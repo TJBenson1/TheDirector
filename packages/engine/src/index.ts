@@ -80,6 +80,8 @@ export {
   type EraRealityPack,
   type FallbackTier,
   type InvalidationCause,
+  type ClubPressure,
+  type AmbitionOverride,
 } from './ledger.js';
 export {
   simulateMatch,

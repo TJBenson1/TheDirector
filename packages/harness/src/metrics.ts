@@ -51,6 +51,10 @@ export interface CareerMetrics {
   /** Tracked real players still at their real club at era end (squad-match). */
   trackedRealPlayersAtRealClub: number;
   trackedRealPlayersTotal: number;
+  /** Pressure-driven ambition overrides, and the significant AI transfers they're
+   *  a share of (Amendment A). */
+  ambitionOverrides: number;
+  significantAiTransfers: number;
 }
 
 export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
@@ -79,6 +83,8 @@ export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
     ledgerExecutedAsReal: 0,
     trackedRealPlayersAtRealClub: 0,
     trackedRealPlayersTotal: 0,
+    ambitionOverrides: 0,
+    significantAiTransfers: 0,
   };
 }
 

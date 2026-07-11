@@ -63,6 +63,62 @@ real 2012 Madrid, absent user interference, is a failing build.*
   prospect scouting, academy intakes, and all narrative events.** No invented
   name may ever become part of the story.
 
+## Amendment A — Ambition overrides (reality can be superseded, with cause)
+
+Reality stays the default (~80–90% of AI transfer activity executes the real
+ledger). Alongside invalidation-triggered butterflies, a **second legitimate
+trigger** exists: **pressure-driven ambition overrides.**
+
+- Each AI club tracks a **`pressure`** state: trophy drought vs. expectations,
+  manager job security, fan/board unrest, a rival's dominance, financial
+  windfalls.
+- When pressure crosses a threshold, the club may **deviate from its real ledger
+  with an ambitious, logical move** — e.g. a still-trophyless 2006 Chelsea bids
+  aggressively for Kaká/Ronaldinho (never signed in reality, but plausible in
+  that state); an Arsenal that lost Pirès to the user moves *earlier* for
+  Duff/Kewell.
+- **Plausibility gate (all must hold):** the target fits the club's need,
+  profile, budget/wage reality and prestige pull, AND respects the target's
+  transfer-resistance profile (§6). **Zero overrides may breach a hard block.**
+- Overrides are logged to `divergenceLog` with the pressure cause, and then
+  ripple through the standard butterfly chain (whoever loses that player falls
+  back per the hierarchy).
+- **This is why suppressing a rival is risky:** gutting Arsenal *raises* their
+  pressure, making them *more* likely to do something ambitious and
+  unpredictable — the "rivals react better" realism, emergent from one mechanic.
+
+**Calibration (harness):** in a zero-user-divergence run, ledger fidelity stays
+**≥85%**; ambition overrides are **~10–15%** of significant AI transfers across a
+decade, concentrated at high-pressure clubs; **>~20% overrides is a failing
+build**; hard-block breaches must be **0**.
+
+## Amendment B — Non-playable clubs are full narrative participants
+
+The world is not "12 clubs + fog." Clubs like Atlético, Dortmund, Valencia,
+Porto, Newcastle, Deportivo, Leeds, Sevilla, Lyon, Ajax, PSV, Benfica, Roma,
+Napoli, Marseille, Monaco must exist as simulated actors:
+
+- Real squads (curated key players + capped procedural depth), real managers
+  where notable, and their real ledger entries.
+- Full participation in league tables, European competitions and the event
+  system — real financial crises (Leeds, Valencia, Deportivo's decline),
+  golden generations (Porto '04, Deportivo '00–'04, Dortmund '11–'13),
+  fire-sales — all creating the buy/sell opportunities the player interacts with.
+- They buy, sell, develop and lose players via the same reality-default +
+  butterfly + (rarer) ambition-override machinery — a non-playable club can
+  hijack your target or refuse to sell you its captain.
+
+**Tiering (performance only, never narrative):**
+- **Tier 1** — the 12 playable clubs: full simulation.
+- **Tier 2** — ~30–40 significant clubs: full transfer/event/squad simulation,
+  not playable. **Narratively indistinguishable** from Tier 1 (scout reports,
+  negotiations, events, butterflies all treat them as real actors).
+- **Tier 3** — results-level simulation only.
+
+The **Tier 2 roster is per-era data** — which clubs matter shifts across
+1995–2025 (Leeds/Deportivo early; Dortmund/Atlético late). `ClubState.tier`
+carries the tier; the roster lives in the era pack.
+
 ## Current state vs. this design (honest gaps)
 
 | Area | Now (M4) | Target |

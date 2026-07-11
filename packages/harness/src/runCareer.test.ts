@@ -28,8 +28,8 @@ describe('calibration harness', () => {
       runCareer({ seed: `batch:${i}`, years: 15, bot: passiveBot }),
     );
     const results = evaluateAll(careers);
-    // 9 §12 rows + 2 reality-default rows (docs/DESIGN-reality-default.md).
-    expect(results).toHaveLength(11);
+    // 9 §12 rows + 3 reality-default rows (docs/DESIGN-reality-default.md).
+    expect(results).toHaveLength(12);
 
     // The two injury targets are live (M4) and must pass.
     const injuryCrisis = results.find((r) => r.id === 'user-injury-crisis')!;
@@ -42,6 +42,6 @@ describe('calibration harness', () => {
     // Targets owned by later milestones stay pending — no false pass/fail.
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
-    expect(pending.length).toBe(9);
+    expect(pending.length).toBe(10);
   }, 30000);
 });

@@ -4,6 +4,7 @@
 
 import type {
   ClubState,
+  ClubTier,
   DifficultySettings,
   GameState,
   LeagueState,
@@ -73,6 +74,13 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
   // clubs. League clubs carry authored strength and a leagueId; context-only
   // clubs get a placeholder strength from prestige until their league is
   // simulated (M-later).
+  // Tier 1 = the 12 playable clubs (docs/DESIGN-reality-default.md Amendment B).
+  // Tier 2 = other simulated (in-league) clubs; Tier 3 = results-level context.
+  // The full per-era Tier-2 roster is era-pack data (M8); this is the seed.
+  const tier1 = new Set(scenario.clubs.map((c) => c.id));
+  const tierFor = (id: string, leagueId: string | null): ClubTier =>
+    tier1.has(id) ? 1 : leagueId !== null ? 2 : 3;
+
   const clubs: Record<string, ClubState> = {};
   const newClub = (
     id: string,
@@ -83,6 +91,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
   ): ClubState => ({
     id,
     name,
+    tier: tierFor(id, leagueId),
     prestige,
     squad: [],
     strength,

@@ -141,14 +141,29 @@ export const TARGETS: CalibrationTarget[] = [
     // AI clubs' real transfers must execute as in reality.
     id: 'reality-ledger-fidelity',
     label: 'Zero-divergence real transfers executing as in reality',
-    band: '≥90% of ledger',
+    band: '≥85% of ledger',
     ownedBy: 'M8',
     active: false,
     evaluate: (c) => {
       const expected = sum(c, (x) => x.ledgerExpected);
       const asReal = sum(c, (x) => x.ledgerExecutedAsReal);
       const f = expected > 0 ? asReal / expected : 0;
-      return { value: pct(f), pass: f >= 0.9 };
+      return { value: pct(f), pass: f >= 0.85 };
+    },
+  },
+  {
+    // docs/DESIGN-reality-default.md, Amendment A. Pressure-driven ambition
+    // overrides are a minority of AI transfers; >~20% is a failing build.
+    id: 'reality-ambition-overrides',
+    label: 'Ambition overrides as a share of significant AI transfers',
+    band: '~10–15% (fail >20%)',
+    ownedBy: 'M8',
+    active: false,
+    evaluate: (c) => {
+      const overrides = sum(c, (x) => x.ambitionOverrides);
+      const significant = sum(c, (x) => x.significantAiTransfers);
+      const f = significant > 0 ? overrides / significant : 0;
+      return { value: pct(f), pass: f <= 0.2 };
     },
   },
   {

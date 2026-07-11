@@ -57,6 +57,33 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
 };
 
 /**
+ * Pressure state driving ambition overrides (Amendment A). Higher = more likely
+ * to deviate from the real ledger with an ambitious, logged, plausibility-gated
+ * move. Wired into ClubState and the Rival AI in M8.
+ */
+export interface ClubPressure {
+  /** Seasons without a trophy relative to expectation. */
+  trophyDrought: number;
+  /** Manager job security, 0 (about to be sacked) – 100. */
+  jobSecurity: number;
+  /** Fan/board unrest, 0 (content) – 100. */
+  unrest: number;
+  /** A rival's perceived dominance, 0 – 100. */
+  rivalDominance: number;
+  /** Recent financial windfall available for a statement signing, 0 – 100. */
+  windfall: number;
+}
+
+/** An ambition override: a pressure-driven deviation from the real ledger. */
+export interface AmbitionOverride {
+  clubId: ClubId;
+  targetPlayerId: PlayerId;
+  /** Which pressure component crossed threshold. */
+  cause: keyof ClubPressure;
+  window: YearMonth;
+}
+
+/**
  * A procedural player is anonymous depth (Principle 2): NEVER a scoutable
  * prospect, academy intake, or narrative subject. Real players are `curated`.
  */

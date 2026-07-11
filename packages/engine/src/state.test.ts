@@ -23,6 +23,11 @@ describe('createNewGame', () => {
     expect(state.leagues['eng-1']?.clubIds).toHaveLength(20);
     expect(state.clubs.man_utd?.leagueId).toBe('eng-1');
     expect(state.clubs.real_madrid?.leagueId).toBeNull();
+    // Tiering (Amendment B): playable clubs = Tier 1, simulated non-playable
+    // (e.g. Leeds) = Tier 2.
+    expect(state.clubs.man_utd?.tier).toBe(1);
+    expect(state.clubs.real_madrid?.tier).toBe(1);
+    expect(state.clubs.leeds?.tier).toBe(2);
     // The creation event is the first log entry.
     expect(state.eventLog[0]?.code).toBe('game.created');
   });

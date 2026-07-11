@@ -55,9 +55,18 @@ export interface ClubFinances {
 
 /** M1: identity. M2: abstracted strength + form + league. M3: squad-derived
  *  strength (anchored to the M2 baseline) + finances. */
+/**
+ * Simulation tier (performance only, never narrative — see
+ * docs/DESIGN-reality-default.md Amendment B):
+ *  1 = playable (full sim), 2 = significant non-playable (full transfer/event/
+ *  squad sim, narratively indistinguishable), 3 = results-level only.
+ */
+export type ClubTier = 1 | 2 | 3;
+
 export interface ClubState {
   id: ClubId;
   name: string;
+  tier: ClubTier;
   /** Reputation/pull, 1–100. Drives budgets (§11) and transfer willingness (§6). */
   prestige: number;
   /** Squad = player ids. Built in M3 (curated + procedural filler). */
