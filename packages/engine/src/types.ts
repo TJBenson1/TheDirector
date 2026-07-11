@@ -380,6 +380,9 @@ export interface GameStateMeta {
   firedScripted: string[];
   /** The scenario's opening calendar year (for elapsed-time drift, §9f). */
   startYear: number;
+  /** Real-ledger entries already processed (executed or fallen back), by
+   *  subject playerId, so each resolves once (reality-default). */
+  executedLedger: string[];
 }
 
 export interface GameClock {

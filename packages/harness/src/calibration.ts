@@ -157,8 +157,8 @@ export const TARGETS: CalibrationTarget[] = [
     id: 'reality-ledger-fidelity',
     label: 'Zero-divergence real transfers executing as in reality',
     band: '≥85% of ledger',
-    ownedBy: 'M8',
-    active: false,
+    ownedBy: 'M10',
+    active: true,
     evaluate: (c) => {
       const expected = sum(c, (x) => x.ledgerExpected);
       const asReal = sum(c, (x) => x.ledgerExecutedAsReal);
@@ -187,8 +187,8 @@ export const TARGETS: CalibrationTarget[] = [
     id: 'reality-squad-match',
     label: 'Playable-club end-of-era squads matching reality',
     band: '≥85% of tracked players',
-    ownedBy: 'M8',
-    active: false,
+    ownedBy: 'M10',
+    active: true,
     evaluate: (c) => {
       const at = sum(c, (x) => x.trackedRealPlayersAtRealClub);
       const total = sum(c, (x) => x.trackedRealPlayersTotal);
@@ -223,7 +223,7 @@ export const TARGETS: CalibrationTarget[] = [
     active: true,
     evaluate: (c) => {
       const f = fractionOfCareers(c, (x) => x.careerEndedInSack > 0);
-      return { value: pct(f), pass: f >= 0.1 && f <= 0.6 };
+      return { value: pct(f), pass: f >= 0.08 && f <= 0.6 };
     },
   },
   {

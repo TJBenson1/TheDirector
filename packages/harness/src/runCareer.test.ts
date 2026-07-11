@@ -48,6 +48,8 @@ describe('calibration harness', () => {
       'hard-block-integrity',
       'adaptation-signing-risk',
       'scripted-event-fidelity',
+      'reality-ledger-fidelity',
+      'reality-squad-match',
     ];
     for (const id of live) {
       const t = results.find((r) => r.id === id)!;
@@ -58,6 +60,6 @@ describe('calibration harness', () => {
     // Targets owned by later milestones stay pending — no false pass/fail.
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
-    expect(pending.length).toBe(6);
+    expect(pending.length).toBe(4);
   }, 30000);
 });

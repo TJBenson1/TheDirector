@@ -45,16 +45,39 @@ export interface AcademyIntake {
   playerId: PlayerId;
 }
 
-/** Per-era reality data. Empty until era packs populate it (M8/M9). */
+/** Per-era reality data. */
 export interface EraRealityPack {
   realTransferLedger: RealTransferLedgerEntry[];
   academyIntakes: AcademyIntake[];
 }
 
-/** Registry keyed by era pack id. Deliberately empty at M4. */
+/**
+ * Real transfers among tracked (non-user) clubs, 1999–2004 — a seed slice of the
+ * full ledger (the complete curation is ongoing data work). Each subject player
+ * is curated at his source club (data/curated-1999.ts) so the entry can execute
+ * on schedule. The AI executes these by DEFAULT; a user action that invalidates
+ * one triggers the fallback + a logged butterfly (§9f).
+ */
+const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
+  { playerId: 'cur_anelka', from: 'arsenal', to: 'real_madrid', window: '1999-08', fee: 22_000_000 },
+  { playerId: 'cur_mcmanaman', from: 'liverpool', to: 'real_madrid', window: '1999-08', fee: 0 },
+  { playerId: 'cur_overmars', from: 'arsenal', to: 'barcelona', window: '2000-07', fee: 25_000_000 },
+  { playerId: 'cur_rkeane', from: 'leeds', to: 'spurs', window: '2002-07', fee: 7_000_000 },
+  { playerId: 'cur_woodgate', from: 'leeds', to: 'newcastle', window: '2003-01', fee: 9_000_000 },
+  { playerId: 'cur_crespo', from: 'inter', to: 'chelsea', window: '2003-07', fee: 16_800_000 },
+  { playerId: 'cur_owen', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 8_000_000 },
+];
+
+/** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
-  'era-1995-2005': { realTransferLedger: [], academyIntakes: [] },
+  'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [] },
 };
+
+/** The era pack a scenario draws its reality data from. */
+export function eraForScenario(scenarioId: string): string {
+  void scenarioId;
+  return 'era-1995-2005';
+}
 
 /**
  * Pressure state driving ambition overrides (Amendment A). Higher = more likely

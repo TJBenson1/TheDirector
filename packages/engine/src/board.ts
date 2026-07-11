@@ -36,9 +36,9 @@ export function reviewBoard(state: GameState, rng: Rng): void {
   const expected = state.board.expectedFinish;
 
   let delta: number;
-  if (wonTitle) delta = 12;
+  if (wonTitle) delta = 10;
   else if (finish <= expected) delta = 4;
-  else delta = -(finish - expected) * 7;
+  else delta = -(finish - expected) * 9;
 
   state.board.patience = Math.max(0, Math.min(100, state.board.patience + delta));
 
@@ -54,7 +54,7 @@ export function reviewBoard(state: GameState, rng: Rng): void {
 
     // Dismissal: sustained failure. A little variance keeps it from being a
     // deterministic cliff, but the job is genuinely at risk.
-    if (state.board.warnings >= 2 && state.board.patience < 18 && rng.chance(0.7)) {
+    if (state.board.warnings >= 2 && state.board.patience < 22 && rng.chance(0.85)) {
       state.board.dismissed = true;
       logEvent(state, {
         category: 'system',

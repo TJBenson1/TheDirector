@@ -153,6 +153,27 @@ export const MILAN_1999: CuratedSeed[] = [
   }),
 ];
 
+/**
+ * Real-ledger subjects — players curated at their SOURCE clubs so the real
+ * transfer ledger (ledger.ts) can move them to their real destinations on
+ * schedule (reality-default, §9f). Non-user clubs only.
+ */
+export const ARSENAL_1999: CuratedSeed[] = [
+  q('arsenal', 'anelka', 'Nicolas Anelka', 1979, 'France', ['ST'], 82, 86, 2003, 30, t(5, 8, 8, 3, 6, 6)),
+  q('arsenal', 'overmars', 'Marc Overmars', 1973, 'Netherlands', ['LW'], 84, 85, 2002, 55, t(7, 5, 7, 5, 4, 7)),
+];
+export const LIVERPOOL_1999: CuratedSeed[] = [
+  q('liverpool', 'mcmanaman', 'Steve McManaman', 1972, 'England', ['RW', 'AM'], 82, 83, 2000, 25, t(7, 6, 7, 5, 4, 8)),
+  q('liverpool', 'owen', 'Michael Owen', 1979, 'England', ['ST'], 87, 90, 2005, 45, t(8, 6, 8, 6, 4, 7)),
+];
+export const LEEDS_1999: CuratedSeed[] = [
+  q('leeds', 'rkeane', 'Robbie Keane', 1980, 'Ireland', ['ST'], 79, 85, 2004, 25, t(7, 6, 8, 5, 5, 8)),
+  q('leeds', 'woodgate', 'Jonathan Woodgate', 1980, 'England', ['CB'], 80, 87, 2004, 65, t(6, 5, 7, 6, 6, 6)),
+];
+export const INTER_1999: CuratedSeed[] = [
+  q('inter', 'crespo', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 85, 86, 2006, 40, t(7, 6, 8, 5, 5, 7)),
+];
+
 /** Curated squads keyed by scenario → club (marquee real players + procedural
  *  depth is filled in at squad build). */
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
@@ -161,5 +182,9 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
     newcastle: NEWCASTLE_1999,
     southampton: SOUTHAMPTON_1999,
     milan: MILAN_1999,
+    arsenal: ARSENAL_1999,
+    liverpool: LIVERPOOL_1999,
+    leeds: LEEDS_1999,
+    inter: INTER_1999,
   },
 };

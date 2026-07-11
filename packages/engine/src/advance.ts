@@ -23,6 +23,7 @@ import { runRivalWindow, updateWorldDefiance } from './rival.js';
 import { windowForMonthIndex } from './clock.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
+import { executeLedgerWindow } from './ledgerExec.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
@@ -70,9 +71,10 @@ function runMonth(state: GameState, rng: Rng): void {
   processInjuriesMonth(state, rng);
   // M7: scripted + procedural events, scandals (§9b, §9d). May raise interrupts.
   rollEventsMonth(state, rng);
-  // M8: rival-AI response layer at each decision window — counter-punch,
-  // poaching, grudges (§9a). Reactive only; proactive AI follows the ledger.
+  // M10: proactive AI transfers follow the REAL ledger by default (§9f), then
+  // M8: the rival-AI reactive response layer (counter-punch, poaching, §9a).
   if (windowForMonthIndex(state.clock.monthIndex) !== null) {
+    executeLedgerWindow(state, rng);
     runRivalWindow(state, rng);
   }
 }

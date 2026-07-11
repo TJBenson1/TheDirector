@@ -140,6 +140,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
       nextSeq: 0,
       firedScripted: [],
       startYear: parseYearMonth(scenario.startDate).year,
+      executedLedger: [],
     },
     clock: {
       date: scenario.startDate,

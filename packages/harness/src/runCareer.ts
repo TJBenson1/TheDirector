@@ -19,6 +19,7 @@ import {
   parseYearMonth,
   maxConsecutiveTitles,
   significantInjuredCount,
+  ledgerSquadMatch,
   cloneState,
   type GameState,
   type NewGameOptions,
@@ -153,6 +154,13 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
       } else if (zeroDivergence && e.code === 'scripted.skipped') {
         metrics.scriptedEventsExpected += 1;
       }
+      // Reality-ledger fidelity — also a zero-divergence measure (§9f).
+      if (zeroDivergence && e.code === 'ledger.executed') {
+        metrics.ledgerExpected += 1;
+        metrics.ledgerExecutedAsReal += 1;
+      } else if (zeroDivergence && e.code === 'ledger.fallback') {
+        metrics.ledgerExpected += 1;
+      }
     }
 
     // Internal crises imposed on the player (§ internal-friction).
@@ -174,6 +182,14 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
   metrics.userMajorInjuryCrisisDecades = crisisDecades.size;
   metrics.userScandalDecades = scandalDecades.size;
   metrics.keepHappyCampaigns = starIds.size;
+
+  // Reality squad-match at era end (zero-divergence control): did the ledger
+  // subjects end up at their real destinations? (§9f)
+  if (zeroDivergence) {
+    const match = ledgerSquadMatch(state);
+    metrics.trackedRealPlayersAtRealClub = match.atRealClub;
+    metrics.trackedRealPlayersTotal = match.total;
+  }
 
   collectEndOfCareerMetrics(state, metrics);
   return metrics;

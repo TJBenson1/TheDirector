@@ -126,6 +126,7 @@ export { appendMemory, memoriesWithTag } from './memory.js';
 export { CURATED_SQUADS, MAN_UTD_1999, type CuratedSeed } from './data/curated-1999.js';
 export {
   ERA_REALITY,
+  eraForScenario,
   isProcedural,
   type RealTransferLedgerEntry,
   type AcademyIntake,
@@ -135,6 +136,7 @@ export {
   type ClubPressure,
   type AmbitionOverride,
 } from './ledger.js';
+export { executeLedgerWindow, ledgerSquadMatch, ledgerClubs } from './ledgerExec.js';
 export {
   simulateMatch,
   generateSchedule,
