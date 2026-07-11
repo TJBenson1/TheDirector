@@ -95,6 +95,28 @@ export function executeTransfer(state: GameState, req: TransferRequest): Transfe
     data: { playerId: player.id, from: fromClubId, to: req.toClub, fee, wage: player.wage },
   });
 
+  // The user acting on the market provokes the rival response layer (§9a) — a
+  // do-nothing user doesn't, so reality/scripted history holds for them.
+  if (req.toClub === state.playerClub && fromClubId !== state.playerClub) {
+    state.userAggression += 1;
+  }
+
+  // Raid detection (§9a): the user raiding a simulated rival provokes a
+  // counter-punch and a grudge. The rival has ≤2 windows to respond.
+  if (fromClubId && req.toClub === state.playerClub) {
+    const seller = state.clubs[fromClubId];
+    if (seller && seller.leagueId !== null && seller.id !== state.playerClub) {
+      seller.pendingCounterPunch = 2;
+      seller.grudge = Math.min(100, seller.grudge + 20);
+      logEvent(state, {
+        category: 'transfer',
+        code: 'raid.suffered',
+        message: `${seller.name} raided by ${buyer.name} for ${player.name}`,
+        data: { clubId: seller.id, playerId: player.id, fee },
+      });
+    }
+  }
+
   return { ok: true, playerId: player.id, from: fromClubId, to: req.toClub, fee };
 }
 

@@ -13,7 +13,7 @@
 import {
   createNewGame,
   advanceWindow,
-  executeTransfer,
+  attemptSigning,
   evaluateApproach,
   applyDecision,
   parseYearMonth,
@@ -50,6 +50,11 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
   // Decade buckets with a major injury crisis / user scandal, for calibration.
   const crisisDecades = new Set<number>();
   const scandalDecades = new Set<number>();
+  // Distinct user stars held over the career ("keep him happy" campaigns).
+  const starIds = new Set<string>();
+  // A career is "zero-divergence" if the user makes no transfers — the control
+  // for scripted-event fidelity (§12). Active careers measure star retention.
+  const zeroDivergence = !bot.transferActions;
   const decadeOf = () => Math.floor((parseYearMonth(state.clock.date).year - startYear) / 10);
 
   let iterations = 0;
@@ -88,17 +93,35 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
         if (verdict.willing) metrics.hardBlockedCompletedBeforeUnlock += 1;
       }
 
-      // Apply the bot's logical signings; record the hidden adaptation outcome.
+      // Apply the bot's transfer activity WITH agency (attemptSigning consults
+      // willingness). Cross-border signings feed the adaptation metric; domestic
+      // raids feed the counter-punch metric (tracked via engine events).
       if (bot.transferActions) {
         for (const req of bot.transferActions(draft, botRng)) {
-          const res = executeTransfer(draft, req);
+          const target = draft.players[req.playerId];
+          const sellerLeague = target?.club ? draft.clubs[target.club]?.leagueId : undefined;
+          const wasForeign = sellerLeague === null;
+          const wasRaid = sellerLeague != null && target?.club !== draft.playerClub;
+          const res = attemptSigning(draft, req);
           if (res.ok) {
             const signed = draft.players[res.playerId];
-            if (signed?.adaptation) {
+            if (wasForeign && signed?.adaptation) {
               metrics.logicalSignings += 1;
               if (signed.adaptation.outcome !== 'seamless') metrics.signingsUnderperformingFirstSeason += 1;
             }
+            // A raid on a simulated rival — the counter-punch is tracked via the
+            // engine's rival.counterpunch event during the following advance.
+            if (wasRaid) metrics.raidsSuffered += 1;
           }
+        }
+      }
+
+      // Track the user's stars (a "keep him happy" campaign per §12) — only in
+      // active careers, where the rival response layer is in play.
+      if (!zeroDivergence) {
+        for (const id of draft.clubs[draft.playerClub]?.squad ?? []) {
+          const p = draft.players[id];
+          if (p && p.ability >= 82) starIds.add(p.id);
         }
       }
       state = draft;
@@ -115,13 +138,19 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
       (e) => e.code === 'injury.serious',
     ).length;
 
-    // Events fired this advance: user scandals (§9d) and scripted fidelity (§9b).
+    // Events fired this advance: scandals, scripted fidelity, raids/counters,
+    // and poaching of the user's stars (§9a, §9b, §9d).
     for (const e of result.events) {
       if (e.code === 'scandal.fired' && e.data?.user === true) scandalDecades.add(decadeOf());
-      if (e.code === 'scripted.fired') {
+      if (e.code === 'rival.counterpunch') metrics.raidsCounterPunchedWithin2Windows += 1;
+      if (e.code === 'poach.completed' && e.data?.from === state.playerClub) {
+        metrics.keepHappyEndedInDeparture += 1;
+      }
+      // Scripted fidelity is a zero-divergence measure only (§12).
+      if (zeroDivergence && e.code === 'scripted.fired') {
         metrics.scriptedEventsExpected += 1;
         metrics.scriptedEventsFired += 1;
-      } else if (e.code === 'scripted.skipped') {
+      } else if (zeroDivergence && e.code === 'scripted.skipped') {
         metrics.scriptedEventsExpected += 1;
       }
     }
@@ -135,6 +164,7 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
 
   metrics.userMajorInjuryCrisisDecades = crisisDecades.size;
   metrics.userScandalDecades = scandalDecades.size;
+  metrics.keepHappyCampaigns = starIds.size;
 
   collectEndOfCareerMetrics(state, metrics);
   return metrics;

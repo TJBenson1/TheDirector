@@ -8,7 +8,7 @@
  */
 
 import type { GameState, Decision, TransferRequest } from '@director/engine';
-import { Rng, valuePlayer, currentYear } from '@director/engine';
+import { Rng, valuePlayer, currentYear, evaluateApproach } from '@director/engine';
 
 export interface BotChoice {
   decisionId: string;
@@ -75,4 +75,37 @@ export const signingBot: StrategyBot = {
   },
 };
 
-export const ALL_BOTS: StrategyBot[] = [passiveBot, firstChoiceBot, signingBot];
+/**
+ * Raids a simulated domestic rival each summer — buying a willing, affordable
+ * player from another in-league club. Exists to exercise the counter-punch
+ * response (§9a): a raided rival must respond within ≤2 windows. Resolves
+ * decisions (first choice) so scandals/events don't stall the loop.
+ */
+export const raidingBot: StrategyBot = {
+  name: 'raiding',
+  decide: (state, decisions, rng) => firstChoiceBot.decide(state, decisions, rng),
+  transferActions(state) {
+    const clubId = state.playerClub;
+    const club = state.clubs[clubId];
+    if (!club) return [];
+    const budget = club.finances.transferBudget;
+    const year = currentYear(state);
+    const candidates = Object.values(state.players)
+      .filter(
+        (p) =>
+          p.club !== null &&
+          p.club !== clubId &&
+          state.clubs[p.club]?.leagueId != null && // simulated (in-league) rival
+          p.ability >= 68 &&
+          valuePlayer(p, year) <= budget,
+      )
+      .sort((a, b) => b.ability - a.ability);
+    for (const p of candidates) {
+      const v = evaluateApproach(state, { playerId: p.id, toClub: clubId, wageOffer: p.wage * 1.4 });
+      if (v.willing) return [{ playerId: p.id, toClub: clubId, fee: valuePlayer(p, year) }];
+    }
+    return [];
+  },
+};
+
+export const ALL_BOTS: StrategyBot[] = [passiveBot, firstChoiceBot, signingBot, raidingBot];

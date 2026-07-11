@@ -101,6 +101,8 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     form: 0,
     leagueId,
     finances: { ownership: 'sustainable', transferBudget: 0, wageBudget: 0, wageBill: 0 },
+    pendingCounterPunch: 0,
+    grudge: 0,
   });
   for (const clubSeed of scenario.clubs) {
     clubs[clubSeed.id] = newClub(
@@ -153,6 +155,8 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     pendingDecisions: [],
     eventLog: [],
     board: { mandate: scenario.mandate, patience: scenario.boardPatience },
+    worldDefiance: 0,
+    userAggression: 0,
   };
 
   // Build squads (curated where available + procedural filler), anchor each

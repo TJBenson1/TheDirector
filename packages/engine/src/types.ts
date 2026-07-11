@@ -86,6 +86,10 @@ export interface ClubState {
   /** The simulated league this club plays in, or null if not simulated yet. */
   leagueId: string | null;
   finances: ClubFinances;
+  /** Windows remaining to counter-punch after being raided (§9a). 0 = settled. */
+  pendingCounterPunch: number;
+  /** Grudge toward the user after being raided/gazumped (§9a #4). 0..100. */
+  grudge: number;
 }
 
 // ── Leagues & season sim (§15) ───────────────────────────────────────────────
@@ -393,6 +397,13 @@ export interface GameState {
   pendingDecisions: Decision[];
   eventLog: LoggedEvent[];
   board: BoardState;
+  /** Rubber-band metric (§9a #5): rises when the user dominates, raising rival
+   *  aggression/fortune. Governed by the worldDefiance slider (0 = sandbox). */
+  worldDefiance: number;
+  /** How aggressive the user has been (signings + raids). Gates the rival
+   *  response layer: a do-nothing user doesn't provoke poaching, so reality (and
+   *  scripted history) holds — poaching is a RESPONSE to aggression (§9a). */
+  userAggression: number;
 }
 
 /** The current schema version. Bump on breaking GameState changes. */

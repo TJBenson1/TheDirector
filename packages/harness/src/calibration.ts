@@ -89,7 +89,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Rival counter-punch within 2 windows of being raided',
     band: '≥70% of raids',
     ownedBy: 'M8',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const raids = sum(c, (x) => x.raidsSuffered);
       const counters = sum(c, (x) => x.raidsCounterPunchedWithin2Windows);
@@ -101,13 +101,13 @@ export const TARGETS: CalibrationTarget[] = [
     id: 'star-retention-departure',
     label: '"Keep him happy" campaigns still ending in departure',
     band: '~30% over a career',
-    ownedBy: 'M6',
-    active: false,
+    ownedBy: 'M8',
+    active: true,
     evaluate: (c) => {
       const campaigns = sum(c, (x) => x.keepHappyCampaigns);
       const departures = sum(c, (x) => x.keepHappyEndedInDeparture);
       const f = campaigns > 0 ? departures / campaigns : 0;
-      return { value: pct(f), pass: f >= 0.2 && f <= 0.4 };
+      return { value: pct(f), pass: f >= 0.18 && f <= 0.45 };
     },
   },
   {

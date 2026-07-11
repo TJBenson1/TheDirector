@@ -19,6 +19,8 @@ import { eventsSince } from './eventLog.js';
 import { stepLeagueMonth } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
 import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
+import { runRivalWindow, updateWorldDefiance } from './rival.js';
+import { windowForMonthIndex } from './clock.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
@@ -49,7 +51,9 @@ function runMonth(state: GameState, rng: Rng): void {
     processSeasonDevelopment(state, rng);
     processSeasonAgeing(state, rng);
     processSeasonMorale(state);
-    // 4. Reconcile strength for all simulated clubs after ability changes.
+    // 4. Rubber-band: update world defiance from last season's finish (§9a #5).
+    updateWorldDefiance(state);
+    // 5. Reconcile strength for all simulated clubs after ability changes.
     for (const club of Object.values(state.clubs)) {
       if (club.leagueId !== null) recomputeClubStrength(state, club.id);
     }
@@ -61,6 +65,11 @@ function runMonth(state: GameState, rng: Rng): void {
   processInjuriesMonth(state, rng);
   // M7: scripted + procedural events, scandals (§9b, §9d). May raise interrupts.
   rollEventsMonth(state, rng);
+  // M8: rival-AI response layer at each decision window — counter-punch,
+  // poaching, grudges (§9a). Reactive only; proactive AI follows the ledger.
+  if (windowForMonthIndex(state.clock.monthIndex) !== null) {
+    runRivalWindow(state, rng);
+  }
 }
 
 /**

@@ -31,11 +31,13 @@ describe('calibration harness', () => {
     // 9 §12 rows + 9 reality/friction/governing rows (design docs).
     expect(results).toHaveLength(18);
 
-    // Live targets through M7 must all pass.
+    // Live targets through M8 must all pass.
     const live = [
       'user-injury-crisis',
       'serious-injury-rate',
       'user-scandal',
+      'rival-counter-punch',
+      'star-retention-departure',
       'benched-wonderkid-plateau',
       'prospect-hit-rate',
       'hard-block-integrity',
@@ -51,6 +53,6 @@ describe('calibration harness', () => {
     // Targets owned by later milestones stay pending — no false pass/fail.
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
-    expect(pending.length).toBe(10);
+    expect(pending.length).toBe(8);
   }, 30000);
 });
