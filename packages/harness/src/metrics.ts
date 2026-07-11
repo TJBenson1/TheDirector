@@ -42,6 +42,15 @@ export interface CareerMetrics {
   // ── M7: scripted events ───────────────────────────────────────
   scriptedEventsExpected: number;
   scriptedEventsFired: number;
+
+  // ── M8: reality-default timeline (docs/DESIGN-reality-default.md) ──
+  /** Real ledger transfers among tracked clubs expected in a zero-divergence run. */
+  ledgerExpected: number;
+  /** …of those, how many executed exactly as in reality. */
+  ledgerExecutedAsReal: number;
+  /** Tracked real players still at their real club at era end (squad-match). */
+  trackedRealPlayersAtRealClub: number;
+  trackedRealPlayersTotal: number;
 }
 
 export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
@@ -66,6 +75,10 @@ export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
     benchedWonderkidsReachedCeiling: 0,
     scriptedEventsExpected: 0,
     scriptedEventsFired: 0,
+    ledgerExpected: 0,
+    ledgerExecutedAsReal: 0,
+    trackedRealPlayersAtRealClub: 0,
+    trackedRealPlayersTotal: 0,
   };
 }
 

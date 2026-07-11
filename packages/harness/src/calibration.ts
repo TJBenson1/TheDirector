@@ -137,6 +137,36 @@ export const TARGETS: CalibrationTarget[] = [
     },
   },
   {
+    // docs/DESIGN-reality-default.md, Principle 1. In a zero-divergence run,
+    // AI clubs' real transfers must execute as in reality.
+    id: 'reality-ledger-fidelity',
+    label: 'Zero-divergence real transfers executing as in reality',
+    band: '≥90% of ledger',
+    ownedBy: 'M8',
+    active: false,
+    evaluate: (c) => {
+      const expected = sum(c, (x) => x.ledgerExpected);
+      const asReal = sum(c, (x) => x.ledgerExecutedAsReal);
+      const f = expected > 0 ? asReal / expected : 0;
+      return { value: pct(f), pass: f >= 0.9 };
+    },
+  },
+  {
+    // docs/DESIGN-reality-default.md, Principle 1. End-of-era squads at the 12
+    // playable clubs must materially match their real counterparts.
+    id: 'reality-squad-match',
+    label: 'Playable-club end-of-era squads matching reality',
+    band: '≥85% of tracked players',
+    ownedBy: 'M8',
+    active: false,
+    evaluate: (c) => {
+      const at = sum(c, (x) => x.trackedRealPlayersAtRealClub);
+      const total = sum(c, (x) => x.trackedRealPlayersTotal);
+      const f = total > 0 ? at / total : 0;
+      return { value: pct(f), pass: f >= 0.85 };
+    },
+  },
+  {
     id: 'scripted-event-fidelity',
     label: 'Scripted historical events firing (zero-divergence run)',
     band: '≥95%',

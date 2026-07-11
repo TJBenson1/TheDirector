@@ -73,6 +73,15 @@ export {
 } from './transfers.js';
 export { CURATED_SQUADS, MAN_UTD_1999, type CuratedSeed } from './data/curated-1999.js';
 export {
+  ERA_REALITY,
+  isProcedural,
+  type RealTransferLedgerEntry,
+  type AcademyIntake,
+  type EraRealityPack,
+  type FallbackTier,
+  type InvalidationCause,
+} from './ledger.js';
+export {
   simulateMatch,
   generateSchedule,
   standingsOrder,

@@ -55,7 +55,13 @@ Built incrementally, one milestone at a time (see §17 of the build spec).
 
 The **Monte Carlo harness runs from M1** and its §12 target table is fully
 defined; each target activates (and starts gating CI) as the milestone that
-produces its behaviour lands. Injury/scandal targets go live at **M4**.
+produces its behaviour lands. Injury targets went live at **M4**.
+
+> **Binding architecture:** [`docs/DESIGN-reality-default.md`](docs/DESIGN-reality-default.md)
+> — AI clubs follow the *real* timeline by default (execute real transfers unless
+> a user action invalidates them, with traceable butterfly chains), and academy/
+> prospect players are *real players only*. Two reality-fidelity calibration
+> targets are tracked (pending until the Rival AI lands in M8).
 
 ## Determinism
 
