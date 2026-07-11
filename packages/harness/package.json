@@ -1,0 +1,14 @@
+{
+  "name": "@director/harness",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Monte Carlo calibration + simulation test harness (§12). Runs in CI.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "harness": "tsx src/run.ts"
+  },
+  "dependencies": {
+    "@director/engine": "workspace:*"
+  }
+}

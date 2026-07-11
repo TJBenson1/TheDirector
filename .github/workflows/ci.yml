@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'claude/**']
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit & property tests
+        run: pnpm test
+
+      # The realism gate (§12, §18). A PR that makes the world too kind fails
+      # here. Career count is reduced in CI for speed; the band assertions are
+      # identical. Bump --careers back to 500+ for a full calibration pass.
+      - name: Monte Carlo calibration harness
+        run: pnpm harness -- --careers=200 --years=15
