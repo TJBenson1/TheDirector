@@ -128,7 +128,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Benched (<40% mins, 2yr+) wonderkids reaching ceiling',
     band: '<15%',
     ownedBy: 'M5',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const benched = sum(c, (x) => x.benchedWonderkids);
       const reached = sum(c, (x) => x.benchedWonderkidsReachedCeiling);

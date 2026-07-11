@@ -201,6 +201,7 @@ function mkPlayer(overrides: Partial<PlayerState> & { ability: number }): Player
     contractUntil: 2004,
     wage: 1_000_000,
     potentialCeiling: overrides.ability,
+    birthCeiling: overrides.potentialCeiling ?? overrides.ability,
     personality: {
       professionalism: 5,
       ego: 5,
@@ -216,6 +217,9 @@ function mkPlayer(overrides: Partial<PlayerState> & { ability: number }): Player
     form: 0,
     injury: null,
     injuryHistory: 0,
+    wonderkid: false,
+    benchedDevSeasons: 0,
+    reachedPotential: false,
     ...overrides,
   };
 }

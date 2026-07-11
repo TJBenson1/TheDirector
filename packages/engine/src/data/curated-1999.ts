@@ -13,7 +13,17 @@ import type { PlayerState, Position } from '../types.js';
  *  live M4 state (fitness/morale/form/injury) are filled in at squad build. */
 export type CuratedSeed = Omit<
   PlayerState,
-  'wage' | 'curated' | 'fitness' | 'morale' | 'form' | 'injury' | 'injuryHistory'
+  | 'wage'
+  | 'curated'
+  | 'fitness'
+  | 'morale'
+  | 'form'
+  | 'injury'
+  | 'injuryHistory'
+  | 'wonderkid'
+  | 'benchedDevSeasons'
+  | 'reachedPotential'
+  | 'birthCeiling'
 >;
 
 type Trait = PlayerState['personality'];

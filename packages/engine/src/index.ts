@@ -64,6 +64,21 @@ export {
 } from './injuries.js';
 export { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 export {
+  processSeasonDevelopment,
+  estimateMinutesShare,
+} from './development.js';
+export {
+  scoutPlayer,
+  medicalCheck,
+  listScoutableProspects,
+  type ScoutReport,
+  type ScoutConfidence,
+  type Range,
+  type ScoutOptions,
+  type MedicalResult,
+  type MedicalGrade,
+} from './scouting.js';
+export {
   executeTransfer,
   affordableTargets,
   squadSize,

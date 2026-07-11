@@ -100,4 +100,13 @@ function collectEndOfCareerMetrics(state: GameState, metrics: CareerMetrics): vo
     squadSeasons += league.clubIds.length * league.titleHistory.length;
   }
   metrics.squadSeasons = squadSeasons;
+
+  // M5: benched wonderkids and whether they reached their ceiling (§12).
+  for (const player of Object.values(state.players)) {
+    if (!player.wonderkid) continue;
+    if (player.benchedDevSeasons >= 2) {
+      metrics.benchedWonderkids += 1;
+      if (player.reachedPotential) metrics.benchedWonderkidsReachedCeiling += 1;
+    }
+  }
 }

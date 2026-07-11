@@ -23,7 +23,7 @@ describe('runCareer', () => {
 });
 
 describe('calibration harness', () => {
-  it('reports all nine §12 rows; injury targets are active and in band by M4', () => {
+  it('reports all §12 + reality rows; live targets pass by M5', () => {
     const careers = Array.from({ length: 24 }, (_, i) =>
       runCareer({ seed: `batch:${i}`, years: 15, bot: passiveBot }),
     );
@@ -31,17 +31,17 @@ describe('calibration harness', () => {
     // 9 §12 rows + 3 reality-default rows (docs/DESIGN-reality-default.md).
     expect(results).toHaveLength(12);
 
-    // The two injury targets are live (M4) and must pass.
-    const injuryCrisis = results.find((r) => r.id === 'user-injury-crisis')!;
-    const injuryRate = results.find((r) => r.id === 'serious-injury-rate')!;
-    expect(injuryCrisis.active).toBe(true);
-    expect(injuryCrisis.pass).toBe(true);
-    expect(injuryRate.active).toBe(true);
-    expect(injuryRate.pass).toBe(true);
+    // Live targets (M4 injuries, M5 benched-wonderkid plateau) must all pass.
+    const live = ['user-injury-crisis', 'serious-injury-rate', 'benched-wonderkid-plateau'];
+    for (const id of live) {
+      const t = results.find((r) => r.id === id)!;
+      expect(t.active).toBe(true);
+      expect(t.pass).toBe(true);
+    }
 
     // Targets owned by later milestones stay pending — no false pass/fail.
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
-    expect(pending.length).toBe(10);
+    expect(pending.length).toBe(9);
   }, 30000);
 });

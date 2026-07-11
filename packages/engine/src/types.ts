@@ -155,7 +155,8 @@ export interface PlayerState {
 
   // HIDDEN (§7) — revealed only via scouting/medicals:
   ability: number; // current, 1–100
-  potentialCeiling: number; // max under ideal development (§5)
+  potentialCeiling: number; // max under ideal development NOW (§5); erodes if stunted
+  birthCeiling: number; // the potential he was born with (immutable; measures "reached potential")
   personality: Personality;
   injuryProneness: number; // 1–100 baseline, history-modified (M4)
 
@@ -174,7 +175,14 @@ export interface PlayerState {
   /** Count of serious injuries suffered (raises proneness + recurrence risk). */
   injuryHistory: number;
 
-  // TODO(M5): contextual development (minutes, competition, coaching).
+  // ── M5 development (§5) ───────────────────────────────────────
+  /** A high-ceiling young talent at generation (potentialCeiling ≥ 85, age ≤ 21). */
+  wonderkid: boolean;
+  /** Development seasons spent with <40% expected minutes (benched → plateau). */
+  benchedDevSeasons: number;
+  /** True once ability came within ~2 of the ceiling — "became the player". */
+  reachedPotential: boolean;
+
   // TODO(M6): transferResistance (ResistanceProfile).
 }
 

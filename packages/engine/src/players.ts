@@ -166,6 +166,7 @@ export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
     wage: 0,
     ability,
     potentialCeiling: ceiling,
+    birthCeiling: ceiling,
     personality,
     injuryProneness,
     curated: false,
@@ -174,6 +175,9 @@ export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
     form: 0,
     injury: null,
     injuryHistory: 0,
+    wonderkid: ceiling >= 85 && age <= 21,
+    benchedDevSeasons: 0,
+    reachedPotential: false,
   };
   player.wage = suggestWage(player, currentYear);
   return player;

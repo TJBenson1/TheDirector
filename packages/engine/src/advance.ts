@@ -19,6 +19,7 @@ import { eventsSince } from './eventLog.js';
 import { stepLeagueMonth } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
+import { processSeasonDevelopment } from './development.js';
 
 export interface AdvanceResult {
   state: GameState;
@@ -34,8 +35,10 @@ const MAX_MONTHS_PER_ADVANCE = 12;
  * interrupt. Kept as a seam so `advanceWindow`'s control flow is stable.
  */
 function runMonth(state: GameState, rng: Rng): void {
-  // Season rollover (July): age the world before the new campaign kicks off.
+  // Season rollover (July): develop the young and age the rest before the new
+  // campaign kicks off (§5).
   if (state.clock.monthIndex === 0) {
+    processSeasonDevelopment(state, rng);
     processSeasonAgeing(state, rng);
     processSeasonMorale(state);
   }
