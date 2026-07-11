@@ -12,7 +12,7 @@ function mk(overrides: Partial<PlayerState> & { ability: number }): PlayerState 
   return {
     id: 't', name: 'T', birthYear: 1978, nationality: 'Spain', positions: ['ST'],
     club: 'real_madrid', contractUntil: 2004, wage: 1_000_000,
-    ability: overrides.ability, potentialCeiling: overrides.ability, birthCeiling: overrides.ability,
+    potentialCeiling: overrides.ability, birthCeiling: overrides.ability,
     personality: { professionalism: 6, ego: 5, ambition: 6, loyalty: 5, volatility: 5, adaptability: 6 },
     injuryProneness: 30, curated: false, fitness: 100, morale: 75, form: 0, injury: null,
     injuryHistory: 0, wonderkid: false, benchedDevSeasons: 0, reachedPotential: false,

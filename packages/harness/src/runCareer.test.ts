@@ -28,14 +28,15 @@ describe('calibration harness', () => {
       runCareer({ seed: `batch:${i}`, years: 15, bot: ALL_BOTS[i % ALL_BOTS.length]! }),
     );
     const results = evaluateAll(careers);
-    // 9 §12 rows + 4 reality/friction rows (design docs).
-    expect(results).toHaveLength(13);
+    // 9 §12 rows + 9 reality/friction/governing rows (design docs).
+    expect(results).toHaveLength(18);
 
-    // Live targets (M4 injuries, M5 plateau, M6 adaptation risk) must all pass.
+    // Live targets through M6 must all pass.
     const live = [
       'user-injury-crisis',
       'serious-injury-rate',
       'benched-wonderkid-plateau',
+      'prospect-hit-rate',
       'adaptation-signing-risk',
     ];
     for (const id of live) {
@@ -47,6 +48,6 @@ describe('calibration harness', () => {
     // Targets owned by later milestones stay pending — no false pass/fail.
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
-    expect(pending.length).toBe(9);
+    expect(pending.length).toBe(13);
   }, 30000);
 });

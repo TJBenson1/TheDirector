@@ -38,6 +38,10 @@ export interface CareerMetrics {
   // ── M5: development ───────────────────────────────────────────
   benchedWonderkids: number;
   benchedWonderkidsReachedCeiling: number;
+  /** Well-managed (not benched 2+ yrs) generational prospects, and how many
+   *  reached ceiling — must land ~40–60% (internal-friction §5). */
+  wellManagedWonderkids: number;
+  wellManagedWonderkidsReachedCeiling: number;
 
   // ── M7: scripted events ───────────────────────────────────────
   scriptedEventsExpected: number;
@@ -61,6 +65,20 @@ export interface CareerMetrics {
    *  season (adaptation outcome other than seamless). */
   logicalSignings: number;
   signingsUnderperformingFirstSeason: number;
+
+  // ── Governing constraint (DESIGN-internal-friction) — M8/M9 ──
+  /** Career ended in dismissal (sackable job, §1). */
+  careerEndedInSack: number;
+  /** Titles won by big-money clubs (Chelsea/City/Madrid), and total titles, for
+   *  the "money still talks" share. */
+  moneyClubTitles: number;
+  leagueTitlesTotal: number;
+  /** Internal crises suffered (forced sale / contract loss / manager conflict /
+   *  financial shock / prospect bust / chemistry failure). */
+  internalCrises: number;
+  /** Clubs exceeding their plausible ceiling without a logged multi-cause chain.
+   *  MUST stay 0 (no fantasy leaps). */
+  fantasyLeaps: number;
 }
 
 export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
@@ -83,6 +101,8 @@ export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
     hardBlockedCompletedBeforeUnlock: 0,
     benchedWonderkids: 0,
     benchedWonderkidsReachedCeiling: 0,
+    wellManagedWonderkids: 0,
+    wellManagedWonderkidsReachedCeiling: 0,
     scriptedEventsExpected: 0,
     scriptedEventsFired: 0,
     ledgerExpected: 0,
@@ -93,6 +113,11 @@ export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
     significantAiTransfers: 0,
     logicalSignings: 0,
     signingsUnderperformingFirstSeason: 0,
+    careerEndedInSack: 0,
+    moneyClubTitles: 0,
+    leagueTitlesTotal: 0,
+    internalCrises: 0,
+    fantasyLeaps: 0,
   };
 }
 

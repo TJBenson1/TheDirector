@@ -10,21 +10,25 @@ function firstCB(state: GameState, clubId: string): PlayerState {
 }
 
 describe('contextual development (§5)', () => {
-  it('a young talent who plays regularly develops toward his ceiling', () => {
-    const state = cloneState(createNewGame({ seed: 'dev-play' }));
-    // A 19-year-old with a big gap, made the clear best CB at a weak club.
-    const p = firstCB(state, 'watford');
-    p.birthYear = 1980;
-    p.ability = 68;
-    p.potentialCeiling = 90;
-    p.birthCeiling = 90;
-    const before = p.ability;
-
-    processSeasonDevelopment(state, Rng.fromSeed('run'));
-
-    expect(estimateMinutesShare(state, state.clubs.watford!, p)).toBeGreaterThanOrEqual(0.6);
-    expect(p.ability).toBeGreaterThan(before);
-    expect(p.benchedDevSeasons).toBe(0);
+  it('a young talent who plays regularly develops in most seasons (development is not on rails)', () => {
+    // Development is stochastic — a playing season usually grows the player but
+    // can stall (§5; internal-friction §5). Assert the common case across seeds.
+    let grew = 0;
+    const trials = 20;
+    for (let i = 0; i < trials; i++) {
+      const state = cloneState(createNewGame({ seed: `dev-play:${i}` }));
+      const p = firstCB(state, 'watford');
+      p.birthYear = 1980; // 19
+      p.ability = 68;
+      p.potentialCeiling = 90;
+      p.birthCeiling = 90;
+      expect(estimateMinutesShare(state, state.clubs.watford!, p)).toBeGreaterThanOrEqual(0.6);
+      const before = p.ability;
+      processSeasonDevelopment(state, Rng.fromSeed(`run:${i}`));
+      expect(p.benchedDevSeasons).toBe(0); // he played
+      if (p.ability > before) grew++;
+    }
+    expect(grew).toBeGreaterThan(trials / 2); // develops in the clear majority
   });
 
   it('a benched young talent plateaus: ceiling erodes and he barely grows', () => {

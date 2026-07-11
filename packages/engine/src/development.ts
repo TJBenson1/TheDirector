@@ -123,7 +123,31 @@ function developYoungster(
 
   const ideal = gap * 0.35; // approach the ceiling over a few ideal years
   const realized = ideal * minutesFactor(share) * coaching * prof * ageFactor - injuryPenalty;
-  const delta = Math.max(0, Math.round(realized + rng.gaussian(0, 0.6)));
+  let delta = Math.max(0, Math.round(realized + rng.gaussian(0, 0.6)));
+
+  // Development is NOT on rails (§5; internal-friction §5). Even a prospect
+  // getting minutes can stall or regress — fame/complacency (low
+  // professionalism, high ego/volatility) and plain stagnation. This is why a
+  // "generational" talent under good management still only reaches his ceiling
+  // ~40–60% of the time, not ~100%.
+  const per = player.personality;
+  const stallChance =
+    0.29 +
+    (10 - per.professionalism) * 0.022 +
+    per.volatility * 0.008 +
+    (player.ability >= 78 ? per.ego * 0.01 : 0);
+  if (rng.chance(stallChance)) {
+    delta = 0;
+    // A stalled season is a permanently missed window: it shaves the working
+    // ceiling, so enough stalls leave the prospect short of his birth potential
+    // for good (this is what pulls the generational hit-rate down to ~40–60%).
+    player.potentialCeiling = Math.max(player.ability, player.potentialCeiling - 2);
+    // A sharper fame/complacency regression for the successful & unprofessional.
+    if (player.ability >= 78 && per.professionalism <= 5 && rng.chance(0.35)) {
+      player.ability = Math.max(40, player.ability - rng.int(1, 3));
+    }
+    return true;
+  }
 
   if (delta > 0) {
     player.ability = Math.min(player.potentialCeiling, player.ability + delta);

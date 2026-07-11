@@ -120,12 +120,17 @@ function collectEndOfCareerMetrics(state: GameState, metrics: CareerMetrics): vo
   }
   metrics.squadSeasons = squadSeasons;
 
-  // M5: benched wonderkids and whether they reached their ceiling (§12).
+  // M5: wonderkid outcomes (§12 + internal-friction §5). Benched (<40% mins,
+  // 2+ yrs) should almost never reach ceiling; well-managed should reach it
+  // only ~40–60% of the time — development is not on rails.
   for (const player of Object.values(state.players)) {
     if (!player.wonderkid) continue;
     if (player.benchedDevSeasons >= 2) {
       metrics.benchedWonderkids += 1;
       if (player.reachedPotential) metrics.benchedWonderkidsReachedCeiling += 1;
+    } else {
+      metrics.wellManagedWonderkids += 1;
+      if (player.reachedPotential) metrics.wellManagedWonderkidsReachedCeiling += 1;
     }
   }
 }

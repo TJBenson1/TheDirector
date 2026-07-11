@@ -124,6 +124,21 @@ export const TARGETS: CalibrationTarget[] = [
     },
   },
   {
+    // internal-friction §5. Even well-managed generational prospects reach
+    // their ceiling only ~40–60% of the time — a ~100% hit rate is a bug.
+    id: 'prospect-hit-rate',
+    label: 'Well-managed generational prospects reaching ceiling',
+    band: '~40–60%',
+    ownedBy: 'M5/M6',
+    active: true,
+    evaluate: (c) => {
+      const wk = sum(c, (x) => x.wellManagedWonderkids);
+      const reached = sum(c, (x) => x.wellManagedWonderkidsReachedCeiling);
+      const f = wk > 0 ? reached / wk : 0;
+      return { value: pct(f), pass: wk > 0 && f >= 0.35 && f <= 0.65 };
+    },
+  },
+  {
     id: 'benched-wonderkid-plateau',
     label: 'Benched (<40% mins, 2yr+) wonderkids reaching ceiling',
     band: '<15%',
@@ -196,6 +211,62 @@ export const TARGETS: CalibrationTarget[] = [
       // Ideal ~45%; accept 20–60% so a signing is never a guaranteed success
       // nor mostly a flop, with CI margin against small-sample variance.
       return { value: pct(f), pass: signings > 0 && f >= 0.2 && f <= 0.6 };
+    },
+  },
+  {
+    // internal-friction §1. The player must be sackable — dismissal in a
+    // meaningful minority of underperforming runs.
+    id: 'player-sackable',
+    label: 'Careers ending in dismissal (job is at risk)',
+    band: 'meaningful minority',
+    ownedBy: 'M9',
+    active: false,
+    evaluate: (c) => {
+      const f = fractionOfCareers(c, (x) => x.careerEndedInSack > 0);
+      return { value: pct(f), pass: f >= 0.1 && f <= 0.6 };
+    },
+  },
+  {
+    // internal-friction governing constraint. Money still talks: big spenders
+    // win a clear majority share of titles, never blunted into failure.
+    id: 'money-club-trophy-share',
+    label: 'Title share won by big-money clubs (money still talks)',
+    band: 'clear majority vs field',
+    ownedBy: 'M8',
+    active: false,
+    evaluate: (c) => {
+      const money = sum(c, (x) => x.moneyClubTitles);
+      const total = sum(c, (x) => x.leagueTitlesTotal);
+      const f = total > 0 ? money / total : 0;
+      return { value: pct(f), pass: f >= 0.5 };
+    },
+  },
+  {
+    // internal-friction governing constraint. At least one internal crisis every
+    // few seasons on average.
+    id: 'internal-crisis-cadence',
+    label: 'Internal crises per career (forced sale / manager / finance / bust)',
+    band: '≥1 per ~3 seasons',
+    ownedBy: 'M9',
+    active: false,
+    evaluate: (c) => {
+      const crises = sum(c, (x) => x.internalCrises);
+      const years = sum(c, (x) => x.years);
+      const perSeason = years > 0 ? crises / years : 0;
+      return { value: `${perSeason.toFixed(2)}/season`, pass: perSeason >= 1 / 3 };
+    },
+  },
+  {
+    // internal-friction governing constraint. No fantasy leaps — a club never
+    // exceeds its plausible ceiling without a logged multi-cause chain.
+    id: 'no-fantasy-leaps',
+    label: 'Clubs exceeding their plausible ceiling without cause',
+    band: '0 (hard)',
+    ownedBy: 'M8',
+    active: false,
+    evaluate: (c) => {
+      const leaps = sum(c, (x) => x.fantasyLeaps);
+      return { value: String(leaps), pass: leaps === 0 };
     },
   },
   {
