@@ -16,6 +16,7 @@ import { cloneState } from './state.js';
 import { Rng } from './rng.js';
 import { advanceOneMonth } from './clock.js';
 import { eventsSince } from './eventLog.js';
+import { stepLeagueMonth } from './season.js';
 
 export interface AdvanceResult {
   state: GameState;
@@ -31,9 +32,9 @@ const MAX_MONTHS_PER_ADVANCE = 12;
  * interrupt. Kept as a seam so `advanceWindow`'s control flow is stable.
  */
 function runMonth(state: GameState, rng: Rng): void {
-  void state;
-  void rng;
-  // M2+: monthly results, form, injuries, rival moves, event rolls.
+  // M2: monthly league results, tables, form, season boundaries (§15).
+  stepLeagueMonth(state, rng);
+  // M4+: injuries, form shocks, rival moves, event rolls slot in here.
 }
 
 /**

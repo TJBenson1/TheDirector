@@ -39,3 +39,15 @@ export {
   type ScenarioSeed,
   type ClubSeed,
 } from './scenarios.js';
+export { LEAGUES, ENGLAND_1999, type LeagueSeed, type LeagueClubSeed } from './leagues.js';
+export {
+  simulateMatch,
+  generateSchedule,
+  standingsOrder,
+  initLeagueSeason,
+  finalizeSeason,
+  stepLeagueMonth,
+  maxConsecutiveTitles,
+  emptyRecord,
+  type MatchResult,
+} from './season.js';

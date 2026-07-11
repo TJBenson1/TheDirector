@@ -23,7 +23,10 @@ export interface ScenarioSeed {
   playerClub: ClubId;
   mandate: string;
   boardPatience: number;
+  /** Cross-European context clubs (transfers/scenario). */
   clubs: ClubSeed[];
+  /** The player's simulated domestic league (§15). */
+  domesticLeagueId: string;
 }
 
 /** The 12 elite clubs (§14), with rough late-90s prestige. Refined in M3. */
@@ -51,6 +54,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     mandate: 'Sustain domestic dominance and win a second European Cup.',
     boardPatience: 80,
     clubs: ELITE_CLUBS,
+    domesticLeagueId: 'eng-1',
   },
 };
 

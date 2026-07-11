@@ -39,16 +39,59 @@ export interface DifficultySettings {
 
 // ── Clubs ────────────────────────────────────────────────────────────────────
 
-/** M1: identity + the strength/finance handles later milestones lean on.
- *  Squad-strength maths and finances land in M2/M3. */
+/** M1: identity. M2: abstracted squad strength + form + league membership.
+ *  M3 derives `strength` from real squads and adds finances. */
 export interface ClubState {
   id: ClubId;
   name: string;
   /** Reputation/pull, 1–100. Drives budgets (§11) and transfer willingness (§6). */
   prestige: number;
-  /** Squad = player ids. Populated properly in M3; may be empty at M1. */
+  /** Squad = player ids. Populated properly in M3; may be empty pre-M3. */
   squad: PlayerId[];
-  /** TODO(M2): league standing, form. TODO(M3): budgets, wage bill, ownership. */
+  /**
+   * Abstracted squad strength, ~40–95 (§15: weighted XI + depth). M2 authors
+   * this from data; M3 derives it from the curated squad. Drives results.
+   */
+  strength: number;
+  /** Rolling form modifier, roughly -6..+6, drifting toward 0. */
+  form: number;
+  /** The simulated league this club plays in, or null if not simulated yet. */
+  leagueId: string | null;
+  /** TODO(M3): budgets, wage bill, ownership model. */
+}
+
+// ── Leagues & season sim (§15) ───────────────────────────────────────────────
+
+/** A club's running record within the current league season. */
+export interface TeamRecord {
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  points: number;
+}
+
+export interface TitleEntry {
+  seasonYear: number; // the opening calendar year (1999 = the 1999–2000 season)
+  championId: ClubId;
+  points: number;
+}
+
+/** A simulated league and its live season. Standings reset each season; the
+ *  schedule is regenerated deterministically (not stored) so saves stay lean. */
+export interface LeagueState {
+  id: string;
+  name: string;
+  clubIds: ClubId[];
+  /** Opening year of the season currently in progress. */
+  seasonYear: number;
+  standings: Record<ClubId, TeamRecord>;
+  /** Rounds of the double round-robin completed so far this season. */
+  roundsPlayed: number;
+  /** Champions, most recent last. Feeds the §12 dynasty target and §16 timeline. */
+  titleHistory: TitleEntry[];
 }
 
 // ── Players ──────────────────────────────────────────────────────────────────
@@ -161,6 +204,7 @@ export interface GameState {
   settings: DifficultySettings;
   playerClub: ClubId;
   clubs: Record<ClubId, ClubState>;
+  leagues: Record<string, LeagueState>;
   players: Record<PlayerId, PlayerState>;
   managerRelations: ManagerState;
   timeline: {

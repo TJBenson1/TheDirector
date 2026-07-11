@@ -6,14 +6,17 @@ import type {
   ClubState,
   DifficultySettings,
   GameState,
+  LeagueState,
   ScenarioId,
 } from './types.js';
 import { GAME_VERSION } from './types.js';
 import { Rng } from './rng.js';
 import { hashValue } from './hash.js';
 import { logEvent } from './eventLog.js';
-import { seasonMonthIndex, windowForMonthIndex } from './clock.js';
+import { seasonMonthIndex, windowForMonthIndex, parseYearMonth } from './clock.js';
 import { getScenario, DEFAULT_SCENARIO_ID } from './scenarios.js';
+import { LEAGUES } from './leagues.js';
+import { initLeagueSeason } from './season.js';
 
 /** Calibrated defaults (§13): 1 = the §12 realism bands. */
 export const DEFAULT_SETTINGS: DifficultySettings = {
@@ -27,6 +30,12 @@ export const DEFAULT_SETTINGS: DifficultySettings = {
   ironman: false,
   narration: true,
 };
+
+/** Placeholder strength for context-only clubs whose league isn't simulated
+ *  yet. M3 replaces this with squad-derived strength. */
+function prestigeToStrength(prestige: number): number {
+  return prestige;
+}
 
 export interface NewGameOptions {
   scenarioId?: ScenarioId;
@@ -47,6 +56,13 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
 
   const rng = Rng.fromSeed(seed);
 
+  const league = LEAGUES[scenario.domesticLeagueId];
+  if (!league) throw new Error(`Unknown league "${scenario.domesticLeagueId}"`);
+
+  // Club universe = cross-European context clubs + the simulated league's
+  // clubs. League clubs carry authored strength and a leagueId; context-only
+  // clubs get a placeholder strength from prestige until their league is
+  // simulated (M-later).
   const clubs: Record<string, ClubState> = {};
   for (const clubSeed of scenario.clubs) {
     clubs[clubSeed.id] = {
@@ -54,8 +70,33 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
       name: clubSeed.name,
       prestige: clubSeed.prestige,
       squad: [],
+      strength: prestigeToStrength(clubSeed.prestige),
+      form: 0,
+      leagueId: null,
     };
   }
+  for (const lc of league.clubs) {
+    clubs[lc.id] = {
+      id: lc.id,
+      name: lc.name,
+      prestige: lc.prestige,
+      squad: [],
+      strength: lc.strength,
+      form: 0,
+      leagueId: league.id,
+    };
+  }
+
+  const leagueState: LeagueState = {
+    id: league.id,
+    name: league.name,
+    clubIds: league.clubs.map((c) => c.id),
+    seasonYear: parseYearMonth(scenario.startDate).year,
+    standings: {},
+    roundsPlayed: 0,
+    titleHistory: [],
+  };
+  initLeagueSeason(leagueState, leagueState.seasonYear);
 
   const monthIndex = seasonMonthIndex(scenario.startDate);
 
@@ -76,6 +117,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     settings,
     playerClub: scenario.playerClub,
     clubs,
+    leagues: { [leagueState.id]: leagueState },
     players: {},
     managerRelations: { identity: 'Unassigned', relationshipWithUser: 50 },
     timeline: { divergenceLog: [], narrativeMemory: [] },

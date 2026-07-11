@@ -14,6 +14,7 @@ import {
   createNewGame,
   advanceWindow,
   parseYearMonth,
+  maxConsecutiveTitles,
   type GameState,
   type NewGameOptions,
   Rng,
@@ -74,7 +75,12 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
  * this in (titles won, squad-seasons, etc.).
  */
 function collectEndOfCareerMetrics(state: GameState, metrics: CareerMetrics): void {
-  void state;
-  void metrics;
-  // M2+: title histories → maxConsecutiveTitlesAnyClub, squadSeasons, etc.
+  // M2: longest title streak by any club (dynasty target, §12) and the number
+  // of club-seasons simulated (denominator for the serious-injury rate, M4).
+  metrics.maxConsecutiveTitlesAnyClub = maxConsecutiveTitles(state);
+  let squadSeasons = 0;
+  for (const league of Object.values(state.leagues)) {
+    squadSeasons += league.clubIds.length * league.titleHistory.length;
+  }
+  metrics.squadSeasons = squadSeasons;
 }

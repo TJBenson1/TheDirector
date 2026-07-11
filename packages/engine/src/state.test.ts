@@ -16,8 +16,13 @@ describe('createNewGame', () => {
     expect(state.playerClub).toBe('man_utd');
     expect(state.clock.date).toBe('1999-07');
     expect(state.clock.window).toBe('summer');
-    expect(Object.keys(state.clubs)).toHaveLength(12);
+    // Universe = 12 European context clubs ∪ 20 PL clubs (5 overlap) = 27.
+    expect(Object.keys(state.clubs)).toHaveLength(27);
     expect(state.clubs.man_utd?.name).toBe('Manchester United');
+    // The domestic league is initialised and ready to play.
+    expect(state.leagues['eng-1']?.clubIds).toHaveLength(20);
+    expect(state.clubs.man_utd?.leagueId).toBe('eng-1');
+    expect(state.clubs.real_madrid?.leagueId).toBeNull();
     // The creation event is the first log entry.
     expect(state.eventLog[0]?.code).toBe('game.created');
   });

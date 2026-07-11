@@ -47,8 +47,8 @@ Built incrementally, one milestone at a time (see §17 of the build spec).
 | Milestone | Status | Summary |
 |---|---|---|
 | **M1 — Skeleton** | ✅ Done | Monorepo, `GameState` (§2), seeded RNG + fork streams, append-only event log, two-clock `WorldClock` (§3), save/load + stable hashing, harness scaffold running real headless careers. |
-| M2 — Season sim | ⏳ Next | Clubs + squad strength → monthly results (§15). |
-| M3 — Players & market | ◻ | era-1995-2005 pack, transfers, contracts, budgets. |
+| **M2 — Season sim** | ✅ Done | Abstracted monthly match model (strength + form + variance → Poisson goals), deterministic double round-robin, league tables + title history (§15). Calibrated to a sane 1999–2000 Premier League (Man Utd champions, real ordering). The §12 dynasty metric is now *measured* (still pending M9 to come into band). |
+| M3 — Players & market | ⏳ Next | era-1995-2005 pack, transfers, contracts, budgets. |
 | M4 — Player state + **harness live** | ◻ | Happiness, fitness/injuries (§9c), form, ageing. First §12 calibration assertions gate CI. |
 | M5–M10 | ◻ | Development, agency, events, rival AI, manager/academy/board, full calibration. |
 
