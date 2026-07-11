@@ -120,6 +120,9 @@ export {
   type DecisionResult,
 } from './events.js';
 export { runRivalWindow, updateWorldDefiance } from './rival.js';
+export { reviewBoard, rollInternalCrisis } from './board.js';
+export { divergenceFactor, rollDivergentStoryline } from './divergence.js';
+export { appendMemory, memoriesWithTag } from './memory.js';
 export { CURATED_SQUADS, MAN_UTD_1999, type CuratedSeed } from './data/curated-1999.js';
 export {
   ERA_REALITY,

@@ -23,6 +23,8 @@ export interface ScenarioSeed {
   playerClub: ClubId;
   mandate: string;
   boardPatience: number;
+  /** League position the board expects the user to hit (1 = title). */
+  boardExpectedFinish: number;
   /** Cross-European context clubs (transfers/scenario). */
   clubs: ClubSeed[];
   /** The player's simulated domestic league (§15). */
@@ -53,6 +55,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     playerClub: 'man_utd',
     mandate: 'Sustain domestic dominance and win a second European Cup.',
     boardPatience: 80,
+    boardExpectedFinish: 1,
     clubs: ELITE_CLUBS,
     domesticLeagueId: 'eng-1',
   },

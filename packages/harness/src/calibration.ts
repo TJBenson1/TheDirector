@@ -220,7 +220,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Careers ending in dismissal (job is at risk)',
     band: 'meaningful minority',
     ownedBy: 'M9',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const f = fractionOfCareers(c, (x) => x.careerEndedInSack > 0);
       return { value: pct(f), pass: f >= 0.1 && f <= 0.6 };
@@ -248,7 +248,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Internal crises per career (forced sale / manager / finance / bust)',
     band: '≥1 per ~3 seasons',
     ownedBy: 'M9',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const crises = sum(c, (x) => x.internalCrises);
       const years = sum(c, (x) => x.years);

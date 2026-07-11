@@ -325,10 +325,16 @@ export interface Consequence {
   text?: string; // human-readable detail
 }
 
-/** TODO(M9/M11): board mandate, patience, finances. */
+/** Board mandate, patience and job security (§11, internal-friction §1). */
 export interface BoardState {
   mandate: string;
-  patience: number;
+  patience: number; // 0..100; sustained failure erodes it
+  /** League position the board expects (1 = title). Missing it costs patience. */
+  expectedFinish: number;
+  /** Formal warnings issued after poor seasons. */
+  warnings: number;
+  /** True once the player has been dismissed — the career is over. */
+  dismissed: boolean;
 }
 
 // ── Event log (append-only audit trail) ──────────────────────────────────────
@@ -372,6 +378,8 @@ export interface GameStateMeta {
   nextSeq: number;
   /** Scripted events already fired/skipped, so each resolves once (§9b). */
   firedScripted: string[];
+  /** The scenario's opening calendar year (for elapsed-time drift, §9f). */
+  startYear: number;
 }
 
 export interface GameClock {

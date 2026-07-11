@@ -21,6 +21,8 @@ import { processInjuriesMonth } from './injuries.js';
 import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance } from './rival.js';
 import { windowForMonthIndex } from './clock.js';
+import { reviewBoard, rollInternalCrisis } from './board.js';
+import { divergenceFactor } from './divergence.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
@@ -53,7 +55,10 @@ function runMonth(state: GameState, rng: Rng): void {
     processSeasonMorale(state);
     // 4. Rubber-band: update world defiance from last season's finish (§9a #5).
     updateWorldDefiance(state);
-    // 5. Reconcile strength for all simulated clubs after ability changes.
+    // 5. Board review (job security) + an imposed internal crisis (M9).
+    reviewBoard(state, rng.fork(`board:${state.clock.date}`));
+    rollInternalCrisis(state, rng.fork(`crisis:${state.clock.date}`), divergenceFactor(state) * 0.3);
+    // 6. Reconcile strength for all simulated clubs after ability changes.
     for (const club of Object.values(state.clubs)) {
       if (club.leagueId !== null) recomputeClubStrength(state, club.id);
     }
@@ -83,6 +88,9 @@ export function advanceWindow(state: GameState): AdvanceResult {
   const draft = cloneState(state);
   const startSeq = draft.meta.nextSeq;
   const rng = new Rng(draft.meta.rngState);
+
+  // A dismissed manager's career is over — the sim does not advance (M9).
+  if (draft.board.dismissed) return { state: draft, events: [] };
 
   // Advancing with decisions still pending means the player chose to ignore
   // them — apply their fallout before stepping on (§9b).

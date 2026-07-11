@@ -155,8 +155,17 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
       }
     }
 
+    // Internal crises imposed on the player (§ internal-friction).
+    metrics.internalCrises += result.events.filter((e) => e.code === 'internal.crisis').length;
+
     // Sample the user club for a major injury crisis.
     if (significantInjuredCount(state, state.playerClub) >= 3) crisisDecades.add(decadeOf());
+
+    // Dismissal ends the career (M9).
+    if (state.board.dismissed) {
+      metrics.careerEndedInSack = 1;
+      break;
+    }
 
     // Safety: if an advance produced nothing, bail rather than spin.
     if (state.eventLog.length === before) break;

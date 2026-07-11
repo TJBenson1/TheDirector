@@ -139,6 +139,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
       rngState: rng.state,
       nextSeq: 0,
       firedScripted: [],
+      startYear: parseYearMonth(scenario.startDate).year,
     },
     clock: {
       date: scenario.startDate,
@@ -154,7 +155,13 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     timeline: { divergenceLog: [], narrativeMemory: [] },
     pendingDecisions: [],
     eventLog: [],
-    board: { mandate: scenario.mandate, patience: scenario.boardPatience },
+    board: {
+      mandate: scenario.mandate,
+      patience: scenario.boardPatience,
+      expectedFinish: scenario.boardExpectedFinish,
+      warnings: 0,
+      dismissed: false,
+    },
     worldDefiance: 0,
     userAggression: 0,
   };

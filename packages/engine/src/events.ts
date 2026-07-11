@@ -25,6 +25,8 @@ import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { cloneState } from './state.js';
 import { eventsSince } from './eventLog.js';
+import { appendMemory } from './memory.js';
+import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 
 // ── Consequence application ──────────────────────────────────────────────────
 
@@ -74,10 +76,6 @@ export function applyConsequence(state: GameState, c: Consequence): void {
       logEvent(state, { category: 'event', code: 'event.note', message: c.text ?? '' });
       break;
   }
-}
-
-function appendMemory(state: GameState, tag: string, detail: string): void {
-  state.timeline.narrativeMemory.push({ date: state.clock.date, tag, detail });
 }
 
 function applyConsequences(state: GameState, cs: Consequence[] | undefined): void {
@@ -200,7 +198,9 @@ function hashCode(s: string): number {
 }
 
 function rollScandals(state: GameState, rng: Rng): void {
-  const scandalFrequency = state.settings.scandalFrequency;
+  // Divergence adds chaos: a world the user has reshaped throws up more
+  // off-script drama (§9f). Passive users see the calm real baseline.
+  const scandalFrequency = state.settings.scandalFrequency * (1 + 0.6 * divergenceFactor(state));
   for (const club of Object.values(state.clubs)) {
     if (club.leagueId === null) continue; // simulated clubs only
     for (const id of club.squad) {
@@ -369,4 +369,6 @@ function fireScriptedEvents(state: GameState): void {
 export function rollEventsMonth(state: GameState, rng: Rng): void {
   fireScriptedEvents(state);
   rollScandals(state, rng.fork(`events:${state.clock.date}`));
+  // Non-real storylines emerge as the world diverges from real history (§9f).
+  rollDivergentStoryline(state, rng.fork(`divergence:${state.clock.date}`));
 }
