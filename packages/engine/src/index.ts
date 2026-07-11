@@ -41,6 +41,30 @@ export {
 } from './scenarios.js';
 export { LEAGUES, ENGLAND_1999, type LeagueSeed, type LeagueClubSeed } from './leagues.js';
 export {
+  inflationFactor,
+  valuePlayer,
+  suggestWage,
+  initialFinances,
+} from './finance.js';
+export {
+  generatePlayer,
+  generateSquad,
+  deriveRawStrength,
+  recomputeClubStrength,
+  clubSquadPlayers,
+  computeWageBill,
+  type GeneratePlayerOptions,
+} from './players.js';
+export {
+  executeTransfer,
+  affordableTargets,
+  squadSize,
+  currentYear,
+  type TransferRequest,
+  type TransferResult,
+} from './transfers.js';
+export { CURATED_SQUADS, MAN_UTD_1999, type CuratedSeed } from './data/curated-1999.js';
+export {
   simulateMatch,
   generateSchedule,
   standingsOrder,

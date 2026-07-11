@@ -1,0 +1,243 @@
+/**
+ * Player generation and squad-strength derivation (§4, §9e, §15).
+ *
+ * Procedural filler is generated with realistic name/nationality distributions
+ * (weighted by the club's region), a realistic potential curve (most are
+ * filler), position needs, and age spread. Curated real players (see
+ * data/curated-1999.ts) are layered on top for the vertical-slice club.
+ *
+ * Squad strength for the season sim is DERIVED from the squad (weighted XI +
+ * depth, §15) but ANCHORED so it equals the club's authored `baseStrength` at
+ * kickoff — preserving M2's calibrated tables — then drifts as the squad
+ * changes through transfers (M3) and development (M5).
+ */
+
+import type { ClubId, GameState, PlayerId, PlayerState, Position } from './types.js';
+import { Rng } from './rng.js';
+import { suggestWage } from './finance.js';
+
+// ── Name & nationality pools by region ───────────────────────────────────────
+
+interface Region {
+  nationalities: string[];
+  first: string[];
+  last: string[];
+}
+
+const REGIONS: Record<string, Region> = {
+  britain: {
+    nationalities: ['England', 'England', 'England', 'Scotland', 'Wales', 'Ireland', 'N. Ireland'],
+    first: ['Jack', 'Harry', 'Tom', 'James', 'Michael', 'David', 'Paul', 'Lee', 'Craig', 'Scott', 'Danny', 'Ryan', 'Wayne', 'Andy', 'Gary', 'Steven', 'Ashley', 'Joe', 'Sam', 'Kevin', 'Mark', 'Neil'],
+    last: ['Smith', 'Taylor', 'Brown', 'Wilson', 'Walker', 'Robinson', 'Wright', 'Thompson', 'Evans', 'Roberts', 'Johnson', 'Clarke', 'Hughes', 'Green', 'Hall', 'Cooper', 'Ward', 'Baker', 'Carter', 'Phillips', 'Turner', 'Parker', 'Collins', 'Murphy', 'Kelly', 'Reid'],
+  },
+  iberia: {
+    nationalities: ['Spain', 'Spain', 'Spain', 'Portugal', 'Argentina', 'Brazil'],
+    first: ['Carlos', 'Javier', 'Sergio', 'Pablo', 'Raúl', 'Fernando', 'Diego', 'Álvaro', 'Rubén', 'Iván', 'Jesús', 'Marcos', 'David', 'Antonio', 'Miguel', 'José', 'Luis', 'Andrés', 'Xavi', 'Gonzalo'],
+    last: ['García', 'Martínez', 'López', 'Sánchez', 'Fernández', 'Gómez', 'Ruiz', 'Díaz', 'Moreno', 'Álvarez', 'Romero', 'Torres', 'Navarro', 'Ramos', 'Vidal', 'Castro', 'Silva', 'Costa', 'Reyes', 'Herrera'],
+  },
+  italy: {
+    nationalities: ['Italy', 'Italy', 'Italy', 'Italy'],
+    first: ['Marco', 'Alessandro', 'Andrea', 'Francesco', 'Luca', 'Matteo', 'Giovanni', 'Roberto', 'Stefano', 'Fabio', 'Paolo', 'Antonio', 'Davide', 'Simone', 'Gianluca', 'Cristian', 'Massimo', 'Daniele', 'Emiliano', 'Riccardo'],
+    last: ['Rossi', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco', 'Bruno', 'Gallo', 'Conti', 'De Luca', 'Costa', 'Giordano', 'Mancini', 'Rizzo', 'Lombardi', 'Moretti', 'Barbieri'],
+  },
+  germanic: {
+    nationalities: ['Germany', 'Germany', 'Germany', 'Austria', 'Switzerland', 'Netherlands'],
+    first: ['Michael', 'Thomas', 'Stefan', 'Andreas', 'Markus', 'Jan', 'Sven', 'Lars', 'Dennis', 'Kai', 'Jens', 'Oliver', 'Tobias', 'Christian', 'Marcel', 'Patrick', 'Robin', 'Niklas', 'Florian', 'Max'],
+    last: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schäfer', 'Koch', 'Bauer', 'Richter', 'Klein', 'Wolf', 'Neumann', 'Braun', 'Krüger', 'Hofmann', 'Vogel'],
+  },
+  world: {
+    nationalities: ['France', 'Brazil', 'Argentina', 'Nigeria', 'Ghana', 'Senegal', 'Croatia', 'Serbia', 'Denmark', 'Sweden', 'Norway', 'Belgium'],
+    first: ['Didier', 'Emmanuel', 'Youssef', 'Kolo', 'Nwankwo', 'Ola', 'Zlatan', 'Dado', 'Sinisa', 'Thomas', 'Marc', 'Olof', 'Henri', 'Bruno', 'Salif', 'Papa', 'Nemanja', 'Ivan', 'Jesper', 'Ole'],
+    last: ['Diarra', 'Traoré', 'Okocha', 'Kanu', 'Ibrahimović', 'Prso', 'Mihajlović', 'Sørensen', 'Larsson', 'Solskjær', 'Diouf', 'Camara', 'Vidić', 'Rakitić', 'Boateng', 'Essien', 'Touré', 'Adebayor', 'Drogba', 'Eto'],
+  },
+};
+
+/** Primary talent region for each club (drives name/nationality weighting). */
+const CLUB_REGION: Record<ClubId, keyof typeof REGIONS> = {
+  real_madrid: 'iberia',
+  barcelona: 'iberia',
+  juventus: 'italy',
+  milan: 'italy',
+  inter: 'italy',
+  bayern: 'germanic',
+};
+
+function regionForClub(clubId: ClubId, leagueId: string | null): keyof typeof REGIONS {
+  if (CLUB_REGION[clubId]) return CLUB_REGION[clubId]!;
+  if (leagueId === 'eng-1') return 'britain';
+  return 'world';
+}
+
+// ── Squad composition ────────────────────────────────────────────────────────
+
+/** A realistic 25-man squad's positional makeup. */
+const SQUAD_TEMPLATE: Position[] = [
+  'GK', 'GK', 'GK',
+  'CB', 'CB', 'CB', 'CB',
+  'LB', 'LB', 'RB', 'RB',
+  'DM', 'DM', 'CM', 'CM', 'CM', 'AM', 'AM',
+  'LW', 'LW', 'RW', 'RW',
+  'ST', 'ST', 'ST',
+];
+
+export interface GeneratePlayerOptions {
+  /** Caller-supplied unique, stable id (no hidden global state → determinism). */
+  id: PlayerId;
+  clubId: ClubId;
+  leagueId: string | null;
+  position: Position;
+  /** Target ability center; actual is a spread around this. */
+  targetAbility: number;
+  currentYear: number;
+  /** Bias toward youth (prospects) or a settled pro. */
+  ageBias?: 'young' | 'prime' | 'veteran' | 'mixed';
+  rng: Rng;
+}
+
+function pickName(region: Region, rng: Rng): { name: string; nationality: string } {
+  const first = rng.pick(region.first);
+  const last = rng.pick(region.last);
+  const nationality = rng.pick(region.nationalities);
+  return { name: `${first} ${last}`, nationality };
+}
+
+function rollAge(bias: GeneratePlayerOptions['ageBias'], rng: Rng): number {
+  switch (bias) {
+    case 'young':
+      return rng.int(17, 21);
+    case 'veteran':
+      return rng.int(30, 35);
+    case 'prime':
+      return rng.int(23, 29);
+    default: {
+      // Mixed: a realistic squad age pyramid.
+      const r = rng.next();
+      if (r < 0.18) return rng.int(17, 21);
+      if (r < 0.75) return rng.int(22, 29);
+      return rng.int(30, 35);
+    }
+  }
+}
+
+function clampAbility(a: number): number {
+  return Math.max(32, Math.min(94, Math.round(a)));
+}
+
+export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
+  const { rng, clubId, leagueId, position, targetAbility, currentYear } = opts;
+  const region = REGIONS[regionForClub(clubId, leagueId)]!;
+  const { name, nationality } = pickName(region, rng);
+  const age = rollAge(opts.ageBias ?? 'mixed', rng);
+  const birthYear = currentYear - age;
+
+  const ability = clampAbility(targetAbility + rng.gaussian(0, 5));
+
+  // Potential: young players can be well above current ability; the upside
+  // shrinks with age. Most prospects are filler (small gap); a few are gems.
+  let ceiling = ability;
+  if (age <= 23) {
+    const upsideRoll = rng.next();
+    const upside = upsideRoll > 0.92 ? rng.int(10, 20) : upsideRoll > 0.6 ? rng.int(3, 9) : rng.int(0, 3);
+    ceiling = Math.min(97, ability + Math.round((upside * (24 - age)) / 6));
+  } else if (age <= 27) {
+    ceiling = Math.min(97, ability + rng.int(0, 3));
+  }
+
+  const personality = {
+    professionalism: rng.int(3, 10),
+    ego: rng.int(1, 9),
+    ambition: rng.int(3, 10),
+    loyalty: rng.int(2, 9),
+    volatility: rng.int(1, 9),
+    adaptability: rng.int(2, 10),
+  };
+
+  // Injury proneness: most players low, a minority fragile.
+  const injuryProneness = Math.max(5, Math.min(95, Math.round(rng.gaussian(30, 16))));
+
+  const player: PlayerState = {
+    id: opts.id,
+    name,
+    birthYear,
+    nationality,
+    positions: [position],
+    club: clubId,
+    contractUntil: currentYear + rng.int(1, 5),
+    wage: 0,
+    ability,
+    potentialCeiling: ceiling,
+    personality,
+    injuryProneness,
+    curated: false,
+  };
+  player.wage = suggestWage(player, currentYear);
+  return player;
+}
+
+/** Generate a full procedural squad for a club, targeting its base strength. */
+export function generateSquad(
+  clubId: ClubId,
+  leagueId: string | null,
+  baseStrength: number,
+  currentYear: number,
+  rng: Rng,
+): PlayerState[] {
+  const squad: PlayerState[] = [];
+  SQUAD_TEMPLATE.forEach((position, i) => {
+    // Front ~14 are first-team quality; the rest are squad depth / prospects.
+    const isStarter = i < 14;
+    const target = isStarter ? baseStrength + 2 : baseStrength - 11;
+    const ageBias = !isStarter && rng.chance(0.4) ? 'young' : 'mixed';
+    squad.push(
+      generatePlayer({
+        id: `p_${clubId}_${i}`,
+        clubId,
+        leagueId,
+        position,
+        targetAbility: target,
+        currentYear,
+        ageBias,
+        rng,
+      }),
+    );
+  });
+  return squad;
+}
+
+// ── Squad-strength derivation (§15) ──────────────────────────────────────────
+
+/** Best available player ability at each outfield/GK slot, weighted XI + depth. */
+export function deriveRawStrength(players: PlayerState[]): number {
+  if (players.length === 0) return 0;
+  const abilities = players.map((p) => p.ability).sort((a, b) => b - a);
+  const xi = abilities.slice(0, 11);
+  const depth = abilities.slice(11, 20);
+  const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+  const xiAvg = avg(xi);
+  const depthAvg = avg(depth);
+  return xiAvg * 0.85 + depthAvg * 0.15;
+}
+
+/** Squad players for a club, in a stable order. */
+export function clubSquadPlayers(state: GameState, clubId: ClubId): PlayerState[] {
+  const club = state.clubs[clubId];
+  if (!club) return [];
+  return club.squad.map((id) => state.players[id]).filter((p): p is PlayerState => !!p);
+}
+
+/**
+ * Recompute a club's live `strength` from its current squad, anchored so it
+ * started at `baseStrength`. Call after any squad mutation (transfers, and
+ * later development/ageing).
+ */
+export function recomputeClubStrength(state: GameState, clubId: ClubId): void {
+  const club = state.clubs[clubId];
+  if (!club) return;
+  const raw = deriveRawStrength(clubSquadPlayers(state, clubId));
+  club.strength = Math.max(20, Math.min(99, club.baseStrength + (raw - club.squadStrengthAnchor)));
+}
+
+/** Sum of a club's committed wages. */
+export function computeWageBill(state: GameState, clubId: ClubId): number {
+  return clubSquadPlayers(state, clubId).reduce((acc, p) => acc + p.wage, 0);
+}

@@ -7,6 +7,7 @@ import type {
   DifficultySettings,
   GameState,
   LeagueState,
+  PlayerState,
   ScenarioId,
 } from './types.js';
 import { GAME_VERSION } from './types.js';
@@ -17,6 +18,15 @@ import { seasonMonthIndex, windowForMonthIndex, parseYearMonth } from './clock.j
 import { getScenario, DEFAULT_SCENARIO_ID } from './scenarios.js';
 import { LEAGUES } from './leagues.js';
 import { initLeagueSeason } from './season.js';
+import {
+  generateSquad,
+  deriveRawStrength,
+  recomputeClubStrength,
+  clubSquadPlayers,
+  computeWageBill,
+} from './players.js';
+import { initialFinances, suggestWage } from './finance.js';
+import { CURATED_SQUADS } from './data/curated-1999.js';
 
 /** Calibrated defaults (§13): 1 = the §12 realism bands. */
 export const DEFAULT_SETTINGS: DifficultySettings = {
@@ -64,27 +74,35 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
   // clubs get a placeholder strength from prestige until their league is
   // simulated (M-later).
   const clubs: Record<string, ClubState> = {};
+  const newClub = (
+    id: string,
+    name: string,
+    prestige: number,
+    strength: number,
+    leagueId: string | null,
+  ): ClubState => ({
+    id,
+    name,
+    prestige,
+    squad: [],
+    strength,
+    baseStrength: strength,
+    squadStrengthAnchor: 0,
+    form: 0,
+    leagueId,
+    finances: { ownership: 'sustainable', transferBudget: 0, wageBudget: 0, wageBill: 0 },
+  });
   for (const clubSeed of scenario.clubs) {
-    clubs[clubSeed.id] = {
-      id: clubSeed.id,
-      name: clubSeed.name,
-      prestige: clubSeed.prestige,
-      squad: [],
-      strength: prestigeToStrength(clubSeed.prestige),
-      form: 0,
-      leagueId: null,
-    };
+    clubs[clubSeed.id] = newClub(
+      clubSeed.id,
+      clubSeed.name,
+      clubSeed.prestige,
+      prestigeToStrength(clubSeed.prestige),
+      null,
+    );
   }
   for (const lc of league.clubs) {
-    clubs[lc.id] = {
-      id: lc.id,
-      name: lc.name,
-      prestige: lc.prestige,
-      squad: [],
-      strength: lc.strength,
-      form: 0,
-      leagueId: league.id,
-    };
+    clubs[lc.id] = newClub(lc.id, lc.name, lc.prestige, lc.strength, league.id);
   }
 
   const leagueState: LeagueState = {
@@ -126,14 +144,65 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     board: { mandate: scenario.mandate, patience: scenario.boardPatience },
   };
 
+  // Build squads (curated where available + procedural filler), anchor each
+  // club's strength to its M2 baseline, and set finances (§4, §11).
+  populateSquads(state, scenarioId, parseYearMonth(scenario.startDate).year, rng.fork('squads'));
+
   logEvent(state, {
     category: 'system',
     code: 'game.created',
     message: `New game: ${scenario.name}`,
-    data: { scenarioId, seed, startDate: scenario.startDate },
+    data: {
+      scenarioId,
+      seed,
+      startDate: scenario.startDate,
+      players: Object.keys(state.players).length,
+    },
   });
 
   return state;
+}
+
+/**
+ * Fill every club's squad, then anchor its live strength to its authored
+ * baseline and derive its finances. Curated real players are used where the
+ * scenario provides them; the rest is procedural filler (§4, §9e).
+ */
+function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, rng: Rng): void {
+  const curatedForScenario = CURATED_SQUADS[scenarioId] ?? {};
+
+  for (const club of Object.values(state.clubs)) {
+    const clubRng = rng.fork(`squad:${club.id}`);
+    const seeds = curatedForScenario[club.id];
+
+    if (seeds && seeds.length > 0) {
+      for (const seed of seeds) {
+        const player: PlayerState = {
+          ...seed,
+          positions: [...seed.positions],
+          personality: { ...seed.personality },
+          wage: suggestWage({ ...seed, wage: 0, curated: true }, year),
+          curated: true,
+        };
+        state.players[player.id] = player;
+        club.squad.push(player.id);
+      }
+    } else {
+      const generated = generateSquad(club.id, club.leagueId, club.baseStrength, year, clubRng);
+      for (const player of generated) {
+        state.players[player.id] = player;
+        club.squad.push(player.id);
+      }
+    }
+
+    // Anchor strength so it equals baseStrength now, then let it float later.
+    club.squadStrengthAnchor = deriveRawStrength(clubSquadPlayers(state, club.id));
+    recomputeClubStrength(state, club.id);
+
+    // Finances from prestige, era and current wage bill.
+    const wageBill = computeWageBill(state, club.id);
+    club.finances = initialFinances(club.prestige, year, club.finances.ownership, wageBill);
+  }
 }
 
 /** Deep, structured clone. Engine transitions clone at their boundary so the

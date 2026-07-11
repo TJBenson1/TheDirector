@@ -39,25 +39,44 @@ export interface DifficultySettings {
 
 // ── Clubs ────────────────────────────────────────────────────────────────────
 
-/** M1: identity. M2: abstracted squad strength + form + league membership.
- *  M3 derives `strength` from real squads and adds finances. */
+export type OwnershipModel = 'debt' | 'sustainable' | 'sugar-daddy';
+
+/** Club finances (§11). Fees/wages are in whole currency units (£). */
+export interface ClubFinances {
+  /** Ownership shapes budgets and FFP exposure (§11). */
+  ownership: OwnershipModel;
+  /** Transfer kitty available to spend this season. */
+  transferBudget: number;
+  /** Annual wage ceiling. */
+  wageBudget: number;
+  /** Current committed annual wages (Σ squad wages). */
+  wageBill: number;
+}
+
+/** M1: identity. M2: abstracted strength + form + league. M3: squad-derived
+ *  strength (anchored to the M2 baseline) + finances. */
 export interface ClubState {
   id: ClubId;
   name: string;
   /** Reputation/pull, 1–100. Drives budgets (§11) and transfer willingness (§6). */
   prestige: number;
-  /** Squad = player ids. Populated properly in M3; may be empty pre-M3. */
+  /** Squad = player ids. Built in M3 (curated + procedural filler). */
   squad: PlayerId[];
   /**
-   * Abstracted squad strength, ~40–95 (§15: weighted XI + depth). M2 authors
-   * this from data; M3 derives it from the curated squad. Drives results.
+   * Live squad strength, ~40–95 (§15: weighted XI + depth). Used by the season
+   * sim. Derived from the squad but anchored so it equals `baseStrength` at
+   * kickoff (preserving M2 calibration), then moves as the squad changes.
    */
   strength: number;
+  /** The authored/target strength the squad is anchored to (M2 baseline). */
+  baseStrength: number;
+  /** Raw squad-strength of the initial squad; the anchor for `strength`. */
+  squadStrengthAnchor: number;
   /** Rolling form modifier, roughly -6..+6, drifting toward 0. */
   form: number;
   /** The simulated league this club plays in, or null if not simulated yet. */
   leagueId: string | null;
-  /** TODO(M3): budgets, wage bill, ownership model. */
+  finances: ClubFinances;
 }
 
 // ── Leagues & season sim (§15) ───────────────────────────────────────────────
@@ -96,15 +115,46 @@ export interface LeagueState {
 
 // ── Players ──────────────────────────────────────────────────────────────────
 
-/** M1: id + name only. The curated PlayerRecord (§4) with hidden
- *  ability/potential/personality lands in M3; player *state* (happiness,
- *  fitness, form) lands in M4. */
+export type Position = 'GK' | 'CB' | 'LB' | 'RB' | 'DM' | 'CM' | 'AM' | 'LW' | 'RW' | 'ST';
+
+/** Personality traits, 1–10 each (§4). Hidden from the user; partially
+ *  revealed pre-signing via interviews/references (§7). */
+export interface Personality {
+  professionalism: number;
+  ego: number;
+  ambition: number;
+  loyalty: number;
+  volatility: number;
+  adaptability: number;
+}
+
+/**
+ * A player (§4). Fields marked HIDDEN are never shown to the user directly —
+ * only via scouting ranges and medical grades (§7). M3 establishes the record
+ * and the market; M4 adds live *state* (happiness, fitness, form, injury); M5
+ * adds contextual development; M6 adds transfer resistance.
+ */
 export interface PlayerState {
   id: PlayerId;
   name: string;
+  birthYear: number;
+  nationality: string;
+  positions: Position[];
   club: ClubId | null;
-  /** TODO(M3): ability, potentialCeiling, personality, contract, wage, resistance. */
-  /** TODO(M4): happiness, fitness, form, injury. */
+  contractUntil: number; // calendar year the contract expires
+  wage: number; // annual
+
+  // HIDDEN (§7) — revealed only via scouting/medicals:
+  ability: number; // current, 1–100
+  potentialCeiling: number; // max under ideal development (§5)
+  personality: Personality;
+  injuryProneness: number; // 1–100 baseline, history-modified (M4)
+
+  /** True for hand-authored real players; false for procedural filler. */
+  curated: boolean;
+
+  // TODO(M4): happiness, fitness, form, injury, minutes.
+  // TODO(M6): transferResistance (ResistanceProfile).
 }
 
 // ── Later-milestone placeholders (shape only) ────────────────────────────────
