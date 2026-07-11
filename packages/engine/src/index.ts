@@ -43,9 +43,24 @@ export { LEAGUES, ENGLAND_1999, type LeagueSeed, type LeagueClubSeed } from './l
 export {
   inflationFactor,
   valuePlayer,
+  outputFactor,
   suggestWage,
   initialFinances,
 } from './finance.js';
+export {
+  LEAGUE_STYLES,
+  styleForClub,
+  styleKeyForClub,
+  styleDistance,
+  styleSuitability,
+  type LeagueStyle,
+} from './leaguestyle.js';
+export {
+  effectiveAbility,
+  rollAdaptation,
+  resolveAdaptationSeason,
+} from './adaptation.js';
+export { computeSeasonStats, computePlayerSeason } from './stats.js';
 export {
   generatePlayer,
   generateSquad,

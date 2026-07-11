@@ -220,6 +220,9 @@ function mkPlayer(overrides: Partial<PlayerState> & { ability: number }): Player
     wonderkid: false,
     benchedDevSeasons: 0,
     reachedPotential: false,
+    lastSeason: null,
+    seasonMonthsInjured: 0,
+    adaptation: null,
     ...overrides,
   };
 }

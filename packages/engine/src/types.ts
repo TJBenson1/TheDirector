@@ -183,7 +183,38 @@ export interface PlayerState {
   /** True once ability came within ~2 of the ceiling — "became the player". */
   reachedPotential: boolean;
 
-  // TODO(M6): transferResistance (ResistanceProfile).
+  // ── M6 context & friction (docs/DESIGN-context-and-friction.md) ──
+  /** Actual output from the season just completed (drives dynamic valuation).
+   *  null before any season has been played. */
+  lastSeason: SeasonStats | null;
+  /** Months spent injured in the current season (reset at rollover). */
+  seasonMonthsInjured: number;
+  /** Active adaptation to a new league/context, or null if settled. */
+  adaptation: AdaptationState | null;
+}
+
+/** A player's actual output over one completed season (§1 dynamic valuation). */
+export interface SeasonStats {
+  appearances: number;
+  goals: number;
+  assists: number;
+  monthsInjured: number;
+  minutesShare: number; // average 0..1
+  rating: number; // seasonal, ~4..9
+}
+
+export type AdaptationOutcome = 'seamless' | 'slow-burn' | 'partial' | 'failure';
+
+/** Hidden adaptation to a new context (§3 adaptation engine). While unsettled,
+ *  `penalty` reduces effective ability; on resolution it either blooms (0) or
+ *  leaves a permanent residual cut. */
+export interface AdaptationState {
+  outcome: AdaptationOutcome;
+  /** 0..1 reduction to effective ability while adapting. */
+  penalty: number;
+  /** Seasons of adaptation remaining before it resolves. */
+  seasonsRemaining: number;
+  settled: boolean;
 }
 
 export type InjuryKind = 'minor' | 'moderate' | 'serious';

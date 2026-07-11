@@ -15,6 +15,7 @@
 import type { ClubId, GameState, PlayerId, PlayerState, Position } from './types.js';
 import { Rng } from './rng.js';
 import { suggestWage } from './finance.js';
+import { effectiveAbility } from './adaptation.js';
 
 // ── Name & nationality pools by region ───────────────────────────────────────
 
@@ -178,6 +179,9 @@ export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
     wonderkid: ceiling >= 85 && age <= 21,
     benchedDevSeasons: 0,
     reachedPotential: false,
+    lastSeason: null,
+    seasonMonthsInjured: 0,
+    adaptation: null,
   };
   player.wage = suggestWage(player, currentYear);
   return player;
@@ -218,7 +222,9 @@ export function generateSquad(
 /** Best available player ability at each outfield/GK slot, weighted XI + depth. */
 export function deriveRawStrength(players: PlayerState[]): number {
   if (players.length === 0) return 0;
-  const abilities = players.map((p) => p.ability).sort((a, b) => b - a);
+  // Effective ability so an unsettled signing (adaptation penalty) genuinely
+  // weakens the XI while he beds in (§3).
+  const abilities = players.map((p) => effectiveAbility(p)).sort((a, b) => b - a);
   const xi = abilities.slice(0, 11);
   const depth = abilities.slice(11, 20);
   const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);

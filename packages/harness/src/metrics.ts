@@ -55,6 +55,12 @@ export interface CareerMetrics {
    *  a share of (Amendment A). */
   ambitionOverrides: number;
   significantAiTransfers: number;
+
+  // ── M6: adaptation (DESIGN-context-and-friction §3) ──
+  /** On-paper-logical signings made, and how many underperformed their first
+   *  season (adaptation outcome other than seamless). */
+  logicalSignings: number;
+  signingsUnderperformingFirstSeason: number;
 }
 
 export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
@@ -85,6 +91,8 @@ export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
     trackedRealPlayersTotal: 0,
     ambitionOverrides: 0,
     significantAiTransfers: 0,
+    logicalSignings: 0,
+    signingsUnderperformingFirstSeason: 0,
   };
 }
 

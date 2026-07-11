@@ -24,6 +24,9 @@ export type CuratedSeed = Omit<
   | 'benchedDevSeasons'
   | 'reachedPotential'
   | 'birthCeiling'
+  | 'lastSeason'
+  | 'seasonMonthsInjured'
+  | 'adaptation'
 >;
 
 type Trait = PlayerState['personality'];

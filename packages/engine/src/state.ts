@@ -201,6 +201,9 @@ function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, 
           wonderkid: seed.potentialCeiling >= 85 && year - seed.birthYear <= 21,
           benchedDevSeasons: 0,
           reachedPotential: false,
+          lastSeason: null,
+          seasonMonthsInjured: 0,
+          adaptation: null,
         };
         player.wage = suggestWage(player, year);
         state.players[player.id] = player;

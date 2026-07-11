@@ -20,6 +20,9 @@ import { stepLeagueMonth } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
+import { computeSeasonStats } from './stats.js';
+import { resolveAdaptationSeason } from './adaptation.js';
+import { recomputeClubStrength } from './players.js';
 
 export interface AdvanceResult {
   state: GameState;
@@ -35,12 +38,20 @@ const MAX_MONTHS_PER_ADVANCE = 12;
  * interrupt. Kept as a seam so `advanceWindow`'s control flow is stable.
  */
 function runMonth(state: GameState, rng: Rng): void {
-  // Season rollover (July): develop the young and age the rest before the new
-  // campaign kicks off (§5).
+  // Season rollover (July), in order:
   if (state.clock.monthIndex === 0) {
+    // 1. Bank the season just played as per-player output (drives valuation).
+    computeSeasonStats(state, rng);
+    // 2. Resolve a season of adaptation (bloom or permanent residual, §3).
+    resolveAdaptationSeason(state, rng);
+    // 3. Develop the young, decline the old, drift morale (§5).
     processSeasonDevelopment(state, rng);
     processSeasonAgeing(state, rng);
     processSeasonMorale(state);
+    // 4. Reconcile strength for all simulated clubs after ability changes.
+    for (const club of Object.values(state.clubs)) {
+      if (club.leagueId !== null) recomputeClubStrength(state, club.id);
+    }
   }
   // M2: monthly league results, tables, form, season boundaries (§15).
   stepLeagueMonth(state, rng);

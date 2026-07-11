@@ -11,6 +11,8 @@ import { parseYearMonth } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer, suggestWage } from './finance.js';
 import { recomputeClubStrength, computeWageBill, clubSquadPlayers } from './players.js';
+import { rollAdaptation } from './adaptation.js';
+import { Rng } from './rng.js';
 
 export interface TransferRequest {
   playerId: PlayerId;
@@ -71,6 +73,11 @@ export function executeTransfer(state: GameState, req: TransferRequest): Transfe
   player.club = req.toClub;
   player.contractUntil = year + Math.max(1, req.contractYears ?? 4);
   player.wage = req.wage ?? suggestWage(player, year);
+
+  // Roll a hidden adaptation outcome for the move (§3). Deterministic stream,
+  // forked so it doesn't perturb the main RNG cursor.
+  const adaptRng = new Rng(state.meta.rngState).fork(`transfer:${player.id}:${state.clock.date}`);
+  player.adaptation = rollAdaptation(state, player, fromClubId, req.toClub, adaptRng);
 
   // Bookkeeping: wage bills and squad strengths for both clubs.
   buyer.finances.wageBill = computeWageBill(state, buyer.id);

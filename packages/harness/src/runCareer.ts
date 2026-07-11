@@ -13,9 +13,11 @@
 import {
   createNewGame,
   advanceWindow,
+  executeTransfer,
   parseYearMonth,
   maxConsecutiveTitles,
   significantInjuredCount,
+  cloneState,
   type GameState,
   type NewGameOptions,
   Rng,
@@ -57,6 +59,23 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
       // TODO(M7): apply the returned choices via engine.applyDecision.
       // Until that exists, clear them so the loop makes progress.
       state = { ...state, pendingDecisions: [] };
+    }
+
+    // Summer transfer window: apply the bot's logical signings and record the
+    // hidden adaptation outcome (§3 calibration — logical signings must risk).
+    if (state.clock.window === 'summer' && bot.transferActions) {
+      const draft = cloneState(state);
+      for (const req of bot.transferActions(draft, botRng)) {
+        const res = executeTransfer(draft, req);
+        if (res.ok) {
+          const signed = draft.players[res.playerId];
+          if (signed?.adaptation) {
+            metrics.logicalSignings += 1;
+            if (signed.adaptation.outcome !== 'seamless') metrics.signingsUnderperformingFirstSeason += 1;
+          }
+        }
+      }
+      state = draft;
     }
 
     const before = state.eventLog.length;

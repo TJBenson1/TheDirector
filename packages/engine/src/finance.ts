@@ -37,10 +37,12 @@ export function inflationFactor(year: number): number {
 }
 
 /**
- * Market value of a player (§11). Ability drives value exponentially, anchored
- * so a ~90-rated peak player is worth ~£13m at the 1995 baseline (Shearer's
- * £15m 1996 record) and ~£150m in the inflated 2020s. Youth upside adds a
- * premium, age past the curve and a short contract cut it, inflation scales it.
+ * Live market value of a player (§11 + DESIGN-context-and-friction §1). Ability
+ * drives value exponentially (anchored so a ~90 peak player ≈ £13m at the 1995
+ * baseline, ~£150m in the 2020s), then it is modulated by his ACTUAL recent
+ * output — a low-minutes or injury-hit season is a real haircut; a standout
+ * season a premium. Youth upside, age curve, contract length and inflation all
+ * apply. Never a static number independent of the season played.
  */
 export function valuePlayer(player: PlayerState, year: number): number {
   const age = year - player.birthYear;
@@ -61,8 +63,23 @@ export function valuePlayer(player: PlayerState, year: number): number {
   const yearsLeft = Math.max(0, player.contractUntil - year);
   const contractFactor = yearsLeft >= 3 ? 1.0 : yearsLeft === 2 ? 0.8 : yearsLeft === 1 ? 0.5 : 0.2;
 
-  const raw = abilityValue * youthMult * ageFactor * contractFactor * inflationFactor(year);
+  const raw =
+    abilityValue * youthMult * ageFactor * contractFactor * outputFactor(player) * inflationFactor(year);
   return Math.max(50_000, Math.round(raw / 100_000) * 100_000);
+}
+
+/**
+ * Multiplier from a player's most recent season (~0.45..1.6). Neutral (1.0)
+ * before any season is played, so opening-day valuations are pure ability/age.
+ * Thereafter, minutes, rating and time lost to injury swing the fee.
+ */
+export function outputFactor(player: PlayerState): number {
+  const s = player.lastSeason;
+  if (!s) return 1.0;
+  const ratingTerm = 0.55 + 0.09 * s.rating; // rating 6.5 ⇒ ~1.14
+  const minutesTerm = 0.6 + 0.4 * s.minutesShare; // benched season ⇒ ~0.64
+  const injuryTerm = 1 - 0.4 * (Math.min(10, s.monthsInjured) / 10); // half-year out ⇒ ~0.8
+  return Math.max(0.45, Math.min(1.6, ratingTerm * minutesTerm * injuryTerm));
 }
 
 /**

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { runCareer } from './runCareer.js';
-import { passiveBot, firstChoiceBot } from './strategy.js';
+import { passiveBot, firstChoiceBot, ALL_BOTS } from './strategy.js';
 import { evaluateAll } from './calibration.js';
 
 describe('runCareer', () => {
@@ -24,15 +24,20 @@ describe('runCareer', () => {
 
 describe('calibration harness', () => {
   it('reports all §12 + reality rows; live targets pass by M5', () => {
-    const careers = Array.from({ length: 24 }, (_, i) =>
-      runCareer({ seed: `batch:${i}`, years: 15, bot: passiveBot }),
+    const careers = Array.from({ length: 36 }, (_, i) =>
+      runCareer({ seed: `batch:${i}`, years: 15, bot: ALL_BOTS[i % ALL_BOTS.length]! }),
     );
     const results = evaluateAll(careers);
-    // 9 §12 rows + 3 reality-default rows (docs/DESIGN-reality-default.md).
-    expect(results).toHaveLength(12);
+    // 9 §12 rows + 4 reality/friction rows (design docs).
+    expect(results).toHaveLength(13);
 
-    // Live targets (M4 injuries, M5 benched-wonderkid plateau) must all pass.
-    const live = ['user-injury-crisis', 'serious-injury-rate', 'benched-wonderkid-plateau'];
+    // Live targets (M4 injuries, M5 plateau, M6 adaptation risk) must all pass.
+    const live = [
+      'user-injury-crisis',
+      'serious-injury-rate',
+      'benched-wonderkid-plateau',
+      'adaptation-signing-risk',
+    ];
     for (const id of live) {
       const t = results.find((r) => r.id === id)!;
       expect(t.active).toBe(true);

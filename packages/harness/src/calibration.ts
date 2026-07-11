@@ -182,6 +182,23 @@ export const TARGETS: CalibrationTarget[] = [
     },
   },
   {
+    // DESIGN-context-and-friction §3. On-paper-logical signings must still carry
+    // real first-season risk — never a guaranteed success, never mostly failing.
+    id: 'adaptation-signing-risk',
+    label: 'On-paper-logical signings underperforming their first season',
+    band: '~20–55%',
+    ownedBy: 'M6',
+    active: true,
+    evaluate: (c) => {
+      const signings = sum(c, (x) => x.logicalSignings);
+      const under = sum(c, (x) => x.signingsUnderperformingFirstSeason);
+      const f = signings > 0 ? under / signings : 0;
+      // Ideal ~45%; accept 20–60% so a signing is never a guaranteed success
+      // nor mostly a flop, with CI margin against small-sample variance.
+      return { value: pct(f), pass: signings > 0 && f >= 0.2 && f <= 0.6 };
+    },
+  },
+  {
     id: 'scripted-event-fidelity',
     label: 'Scripted historical events firing (zero-divergence run)',
     band: '≥95%',

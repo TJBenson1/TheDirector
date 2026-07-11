@@ -72,6 +72,7 @@ export function processInjuriesMonth(state: GameState, rng: Rng): void {
 
     for (const player of clubSquadPlayers(state, club.id)) {
       if (player.injury) {
+        player.seasonMonthsInjured += 1; // time lost this season (drives valuation §1)
         // Recover.
         player.injury.monthsRemaining -= 1;
         if (player.injury.monthsRemaining <= 0) {
