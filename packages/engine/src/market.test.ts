@@ -211,6 +211,11 @@ function mkPlayer(overrides: Partial<PlayerState> & { ability: number }): Player
     },
     injuryProneness: 30,
     curated: false,
+    fitness: 100,
+    morale: 75,
+    form: 0,
+    injury: null,
+    injuryHistory: 0,
     ...overrides,
   };
 }

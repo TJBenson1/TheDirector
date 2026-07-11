@@ -17,6 +17,8 @@ import { Rng } from './rng.js';
 import { advanceOneMonth } from './clock.js';
 import { eventsSince } from './eventLog.js';
 import { stepLeagueMonth } from './season.js';
+import { processInjuriesMonth } from './injuries.js';
+import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 
 export interface AdvanceResult {
   state: GameState;
@@ -32,9 +34,17 @@ const MAX_MONTHS_PER_ADVANCE = 12;
  * interrupt. Kept as a seam so `advanceWindow`'s control flow is stable.
  */
 function runMonth(state: GameState, rng: Rng): void {
+  // Season rollover (July): age the world before the new campaign kicks off.
+  if (state.clock.monthIndex === 0) {
+    processSeasonAgeing(state, rng);
+    processSeasonMorale(state);
+  }
   // M2: monthly league results, tables, form, season boundaries (§15).
   stepLeagueMonth(state, rng);
-  // M4+: injuries, form shocks, rival moves, event rolls slot in here.
+  // M4: injuries/recoveries (§9c) — after matches, so a new injury bites the
+  // following month and availability feeds strength.
+  processInjuriesMonth(state, rng);
+  // M7+: rival moves, event rolls, scandals slot in here.
 }
 
 /**

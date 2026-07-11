@@ -49,8 +49,9 @@ Built incrementally, one milestone at a time (see §17 of the build spec).
 | **M1 — Skeleton** | ✅ Done | Monorepo, `GameState` (§2), seeded RNG + fork streams, append-only event log, two-clock `WorldClock` (§3), save/load + stable hashing, harness scaffold running real headless careers. |
 | **M2 — Season sim** | ✅ Done | Abstracted monthly match model (strength + form + variance → Poisson goals), deterministic double round-robin, league tables + title history (§15). Calibrated to a sane 1999–2000 Premier League (Man Utd champions, real ordering). The §12 dynasty metric is now *measured* (still pending M9 to come into band). |
 | **M3 — Players & market** | ✅ Done | Full player records (§4, hidden ability/potential/personality), curated Man Utd 1999 squad + procedural filler (~673 players/world), squad-derived-but-anchored strength, finances + market inflation (§11), transfers with budget invariants (§18). |
-| **M4 — Player state + harness live** | ⏳ Next | Happiness, fitness/injuries (§9c), form, ageing. First §12 calibration assertions gate CI. |
-| M5–M10 | ◻ | Development, agency, events, rival AI, manager/academy/board, full calibration. |
+| **M4 — Player state + harness live** | ✅ Done | Player state (fitness, morale, form, injury), calibrated injuries (§9c), ageing/decline with sudden-collapse rolls. **Two §12 calibration targets now active and gating CI**: user injury-crisis-per-decade (≥90%) and league-wide serious-injury rate (~1–2/squad-season). |
+| M5 — Development + scouting | ⏳ Next | Contextual development (§5), fog-of-war scouting/medicals (§7). |
+| M6–M10 | ◻ | Agency, events, rival AI (reality-default), manager/academy/board, full calibration. |
 
 The **Monte Carlo harness runs from M1** and its §12 target table is fully
 defined; each target activates (and starts gating CI) as the milestone that

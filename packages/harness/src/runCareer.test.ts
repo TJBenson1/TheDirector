@@ -22,15 +22,25 @@ describe('runCareer', () => {
   });
 });
 
-describe('calibration harness (M1)', () => {
-  it('runs a small batch and reports every §12 target as pending (no false pass/fail)', () => {
-    const careers = Array.from({ length: 20 }, (_, i) =>
+describe('calibration harness', () => {
+  it('reports all nine §12 rows; injury targets are active and in band by M4', () => {
+    const careers = Array.from({ length: 24 }, (_, i) =>
       runCareer({ seed: `batch:${i}`, years: 15, bot: passiveBot }),
     );
     const results = evaluateAll(careers);
     expect(results).toHaveLength(9); // all nine §12 rows present
-    // Nothing is active yet, so nothing can fail the build at M1.
-    expect(results.every((r) => r.active === false)).toBe(true);
-    expect(results.every((r) => r.pass === null)).toBe(true);
-  });
+
+    // The two injury targets are live (M4) and must pass.
+    const injuryCrisis = results.find((r) => r.id === 'user-injury-crisis')!;
+    const injuryRate = results.find((r) => r.id === 'serious-injury-rate')!;
+    expect(injuryCrisis.active).toBe(true);
+    expect(injuryCrisis.pass).toBe(true);
+    expect(injuryRate.active).toBe(true);
+    expect(injuryRate.pass).toBe(true);
+
+    // Targets owned by later milestones stay pending — no false pass/fail.
+    const pending = results.filter((r) => !r.active);
+    expect(pending.every((r) => r.pass === null)).toBe(true);
+    expect(pending.length).toBe(7);
+  }, 30000);
 });

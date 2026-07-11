@@ -169,6 +169,11 @@ export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
     personality,
     injuryProneness,
     curated: false,
+    fitness: 100,
+    morale: rng.int(60, 85),
+    form: 0,
+    injury: null,
+    injuryHistory: 0,
   };
   player.wage = suggestWage(player, currentYear);
   return player;
@@ -225,15 +230,27 @@ export function clubSquadPlayers(state: GameState, clubId: ClubId): PlayerState[
   return club.squad.map((id) => state.players[id]).filter((p): p is PlayerState => !!p);
 }
 
+/** A player is available if not currently injured (§9c). */
+export function isAvailable(player: PlayerState): boolean {
+  return player.injury === null;
+}
+
+/** Selectable (fit) squad players — what the season sim can actually field. */
+export function availableSquadPlayers(state: GameState, clubId: ClubId): PlayerState[] {
+  return clubSquadPlayers(state, clubId).filter(isAvailable);
+}
+
 /**
- * Recompute a club's live `strength` from its current squad, anchored so it
- * started at `baseStrength`. Call after any squad mutation (transfers, and
- * later development/ageing).
+ * Recompute a club's live `strength` from its currently-AVAILABLE squad,
+ * anchored so a fully-fit squad equals `baseStrength`. Injuries drop the best
+ * XI to the next-best available player, so losing a star measurably weakens the
+ * side while depth mitigates (§9c) — call after squad, injury, or development
+ * changes.
  */
 export function recomputeClubStrength(state: GameState, clubId: ClubId): void {
   const club = state.clubs[clubId];
   if (!club) return;
-  const raw = deriveRawStrength(clubSquadPlayers(state, clubId));
+  const raw = deriveRawStrength(availableSquadPlayers(state, clubId));
   club.strength = Math.max(20, Math.min(99, club.baseStrength + (raw - club.squadStrengthAnchor)));
 }
 

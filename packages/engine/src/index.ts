@@ -52,9 +52,17 @@ export {
   deriveRawStrength,
   recomputeClubStrength,
   clubSquadPlayers,
+  availableSquadPlayers,
+  isAvailable,
   computeWageBill,
   type GeneratePlayerOptions,
 } from './players.js';
+export {
+  processInjuriesMonth,
+  injuredCount,
+  significantInjuredCount,
+} from './injuries.js';
+export { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 export {
   executeTransfer,
   affordableTargets,

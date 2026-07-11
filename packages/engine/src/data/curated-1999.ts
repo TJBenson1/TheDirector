@@ -9,8 +9,12 @@
 
 import type { PlayerState, Position } from '../types.js';
 
-/** A curated seed: everything except the computed wage + the `curated` flag. */
-export type CuratedSeed = Omit<PlayerState, 'wage' | 'curated'>;
+/** A curated seed: the intrinsic record only. Wage, the `curated` flag and all
+ *  live M4 state (fitness/morale/form/injury) are filled in at squad build. */
+export type CuratedSeed = Omit<
+  PlayerState,
+  'wage' | 'curated' | 'fitness' | 'morale' | 'form' | 'injury' | 'injuryHistory'
+>;
 
 type Trait = PlayerState['personality'];
 

@@ -15,6 +15,7 @@ import {
   advanceWindow,
   parseYearMonth,
   maxConsecutiveTitles,
+  significantInjuredCount,
   type GameState,
   type NewGameOptions,
   Rng,
@@ -42,6 +43,10 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
   // perturbs the engine's own rolls.
   const botRng = new Rng(state.meta.rngState).fork('harness:bot');
 
+  // Decade buckets in which the user club suffered a major injury crisis
+  // (3+ simultaneous significant injuries), sampled at each window boundary.
+  const crisisDecades = new Set<number>();
+
   let iterations = 0;
   while (parseYearMonth(state.clock.date).year < endYear && iterations < MAX_ITERATIONS) {
     iterations++;
@@ -60,10 +65,22 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
 
     metrics.windowsAdvanced++;
     metrics.monthsSimulated += result.events.filter((e) => e.code === 'month.advanced').length;
+    // League-wide serious injuries (logged by the engine).
+    metrics.seriousInjuriesLeagueWide += result.events.filter(
+      (e) => e.code === 'injury.serious',
+    ).length;
+
+    // Sample the user club for a major injury crisis.
+    if (significantInjuredCount(state, state.playerClub) >= 3) {
+      const decade = Math.floor((parseYearMonth(state.clock.date).year - startYear) / 10);
+      crisisDecades.add(decade);
+    }
 
     // Safety: if an advance produced nothing, bail rather than spin.
     if (state.eventLog.length === before) break;
   }
+
+  metrics.userMajorInjuryCrisisDecades = crisisDecades.size;
 
   collectEndOfCareerMetrics(state, metrics);
   return metrics;

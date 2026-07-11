@@ -181,9 +181,15 @@ function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, 
           ...seed,
           positions: [...seed.positions],
           personality: { ...seed.personality },
-          wage: suggestWage({ ...seed, wage: 0, curated: true }, year),
+          wage: 0,
           curated: true,
+          fitness: 100,
+          morale: 78,
+          form: 0,
+          injury: null,
+          injuryHistory: 0,
         };
+        player.wage = suggestWage(player, year);
         state.players[player.id] = player;
         club.squad.push(player.id);
       }

@@ -153,8 +153,30 @@ export interface PlayerState {
   /** True for hand-authored real players; false for procedural filler. */
   curated: boolean;
 
-  // TODO(M4): happiness, fitness, form, injury, minutes.
+  // ── M4 live state ─────────────────────────────────────────────
+  /** Match sharpness / recovery, 0–100. */
+  fitness: number;
+  /** Happiness, 0–100 (playing time, success, wages). Full agency in M6. */
+  morale: number;
+  /** Individual form, -10..+10. Full development weighting in M5. */
+  form: number;
+  /** Current injury, or null if fit. */
+  injury: InjuryState | null;
+  /** Count of serious injuries suffered (raises proneness + recurrence risk). */
+  injuryHistory: number;
+
+  // TODO(M5): contextual development (minutes, competition, coaching).
   // TODO(M6): transferResistance (ResistanceProfile).
+}
+
+export type InjuryKind = 'minor' | 'moderate' | 'serious';
+
+/** An active injury (§9c). `serious` covers the 6mo+ ligament class. */
+export interface InjuryState {
+  kind: InjuryKind;
+  monthsRemaining: number;
+  /** The month it began, for narrative/log context. */
+  since: YearMonth;
 }
 
 // ── Later-milestone placeholders (shape only) ────────────────────────────────

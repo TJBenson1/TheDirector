@@ -54,7 +54,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'User club ≥1 major injury crisis per decade',
     band: '≥90% of sims',
     ownedBy: 'M4',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const f = fractionOfCareers(c, (x) => x.userMajorInjuryCrisisDecades >= x.decadesElapsed);
       return { value: pct(f), pass: f >= 0.9 };
@@ -76,7 +76,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Serious (6mo+) injuries league-wide per squad-season',
     band: '~1–2 avg',
     ownedBy: 'M4',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const injuries = sum(c, (x) => x.seriousInjuriesLeagueWide);
       const squadSeasons = sum(c, (x) => x.squadSeasons);

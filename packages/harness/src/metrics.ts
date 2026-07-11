@@ -53,7 +53,7 @@ export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
     maxConsecutiveTitlesAnyClub: 0,
     userMajorInjuryCrisisDecades: 0,
     userScandalDecades: 0,
-    decadesElapsed: Math.max(1, Math.round(years / 10)),
+    decadesElapsed: Math.max(1, Math.floor(years / 10)),
     seriousInjuriesLeagueWide: 0,
     squadSeasons: 0,
     raidsSuffered: 0,
