@@ -7,12 +7,12 @@ describe('runCareer', () => {
   it('walks a full 15-year career through the two-clock model', () => {
     const m = runCareer({ seed: 'career-1', years: 15, bot: passiveBot });
     expect(m.years).toBe(15);
-    // ~2 windows/year over 15 years.
-    expect(m.windowsAdvanced).toBeGreaterThanOrEqual(28);
-    expect(m.windowsAdvanced).toBeLessThanOrEqual(32);
-    // ~12 months/year simulated under the hood.
+    // ~12 months/year simulated under the hood (robust to interrupt events
+    // fragmenting individual advance calls, §9b).
     expect(m.monthsSimulated).toBeGreaterThanOrEqual(170);
     expect(m.monthsSimulated).toBeLessThanOrEqual(185);
+    // At least the two decision windows per year were reached.
+    expect(m.windowsAdvanced).toBeGreaterThanOrEqual(28);
   });
 
   it('is deterministic: same seed ⇒ identical metrics', () => {
@@ -31,14 +31,16 @@ describe('calibration harness', () => {
     // 9 §12 rows + 9 reality/friction/governing rows (design docs).
     expect(results).toHaveLength(18);
 
-    // Live targets through M6 must all pass.
+    // Live targets through M7 must all pass.
     const live = [
       'user-injury-crisis',
       'serious-injury-rate',
+      'user-scandal',
       'benched-wonderkid-plateau',
       'prospect-hit-rate',
       'hard-block-integrity',
       'adaptation-signing-risk',
+      'scripted-event-fidelity',
     ];
     for (const id of live) {
       const t = results.find((r) => r.id === id)!;
@@ -49,6 +51,6 @@ describe('calibration harness', () => {
     // Targets owned by later milestones stay pending — no false pass/fail.
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
-    expect(pending.length).toBe(12);
+    expect(pending.length).toBe(10);
   }, 30000);
 });

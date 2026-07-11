@@ -270,21 +270,55 @@ export interface MemoryEntry {
   detail: string;
 }
 
-/** TODO(M7): a surfaced decision (event choice / interrupt). Shape is stable so
- *  the API contract (§16) and Lovable can bind to it from M1. */
+/** A surfaced decision (event choice / interrupt). Shape is stable so the API
+ *  contract (§16) and Lovable can bind to it. The `on*`/`fallout` fields are
+ *  engine-internal resolution data (serialised in state); the UI renders
+ *  title/description/choices + `successProbability`. */
 export interface Decision {
   id: string;
   title: string;
   description: string;
   interrupt: boolean;
   choices: DecisionChoice[];
+  /** Consequences if the decision is left unresolved when the window advances. */
+  falloutIfIgnored?: Consequence[];
+  /** Narrative-memory tags this decision threads into (§10). */
+  memoryTags?: string[];
+  /** The club this decision concerns (usually the user's). */
+  clubId?: ClubId;
+  category?: LoggedEventCategory;
 }
 
 export interface DecisionChoice {
   id: string;
   label: string;
-  /** Framed risk shown to the user (§16 view 2). 0..1, optional pre-M7. */
+  /** Framed risk shown to the user (§16 view 2). 0..1. Outcomes are UNCERTAIN —
+   *  mediation can fail. Absent ⇒ deterministic (always "succeeds"). */
   successProbability?: number;
+  /** Applied on a successful roll. */
+  onSuccess?: Consequence[];
+  /** Applied on a failed roll. */
+  onFailure?: Consequence[];
+}
+
+/** A single state effect produced by an event/decision outcome (§9b). */
+export interface Consequence {
+  kind:
+    | 'morale' // player/squad happiness
+    | 'money' // club transfer budget
+    | 'ability' // player ability delta
+    | 'fanTrust' // narrative memory + board patience nudge
+    | 'boardPatience'
+    | 'ban' // player unavailable for N months (injury-like)
+    | 'managerRelationship'
+    | 'memory' // append a narrative-memory entry (§10)
+    | 'log'; // purely informational log line
+  playerId?: PlayerId;
+  clubId?: ClubId;
+  amount?: number; // signed delta for numeric kinds
+  months?: number; // for 'ban'
+  tag?: string; // memory tag
+  text?: string; // human-readable detail
 }
 
 /** TODO(M9/M11): board mandate, patience, finances. */
@@ -332,6 +366,8 @@ export interface GameStateMeta {
   rngState: number;
   /** Next sequence number for the event log. */
   nextSeq: number;
+  /** Scripted events already fired/skipped, so each resolves once (§9b). */
+  firedScripted: string[];
 }
 
 export interface GameClock {

@@ -18,6 +18,7 @@ import { advanceOneMonth } from './clock.js';
 import { eventsSince } from './eventLog.js';
 import { stepLeagueMonth } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
+import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
@@ -58,7 +59,8 @@ function runMonth(state: GameState, rng: Rng): void {
   // M4: injuries/recoveries (§9c) — after matches, so a new injury bites the
   // following month and availability feeds strength.
   processInjuriesMonth(state, rng);
-  // M7+: rival moves, event rolls, scandals slot in here.
+  // M7: scripted + procedural events, scandals (§9b, §9d). May raise interrupts.
+  rollEventsMonth(state, rng);
 }
 
 /**
@@ -72,6 +74,10 @@ export function advanceWindow(state: GameState): AdvanceResult {
   const draft = cloneState(state);
   const startSeq = draft.meta.nextSeq;
   const rng = new Rng(draft.meta.rngState);
+
+  // Advancing with decisions still pending means the player chose to ignore
+  // them — apply their fallout before stepping on (§9b).
+  if (draft.pendingDecisions.length > 0) resolveIgnoredDecisions(draft);
 
   for (let stepped = 0; stepped < MAX_MONTHS_PER_ADVANCE; stepped++) {
     const window = advanceOneMonth(draft);

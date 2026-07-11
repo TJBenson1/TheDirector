@@ -136,6 +136,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
       ironman: settings.ironman,
       rngState: rng.state,
       nextSeq: 0,
+      firedScripted: [],
     },
     clock: {
       date: scenario.startDate,

@@ -15,6 +15,7 @@ import {
   advanceWindow,
   executeTransfer,
   evaluateApproach,
+  applyDecision,
   parseYearMonth,
   maxConsecutiveTitles,
   significantInjuredCount,
@@ -46,20 +47,25 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
   // perturbs the engine's own rolls.
   const botRng = new Rng(state.meta.rngState).fork('harness:bot');
 
-  // Decade buckets in which the user club suffered a major injury crisis
-  // (3+ simultaneous significant injuries), sampled at each window boundary.
+  // Decade buckets with a major injury crisis / user scandal, for calibration.
   const crisisDecades = new Set<number>();
+  const scandalDecades = new Set<number>();
+  const decadeOf = () => Math.floor((parseYearMonth(state.clock.date).year - startYear) / 10);
 
   let iterations = 0;
   while (parseYearMonth(state.clock.date).year < endYear && iterations < MAX_ITERATIONS) {
     iterations++;
 
-    // Resolve any interrupts/decisions the world raised.
+    // Resolve interrupts the world raised: apply the bot's chosen options via
+    // the decision engine. Options the bot declines to answer are left pending
+    // and applied as "ignored" fallout when the window advances (§9b).
     if (state.pendingDecisions.length > 0) {
-      bot.decide(state, state.pendingDecisions, botRng);
-      // TODO(M7): apply the returned choices via engine.applyDecision.
-      // Until that exists, clear them so the loop makes progress.
-      state = { ...state, pendingDecisions: [] };
+      const chosen = bot.decide(state, state.pendingDecisions, botRng);
+      const byId = new Map(chosen.map((c) => [c.decisionId, c.choiceId]));
+      for (const d of [...state.pendingDecisions]) {
+        const choiceId = byId.get(d.id);
+        if (choiceId) state = applyDecision(state, d.id, choiceId).state;
+      }
     }
 
     // Summer transfer window.
@@ -109,17 +115,26 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
       (e) => e.code === 'injury.serious',
     ).length;
 
-    // Sample the user club for a major injury crisis.
-    if (significantInjuredCount(state, state.playerClub) >= 3) {
-      const decade = Math.floor((parseYearMonth(state.clock.date).year - startYear) / 10);
-      crisisDecades.add(decade);
+    // Events fired this advance: user scandals (§9d) and scripted fidelity (§9b).
+    for (const e of result.events) {
+      if (e.code === 'scandal.fired' && e.data?.user === true) scandalDecades.add(decadeOf());
+      if (e.code === 'scripted.fired') {
+        metrics.scriptedEventsExpected += 1;
+        metrics.scriptedEventsFired += 1;
+      } else if (e.code === 'scripted.skipped') {
+        metrics.scriptedEventsExpected += 1;
+      }
     }
+
+    // Sample the user club for a major injury crisis.
+    if (significantInjuredCount(state, state.playerClub) >= 3) crisisDecades.add(decadeOf());
 
     // Safety: if an advance produced nothing, bail rather than spin.
     if (state.eventLog.length === before) break;
   }
 
   metrics.userMajorInjuryCrisisDecades = crisisDecades.size;
+  metrics.userScandalDecades = scandalDecades.size;
 
   collectEndOfCareerMetrics(state, metrics);
   return metrics;

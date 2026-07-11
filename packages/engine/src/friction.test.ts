@@ -5,6 +5,7 @@ import { valuePlayer, outputFactor } from './finance.js';
 import { styleDistance, styleForClub, LEAGUE_STYLES } from './leaguestyle.js';
 import { rollAdaptation, effectiveAbility } from './adaptation.js';
 import { executeTransfer, currentYear } from './transfers.js';
+import { applyDecision } from './events.js';
 import { Rng } from './rng.js';
 import type { PlayerState, SeasonStats } from './types.js';
 
@@ -110,8 +111,16 @@ describe('friction determinism', () => {
 
   it('season stats populate after a season and reflect output', () => {
     let s = createNewGame({ seed: 'stats' });
-    s = advanceWindow(s).state; // to winter
-    s = advanceWindow(s).state; // to next summer (season complete + stats banked)
+    // Advance a full season, resolving any interrupt events along the way (§9b).
+    const startTitles = s.leagues['eng-1']!.titleHistory.length;
+    for (let i = 0; i < 40; i++) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      s = advanceWindow(s).state;
+      if (s.leagues['eng-1']!.titleHistory.length > startTitles && s.players) {
+        // Give the July rollover (stats banked) a step past the crowning.
+        if (Object.values(s.players).some((p) => p.lastSeason !== null)) break;
+      }
+    }
     const withStats = Object.values(s.players).filter((p) => p.lastSeason !== null);
     expect(withStats.length).toBeGreaterThan(0);
     // A first-choice striker should have scored some goals.

@@ -64,8 +64,8 @@ export const TARGETS: CalibrationTarget[] = [
     id: 'user-scandal',
     label: 'User club ≥1 significant scandal per decade',
     band: '≥80% of sims',
-    ownedBy: 'M4/M7',
-    active: false,
+    ownedBy: 'M7',
+    active: true,
     evaluate: (c) => {
       const f = fractionOfCareers(c, (x) => x.userScandalDecades >= x.decadesElapsed);
       return { value: pct(f), pass: f >= 0.8 };
@@ -274,7 +274,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Scripted historical events firing (zero-divergence run)',
     band: '≥95%',
     ownedBy: 'M7/M8',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const expected = sum(c, (x) => x.scriptedEventsExpected);
       const fired = sum(c, (x) => x.scriptedEventsFired);

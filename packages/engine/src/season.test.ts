@@ -8,14 +8,19 @@ import {
 import { createNewGame, cloneState, hashState } from './state.js';
 import { advanceWindow } from './advance.js';
 import { Rng } from './rng.js';
+import { applyDecision } from './events.js';
 import type { GameState } from './types.js';
 
-/** Advance a full season (July → next July) and return the ended state. */
+/** Advance a full season (until a champion is crowned), resolving any interrupt
+ *  events (§9b) that fire mid-window along the way. */
 function playOneSeason(state: GameState): GameState {
   let s = state;
-  // Summer → winter, then winter → next summer completes the season.
-  s = advanceWindow(s).state; // to winter
-  s = advanceWindow(s).state; // to next summer (crosses June crowning)
+  const titlesBefore = s.leagues['eng-1']!.titleHistory.length;
+  for (let i = 0; i < 40; i++) {
+    for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+    s = advanceWindow(s).state;
+    if (s.leagues['eng-1']!.titleHistory.length > titlesBefore) break;
+  }
   return s;
 }
 

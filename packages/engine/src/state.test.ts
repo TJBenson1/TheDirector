@@ -8,6 +8,23 @@ import {
   DEFAULT_SETTINGS,
 } from './state.js';
 import { advanceWindow } from './advance.js';
+import { applyDecision } from './events.js';
+import type { GameState } from './types.js';
+
+/** Advance one window's worth of time, resolving any interrupt events (§9b)
+ *  that fire mid-window so the sim reaches the next decision window. */
+function advanceResolving(state: GameState): { state: GameState; months: number } {
+  let s = state;
+  let months = 0;
+  for (let i = 0; i < 24; i++) {
+    for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+    const res = advanceWindow(s);
+    s = res.state;
+    months += res.events.filter((e) => e.code === 'month.advanced').length;
+    if (s.clock.window && s.pendingDecisions.length === 0) break;
+  }
+  return { state: s, months };
+}
 
 describe('createNewGame', () => {
   it('builds a valid state for the default scenario', () => {
@@ -102,11 +119,12 @@ describe('advanceWindow', () => {
   it('advances from the summer window to the next winter window', () => {
     const state = createNewGame({ seed: 'windows' });
     expect(state.clock.window).toBe('summer');
-    const { state: next, events } = advanceWindow(state);
+    // Events can interrupt mid-window (§3); resolve them and continue.
+    const { state: next, months } = advanceResolving(state);
     expect(next.clock.date).toBe('2000-01');
     expect(next.clock.window).toBe('winter');
-    // Six month-advance events (Aug … Jan).
-    expect(events.filter((e) => e.code === 'month.advanced')).toHaveLength(6);
+    // Six months elapsed (Aug … Jan), regardless of interrupts along the way.
+    expect(months).toBe(6);
   });
 
   it('cloneState is a deep copy', () => {
