@@ -115,7 +115,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Hard-blocked (Messi-class) transfers before unlock',
     band: '~0%',
     ownedBy: 'M6',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const approaches = sum(c, (x) => x.hardBlockedApproaches);
       const completed = sum(c, (x) => x.hardBlockedCompletedBeforeUnlock);

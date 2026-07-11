@@ -7,10 +7,11 @@
  * facts. Everything else in the world is procedural filler for now.
  */
 
-import type { PlayerState, Position } from '../types.js';
+import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 
-/** A curated seed: the intrinsic record only. Wage, the `curated` flag and all
- *  live M4 state (fitness/morale/form/injury) are filled in at squad build. */
+/** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
+ *  the `curated` flag, live state and a generated resistance profile are filled
+ *  in at squad build; `hardBlocks`/`loyalty` override the generated resistance. */
 export type CuratedSeed = Omit<
   PlayerState,
   | 'wage'
@@ -27,7 +28,8 @@ export type CuratedSeed = Omit<
   | 'lastSeason'
   | 'seasonMonthsInjured'
   | 'adaptation'
->;
+  | 'resistance'
+> & { hardBlocks?: HardBlock[]; loyalty?: number };
 
 type Trait = PlayerState['personality'];
 
@@ -95,9 +97,69 @@ export const MAN_UTD_1999: CuratedSeed[] = [
   p('sheringham', 'Teddy Sheringham', 1966, 'England', ['ST', 'AM'], 83, 83, 2001, 30, t(8, 6, 8, 6, 5, 7)),
 ];
 
-/** Curated squads keyed by scenario → club. */
+/** A curated marquee player at another club, with optional agency hints. */
+function q(
+  club: ClubId,
+  id: string,
+  name: string,
+  birthYear: number,
+  nationality: string,
+  positions: Position[],
+  ability: number,
+  potentialCeiling: number,
+  contractUntil: number,
+  injuryProneness: number,
+  personality: Trait,
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number } = {},
+): CuratedSeed {
+  return {
+    id: `cur_${id}`,
+    name,
+    birthYear,
+    nationality,
+    positions,
+    club,
+    contractUntil,
+    ability,
+    potentialCeiling,
+    personality,
+    injuryProneness,
+    ...extra,
+  };
+}
+
+/**
+ * Hard-block exemplars — real one-club men who are practically unbuyable (the
+ * Messi rule, §6). Their clubs get a curated marquee + procedural depth.
+ */
+export const NEWCASTLE_1999: CuratedSeed[] = [
+  q('newcastle', 'shearer', 'Alan Shearer', 1970, 'England', ['ST'], 87, 88, 2004, 40, t(9, 7, 8, 10, 4, 6), {
+    loyalty: 96,
+    hardBlocks: [{ reason: 'Alan Shearer will not leave Newcastle. This is not about money.', untilYear: 2006 }],
+  }),
+];
+
+export const SOUTHAMPTON_1999: CuratedSeed[] = [
+  q('southampton', 'letissier', 'Matt Le Tissier', 1968, 'England', ['AM'], 82, 83, 2002, 45, t(7, 6, 6, 10, 5, 6), {
+    loyalty: 98,
+    hardBlocks: [{ reason: 'Le Tissier is a Southampton one-club man. He will not move.', untilYear: 2003 }],
+  }),
+];
+
+export const MILAN_1999: CuratedSeed[] = [
+  q('milan', 'maldini', 'Paolo Maldini', 1968, 'Italy', ['LB', 'CB'], 89, 90, 2005, 25, t(10, 6, 8, 10, 2, 6), {
+    loyalty: 99,
+    hardBlocks: [{ reason: 'Paolo Maldini is Milan for life. He is not for sale at any price.', untilYear: 2009 }],
+  }),
+];
+
+/** Curated squads keyed by scenario → club (marquee real players + procedural
+ *  depth is filled in at squad build). */
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'man-utd-1999': {
     man_utd: MAN_UTD_1999,
+    newcastle: NEWCASTLE_1999,
+    southampton: SOUTHAMPTON_1999,
+    milan: MILAN_1999,
   },
 };

@@ -37,6 +37,7 @@ describe('calibration harness', () => {
       'serious-injury-rate',
       'benched-wonderkid-plateau',
       'prospect-hit-rate',
+      'hard-block-integrity',
       'adaptation-signing-risk',
     ];
     for (const id of live) {
@@ -48,6 +49,6 @@ describe('calibration harness', () => {
     // Targets owned by later milestones stay pending — no false pass/fail.
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
-    expect(pending.length).toBe(13);
+    expect(pending.length).toBe(12);
   }, 30000);
 });

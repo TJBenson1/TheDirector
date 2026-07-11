@@ -95,12 +95,23 @@ export {
 } from './scouting.js';
 export {
   executeTransfer,
+  attemptSigning,
   affordableTargets,
   squadSize,
   currentYear,
   type TransferRequest,
   type TransferResult,
+  type SigningResult,
 } from './transfers.js';
+export {
+  evaluateApproach,
+  wouldAcceptMove,
+  areRivals,
+  WILLINGNESS_THRESHOLD,
+  type ApproachInput,
+  type ApproachVerdict,
+} from './agency.js';
+export { buildResistance } from './players.js';
 export { CURATED_SQUADS, MAN_UTD_1999, type CuratedSeed } from './data/curated-1999.js';
 export {
   ERA_REALITY,

@@ -12,10 +12,42 @@
  * changes through transfers (M3) and development (M5).
  */
 
-import type { ClubId, GameState, PlayerId, PlayerState, Position } from './types.js';
+import type {
+  ClubId,
+  GameState,
+  PlayerId,
+  PlayerState,
+  Position,
+  Personality,
+  ResistanceProfile,
+} from './types.js';
 import { Rng } from './rng.js';
 import { suggestWage } from './finance.js';
 import { effectiveAbility } from './adaptation.js';
+
+/** Marquee clubs a player might carry as a boyhood/dream pull (§6). */
+const DREAM_POOL: ClubId[] = ['real_madrid', 'barcelona', 'man_utd', 'bayern', 'milan'];
+
+/** Build a transfer-resistance profile (§6) from personality, age and level. */
+export function buildResistance(
+  personality: Personality,
+  nationality: string,
+  age: number,
+  ability: number,
+  rng: Rng,
+): ResistanceProfile {
+  const clubLoyalty = Math.max(5, Math.min(98, personality.loyalty * 9 + rng.int(-8, 8)));
+  const careerStagePull =
+    age <= 22 ? 'prove' : age >= 30 ? 'legacy' : ability < 64 && age >= 27 ? 'payday' : 'peak';
+  return {
+    clubLoyalty,
+    culturalAnchors: [nationality],
+    dreamClubs: rng.chance(0.15) ? [rng.pick(DREAM_POOL)] : [],
+    agentInfluence: rng.int(20, 85),
+    careerStagePull,
+    hardBlocks: [],
+  };
+}
 
 // ── Name & nationality pools by region ───────────────────────────────────────
 
@@ -182,6 +214,7 @@ export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
     lastSeason: null,
     seasonMonthsInjured: 0,
     adaptation: null,
+    resistance: buildResistance(personality, nationality, age, ability, rng),
   };
   player.wage = suggestWage(player, currentYear);
   return player;

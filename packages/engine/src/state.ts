@@ -25,6 +25,7 @@ import {
   recomputeClubStrength,
   clubSquadPlayers,
   computeWageBill,
+  buildResistance,
 } from './players.js';
 import { initialFinances, suggestWage } from './finance.js';
 import { CURATED_SQUADS } from './data/curated-1999.js';
@@ -180,38 +181,48 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
 function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, rng: Rng): void {
   const curatedForScenario = CURATED_SQUADS[scenarioId] ?? {};
 
+  const TARGET_SQUAD = 23;
+
   for (const club of Object.values(state.clubs)) {
     const clubRng = rng.fork(`squad:${club.id}`);
-    const seeds = curatedForScenario[club.id];
+    const seeds = curatedForScenario[club.id] ?? [];
 
-    if (seeds && seeds.length > 0) {
-      for (const seed of seeds) {
-        const player: PlayerState = {
-          ...seed,
-          positions: [...seed.positions],
-          personality: { ...seed.personality },
-          birthCeiling: seed.potentialCeiling,
-          wage: 0,
-          curated: true,
-          fitness: 100,
-          morale: 78,
-          form: 0,
-          injury: null,
-          injuryHistory: 0,
-          wonderkid: seed.potentialCeiling >= 85 && year - seed.birthYear <= 21,
-          benchedDevSeasons: 0,
-          reachedPotential: false,
-          lastSeason: null,
-          seasonMonthsInjured: 0,
-          adaptation: null,
-        };
-        player.wage = suggestWage(player, year);
-        state.players[player.id] = player;
-        club.squad.push(player.id);
-      }
-    } else {
+    // Curated marquee real players first (real squads at real clubs).
+    for (const seed of seeds) {
+      const { hardBlocks, loyalty, ...rest } = seed;
+      const age = year - seed.birthYear;
+      const player: PlayerState = {
+        ...rest,
+        positions: [...seed.positions],
+        personality: { ...seed.personality },
+        birthCeiling: seed.potentialCeiling,
+        wage: 0,
+        curated: true,
+        fitness: 100,
+        morale: 78,
+        form: 0,
+        injury: null,
+        injuryHistory: 0,
+        wonderkid: seed.potentialCeiling >= 85 && age <= 21,
+        benchedDevSeasons: 0,
+        reachedPotential: false,
+        lastSeason: null,
+        seasonMonthsInjured: 0,
+        adaptation: null,
+        resistance: buildResistance(seed.personality, seed.nationality, age, seed.ability, clubRng),
+      };
+      if (loyalty !== undefined) player.resistance.clubLoyalty = loyalty;
+      if (hardBlocks) player.resistance.hardBlocks = hardBlocks.map((b) => ({ ...b }));
+      player.wage = suggestWage(player, year);
+      state.players[player.id] = player;
+      club.squad.push(player.id);
+    }
+
+    // Procedural depth to fill the squad out (anonymous, per Principle 2).
+    const fillCount = Math.max(0, TARGET_SQUAD - club.squad.length);
+    if (fillCount > 0) {
       const generated = generateSquad(club.id, club.leagueId, club.baseStrength, year, clubRng);
-      for (const player of generated) {
+      for (const player of generated.slice(0, fillCount)) {
         state.players[player.id] = player;
         club.squad.push(player.id);
       }

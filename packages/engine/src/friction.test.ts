@@ -16,7 +16,9 @@ function mk(overrides: Partial<PlayerState> & { ability: number }): PlayerState 
     personality: { professionalism: 6, ego: 5, ambition: 6, loyalty: 5, volatility: 5, adaptability: 6 },
     injuryProneness: 30, curated: false, fitness: 100, morale: 75, form: 0, injury: null,
     injuryHistory: 0, wonderkid: false, benchedDevSeasons: 0, reachedPotential: false,
-    lastSeason: null, seasonMonthsInjured: 0, adaptation: null, ...overrides,
+    lastSeason: null, seasonMonthsInjured: 0, adaptation: null,
+    resistance: { clubLoyalty: 50, culturalAnchors: ['Spain'], dreamClubs: [], agentInfluence: 50, careerStagePull: 'peak', hardBlocks: [] },
+    ...overrides,
   };
 }
 

@@ -223,6 +223,10 @@ function mkPlayer(overrides: Partial<PlayerState> & { ability: number }): Player
     lastSeason: null,
     seasonMonthsInjured: 0,
     adaptation: null,
+    resistance: {
+      clubLoyalty: 50, culturalAnchors: ['England'], dreamClubs: [], agentInfluence: 50,
+      careerStagePull: 'peak', hardBlocks: [],
+    },
     ...overrides,
   };
 }

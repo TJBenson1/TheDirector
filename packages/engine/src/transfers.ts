@@ -13,6 +13,7 @@ import { valuePlayer, suggestWage } from './finance.js';
 import { recomputeClubStrength, computeWageBill, clubSquadPlayers } from './players.js';
 import { rollAdaptation } from './adaptation.js';
 import { Rng } from './rng.js';
+import { evaluateApproach, type ApproachVerdict } from './agency.js';
 
 export interface TransferRequest {
   playerId: PlayerId;
@@ -95,6 +96,29 @@ export function executeTransfer(state: GameState, req: TransferRequest): Transfe
   });
 
   return { ok: true, playerId: player.id, from: fromClubId, to: req.toClub, fee };
+}
+
+export type SigningResult = TransferResult | { ok: false; reason: string; refusedByPlayer: true };
+
+/**
+ * Attempt a signing WITH player agency (§6): consult willingness first, and only
+ * execute the deal if the player is willing (and the fee is affordable). A hard
+ * block or a below-threshold willingness refuses regardless of fee — this is the
+ * Messi rule and the "not about money" verdict in one path.
+ */
+export function attemptSigning(
+  state: GameState,
+  req: TransferRequest & { wageOffer?: number },
+): SigningResult {
+  const verdict: ApproachVerdict = evaluateApproach(state, {
+    playerId: req.playerId,
+    toClub: req.toClub,
+    wageOffer: req.wageOffer,
+  });
+  if (!verdict.willing) {
+    return { ok: false, reason: verdict.reason, refusedByPlayer: true };
+  }
+  return executeTransfer(state, req);
 }
 
 /** Affordable, sensible targets for a club from a candidate pool (helper for

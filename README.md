@@ -51,8 +51,13 @@ Built incrementally, one milestone at a time (see §17 of the build spec).
 | **M3 — Players & market** | ✅ Done | Full player records (§4, hidden ability/potential/personality), curated Man Utd 1999 squad + procedural filler (~673 players/world), squad-derived-but-anchored strength, finances + market inflation (§11), transfers with budget invariants (§18). |
 | **M4 — Player state + harness live** | ✅ Done | Player state (fitness, morale, form, injury), calibrated injuries (§9c), ageing/decline with sudden-collapse rolls. **Two §12 calibration targets now active and gating CI**: user injury-crisis-per-decade (≥90%) and league-wide serious-injury rate (~1–2/squad-season). |
 | **M5 — Development + scouting** | ✅ Done | Contextual development (§5) — minutes-at-level/coaching/professionalism/injuries drive growth; benched wonderkids plateau (working ceiling erodes). Lifestyle decline (Ronaldinho pattern). Fog-of-war scouting (§7): confidence ranges, medicals with false-clean, real-only prospect discovery. **Third §12 target now active**: benched wonderkids reaching ceiling <15% (~0%). |
-| M6 — Agency | ⏳ Next | Resistance profiles, hard blocks (Messi rule), willingness maths, two-sided poaching (§6). |
-| M7–M10 | ◻ | Events, rival AI (reality-default + ambition overrides), manager/academy/board, full calibration. |
+| **M6 — Agency + friction** | ✅ Done | Resistance profiles, willingness maths, hard blocks (Messi rule — Shearer/Le Tissier/Maldini exemplars), rivalry resistance, poaching maths (§6). Dynamic valuation, league-style model, adaptation engine, per-player season stats (context/friction §1,§3,§4). Prospect hit-rate recalibrated to 40–60%. **Six §12 targets now gating CI.** |
+| M7–M10 | ◻ | Events + internal friction (board/sacking, agents, manager autonomy, chemistry, succession, financial shocks), rival AI (reality-default + ambition overrides), academy, full calibration. |
+
+Three binding design docs shape M7–M10:
+[reality-default](docs/DESIGN-reality-default.md),
+[context & friction](docs/DESIGN-context-and-friction.md),
+[internal friction](docs/DESIGN-internal-friction.md).
 
 The **Monte Carlo harness runs from M1** and its §12 target table is fully
 defined; each target activates (and starts gating CI) as the milestone that

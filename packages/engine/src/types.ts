@@ -191,6 +191,29 @@ export interface PlayerState {
   seasonMonthsInjured: number;
   /** Active adaptation to a new league/context, or null if settled. */
   adaptation: AdaptationState | null;
+
+  /** Transfer agency (§6) — consulted on any approach. */
+  resistance: ResistanceProfile;
+}
+
+export type CareerStagePull = 'prove' | 'peak' | 'legacy' | 'payday';
+
+/** A scripted near-absolute block on a move (the Messi rule, §6). */
+export interface HardBlock {
+  reason: string;
+  /** Block holds until at least this calendar year. */
+  untilYear?: number;
+}
+
+/** Player agency (§6). Consulted on ANY approach; below a willingness threshold
+ *  the player says no regardless of fee, and the game says why. */
+export interface ResistanceProfile {
+  clubLoyalty: number; // 0–100, one-club identity strength
+  culturalAnchors: string[]; // language/region/boyhood pulls
+  dreamClubs: ClubId[]; // pull factors
+  agentInfluence: number; // 0–100
+  careerStagePull: CareerStagePull;
+  hardBlocks: HardBlock[]; // scripted near-absolute resistance
 }
 
 /** A player's actual output over one completed season (§1 dynamic valuation). */

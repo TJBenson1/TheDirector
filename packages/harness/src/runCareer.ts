@@ -14,6 +14,7 @@ import {
   createNewGame,
   advanceWindow,
   executeTransfer,
+  evaluateApproach,
   parseYearMonth,
   maxConsecutiveTitles,
   significantInjuredCount,
@@ -61,17 +62,36 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
       state = { ...state, pendingDecisions: [] };
     }
 
-    // Summer transfer window: apply the bot's logical signings and record the
-    // hidden adaptation outcome (§3 calibration — logical signings must risk).
-    if (state.clock.window === 'summer' && bot.transferActions) {
+    // Summer transfer window.
+    if (state.clock.window === 'summer') {
       const draft = cloneState(state);
-      for (const req of bot.transferActions(draft, botRng)) {
-        const res = executeTransfer(draft, req);
-        if (res.ok) {
-          const signed = draft.players[res.playerId];
-          if (signed?.adaptation) {
-            metrics.logicalSignings += 1;
-            if (signed.adaptation.outcome !== 'seamless') metrics.signingsUnderperformingFirstSeason += 1;
+
+      // Probe the hard-block invariant (§6), read-only: an unlimited-budget
+      // approach to any hard-blocked player must be refused (a willing verdict
+      // would let the deal complete). None may ever pass before unlock.
+      const y = parseYearMonth(draft.clock.date).year;
+      for (const p of Object.values(draft.players)) {
+        const blocked = p.resistance.hardBlocks.some((b) => (b.untilYear ?? Infinity) > y);
+        if (!blocked || p.club === draft.playerClub) continue;
+        metrics.hardBlockedApproaches += 1;
+        const verdict = evaluateApproach(draft, {
+          playerId: p.id,
+          toClub: draft.playerClub,
+          wageOffer: p.wage * 5,
+        });
+        if (verdict.willing) metrics.hardBlockedCompletedBeforeUnlock += 1;
+      }
+
+      // Apply the bot's logical signings; record the hidden adaptation outcome.
+      if (bot.transferActions) {
+        for (const req of bot.transferActions(draft, botRng)) {
+          const res = executeTransfer(draft, req);
+          if (res.ok) {
+            const signed = draft.players[res.playerId];
+            if (signed?.adaptation) {
+              metrics.logicalSignings += 1;
+              if (signed.adaptation.outcome !== 'seamless') metrics.signingsUnderperformingFirstSeason += 1;
+            }
           }
         }
       }
