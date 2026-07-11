@@ -55,6 +55,36 @@ export const ENGLAND_1999: LeagueSeed = {
   ],
 };
 
+/** Spain, La Liga (2000-era). Deportivo were the 1999–2000 champions. */
+export const SPAIN_2000: LeagueSeed = {
+  id: 'esp-1',
+  name: 'La Liga',
+  season: '2000-07',
+  clubs: [
+    { id: 'real_madrid', name: 'Real Madrid', prestige: 94, strength: 90 },
+    { id: 'barcelona', name: 'Barcelona', prestige: 90, strength: 86 },
+    { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 74, strength: 82 },
+    { id: 'valencia', name: 'Valencia', prestige: 78, strength: 84 },
+    { id: 'celta', name: 'Celta Vigo', prestige: 64, strength: 68 },
+    { id: 'mallorca', name: 'RCD Mallorca', prestige: 60, strength: 66 },
+    { id: 'athletic', name: 'Athletic Bilbao', prestige: 68, strength: 64 },
+    { id: 'real_sociedad', name: 'Real Sociedad', prestige: 64, strength: 62 },
+    { id: 'espanyol', name: 'Espanyol', prestige: 60, strength: 60 },
+    { id: 'betis', name: 'Real Betis', prestige: 62, strength: 60 },
+    { id: 'malaga', name: 'Málaga', prestige: 56, strength: 59 },
+    { id: 'zaragoza', name: 'Real Zaragoza', prestige: 60, strength: 61 },
+    { id: 'villarreal', name: 'Villarreal', prestige: 54, strength: 57 },
+    { id: 'alaves', name: 'Deportivo Alavés', prestige: 52, strength: 58 },
+    { id: 'osasuna', name: 'Osasuna', prestige: 52, strength: 55 },
+    { id: 'valladolid', name: 'Real Valladolid', prestige: 52, strength: 54 },
+    { id: 'rayo', name: 'Rayo Vallecano', prestige: 50, strength: 56 },
+    { id: 'las_palmas', name: 'Las Palmas', prestige: 48, strength: 52 },
+    { id: 'numancia', name: 'Numancia', prestige: 46, strength: 50 },
+    { id: 'oviedo', name: 'Real Oviedo', prestige: 48, strength: 50 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
+  'esp-1': SPAIN_2000,
 };

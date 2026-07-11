@@ -6,7 +6,8 @@
   "description": "Monte Carlo calibration + simulation test harness (§12). Runs in CI.",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "harness": "tsx src/run.ts"
+    "harness": "tsx src/run.ts",
+    "play": "tsx src/play.ts"
   },
   "dependencies": {
     "@director/engine": "workspace:*"
