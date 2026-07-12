@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createNewGame, cloneState } from './state.js';
-import { evaluateApproach, wouldAcceptMove, areRivals } from './agency.js';
+import { evaluateApproach, wouldAcceptMove, areRivals, areDirectRivals } from './agency.js';
 import { attemptSigning } from './transfers.js';
 import type { GameState } from './types.js';
 
@@ -47,6 +47,40 @@ describe('player agency & resistance (§6)', () => {
     expect(verdict.willing).toBe(false);
     expect(verdict.reason).toMatch(/rival/i);
     expect(areRivals('man_utd', 'liverpool')).toBe(true);
+  });
+
+  it('title rivals never sell to each other — impossible at any price', () => {
+    // Arsenal-2004: Chelsea and Arsenal are both big clubs in the same league, so
+    // they are DIRECT rivals even without a named rivalry. Essien's real move is
+    // Chelsea (2005) — from Chelsea to Arsenal must be flat impossible.
+    const s = cloneState(createNewGame({ scenarioId: 'arsenal-2004', seed: 'rivals' }));
+    expect(areDirectRivals(s, 'chelsea', 'arsenal')).toBe(true);
+
+    const chelseaPlayer = Object.values(s.players).find(
+      (p) => p.club === 'chelsea' && p.curated && p.resistance.hardBlocks.length === 0,
+    )!;
+    const blocked = evaluateApproach(s, {
+      playerId: chelseaPlayer.id,
+      toClub: 'arsenal',
+      wageOffer: chelseaPlayer.wage * 10, // money is no object
+    });
+    expect(blocked.willing).toBe(false);
+    expect(blocked.hardBlocked).toBe(true);
+    expect(blocked.reason).toMatch(/direct rival/i);
+  });
+
+  it('hijacking the same player from his neutral source club IS legitimate', () => {
+    // The asymmetry the design turns on: Essien Chelsea→Arsenal is impossible,
+    // but Essien from LYON (his 2004 source club, before Chelsea sign him in 2005)
+    // is an ordinary, winnable pursuit — a clean hijack, not a rival sale.
+    const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'rivals' });
+    expect(s.players['cur_essien']!.club).toBe('lyon');
+    expect(areDirectRivals(s, 'lyon', 'arsenal')).toBe(false);
+
+    const hijack = evaluateApproach(s, { playerId: 'cur_essien', toClub: 'arsenal' });
+    // Not walled off by the rivalry rule — gated only by ordinary agency.
+    expect(hijack.hardBlocked).toBe(false);
+    expect(hijack.reason).not.toMatch(/direct rival/i);
   });
 
   it('an ordinary player is willing to move up for a fair package', () => {

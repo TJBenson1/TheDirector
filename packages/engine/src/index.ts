@@ -111,6 +111,7 @@ export {
   evaluateApproach,
   wouldAcceptMove,
   areRivals,
+  areDirectRivals,
   WILLINGNESS_THRESHOLD,
   type ApproachInput,
   type ApproachVerdict,

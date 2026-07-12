@@ -141,19 +141,21 @@ export function advanceWindow(state: GameState, options: AdvanceOptions = {}): A
   // A dismissed manager's career is over — the sim does not advance (M9).
   if (draft.board.dismissed) return { state: draft, events: [] };
 
-  // Advancing with decisions still pending means the player chose to ignore
-  // them — apply their fallout before stepping on (§9b).
-  if (draft.pendingDecisions.length > 0) resolveIgnoredDecisions(draft);
-
   // Mid-window (per-step mode only): a window is open with steps remaining.
-  // Unfold the next sub-step WITHOUT moving the calendar, so the player gets a
-  // turn between each tranche of real business.
+  // Unfold the next sub-step WITHOUT moving the calendar. Pending decisions are
+  // carried forward, NOT lapsed — a real-move offer raised early in the window
+  // stays open across its steps until the window itself closes.
   if (draft.clock.window !== null && draft.clock.windowStep >= 1 && draft.clock.windowStep < WINDOW_STEPS) {
     draft.clock.windowStep += 1;
     runWindowStep(draft, rng, draft.clock.windowStep);
     draft.meta.rngState = rng.state;
     return { state: draft, events: eventsSince(draft, startSeq) };
   }
+
+  // From here the calendar advances (to the next window). Decisions still
+  // pending means the player chose to ignore them — apply their fallout as the
+  // window closes behind them (§9b).
+  if (draft.pendingDecisions.length > 0) resolveIgnoredDecisions(draft);
 
   // A fully-unfolded window: clear the sub-step so the loop below advances the
   // calendar on to the next window.
