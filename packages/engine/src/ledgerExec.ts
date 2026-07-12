@@ -37,13 +37,13 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
   const r = rng.fork(`ledger:${now}`);
 
   // Players whose real move is still ahead — used to let a deprived club hijack
-  // a player reality was already moving SOON (Arsenal → Ferdinand). Only imminent
-  // moves (within ~2 years) count: you can't replace a 2004 striker by hijacking
-  // a winger whose real transfer isn't until 2009.
+  // a player reality was already moving IMMINENTLY (Arsenal → Ferdinand, whose
+  // move was a year away). Only moves within ~1 year count: you can't pull a
+  // striker's 2007 transfer forward to 2004 to plug a gap now.
   const nowYear = Number(now.slice(0, 4));
   const futureByPlayer = new Map<string, string[]>();
   for (const e of pack.realTransferLedger) {
-    if (e.window > now && Number(e.window.slice(0, 4)) - nowYear <= 2 && !state.meta.executedLedger.includes(entryKey(e))) {
+    if (e.window > now && Number(e.window.slice(0, 4)) - nowYear <= 1 && !state.meta.executedLedger.includes(entryKey(e))) {
       const arr = futureByPlayer.get(e.playerId) ?? [];
       arr.push(entryKey(e));
       futureByPlayer.set(e.playerId, arr);

@@ -127,6 +127,36 @@ export const EVERTON_2004: CuratedSeed[] = [
   q('everton', 'lescott', 'Joleon Lescott', 1982, 'England', ['CB', 'LB'], 78, 84, 2009, 30, t(8, 5, 8, 7, 4, 7)),
 ];
 
+/**
+ * Real 2005–08 arrivals at their SOURCE clubs, so the reality-default ledger can
+ * reproduce the rebuilds that kept the giants on top — United's especially. They
+ * execute as reality unless a butterfly diverts them.
+ */
+export const SPARTAK_2004: CuratedSeed[] = [
+  q('spartak_moscow', 'vidic', 'Nemanja Vidić', 1981, 'Serbia', ['CB'], 82, 87, 2010, 40, t(9, 6, 9, 8, 5, 6)),
+];
+export const MONACO_2004: CuratedSeed[] = [
+  q('monaco', 'evra', 'Patrice Evra', 1981, 'France', ['LB'], 81, 85, 2010, 25, t(8, 6, 8, 8, 5, 7)),
+];
+export const ATLETICO_2004: CuratedSeed[] = [
+  q('atletico', 'torres', 'Fernando Torres', 1984, 'Spain', ['ST'], 84, 90, 2009, 40, t(8, 6, 9, 7, 5, 7)),
+];
+export const WESTHAM_2004: CuratedSeed[] = [
+  q('west_ham', 'tevez', 'Carlos Tévez', 1984, 'Argentina', ['ST', 'AM'], 83, 88, 2008, 30, t(7, 8, 9, 6, 7, 7)),
+];
+/** Ballack + Hargreaves join English clubs from Bayern (curated as the source). */
+export const BAYERN_2004: CuratedSeed[] = [
+  q('bayern', 'ballack', 'Michael Ballack', 1976, 'Germany', ['CM', 'AM'], 85, 86, 2006, 30, t(8, 7, 9, 6, 5, 7)),
+  q('bayern', 'hargreaves', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 82, 85, 2007, 65, t(9, 5, 8, 7, 4, 7)),
+];
+export const PORTO_2004: CuratedSeed[] = [
+  q('porto', 'anderson_p', 'Anderson', 1988, 'Brazil', ['CM'], 76, 86, 2011, 55, t(6, 7, 7, 6, 6, 7)),
+  q('porto', 'quaresma', 'Ricardo Quaresma', 1983, 'Portugal', ['RW'], 80, 85, 2008, 40, t(6, 8, 7, 5, 7, 6)),
+];
+export const SPORTING_2004: CuratedSeed[] = [
+  q('sporting', 'nani', 'Nani', 1986, 'Portugal', ['RW', 'LW'], 76, 86, 2011, 35, t(6, 8, 7, 6, 7, 7)),
+];
+
 /** Curated squads for the arsenal-2004 scenario, keyed by club. */
 export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   arsenal: ARSENAL_2004,
@@ -139,4 +169,11 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   psv: PSV_2004,
   mallorca: MALLORCA_2004,
   valencia: VALENCIA_2004,
+  spartak_moscow: SPARTAK_2004,
+  monaco: MONACO_2004,
+  atletico: ATLETICO_2004,
+  west_ham: WESTHAM_2004,
+  bayern: BAYERN_2004,
+  porto: PORTO_2004,
+  sporting: SPORTING_2004,
 };
