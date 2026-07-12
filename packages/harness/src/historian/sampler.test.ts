@@ -31,7 +31,8 @@ describe('sampleCareer', () => {
 
   it('caps sampled items but never drops a 100%-coverage item', () => {
     const state = capture(raidingBot);
-    const mk = (c: string) => c === 'divergence-chain' || c === 'ambition-override';
+    const mk = (c: string) =>
+      c === 'divergence-chain' || c === 'ambition-override' || c === 'table-checkpoint';
     const uncapped = sampleCareer(state, 'raid');
     const capped = sampleCareer(state, 'raid', { maxItemsPerCareer: 30 });
 

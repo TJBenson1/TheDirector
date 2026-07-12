@@ -132,6 +132,10 @@ export interface LeagueState {
   roundsPlayed: number;
   /** Champions, most recent last. Feeds the §12 dynasty target and §16 timeline. */
   titleHistory: TitleEntry[];
+  /** Second-tier clubs eligible for promotion (ids). The bottom 3 swap with the
+   *  strongest 3 here each season so the division evolves rather than freezing
+   *  the opening membership. Optional so old saves load unchanged. */
+  reservoir?: ClubId[];
 }
 
 // ── Players ──────────────────────────────────────────────────────────────────

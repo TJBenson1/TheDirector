@@ -17,7 +17,7 @@ import { hashValue } from './hash.js';
 import { logEvent } from './eventLog.js';
 import { seasonMonthIndex, windowForMonthIndex, parseYearMonth, WINDOW_STEPS } from './clock.js';
 import { getScenario, DEFAULT_SCENARIO_ID } from './scenarios.js';
-import { LEAGUES } from './leagues.js';
+import { LEAGUES, SECOND_TIER } from './leagues.js';
 import { initLeagueSeason } from './season.js';
 import {
   generateSquad,
@@ -138,6 +138,14 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     if (club) club.finances.ownership = own;
   }
 
+  // Second-tier reservoir: the national pool minus clubs already in this league
+  // (and the user's club). The bottom 3 swap with the strongest 3 here each
+  // season, so the division evolves over a career rather than freezing.
+  const leagueMemberIds = new Set(league.clubs.map((c) => c.id));
+  const reservoir = (SECOND_TIER[league.id] ?? [])
+    .map((c) => c.id)
+    .filter((id) => !leagueMemberIds.has(id) && id !== scenario.playerClub);
+
   const leagueState: LeagueState = {
     id: league.id,
     name: league.name,
@@ -146,6 +154,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     standings: {},
     roundsPlayed: 0,
     titleHistory: [],
+    reservoir,
   };
   initLeagueSeason(leagueState, leagueState.seasonYear);
 

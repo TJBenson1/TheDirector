@@ -177,6 +177,9 @@ function sampleCareerArcs(
         playerId: p.id,
         name: p.name,
         age,
+        // Position is decisive for judging an arc: a 37-year-old GK at 90 or a
+        // defender with 0 goals is normal; the same numbers for a striker are not.
+        positions: p.positions,
         club: p.club,
         curated: p.curated,
         ability: p.ability,
@@ -329,11 +332,13 @@ export function sampleCareer(
 
   if (items.length <= opts.maxItemsPerCareer) return items;
   // Over budget: keep every 100%-coverage item, then fill by significance.
-  const mustKeep = items.filter(
-    (i) => i.category === 'divergence-chain' || i.category === 'ambition-override',
-  );
+  // Divergences and overrides are where unrealism lives; table checkpoints catch
+  // trajectory fantasy (a SEVERE archetype) and are few — never drop them.
+  const isMustKeep = (c: string) =>
+    c === 'divergence-chain' || c === 'ambition-override' || c === 'table-checkpoint';
+  const mustKeep = items.filter((i) => isMustKeep(i.category));
   const rest = items
-    .filter((i) => i.category !== 'divergence-chain' && i.category !== 'ambition-override')
+    .filter((i) => !isMustKeep(i.category))
     .sort((a, b) => b.significance - a.significance);
   return [...mustKeep, ...rest].slice(0, Math.max(mustKeep.length, opts.maxItemsPerCareer));
 }

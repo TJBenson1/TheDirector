@@ -41,7 +41,14 @@ export {
   type ScenarioSeed,
   type ClubSeed,
 } from './scenarios.js';
-export { LEAGUES, ENGLAND_1999, type LeagueSeed, type LeagueClubSeed } from './leagues.js';
+export {
+  LEAGUES,
+  ENGLAND_1999,
+  SECOND_TIER,
+  SECOND_TIER_CLUB,
+  type LeagueSeed,
+  type LeagueClubSeed,
+} from './leagues.js';
 export {
   inflationFactor,
   valuePlayer,
@@ -161,6 +168,7 @@ export {
   finalizeSeason,
   stepLeagueMonth,
   maxConsecutiveTitles,
+  applyPromotionRelegation,
   emptyRecord,
   type MatchResult,
 } from './season.js';

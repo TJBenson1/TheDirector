@@ -183,3 +183,59 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,
 };
+
+/**
+ * Second-tier reservoirs (promotion pools). Each season the league's bottom 3
+ * swap with the strongest 3 clubs here, so the division churns across a long
+ * career (real clubs go down and come back; the 1999 membership doesn't persist
+ * unchanged to 2013 — a Historian realism note). Clubs already in a given
+ * league are filtered out when the pool is attached (see state.ts), so one broad
+ * pool per country serves every era of that country's top flight. Strengths are
+ * promoted-side level (a newly-up club is near the drop, not mid-table).
+ */
+const ENGLISH_POOL: LeagueClubSeed[] = [
+  { id: 'fulham', name: 'Fulham', prestige: 56, strength: 55 },
+  { id: 'man_city', name: 'Manchester City', prestige: 64, strength: 58 },
+  { id: 'bolton', name: 'Bolton Wanderers', prestige: 54, strength: 55 },
+  { id: 'charlton', name: 'Charlton Athletic', prestige: 52, strength: 53 },
+  { id: 'blackburn', name: 'Blackburn Rovers', prestige: 58, strength: 57 },
+  { id: 'birmingham', name: 'Birmingham City', prestige: 52, strength: 52 },
+  { id: 'west_brom', name: 'West Bromwich Albion', prestige: 50, strength: 51 },
+  { id: 'portsmouth', name: 'Portsmouth', prestige: 52, strength: 53 },
+  { id: 'wolves', name: 'Wolverhampton Wanderers', prestige: 50, strength: 50 },
+  { id: 'norwich', name: 'Norwich City', prestige: 50, strength: 51 },
+  { id: 'crystal_palace', name: 'Crystal Palace', prestige: 50, strength: 51 },
+  { id: 'wigan', name: 'Wigan Athletic', prestige: 50, strength: 52 },
+  { id: 'reading', name: 'Reading', prestige: 48, strength: 51 },
+  { id: 'hull', name: 'Hull City', prestige: 48, strength: 50 },
+  { id: 'stoke', name: 'Stoke City', prestige: 52, strength: 54 },
+  { id: 'burnley', name: 'Burnley', prestige: 46, strength: 49 },
+  { id: 'qpr', name: 'Queens Park Rangers', prestige: 48, strength: 50 },
+  { id: 'ipswich', name: 'Ipswich Town', prestige: 50, strength: 52 },
+];
+
+const SPANISH_POOL: LeagueClubSeed[] = [
+  { id: 'sevilla', name: 'Sevilla', prestige: 66, strength: 62 },
+  { id: 'getafe', name: 'Getafe', prestige: 50, strength: 55 },
+  { id: 'levante', name: 'Levante', prestige: 48, strength: 53 },
+  { id: 'sporting_gijon', name: 'Sporting Gijón', prestige: 50, strength: 53 },
+  { id: 'tenerife', name: 'CD Tenerife', prestige: 48, strength: 52 },
+  { id: 'recreativo', name: 'Recreativo Huelva', prestige: 46, strength: 51 },
+  { id: 'almeria', name: 'UD Almería', prestige: 46, strength: 52 },
+  { id: 'hercules', name: 'Hércules', prestige: 44, strength: 50 },
+];
+
+/** Reservoir seeds per league id (broad national pool; league members filtered
+ *  out at attach time). */
+export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
+  'eng-1': ENGLISH_POOL,
+  'eng-2001': ENGLISH_POOL,
+  'eng-2004': ENGLISH_POOL,
+  'eng-2013': ENGLISH_POOL,
+  'esp-1': SPANISH_POOL,
+};
+
+/** Flat lookup for instantiating a promoted club not yet in the world. */
+export const SECOND_TIER_CLUB: Record<string, LeagueClubSeed> = Object.fromEntries(
+  [...ENGLISH_POOL, ...SPANISH_POOL].map((c) => [c.id, c]),
+);

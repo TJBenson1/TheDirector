@@ -61,5 +61,8 @@ describe('calibration harness', () => {
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
     expect(pending.length).toBe(4);
-  }, 30000);
+    // Higher budget than the early milestones: a mature world now also ages
+    // players into retirement and runs promotion/relegation each season, so a
+    // 36-career smoke batch does materially more work per career.
+  }, 90000);
 });

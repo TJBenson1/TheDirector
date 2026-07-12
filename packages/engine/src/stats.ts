@@ -49,11 +49,21 @@ export function computePlayerSeason(
   const goals = Math.max(0, Math.round(goalExp + rng.gaussian(0, Math.sqrt(goalExp + 0.5))));
   const assists = Math.max(0, Math.round(assistExp + rng.gaussian(0, Math.sqrt(assistExp + 0.5))));
 
-  // Seasonal rating from effective ability, minutes and output, ~4..9.
-  const outputBonus = pos === 'GK' || pos === 'CB' ? 0 : (goals + assists) * 0.05;
+  // Seasonal rating from effective ability and minutes, ADJUSTED by output
+  // relative to what the role should produce. An attacker who blanks a full
+  // season is not a 7.8 (a Historian realism note); defenders and keepers stay
+  // output-neutral, judged on ability, not goals.
+  const expectedOutput = goalExp + assistExp;
+  const actualOutput = goals + assists;
+  const attacker = pos === 'AM' || pos === 'LW' || pos === 'RW' || pos === 'ST';
+  const outputTerm = attacker
+    ? Math.max(-1.4, Math.min(1.2, (actualOutput - expectedOutput) * 0.12))
+    : pos === 'CM'
+      ? Math.max(-0.5, Math.min(0.6, (actualOutput - expectedOutput) * 0.08))
+      : 0;
   const rating = Math.max(
     4,
-    Math.min(9, 5.5 + abilityScale * 2 + (share - 0.5) * 1.5 + outputBonus + rng.gaussian(0, 0.3)),
+    Math.min(9, 5.5 + abilityScale * 2 + (share - 0.5) * 1.5 + outputTerm + rng.gaussian(0, 0.3)),
   );
 
   return {

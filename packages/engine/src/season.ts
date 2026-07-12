@@ -12,6 +12,7 @@
 
 import type {
   ClubId,
+  ClubState,
   GameState,
   LeagueState,
   TeamRecord,
@@ -19,6 +20,15 @@ import type {
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { parseYearMonth } from './clock.js';
+import { SECOND_TIER_CLUB } from './leagues.js';
+import {
+  generateSquad,
+  deriveRawStrength,
+  recomputeClubStrength,
+  clubSquadPlayers,
+  computeWageBill,
+} from './players.js';
+import { initialFinances } from './finance.js';
 
 // ── Tunable match-model constants (calibrated in season.test.ts) ─────────────
 const HOME_ADVANTAGE = 6; // strength points
@@ -215,6 +225,103 @@ export function finalizeSeason(state: GameState, league: LeagueState): void {
   });
 }
 
+/** Strength used to rank a reservoir club for promotion (live if instantiated,
+ *  else its seed level). */
+function reservoirStrength(state: GameState, id: ClubId): number {
+  return state.clubs[id]?.strength ?? SECOND_TIER_CLUB[id]?.strength ?? 50;
+}
+
+/** Bring a promoted club into the top flight: re-attach it if it already exists
+ *  (a previously-relegated side bouncing back), else instantiate it with a fresh
+ *  procedural squad. Forked RNG keeps this from perturbing the match stream. */
+function promoteClub(state: GameState, id: ClubId, leagueId: string, year: number, rng: Rng): void {
+  const existing = state.clubs[id];
+  if (existing) {
+    existing.leagueId = leagueId;
+    existing.relegationThreatened = false;
+    recomputeClubStrength(state, id);
+    return;
+  }
+  const seed = SECOND_TIER_CLUB[id];
+  if (!seed) return;
+  const clubRng = rng.fork(`promote:${id}`);
+  const club: ClubState = {
+    id: seed.id,
+    name: seed.name,
+    tier: 2,
+    prestige: seed.prestige,
+    squad: [],
+    strength: seed.strength,
+    baseStrength: seed.strength,
+    squadStrengthAnchor: 0,
+    form: 0,
+    leagueId,
+    finances: { ownership: 'sustainable', transferBudget: 0, wageBudget: 0, wageBill: 0 },
+    pendingCounterPunch: 0,
+    grudge: 0,
+    financialHealth: 'healthy',
+    relegationThreatened: false,
+  };
+  state.clubs[club.id] = club;
+  for (const p of generateSquad(club.id, leagueId, club.baseStrength, year, clubRng)) {
+    state.players[p.id] = p;
+    club.squad.push(p.id);
+  }
+  club.squadStrengthAnchor = deriveRawStrength(clubSquadPlayers(state, club.id));
+  recomputeClubStrength(state, club.id);
+  club.finances = initialFinances(club.prestige, year, 'sustainable', computeWageBill(state, club.id));
+}
+
+/**
+ * Promotion & relegation at the season boundary: the bottom 3 drop out of the
+ * top flight and the strongest 3 reservoir clubs come up, so the division
+ * evolves over a career instead of freezing the opening membership (a Historian
+ * SEVERE — Wimbledon still top-flight in 2009). The user's club is never
+ * auto-relegated (a bottom-3 finish is handled by the board, not the drop), so
+ * the playable timeline stays coherent. Club count is preserved (3-for-3).
+ *
+ * Called at the August reset, AFTER the old final table has been read and
+ * crowned, so mid-season standings are never disturbed.
+ */
+export function applyPromotionRelegation(state: GameState, league: LeagueState, rng: Rng): void {
+  const reservoir = league.reservoir ?? [];
+  if (reservoir.length < 3 || league.clubIds.length < 4) return;
+
+  const order = standingsOrder(league);
+  let relegated = order.slice(-3);
+  if (relegated.includes(state.playerClub)) {
+    relegated = order.filter((id) => id !== state.playerClub).slice(-3);
+  }
+  const relSet = new Set(relegated);
+
+  const year = parseYearMonth(state.clock.date).year;
+  const promoted = [...reservoir]
+    .sort((a, b) => reservoirStrength(state, b) - reservoirStrength(state, a))
+    .slice(0, 3);
+  const proSet = new Set(promoted);
+
+  for (const id of promoted) promoteClub(state, id, league.id, year, rng);
+  for (const id of relegated) {
+    const c = state.clubs[id];
+    if (c) {
+      c.leagueId = null;
+      c.relegationThreatened = true;
+    }
+  }
+
+  league.clubIds = league.clubIds.filter((id) => !relSet.has(id)).concat(promoted);
+  league.reservoir = reservoir.filter((id) => !proSet.has(id)).concat(relegated);
+
+  logEvent(state, {
+    category: 'match',
+    code: 'league.promrel',
+    message: `${league.name}: ${promoted.map((id) => state.clubs[id]?.name ?? id).join(', ')} promoted; ${relegated
+      .map((id) => state.clubs[id]?.name ?? id)
+      .join(', ')} relegated`,
+    data: { leagueId: league.id, promoted, relegated },
+  });
+}
+
 /**
  * Advance every simulated league by one calendar month. Called from
  * `advanceWindow`'s per-month hook. Handles the season boundary: crown at June,
@@ -232,8 +339,11 @@ export function stepLeagueMonth(state: GameState, rng: Rng): void {
     if (idx >= 1 && idx <= PLAYING_MONTHS) {
       // A new season's first playing month (August) resets the table. The old
       // final table therefore stays viewable through June + the July summer
-      // window, then is cleared only when the next campaign kicks off.
+      // window, then is cleared only when the next campaign kicks off. Promotion
+      // & relegation happen HERE — after the old table was read/crowned, before
+      // the new one is built — on a forked stream so the match RNG is untouched.
       if (league.seasonYear !== owningSeasonYear) {
+        applyPromotionRelegation(state, league, leagueRng.fork('promrel'));
         initLeagueSeason(league, owningSeasonYear);
       }
       const target = Math.round((ROUNDS * idx) / PLAYING_MONTHS);
