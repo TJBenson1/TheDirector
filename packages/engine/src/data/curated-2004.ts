@@ -53,7 +53,6 @@ export const CHELSEA_2004: CuratedSeed[] = [
   q('chelsea', 'bridge', 'Wayne Bridge', 1980, 'England', ['LB'], 79, 81, 2008, 35, t(7, 5, 7, 6, 4, 7)),
   q('chelsea', 'makelele2', 'Claude Makélélé', 1973, 'France', ['DM'], 85, 85, 2007, 25, t(9, 4, 8, 7, 3, 7)),
   q('chelsea', 'lampard2', 'Frank Lampard', 1978, 'England', ['CM'], 87, 88, 2008, 20, t(9, 6, 9, 8, 3, 7)),
-  q('chelsea', 'essien', 'Michael Essien', 1982, 'Ghana', ['DM', 'CM'], 84, 88, 2010, 30, t(8, 5, 9, 7, 5, 7)),
   q('chelsea', 'duff', 'Damien Duff', 1979, 'Ireland', ['LW', 'RW'], 83, 84, 2008, 35, t(8, 5, 7, 7, 4, 7)),
   q('chelsea', 'cole_j', 'Joe Cole', 1981, 'England', ['AM', 'LW'], 82, 85, 2008, 30, t(7, 6, 8, 7, 5, 7)),
   q('chelsea', 'gudjohnsen', 'Eiður Guðjohnsen', 1978, 'Iceland', ['ST', 'AM'], 82, 83, 2007, 30, t(8, 5, 7, 6, 4, 7)),
@@ -176,6 +175,11 @@ export const ZENIT_2004: CuratedSeed[] = [
 export const LEVERKUSEN_2004: CuratedSeed[] = [
   q('leverkusen', 'berbatov', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST'], 82, 87, 2006, 30, t(7, 7, 7, 6, 5, 7)),
 ];
+/** Essien at his real source club — Chelsea sign him in 2005, so a rival could
+ *  legitimately hijack him from Lyon in 2004 (but never FROM Chelsea). */
+export const LYON_2004: CuratedSeed[] = [
+  q('lyon', 'essien', 'Michael Essien', 1982, 'Ghana', ['DM', 'CM'], 82, 88, 2010, 30, t(8, 5, 9, 7, 5, 7)),
+];
 
 /** Curated squads for the arsenal-2004 scenario, keyed by club. */
 export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
@@ -200,4 +204,5 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   dortmund: DORTMUND_2004,
   zenit: ZENIT_2004,
   leverkusen: LEVERKUSEN_2004,
+  lyon: LYON_2004,
 };

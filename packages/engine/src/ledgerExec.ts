@@ -19,6 +19,7 @@ import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
 import { clubSquadPlayers } from './players.js';
 import { appendMemory } from './memory.js';
+import { areDirectRivals } from './agency.js';
 import { ERA_REALITY, eraForScenario, entryKey, type RealTransferLedgerEntry, type FallbackTier, type InvalidationCause } from './ledger.js';
 
 function positionGroupOf(p: PlayerState): string {
@@ -242,6 +243,7 @@ function fallbackForLedger(
     if (targetAbility - p.ability > 6) return false; // like-for-like, not a big drop
     const seller = p.club ? state.clubs[p.club] : undefined;
     if (!seller) return false;
+    if (areDirectRivals(state, seller.id, entry.to)) return false; // rivals don't trade
     const hijackable = futureByPlayer.has(p.id); // reality was moving him anyway
     if (hijackable) return true;
     if (ledgerSubjects.has(p.id)) return false; // spoken for, but not yet movable

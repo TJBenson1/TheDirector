@@ -31,6 +31,23 @@ export function areRivals(a: ClubId, b: ClubId): boolean {
   return RIVALRIES.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
 }
 
+/**
+ * Direct rivals for the purposes of the transfer market: a named rivalry, OR two
+ * big clubs (prestige ≥ 78) in the SAME domestic league — title competitors do
+ * not sell each other their players (Essien from Chelsea to Arsenal is simply
+ * impossible). Note this is about the CURRENT clubs: hijacking a player from his
+ * neutral source club before a rival gets him (Essien from Lyon in 2004, before
+ * Chelsea in 2005) is a different, perfectly legitimate move.
+ */
+export function areDirectRivals(state: GameState, a: ClubId | null | undefined, b: ClubId | null | undefined): boolean {
+  if (!a || !b || a === b) return false;
+  if (areRivals(a, b)) return true;
+  const ca = state.clubs[a];
+  const cb = state.clubs[b];
+  if (!ca || !cb) return false;
+  return ca.leagueId !== null && ca.leagueId === cb.leagueId && ca.prestige >= 78 && cb.prestige >= 78;
+}
+
 export interface ApproachInput {
   playerId: PlayerId;
   toClub: ClubId;
@@ -69,6 +86,17 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
   }
 
   const fromClub = player.club ? state.clubs[player.club] : undefined;
+
+  // 1b) Direct rivals never trade with each other — impossible on club and player
+  //     preference alike, at any price (Essien would not cross Chelsea→Arsenal).
+  if (fromClub && areDirectRivals(state, fromClub.id, buyer.id)) {
+    return {
+      willing: false,
+      willingness: 0,
+      hardBlocked: true,
+      reason: `${fromClub.name} will not sell ${player.name} to a direct rival in ${buyer.name} — at any price.`,
+    };
+  }
 
   // 2) Pull — the buyer's appeal.
   let pull = 45;
