@@ -49,8 +49,19 @@ function groupOf(player: PlayerState): PositionGroup {
  */
 export function estimateMinutesShare(state: GameState, club: ClubState, player: PlayerState): number {
   const group = groupOf(player);
+  const year = Number(state.clock.date.slice(0, 4));
+  // Rank by EFFECTIVE ability: a fading veteran (32+) is discounted, because
+  // clubs transition minutes to youth rather than block a prospect behind a
+  // declining 34-year-old for years. A prospect stuck behind PRIME players
+  // (no discount) still rides the bench and plateaus — so this doesn't rescue
+  // a genuinely benched wonderkid, only an unrealistically age-blocked one.
+  const eff = (p: PlayerState): number => {
+    const age = year - p.birthYear;
+    return p.ability - (age >= 32 ? (age - 31) * 3 : 0);
+  };
+  const mine = eff(player);
   const peers = clubSquadPlayers(state, club.id).filter((p) => groupOf(p) === group);
-  const rank = peers.filter((p) => p.ability > player.ability || (p.ability === player.ability && p.id < player.id)).length;
+  const rank = peers.filter((p) => eff(p) > mine || (eff(p) === mine && p.id < player.id)).length;
   const slots = GROUP_SLOTS[group];
   if (rank < slots) return 0.85; // first choice
   if (rank < slots + 2) return 0.4; // rotation

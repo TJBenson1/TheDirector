@@ -65,7 +65,7 @@ describe('rival AI — poaching is a logical butterfly (§9a #3)', () => {
         else s = applyDecision(s, d.id, d.choices[0]!.id).state;
       }
       if (s.eventLog.some((e) => e.code === 'ledger.alternative')) boughtAlternative = true;
-      if (s.meta.executedLedger.includes('cur_anelka')) break;
+      if (s.meta.executedLedger.some((k) => k.startsWith('cur_anelka@'))) break;
       s = advanceWindow(s).state;
     }
     return { poached, boughtAlternative };

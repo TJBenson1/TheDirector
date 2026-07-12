@@ -22,6 +22,9 @@ describe('contextual development (§5)', () => {
       p.ability = 68;
       p.potentialCeiling = 90;
       p.birthCeiling = 90;
+      // Control professionalism so the test isolates the MINUTES factor rather
+      // than whichever procedural filler (and its random personality) is picked.
+      p.personality = { professionalism: 9, ego: 4, ambition: 7, loyalty: 7, volatility: 2, adaptability: 7 };
       expect(estimateMinutesShare(state, state.clubs.watford!, p)).toBeGreaterThanOrEqual(0.6);
       const before = p.ability;
       processSeasonDevelopment(state, Rng.fromSeed(`run:${i}`));

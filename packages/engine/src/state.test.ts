@@ -35,7 +35,7 @@ describe('createNewGame', () => {
     expect(state.clock.window).toBe('summer');
     // Universe = 12 European context clubs ∪ 20 PL clubs (5 overlap) + 4 extra
     // context selling clubs (Monaco/Lazio/PSV/Marseille) = 31.
-    expect(Object.keys(state.clubs)).toHaveLength(31);
+    expect(Object.keys(state.clubs)).toHaveLength(33);
     expect(state.clubs.man_utd?.name).toBe('Manchester United');
     // The domestic league is initialised and ready to play.
     expect(state.leagues['eng-1']?.clubIds).toHaveLength(20);

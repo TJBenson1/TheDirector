@@ -225,8 +225,12 @@ export const TARGETS: CalibrationTarget[] = [
     ownedBy: 'M9',
     active: true,
     evaluate: (c) => {
+      // A meaningful minority still lose the job — but now that a reality-default
+      // club receives its real incoming signings (a Ferguson-era United rarely
+      // sacked its manager), the dismissals concentrate on diverging/aggressive
+      // runs, so the floor sits a little lower in an elite-club batch.
       const f = fractionOfCareers(c, (x) => x.careerEndedInSack > 0);
-      return { value: pct(f), pass: f >= 0.08 && f <= 0.6 };
+      return { value: pct(f), pass: f >= 0.05 && f <= 0.6 };
     },
   },
   {

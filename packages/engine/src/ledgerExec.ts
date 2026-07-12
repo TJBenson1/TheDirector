@@ -19,7 +19,7 @@ import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
 import { clubSquadPlayers } from './players.js';
 import { appendMemory } from './memory.js';
-import { ERA_REALITY, eraForScenario, type RealTransferLedgerEntry, type FallbackTier, type InvalidationCause } from './ledger.js';
+import { ERA_REALITY, eraForScenario, entryKey, type RealTransferLedgerEntry, type FallbackTier, type InvalidationCause } from './ledger.js';
 
 function positionGroupOf(p: PlayerState): string {
   const pos = p.positions[0] ?? 'CM';
@@ -36,35 +36,56 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
   const now = state.clock.date;
   const r = rng.fork(`ledger:${now}`);
 
-  for (const entry of pack.realTransferLedger) {
-    if (state.meta.executedLedger.includes(entry.playerId)) continue;
-    if (entry.window > now) continue; // not due yet (YYYY-MM compares lexically)
-    state.meta.executedLedger.push(entry.playerId);
+  // Players whose real move is still ahead — used both to consume a subject when
+  // a deprived club raids him (Arsenal → Ferdinand) and to know who is "spoken
+  // for" by reality.
+  const futureByPlayer = new Map<string, string[]>();
+  for (const e of pack.realTransferLedger) {
+    if (e.window > now && !state.meta.executedLedger.includes(entryKey(e))) {
+      const arr = futureByPlayer.get(e.playerId) ?? [];
+      arr.push(entryKey(e));
+      futureByPlayer.set(e.playerId, arr);
+    }
+  }
 
-    // Reality moving a player TO the user's club is the user's own signing to
-    // make (or not) — never a reality-default AI transfer, and never a rival
-    // "missed target" butterfly. Consume the entry silently.
-    if (entry.to === state.playerClub) continue;
+  for (const entry of pack.realTransferLedger) {
+    const key = entryKey(entry);
+    if (state.meta.executedLedger.includes(key)) continue;
+    if (entry.window > now) continue; // not due yet (YYYY-MM compares lexically)
+    state.meta.executedLedger.push(key);
 
     const player = state.players[entry.playerId];
     const dest = state.clubs[entry.to];
 
-    // Causal chain: a move enabled by a funder that the user pre-empted is
-    // CANCELLED, not replaced. The club no longer needs/can afford it, so the
-    // player simply stays put (Madrid keep Özil once they never sign Bale).
+    // Causal chain: a move enabled by a funder the user pre-empted is (probably)
+    // CANCELLED, not replaced — the club no longer needs/can afford it, so the
+    // player stays put (Madrid keep Özil once they never sign Bale; keep Ronaldo
+    // and Madrid never offload Robben/Sneijder). `cancelChance` < 1 lets a fringe
+    // move still happen for depth.
     if (entry.enabledBy && !state.meta.realizedLedger.includes(entry.enabledBy)) {
-      const funder = state.players[entry.enabledBy];
-      state.timeline.divergenceLog.push({
-        date: now,
-        kind: 'butterfly',
-        detail: `${dest?.name ?? entry.to} no longer sign ${funder?.name ?? entry.enabledBy}, so ${player?.name ?? entry.playerId} is not sold — he stays at ${state.clubs[entry.from ?? '']?.name ?? entry.from}.`,
-      });
-      logEvent(state, {
-        category: 'transfer',
-        code: 'ledger.cancelled',
-        message: `Chain broken: ${player?.name ?? entry.playerId} is no longer sold (the ${funder?.name ?? entry.enabledBy} deal that funded it never happened)`,
-        data: { playerId: entry.playerId, from: entry.from, to: entry.to, enabledBy: entry.enabledBy },
-      });
+      if (r.chance(entry.cancelChance ?? 1)) {
+        const funderEntry = pack.realTransferLedger.find((e) => entryKey(e) === entry.enabledBy);
+        const funderName = funderEntry ? state.players[funderEntry.playerId]?.name ?? 'that signing' : 'that signing';
+        state.timeline.divergenceLog.push({
+          date: now,
+          kind: 'butterfly',
+          detail: `${dest?.name ?? entry.to} never completed the ${funderName} deal, so ${player?.name ?? entry.playerId} is not moved — he stays at ${state.clubs[entry.from ?? '']?.name ?? entry.from}.`,
+        });
+        logEvent(state, {
+          category: 'transfer',
+          code: 'ledger.cancelled',
+          message: `Chain broken: ${player?.name ?? entry.playerId} stays put (the deal that funded his move never happened)`,
+          data: { playerId: entry.playerId, from: entry.from, to: entry.to, enabledBy: entry.enabledBy },
+        });
+        continue;
+      }
+    }
+
+    // A move involving the USER's club is the user's own call — present it as a
+    // reality-default decision (sign it / sanction it, or diverge), rather than
+    // auto-executing or silently skipping. Reality holds if the user does nothing.
+    if (entry.to === state.playerClub || entry.from === state.playerClub) {
+      offerUserLedgerMove(state, entry, key);
       continue;
     }
 
@@ -80,7 +101,7 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
       dest.finances.transferBudget = Math.max(dest.finances.transferBudget, entry.fee);
       const res = executeTransfer(state, { playerId: entry.playerId, toClub: entry.to, fee: entry.fee });
       if (res.ok) {
-        state.meta.realizedLedger.push(entry.playerId); // funders for dependents
+        state.meta.realizedLedger.push(key); // funders for dependents
         logEvent(state, {
           category: 'transfer',
           code: 'ledger.executed',
@@ -94,7 +115,7 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
     // Invalidated → traceable butterfly + fallback.
     const cause: InvalidationCause =
       player?.club === state.playerClub ? 'user-signed-target' : 'chain-broken-by-user';
-    const tier = fallbackForLedger(state, entry, player, r);
+    const tier = fallbackForLedger(state, entry, player, r, futureByPlayer);
     state.timeline.divergenceLog.push({
       date: now,
       kind: 'butterfly',
@@ -108,6 +129,68 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
       data: { playerId: entry.playerId, to: entry.to, cause, tier },
     });
   }
+}
+
+/**
+ * Present a real transfer involving the user's club as a reality-default
+ * decision (§16 — "real transfers per window"). Doing nothing = reality holds
+ * (the incoming signing is completed / the outgoing sale is sanctioned). The
+ * player may diverge: pass on a signing, or KEEP a player whose real move was
+ * out — which unsettles him, because he wanted to go. A target no longer at his
+ * real club (an earlier butterfly took him) is simply reported as unavailable.
+ */
+function offerUserLedgerMove(state: GameState, entry: RealTransferLedgerEntry, key: string): void {
+  const player = state.players[entry.playerId];
+  const feeM = (entry.fee / 1_000_000).toFixed(1);
+  const realizedTag = `ledger:${key}`;
+
+  if (entry.to === state.playerClub) {
+    // Incoming real signing the user is expected to make.
+    if (!player || player.club !== entry.from) {
+      logEvent(state, {
+        category: 'transfer',
+        code: 'ledger.unavailable',
+        message: `A real target (${player?.name ?? entry.playerId}) is no longer available — an earlier move took him elsewhere`,
+        data: { playerId: entry.playerId, to: entry.to },
+      });
+      return;
+    }
+    const fromName = entry.from ? state.clubs[entry.from]?.name ?? entry.from : 'a free transfer';
+    state.pendingDecisions.push({
+      id: `real-in:${key}`,
+      title: `Real signing available: ${player.name} (${fromName}, £${feeM}m)`,
+      description: `This is the window ${player.name} really joined ${state.clubs[state.playerClub]!.name}. Complete the deal, or pass and let history diverge.`,
+      interrupt: false,
+      clubId: state.playerClub,
+      category: 'transfer',
+      choices: [
+        { id: 'sign', label: `Complete the signing (£${feeM}m)`, onSuccess: [{ kind: 'signReal', playerId: entry.playerId, clubId: entry.from ?? undefined, amount: entry.fee, tag: realizedTag }] },
+        { id: 'pass', label: 'Pass (diverge from history)', onSuccess: [{ kind: 'memory', tag: 'divergence', text: `Passed on signing ${player.name}.` }] },
+      ],
+      falloutIfIgnored: [{ kind: 'signReal', playerId: entry.playerId, clubId: entry.from ?? undefined, amount: entry.fee, tag: realizedTag }],
+      memoryTags: ['real-move', entry.playerId],
+    });
+    return;
+  }
+
+  // Outgoing: entry.from === user club. A real departure the user can sanction.
+  if (!player || player.club !== state.playerClub) return; // already gone / not ours
+  const buyer = state.clubs[entry.to];
+  if (buyer) buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, entry.fee);
+  state.pendingDecisions.push({
+    id: `real-out:${key}`,
+    title: `${buyer?.name ?? entry.to} bid £${feeM}m for ${player.name} (his real move)`,
+    description: `This is the window ${player.name} really left for ${buyer?.name ?? entry.to}. Sanction the sale, or keep him — he wanted the move, so refusing will unsettle him.`,
+    interrupt: false,
+    clubId: state.playerClub,
+    category: 'transfer',
+    choices: [
+      { id: 'sell', label: `Sanction the £${feeM}m sale (as in reality)`, onSuccess: [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.to, amount: entry.fee, tag: realizedTag }] },
+      { id: 'keep', label: `Keep ${player.name} (he wanted the move — unrest)`, onSuccess: [{ kind: 'agitation', playerId: entry.playerId, amount: 45, text: `wanted the move to ${buyer?.name ?? entry.to} that you blocked` }] },
+    ],
+    falloutIfIgnored: [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.to, amount: entry.fee, tag: realizedTag }],
+    memoryTags: ['real-move', entry.playerId],
+  });
 }
 
 /**
@@ -128,6 +211,7 @@ function fallbackForLedger(
   entry: RealTransferLedgerEntry,
   original: PlayerState | undefined,
   rng: Rng,
+  futureByPlayer: Map<string, string[]>,
 ): FallbackTier {
   const dest = state.clubs[entry.to];
   if (!dest || !original) return 'generic-needs';
@@ -135,34 +219,53 @@ function fallbackForLedger(
   const targetAbility = original.ability;
   const year = Number(state.clock.date.slice(0, 4));
 
-  // Best comparable, low-cascade alternative from the foreign/context market —
-  // available depth, similar level, not a clear upgrade, not a one-club man.
-  // Reality's own movers are spoken for — signing one of them would cascade a
-  // chain of misses. The alternative comes from the pool reality isn't using.
+  // A comparable, genuinely-available alternative. Two sources count as
+  // "available": (a) foreign/context depth reality isn't otherwise using, and
+  // (b) a player whose OWN real move is still ahead — reality was going to sell
+  // him anyway, so the deprived club can hijack that (Arsenal, denied Campbell,
+  // go for Leeds' Ferdinand). Picking (b) consumes his onward move: he joins the
+  // new club and his later real transfer never happens.
   const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   const ledgerSubjects = new Set((pack?.realTransferLedger ?? []).map((e) => e.playerId));
 
-  let bestAlt: PlayerState | undefined;
-  for (const p of Object.values(state.players)) {
-    if (!p.curated) continue; // a named narrative signing must be a real player (Principle 2)
-    if (ledgerSubjects.has(p.id)) continue; // reality already has plans for him
+  const eligible = (p: PlayerState): boolean => {
+    if (!p.curated) return false; // a named narrative signing must be a real player (Principle 2)
+    if (p.id === entry.playerId || p.club === entry.to) return false;
+    if (positionGroupOf(p) !== group) return false;
+    if (p.resistance.hardBlocks.length > 0 || p.injury) return false;
+    if (p.ability > targetAbility + 2) return false; // not a clear upgrade
+    if (targetAbility - p.ability > 6) return false; // like-for-like, not a big drop
     const seller = p.club ? state.clubs[p.club] : undefined;
-    if (!seller || seller.leagueId !== null) continue; // foreign/context pool (no cascade)
-    if (p.club === entry.to) continue;
-    // You shop where players are actually available — not by raiding another
-    // giant's contented star. Skip healthy elite sellers (a crisis/strained
-    // club will still deal).
-    if (seller.prestige >= 82 && seller.financialHealth === 'healthy') continue;
-    if (positionGroupOf(p) !== group) continue;
-    if (p.resistance.hardBlocks.length > 0 || p.injury) continue;
-    if (p.ability > targetAbility + 2) continue; // not a clear upgrade on the lost man
-    if (targetAbility - p.ability > 6) continue; // a like-for-like, not a big drop
-    if (!bestAlt || Math.abs(p.ability - targetAbility) < Math.abs(bestAlt.ability - targetAbility)) bestAlt = p;
-  }
+    if (!seller) return false;
+    const hijackable = futureByPlayer.has(p.id); // reality was moving him anyway
+    if (hijackable) return true;
+    if (ledgerSubjects.has(p.id)) return false; // spoken for, but not yet movable
+    if (seller.leagueId !== null) return false; // else only low-cascade foreign depth
+    if (seller.prestige >= 82 && seller.financialHealth === 'healthy') return false; // no raiding a happy giant
+    return true;
+  };
 
-  // The user's best positional fit (a genuine asset the deprived club might want).
+  // Prefer hijacking a player reality was already moving (the realistic,
+  // compounding butterfly — Arsenal replace Campbell with Leeds' Ferdinand, who
+  // then never joins United) over parachuting in distant foreign depth.
+  let bestHijack: PlayerState | undefined;
+  let bestForeign: PlayerState | undefined;
+  const closer = (p: PlayerState, b: PlayerState | undefined) =>
+    !b || Math.abs(p.ability - targetAbility) < Math.abs(b.ability - targetAbility);
+  for (const p of Object.values(state.players)) {
+    if (!eligible(p)) continue;
+    if (futureByPlayer.has(p.id)) {
+      if (closer(p, bestHijack)) bestHijack = p;
+    } else if (closer(p, bestForeign)) {
+      bestForeign = p;
+    }
+  }
+  const bestAlt = bestHijack ?? bestForeign;
+
+  // The user's best positional fit (a genuine asset the deprived club might
+  // want) — but never the very player they just lost to the user.
   const userAsset = clubSquadPlayers(state, state.playerClub)
-    .filter((p) => positionGroupOf(p) === group && p.ability >= 78 && p.resistance.hardBlocks.length === 0 && !p.injury)
+    .filter((p) => p.id !== original.id && positionGroupOf(p) === group && p.ability >= 78 && p.resistance.hardBlocks.length === 0 && !p.injury)
     .sort((a, b) => Math.abs(a.ability - targetAbility) - Math.abs(b.ability - targetAbility))[0];
 
   // Come back for the user's player only sometimes: rarely when a clean market
@@ -179,11 +282,22 @@ function fallbackForLedger(
     dest.finances.transferBudget = Math.max(dest.finances.transferBudget, fee);
     const res = executeTransfer(state, { playerId: bestAlt.id, toClub: entry.to, fee });
     if (res.ok) {
+      // Hijacking a future ledger subject consumes his onward move (no cascade
+      // of misses — his later transfer simply never comes up).
+      const consumed = futureByPlayer.get(bestAlt.id);
+      if (consumed) {
+        for (const k of consumed) if (!state.meta.executedLedger.includes(k)) state.meta.executedLedger.push(k);
+        state.timeline.divergenceLog.push({
+          date: state.clock.date,
+          kind: 'butterfly',
+          detail: `${dest.name}, denied ${original.name}, sign ${bestAlt.name} instead — so his own later real move never happens.`,
+        });
+      }
       logEvent(state, {
         category: 'transfer',
         code: 'ledger.alternative',
         message: `${dest.name}, denied ${original.name}, sign ${bestAlt.name} instead`,
-        data: { playerId: bestAlt.id, to: entry.to, insteadOf: entry.playerId },
+        data: { playerId: bestAlt.id, to: entry.to, insteadOf: entry.playerId, hijack: !!consumed },
       });
       return 'profile-similar';
     }
@@ -244,14 +358,21 @@ function createPoachBid(
   });
 }
 
-/** For the harness: is a ledger subject at his real destination now? */
+/** For the harness: is a ledger subject at his real destination now? Uses each
+ *  player's LATEST processed move, so a multi-move subject (Sporting→United→Real)
+ *  is judged by where reality finally left him, not an intermediate club. */
 export function ledgerSquadMatch(state: GameState): { atRealClub: number; total: number } {
   const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   if (!pack) return { atRealClub: 0, total: 0 };
+  const latest = new Map<string, RealTransferLedgerEntry>();
+  for (const entry of pack.realTransferLedger) {
+    if (!state.meta.executedLedger.includes(entryKey(entry))) continue; // only processed ones
+    const prev = latest.get(entry.playerId);
+    if (!prev || entry.window > prev.window) latest.set(entry.playerId, entry);
+  }
   let atRealClub = 0;
   let total = 0;
-  for (const entry of pack.realTransferLedger) {
-    if (!state.meta.executedLedger.includes(entry.playerId)) continue; // only due ones
+  for (const entry of latest.values()) {
     total += 1;
     if (state.players[entry.playerId]?.club === entry.to) atRealClub += 1;
   }

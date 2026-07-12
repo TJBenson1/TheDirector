@@ -18,6 +18,14 @@ import type { ClubId, PlayerId, YearMonth } from './types.js';
 
 /** One real historical transfer among tracked clubs. */
 export interface RealTransferLedgerEntry {
+  /**
+   * Stable entry id. Optional — defaults to `${playerId}@${window}->${to}`.
+   * Required only when a player has MORE THAN ONE real move in an era (Ronaldo:
+   * Sporting→United→Real) or when something depends on this exact move via
+   * `enabledBy`. This is the key tracked in meta.executedLedger/realizedLedger,
+   * so a multi-move player is no longer collapsed to one entry.
+   */
+  id?: string;
   /** Curated player id (real player). */
   playerId: PlayerId;
   from: ClubId | null; // null = academy graduation / free arrival
@@ -27,13 +35,26 @@ export interface RealTransferLedgerEntry {
   fee: number;
   /**
    * Causal link: this move only happened in reality BECAUSE another move did —
-   * a sale to fund/clear space for an arrival. Value is the funder entry's
-   * `playerId`. If that funder is pre-empted by the user (never executes as
-   * reality), this entry is CANCELLED, not replaced: the club no longer needs
-   * or can afford the move (e.g. Özil's sale was enabled by signing Bale; keep
-   * Bale from Madrid and Özil stays). Author the funder earlier in the array.
+   * a sale to fund/clear space for an arrival. Value is the funder entry's `id`
+   * (or default key). If that funder is pre-empted by the user (never executes
+   * as reality), this entry is CANCELLED, not replaced: the club no longer needs
+   * or can afford the move (keep Bale from Madrid and Özil stays; keep Ronaldo
+   * at United and Madrid never offload Robben/Sneijder). Author the funder
+   * earlier in the array so it is processed first.
    */
-  enabledBy?: PlayerId;
+  enabledBy?: string;
+  /**
+   * Probability (0..1, default 1) that this entry is CANCELLED when its
+   * `enabledBy` funder was pre-empted. < 1 models "they might still have done it
+   * anyway for depth" — e.g. United losing the Ronaldo windfall probably but not
+   * certainly cancels their fringe depth signings.
+   */
+  cancelChance?: number;
+}
+
+/** The key an entry is tracked by (supports multiple moves per player). */
+export function entryKey(e: RealTransferLedgerEntry): string {
+  return e.id ?? `${e.playerId}@${e.window}->${e.to}`;
 }
 
 /** Which tier satisfied an invalidated ledger entry (recorded for audit). */
@@ -93,6 +114,24 @@ const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
   { playerId: 'cur_shevchenko', from: 'milan', to: 'chelsea', window: '2006-07', fee: 30_000_000 },
   { playerId: 'cur_owen', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 8_000_000 },
   { playerId: 'cur_nedved', from: 'lazio', to: 'juventus', window: '2001-07', fee: 41_000_000 },
+
+  // ── The Cristiano Ronaldo arc + the 2009 galáctico cascade ──────────────────
+  // A long-horizon chain that only bites a 1999 playthrough that reaches 2009.
+  // Ronaldo joins United in 2003 (a signing the user makes by default) and is
+  // sold to Madrid in 2009 (a sale the user sanctions by default). Madrid funded
+  // that galáctico window by offloading Robben and Sneijder — the pieces that
+  // built Bayern's and, above all, Inter's 2010 treble side. Keep Ronaldo and
+  // none of it happens: Madrid never sign him, never sell Robben/Sneijder, and
+  // Inter's treble talisman never arrives.
+  // Beckham's real 2003 exit is what opened the wing for Ronaldo — a sale the
+  // user sanctions by default, and the reason the kid gets the minutes to grow.
+  { playerId: 'cur_beckham', from: 'man_utd', to: 'real_madrid', window: '2003-07', fee: 25_000_000, id: 'beckham-real-2003' },
+  { playerId: 'cur_cristiano', from: 'sporting', to: 'man_utd', window: '2003-07', fee: 12_240_000, id: 'cr7-utd-2003' },
+  { playerId: 'cur_cristiano', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_robben', from: 'real_madrid', to: 'bayern', window: '2009-08', fee: 25_000_000, enabledBy: 'cr7-real-2009' },
+  { playerId: 'cur_sneijder', from: 'real_madrid', to: 'inter', window: '2009-08', fee: 15_000_000, enabledBy: 'cr7-real-2009' },
+  // United reinvested some of the Ronaldo money on depth — probably, not surely.
+  { playerId: 'cur_valencia_w', from: 'wigan', to: 'man_utd', window: '2009-06', fee: 16_000_000, id: 'valencia-utd-2009', enabledBy: 'cr7-real-2009', cancelChance: 0.5 },
 ];
 
 /** Real injuries of the era — fire only if the player is at his real club. */
@@ -109,19 +148,19 @@ const INJURIES_1999: RealInjuryEntry[] = [
  * makes those signings — exactly the "no Fellaini, no Van Gaal signings" path.
  */
 const LEDGER_2013_2016: RealTransferLedgerEntry[] = [
-  { playerId: 'cur_bale', from: 'spurs', to: 'real_madrid', window: '2013-08', fee: 85_000_000 },
+  { playerId: 'cur_bale', from: 'spurs', to: 'real_madrid', window: '2013-08', fee: 85_000_000, id: 'bale-real-2013' },
   { playerId: 'cur_thiago', from: 'barcelona', to: 'bayern', window: '2013-07', fee: 22_000_000 },
   // Madrid only sold Özil to raise/clear the Bale money — no Bale, no Özil sale.
-  { playerId: 'cur_ozil', from: 'real_madrid', to: 'arsenal', window: '2013-08', fee: 42_000_000, enabledBy: 'cur_bale' },
+  { playerId: 'cur_ozil', from: 'real_madrid', to: 'arsenal', window: '2013-08', fee: 42_000_000, enabledBy: 'bale-real-2013' },
   { playerId: 'cur_fellaini', from: 'everton', to: 'man_utd', window: '2013-08', fee: 27_500_000 },
   // Spurs' rebuild was funded by SELLING Bale for a huge fee — which happens
   // whether he joins Madrid or you, so the Magnificent Seven arrive regardless.
   { playerId: 'cur_lamela', from: 'roma', to: 'spurs', window: '2013-08', fee: 26_000_000 },
   { playerId: 'cur_soldado', from: 'valencia', to: 'spurs', window: '2013-08', fee: 26_000_000 },
   { playerId: 'cur_eriksen', from: 'ajax', to: 'spurs', window: '2013-08', fee: 11_500_000 },
-  { playerId: 'cur_suarez', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000 },
+  { playerId: 'cur_suarez', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000, id: 'suarez-barca-2014' },
   // Barça part-funded Suárez by selling Sánchez — no Suárez, no Sánchez sale.
-  { playerId: 'cur_alexis', from: 'barcelona', to: 'arsenal', window: '2014-07', fee: 35_000_000, enabledBy: 'cur_suarez' },
+  { playerId: 'cur_alexis', from: 'barcelona', to: 'arsenal', window: '2014-07', fee: 35_000_000, enabledBy: 'suarez-barca-2014' },
   { playerId: 'cur_dimaria', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000 },
   { playerId: 'cur_lukeshaw', from: 'southampton', to: 'man_utd', window: '2014-06', fee: 30_000_000 },
   { playerId: 'cur_lallana', from: 'southampton', to: 'liverpool', window: '2014-07', fee: 25_000_000 },

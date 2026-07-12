@@ -99,6 +99,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'lazio', name: 'Lazio', prestige: 78 },
       { id: 'psv', name: 'PSV Eindhoven', prestige: 72 },
       { id: 'marseille', name: 'Olympique de Marseille', prestige: 72 },
+      { id: 'sporting', name: 'Sporting CP', prestige: 68 },
+      { id: 'wigan', name: 'Wigan Athletic', prestige: 52 },
     ],
     domesticLeagueId: 'eng-1',
     // Leeds' overreach and Lazio's Cragnotti crash are the era's fire-sales.

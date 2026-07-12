@@ -329,6 +329,7 @@ export interface Consequence {
     | 'managerRelationship'
     | 'agitation' // raise a player's unrest
     | 'transferOut' // sell a player to `clubId` for `amount`
+    | 'signReal' // sign an incoming real target to the user club (funds + moves)
     | 'memory' // append a narrative-memory entry (§10)
     | 'log'; // purely informational log line
   playerId?: PlayerId;

@@ -80,7 +80,19 @@ export function applyConsequence(state: GameState, c: Consequence): void {
     }
     case 'transferOut': {
       if (c.playerId && c.clubId) {
-        executeTransfer(state, { playerId: c.playerId, toClub: c.clubId, fee: c.amount ?? 0 });
+        const res = executeTransfer(state, { playerId: c.playerId, toClub: c.clubId, fee: c.amount ?? 0 });
+        if (res.ok) markLedgerRealized(state, c.tag);
+      }
+      break;
+    }
+    case 'signReal': {
+      // A real incoming signing to the user's club: fund it (the board backs the
+      // real deal) then complete the move.
+      if (c.playerId) {
+        const user = state.clubs[state.playerClub];
+        if (user) user.finances.transferBudget = Math.max(user.finances.transferBudget, c.amount ?? 0);
+        const res = executeTransfer(state, { playerId: c.playerId, toClub: state.playerClub, fee: c.amount ?? 0 });
+        if (res.ok) markLedgerRealized(state, c.tag);
       }
       break;
     }
@@ -90,6 +102,15 @@ export function applyConsequence(state: GameState, c: Consequence): void {
     case 'log':
       logEvent(state, { category: 'event', code: 'event.note', message: c.text ?? '' });
       break;
+  }
+}
+
+/** A ledger-linked reality-default move that actually executed marks its entry
+ *  realized, so dependents (`enabledBy`) know the funding move really happened. */
+function markLedgerRealized(state: GameState, tag: string | undefined): void {
+  if (tag?.startsWith('ledger:')) {
+    const key = tag.slice('ledger:'.length);
+    if (!state.meta.realizedLedger.includes(key)) state.meta.realizedLedger.push(key);
   }
 }
 

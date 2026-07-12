@@ -3,6 +3,7 @@ import { createNewGame, cloneState } from './state.js';
 import { advanceWindow } from './advance.js';
 import { applyDecision } from './events.js';
 import { executeTransfer } from './transfers.js';
+import { resolvePlayer } from './recommend.js';
 import { ledgerSquadMatch } from './ledgerExec.js';
 import type { GameState } from './types.js';
 
@@ -44,7 +45,7 @@ describe('reality-ledger execution (§9f)', () => {
     // Advance until the ledger processes the Anelka entry (interrupts like the
     // Dec-1999 Keane event can fragment the way there).
     for (let i = 0; i < 6; i++) {
-      if (s.meta.executedLedger.includes('cur_anelka')) break;
+      if (s.meta.executedLedger.some((k) => k.startsWith('cur_anelka@'))) break;
       for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
       s = advanceWindow(s).state;
     }
@@ -62,13 +63,25 @@ describe('reality-ledger execution (§9f)', () => {
     expect(new Set(ids).size).toBe(ids.length); // no duplicates
   });
 
-  it('a ledger entry destined for the USER club is never a rival butterfly', () => {
-    // Fellaini → Man Utd (2013) targets the user's own club: it must be consumed
-    // silently, not fire a fallback/poach bid against a passive user's squad.
+  it('a ledger entry TO the user club is offered as a decision, never a rival butterfly', () => {
+    // Fellaini → Man Utd (2013) targets the user's own club: it surfaces as a
+    // reality-default "real signing" offer the user can decline, and never a
+    // fallback/poach bid against the user's squad. Here the user PASSES.
     let s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'ledger-userclub' });
-    s = play(s, 8); // through the 2013 summer + first season
-    expect(s.meta.executedLedger).toContain('cur_fellaini');
-    expect(s.players.cur_fellaini?.club).toBe('everton'); // he never actually arrives
+    let sawOffer = false;
+    for (let i = 0; i < 8; i++) {
+      for (const d of [...s.pendingDecisions]) {
+        if (d.id.startsWith('real-in:') && d.title.includes('Fellaini')) {
+          sawOffer = true;
+          s = applyDecision(s, d.id, 'pass').state; // decline — "no Fellaini"
+        } else {
+          s = applyDecision(s, d.id, d.choices[0]!.id).state;
+        }
+      }
+      s = advanceWindow(s).state;
+    }
+    expect(sawOffer).toBe(true);
+    expect(s.players.cur_fellaini?.club).toBe('everton'); // declined → he stays
     expect(s.eventLog.some((e) => e.code === 'poach.bid' && e.data?.from === 'man_utd')).toBe(false);
   });
 });
@@ -89,6 +102,54 @@ describe('2013 post-Ferguson era pack (§4 data)', () => {
     expect(s.players.cur_thiago?.club).toBe('bayern');
     expect(s.players.cur_ozil?.club).toBe('arsenal');
     expect(s.players.cur_lamela?.club).toBe('spurs');
+  });
+
+  it('keeping Ronaldo cancels the sales it funded — Madrid keep Robben & Sneijder', () => {
+    // A 1999 playthrough that signs Ronaldo (2003) and REFUSES his 2009 sale.
+    let s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'keep-cr7' });
+    for (let i = 0; i < 40; i++) {
+      for (const d of [...s.pendingDecisions]) {
+        const keep = d.id.startsWith('real-out:') && d.title.includes('Ronaldo');
+        s = applyDecision(s, d.id, keep ? 'keep' : d.choices[0]!.id).state;
+      }
+      s = advanceWindow(s).state;
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 30; }
+      if (Number(s.clock.date.slice(0, 4)) >= 2010) break;
+    }
+    expect(s.players.cur_cristiano?.club).toBe('man_utd'); // kept
+    expect(s.players.cur_cristiano!.agitation).toBeGreaterThan(0); // he wanted the move
+    // Madrid never funded a Ronaldo window, so they never offloaded these two.
+    expect(s.players.cur_robben?.club).toBe('real_madrid');
+    expect(s.players.cur_sneijder?.club).toBe('real_madrid');
+    expect(s.eventLog.some((e) => e.code === 'ledger.cancelled' && e.data?.playerId === 'cur_sneijder')).toBe(true);
+  });
+
+  it('a deprived club can hijack a future ledger subject, nullifying his onward move but not his growth', () => {
+    // Sign Sol Campbell (Bosman) before his real move to Arsenal. Arsenal, denied
+    // him, may hijack Leeds' Ferdinand — who then never joins United, but must
+    // still develop toward his ceiling at his new club.
+    for (let attempt = 0; attempt < 12; attempt++) {
+      let s = cloneState(createNewGame({ scenarioId: 'man-utd-1999', seed: `hijack:${attempt}` }));
+      s.clubs.man_utd!.finances.transferBudget = 60_000_000;
+      const campbell = resolvePlayer(s, 'Sol Campbell')!;
+      executeTransfer(s, { playerId: campbell.id, toClub: 'man_utd', fee: 0 });
+      for (let i = 0; i < 20; i++) {
+        for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+        s = advanceWindow(s).state;
+        if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 30; }
+      }
+      const fer = s.players.cur_ferdinand!;
+      if (fer.club === 'arsenal') {
+        // His onward move to United was consumed, and his pathway wasn't blocked:
+        // he held/advanced on his starting ability (82) and kept a high ceiling
+        // rather than eroding on the bench behind a fading veteran.
+        expect(s.timeline.divergenceLog.some((d) => /Ferdinand.*never happens/.test(d.detail))).toBe(true);
+        expect(fer.ability).toBeGreaterThanOrEqual(82);
+        expect(fer.potentialCeiling).toBeGreaterThanOrEqual(86);
+        return;
+      }
+    }
+    throw new Error('no Ferdinand hijack across 12 seeds');
   });
 
   it('buying Bale cancels the sale it funded — Madrid keep Özil (causal chain)', () => {

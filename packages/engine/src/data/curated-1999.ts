@@ -192,6 +192,24 @@ export const MARSEILLE_1999: CuratedSeed[] = [
 ];
 
 /**
+ * Long-horizon subjects for the Cristiano Ronaldo arc (2003 arrival, 2009 sale)
+ * and the 2009 galáctico cascade. Curated at their source clubs as teenagers
+ * with real birth years so a 1999 playthrough that reaches 2009 sees them come
+ * of age and move on schedule (unless the user diverts the chain). Robben and
+ * Sneijder sit as Madrid depth that the Ronaldo money offloaded in reality.
+ */
+export const SPORTING_1999: CuratedSeed[] = [
+  q('sporting', 'cristiano', 'Cristiano Ronaldo', 1985, 'Portugal', ['RW', 'LW', 'ST'], 66, 94, 2003, 15, t(10, 8, 10, 5, 3, 9)),
+];
+export const WIGAN_1999: CuratedSeed[] = [
+  q('wigan', 'valencia_w', 'Antonio Valencia', 1985, 'Ecuador', ['RW'], 52, 82, 2009, 25, t(8, 4, 8, 6, 3, 7)),
+];
+export const REAL_MADRID_CASCADE_1999: CuratedSeed[] = [
+  q('real_madrid', 'robben', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 60, 89, 2010, 55, t(8, 7, 9, 6, 5, 7)),
+  q('real_madrid', 'sneijder', 'Wesley Sneijder', 1984, 'Netherlands', ['AM', 'CM'], 60, 88, 2010, 35, t(7, 6, 8, 6, 5, 7)),
+];
+
+/**
  * A pool of real central midfielders of the era, spread across clubs, so the
  * player has genuine, recognisable options to rebuild a midfield (e.g. to
  * replace Keane) rather than only procedural filler.
@@ -276,10 +294,16 @@ const MAN_UTD_1999_SQUADS: Record<string, CuratedSeed[]> = {
   lazio: [...LAZIO_1999],
   psv: PSV_1999,
   marseille: MARSEILLE_1999,
+  sporting: SPORTING_1999,
+  wigan: WIGAN_1999,
 };
 // Merge the midfield pool + the broad era pool into the relevant clubs.
 for (const [club, seed] of [...MIDFIELD_POOL_1999, ...ERA_1999_POOL]) {
   (MAN_UTD_1999_SQUADS[club] ??= []).push(seed);
+}
+// The 2009 Madrid-cascade depth lives at Real Madrid.
+for (const seed of REAL_MADRID_CASCADE_1999) {
+  (MAN_UTD_1999_SQUADS.real_madrid ??= []).push(seed);
 }
 
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
