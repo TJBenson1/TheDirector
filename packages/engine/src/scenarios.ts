@@ -52,7 +52,39 @@ const ELITE_CLUBS: ClubSeed[] = [
   { id: 'spurs', name: 'Tottenham Hotspur', prestige: 72 },
 ];
 
+/** The elite clubs as they stood in 2013 (City and PSG now moneyed powers). */
+const ELITE_CLUBS_2013: ClubSeed[] = [
+  { id: 'man_utd', name: 'Manchester United', prestige: 90 },
+  { id: 'man_city', name: 'Manchester City', prestige: 85 },
+  { id: 'chelsea', name: 'Chelsea', prestige: 86 },
+  { id: 'arsenal', name: 'Arsenal', prestige: 82 },
+  { id: 'liverpool', name: 'Liverpool', prestige: 82 },
+  { id: 'spurs', name: 'Tottenham Hotspur', prestige: 78 },
+  { id: 'real_madrid', name: 'Real Madrid', prestige: 94 },
+  { id: 'barcelona', name: 'Barcelona', prestige: 93 },
+  { id: 'bayern', name: 'Bayern Munich', prestige: 92 },
+  { id: 'psg', name: 'Paris Saint-Germain', prestige: 82 },
+  { id: 'juventus', name: 'Juventus', prestige: 84 },
+];
+
 export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
+  'man-utd-2013': {
+    id: 'man-utd-2013',
+    name: 'Manchester United — 2013: After Ferguson',
+    startDate: '2013-07',
+    playerClub: 'man_utd',
+    mandate: 'Defend the title and prove the dynasty outlives Ferguson.',
+    boardPatience: 78,
+    boardExpectedFinish: 1,
+    clubs: ELITE_CLUBS_2013,
+    contextExtra: [
+      { id: 'benfica', name: 'Benfica', prestige: 76 },
+      { id: 'roma', name: 'AS Roma', prestige: 74 },
+      { id: 'valencia', name: 'Valencia', prestige: 72 },
+      { id: 'ajax', name: 'Ajax', prestige: 70 },
+    ],
+    domesticLeagueId: 'eng-2013',
+  },
   'man-utd-1999': {
     id: 'man-utd-1999',
     name: 'Manchester United — 1999: After the Treble',

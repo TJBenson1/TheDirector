@@ -41,6 +41,11 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
     if (entry.window > now) continue; // not due yet (YYYY-MM compares lexically)
     state.meta.executedLedger.push(entry.playerId);
 
+    // Reality moving a player TO the user's club is the user's own signing to
+    // make (or not) — never a reality-default AI transfer, and never a rival
+    // "missed target" butterfly. Consume the entry silently.
+    if (entry.to === state.playerClub) continue;
+
     const player = state.players[entry.playerId];
     const dest = state.clubs[entry.to];
     const validReality =

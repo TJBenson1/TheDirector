@@ -397,6 +397,9 @@ export interface GameStateMeta {
   /** Real-ledger entries already processed (executed or fallen back), by
    *  subject playerId, so each resolves once (reality-default). */
   executedLedger: string[];
+  /** Real historical injuries already fired (by subject playerId), so each
+   *  scheduled real injury triggers at most once (reality-default). */
+  firedRealInjuries: string[];
 }
 
 export interface GameClock {

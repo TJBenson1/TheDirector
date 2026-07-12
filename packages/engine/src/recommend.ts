@@ -166,9 +166,14 @@ export function queryPlayer(state: GameState, idOrName: string): PlayerQuery {
 export function resolvePlayer(state: GameState, idOrName: string): PlayerState | undefined {
   if (state.players[idOrName]) return state.players[idOrName];
   const needle = idOrName.toLowerCase();
+  const all = Object.values(state.players);
+  // Prefer an exact full-name match, then a whole-word (first/surname) match —
+  // so "Bale" finds Gareth Bale, not the "bale" inside "Zabaleta" — and only
+  // then fall back to a loose substring match.
   return (
-    Object.values(state.players).find((p) => p.name.toLowerCase() === needle) ??
-    Object.values(state.players).find((p) => p.name.toLowerCase().includes(needle))
+    all.find((p) => p.name.toLowerCase() === needle) ??
+    all.find((p) => p.name.toLowerCase().split(/\s+/).includes(needle)) ??
+    all.find((p) => p.name.toLowerCase().includes(needle))
   );
 }
 

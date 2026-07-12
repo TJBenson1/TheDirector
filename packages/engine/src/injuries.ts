@@ -18,6 +18,7 @@ import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { isRunInMonth } from './clock.js';
 import { clubSquadPlayers, recomputeClubStrength } from './players.js';
+import { ERA_REALITY, eraForScenario } from './ledger.js';
 
 // ── Tunables (calibrated in injuries.test.ts + the harness) ──────────────────
 const BASE_MONTHLY_PROB = 0.032;
@@ -55,12 +56,46 @@ function rollSeverity(rng: Rng): { kind: InjuryKind; months: number } {
 }
 
 /**
+ * Fire real historical injuries scheduled for this exact month — but only if the
+ * player is still at the club he was at in reality (so injuries "match up", per
+ * feedback). If the user has already moved him, the real injury lapses: it was a
+ * fact about that squad in that timeline, not a curse on the player. Each entry
+ * fires at most once (tracked in meta.firedRealInjuries).
+ */
+export function fireRealInjuries(state: GameState): void {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack) return;
+  const touched = new Set<string>();
+  for (const entry of pack.realInjuries) {
+    if (entry.since !== state.clock.date) continue;
+    if (state.meta.firedRealInjuries.includes(entry.playerId)) continue;
+    const player = state.players[entry.playerId];
+    if (!player || player.club !== entry.atClub) continue; // moved by the user → lapses
+    if (player.injury) continue; // already hurt; don't stack
+    const months = entry.months;
+    const kind: InjuryKind = entry.serious ? 'serious' : 'moderate';
+    player.injury = { kind, monthsRemaining: months, since: state.clock.date };
+    if (entry.serious) player.injuryHistory += 1;
+    state.meta.firedRealInjuries.push(entry.playerId);
+    touched.add(entry.atClub);
+    logEvent(state, {
+      category: 'injury',
+      code: entry.serious ? 'injury.real.serious' : 'injury.real',
+      message: `${player.name} (${state.clubs[entry.atClub]?.name ?? entry.atClub}) — ${entry.note ?? 'injury'}, out ~${months} months`,
+      data: { playerId: entry.playerId, clubId: entry.atClub, months, real: true },
+    });
+  }
+  for (const clubId of touched) recomputeClubStrength(state, clubId);
+}
+
+/**
  * Process one month of injuries across all simulated (in-league) clubs.
  * Decrements existing injuries (applying return/permanent effects), then rolls
  * new ones, then recomputes affected clubs' strength so availability feeds
  * results the same month.
  */
 export function processInjuriesMonth(state: GameState, rng: Rng): void {
+  fireRealInjuries(state);
   const year = Number(state.clock.date.slice(0, 4));
   const monthIndex = state.clock.monthIndex;
   const injuryFrequency = state.settings.injuryFrequency;

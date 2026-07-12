@@ -61,4 +61,33 @@ describe('reality-ledger execution (§9f)', () => {
     const ids = executed.map((e) => e.data?.playerId);
     expect(new Set(ids).size).toBe(ids.length); // no duplicates
   });
+
+  it('a ledger entry destined for the USER club is never a rival butterfly', () => {
+    // Fellaini → Man Utd (2013) targets the user's own club: it must be consumed
+    // silently, not fire a fallback/poach bid against a passive user's squad.
+    let s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'ledger-userclub' });
+    s = play(s, 8); // through the 2013 summer + first season
+    expect(s.meta.executedLedger).toContain('cur_fellaini');
+    expect(s.players.cur_fellaini?.club).toBe('everton'); // he never actually arrives
+    expect(s.eventLog.some((e) => e.code === 'poach.bid' && e.data?.from === 'man_utd')).toBe(false);
+  });
+});
+
+describe('2013 post-Ferguson era pack (§4 data)', () => {
+  it('places the four plan targets at their real clubs', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'era2013' });
+    expect(s.players.cur_bale?.club).toBe('spurs');
+    expect(s.players.cur_thiago?.club).toBe('barcelona');
+    expect(s.players.cur_baines?.club).toBe('everton');
+    expect(s.players.cur_garay?.club).toBe('benfica');
+  });
+
+  it('passively reproduces the real 2013 knock-on transfers', () => {
+    let s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'era2013-passive' });
+    s = play(s, 6);
+    expect(s.players.cur_bale?.club).toBe('real_madrid');
+    expect(s.players.cur_thiago?.club).toBe('bayern');
+    expect(s.players.cur_ozil?.club).toBe('arsenal');
+    expect(s.players.cur_lamela?.club).toBe('spurs');
+  });
 });

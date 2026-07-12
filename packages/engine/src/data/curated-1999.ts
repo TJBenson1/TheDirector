@@ -8,6 +8,7 @@
  */
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
+import { MAN_UTD_2013_SQUADS } from './curated-2013.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -283,4 +284,5 @@ for (const [club, seed] of [...MIDFIELD_POOL_1999, ...ERA_1999_POOL]) {
 
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'man-utd-1999': MAN_UTD_1999_SQUADS,
+  'man-utd-2013': MAN_UTD_2013_SQUADS,
 };

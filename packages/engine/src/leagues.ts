@@ -84,7 +84,40 @@ export const SPAIN_2000: LeagueSeed = {
   ],
 };
 
+/** England, 2013–14 Premier League — the post-Ferguson season. Strengths are
+ *  authored anchors; where a curated real squad exists (the top clubs) the sim
+ *  re-derives strength from it at squad build. Ordering informed by the real
+ *  final table (City champions; United collapsed to 7th under Moyes). */
+export const ENGLAND_2013: LeagueSeed = {
+  id: 'eng-2013',
+  name: 'English Premier League',
+  season: '2013-07',
+  clubs: [
+    { id: 'man_city', name: 'Manchester City', prestige: 85, strength: 86 },
+    { id: 'chelsea', name: 'Chelsea', prestige: 86, strength: 85 },
+    { id: 'man_utd', name: 'Manchester United', prestige: 90, strength: 83 },
+    { id: 'arsenal', name: 'Arsenal', prestige: 82, strength: 82 },
+    { id: 'liverpool', name: 'Liverpool', prestige: 82, strength: 81 },
+    { id: 'spurs', name: 'Tottenham Hotspur', prestige: 78, strength: 79 },
+    { id: 'everton', name: 'Everton', prestige: 72, strength: 77 },
+    { id: 'southampton', name: 'Southampton', prestige: 64, strength: 72 },
+    { id: 'newcastle', name: 'Newcastle United', prestige: 68, strength: 70 },
+    { id: 'swansea', name: 'Swansea City', prestige: 60, strength: 67 },
+    { id: 'stoke', name: 'Stoke City', prestige: 58, strength: 65 },
+    { id: 'aston_villa', name: 'Aston Villa', prestige: 62, strength: 63 },
+    { id: 'west_ham', name: 'West Ham United', prestige: 62, strength: 63 },
+    { id: 'hull', name: 'Hull City', prestige: 50, strength: 60 },
+    { id: 'west_brom', name: 'West Bromwich Albion', prestige: 54, strength: 61 },
+    { id: 'crystal_palace', name: 'Crystal Palace', prestige: 50, strength: 58 },
+    { id: 'norwich', name: 'Norwich City', prestige: 52, strength: 59 },
+    { id: 'fulham', name: 'Fulham', prestige: 56, strength: 57 },
+    { id: 'cardiff', name: 'Cardiff City', prestige: 48, strength: 55 },
+    { id: 'sunderland', name: 'Sunderland', prestige: 56, strength: 58 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'esp-1': SPAIN_2000,
+  'eng-2013': ENGLAND_2013,
 };

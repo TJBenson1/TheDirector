@@ -74,6 +74,7 @@ export {
 } from './players.js';
 export {
   processInjuriesMonth,
+  fireRealInjuries,
   injuredCount,
   significantInjuredCount,
 } from './injuries.js';
