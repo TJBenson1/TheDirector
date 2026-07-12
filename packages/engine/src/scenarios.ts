@@ -27,6 +27,9 @@ export interface ScenarioSeed {
   boardExpectedFinish: number;
   /** Cross-European context clubs (transfers/scenario). */
   clubs: ClubSeed[];
+  /** Extra non-elite context clubs (Tier 3) that hold curated players — the
+   *  real selling clubs for era transfers (Monaco, Lazio, PSV, …). */
+  contextExtra?: ClubSeed[];
   /** The player's simulated domestic league (§15). */
   domesticLeagueId: string;
 }
@@ -57,6 +60,12 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     boardPatience: 80,
     boardExpectedFinish: 1,
     clubs: ELITE_CLUBS,
+    contextExtra: [
+      { id: 'monaco', name: 'AS Monaco', prestige: 74 },
+      { id: 'lazio', name: 'Lazio', prestige: 78 },
+      { id: 'psv', name: 'PSV Eindhoven', prestige: 72 },
+      { id: 'marseille', name: 'Olympique de Marseille', prestige: 72 },
+    ],
     domesticLeagueId: 'eng-1',
   },
   'chelsea-2003': {

@@ -113,6 +113,15 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
       null,
     );
   }
+  for (const clubSeed of scenario.contextExtra ?? []) {
+    clubs[clubSeed.id] = newClub(
+      clubSeed.id,
+      clubSeed.name,
+      clubSeed.prestige,
+      prestigeToStrength(clubSeed.prestige),
+      null,
+    );
+  }
   for (const lc of league.clubs) {
     clubs[lc.id] = newClub(lc.id, lc.name, lc.prestige, lc.strength, league.id);
   }

@@ -174,6 +174,21 @@ export const INTER_1999: CuratedSeed[] = [
   q('inter', 'crespo', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 85, 86, 2006, 40, t(7, 6, 8, 5, 5, 7)),
 ];
 
+/** Era transfer targets curated at their real 1999 clubs (the selling clubs are
+ *  Tier-3 context clubs added by the scenario). */
+export const MONACO_1999: CuratedSeed[] = [
+  q('monaco', 'barthez', 'Fabien Barthez', 1971, 'France', ['GK'], 84, 85, 2002, 25, t(6, 7, 7, 5, 6, 6)),
+];
+export const LAZIO_1999: CuratedSeed[] = [
+  q('lazio', 'veron', 'Juan Sebastián Verón', 1975, 'Argentina', ['CM', 'AM'], 86, 87, 2004, 35, t(7, 6, 8, 5, 5, 5)),
+];
+export const PSV_1999: CuratedSeed[] = [
+  q('psv', 'ruud', 'Ruud van Nistelrooy', 1976, 'Netherlands', ['ST'], 85, 90, 2004, 60, t(8, 6, 9, 6, 4, 7)),
+];
+export const MARSEILLE_1999: CuratedSeed[] = [
+  q('marseille', 'pires', 'Robert Pirès', 1973, 'France', ['LW', 'AM'], 83, 87, 2002, 30, t(8, 5, 7, 6, 3, 7)),
+];
+
 /** Curated squads keyed by scenario → club (marquee real players + procedural
  *  depth is filled in at squad build). */
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
@@ -186,5 +201,9 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
     liverpool: LIVERPOOL_1999,
     leeds: LEEDS_1999,
     inter: INTER_1999,
+    monaco: MONACO_1999,
+    lazio: LAZIO_1999,
+    psv: PSV_1999,
+    marseille: MARSEILLE_1999,
   },
 };
