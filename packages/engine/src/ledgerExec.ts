@@ -12,11 +12,12 @@
  * ledger alone and Anelka goes to Madrid, Crespo to Chelsea, on schedule.
  */
 
-import type { ClubId, GameState, PlayerState } from './types.js';
+import type { ClubId, Decision, GameState, PlayerState } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
+import { clubSquadPlayers } from './players.js';
 import { appendMemory } from './memory.js';
 import { ERA_REALITY, eraForScenario, type RealTransferLedgerEntry, type FallbackTier, type InvalidationCause } from './ledger.js';
 
@@ -84,9 +85,13 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
 }
 
 /**
- * Fallback hierarchy when a real transfer can't happen (§9f). For this seed
- * slice: real-backup data isn't curated yet, so we go straight to
- * profile-similar (a comparable available player), else generic-needs (no deal).
+ * Fallback hierarchy when a real transfer can't happen (§9f). Because the ONLY
+ * way an entry invalidates is a user action, the deprived club first looks at
+ * the player who caused the problem — the USER's squad. If the user has a
+ * genuine asset in the needed position, the club bids for HIM (a refusable
+ * poach bid — the logical, traceable butterfly of the user's move). Only if the
+ * user has no fit does it pursue a profile-similar player from the wider market,
+ * else generic-needs (no deal).
  */
 function fallbackForLedger(
   state: GameState,
@@ -96,11 +101,21 @@ function fallbackForLedger(
 ): FallbackTier {
   const dest = state.clubs[entry.to];
   if (!dest || !original) return 'generic-needs';
-
   const group = positionGroupOf(original);
   const targetAbility = original.ability;
   const year = Number(state.clock.date.slice(0, 4));
 
+  // Tier: poach the user — the club deprived by the user's move turns to the
+  // user's squad for a genuine asset in the same position (ability ≥ 78).
+  const userAsset = clubSquadPlayers(state, state.playerClub)
+    .filter((p) => positionGroupOf(p) === group && p.ability >= 78 && p.resistance.hardBlocks.length === 0 && !p.injury)
+    .sort((a, b) => Math.abs(a.ability - targetAbility) - Math.abs(b.ability - targetAbility))[0];
+  if (userAsset) {
+    createPoachBid(state, dest.id, userAsset, original.name, year);
+    return 'profile-similar';
+  }
+
+  // Otherwise, a profile-similar player from the wider (foreign) market.
   let best: PlayerState | undefined;
   for (const p of Object.values(state.players)) {
     const seller = p.club ? state.clubs[p.club] : undefined;
@@ -111,11 +126,63 @@ function fallbackForLedger(
     if (!best || Math.abs(p.ability - targetAbility) < Math.abs(best.ability - targetAbility)) best = p;
   }
   if (!best) return 'generic-needs';
-
   const fee = valuePlayer(best, year);
   dest.finances.transferBudget = Math.max(dest.finances.transferBudget, fee);
   const res = executeTransfer(state, { playerId: best.id, toClub: entry.to, fee });
   return res.ok ? 'profile-similar' : 'generic-needs';
+}
+
+/**
+ * Surface a refusable bid for a user player, as the logical consequence of the
+ * user depriving `buyerId` of a real signing. Accept = a sale (you cash in);
+ * reject = you keep him, at the cost of unrest. Every bid is a traceable chain.
+ */
+function createPoachBid(
+  state: GameState,
+  buyerId: ClubId,
+  target: PlayerState,
+  deprivedOf: string,
+  year: number,
+): void {
+  const buyer = state.clubs[buyerId]!;
+  const fee = Math.round(valuePlayer(target, year) * 1.05);
+  buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, fee);
+
+  const decision: Decision = {
+    id: `poach:${target.id}:${state.clock.date}`,
+    title: `${buyer.name} bid ${(fee / 1_000_000).toFixed(1)}m for ${target.name}`,
+    description: `Denied ${deprivedOf} by your move, ${buyer.name} have turned to your squad and table a bid for ${target.name}. You can keep him — but he will not take it well.`,
+    interrupt: true,
+    clubId: state.playerClub,
+    category: 'transfer',
+    choices: [
+      {
+        id: 'reject',
+        label: `Reject and keep ${target.name} (risks unrest)`,
+        onSuccess: [{ kind: 'agitation', playerId: target.id, amount: 46, text: 'unsettled by the rejected bid' }],
+      },
+      {
+        id: 'accept',
+        label: `Accept the ${(fee / 1_000_000).toFixed(1)}m bid`,
+        onSuccess: [{ kind: 'transferOut', playerId: target.id, clubId: buyerId, amount: fee }],
+      },
+    ],
+    falloutIfIgnored: [{ kind: 'agitation', playerId: target.id, amount: 44 }],
+    memoryTags: ['poach', target.id],
+  };
+  state.pendingDecisions.push(decision);
+
+  state.timeline.divergenceLog.push({
+    date: state.clock.date,
+    kind: 'butterfly',
+    detail: `${buyer.name}, denied ${deprivedOf} by your move, bid for ${target.name}.`,
+  });
+  logEvent(state, {
+    category: 'transfer',
+    code: 'poach.bid',
+    message: `${buyer.name} bid for ${target.name} (deprived of ${deprivedOf} by your move)`,
+    data: { playerId: target.id, from: state.playerClub, to: buyerId, deprivedOf },
+  });
 }
 
 /** For the harness: is a ledger subject at his real destination now? */

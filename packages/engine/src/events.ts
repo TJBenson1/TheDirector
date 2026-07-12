@@ -27,6 +27,7 @@ import { cloneState } from './state.js';
 import { eventsSince } from './eventLog.js';
 import { appendMemory } from './memory.js';
 import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
+import { executeTransfer } from './transfers.js';
 
 // ── Consequence application ──────────────────────────────────────────────────
 
@@ -69,6 +70,20 @@ export function applyConsequence(state: GameState, c: Consequence): void {
         100,
       );
       break;
+    case 'agitation': {
+      const p = c.playerId ? state.players[c.playerId] : undefined;
+      if (p) {
+        p.agitation = clamp(p.agitation + (c.amount ?? 0), 0, 100);
+        p.morale = clamp(p.morale - Math.round((c.amount ?? 0) / 3), 0, 100);
+      }
+      break;
+    }
+    case 'transferOut': {
+      if (c.playerId && c.clubId) {
+        executeTransfer(state, { playerId: c.playerId, toClub: c.clubId, fee: c.amount ?? 0 });
+      }
+      break;
+    }
     case 'memory':
       appendMemory(state, c.tag ?? 'event', c.text ?? '');
       break;

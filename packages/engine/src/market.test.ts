@@ -227,6 +227,7 @@ function mkPlayer(overrides: Partial<PlayerState> & { ability: number }): Player
       clubLoyalty: 50, culturalAnchors: ['England'], dreamClubs: [], agentInfluence: 50,
       careerStagePull: 'peak', hardBlocks: [],
     },
+    agitation: 0,
     ...overrides,
   };
 }

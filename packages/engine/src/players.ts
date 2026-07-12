@@ -215,6 +215,7 @@ export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
     seasonMonthsInjured: 0,
     adaptation: null,
     resistance: buildResistance(personality, nationality, age, ability, rng),
+    agitation: 0,
   };
   player.wage = suggestWage(player, currentYear);
   return player;

@@ -19,7 +19,7 @@ import { eventsSince } from './eventLog.js';
 import { stepLeagueMonth } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
 import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
-import { runRivalWindow, updateWorldDefiance } from './rival.js';
+import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
 import { windowForMonthIndex } from './clock.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
@@ -59,6 +59,8 @@ function runMonth(state: GameState, rng: Rng): void {
     // 5. Board review (job security) + an imposed internal crisis (M9).
     reviewBoard(state, rng.fork(`board:${state.clock.date}`));
     rollInternalCrisis(state, rng.fork(`crisis:${state.clock.date}`), divergenceFactor(state) * 0.3);
+    // Sustained unrest can force a kept-against-his-wishes player out.
+    processAgitationDepartures(state, rng.fork(`agitation:${state.clock.date}`));
     // 6. Reconcile strength for all simulated clubs after ability changes.
     for (const club of Object.values(state.clubs)) {
       if (club.leagueId !== null) recomputeClubStrength(state, club.id);

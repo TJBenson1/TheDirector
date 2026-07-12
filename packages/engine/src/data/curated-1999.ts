@@ -29,6 +29,7 @@ export type CuratedSeed = Omit<
   | 'seasonMonthsInjured'
   | 'adaptation'
   | 'resistance'
+  | 'agitation'
 > & { hardBlocks?: HardBlock[]; loyalty?: number };
 
 type Trait = PlayerState['personality'];
@@ -189,21 +190,45 @@ export const MARSEILLE_1999: CuratedSeed[] = [
   q('marseille', 'pires', 'Robert Pirès', 1973, 'France', ['LW', 'AM'], 83, 87, 2002, 30, t(8, 5, 7, 6, 3, 7)),
 ];
 
+/**
+ * A pool of real central midfielders of the era, spread across clubs, so the
+ * player has genuine, recognisable options to rebuild a midfield (e.g. to
+ * replace Keane) rather than only procedural filler.
+ */
+export const MIDFIELD_POOL_1999: Array<[ClubId, CuratedSeed]> = [
+  ['juventus', q('juventus', 'davids', 'Edgar Davids', 1973, 'Netherlands', ['CM', 'DM'], 85, 86, 2004, 35, t(7, 6, 8, 6, 6, 7))],
+  ['juventus', q('juventus', 'tacchinardi', 'Alessio Tacchinardi', 1975, 'Italy', ['DM', 'CM'], 79, 81, 2004, 30, t(7, 4, 6, 7, 4, 6))],
+  ['milan', q('milan', 'albertini', 'Demetrio Albertini', 1971, 'Italy', ['CM', 'DM'], 82, 82, 2002, 25, t(8, 5, 7, 8, 3, 7))],
+  ['milan', q('milan', 'gattuso', 'Gennaro Gattuso', 1978, 'Italy', ['DM'], 79, 85, 2004, 30, t(8, 5, 9, 7, 6, 7))],
+  ['real_madrid', q('real_madrid', 'redondo', 'Fernando Redondo', 1969, 'Argentina', ['DM', 'CM'], 86, 86, 2002, 30, t(8, 5, 7, 6, 3, 7))],
+  ['liverpool', q('liverpool', 'hamann', 'Dietmar Hamann', 1973, 'Germany', ['DM', 'CM'], 81, 82, 2003, 30, t(8, 4, 7, 6, 3, 7))],
+  ['inter', q('inter', 'seedorf', 'Clarence Seedorf', 1976, 'Netherlands', ['CM', 'AM'], 84, 87, 2004, 25, t(7, 7, 8, 5, 5, 7))],
+  ['barcelona', q('barcelona', 'cocu', 'Phillip Cocu', 1970, 'Netherlands', ['CM', 'DM'], 82, 83, 2003, 20, t(8, 4, 7, 7, 3, 8))],
+  ['bayern', q('bayern', 'effenberg', 'Stefan Effenberg', 1968, 'Germany', ['CM'], 83, 84, 2002, 30, t(6, 8, 8, 6, 7, 6))],
+  ['lazio', q('lazio', 'nedved', 'Pavel Nedvěd', 1972, 'Czech Republic', ['CM', 'LW'], 85, 88, 2004, 25, t(9, 5, 9, 6, 4, 7))],
+];
+
 /** Curated squads keyed by scenario → club (marquee real players + procedural
  *  depth is filled in at squad build). */
+const MAN_UTD_1999_SQUADS: Record<string, CuratedSeed[]> = {
+  man_utd: MAN_UTD_1999,
+  newcastle: NEWCASTLE_1999,
+  southampton: SOUTHAMPTON_1999,
+  milan: [...MILAN_1999],
+  arsenal: ARSENAL_1999,
+  liverpool: [...LIVERPOOL_1999],
+  leeds: LEEDS_1999,
+  inter: [...INTER_1999],
+  monaco: MONACO_1999,
+  lazio: [...LAZIO_1999],
+  psv: PSV_1999,
+  marseille: MARSEILLE_1999,
+};
+// Merge the midfield pool into the relevant clubs.
+for (const [club, seed] of MIDFIELD_POOL_1999) {
+  (MAN_UTD_1999_SQUADS[club] ??= []).push(seed);
+}
+
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
-  'man-utd-1999': {
-    man_utd: MAN_UTD_1999,
-    newcastle: NEWCASTLE_1999,
-    southampton: SOUTHAMPTON_1999,
-    milan: MILAN_1999,
-    arsenal: ARSENAL_1999,
-    liverpool: LIVERPOOL_1999,
-    leeds: LEEDS_1999,
-    inter: INTER_1999,
-    monaco: MONACO_1999,
-    lazio: LAZIO_1999,
-    psv: PSV_1999,
-    marseille: MARSEILLE_1999,
-  },
+  'man-utd-1999': MAN_UTD_1999_SQUADS,
 };

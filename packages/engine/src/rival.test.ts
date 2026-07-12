@@ -41,21 +41,53 @@ describe('rival AI — counter-punch (§9a)', () => {
   });
 });
 
-describe('rival AI — poaching (§9a #3)', () => {
-  it('a rich rival can poach a willing user star', () => {
-    // A star who dreams of Real Madrid, with high temptation, is at real risk.
-    let poached = false;
-    for (let seed = 0; seed < 30 && !poached; seed++) {
-      const state = cloneState(createNewGame({ seed: `poach:${seed}`, settings: { starTemptation: 2 } }));
-      state.clock = { ...state.clock, monthIndex: 0, window: 'summer' };
-      state.userAggression = 5; // an active user provokes the response layer (§9a)
-      const star = Object.values(state.players).find((p) => p.club === 'man_utd' && p.ability >= 85)!;
-      star.resistance.dreamClubs = ['real_madrid'];
-      star.resistance.clubLoyalty = 30;
-      runRivalWindow(state, Rng.fromSeed(`rw:${seed}`));
-      if (state.players[star.id]!.club !== 'man_utd') poached = true;
+describe('rival AI — poaching is a logical butterfly (§9a #3)', () => {
+  it('a passive user is never poached — no provocation, no bid', () => {
+    let s = createNewGame({ seed: 'no-poach' });
+    for (let i = 0; i < 20; i++) {
+      s = resolveAll(s);
+      s = advanceWindow(s).state;
     }
-    expect(poached).toBe(true);
+    expect(s.eventLog.some((e) => e.code === 'poach.bid')).toBe(false);
+  });
+
+  it('depriving a club of a real signing makes them bid for your player in that position', () => {
+    let s = cloneState(createNewGame({ seed: 'butterfly-poach' }));
+    // Sign Arsenal's Anelka (a striker) before his real move to Real Madrid.
+    s.clubs.man_utd!.finances.transferBudget = 50_000_000;
+    executeTransfer(s, { playerId: 'cur_anelka', toClub: 'man_utd', fee: 22_000_000 });
+    // Advance until Real Madrid, denied their striker, bid for one of yours.
+    let bid = false;
+    for (let i = 0; i < 8 && !bid; i++) {
+      for (const d of [...s.pendingDecisions]) {
+        if (d.id.startsWith('poach:')) bid = true;
+        else s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      }
+      if (bid) break;
+      s = advanceWindow(s).state;
+    }
+    expect(bid).toBe(true);
+    const bidDecision = s.pendingDecisions.find((d) => d.id.startsWith('poach:'))!;
+    expect(bidDecision.description).toMatch(/denied .* by your move/i);
+    expect(bidDecision.choices.map((c) => c.id)).toEqual(['reject', 'accept']);
+  });
+
+  it('rejecting a bid unsettles the player (unrest can force a later exit)', () => {
+    let s = cloneState(createNewGame({ seed: 'reject-bid' }));
+    s.clubs.man_utd!.finances.transferBudget = 50_000_000;
+    executeTransfer(s, { playerId: 'cur_anelka', toClub: 'man_utd', fee: 22_000_000 });
+    for (let i = 0; i < 8; i++) {
+      const bid = s.pendingDecisions.find((d) => d.id.startsWith('poach:'));
+      if (bid) {
+        const target = bid.id.split(':')[1]!;
+        s = applyDecision(s, bid.id, 'reject').state;
+        expect(s.players[target]!.agitation).toBeGreaterThan(0);
+        return;
+      }
+      s = resolveAll(s);
+      s = advanceWindow(s).state;
+    }
+    throw new Error('no poach bid fired');
   });
 });
 

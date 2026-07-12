@@ -198,6 +198,10 @@ export interface PlayerState {
 
   /** Transfer agency (§6) — consulted on any approach. */
   resistance: ResistanceProfile;
+
+  /** Unrest, 0–100. Rises when the user rejects a bid to keep him; sustained
+   *  agitation can force a discounted exit (the "kept him but he left anyway"). */
+  agitation: number;
 }
 
 export type CareerStagePull = 'prove' | 'peak' | 'legacy' | 'payday';
@@ -315,6 +319,8 @@ export interface Consequence {
     | 'boardPatience'
     | 'ban' // player unavailable for N months (injury-like)
     | 'managerRelationship'
+    | 'agitation' // raise a player's unrest
+    | 'transferOut' // sell a player to `clubId` for `amount`
     | 'memory' // append a narrative-memory entry (§10)
     | 'log'; // purely informational log line
   playerId?: PlayerId;

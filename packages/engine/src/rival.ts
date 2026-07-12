@@ -64,50 +64,53 @@ function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean 
   return false;
 }
 
-/** Attempt to poach the user's stars (§9a #3). Runs once per year (summer).
- *  Only a user who has been active in the market provokes poaching — a passive
- *  user doesn't, so reality (and scripted history) holds for them. */
-function poachUserStars(state: GameState, rng: Rng): void {
-  if (state.userAggression <= 0) return; // reality-default: no provocation, no poach
+/**
+ * Sustained unrest can force a discounted exit (internal-friction). A player
+ * who was bid for and KEPT accumulates agitation; if it runs high he agitates
+ * his way out — the "you kept him happy but he still left" ~30% (§12). Agitation
+ * decays if no fresh bids arrive, so a one-off rejection usually settles.
+ */
+function processAgitationDepartures(state: GameState, rng: Rng): void {
   const user = state.clubs[state.playerClub];
   if (!user) return;
-  const rivals = richRivals(state);
-  if (rivals.length === 0) return;
   const year = Number(state.clock.date.slice(0, 4));
-  const temptation = state.settings.starTemptation;
-  const defianceBoost = 1 + (state.worldDefiance / 100) * state.settings.worldDefiance;
+  const rivals = richRivals(state);
 
   for (const id of [...user.squad]) {
-    const star = state.players[id];
-    if (!star || star.ability < STAR_ABILITY || star.injury) continue;
-
-    for (const rival of rng.shuffle([...rivals])) {
-      const verdict = evaluateApproach(state, { playerId: star.id, toClub: rival.id, wageOffer: star.wage * 1.5 });
-      if (verdict.hardBlocked) continue;
-      // Willing stars (dream move / low loyalty) are far more poachable; a loyal
-      // star only leaves via rare agitation.
-      const base = verdict.willing ? 0.038 : 0.003;
-      const p = base * temptation * defianceBoost;
-      if (!rng.chance(p)) continue;
-
-      const fee = valuePlayer(star, year);
-      // A rich rival stretches to fund a statement signing.
-      rival.finances.transferBudget = Math.max(rival.finances.transferBudget, fee);
-      const res = executeTransfer(state, { playerId: star.id, toClub: rival.id, fee });
-      if (res.ok) {
-        logEvent(state, {
-          category: 'transfer',
-          code: 'poach.completed',
-          message: `${star.name} poached by ${rival.name} — the ${user.name} star departs`,
-          data: { playerId: star.id, from: state.playerClub, to: rival.id, fee },
-        });
+    const p = state.players[id];
+    if (!p) continue;
+    if (p.agitation >= 40) {
+      // A player kept against his wishes forces his way out ~30% of the time.
+      const chance = 0.3 + Math.max(0, (p.agitation - 46) / 100);
+      if (rng.chance(chance)) {
+        // Find a willing buyer; a discounted, forced sale.
+        const buyer =
+          rng.shuffle([...rivals]).find((c) => evaluateApproach(state, { playerId: p.id, toClub: c.id }).willing) ??
+          rivals[0];
+        if (buyer) {
+          const fee = Math.round(valuePlayer(p, year) * 0.8);
+          buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, fee);
+          const res = executeTransfer(state, { playerId: p.id, toClub: buyer.id, fee });
+          if (res.ok) {
+            logEvent(state, {
+              category: 'transfer',
+              code: 'poach.completed',
+              message: `${p.name} forces his way out to ${buyer.name} — kept too long against his wishes`,
+              data: { playerId: p.id, from: state.playerClub, to: buyer.id, fee, forced: true },
+            });
+            continue;
+          }
+        }
       }
-      break; // star handled (gone or stayed) this window
     }
+    // Unrest fades over time if no fresh bids stoke it.
+    p.agitation = Math.max(0, p.agitation - 22);
   }
 }
 
-/** One rival-AI turn at a decision window (§9a response layer). */
+/** One rival-AI turn at a decision window (§9a response layer). Poaching is no
+ *  longer a generic tax — it arises only as a logical butterfly of the user's
+ *  own moves (see ledgerExec.createPoachBid). This turn handles counter-punch. */
 export function runRivalWindow(state: GameState, rng: Rng): void {
   const r = rng.fork(`rival:${state.clock.date}`);
 
@@ -120,10 +123,9 @@ export function runRivalWindow(state: GameState, rng: Rng): void {
       club.pendingCounterPunch -= 1; // ran out of options this window
     }
   }
-
-  // Poaching runs once a year, in the summer window.
-  if (state.clock.monthIndex === 0) poachUserStars(state, r);
 }
+
+export { processAgitationDepartures };
 
 /**
  * Rubber-band (§9a #5): a dominant user raises `worldDefiance` (the world fights

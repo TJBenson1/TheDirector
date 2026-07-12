@@ -108,4 +108,31 @@ export const raidingBot: StrategyBot = {
   },
 };
 
-export const ALL_BOTS: StrategyBot[] = [passiveBot, firstChoiceBot, signingBot, raidingBot];
+/**
+ * Deliberately triggers reality butterflies: each summer it buys a real ledger
+ * subject (depriving that player's real destination), then KEEPS the resulting
+ * poach-bid targets (rejects the bid). Exercises the star-retention mechanic
+ * (§12): of players kept against a logical bid, ~30% still force their way out.
+ */
+export const butterflyBot: StrategyBot = {
+  name: 'butterfly',
+  decide: (state, decisions, rng) => firstChoiceBot.decide(state, decisions, rng), // choices[0] on a poach bid is 'reject' (keep)
+  transferActions(state) {
+    const clubId = state.playerClub;
+    const year = currentYear(state);
+    const budget = state.clubs[clubId]?.finances.transferBudget ?? 0;
+    // Buyable ledger subjects, only from their original source club (so a
+    // player already moved on isn't chased around the world).
+    const subjects: Array<[string, string]> = [['cur_anelka', 'arsenal'], ['cur_overmars', 'arsenal'], ['cur_crespo', 'inter']];
+    for (const [id, source] of subjects) {
+      const p = state.players[id];
+      if (!p || p.club !== source) continue;
+      if (valuePlayer(p, year) > budget) continue;
+      if (!evaluateApproach(state, { playerId: id, toClub: clubId, wageOffer: p.wage * 1.4 }).willing) continue;
+      return [{ playerId: id, toClub: clubId, fee: valuePlayer(p, year) }];
+    }
+    return [];
+  },
+};
+
+export const ALL_BOTS: StrategyBot[] = [passiveBot, firstChoiceBot, signingBot, raidingBot, butterflyBot];

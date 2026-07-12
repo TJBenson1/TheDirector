@@ -51,8 +51,10 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
   // Decade buckets with a major injury crisis / user scandal, for calibration.
   const crisisDecades = new Set<number>();
   const scandalDecades = new Set<number>();
-  // Distinct user stars held over the career ("keep him happy" campaigns).
-  const starIds = new Set<string>();
+  // Players the user was pressured to sell via a logical poach bid ("keep him
+  // happy" campaigns), and those who left despite the keep policy (§12).
+  const poachBidTargets = new Set<string>();
+  const poachDeparted = new Set<string>();
   // A career is "zero-divergence" if the user makes no transfers — the control
   // for scripted-event fidelity (§12). Active careers measure star retention.
   const zeroDivergence = !bot.transferActions;
@@ -117,14 +119,6 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
         }
       }
 
-      // Track the user's stars (a "keep him happy" campaign per §12) — only in
-      // active careers, where the rival response layer is in play.
-      if (!zeroDivergence) {
-        for (const id of draft.clubs[draft.playerClub]?.squad ?? []) {
-          const p = draft.players[id];
-          if (p && p.ability >= 82) starIds.add(p.id);
-        }
-      }
       state = draft;
     }
 
@@ -144,8 +138,13 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
     for (const e of result.events) {
       if (e.code === 'scandal.fired' && e.data?.user === true) scandalDecades.add(decadeOf());
       if (e.code === 'rival.counterpunch') metrics.raidsCounterPunchedWithin2Windows += 1;
+      // A logical poach bid (butterfly of the user's own move) on a user player.
+      if (e.code === 'poach.bid' && e.data?.from === state.playerClub) {
+        poachBidTargets.add(String(e.data.playerId));
+      }
+      // A player who left despite the keep policy (forced out by unrest).
       if (e.code === 'poach.completed' && e.data?.from === state.playerClub) {
-        metrics.keepHappyEndedInDeparture += 1;
+        poachDeparted.add(String(e.data.playerId));
       }
       // Scripted fidelity is a zero-divergence measure only (§12).
       if (zeroDivergence && e.code === 'scripted.fired') {
@@ -181,7 +180,11 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
 
   metrics.userMajorInjuryCrisisDecades = crisisDecades.size;
   metrics.userScandalDecades = scandalDecades.size;
-  metrics.keepHappyCampaigns = starIds.size;
+  // "Keep him happy" campaigns = players bid for; departures = those who were
+  // forced out despite the keep policy (counted from the event, so a later
+  // re-signing doesn't mask that the departure happened).
+  metrics.keepHappyCampaigns = poachBidTargets.size;
+  metrics.keepHappyEndedInDeparture = [...poachBidTargets].filter((id) => poachDeparted.has(id)).length;
 
   // Reality squad-match at era end (zero-divergence control): did the ledger
   // subjects end up at their real destinations? (§9f)

@@ -232,6 +232,7 @@ function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, 
         seasonMonthsInjured: 0,
         adaptation: null,
         resistance: buildResistance(seed.personality, seed.nationality, age, seed.ability, clubRng),
+        agitation: 0,
       };
       if (loyalty !== undefined) player.resistance.clubLoyalty = loyalty;
       if (hardBlocks) player.resistance.hardBlocks = hardBlocks.map((b) => ({ ...b }));
