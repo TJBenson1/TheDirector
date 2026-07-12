@@ -10,6 +10,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import { MAN_UTD_2013_SQUADS } from './curated-2013.js';
 import { ARSENAL_2004_SQUADS } from './curated-2004.js';
+import { LIVERPOOL_2001_SQUADS } from './curated-2001.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -330,4 +331,5 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'real-madrid-2000': MAN_UTD_1999_SQUADS,
   'man-utd-2013': MAN_UTD_2013_SQUADS,
   'arsenal-2004': ARSENAL_2004_SQUADS,
+  'liverpool-2001': LIVERPOOL_2001_SQUADS,
 };

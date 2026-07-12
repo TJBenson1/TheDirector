@@ -234,17 +234,41 @@ const INJURIES_2004: RealInjuryEntry[] = [
   { playerId: 'cur_rooney2', atClub: 'man_utd', since: '2006-04', months: 2, serious: false, note: 'metatarsal fracture before the World Cup' },
 ];
 
+/**
+ * Real 2001–05 transfers for the post-treble era pack. Liverpool's real recruits
+ * (Diouf, Cheyrou) are OFFERED to the user — the counterfactual passes on the
+ * flops and signs Anelka permanently instead. Chelsea's 2003 takeover splurge is
+ * gated by `enabledBy: 'abramovich'` — a marker realized only if the takeover
+ * actually happens (see the Abramovich check in season rollover). Deny Chelsea a
+ * Champions-League place in 2003 and the takeover — and the splurge — may vanish.
+ */
+const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
+  // Anelka's loan ends and he really left in 2002 — offered as the user's call
+  // (keep him permanently, the counterfactual, or let him go, as reality did).
+  { playerId: 'cur_anelka01', from: 'liverpool', to: 'man_city', window: '2002-07', fee: 13_000_000, id: 'anelka-out-2002' },
+  { playerId: 'cur_diouf', from: 'lens', to: 'liverpool', window: '2002-07', fee: 10_000_000, id: 'diouf-liverpool-2002' },
+  { playerId: 'cur_cheyrou', from: 'lille', to: 'liverpool', window: '2002-07', fee: 4_000_000, id: 'cheyrou-liverpool-2002' },
+  // Abramovich's Chelsea — only if the takeover completes.
+  { playerId: 'cur_makelele03', from: 'real_madrid', to: 'chelsea', window: '2003-08', fee: 16_000_000, id: 'makelele-chelsea-2003b', enabledBy: 'abramovich' },
+  { playerId: 'cur_duff03', from: 'blackburn', to: 'chelsea', window: '2003-07', fee: 17_000_000, id: 'duff-chelsea-2003', enabledBy: 'abramovich' },
+  { playerId: 'cur_crespo03', from: 'inter', to: 'chelsea', window: '2003-07', fee: 16_800_000, id: 'crespo-chelsea-2003', enabledBy: 'abramovich' },
+  { playerId: 'cur_mutu03', from: 'parma', to: 'chelsea', window: '2003-07', fee: 15_800_000, id: 'mutu-chelsea-2003', enabledBy: 'abramovich' },
+  { playerId: 'cur_bridge03', from: 'southampton', to: 'chelsea', window: '2003-07', fee: 7_000_000, id: 'bridge-chelsea-2003', enabledBy: 'abramovich' },
+];
+
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004 },
+  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [] },
 };
 
 /** The era pack a scenario draws its reality data from. */
 export function eraForScenario(scenarioId: string): string {
   if (scenarioId.endsWith('-2013')) return 'era-2013';
   if (scenarioId.endsWith('-2004')) return 'era-2004';
+  if (scenarioId.endsWith('-2001')) return 'era-2001';
   return 'era-1995-2005';
 }
 

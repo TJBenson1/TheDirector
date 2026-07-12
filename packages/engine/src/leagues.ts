@@ -146,9 +146,40 @@ export const ENGLAND_2004: LeagueSeed = {
   ],
 };
 
+/** England, 2001–02 Premier League — Arsenal's Double; Liverpool fresh off the
+ *  treble; Leeds still a force. Ordering informed by the real final table. */
+export const ENGLAND_2001: LeagueSeed = {
+  id: 'eng-2001',
+  name: 'English Premier League',
+  season: '2001-07',
+  clubs: [
+    { id: 'arsenal', name: 'Arsenal', prestige: 84, strength: 86 },
+    { id: 'liverpool', name: 'Liverpool', prestige: 82, strength: 85 },
+    { id: 'man_utd', name: 'Manchester United', prestige: 88, strength: 87 },
+    { id: 'newcastle', name: 'Newcastle United', prestige: 70, strength: 79 },
+    { id: 'leeds', name: 'Leeds United', prestige: 74, strength: 82 },
+    { id: 'chelsea', name: 'Chelsea', prestige: 74, strength: 80 },
+    { id: 'west_ham', name: 'West Ham United', prestige: 62, strength: 71 },
+    { id: 'aston_villa', name: 'Aston Villa', prestige: 64, strength: 70 },
+    { id: 'spurs', name: 'Tottenham Hotspur', prestige: 68, strength: 71 },
+    { id: 'blackburn', name: 'Blackburn Rovers', prestige: 58, strength: 68 },
+    { id: 'southampton', name: 'Southampton', prestige: 56, strength: 66 },
+    { id: 'middlesbrough', name: 'Middlesbrough', prestige: 58, strength: 65 },
+    { id: 'fulham', name: 'Fulham', prestige: 56, strength: 64 },
+    { id: 'charlton', name: 'Charlton Athletic', prestige: 52, strength: 63 },
+    { id: 'everton', name: 'Everton', prestige: 62, strength: 64 },
+    { id: 'bolton', name: 'Bolton Wanderers', prestige: 52, strength: 61 },
+    { id: 'sunderland', name: 'Sunderland', prestige: 56, strength: 62 },
+    { id: 'ipswich', name: 'Ipswich Town', prestige: 50, strength: 60 },
+    { id: 'derby', name: 'Derby County', prestige: 50, strength: 58 },
+    { id: 'leicester', name: 'Leicester City', prestige: 52, strength: 59 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'esp-1': SPAIN_2000,
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
+  'eng-2001': ENGLAND_2001,
 };
