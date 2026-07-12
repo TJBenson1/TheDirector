@@ -371,12 +371,63 @@ const ACADEMY_2013: AcademyGraduate[] = [
   { year: 2014, seed: { id: 'cur_wilson13', club: 'man_utd', name: 'James Wilson', birthYear: 1995, nationality: 'England', positions: ['ST'], ability: 62, potentialCeiling: 74, latentCeiling: 83, contractUntil: 2018, injuryProneness: 35, personality: per(7, 5, 7, 7, 4, 7) } },
 ];
 
+// ── era-2004 (Arsenal Invincibles) retirements + academy ─────────────────────
+const RETIREMENTS_2004: RealRetirement[] = [
+  { playerId: 'cur_lehmann', year: 2011 }, { playerId: 'cur_lauren', year: 2012 },
+  { playerId: 'cur_toure', year: 2015 }, { playerId: 'cur_campbell2', year: 2012 },
+  { playerId: 'cur_gilberto', year: 2013 }, { playerId: 'cur_vieira2', year: 2011 },
+  { playerId: 'cur_pires2', year: 2015 }, { playerId: 'cur_ljungberg', year: 2012 },
+  { playerId: 'cur_bergkamp2', year: 2006 }, { playerId: 'cur_henry', year: 2014 },
+  { playerId: 'cur_edu', year: 2011 },
+  { playerId: 'cur_keane2', year: 2006 }, { playerId: 'cur_scholes2', year: 2013 },
+  { playerId: 'cur_giggs3', year: 2014 }, { playerId: 'cur_vannistelrooy2', year: 2012 },
+  { playerId: 'cur_gneville2', year: 2011 }, { playerId: 'cur_ferdinand3', year: 2015 },
+  { playerId: 'cur_makelele2', year: 2011 }, { playerId: 'cur_lampard2', year: 2017 },
+  { playerId: 'cur_terry2', year: 2018 }, { playerId: 'cur_carragher2', year: 2013 },
+  { playerId: 'cur_gerrard3', year: 2016 }, { playerId: 'cur_hyypia2', year: 2011 },
+  { playerId: 'cur_shevchenko2', year: 2012 }, { playerId: 'cur_ballack', year: 2013 },
+];
+
+const ACADEMY_2004: AcademyGraduate[] = [
+  // Jack Wilshere — the flagship Arsenal graduate AND a lost talent: brilliant at
+  // 18, then broken by injuries. Latent 90 if a user can keep him fit and central.
+  { year: 2008, seed: { id: 'cur_wilshere04', club: 'arsenal', name: 'Jack Wilshere', birthYear: 1992, nationality: 'England', positions: ['CM', 'AM'], ability: 60, potentialCeiling: 82, latentCeiling: 90, contractUntil: 2013, injuryProneness: 70, personality: per(6, 7, 8, 8, 6, 6) } },
+  { year: 2009, seed: { id: 'cur_gibbs04', club: 'arsenal', name: 'Kieran Gibbs', birthYear: 1989, nationality: 'England', positions: ['LB'], ability: 58, potentialCeiling: 80, contractUntil: 2013, injuryProneness: 45, personality: per(7, 5, 7, 7, 4, 7) } },
+];
+
+// ── era-2001 (Liverpool post-treble) retirements + academy ───────────────────
+const RETIREMENTS_2001: RealRetirement[] = [
+  { playerId: 'cur_dudek', year: 2011 }, { playerId: 'cur_babbel', year: 2007 },
+  { playerId: 'cur_henchoz', year: 2008 }, { playerId: 'cur_hyypia01', year: 2011 },
+  { playerId: 'cur_carra01', year: 2013 }, { playerId: 'cur_gerrard01', year: 2016 },
+  { playerId: 'cur_hamann01', year: 2011 }, { playerId: 'cur_mcallister', year: 2004 },
+  { playerId: 'cur_murphy01', year: 2013 }, { playerId: 'cur_owen01', year: 2013 },
+  { playerId: 'cur_fowler01', year: 2012 }, { playerId: 'cur_litmanen', year: 2011 },
+  { playerId: 'cur_smicer', year: 2009 },
+  { playerId: 'cur_barthez01', year: 2007 }, { playerId: 'cur_gneville01', year: 2011 },
+  { playerId: 'cur_stam01', year: 2007 }, { playerId: 'cur_blanc', year: 2003 },
+  { playerId: 'cur_keane01', year: 2006 }, { playerId: 'cur_scholes01', year: 2013 },
+  { playerId: 'cur_beckham01', year: 2013 }, { playerId: 'cur_giggs01', year: 2014 },
+  { playerId: 'cur_veron01', year: 2012 }, { playerId: 'cur_ruud01', year: 2012 },
+  { playerId: 'cur_solskjaer01', year: 2007 }, { playerId: 'cur_cole01', year: 2008 },
+  { playerId: 'cur_seaman01', year: 2004 }, { playerId: 'cur_adams01', year: 2002 },
+  { playerId: 'cur_vieira01', year: 2011 }, { playerId: 'cur_bergkamp01', year: 2006 },
+  { playerId: 'cur_henry01', year: 2014 }, { playerId: 'cur_shearer01', year: 2006 },
+  { playerId: 'cur_martyn', year: 2006 }, { playerId: 'cur_speed01', year: 2011 },
+];
+
+const ACADEMY_2001: AcademyGraduate[] = [
+  { year: 2004, seed: { id: 'cur_warnock01', club: 'liverpool', name: 'Stephen Warnock', birthYear: 1981, nationality: 'England', positions: ['LB'], ability: 58, potentialCeiling: 76, contractUntil: 2008, injuryProneness: 35, personality: per(7, 4, 7, 7, 4, 7) } },
+  // Neil Mellor — a promising academy striker whose knees betrayed him (latent 82).
+  { year: 2004, seed: { id: 'cur_mellor01', club: 'liverpool', name: 'Neil Mellor', birthYear: 1982, nationality: 'England', positions: ['ST'], ability: 56, potentialCeiling: 72, latentCeiling: 82, contractUntil: 2008, injuryProneness: 65, personality: per(7, 5, 7, 8, 5, 6) } },
+];
+
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013 },
-  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004 },
-  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [] },
+  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004 },
+  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2001, academyGraduates: ACADEMY_2001 },
 };
 
 /** The era pack a scenario draws its reality data from. */

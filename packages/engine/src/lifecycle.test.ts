@@ -59,6 +59,27 @@ describe('player lifecycle (retirement / academy / lost talent)', () => {
     expect(ev(g, 'development.unlocked').some((e) => e.data?.playerId === 'cur_wbrown')).toBe(true);
   });
 
+  it('a lost talent is a deployable gamble — pays off sometimes, busts others', () => {
+    // Centre Januzaj (a flaky lost talent): make him first-choice, then run
+    // development seasons. Across seeds he should BOTH unlock and bust — a real
+    // strategy, never a guarantee.
+    let unlocked = 0;
+    let busted = 0;
+    for (let seed = 0; seed < 24; seed++) {
+      const g = createNewGame({ scenarioId: 'man-utd-2013', seed: `jz-${seed}` });
+      const utd = g.clubs.man_utd!;
+      utd.squad = utd.squad.filter(
+        (id) => id === 'cur_januzaj' || !['LW', 'RW', 'ST', 'AM'].includes(g.players[id]!.positions[0]!),
+      );
+      const rng = Rng.fromSeed(`jzd-${seed}`);
+      for (let i = 0; i < 6; i++) processSeasonDevelopment(g, rng.fork(`s${i}`));
+      if (ev(g, 'development.unlocked').some((e) => e.data?.playerId === 'cur_januzaj')) unlocked++;
+      if (ev(g, 'development.busted').some((e) => e.data?.playerId === 'cur_januzaj')) busted++;
+    }
+    expect(unlocked).toBeGreaterThan(0); // the strategy CAN be deployed
+    expect(busted).toBeGreaterThan(0); // but is NOT guaranteed
+  });
+
   it('never fabricates a real-looking player to replace a retiree (anonymous depth only)', () => {
     // Every generated (procedural) player id is the anonymous p_* form; no
     // retirement ever mints a curated-looking academy name.

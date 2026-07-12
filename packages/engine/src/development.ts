@@ -18,7 +18,7 @@
  */
 
 import type { ClubId, ClubState, GameState, PlayerState, Position } from './types.js';
-import { Rng } from './rng.js';
+import { Rng, clamp01 } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { clubSquadPlayers, recomputeClubStrength, buildResistance } from './players.js';
 import { suggestWage } from './finance.js';
@@ -140,30 +140,15 @@ function developYoungster(
   }
   const per = player.personality;
 
-  // ── LOST TALENT: reverse reality-rail (before the gap check) ────────────────
+  // ── LOST TALENT: a deployable GAMBLE, never a guarantee ─────────────────────
   // A real player who under-achieved carries a latent ceiling above what he
-  // reached. Sustained TOP minutes at a suitable club (the user's own, or an
-  // elite side) during the growth window can unlock it — earned, not automatic,
-  // and gated by professionalism. The mirror of bench-erosion: the right pathway
-  // raises the cap instead of a blocked one capping the talent. Runs before the
-  // gap check so a player already at his (low) real ceiling can still break past it.
-  if (
-    player.curated &&
-    player.latentCeiling !== undefined &&
-    player.latentCeiling > player.potentialCeiling &&
-    share >= 0.6 &&
-    (club.id === state.playerClub || club.prestige >= 80) &&
-    age <= 23 &&
-    rng.chance(0.45 + per.professionalism * 0.03)
-  ) {
-    const raise = Math.min(player.latentCeiling - player.potentialCeiling, rng.int(2, 4));
-    player.potentialCeiling += raise;
-    logEvent(state, {
-      category: 'development',
-      code: 'development.unlocked',
-      message: `${player.name} (${club.name}) is fulfilling the talent reality wasted — ceiling rises to ${player.potentialCeiling}`,
-      data: { playerId: player.id, clubId: club.id, ceiling: player.potentialCeiling, latent: player.latentCeiling },
-    });
+  // reached. Giving him real minutes at a real club is a STRATEGY the user can
+  // deploy — but it can fail: he might kick on (ceiling climbs toward the latent),
+  // or BUST (the talent reality wasted stays wasted). The odds are weighted by
+  // temperament — a pro is a safer bet than a flaky, big-ego talent. Deny him
+  // minutes and the pathway is blocked, so the latent quietly fades, as reality.
+  if (player.curated && player.latentCeiling !== undefined && player.latentCeiling > player.potentialCeiling) {
+    developLatentTalent(state, club, player, age, share, rng);
   }
 
   const gap = player.potentialCeiling - player.ability;
@@ -285,6 +270,64 @@ export function processAcademyGraduates(state: GameState, rng: Rng): void {
       message: `${player.name} graduates from the ${club.name} academy${player.latentCeiling ? ' — one to watch' : ''}`,
       data: { playerId: player.id, clubId: club.id, age },
     });
+  }
+}
+
+/** The latent upside fades once the pathway is missed — a blocked or aged-out
+ *  talent goes unfulfilled, exactly as reality left him. */
+function fadeLatent(player: PlayerState): void {
+  const next = Math.max(player.potentialCeiling, (player.latentCeiling ?? 0) - 2);
+  if (next <= player.potentialCeiling) delete player.latentCeiling;
+  else player.latentCeiling = next;
+}
+
+/**
+ * Resolve one development season for a LOST TALENT (reverse reality-rail). This
+ * is a gamble the user opts into by playing him:
+ *  - Aged out of the window (>23): the chance is gone, the latent fades.
+ *  - Given TOP minutes at a suitable club: roll a temperament-weighted
+ *    breakthrough (ceiling climbs toward the latent). If it misses, roll a bust —
+ *    a flaky, low-professionalism talent is far more likely to throw it away, and
+ *    a bust locks him at his real level for good.
+ *  - Otherwise (blocked / rotation only): the pathway is missed, the latent fades.
+ * Never guaranteed; a pro is a much safer bet than a volatile, big-ego prospect.
+ */
+function developLatentTalent(
+  state: GameState,
+  club: ClubState,
+  player: PlayerState,
+  age: number,
+  share: number,
+  rng: Rng,
+): void {
+  if (age > 23) return fadeLatent(player);
+
+  const suitable = club.id === state.playerClub || club.prestige >= 80;
+  if (share < 0.6 || !suitable) return fadeLatent(player);
+
+  const { professionalism: prof, volatility: vol, ego } = player.personality;
+  const breakthrough = clamp01(0.34 + prof * 0.028 - vol * 0.012 - ego * 0.008);
+  if (rng.chance(breakthrough)) {
+    const raise = Math.min(player.latentCeiling! - player.potentialCeiling, rng.int(2, 5));
+    player.potentialCeiling += raise;
+    logEvent(state, {
+      category: 'development',
+      code: 'development.unlocked',
+      message: `${player.name} (${club.name}) is kicking on — fulfilling talent reality wasted, ceiling rises to ${player.potentialCeiling}`,
+      data: { playerId: player.id, clubId: club.id, ceiling: player.potentialCeiling, latent: player.latentCeiling },
+    });
+    return;
+  }
+
+  const bust = clamp01(0.07 + (10 - prof) * 0.016 + vol * 0.01);
+  if (rng.chance(bust)) {
+    logEvent(state, {
+      category: 'development',
+      code: 'development.busted',
+      message: `${player.name} (${club.name}) does not kick on — the talent reality wasted stays wasted`,
+      data: { playerId: player.id, clubId: club.id },
+    });
+    delete player.latentCeiling; // locked at his real level, for good
   }
 }
 

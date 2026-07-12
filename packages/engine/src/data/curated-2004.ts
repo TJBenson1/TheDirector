@@ -18,7 +18,7 @@ const t = (prof: number, ego: number, amb: number, loy: number, vol: number, ada
 function q(
   club: ClubId, id: string, name: string, birthYear: number, nationality: string, positions: Position[],
   ability: number, potentialCeiling: number, contractUntil: number, injuryProneness: number, personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number } = {},
 ): CuratedSeed {
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
@@ -36,7 +36,9 @@ export const ARSENAL_2004: CuratedSeed[] = [
   q('arsenal', 'ljungberg', 'Fredrik Ljungberg', 1977, 'Sweden', ['RW', 'AM'], 83, 85, 2007, 35, t(8, 6, 8, 7, 4, 7)),
   q('arsenal', 'bergkamp2', 'Dennis Bergkamp', 1969, 'Netherlands', ['AM', 'ST'], 85, 86, 2006, 25, t(9, 6, 8, 8, 3, 6)),
   q('arsenal', 'henry', 'Thierry Henry', 1977, 'France', ['ST', 'LW'], 91, 92, 2007, 25, t(9, 7, 9, 8, 4, 8), { loyalty: 88 }),
-  q('arsenal', 'reyes', 'José Antonio Reyes', 1983, 'Spain', ['LW', 'ST'], 80, 86, 2008, 35, t(6, 7, 7, 6, 7, 6)),
+  // Reyes — dazzled at 20, then faded under pressure. A flaky (low-prof, volatile)
+  // lost talent: centre him and he MIGHT become the star Highbury dreamed of.
+  q('arsenal', 'reyes', 'José Antonio Reyes', 1983, 'Spain', ['LW', 'ST'], 80, 86, 2008, 35, t(6, 7, 7, 6, 7, 6), { latentCeiling: 90 }),
   q('arsenal', 'fabregas', 'Cesc Fàbregas', 1987, 'Spain', ['CM', 'AM'], 68, 90, 2008, 20, t(9, 6, 9, 7, 3, 8)),
   q('arsenal', 'rvp', 'Robin van Persie', 1983, 'Netherlands', ['ST', 'LW'], 74, 90, 2009, 55, t(6, 7, 8, 6, 6, 7)),
   q('arsenal', 'clichy', 'Gaël Clichy', 1985, 'France', ['LB'], 70, 84, 2008, 30, t(8, 5, 7, 7, 4, 7)),
@@ -153,7 +155,7 @@ export const BAYERN_2004: CuratedSeed[] = [
   q('bayern', 'hargreaves', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 82, 85, 2007, 65, t(9, 5, 8, 7, 4, 7)),
 ];
 export const PORTO_2004: CuratedSeed[] = [
-  q('porto', 'anderson_p', 'Anderson', 1988, 'Brazil', ['CM'], 76, 86, 2011, 55, t(6, 7, 7, 6, 6, 7)),
+  q('porto', 'anderson_p', 'Anderson', 1988, 'Brazil', ['CM'], 76, 86, 2011, 55, t(6, 7, 7, 6, 6, 7), { latentCeiling: 89 }),
   q('porto', 'quaresma', 'Ricardo Quaresma', 1983, 'Portugal', ['RW'], 80, 85, 2008, 40, t(6, 8, 7, 5, 7, 6)),
 ];
 export const SPORTING_2004: CuratedSeed[] = [

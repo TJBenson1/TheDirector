@@ -19,7 +19,7 @@ const t = (prof: number, ego: number, amb: number, loy: number, vol: number, ada
 function q(
   club: ClubId, id: string, name: string, birthYear: number, nationality: string, positions: Position[],
   ability: number, potentialCeiling: number, contractUntil: number, injuryProneness: number, personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number } = {},
 ): CuratedSeed {
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
@@ -96,14 +96,18 @@ export const CHELSEA_2001: CuratedSeed[] = [
 export const LEEDS_2001: CuratedSeed[] = [
   q('leeds', 'martyn', 'Nigel Martyn', 1966, 'England', ['GK'], 80, 81, 2004, 25, t(8, 5, 7, 8, 4, 6)),
   q('leeds', 'ferdinand01', 'Rio Ferdinand', 1978, 'England', ['CB'], 84, 90, 2006, 30, t(7, 6, 8, 6, 5, 7)),
-  q('leeds', 'woodgate01', 'Jonathan Woodgate', 1980, 'England', ['CB'], 81, 88, 2006, 65, t(6, 5, 7, 6, 6, 6)),
+  // Woodgate — an England centre-half of rare talent whose career was gutted by
+  // injuries. Kept fit and central, the defender he should have been (latent 91).
+  q('leeds', 'woodgate01', 'Jonathan Woodgate', 1980, 'England', ['CB'], 81, 88, 2006, 65, t(6, 5, 7, 6, 6, 6), { latentCeiling: 91 }),
   q('leeds', 'harte', 'Ian Harte', 1977, 'Ireland', ['LB'], 78, 80, 2005, 30, t(7, 5, 7, 7, 4, 7)),
   q('leeds', 'batty', 'David Batty', 1968, 'England', ['DM'], 79, 80, 2004, 35, t(8, 5, 8, 8, 6, 6)),
   q('leeds', 'bowyer', 'Lee Bowyer', 1977, 'England', ['CM'], 80, 83, 2004, 35, t(6, 7, 8, 6, 7, 6)),
   q('leeds', 'dacourt01', 'Olivier Dacourt', 1974, 'France', ['CM', 'DM'], 80, 82, 2005, 30, t(7, 5, 7, 5, 6, 7)),
   q('leeds', 'kewell01', 'Harry Kewell', 1978, 'Australia', ['LW', 'ST'], 83, 87, 2004, 50, t(6, 7, 7, 5, 6, 7)),
   q('leeds', 'viduka01', 'Mark Viduka', 1975, 'Australia', ['ST'], 83, 85, 2005, 35, t(6, 7, 7, 5, 6, 6)),
-  q('leeds', 'smith01', 'Alan Smith', 1980, 'England', ['ST', 'AM'], 78, 84, 2006, 40, t(6, 7, 8, 7, 8, 6)),
+  // Alan Smith — a fearless young striker before a broken leg and a positional
+  // exile derailed him. A volatile, high-risk lost talent (latent 88).
+  q('leeds', 'smith01', 'Alan Smith', 1980, 'England', ['ST', 'AM'], 78, 84, 2006, 40, t(6, 7, 8, 7, 8, 6), { latentCeiling: 88 }),
 ];
 
 /** Newcastle United, 2001–02 — Robson's top-four side. */
@@ -117,7 +121,10 @@ export const NEWCASTLE_2001: CuratedSeed[] = [
 
 /** Source clubs for the Liverpool 2002 decisions + Chelsea's 2003 splurge. */
 export const LENS_2001: CuratedSeed[] = [
-  q('lens', 'diouf', 'El-Hadji Diouf', 1981, 'Senegal', ['RW', 'ST'], 78, 84, 2006, 30, t(4, 8, 7, 4, 8, 6)),
+  // Diouf — a World Cup star who flopped in England on attitude. The riskiest
+  // lost-talent bet there is (prof 4, ego 8, volatile): most who try him get
+  // burned, but the talent (latent 88) is genuinely there for a manager who reaches him.
+  q('lens', 'diouf', 'El-Hadji Diouf', 1981, 'Senegal', ['RW', 'ST'], 78, 84, 2006, 30, t(4, 8, 7, 4, 8, 6), { latentCeiling: 88 }),
 ];
 export const LILLE_2001: CuratedSeed[] = [
   q('lille', 'cheyrou', 'Bruno Cheyrou', 1978, 'France', ['AM', 'LW'], 75, 82, 2006, 35, t(6, 6, 6, 6, 6, 6)),
