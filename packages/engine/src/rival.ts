@@ -24,6 +24,15 @@ import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
 import { evaluateApproach } from './agency.js';
 import { standingsOrder } from './season.js';
+import { ERA_REALITY, eraForScenario } from './ledger.js';
+
+/** Real players reality is tracking in this scenario's era pack — never poached
+ *  by the reactive layer out of the club reality put them at (that would rewrite
+ *  history for a settled star). */
+function ledgerSubjectIds(state: GameState): Set<string> {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  return new Set((pack?.realTransferLedger ?? []).map((e) => e.playerId));
+}
 
 const STAR_ABILITY = 82;
 
@@ -40,10 +49,12 @@ function richRivals(state: GameState): ClubState[] {
 function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean {
   const budget = club.finances.transferBudget;
   const target = club.baseStrength;
+  const tracked = ledgerSubjectIds(state);
   let best: PlayerState | undefined;
   for (const p of Object.values(state.players)) {
     const seller = p.club ? state.clubs[p.club] : undefined;
     if (!seller || seller.leagueId !== null) continue; // foreign/context only
+    if (tracked.has(p.id)) continue; // never prise a real ledger star off his real path
     if (p.ability < target - 10 || p.ability > target + 5) continue;
     if (p.resistance.hardBlocks.length > 0) continue;
     if (valuePlayer(p, Number(state.clock.date.slice(0, 4))) > budget) continue;

@@ -94,6 +94,31 @@ describe('passive-fidelity — reality holds when the user does nothing (§9f)',
     expect(fallbacks(s)).toBe(0);
   });
 
+  it('era-serie-a-1995 (juventus-1995): the calcio golden age plays out as reality', () => {
+    const s = runPassive('juventus-1995', 'fidelity', 2003);
+    expectAt(s, {
+      // Juventus's real business — Baggio out (the opening veto), the rebuild in.
+      cur_baggio_r: 'milan',
+      cur_zidane_b: 'juventus',
+      cur_davids_aj: 'juventus', // via Milan
+      cur_trezeguet_m: 'juventus',
+      cur_buffon_p: 'juventus', // Parma cash-in
+      cur_thuram_p: 'juventus',
+      // Multi-hop sagas resolve to their real endpoints.
+      cur_vieri_a: 'inter', // Atalanta→Juve→Atlético→Lazio→Inter
+      cur_henry_m: 'arsenal', // Monaco→Juventus→Arsenal
+      // The wider Serie A market holds.
+      cur_ronaldo_r: 'inter',
+      cur_roberto_carlos_i: 'real_madrid',
+      cur_zola_p: 'chelsea',
+      cur_batistuta_f: 'roma',
+      cur_shevchenko_k: 'milan',
+    });
+    const m = ledgerSquadMatch(s);
+    expect(m.atRealClub / m.total).toBeGreaterThanOrEqual(0.95);
+    expect(fallbacks(s)).toBe(0);
+  });
+
   it('era-2000 (real-madrid-2000): the galácticos arrive and La Liga plays out as reality', () => {
     const s = runPassive('real-madrid-2000', 'fidelity', 2008);
     expectAt(s, {

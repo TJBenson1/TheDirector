@@ -28,8 +28,14 @@ const MAX_LAMBDA = 6; // safety cap on the Poisson mean
 const FORM_STEP = 1; // form nudge per win/loss
 const FORM_CAP = 5;
 const FORM_DECAY = 0.7; // per round, form drifts toward 0
-const ROUNDS = 38; // double round-robin, 20 teams
 const PLAYING_MONTHS = 10; // Aug (idx 1) … May (idx 10)
+
+/** Rounds in a double round-robin for a league of `n` clubs (Serie A 1995 had
+ *  18 → 34 rounds; the Premier League 20 → 38). Kept league-size-aware so packs
+ *  aren't locked to a 20-club division. */
+function roundsFor(league: LeagueState): number {
+  return Math.max(2, (league.clubIds.length - 1) * 2);
+}
 
 export function emptyRecord(): TeamRecord {
   return { played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 };
@@ -236,7 +242,7 @@ export function stepLeagueMonth(state: GameState, rng: Rng): void {
       if (league.seasonYear !== owningSeasonYear) {
         initLeagueSeason(league, owningSeasonYear);
       }
-      const target = Math.round((ROUNDS * idx) / PLAYING_MONTHS);
+      const target = Math.round((roundsFor(league) * idx) / PLAYING_MONTHS);
       const played = playRoundsUpTo(state, league, target, leagueRng);
       if (played > 0) {
         logEvent(state, {
@@ -246,7 +252,7 @@ export function stepLeagueMonth(state: GameState, rng: Rng): void {
           data: { leagueId: league.id, roundsPlayed: league.roundsPlayed, played },
         });
       }
-    } else if (idx === 11 && league.roundsPlayed >= ROUNDS) {
+    } else if (idx === 11 && league.roundsPlayed >= roundsFor(league)) {
       // June — season complete; crown the champion (standings preserved).
       finalizeSeason(state, league);
     }

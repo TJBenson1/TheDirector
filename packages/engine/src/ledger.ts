@@ -317,11 +317,74 @@ const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
   { playerId: 'cur_forlan', from: 'man_utd', to: 'villarreal', window: '2004-07', fee: 3_000_000, id: 'forlan-villarreal-2004' },
 ];
 
+/**
+ * Real 1995–2001 transfers for the Serie A "Golden Age" pack. Juventus's real
+ * story: cash in the Turin heroes after 1995 (Vialli, Ravanelli, Paulo Sousa),
+ * reinvest in a young Zidane, Davids, Inzaghi and Trezeguet, and — the opening
+ * decision — let Roberto Baggio go to Milan. Around them the real calcio market:
+ * Ronaldo's world-record move to Inter, the Vieri fee saga, and Parma's Parmalat
+ * side cashing in its jewels (Zola, Asprilla, then Buffon & Thuram to Juve).
+ *
+ * The 1995-07 window is LIVE, so Baggio's move to Milan is offered to the user;
+ * summer-1995 arrivals already in the squads are recognised as reality.
+ */
+const LEDGER_1995_2001: RealTransferLedgerEntry[] = [
+  // ── Juventus depart (real-out decisions for the user) ──
+  { playerId: 'cur_baggio_r', from: 'juventus', to: 'milan', window: '1995-07', fee: 6_500_000, id: 'baggio-milan-1995' },
+  { playerId: 'cur_vialli', from: 'juventus', to: 'chelsea', window: '1996-07', fee: 0, id: 'vialli-chelsea-1996' },
+  { playerId: 'cur_ravanelli', from: 'juventus', to: 'middlesbrough', window: '1996-07', fee: 7_000_000, id: 'rava-boro-1996' },
+  { playerId: 'cur_paulo_sousa', from: 'juventus', to: 'dortmund', window: '1996-07', fee: 3_000_000, id: 'sousa-dortmund-1996' },
+  { playerId: 'cur_deschamps', from: 'juventus', to: 'chelsea', window: '1999-07', fee: 3_000_000, id: 'deschamps-chelsea-1999' },
+  // ── Juventus rebuild (real-in decisions) ──
+  { playerId: 'cur_zidane_b', from: 'bordeaux', to: 'juventus', window: '1996-07', fee: 3_200_000, id: 'zidane-juve-1996' },
+  { playerId: 'cur_boksic', from: 'lazio', to: 'juventus', window: '1996-07', fee: 7_000_000, id: 'boksic-juve-1996' },
+  { playerId: 'cur_inzaghi_a', from: 'atalanta', to: 'juventus', window: '1997-07', fee: 12_500_000, id: 'inzaghi-juve-1997' },
+  { playerId: 'cur_trezeguet_m', from: 'monaco', to: 'juventus', window: '2000-07', fee: 21_000_000, id: 'trezeguet-juve-2000' },
+  { playerId: 'cur_thuram_p', from: 'parma', to: 'juventus', window: '2001-07', fee: 32_500_000, id: 'thuram-juve-2001' },
+  { playerId: 'cur_buffon_p', from: 'parma', to: 'juventus', window: '2001-07', fee: 32_000_000, id: 'buffon-juve-2001' },
+  // ── The Vieri fee saga: Atalanta → Juve → Atlético → Lazio → Inter ──
+  { playerId: 'cur_vieri_a', from: 'atalanta', to: 'juventus', window: '1996-07', fee: 6_000_000, id: 'vieri-juve-1996' },
+  { playerId: 'cur_vieri_a', from: 'juventus', to: 'atletico', window: '1997-07', fee: 12_000_000, id: 'vieri-atletico-1997' },
+  { playerId: 'cur_vieri_a', from: 'atletico', to: 'lazio', window: '1998-07', fee: 18_000_000, id: 'vieri-lazio-1998' },
+  { playerId: 'cur_vieri_a', from: 'lazio', to: 'inter', window: '1999-07', fee: 31_000_000, id: 'vieri-inter-1999' },
+  // ── Davids: Ajax → Milan → Juventus. Henry: Monaco → Juventus → Arsenal ──
+  { playerId: 'cur_davids_aj', from: 'ajax', to: 'milan', window: '1996-07', fee: 5_500_000, id: 'davids-milan-1996' },
+  { playerId: 'cur_davids_aj', from: 'milan', to: 'juventus', window: '1997-07', fee: 8_000_000, id: 'davids-juve-1997' },
+  { playerId: 'cur_henry_m', from: 'monaco', to: 'juventus', window: '1999-01', fee: 10_500_000, id: 'henry-juve-1999' },
+  { playerId: 'cur_henry_m', from: 'juventus', to: 'arsenal', window: '1999-07', fee: 11_000_000, id: 'henry-arsenal-1999' },
+  // ── Serie A context: the real market around Turin ──
+  { playerId: 'cur_roberto_carlos_i', from: 'inter', to: 'real_madrid', window: '1996-07', fee: 5_000_000, id: 'rcarlos-real-1996' },
+  { playerId: 'cur_seedorf_s', from: 'sampdoria', to: 'real_madrid', window: '1996-07', fee: 4_500_000, id: 'seedorf-real-1996' },
+  { playerId: 'cur_karembeu', from: 'sampdoria', to: 'real_madrid', window: '1997-07', fee: 5_000_000, id: 'karembeu-real-1997' },
+  { playerId: 'cur_zola_p', from: 'parma', to: 'chelsea', window: '1996-07', fee: 4_500_000, id: 'zola-chelsea-1996' },
+  { playerId: 'cur_asprilla', from: 'parma', to: 'newcastle', window: '1996-01', fee: 6_700_000, id: 'asprilla-newcastle-1996' },
+  { playerId: 'cur_stoichkov', from: 'parma', to: 'barcelona', window: '1996-07', fee: 3_000_000, id: 'stoichkov-barca-1996' },
+  { playerId: 'cur_di_matteo', from: 'lazio', to: 'chelsea', window: '1996-07', fee: 4_900_000, id: 'dimatteo-chelsea-1996' },
+  { playerId: 'cur_chiesa_s', from: 'sampdoria', to: 'parma', window: '1996-07', fee: 8_000_000, id: 'chiesa-parma-1996' },
+  { playerId: 'cur_kanu', from: 'ajax', to: 'inter', window: '1996-07', fee: 4_500_000, id: 'kanu-inter-1996' },
+  { playerId: 'cur_overmars_aj', from: 'ajax', to: 'arsenal', window: '1997-07', fee: 7_000_000, id: 'overmars-arsenal-1997' },
+  { playerId: 'cur_f_de_boer', from: 'ajax', to: 'barcelona', window: '1999-01', fee: 9_000_000, id: 'fdeboer-barca-1999' },
+  { playerId: 'cur_ronaldo_r', from: 'barcelona', to: 'inter', window: '1997-07', fee: 19_500_000, id: 'ronaldo-inter-1997' },
+  { playerId: 'cur_shevchenko_k', from: 'dynamo_kyiv', to: 'milan', window: '1999-07', fee: 24_000_000, id: 'sheva-milan-1999' },
+  { playerId: 'cur_batistuta_f', from: 'fiorentina', to: 'roma', window: '2000-07', fee: 23_000_000, id: 'bati-roma-2000' },
+  { playerId: 'cur_rui_costa_f', from: 'fiorentina', to: 'milan', window: '2001-07', fee: 42_000_000, id: 'ruicosta-milan-2001' },
+  { playerId: 'cur_cannavaro_p', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000, id: 'cannavaro-inter-2002' },
+  { playerId: 'cur_mihajlovic_s', from: 'sampdoria', to: 'lazio', window: '1998-07', fee: 9_000_000, id: 'miha-lazio-1998' },
+  { playerId: 'cur_bierhoff', from: 'udinese', to: 'milan', window: '1998-07', fee: 10_000_000, id: 'bierhoff-milan-1998' },
+  { playerId: 'cur_ayala_n', from: 'napoli', to: 'milan', window: '1998-07', fee: 8_000_000, id: 'ayala-milan-1998' },
+];
+
 /** Real Galácticos-era injuries — fire only if the player is at his real club. */
 const INJURIES_2000: RealInjuryEntry[] = [
   { playerId: 'cur_ronaldo_r9', atClub: 'real_madrid', since: '2003-11', months: 2, serious: false, note: 'recurrent muscle trouble' },
   { playerId: 'cur_owen', atClub: 'real_madrid', since: '2004-12', months: 2, serious: false, note: 'hamstring' },
   { playerId: 'cur_aimar', atClub: 'valencia', since: '2002-10', months: 3, serious: false, note: 'ankle ligament damage' },
+];
+
+/** Real Serie A "Golden Age" injuries — fire only if the player is at his club. */
+const INJURIES_1995: RealInjuryEntry[] = [
+  { playerId: 'cur_delpiero_j', atClub: 'juventus', since: '1998-11', months: 6, serious: true, note: 'cruciate ligament rupture at Udine' },
+  { playerId: 'cur_ronaldo_r', atClub: 'inter', since: '2000-04', months: 5, serious: true, note: 'catastrophic knee injury' },
 ];
 
 /** Registry keyed by era pack id. */
@@ -331,6 +394,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004 },
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [] },
   'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: [], realInjuries: INJURIES_2000 },
+  'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: [], realInjuries: INJURIES_1995 },
 };
 
 /** The era pack a scenario draws its reality data from. */
@@ -339,6 +403,7 @@ export function eraForScenario(scenarioId: string): string {
   if (scenarioId.endsWith('-2004')) return 'era-2004';
   if (scenarioId.endsWith('-2001')) return 'era-2001';
   if (scenarioId.endsWith('-2000')) return 'era-2000';
+  if (scenarioId.endsWith('-1995')) return 'era-serie-a-1995';
   return 'era-1995-2005';
 }
 

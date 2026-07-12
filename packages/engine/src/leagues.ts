@@ -176,9 +176,39 @@ export const ENGLAND_2001: LeagueSeed = {
   ],
 };
 
+/** Italy, Serie A 1995–96 — "il campionato più bello del mondo". Milan were the
+ *  champions; Juventus (reigning champions, about to win the Champions League)
+ *  chase them. 18 clubs, as Serie A was then. Ordering follows the real table. */
+export const ITALY_1995: LeagueSeed = {
+  id: 'ita-1',
+  name: 'Serie A',
+  season: '1995-07',
+  clubs: [
+    { id: 'milan', name: 'AC Milan', prestige: 90, strength: 88 },
+    { id: 'juventus', name: 'Juventus', prestige: 88, strength: 87 },
+    { id: 'fiorentina', name: 'Fiorentina', prestige: 74, strength: 81 },
+    { id: 'lazio', name: 'Lazio', prestige: 78, strength: 81 },
+    { id: 'inter', name: 'Internazionale', prestige: 84, strength: 80 },
+    { id: 'roma', name: 'AS Roma', prestige: 78, strength: 79 },
+    { id: 'parma', name: 'Parma', prestige: 76, strength: 80 },
+    { id: 'sampdoria', name: 'Sampdoria', prestige: 70, strength: 77 },
+    { id: 'vicenza', name: 'Vicenza', prestige: 56, strength: 68 },
+    { id: 'napoli', name: 'Napoli', prestige: 68, strength: 70 },
+    { id: 'atalanta', name: 'Atalanta', prestige: 58, strength: 66 },
+    { id: 'cagliari', name: 'Cagliari', prestige: 56, strength: 66 },
+    { id: 'udinese', name: 'Udinese', prestige: 58, strength: 65 },
+    { id: 'torino', name: 'Torino', prestige: 60, strength: 63 },
+    { id: 'cremonese', name: 'Cremonese', prestige: 48, strength: 61 },
+    { id: 'piacenza', name: 'Piacenza', prestige: 46, strength: 59 },
+    { id: 'padova', name: 'Padova', prestige: 46, strength: 56 },
+    { id: 'bari', name: 'Bari', prestige: 48, strength: 56 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'esp-1': SPAIN_2000,
+  'ita-1': ITALY_1995,
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,

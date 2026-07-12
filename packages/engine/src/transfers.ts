@@ -96,7 +96,7 @@ export function executeTransfer(state: GameState, req: TransferRequest): Transfe
   });
 
   // The user acting on the market provokes the rival response layer (§9a) — a
-  // do-nothing user doesn't, so reality/scripted history holds for them.
+  // do-nothing user doesn't, so reality/scripted history holds for the passive.
   if (req.toClub === state.playerClub && fromClubId !== state.playerClub) {
     state.userAggression += 1;
   }
