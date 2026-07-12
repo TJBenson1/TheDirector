@@ -17,7 +17,7 @@
  * wonderkids reaching their ceiling < 15%.
  */
 
-import type { ClubState, GameState, PlayerState, Position } from './types.js';
+import type { ClubId, ClubState, GameState, PlayerState, Position } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { clubSquadPlayers, recomputeClubStrength } from './players.js';
@@ -216,4 +216,64 @@ function lifestyleDeclineCheck(
       data: { playerId: player.id, clubId: club.id, drop },
     });
   }
+}
+
+/**
+ * A curated player pulled off his real pathway PREMATURELY (reality-default): a
+ * club signs him `yearsEarly` years ahead of the transfer reality had lined up
+ * (e.g. a young striker taken as an alternative to the target you just gazumped).
+ *
+ * The reality-rail guarantees a curated talent "becomes the player" GIVEN the
+ * environment and timing reality gave him. Move him early and that guarantee no
+ * longer holds: he is asked to deliver before he was ready, at a club that isn't
+ * the one that forged him. With a probability that scales with how early the move
+ * is — and is softened by a mature, adaptable, professional head — his potential
+ * ceiling slips, so he may never reach the heights he hit in reality. Either way
+ * the divergence is logged, so the counterfactual is traceable (§16). Returns
+ * true if the ceiling actually eroded.
+ */
+export function applyPrematureMove(
+  state: GameState,
+  player: PlayerState,
+  yearsEarly: number,
+  realDest: ClubId | null,
+  rng: Rng,
+): boolean {
+  if (!player.curated || yearsEarly < 1) return false;
+  const year = Number(state.clock.date.slice(0, 4));
+  const age = year - player.birthYear;
+  // Only a still-developing player has a ceiling left to miss; a finished pro
+  // moved early is just a normal transfer.
+  if (age > 25 || player.ability >= player.potentialCeiling) return false;
+
+  const temperament =
+    (player.personality.adaptability - 5) * 0.03 + (player.personality.professionalism - 5) * 0.02;
+  const risk = Math.max(0, Math.min(0.6, 0.22 * yearsEarly - temperament));
+  const realDestName = realDest ? state.clubs[realDest]?.name ?? realDest : 'his real destination';
+
+  if (rng.next() >= risk) {
+    logEvent(state, {
+      category: 'development',
+      code: 'development.premature.absorbed',
+      message: `${player.name} moved ${yearsEarly}yr ahead of his real path but is taking it in stride — no ceiling lost (so far)`,
+      data: { playerId: player.id, yearsEarly, realDest },
+    });
+    return false;
+  }
+
+  const erosion = rng.int(2, 3 + yearsEarly);
+  player.potentialCeiling = Math.max(player.ability, player.potentialCeiling - erosion);
+  player.morale = Math.max(0, player.morale - 6);
+  state.timeline.divergenceLog.push({
+    date: state.clock.date,
+    kind: 'butterfly',
+    detail: `${player.name} was signed ${yearsEarly}yr ahead of his real move to ${realDestName}; asked to deliver before he was ready, his ceiling slips (−${erosion}) — he may not reach the player he became in reality.`,
+  });
+  logEvent(state, {
+    category: 'development',
+    code: 'development.premature',
+    message: `${player.name} moved ${yearsEarly}yr early — development ceiling eroded (−${erosion}); he may not fulfil his real potential`,
+    data: { playerId: player.id, yearsEarly, erosion, realDest },
+  });
+  return true;
 }

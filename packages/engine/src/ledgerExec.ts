@@ -21,6 +21,7 @@ import { executeTransfer } from './transfers.js';
 import { clubSquadPlayers } from './players.js';
 import { appendMemory } from './memory.js';
 import { areDirectRivals } from './agency.js';
+import { applyPrematureMove } from './development.js';
 import { ERA_REALITY, eraForScenario, entryKey, type RealTransferLedgerEntry, type FallbackTier, type InvalidationCause } from './ledger.js';
 
 function positionGroupOf(p: PlayerState): string {
@@ -343,6 +344,18 @@ function fallbackForLedger(
           kind: 'butterfly',
           detail: `${dest.name}, denied ${original.name}, sign ${bestAlt.name} instead — so his own later real move never happens.`,
         });
+        // He has been pulled off his real pathway ahead of time. A young talent
+        // asked to deliver before he was ready may not fulfil his potential
+        // (§5 reality-rail) — a logged, traceable consequence.
+        let earliest: RealTransferLedgerEntry | undefined;
+        for (const e of pack?.realTransferLedger ?? []) {
+          if (e.playerId !== bestAlt.id || e.window <= state.clock.date) continue;
+          if (!earliest || e.window < earliest.window) earliest = e;
+        }
+        const yearsEarly = earliest
+          ? Number(earliest.window.slice(0, 4)) - Number(state.clock.date.slice(0, 4))
+          : 1;
+        applyPrematureMove(state, bestAlt, yearsEarly, earliest?.to ?? null, rng.fork(`premature:${bestAlt.id}`));
       }
       logEvent(state, {
         category: 'transfer',

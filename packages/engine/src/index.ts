@@ -84,6 +84,7 @@ export { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 export {
   processSeasonDevelopment,
   estimateMinutesShare,
+  applyPrematureMove,
 } from './development.js';
 export {
   scoutPlayer,
