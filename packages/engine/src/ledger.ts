@@ -115,6 +115,14 @@ const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
   { playerId: 'cur_owen', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 8_000_000 },
   { playerId: 'cur_nedved', from: 'lazio', to: 'juventus', window: '2001-07', fee: 41_000_000 },
 
+  // ── The galáctico era (real-madrid-2000 start point) ────────────────────────
+  // Figo (above) then a marquee a year: Zidane, Ronaldo, Beckham (below). The
+  // pragmatic pivot is Makélélé — sold in 2003 to help fund the Beckham galáctico
+  // window, unbalancing the midfield. Keep him instead and history diverges.
+  { playerId: 'cur_zidane', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 46_000_000, id: 'zidane-real-2001' },
+  { playerId: 'cur_ronaldo', from: 'inter', to: 'real_madrid', window: '2002-08', fee: 30_000_000, id: 'ronaldo-real-2002' },
+  { playerId: 'cur_makelele', from: 'real_madrid', to: 'chelsea', window: '2003-08', fee: 16_000_000, id: 'makelele-chelsea-2003' },
+
   // ── The Cristiano Ronaldo arc + the 2009 galáctico cascade ──────────────────
   // A long-horizon chain that only bites a 1999 playthrough that reaches 2009.
   // Ronaldo joins United in 2003 (a signing the user makes by default) and is
@@ -173,15 +181,38 @@ const INJURIES_2013: RealInjuryEntry[] = [
   { playerId: 'cur_sturridge', atClub: 'liverpool', since: '2014-09', months: 5, serious: true, note: 'recurrent thigh/calf injuries' },
 ];
 
+/**
+ * Real 2004–09 transfers for the Invincibles era pack. Arsenal's real story is
+ * one of SELLING the spine (Vieira 2005, Cole 2006, Henry 2007) and going frugal
+ * for the Emirates move. Each is a from-user decision the player can refuse — the
+ * aggressive-build counterfactual keeps them. A couple of context moves colour
+ * the rest of the world (the Cole↔Gallas swap; United cashing in on Ronaldo).
+ */
+const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
+  { playerId: 'cur_vieira2', from: 'arsenal', to: 'juventus', window: '2005-07', fee: 20_000_000, id: 'vieira-juve-2005' },
+  { playerId: 'cur_acole', from: 'arsenal', to: 'chelsea', window: '2006-07', fee: 16_000_000, id: 'cole-chelsea-2006' },
+  { playerId: 'cur_gallas2', from: 'chelsea', to: 'arsenal', window: '2006-07', fee: 5_000_000, id: 'gallas-arsenal-2006' },
+  { playerId: 'cur_henry', from: 'arsenal', to: 'barcelona', window: '2007-07', fee: 24_000_000, id: 'henry-barca-2007' },
+  { playerId: 'cur_cristiano2', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cr7b-real-2009' },
+];
+
+/** Real 2004-era injuries — fire only if the player is at his real club. */
+const INJURIES_2004: RealInjuryEntry[] = [
+  { playerId: 'cur_king', atClub: 'spurs', since: '2005-11', months: 4, serious: true, note: 'chronic knee trouble' },
+  { playerId: 'cur_rooney2', atClub: 'man_utd', since: '2006-04', months: 2, serious: false, note: 'metatarsal fracture before the World Cup' },
+];
+
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013 },
+  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004 },
 };
 
 /** The era pack a scenario draws its reality data from. */
 export function eraForScenario(scenarioId: string): string {
   if (scenarioId.endsWith('-2013')) return 'era-2013';
+  if (scenarioId.endsWith('-2004')) return 'era-2004';
   return 'era-1995-2005';
 }
 

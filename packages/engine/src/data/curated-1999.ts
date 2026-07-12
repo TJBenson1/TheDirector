@@ -9,6 +9,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import { MAN_UTD_2013_SQUADS } from './curated-2013.js';
+import { ARSENAL_2004_SQUADS } from './curated-2004.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -210,6 +211,22 @@ export const REAL_MADRID_CASCADE_1999: CuratedSeed[] = [
 ];
 
 /**
+ * Real Madrid's 2000 supporting cast for the galáctico-era start point
+ * (real-madrid-2000). The marquee names (Raúl, Casillas, Roberto Carlos, Hierro,
+ * Redondo) already live in the shared era pools; this fills out the rest of the
+ * real squad — including Makélélé, whose 2003 sale is the pragmatic pivot of
+ * that era ("keep the balance, or cash in for another galáctico?").
+ */
+export const REAL_MADRID_2000: CuratedSeed[] = [
+  q('real_madrid', 'makelele', 'Claude Makélélé', 1973, 'France', ['DM'], 85, 86, 2003, 25, t(9, 4, 8, 7, 3, 7)),
+  q('real_madrid', 'salgado', 'Míchel Salgado', 1975, 'Spain', ['RB'], 81, 82, 2004, 30, t(8, 5, 8, 8, 5, 7)),
+  q('real_madrid', 'morientes', 'Fernando Morientes', 1976, 'Spain', ['ST'], 84, 85, 2004, 35, t(8, 5, 8, 7, 4, 7)),
+  q('real_madrid', 'guti', 'Guti', 1976, 'Spain', ['AM', 'CM'], 82, 85, 2004, 30, t(6, 7, 6, 8, 6, 7)),
+  q('real_madrid', 'helguera', 'Iván Helguera', 1975, 'Spain', ['CB', 'DM'], 82, 83, 2004, 30, t(8, 5, 8, 7, 5, 7)),
+  q('real_madrid', 'solari', 'Santiago Solari', 1976, 'Argentina', ['LW', 'AM'], 79, 81, 2004, 25, t(8, 5, 7, 7, 4, 7)),
+];
+
+/**
  * A pool of real central midfielders of the era, spread across clubs, so the
  * player has genuine, recognisable options to rebuild a midfield (e.g. to
  * replace Keane) rather than only procedural filler.
@@ -301,12 +318,16 @@ const MAN_UTD_1999_SQUADS: Record<string, CuratedSeed[]> = {
 for (const [club, seed] of [...MIDFIELD_POOL_1999, ...ERA_1999_POOL]) {
   (MAN_UTD_1999_SQUADS[club] ??= []).push(seed);
 }
-// The 2009 Madrid-cascade depth lives at Real Madrid.
-for (const seed of REAL_MADRID_CASCADE_1999) {
+// The 2009 Madrid-cascade depth + the 2000 supporting cast live at Real Madrid.
+for (const seed of [...REAL_MADRID_CASCADE_1999, ...REAL_MADRID_2000]) {
   (MAN_UTD_1999_SQUADS.real_madrid ??= []).push(seed);
 }
 
+// The era's curated real players are the same whichever club you play — only
+// the playerClub differs — so the galáctico-era Madrid start reuses the map.
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'man-utd-1999': MAN_UTD_1999_SQUADS,
+  'real-madrid-2000': MAN_UTD_1999_SQUADS,
   'man-utd-2013': MAN_UTD_2013_SQUADS,
+  'arsenal-2004': ARSENAL_2004_SQUADS,
 };

@@ -116,8 +116,39 @@ export const ENGLAND_2013: LeagueSeed = {
   ],
 };
 
+/** England, 2004–05 Premier League — Mourinho's first title, Arsenal's
+ *  Invincibles the season before. Ordering informed by the real final table. */
+export const ENGLAND_2004: LeagueSeed = {
+  id: 'eng-2004',
+  name: 'English Premier League',
+  season: '2004-07',
+  clubs: [
+    { id: 'chelsea', name: 'Chelsea', prestige: 84, strength: 88 },
+    { id: 'arsenal', name: 'Arsenal', prestige: 86, strength: 86 },
+    { id: 'man_utd', name: 'Manchester United', prestige: 88, strength: 85 },
+    { id: 'everton', name: 'Everton', prestige: 66, strength: 74 },
+    { id: 'liverpool', name: 'Liverpool', prestige: 82, strength: 82 },
+    { id: 'bolton', name: 'Bolton Wanderers', prestige: 58, strength: 70 },
+    { id: 'middlesbrough', name: 'Middlesbrough', prestige: 60, strength: 71 },
+    { id: 'man_city', name: 'Manchester City', prestige: 64, strength: 69 },
+    { id: 'spurs', name: 'Tottenham Hotspur', prestige: 70, strength: 72 },
+    { id: 'aston_villa', name: 'Aston Villa', prestige: 62, strength: 67 },
+    { id: 'charlton', name: 'Charlton Athletic', prestige: 54, strength: 65 },
+    { id: 'birmingham', name: 'Birmingham City', prestige: 54, strength: 64 },
+    { id: 'fulham', name: 'Fulham', prestige: 58, strength: 63 },
+    { id: 'newcastle', name: 'Newcastle United', prestige: 68, strength: 70 },
+    { id: 'blackburn', name: 'Blackburn Rovers', prestige: 58, strength: 64 },
+    { id: 'portsmouth', name: 'Portsmouth', prestige: 52, strength: 61 },
+    { id: 'west_brom', name: 'West Bromwich Albion', prestige: 50, strength: 58 },
+    { id: 'crystal_palace', name: 'Crystal Palace', prestige: 48, strength: 57 },
+    { id: 'norwich', name: 'Norwich City', prestige: 48, strength: 56 },
+    { id: 'southampton', name: 'Southampton', prestige: 54, strength: 60 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'esp-1': SPAIN_2000,
   'eng-2013': ENGLAND_2013,
+  'eng-2004': ENGLAND_2004,
 };

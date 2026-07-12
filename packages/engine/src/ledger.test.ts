@@ -86,6 +86,34 @@ describe('reality-ledger execution (§9f)', () => {
   });
 });
 
+describe('more start points (§4 data)', () => {
+  it('the galáctico Madrid start places Figo/Zidane/Makélélé and can keep Makélélé', () => {
+    let s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'gal' });
+    expect(s.playerClub).toBe('real_madrid');
+    expect(resolvePlayer(s, 'Figo')?.club).toBe('barcelona'); // his real move is TO the user
+    expect(s.players.cur_makelele?.club).toBe('real_madrid');
+    // Keep Makélélé when his 2003 sale is offered; he stays, unsettled.
+    for (let i = 0; i < 12; i++) {
+      for (const d of [...s.pendingDecisions]) {
+        const keep = d.id.startsWith('real-out:') && d.title.includes('Makélélé');
+        s = applyDecision(s, d.id, keep ? 'keep' : d.choices[0]!.id).state;
+      }
+      s = advanceWindow(s).state;
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 30; }
+      if (Number(s.clock.date.slice(0, 4)) >= 2004) break;
+    }
+    expect(s.players.cur_makelele?.club).toBe('real_madrid'); // kept, not sold to Chelsea
+  });
+
+  it('the Invincibles Arsenal start builds a real 2004-05 league and squad', () => {
+    const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'inv' });
+    expect(s.playerClub).toBe('arsenal');
+    expect(resolvePlayer(s, 'Henry')?.club).toBe('arsenal');
+    expect(resolvePlayer(s, 'Drogba')?.club).toBe('chelsea');
+    expect(s.leagues['eng-2004']?.clubIds).toContain('arsenal');
+  });
+});
+
 describe('2013 post-Ferguson era pack (§4 data)', () => {
   it('places the four plan targets at their real clubs', () => {
     const s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'era2013' });

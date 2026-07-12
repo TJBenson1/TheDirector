@@ -186,7 +186,10 @@ function offerUserLedgerMove(state: GameState, entry: RealTransferLedgerEntry, k
     category: 'transfer',
     choices: [
       { id: 'sell', label: `Sanction the £${feeM}m sale (as in reality)`, onSuccess: [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.to, amount: entry.fee, tag: realizedTag }] },
-      { id: 'keep', label: `Keep ${player.name} (he wanted the move — unrest)`, onSuccess: [{ kind: 'agitation', playerId: entry.playerId, amount: 45, text: `wanted the move to ${buyer?.name ?? entry.to} that you blocked` }] },
+      // You can always keep a player (§ "money talks, but you can refuse") — the
+      // cost is unrest (38 sits just below the forced-exit threshold, so he stays
+      // but sulks), not a guaranteed exit like a rejected poach bid.
+      { id: 'keep', label: `Keep ${player.name} (he wanted the move — unrest)`, onSuccess: [{ kind: 'agitation', playerId: entry.playerId, amount: 38, text: `wanted the move to ${buyer?.name ?? entry.to} that you blocked` }] },
     ],
     falloutIfIgnored: [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.to, amount: entry.fee, tag: realizedTag }],
     memoryTags: ['real-move', entry.playerId],
