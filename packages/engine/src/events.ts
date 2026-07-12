@@ -80,6 +80,14 @@ export function applyConsequence(state: GameState, c: Consequence): void {
     }
     case 'transferOut': {
       if (c.playerId && c.clubId) {
+        // Guarantee the buyer can fund the move at EXECUTION time. A sanctioned
+        // real sale is offered with the buyer's budget bumped, but the buyer may
+        // spend it on its other same-window real signings before the user acts
+        // (Chelsea buying Shevchenko before you sanction Cole→Chelsea) — so
+        // re-fund here, symmetric with signReal, or the real move silently fails
+        // and any deal it enables (the Cole↔Gallas swap) wrongly cancels.
+        const buyer = state.clubs[c.clubId];
+        if (buyer && c.amount) buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, c.amount);
         const res = executeTransfer(state, { playerId: c.playerId, toClub: c.clubId, fee: c.amount ?? 0 });
         if (res.ok) markLedgerRealized(state, c.tag);
       }
