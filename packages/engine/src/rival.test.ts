@@ -51,43 +51,63 @@ describe('rival AI — poaching is a logical butterfly (§9a #3)', () => {
     expect(s.eventLog.some((e) => e.code === 'poach.bid')).toBe(false);
   });
 
-  it('depriving a club of a real signing makes them bid for your player in that position', () => {
-    let s = cloneState(createNewGame({ seed: 'butterfly-poach' }));
-    // Sign Arsenal's Anelka (a striker) before his real move to Real Madrid.
+  // Run one provocation (sign Anelka before his real move) and report how the
+  // deprived club reacted: a poach bid for a user player, or a market signing.
+  function reactionToProvocation(seed: string): { poached: boolean; boughtAlternative: boolean } {
+    let s = cloneState(createNewGame({ seed }));
     s.clubs.man_utd!.finances.transferBudget = 50_000_000;
     executeTransfer(s, { playerId: 'cur_anelka', toClub: 'man_utd', fee: 22_000_000 });
-    // Advance until Real Madrid, denied their striker, bid for one of yours.
-    let bid = false;
-    for (let i = 0; i < 8 && !bid; i++) {
+    let poached = false;
+    let boughtAlternative = false;
+    for (let i = 0; i < 8; i++) {
       for (const d of [...s.pendingDecisions]) {
-        if (d.id.startsWith('poach:')) bid = true;
+        if (d.id.startsWith('poach:')) poached = true;
         else s = applyDecision(s, d.id, d.choices[0]!.id).state;
       }
-      if (bid) break;
+      if (s.eventLog.some((e) => e.code === 'ledger.alternative')) boughtAlternative = true;
+      if (s.meta.executedLedger.includes('cur_anelka')) break;
       s = advanceWindow(s).state;
     }
-    expect(bid).toBe(true);
-    const bidDecision = s.pendingDecisions.find((d) => d.id.startsWith('poach:'))!;
-    expect(bidDecision.description).toMatch(/denied .* by your move/i);
-    expect(bidDecision.choices.map((c) => c.id)).toEqual(['reject', 'accept']);
+    return { poached, boughtAlternative };
+  }
+
+  it('a deprived club usually buys a comparable alternative, only sometimes poaching you', () => {
+    let poaches = 0;
+    let alternatives = 0;
+    const N = 40;
+    for (let i = 0; i < N; i++) {
+      const r = reactionToProvocation(`prov:${i}`);
+      if (r.poached) poaches += 1;
+      if (r.boughtAlternative) alternatives += 1;
+    }
+    // Both reactions occur; buying a comparable alternative is the majority
+    // response, and poaching the user's player is a real but minority butterfly.
+    expect(poaches).toBeGreaterThan(0);
+    expect(alternatives).toBeGreaterThan(poaches);
+    expect(poaches).toBeLessThan(N * 0.6);
   });
 
-  it('rejecting a bid unsettles the player (unrest can force a later exit)', () => {
-    let s = cloneState(createNewGame({ seed: 'reject-bid' }));
-    s.clubs.man_utd!.finances.transferBudget = 50_000_000;
-    executeTransfer(s, { playerId: 'cur_anelka', toClub: 'man_utd', fee: 22_000_000 });
-    for (let i = 0; i < 8; i++) {
-      const bid = s.pendingDecisions.find((d) => d.id.startsWith('poach:'));
-      if (bid) {
-        const target = bid.id.split(':')[1]!;
-        s = applyDecision(s, bid.id, 'reject').state;
-        expect(s.players[target]!.agitation).toBeGreaterThan(0);
-        return;
+  it('the poach bid, when it fires, is a refusable chain and rejection unsettles the player', () => {
+    // Find a seed that produces a poach bid (a minority outcome now).
+    for (let i = 0; i < 60; i++) {
+      let s = cloneState(createNewGame({ seed: `reject:${i}` }));
+      s.clubs.man_utd!.finances.transferBudget = 50_000_000;
+      executeTransfer(s, { playerId: 'cur_anelka', toClub: 'man_utd', fee: 22_000_000 });
+      for (let w = 0; w < 8; w++) {
+        const bid = s.pendingDecisions.find((d) => d.id.startsWith('poach:'));
+        if (bid) {
+          expect(bid.description).toMatch(/denied .* by your move/i);
+          expect(bid.choices.map((c) => c.id)).toEqual(['reject', 'accept']);
+          const target = bid.id.split(':')[1]!;
+          s = applyDecision(s, bid.id, 'reject').state;
+          expect(s.players[target]!.agitation).toBeGreaterThan(0);
+          return;
+        }
+        s = resolveAll(s);
+        s = advanceWindow(s).state;
       }
-      s = resolveAll(s);
-      s = advanceWindow(s).state;
     }
-    throw new Error('no poach bid fired');
+    throw new Error('no poach bid fired across 60 seeds');
   });
 });
 

@@ -25,6 +25,15 @@ export interface RealTransferLedgerEntry {
   /** The real window this happened in. */
   window: YearMonth;
   fee: number;
+  /**
+   * Causal link: this move only happened in reality BECAUSE another move did —
+   * a sale to fund/clear space for an arrival. Value is the funder entry's
+   * `playerId`. If that funder is pre-empted by the user (never executes as
+   * reality), this entry is CANCELLED, not replaced: the club no longer needs
+   * or can afford the move (e.g. Özil's sale was enabled by signing Bale; keep
+   * Bale from Madrid and Özil stays). Author the funder earlier in the array.
+   */
+  enabledBy?: PlayerId;
 }
 
 /** Which tier satisfied an invalidated ledger entry (recorded for audit). */
@@ -102,13 +111,17 @@ const INJURIES_1999: RealInjuryEntry[] = [
 const LEDGER_2013_2016: RealTransferLedgerEntry[] = [
   { playerId: 'cur_bale', from: 'spurs', to: 'real_madrid', window: '2013-08', fee: 85_000_000 },
   { playerId: 'cur_thiago', from: 'barcelona', to: 'bayern', window: '2013-07', fee: 22_000_000 },
-  { playerId: 'cur_ozil', from: 'real_madrid', to: 'arsenal', window: '2013-08', fee: 42_000_000 },
+  // Madrid only sold Özil to raise/clear the Bale money — no Bale, no Özil sale.
+  { playerId: 'cur_ozil', from: 'real_madrid', to: 'arsenal', window: '2013-08', fee: 42_000_000, enabledBy: 'cur_bale' },
   { playerId: 'cur_fellaini', from: 'everton', to: 'man_utd', window: '2013-08', fee: 27_500_000 },
+  // Spurs' rebuild was funded by SELLING Bale for a huge fee — which happens
+  // whether he joins Madrid or you, so the Magnificent Seven arrive regardless.
   { playerId: 'cur_lamela', from: 'roma', to: 'spurs', window: '2013-08', fee: 26_000_000 },
   { playerId: 'cur_soldado', from: 'valencia', to: 'spurs', window: '2013-08', fee: 26_000_000 },
   { playerId: 'cur_eriksen', from: 'ajax', to: 'spurs', window: '2013-08', fee: 11_500_000 },
   { playerId: 'cur_suarez', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000 },
-  { playerId: 'cur_alexis', from: 'barcelona', to: 'arsenal', window: '2014-07', fee: 35_000_000 },
+  // Barça part-funded Suárez by selling Sánchez — no Suárez, no Sánchez sale.
+  { playerId: 'cur_alexis', from: 'barcelona', to: 'arsenal', window: '2014-07', fee: 35_000_000, enabledBy: 'cur_suarez' },
   { playerId: 'cur_dimaria', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000 },
   { playerId: 'cur_lukeshaw', from: 'southampton', to: 'man_utd', window: '2014-06', fee: 30_000_000 },
   { playerId: 'cur_lallana', from: 'southampton', to: 'liverpool', window: '2014-07', fee: 25_000_000 },

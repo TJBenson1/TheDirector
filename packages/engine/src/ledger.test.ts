@@ -90,4 +90,19 @@ describe('2013 post-Ferguson era pack (§4 data)', () => {
     expect(s.players.cur_ozil?.club).toBe('arsenal');
     expect(s.players.cur_lamela?.club).toBe('spurs');
   });
+
+  it('buying Bale cancels the sale it funded — Madrid keep Özil (causal chain)', () => {
+    let s = cloneState(createNewGame({ scenarioId: 'man-utd-2013', seed: 'era2013-bale' }));
+    s.clubs.man_utd!.finances.transferBudget = 200_000_000;
+    const res = executeTransfer(s, { playerId: 'cur_bale', toClub: 'man_utd', fee: 85_000_000 });
+    expect(res.ok).toBe(true);
+    s = play(s, 6);
+    // Bale never reached Madrid, so the Özil sale it funded is cancelled — he
+    // stays at Real Madrid rather than a like-for-like replacing him at Arsenal.
+    expect(s.players.cur_bale?.club).toBe('man_utd');
+    expect(s.players.cur_ozil?.club).toBe('real_madrid');
+    expect(s.eventLog.some((e) => e.code === 'ledger.cancelled' && e.data?.playerId === 'cur_ozil')).toBe(true);
+    // But Spurs still bank a huge fee (from you) and still rebuild.
+    expect(s.players.cur_lamela?.club).toBe('spurs');
+  });
 });

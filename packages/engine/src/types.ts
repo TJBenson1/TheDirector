@@ -397,6 +397,11 @@ export interface GameStateMeta {
   /** Real-ledger entries already processed (executed or fallen back), by
    *  subject playerId, so each resolves once (reality-default). */
   executedLedger: string[];
+  /** Subset of `executedLedger` that executed AS REALITY (the real move
+   *  happened). A dependent entry (`enabledBy`) only fires if its funder is
+   *  here — so a purchase the user pre-empts cancels the sale it would have
+   *  funded (e.g. no Bale at Madrid → Özil is never sold). */
+  realizedLedger: string[];
   /** Real historical injuries already fired (by subject playerId), so each
    *  scheduled real injury triggers at most once (reality-default). */
   firedRealInjuries: string[];

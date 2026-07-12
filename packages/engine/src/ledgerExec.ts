@@ -48,6 +48,26 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
 
     const player = state.players[entry.playerId];
     const dest = state.clubs[entry.to];
+
+    // Causal chain: a move enabled by a funder that the user pre-empted is
+    // CANCELLED, not replaced. The club no longer needs/can afford it, so the
+    // player simply stays put (Madrid keep Özil once they never sign Bale).
+    if (entry.enabledBy && !state.meta.realizedLedger.includes(entry.enabledBy)) {
+      const funder = state.players[entry.enabledBy];
+      state.timeline.divergenceLog.push({
+        date: now,
+        kind: 'butterfly',
+        detail: `${dest?.name ?? entry.to} no longer sign ${funder?.name ?? entry.enabledBy}, so ${player?.name ?? entry.playerId} is not sold — he stays at ${state.clubs[entry.from ?? '']?.name ?? entry.from}.`,
+      });
+      logEvent(state, {
+        category: 'transfer',
+        code: 'ledger.cancelled',
+        message: `Chain broken: ${player?.name ?? entry.playerId} is no longer sold (the ${funder?.name ?? entry.enabledBy} deal that funded it never happened)`,
+        data: { playerId: entry.playerId, from: entry.from, to: entry.to, enabledBy: entry.enabledBy },
+      });
+      continue;
+    }
+
     const validReality =
       !!player &&
       !!dest &&
@@ -60,6 +80,7 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
       dest.finances.transferBudget = Math.max(dest.finances.transferBudget, entry.fee);
       const res = executeTransfer(state, { playerId: entry.playerId, toClub: entry.to, fee: entry.fee });
       if (res.ok) {
+        state.meta.realizedLedger.push(entry.playerId); // funders for dependents
         logEvent(state, {
           category: 'transfer',
           code: 'ledger.executed',
@@ -90,13 +111,17 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
 }
 
 /**
- * Fallback hierarchy when a real transfer can't happen (§9f). Because the ONLY
- * way an entry invalidates is a user action, the deprived club first looks at
- * the player who caused the problem — the USER's squad. If the user has a
- * genuine asset in the needed position, the club bids for HIM (a refusable
- * poach bid — the logical, traceable butterfly of the user's move). Only if the
- * user has no fit does it pursue a profile-similar player from the wider market,
- * else generic-needs (no deal).
+ * How a club deprived of a real target reacts (§9f). Realistic priority:
+ *
+ *   1. Sign a COMPARABLE, AVAILABLE alternative from the market (the default —
+ *      "if you take my target, I buy someone else of similar level").
+ *   2. Only if that club genuinely rates the user's own asset as the best
+ *      attainable replacement does it *sometimes* come back for HIM — a
+ *      refusable poach bid, now a minority butterfly rather than the reflex.
+ *   3. Otherwise it makes do (promote/patch — generic-needs, no deal).
+ *
+ * The poach is deliberately probabilistic so a single user signing does not
+ * reliably boomerang into a bid for the user's stars.
  */
 function fallbackForLedger(
   state: GameState,
@@ -110,31 +135,60 @@ function fallbackForLedger(
   const targetAbility = original.ability;
   const year = Number(state.clock.date.slice(0, 4));
 
-  // Tier: poach the user — the club deprived by the user's move turns to the
-  // user's squad for a genuine asset in the same position (ability ≥ 78).
+  // Best comparable, low-cascade alternative from the foreign/context market —
+  // available depth, similar level, not a clear upgrade, not a one-club man.
+  // Reality's own movers are spoken for — signing one of them would cascade a
+  // chain of misses. The alternative comes from the pool reality isn't using.
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  const ledgerSubjects = new Set((pack?.realTransferLedger ?? []).map((e) => e.playerId));
+
+  let bestAlt: PlayerState | undefined;
+  for (const p of Object.values(state.players)) {
+    if (!p.curated) continue; // a named narrative signing must be a real player (Principle 2)
+    if (ledgerSubjects.has(p.id)) continue; // reality already has plans for him
+    const seller = p.club ? state.clubs[p.club] : undefined;
+    if (!seller || seller.leagueId !== null) continue; // foreign/context pool (no cascade)
+    if (p.club === entry.to) continue;
+    // You shop where players are actually available — not by raiding another
+    // giant's contented star. Skip healthy elite sellers (a crisis/strained
+    // club will still deal).
+    if (seller.prestige >= 82 && seller.financialHealth === 'healthy') continue;
+    if (positionGroupOf(p) !== group) continue;
+    if (p.resistance.hardBlocks.length > 0 || p.injury) continue;
+    if (p.ability > targetAbility + 2) continue; // not a clear upgrade on the lost man
+    if (targetAbility - p.ability > 6) continue; // a like-for-like, not a big drop
+    if (!bestAlt || Math.abs(p.ability - targetAbility) < Math.abs(bestAlt.ability - targetAbility)) bestAlt = p;
+  }
+
+  // The user's best positional fit (a genuine asset the deprived club might want).
   const userAsset = clubSquadPlayers(state, state.playerClub)
     .filter((p) => positionGroupOf(p) === group && p.ability >= 78 && p.resistance.hardBlocks.length === 0 && !p.injury)
     .sort((a, b) => Math.abs(a.ability - targetAbility) - Math.abs(b.ability - targetAbility))[0];
-  if (userAsset) {
-    createPoachBid(state, dest.id, userAsset, original.name, year);
-    return 'profile-similar';
+
+  // Come back for the user's player only sometimes: rarely when a clean market
+  // alternative exists (they'd usually just buy that), more often when nothing
+  // comparable is available and the user is holding the obvious replacement.
+  const poach = !!userAsset && rng.chance(bestAlt ? 0.35 : 0.7);
+  if (poach) {
+    createPoachBid(state, dest.id, userAsset!, original.name, year);
+    return 'real-backup';
   }
 
-  // Otherwise, a profile-similar player from the wider (foreign) market.
-  let best: PlayerState | undefined;
-  for (const p of Object.values(state.players)) {
-    const seller = p.club ? state.clubs[p.club] : undefined;
-    if (!seller || seller.leagueId !== null) continue; // foreign/context pool (no cascade)
-    if (positionGroupOf(p) !== group) continue;
-    if (Math.abs(p.ability - targetAbility) > 6) continue;
-    if (p.resistance.hardBlocks.length > 0) continue;
-    if (!best || Math.abs(p.ability - targetAbility) < Math.abs(best.ability - targetAbility)) best = p;
+  if (bestAlt) {
+    const fee = valuePlayer(bestAlt, year);
+    dest.finances.transferBudget = Math.max(dest.finances.transferBudget, fee);
+    const res = executeTransfer(state, { playerId: bestAlt.id, toClub: entry.to, fee });
+    if (res.ok) {
+      logEvent(state, {
+        category: 'transfer',
+        code: 'ledger.alternative',
+        message: `${dest.name}, denied ${original.name}, sign ${bestAlt.name} instead`,
+        data: { playerId: bestAlt.id, to: entry.to, insteadOf: entry.playerId },
+      });
+      return 'profile-similar';
+    }
   }
-  if (!best) return 'generic-needs';
-  const fee = valuePlayer(best, year);
-  dest.finances.transferBudget = Math.max(dest.finances.transferBudget, fee);
-  const res = executeTransfer(state, { playerId: best.id, toClub: entry.to, fee });
-  return res.ok ? 'profile-similar' : 'generic-needs';
+  return 'generic-needs';
 }
 
 /**

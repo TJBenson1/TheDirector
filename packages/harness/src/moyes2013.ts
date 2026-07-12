@@ -116,6 +116,14 @@ function main(): void {
         seenButterfly.add(e.message);
         console.log(`     ⤳ ${e.date}  ${e.message}`);
       }
+      if (e.code === 'ledger.alternative' && !seenButterfly.has(e.message)) {
+        seenButterfly.add(e.message);
+        console.log(`     ⤳ ${e.date}  ${e.message}`);
+      }
+      if (e.code === 'ledger.cancelled' && !seenButterfly.has(e.message)) {
+        seenButterfly.add(e.message);
+        console.log(`     ✂ ${e.date}  ${e.message}`);
+      }
     }
 
     if (s.board.dismissed) {
