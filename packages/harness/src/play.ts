@@ -4,7 +4,7 @@
  *
  *   tsx src/play.ts new <scenarioId> [seed]     start a game
  *   tsx src/play.ts state                         re-render the briefing
- *   tsx src/play.ts advance                       advance to the next window/interrupt
+ *   tsx src/play.ts advance                       advance one window sub-step / to the next window
  *   tsx src/play.ts decide <decisionId> <choiceId>  resolve a pending decision
  *   tsx src/play.ts sign <playerId> [feeM]        attempt a signing (with agency)
  *   tsx src/play.ts scout <playerId>              fogged scout report
@@ -30,6 +30,8 @@ import {
   resolvePlayer,
   courtPlayer,
   poleSuitorFor,
+  windowStepLabel,
+  WINDOW_STEPS,
   SCENARIOS,
   Rng,
   type GameState,
@@ -70,7 +72,10 @@ function briefing(s: GameState): void {
   const club = s.clubs[s.playerClub]!;
   console.log('\n════════════════════════════════════════════════════════════════');
   console.log(`  ${SCENARIOS[s.meta.scenarioId]?.name ?? s.meta.scenarioId}`);
-  console.log(`  ${s.clock.date}  ·  ${s.clock.window ? s.clock.window.toUpperCase() + ' WINDOW' : 'in-season'}  ·  ${club.name}`);
+  const windowLabel = s.clock.window
+    ? `${s.clock.window.toUpperCase()} WINDOW — ${windowStepLabel(s.clock.windowStep)} (${Math.min(s.clock.windowStep, WINDOW_STEPS)}/${WINDOW_STEPS})`
+    : 'in-season';
+  console.log(`  ${s.clock.date}  ·  ${windowLabel}  ·  ${club.name}`);
   console.log('════════════════════════════════════════════════════════════════');
   console.log(`  Board: "${s.board.mandate}"`);
   console.log(`  Patience ${bar(s.board.patience)}  ${s.board.warnings ? `⚠ ${s.board.warnings} warning(s)` : ''}${s.board.dismissed ? '  ✗ DISMISSED' : ''}`);
@@ -147,7 +152,11 @@ function main(): void {
       const s0 = load();
       if (s0.board.dismissed) { console.log('You have been dismissed. Game over. Start again with: play new'); break; }
       const since = s0.meta.nextSeq;
-      const { state } = advanceWindow(s0);
+      // Interactive UI: windows unfold one sub-step at a time (early → mid →
+      // deadline), so real business lands in tranches and you get a turn between
+      // them (§3 multi-step windows). Court targets and answer real-move offers
+      // as they surface, then `advance` again to move to the next step.
+      const { state } = advanceWindow(s0, { pausePerStep: true });
       save(state);
       recent(state, since);
       briefing(state);

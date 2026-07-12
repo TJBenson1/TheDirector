@@ -21,6 +21,21 @@ export const SEASON_START_CALENDAR_MONTH = 7;
 export const SUMMER_WINDOW_MONTH_INDEX = 0;
 export const WINTER_WINDOW_MONTH_INDEX = 6;
 
+/**
+ * How many sub-steps a transfer window unfolds over (§3 multi-step windows).
+ * The user acts between steps; real ledger moves are distributed across them so
+ * business lands at different points (early → mid → deadline day). Three keeps
+ * the loop light while giving a genuine "deadline day" beat.
+ */
+export const WINDOW_STEPS = 3;
+
+/** Human-readable name for a window sub-step (1..WINDOW_STEPS). */
+export function windowStepLabel(step: number): string {
+  if (step <= 1) return 'early window';
+  if (step >= WINDOW_STEPS) return 'deadline day';
+  return 'mid-window';
+}
+
 export interface ParsedYearMonth {
   year: number;
   month: number; // 1..12
@@ -78,6 +93,10 @@ export function advanceOneMonth(state: GameState): SeasonWindow {
   state.clock.date = newDate;
   state.clock.monthIndex = monthIndex;
   state.clock.window = window;
+  // Entering a window opens it at step 1 (early business); a non-window month
+  // clears the sub-step. Mid-window steps (2..N) are driven by advanceWindow
+  // without moving the calendar, so this only ever sets the opening step.
+  state.clock.windowStep = window !== null ? 1 : 0;
 
   logEvent(state, {
     category: 'clock',

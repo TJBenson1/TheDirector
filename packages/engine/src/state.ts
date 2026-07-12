@@ -15,7 +15,7 @@ import { GAME_VERSION } from './types.js';
 import { Rng } from './rng.js';
 import { hashValue } from './hash.js';
 import { logEvent } from './eventLog.js';
-import { seasonMonthIndex, windowForMonthIndex, parseYearMonth } from './clock.js';
+import { seasonMonthIndex, windowForMonthIndex, parseYearMonth, WINDOW_STEPS } from './clock.js';
 import { getScenario, DEFAULT_SCENARIO_ID } from './scenarios.js';
 import { LEAGUES } from './leagues.js';
 import { initLeagueSeason } from './season.js';
@@ -169,6 +169,11 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
       date: scenario.startDate,
       window: windowForMonthIndex(monthIndex),
       monthIndex,
+      // A scenario opens AT its start window, but the curated squad already bakes
+      // in that window's real business — so it starts pre-closed (deadline day
+      // reached) and the first advance moves on to the next window rather than
+      // re-executing the opening ledger.
+      windowStep: windowForMonthIndex(monthIndex) !== null ? WINDOW_STEPS : 0,
     },
     settings,
     playerClub: scenario.playerClub,

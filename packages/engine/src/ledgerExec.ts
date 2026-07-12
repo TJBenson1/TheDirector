@@ -13,7 +13,8 @@
  */
 
 import type { ClubId, Decision, GameState, PlayerState } from './types.js';
-import { Rng } from './rng.js';
+import { Rng, hashStringToU32 } from './rng.js';
+import { WINDOW_STEPS } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
@@ -30,11 +31,37 @@ function positionGroupOf(p: PlayerState): string {
   return 'ATT';
 }
 
-/** Execute all real-ledger entries now due, from the current window. */
-export function executeLedgerWindow(state: GameState, rng: Rng): void {
+/**
+ * Which sub-step of a window a real move lands in (§3 multi-step windows),
+ * 1..WINDOW_STEPS. Marquee deals tend to resolve LATE (deadline-day drama),
+ * which is also what gives the user time to court and intervene before a big
+ * transfer locks in; routine business goes early. Deterministic, with a hash
+ * jitter so same-tier deals spread across the window rather than clumping.
+ */
+export function stepForEntry(entry: RealTransferLedgerEntry): number {
+  const feeM = entry.fee / 1_000_000;
+  let step = feeM >= 22 ? WINDOW_STEPS : feeM >= 8 ? 2 : 1;
+  const h = hashStringToU32(entryKey(entry)) % 100;
+  if (h < 20 && step > 1) step -= 1; // a fifth pulled forward
+  else if (h >= 80 && step < WINDOW_STEPS) step += 1; // a fifth pushed to the deadline
+  return step;
+}
+
+/**
+ * Execute the real-ledger entries now due that belong to window sub-step `step`
+ * (§3). On the final step (deadline day) every still-unprocessed due entry is
+ * swept up, so nothing is stranded and a full window (steps 1..N) executes
+ * exactly the set it did as a single pass. `step` defaults to the final step so
+ * a single-shot caller still processes the whole window.
+ */
+export function executeLedgerWindow(state: GameState, rng: Rng, step: number = WINDOW_STEPS): void {
   const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   if (!pack) return;
+  const isFinalStep = step >= WINDOW_STEPS;
   const now = state.clock.date;
+  // Fork label deliberately omits the step: a single-shot final-step sweep
+  // (the headless/batch path) draws the exact same stream as before multi-step
+  // windows existed, so determinism and calibration are preserved.
   const r = rng.fork(`ledger:${now}`);
 
   // Players whose real move is still ahead — used to let a deprived club hijack
@@ -55,6 +82,9 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
     const key = entryKey(entry);
     if (state.meta.executedLedger.includes(key)) continue;
     if (entry.window > now) continue; // not due yet (YYYY-MM compares lexically)
+    // Multi-step: only this step's slice fires now; the deadline step sweeps up
+    // whatever remains due (so the full window still executes the same set).
+    if (!isFinalStep && stepForEntry(entry) !== step) continue;
     state.meta.executedLedger.push(key);
 
     const player = state.players[entry.playerId];

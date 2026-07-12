@@ -14,13 +14,13 @@
 import type { GameState, LoggedEvent } from './types.js';
 import { cloneState } from './state.js';
 import { Rng } from './rng.js';
-import { advanceOneMonth } from './clock.js';
+import { advanceOneMonth, windowForMonthIndex, windowStepLabel, WINDOW_STEPS } from './clock.js';
 import { eventsSince } from './eventLog.js';
 import { stepLeagueMonth } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
 import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
-import { windowForMonthIndex } from './clock.js';
+import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow } from './ledgerExec.js';
@@ -78,23 +78,62 @@ function runMonth(state: GameState, rng: Rng): void {
   processInjuriesMonth(state, rng);
   // M7: scripted + procedural events, scandals (§9b, §9d). May raise interrupts.
   rollEventsMonth(state, rng);
-  // M10: proactive AI transfers follow the REAL ledger by default (§9f), then
-  // M8: the rival-AI reactive response layer (counter-punch, poaching, §9a).
-  if (windowForMonthIndex(state.clock.monthIndex) !== null) {
-    executeLedgerWindow(state, rng);
+  // NB: the transfer window itself (real-ledger execution + rival response) is
+  // driven by `advanceWindow`, not here — a window unfolds over sub-steps (§3
+  // multi-step windows) which the caller may pause between.
+}
+
+/**
+ * Run one sub-step of an open transfer window (§3 multi-step windows). Each step
+ * executes its slice of the real ledger; the deadline step (final) also runs the
+ * rival-AI reactive layer (counter-punch/poaching, §9a) and fades courtship —
+ * the once-per-window beats. The player acts between steps. A single-shot caller
+ * runs only the final step, which sweeps up the whole window at once (identical
+ * to the pre-multi-step single pass).
+ */
+function runWindowStep(state: GameState, rng: Rng, step: number): void {
+  // M10: proactive AI transfers follow the REAL ledger by default (§9f) — this
+  // step's slice of it (or the whole window, on a final-step sweep).
+  executeLedgerWindow(state, rng, step);
+  if (step >= WINDOW_STEPS) {
+    // M8: the rival-AI reactive response layer, at the deadline.
     runRivalWindow(state, rng);
     decayPursuit(state); // courtship fades if you stop working a target
   }
+  logEvent(state, {
+    category: 'transfer',
+    code: 'window.step',
+    message: `${state.clock.window ?? 'transfer'} window — ${windowStepLabel(step)}`,
+    data: { window: state.clock.window, step, steps: WINDOW_STEPS },
+  });
+}
+
+export interface AdvanceOptions {
+  /**
+   * Unfold a transfer window ONE sub-step at a time, pausing between (§3
+   * multi-step windows) — the interactive UI path, where the player courts
+   * targets and answers real-move offers as business lands in tranches (early →
+   * mid → deadline). Default `false`: a window unfolds in a single call
+   * (deadline-day sweep), which is what headless/batch callers want and is
+   * byte-identical to the pre-multi-step behaviour.
+   */
+  pausePerStep?: boolean;
 }
 
 /**
  * Step the simulation forward to the next decision window or interrupt.
  *
  * Pure over `GameState`: clones at the boundary, mutates the draft, and returns
- * the new state plus the events produced this call. Always advances at least
- * one month so repeated calls make progress.
+ * the new state plus the events produced this call. Always makes progress —
+ * either a calendar month or a window sub-step.
+ *
+ * A transfer window is not an instant: it unfolds over `WINDOW_STEPS` sub-steps
+ * with real moves landing at different points (§3). In the default batch mode
+ * the whole window resolves in one call; with `pausePerStep`, each call advances
+ * exactly one sub-step so the player gets a turn between tranches.
  */
-export function advanceWindow(state: GameState): AdvanceResult {
+export function advanceWindow(state: GameState, options: AdvanceOptions = {}): AdvanceResult {
+  const pausePerStep = options.pausePerStep ?? false;
   const draft = cloneState(state);
   const startSeq = draft.meta.nextSeq;
   const rng = new Rng(draft.meta.rngState);
@@ -106,9 +145,37 @@ export function advanceWindow(state: GameState): AdvanceResult {
   // them — apply their fallout before stepping on (§9b).
   if (draft.pendingDecisions.length > 0) resolveIgnoredDecisions(draft);
 
+  // Mid-window (per-step mode only): a window is open with steps remaining.
+  // Unfold the next sub-step WITHOUT moving the calendar, so the player gets a
+  // turn between each tranche of real business.
+  if (draft.clock.window !== null && draft.clock.windowStep >= 1 && draft.clock.windowStep < WINDOW_STEPS) {
+    draft.clock.windowStep += 1;
+    runWindowStep(draft, rng, draft.clock.windowStep);
+    draft.meta.rngState = rng.state;
+    return { state: draft, events: eventsSince(draft, startSeq) };
+  }
+
+  // A fully-unfolded window: clear the sub-step so the loop below advances the
+  // calendar on to the next window.
+  if (draft.clock.window !== null && draft.clock.windowStep >= WINDOW_STEPS) {
+    draft.clock.windowStep = 0;
+  }
+
   for (let stepped = 0; stepped < MAX_MONTHS_PER_ADVANCE; stepped++) {
     const window = advanceOneMonth(draft);
     runMonth(draft, rng);
+
+    // A window opened this month. `advanceOneMonth` set windowStep = 1. Either
+    // run only the first sub-step (pause between the rest), or — the default —
+    // sweep the whole window in one final-step pass (batch/headless).
+    if (window !== null) {
+      if (pausePerStep) {
+        runWindowStep(draft, rng, 1);
+      } else {
+        draft.clock.windowStep = WINDOW_STEPS;
+        runWindowStep(draft, rng, WINDOW_STEPS);
+      }
+    }
 
     // Persist RNG progress after each month so a save mid-advance is faithful.
     draft.meta.rngState = rng.state;

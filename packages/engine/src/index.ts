@@ -17,9 +17,11 @@ export {
   windowForMonthIndex,
   isRunInMonth,
   advanceOneMonth,
+  windowStepLabel,
   SEASON_START_CALENDAR_MONTH,
   SUMMER_WINDOW_MONTH_INDEX,
   WINTER_WINDOW_MONTH_INDEX,
+  WINDOW_STEPS,
 } from './clock.js';
 export {
   createNewGame,
@@ -30,7 +32,7 @@ export {
   DEFAULT_SETTINGS,
   type NewGameOptions,
 } from './state.js';
-export { advanceWindow, type AdvanceResult } from './advance.js';
+export { advanceWindow, type AdvanceResult, type AdvanceOptions } from './advance.js';
 export { stableStringify, hashString, hashValue } from './hash.js';
 export {
   SCENARIOS,
@@ -137,7 +139,7 @@ export {
   type ClubPressure,
   type AmbitionOverride,
 } from './ledger.js';
-export { executeLedgerWindow, ledgerSquadMatch, ledgerClubs } from './ledgerExec.js';
+export { executeLedgerWindow, stepForEntry, ledgerSquadMatch, ledgerClubs } from './ledgerExec.js';
 export {
   suggestTargets,
   queryPlayer,

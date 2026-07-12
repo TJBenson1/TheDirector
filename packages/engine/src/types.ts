@@ -413,6 +413,14 @@ export interface GameClock {
   window: SeasonWindow;
   /** 0..11 month within the *season* (season starts in July → index 0). */
   monthIndex: number;
+  /**
+   * Sub-step within an OPEN transfer window (§3 multi-step windows). A window is
+   * not a single instant: it unfolds over `WINDOW_STEPS` stages (early business →
+   * mid-window → deadline day), with real ledger moves landing at different
+   * points and the user acting between them. 0 when no window is open; 1..N while
+   * a window is unfolding (N = deadline day, fully processed).
+   */
+  windowStep: number;
 }
 
 export interface GameState {
