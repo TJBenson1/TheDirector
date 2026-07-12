@@ -22,6 +22,11 @@ describe('sampleCareer', () => {
     const cats = new Set(items.map((i) => i.category));
     expect(cats.has('career-arc')).toBe(true);
     expect(cats.has('table-checkpoint')).toBe(true);
+
+    // Career arcs are REAL players only — no fabricated names in the narrative.
+    const arcs = items.filter((i) => i.category === 'career-arc');
+    expect(arcs.length).toBeGreaterThan(0);
+    expect(arcs.every((a) => a.payload.curated === true)).toBe(true);
   });
 
   it('is deterministic: same state + id ⇒ identical items', () => {

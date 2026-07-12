@@ -20,12 +20,15 @@ describe('reality-ledger execution (§9f)', () => {
   it('a passive user preserves real history — ledger subjects reach real clubs', () => {
     let s = createNewGame({ seed: 'ledger-passive' });
     s = play(s, 30); // ~15 years, no user transfers
-    // Real destinations, as in reality.
-    expect(s.players.cur_anelka?.club).toBe('real_madrid');
-    expect(s.players.cur_overmars?.club).toBe('barcelona');
-    expect(s.players.cur_crespo?.club).toBe('chelsea');
-    expect(s.players.cur_rkeane?.club).toBe('spurs');
-    expect(s.players.cur_owen?.club).toBe('real_madrid');
+    // Real destinations, as in reality — OR the legend has since retired (also
+    // reality-consistent; a retired player isn't sitting at the wrong club).
+    const reality = (id: string, club: string) =>
+      s.players[id]?.club === club || (s.meta.retiredLedgerSubjects ?? []).includes(id);
+    expect(reality('cur_anelka', 'real_madrid')).toBe(true);
+    expect(reality('cur_overmars', 'barcelona')).toBe(true);
+    expect(reality('cur_crespo', 'chelsea')).toBe(true);
+    expect(reality('cur_rkeane', 'spurs')).toBe(true);
+    expect(reality('cur_owen', 'real_madrid')).toBe(true);
 
     const match = ledgerSquadMatch(s);
     expect(match.total).toBeGreaterThan(0);

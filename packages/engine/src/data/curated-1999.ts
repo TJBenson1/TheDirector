@@ -48,6 +48,7 @@ function p(
   contractUntil: number,
   injuryProneness: number,
   personality: Trait,
+  extra: { latentCeiling?: number } = {},
 ): CuratedSeed {
   return {
     id: `cur_${id}`,
@@ -61,6 +62,7 @@ function p(
     potentialCeiling,
     personality,
     injuryProneness,
+    ...extra,
   };
 }
 
@@ -84,7 +86,9 @@ export const MAN_UTD_1999: CuratedSeed[] = [
   p('silvestre', 'Mikael Silvestre', 1977, 'France', ['CB', 'LB'], 79, 86, 2004, 28, t(7, 5, 7, 6, 4, 8)),
   p('stam', 'Jaap Stam', 1972, 'Netherlands', ['CB'], 89, 90, 2003, 35, t(8, 6, 8, 6, 5, 6)),
   p('rjohnsen', 'Ronny Johnsen', 1969, 'Norway', ['CB', 'DM'], 79, 80, 2002, 55, t(8, 4, 6, 7, 3, 6)),
-  p('wbrown', 'Wes Brown', 1979, 'England', ['CB'], 74, 85, 2004, 60, t(7, 4, 7, 9, 4, 6)),
+  // Wes Brown — a genuine talent whose ceiling was capped by chronic injuries.
+  // A user who keeps him fit and central can unlock the defender he could've been.
+  p('wbrown', 'Wes Brown', 1979, 'England', ['CB'], 74, 85, 2004, 60, t(7, 4, 7, 9, 4, 6), { latentCeiling: 89 }),
   p('berg', 'Henning Berg', 1969, 'Norway', ['CB'], 77, 78, 2001, 30, t(8, 4, 6, 7, 3, 7)),
   p('may', 'David May', 1970, 'England', ['CB'], 70, 72, 2002, 40, t(6, 6, 5, 7, 5, 6)),
   p('keane', 'Roy Keane', 1971, 'Ireland', ['CM', 'DM'], 90, 91, 2003, 45, t(9, 7, 10, 8, 8, 6)),
@@ -114,7 +118,7 @@ function q(
   contractUntil: number,
   injuryProneness: number,
   personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number } = {},
 ): CuratedSeed {
   return {
     id: `cur_${id}`,

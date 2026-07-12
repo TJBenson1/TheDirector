@@ -75,6 +75,49 @@ export interface AcademyIntake {
   playerId: PlayerId;
 }
 
+/** When a real player actually hung up his boots. Curated players retire within
+ *  ~1 year of this (± user influence on the user's own squad — see ageing.ts).
+ *  Players NOT listed fall back to a position-based age threshold. */
+export interface RealRetirement {
+  playerId: PlayerId;
+  year: number;
+}
+
+/**
+ * A real academy graduate who breaks into his club's first team in a given year
+ * — the REAL-players-only youth pipeline (Principle 2). The seed is a full
+ * curated player (see data/curated-*.ts); he is instantiated into the squad, at
+ * a youth age, in `year`. This is how squads renew without fabricating players.
+ */
+export interface AcademyGraduate {
+  year: number;
+  /** The real graduate's curated seed (typed loosely to avoid a data-module
+   *  import cycle; validated at instantiation). */
+  seed: {
+    id: PlayerId;
+    club: ClubId;
+    name: string;
+    birthYear: number;
+    nationality: string;
+    positions: string[];
+    ability: number;
+    potentialCeiling: number;
+    birthCeiling?: number;
+    latentCeiling?: number;
+    contractUntil: number;
+    injuryProneness: number;
+    personality: {
+      professionalism: number;
+      ego: number;
+      ambition: number;
+      loyalty: number;
+      volatility: number;
+      adaptability: number;
+    };
+    loyalty?: number;
+  };
+}
+
 /** A real injury that happened in history — fired only if the player is still at
  *  the club he was at in reality (so injuries "match up", per feedback). */
 export interface RealInjuryEntry {
@@ -91,6 +134,10 @@ export interface EraRealityPack {
   realTransferLedger: RealTransferLedgerEntry[];
   academyIntakes: AcademyIntake[];
   realInjuries: RealInjuryEntry[];
+  /** Real retirement years for curated players (age-based fallback otherwise). */
+  retirements?: RealRetirement[];
+  /** Real youth graduates who break through during the era (real players only). */
+  academyGraduates?: AcademyGraduate[];
 }
 
 /**
@@ -257,10 +304,77 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   { playerId: 'cur_bridge03', from: 'southampton', to: 'chelsea', window: '2003-07', fee: 7_000_000, id: 'bridge-chelsea-2003', enabledBy: 'abramovich' },
 ];
 
+// ── Real retirements (curated players hang up their boots ≈ when they did) ────
+
+/** Man Utd 1999 squad + marquee era stars. Ledger subjects (Beckham, Anelka,
+ *  Owen…) are exempt from retirement elsewhere, so they need no entry here. */
+const RETIREMENTS_1999: RealRetirement[] = [
+  { playerId: 'cur_bosnich', year: 2009 }, { playerId: 'cur_vdgouw', year: 2003 },
+  { playerId: 'cur_gneville', year: 2011 }, { playerId: 'cur_pneville', year: 2013 },
+  { playerId: 'cur_irwin', year: 2004 }, { playerId: 'cur_silvestre', year: 2014 },
+  { playerId: 'cur_stam', year: 2007 }, { playerId: 'cur_rjohnsen', year: 2008 },
+  { playerId: 'cur_wbrown', year: 2016 }, { playerId: 'cur_berg', year: 2004 },
+  { playerId: 'cur_may', year: 2003 }, { playerId: 'cur_keane', year: 2006 },
+  { playerId: 'cur_scholes', year: 2013 }, { playerId: 'cur_giggs', year: 2014 },
+  { playerId: 'cur_butt', year: 2011 }, { playerId: 'cur_blomqvist', year: 2005 },
+  { playerId: 'cur_cruyff', year: 2010 }, { playerId: 'cur_fortune', year: 2010 },
+  { playerId: 'cur_cole', year: 2008 }, { playerId: 'cur_yorke', year: 2009 },
+  { playerId: 'cur_solskjaer', year: 2007 }, { playerId: 'cur_sheringham', year: 2008 },
+  // Marquee world stars.
+  { playerId: 'cur_maldini', year: 2009 }, { playerId: 'cur_shearer', year: 2006 },
+  { playerId: 'cur_letissier', year: 2002 }, { playerId: 'cur_veron', year: 2012 },
+  { playerId: 'cur_barthez', year: 2007 },
+  // Ledger legends retire ≈ when they did (they may only retire once their real
+  // moves are done; the squad-match metric credits a retired legend as reality-
+  // consistent, so they no longer linger into their mid-40s).
+  { playerId: 'cur_redondo', year: 2004 }, { playerId: 'cur_zidane', year: 2006 },
+  { playerId: 'cur_figo', year: 2009 }, { playerId: 'cur_mcmanaman', year: 2005 },
+  { playerId: 'cur_overmars', year: 2009 }, { playerId: 'cur_nedved', year: 2009 },
+  { playerId: 'cur_ronaldo', year: 2011 }, { playerId: 'cur_makelele', year: 2011 },
+  { playerId: 'cur_owen', year: 2013 }, { playerId: 'cur_crespo', year: 2012 },
+  { playerId: 'cur_beckham', year: 2013 },
+];
+
+const RETIREMENTS_2013: RealRetirement[] = [
+  { playerId: 'cur_giggs2', year: 2014 }, { playerId: 'cur_ferdinand2', year: 2015 },
+  { playerId: 'cur_vidic', year: 2016 }, { playerId: 'cur_evra', year: 2019 },
+  { playerId: 'cur_carrick', year: 2018 }, { playerId: 'cur_fletcher', year: 2019 },
+  { playerId: 'cur_xavi', year: 2019 }, { playerId: 'cur_pirlo', year: 2017 },
+  { playerId: 'cur_gerrard2', year: 2016 }, { playerId: 'cur_lampard', year: 2017 },
+  { playerId: 'cur_terry', year: 2018 }, { playerId: 'cur_buffon', year: 2023 },
+  { playerId: 'cur_totti', year: 2017 }, { playerId: 'cur_pepe2', year: 2021 },
+];
+
+// ── Real academy graduates (real players only — the youth pipeline) ───────────
+
+const per = (
+  professionalism: number, ego: number, ambition: number,
+  loyalty: number, volatility: number, adaptability: number,
+) => ({ professionalism, ego, ambition, loyalty, volatility, adaptability });
+
+const ACADEMY_1999: AcademyGraduate[] = [
+  { year: 2001, seed: { id: 'cur_oshea99', club: 'man_utd', name: 'John O’Shea', birthYear: 1981, nationality: 'Ireland', positions: ['CB', 'RB'], ability: 60, potentialCeiling: 80, contractUntil: 2006, injuryProneness: 25, personality: per(8, 4, 7, 9, 4, 7) } },
+  { year: 2003, seed: { id: 'cur_fletcher99', club: 'man_utd', name: 'Darren Fletcher', birthYear: 1984, nationality: 'Scotland', positions: ['CM'], ability: 58, potentialCeiling: 82, contractUntil: 2007, injuryProneness: 55, personality: per(9, 4, 8, 9, 3, 7) } },
+  { year: 2004, seed: { id: 'cur_richardson99', club: 'man_utd', name: 'Kieran Richardson', birthYear: 1984, nationality: 'England', positions: ['LW', 'CM'], ability: 58, potentialCeiling: 76, contractUntil: 2007, injuryProneness: 30, personality: per(6, 6, 7, 6, 5, 7) } },
+  { year: 2007, seed: { id: 'cur_jevans99', club: 'man_utd', name: 'Jonny Evans', birthYear: 1988, nationality: 'Northern Ireland', positions: ['CB'], ability: 56, potentialCeiling: 81, contractUntil: 2010, injuryProneness: 35, personality: per(8, 4, 7, 8, 4, 7) } },
+  // Danny Welbeck — a real academy graduate carrying LATENT upside (his end
+  // product never quite matched his talent; a patient United user can unlock it).
+  { year: 2009, seed: { id: 'cur_welbeck99', club: 'man_utd', name: 'Danny Welbeck', birthYear: 1990, nationality: 'England', positions: ['ST', 'LW'], ability: 55, potentialCeiling: 80, latentCeiling: 87, contractUntil: 2012, injuryProneness: 45, personality: per(8, 4, 8, 8, 4, 7) } },
+  { year: 2009, seed: { id: 'cur_cleverley99', club: 'man_utd', name: 'Tom Cleverley', birthYear: 1989, nationality: 'England', positions: ['CM'], ability: 55, potentialCeiling: 76, contractUntil: 2012, injuryProneness: 30, personality: per(7, 5, 7, 7, 4, 7) } },
+];
+
+const ACADEMY_2013: AcademyGraduate[] = [
+  // Adnan Januzaj — the flagship LOST TALENT: dazzled at 18, then faded through
+  // mismanagement/minutes. A 2013 user who centres him can unlock what reality
+  // wasted (latent 88 vs the 78 he actually reached).
+  { year: 2013, seed: { id: 'cur_januzaj', club: 'man_utd', name: 'Adnan Januzaj', birthYear: 1995, nationality: 'Belgium', positions: ['LW', 'AM'], ability: 68, potentialCeiling: 78, latentCeiling: 88, contractUntil: 2018, injuryProneness: 30, personality: per(6, 7, 7, 5, 5, 7) } },
+  { year: 2014, seed: { id: 'cur_wilson13', club: 'man_utd', name: 'James Wilson', birthYear: 1995, nationality: 'England', positions: ['ST'], ability: 62, potentialCeiling: 74, latentCeiling: 83, contractUntil: 2018, injuryProneness: 35, personality: per(7, 5, 7, 7, 4, 7) } },
+];
+
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
-  'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999 },
-  'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013 },
+  'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999 },
+  'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004 },
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [] },
 };

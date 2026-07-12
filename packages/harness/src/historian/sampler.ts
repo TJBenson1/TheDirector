@@ -153,15 +153,17 @@ function sampleCareerArcs(
   rng: Rng,
   opts: Required<SampleOptions>,
 ): ReviewItem[] {
-  const players = Object.values(state.players);
+  // Only REAL (curated) players get individually-reviewed career arcs — procedural
+  // filler is anonymous depth, never surfaced as a named career (a user directive:
+  // no fake players in the narrative). Judge real arcs against reality.
+  const players = Object.values(state.players).filter((p) => p.curated);
   const currentYear = parseYearMonth(state.clock.date).year;
 
   const superstars = players.filter((p) => p.ability >= opts.topPlayerAbility);
   const prospects = players.filter((p) => p.wonderkid);
-  const realPlayers = players.filter((p) => p.curated);
   // A blended pool, deduped by id, then sampled to the budget.
   const poolMap = new Map<PlayerId, (typeof players)[number]>();
-  for (const p of [...superstars, ...prospects, ...sampleN(realPlayers, opts.keyPlayersPerCareer, rng)]) {
+  for (const p of [...superstars, ...prospects, ...sampleN(players, opts.keyPlayersPerCareer, rng)]) {
     poolMap.set(p.id, p);
   }
   const picked = sampleN([...poolMap.values()], opts.keyPlayersPerCareer, rng);
@@ -185,6 +187,7 @@ function sampleCareerArcs(
         ability: p.ability,
         potentialCeiling: p.potentialCeiling,
         birthCeiling: p.birthCeiling,
+        ...(p.latentCeiling !== undefined ? { latentCeiling: p.latentCeiling } : {}),
         reachedPotential: p.reachedPotential,
         wonderkid: p.wonderkid,
         benchedDevSeasons: p.benchedDevSeasons,

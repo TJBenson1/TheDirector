@@ -12,7 +12,8 @@ import type { ClubState, GameState, PlayerState, Position } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { clubSquadPlayers, recomputeClubStrength, generatePlayer } from './players.js';
-import { ERA_REALITY, eraForScenario } from './ledger.js';
+import { ERA_REALITY, eraForScenario, entryKey } from './ledger.js';
+import { estimateMinutesShare } from './development.js';
 
 /** Age at which decline begins, by position group (keepers last longest). */
 const DECLINE_START: Record<Position, number> = {
@@ -50,10 +51,7 @@ function declineStartFor(positions: Position[]): number {
   return Math.max(...positions.map((p) => DECLINE_START[p]));
 }
 
-/** Ledger subjects are never retired: their real moves (past or future) drive
- *  the reality-default squad-match, so removing them would break that fidelity.
- *  A minority of ageing legends thus linger — acceptable next to the systemic
- *  "no one ever retires" break this fixes. */
+/** All ledger subjects (for crediting a retiree in the squad-match metric). */
 function ledgerSubjectIds(state: GameState): Set<string> {
   const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   const ids = new Set<string>();
@@ -61,16 +59,73 @@ function ledgerSubjectIds(state: GameState): Set<string> {
   return ids;
 }
 
-function shouldRetire(player: PlayerState, age: number, protectedIds: Set<string>): boolean {
-  if (protectedIds.has(player.id)) return false;
+/** Ledger subjects with a real move STILL to execute — they must not retire yet,
+ *  or their transfer would never happen (breaking reality-default). Once his
+ *  moves are done a legend retires normally (at his real date), and squad-match
+ *  credits the retirement rather than counting him as misplaced. */
+function pendingMoverIds(state: GameState): Set<string> {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  const ids = new Set<string>();
+  for (const e of pack?.realTransferLedger ?? []) {
+    if (!state.meta.executedLedger.includes(entryKey(e))) ids.add(e.playerId);
+  }
+  return ids;
+}
+
+/** Real retirement years for curated players, from the era pack. */
+function retirementSchedule(state: GameState): Map<string, number> {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  const m = new Map<string, number>();
+  for (const r of pack?.retirements ?? []) m.set(r.playerId, r.year);
+  return m;
+}
+
+/**
+ * The year a curated player actually retires, adjusted by USER influence on his
+ * own squad (the "played squad" directive): if his minutes have dried up — the
+ * user built a stronger side around him — he steps aside a year or two early
+ * (Giggs' minutes going earlier); if he is still a key starter he plays on a
+ * touch (a graceful, planned send-off). Only the user's own club is influenced;
+ * elsewhere reality's date holds.
+ */
+function effectiveRetireYear(state: GameState, player: PlayerState, realYear: number): number {
+  if (player.club !== state.playerClub || !player.club) return realYear;
+  const club = state.clubs[player.club];
+  if (!club) return realYear;
+  const share = estimateMinutesShare(state, club, player);
+  if (share < 0.2) return realYear - 2; // squeezed out — bows out early
+  if (share < 0.4) return realYear - 1;
+  if (share >= 0.6) return realYear + 1; // still needed — plays on gracefully
+  return realYear;
+}
+
+function shouldRetire(
+  state: GameState,
+  player: PlayerState,
+  age: number,
+  year: number,
+  pendingMovers: Set<string>,
+  schedule: Map<string, number>,
+): boolean {
+  if (pendingMovers.has(player.id)) return false; // finish real moves before retiring
+  const realYear = schedule.get(player.id);
+  if (realYear !== undefined) return year >= effectiveRetireYear(state, player, realYear);
+  // No real date (procedural filler, or an uncurated career): age-based fallback.
   const retireAge = RETIRE_AGE[player.positions[0] ?? 'CM'];
   return age >= retireAge || (age >= 35 && player.ability < 55);
 }
 
+/** Minimum squad size kept via anonymous depth so injuries/rotation stay real. */
+const SQUAD_DEPTH_FLOOR = 22;
+
 /**
- * Retire a player: remove him from the game and blood a young replacement in his
- * position, so the squad churns generationally rather than shrinking or
- * fossilising. Deterministic given `rng`.
+ * Retire a player. The NAMED youth pipeline is real academy graduates
+ * (development.ts) — no fabricated academy stars. But a squad must still field a
+ * viable bench, so if retirement leaves it below the depth floor it is topped up
+ * with ANONYMOUS depth: unnamed, raw filler standing in for the dozens of
+ * real-but-uncurated squad members (Principle 2). This filler is never surfaced
+ * as a graduate, prospect, or named career (the sampler + scouting exclude
+ * procedural players), so no fake player enters the narrative. Deterministic.
  */
 function retirePlayer(
   state: GameState,
@@ -86,12 +141,13 @@ function retirePlayer(
     category: 'development',
     code: 'career.retired',
     message: `${player.name} (${club.name}, ${age}) hangs up his boots`,
-    data: { playerId: player.id, clubId: club.id, age },
+    data: { playerId: player.id, clubId: club.id, age, curated: player.curated },
   });
 
-  // A youth graduate steps up — but RAW: an academy kid, weaker than the man he
+  // Only top up when genuinely thin — real academy graduates and signings fill
+  // most gaps; anonymous depth is the safety net, raw and weaker than the man it
   // replaces, so an unmanaged squad still erodes (renewal is not a free upgrade).
-  // He may develop later, or not (§5). Squads churn; dominance is still not free.
+  if (club.squad.length >= SQUAD_DEPTH_FLOOR) return;
   const position = player.positions[0] ?? 'CM';
   const kid = generatePlayer({
     id: `p_${club.id}_y${year}_${player.id.replace(/[^a-z0-9]/gi, '')}`,
@@ -116,7 +172,9 @@ function retirePlayer(
 export function processSeasonAgeing(state: GameState, rng: Rng): void {
   const year = Number(state.clock.date.slice(0, 4));
   const ageRng = rng.fork(`ageing:${year}`);
-  const protectedIds = ledgerSubjectIds(state);
+  const pendingMovers = pendingMoverIds(state);
+  const ledgerIds = ledgerSubjectIds(state);
+  const schedule = retirementSchedule(state);
 
   for (const club of Object.values(state.clubs)) {
     let changed = false;
@@ -124,9 +182,9 @@ export function processSeasonAgeing(state: GameState, rng: Rng): void {
     for (const player of clubSquadPlayers(state, club.id)) {
       const age = year - player.birthYear;
 
-      // End of the road: he retires and a youngster takes his place (handled
-      // after the loop so we don't mutate the squad mid-iteration).
-      if (shouldRetire(player, age, protectedIds)) {
+      // End of the road: he retires (handled after the loop so we don't mutate
+      // the squad mid-iteration). Real players retire ≈ when they really did.
+      if (shouldRetire(state, player, age, year, pendingMovers, schedule)) {
         retirees.push(player);
         continue;
       }
@@ -155,7 +213,12 @@ export function processSeasonAgeing(state: GameState, rng: Rng): void {
     }
     if (retirees.length > 0) {
       const retRng = ageRng.fork(`retire:${club.id}`);
-      for (const r of retirees) retirePlayer(state, club, r, year, retRng);
+      for (const r of retirees) {
+        // A retiring ledger legend is recorded so squad-match still credits him
+        // (he retired at his real club — reality-consistent, not misplaced).
+        if (ledgerIds.has(r.id)) (state.meta.retiredLedgerSubjects ??= []).push(r.id);
+        retirePlayer(state, club, r, year, retRng);
+      }
       changed = true;
     }
     if (changed && club.leagueId !== null) recomputeClubStrength(state, club.id);

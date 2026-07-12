@@ -90,6 +90,7 @@ export {
 export { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 export {
   processSeasonDevelopment,
+  processAcademyGraduates,
   estimateMinutesShare,
   applyPrematureMove,
 } from './development.js';

@@ -20,7 +20,9 @@
 import type { ClubId, ClubState, GameState, PlayerState, Position } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
-import { clubSquadPlayers, recomputeClubStrength } from './players.js';
+import { clubSquadPlayers, recomputeClubStrength, buildResistance } from './players.js';
+import { suggestWage } from './finance.js';
+import { ERA_REALITY, eraForScenario } from './ledger.js';
 
 const DEV_AGE_MAX = 23; // growth window (§5 age curve)
 const REACHED_MARGIN = 2; // ability within this of ceiling ⇒ "reached potential"
@@ -100,9 +102,11 @@ export function processSeasonDevelopment(state: GameState, rng: Rng): void {
 
       // Real players keep improving toward their peak into their mid-20s (many
       // defenders/keepers peak at 27+); procedural filler follows the tighter
-      // youth curve.
+      // youth curve. A lost talent with a still-locked latent ceiling develops
+      // even once he has maxed his (low) real ceiling — the unlock can raise it.
       const devMax = player.curated ? 27 : DEV_AGE_MAX;
-      if (age <= devMax && player.ability < player.potentialCeiling) {
+      const hasLatent = player.latentCeiling !== undefined && player.latentCeiling > player.potentialCeiling;
+      if (age <= devMax && (player.ability < player.potentialCeiling || hasLatent)) {
         changed = developYoungster(state, club, player, age, devRng) || changed;
       } else if (age >= 25 && player.ability >= 82) {
         lifestyleDeclineCheck(state, club, player, devRng);
@@ -134,9 +138,36 @@ function developYoungster(
     player.benchedDevSeasons += 1;
     player.potentialCeiling = Math.max(player.ability, player.potentialCeiling - BENCH_CEILING_EROSION);
   }
+  const per = player.personality;
+
+  // ── LOST TALENT: reverse reality-rail (before the gap check) ────────────────
+  // A real player who under-achieved carries a latent ceiling above what he
+  // reached. Sustained TOP minutes at a suitable club (the user's own, or an
+  // elite side) during the growth window can unlock it — earned, not automatic,
+  // and gated by professionalism. The mirror of bench-erosion: the right pathway
+  // raises the cap instead of a blocked one capping the talent. Runs before the
+  // gap check so a player already at his (low) real ceiling can still break past it.
+  if (
+    player.curated &&
+    player.latentCeiling !== undefined &&
+    player.latentCeiling > player.potentialCeiling &&
+    share >= 0.6 &&
+    (club.id === state.playerClub || club.prestige >= 80) &&
+    age <= 23 &&
+    rng.chance(0.45 + per.professionalism * 0.03)
+  ) {
+    const raise = Math.min(player.latentCeiling - player.potentialCeiling, rng.int(2, 4));
+    player.potentialCeiling += raise;
+    logEvent(state, {
+      category: 'development',
+      code: 'development.unlocked',
+      message: `${player.name} (${club.name}) is fulfilling the talent reality wasted — ceiling rises to ${player.potentialCeiling}`,
+      data: { playerId: player.id, clubId: club.id, ceiling: player.potentialCeiling, latent: player.latentCeiling },
+    });
+  }
+
   const gap = player.potentialCeiling - player.ability;
   if (gap <= 0) return false;
-  const per = player.personality;
 
   // ── CURATED = reality-rail (§5, user directive) ────────────────────────────
   // A real player became who he became: given minutes he closes the gap to his
@@ -188,6 +219,73 @@ function developYoungster(
     return true;
   }
   return false;
+}
+
+/**
+ * Surface real academy graduates due this year (Principle 2 — youth is REAL
+ * players only). Each graduate is a curated seed instantiated into his club at a
+ * youth age; this is how squads renew without fabricating players. Idempotent:
+ * a graduate already in the world is skipped. Runs at the July rollover.
+ */
+export function processAcademyGraduates(state: GameState, rng: Rng): void {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  const grads = pack?.academyGraduates ?? [];
+  const year = Number(state.clock.date.slice(0, 4));
+
+  for (const g of grads) {
+    if (g.year > year) continue; // not due yet (due-or-overdue handles the start year)
+    const seed = g.seed;
+    if (state.players[seed.id]) continue; // already surfaced (idempotent)
+    const club = state.clubs[seed.club];
+    if (!club) continue;
+
+    const gr = rng.fork(`academy:${seed.id}`);
+    const age = year - seed.birthYear;
+    const ceiling = seed.potentialCeiling;
+    const player: PlayerState = {
+      id: seed.id,
+      name: seed.name,
+      birthYear: seed.birthYear,
+      nationality: seed.nationality,
+      positions: [...seed.positions] as Position[],
+      club: seed.club,
+      contractUntil: seed.contractUntil,
+      wage: 0,
+      ability: seed.ability,
+      potentialCeiling: ceiling,
+      birthCeiling: seed.birthCeiling ?? ceiling,
+      ...(seed.latentCeiling !== undefined ? { latentCeiling: seed.latentCeiling } : {}),
+      personality: { ...seed.personality },
+      injuryProneness: seed.injuryProneness,
+      curated: true,
+      fitness: 100,
+      morale: 78,
+      form: 0,
+      injury: null,
+      injuryHistory: 0,
+      wonderkid: ceiling >= 85 && age <= 21,
+      benchedDevSeasons: 0,
+      reachedPotential: false,
+      lastSeason: null,
+      seasonMonthsInjured: 0,
+      adaptation: null,
+      resistance: buildResistance(seed.personality, seed.nationality, age, seed.ability, gr),
+      agitation: 0,
+    };
+    if (seed.loyalty !== undefined) player.resistance.clubLoyalty = seed.loyalty;
+    player.wage = suggestWage(player, year);
+
+    state.players[player.id] = player;
+    club.squad.push(player.id);
+    if (club.leagueId !== null) recomputeClubStrength(state, club.id);
+
+    logEvent(state, {
+      category: 'development',
+      code: 'academy.graduate',
+      message: `${player.name} graduates from the ${club.name} academy${player.latentCeiling ? ' — one to watch' : ''}`,
+      data: { playerId: player.id, clubId: club.id, age },
+    });
+  }
 }
 
 /** The Ronaldinho pattern: a successful star with low professionalism can

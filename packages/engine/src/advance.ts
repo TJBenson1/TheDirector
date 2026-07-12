@@ -27,7 +27,7 @@ import { executeLedgerWindow } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
 import { decayPursuit } from './wooing.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
-import { processSeasonDevelopment } from './development.js';
+import { processSeasonDevelopment, processAcademyGraduates } from './development.js';
 import { computeSeasonStats } from './stats.js';
 import { resolveAdaptationSeason } from './adaptation.js';
 import { recomputeClubStrength } from './players.js';
@@ -52,8 +52,11 @@ function runMonth(state: GameState, rng: Rng): void {
     computeSeasonStats(state, rng);
     // 2. Resolve a season of adaptation (bloom or permanent residual, §3).
     resolveAdaptationSeason(state, rng);
-    // 3. Develop the young, decline the old, drift morale (§5).
+    // 3. Develop the young, surface real academy graduates, decline/retire the
+    //    old, drift morale (§5). Graduates arrive before ageing so a debutant is
+    //    available to inherit minutes from a retiree the same summer.
     processSeasonDevelopment(state, rng);
+    processAcademyGraduates(state, rng.fork(`academy:${state.clock.date}`));
     processSeasonAgeing(state, rng);
     processSeasonMorale(state);
     // 4. Rubber-band: update world defiance from last season's finish (§9a #5).

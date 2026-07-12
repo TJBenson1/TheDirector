@@ -173,6 +173,14 @@ export interface PlayerState {
   ability: number; // current, 1–100
   potentialCeiling: number; // max under ideal development NOW (§5); erodes if stunted
   birthCeiling: number; // the potential he was born with (immutable; measures "reached potential")
+  /**
+   * LOST TALENT (reverse reality-rail). A real player who UNDER-achieved in
+   * reality — buried, mismanaged, or moved wrong — carries a hidden latent
+   * ceiling ABOVE what he actually reached. Given the pathway he never got (real
+   * minutes at a suitable club), the user can unlock it and he becomes the player
+   * reality wasted (Januzaj, Ravel Morrison…). Absent for players who fulfilled
+   * their potential. See development.ts. */
+  latentCeiling?: number;
   personality: Personality;
   injuryProneness: number; // 1–100 baseline, history-modified (M4)
 
@@ -410,6 +418,10 @@ export interface GameStateMeta {
   /** Real historical injuries already fired (by subject playerId), so each
    *  scheduled real injury triggers at most once (reality-default). */
   firedRealInjuries: string[];
+  /** Ledger subjects who have RETIRED. Counted as reality-consistent by the
+   *  squad-match metric — a retired legend isn't "misplaced from his real club",
+   *  he ended his career (as he did in reality). Optional for old-save loads. */
+  retiredLedgerSubjects?: string[];
 }
 
 export interface GameClock {

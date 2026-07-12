@@ -434,11 +434,16 @@ export function ledgerSquadMatch(state: GameState): { atRealClub: number; total:
     const prev = latest.get(entry.playerId);
     if (!prev || entry.window > prev.window) latest.set(entry.playerId, entry);
   }
+  const retired = new Set(state.meta.retiredLedgerSubjects ?? []);
   let atRealClub = 0;
   let total = 0;
   for (const entry of latest.values()) {
     total += 1;
-    if (state.players[entry.playerId]?.club === entry.to) atRealClub += 1;
+    // At his real club, OR he retired (career over — reality-consistent, not a
+    // player sitting at the wrong club).
+    if (state.players[entry.playerId]?.club === entry.to || retired.has(entry.playerId)) {
+      atRealClub += 1;
+    }
   }
   return { atRealClub, total };
 }

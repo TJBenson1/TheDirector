@@ -36,7 +36,7 @@ function q(
   contractUntil: number,
   injuryProneness: number,
   personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number } = {},
 ): CuratedSeed {
   return {
     id: `cur_${id}`,
@@ -67,7 +67,10 @@ export const MAN_UTD_2013: CuratedSeed[] = [
   q('man_utd', 'jones', 'Phil Jones', 1992, 'England', ['CB', 'DM'], 77, 86, 2017, 55, t(7, 5, 8, 8, 6, 6)),
   q('man_utd', 'carrick', 'Michael Carrick', 1981, 'England', ['CM', 'DM'], 84, 85, 2015, 25, t(9, 4, 7, 9, 3, 7)),
   q('man_utd', 'cleverley', 'Tom Cleverley', 1989, 'England', ['CM'], 74, 80, 2015, 30, t(7, 5, 7, 7, 4, 7)),
-  q('man_utd', 'anderson', 'Anderson', 1988, 'Brazil', ['CM'], 74, 84, 2015, 65, t(4, 7, 6, 6, 7, 6)),
+  // Anderson — a £27m talent wasted by fitness/complacency. A user who instils
+  // the professionalism reality never got out of him unlocks the midfielder he
+  // was billed as (latent 88 vs the 84 he was rated, 74 he stagnated at).
+  q('man_utd', 'anderson', 'Anderson', 1988, 'Brazil', ['CM'], 74, 84, 2015, 65, t(4, 7, 6, 6, 7, 6), { latentCeiling: 88 }),
   q('man_utd', 'fletcher', 'Darren Fletcher', 1984, 'Scotland', ['CM'], 76, 82, 2015, 60, t(9, 4, 8, 9, 3, 7)),
   q('man_utd', 'valencia', 'Antonio Valencia', 1985, 'Ecuador', ['RW', 'RB'], 80, 82, 2015, 30, t(8, 4, 7, 8, 3, 7)),
   q('man_utd', 'nani', 'Nani', 1986, 'Portugal', ['RW', 'LW'], 79, 85, 2018, 35, t(5, 8, 7, 6, 7, 7)),

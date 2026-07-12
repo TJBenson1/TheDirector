@@ -27,6 +27,7 @@ import {
   computeWageBill,
   buildResistance,
 } from './players.js';
+import { processAcademyGraduates } from './development.js';
 import { initialFinances, suggestWage } from './finance.js';
 import { CURATED_SQUADS } from './data/curated-1999.js';
 
@@ -173,6 +174,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
       executedLedger: [],
       realizedLedger: [],
       firedRealInjuries: [],
+      retiredLedgerSubjects: [],
     },
     clock: {
       date: scenario.startDate,
@@ -208,6 +210,11 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
   // Build squads (curated where available + procedural filler), anchor each
   // club's strength to its M2 baseline, and set finances (§4, §11).
   populateSquads(state, scenarioId, parseYearMonth(scenario.startDate).year, rng.fork('squads'));
+
+  // Surface any real academy graduate whose breakthrough year is the opening
+  // season — the start-year rollover is never processed, so catch them here
+  // (e.g. Januzaj in the 2013 start). Idempotent with the rollover pipeline.
+  processAcademyGraduates(state, rng.fork('academy:init'));
 
   logEvent(state, {
     category: 'system',
