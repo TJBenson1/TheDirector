@@ -7,6 +7,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "harness": "tsx src/run.ts",
+    "historian": "tsx src/historian/run.ts",
     "play": "tsx src/play.ts"
   },
   "dependencies": {

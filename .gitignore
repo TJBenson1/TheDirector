@@ -4,4 +4,7 @@ coverage/
 *.tsbuildinfo
 .DS_Store
 harness-report*.json
+realism-report*.md
+realism-datapack*.md
+playthrough.json
 *.log

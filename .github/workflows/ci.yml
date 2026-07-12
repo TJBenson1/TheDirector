@@ -33,3 +33,28 @@ jobs:
       # identical. Bump --careers back to 500+ for a full calibration pass.
       - name: Monte Carlo calibration harness
         run: pnpm harness -- --careers=150 --years=15
+
+      # The Historian realism-review layer (docs/DESIGN-historian.md). Judges
+      # plausibility where code asserts statistics. It gates only on a CONFIRMED
+      # SEVERE (or too-many-MODERATE) finding. Without an API key the run is
+      # SKIPPED and never fails the build — a missing key is a config gap, not a
+      # realism regression. Provide ANTHROPIC_API_KEY as a repo secret to enable.
+      - name: Historian — data-pack validation (Mode 3)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: pnpm historian -- --mode=datapack --scenario=man-utd-1999 --out=realism-datapack.md
+
+      - name: Historian — calibration review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: pnpm historian -- --mode=calibration --careers=8 --years=15 --out=realism-report.md
+
+      - name: Upload realism reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: realism-reports
+          path: |
+            realism-report.md
+            realism-datapack.md
+          if-no-files-found: ignore

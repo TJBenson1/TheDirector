@@ -33,10 +33,32 @@ export interface RunCareerOptions extends NewGameOptions {
   bot: StrategyBot;
 }
 
+/** A career run plus the final world state — the review material the Historian
+ *  harness (packages/harness/src/historian) samples post-hoc. `runCareer` (the
+ *  calibration path) discards `finalState`; the Historian keeps it. */
+export interface CareerTrace {
+  metrics: CareerMetrics;
+  finalState: GameState;
+}
+
 /** Guard against a stuck loop: 15 years ≈ 30 windows; cap well above that. */
 const MAX_ITERATIONS = 400;
 
+/**
+ * The calibration entry point (§12): run a career, return only its metrics.
+ * A thin wrapper over `traceCareer` so the Monte Carlo batch is unchanged and
+ * bit-identical, while the Historian can ask the same loop for the final state.
+ */
 export function runCareer(options: RunCareerOptions): CareerMetrics {
+  return traceCareer(options).metrics;
+}
+
+/**
+ * Identical to `runCareer` but also returns the final `GameState` for post-hoc
+ * realism review. Same code path ⇒ same seed ⇒ identical metrics; the extra
+ * return value is a pure read of the state the loop already produced.
+ */
+export function traceCareer(options: RunCareerOptions): CareerTrace {
   const { years, bot } = options;
   let state: GameState = createNewGame(options);
 
@@ -195,7 +217,7 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
   }
 
   collectEndOfCareerMetrics(state, metrics);
-  return metrics;
+  return { metrics, finalState: state };
 }
 
 /**

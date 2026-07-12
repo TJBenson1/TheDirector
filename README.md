@@ -17,9 +17,18 @@ packages/
   narrative  ← optional LLM narration layer (M10)
   api        ← thin HTTP layer exposing the engine (§16, M10)
   harness    ← Monte Carlo calibration harness (CI realism gate, §12)
+             + the Historian realism-review layer (LLM plausibility audit)
 apps/
   web        ← Lovable front end (consumes /api). See docs/LOVABLE.md
 ```
+
+> **Two-part realism gate.** The deterministic Monte Carlo harness *asserts
+> statistics*; the **[Historian](docs/DESIGN-historian.md)** — an LLM reviewer
+> expert in football history 1995–2025 — *judges plausibility* of sampled
+> divergences, career arcs and data packs. Code asserts; the Historian judges.
+> It is a review layer only (`packages/harness/src/historian`), runs post-hoc,
+> and never touches gameplay. `pnpm historian` (skips cleanly without an API
+> key). See [`docs/DESIGN-historian.md`](docs/DESIGN-historian.md).
 
 **Engineering rules (non-negotiable):**
 1. Engine is **pure functions** over a serialisable `GameState`. No I/O, no clocks,
