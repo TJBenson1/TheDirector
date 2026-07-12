@@ -1,9 +1,12 @@
 /**
- * Counterfactual: "Build on the Invincibles." Arsenal from 2004. Instead of
- * selling the spine and going frugal for the Emirates move, the user KEEPS
- * Vieira (2005), Cole (2006) and Henry (2007), takes the Gallas deal too, and
- * backs an aggressive signing each summer. Run to 2009 and see whether the
- * dynasty holds off Mourinho's Chelsea and Ferguson's United.
+ * Counterfactual: "Aggressive Arsenal." From 2004 the board backs Wenger to
+ * build, rather than tightening for the Emirates move. In the 2004 window in
+ * particular they go big — a Bergkamp successor (a playmaker) and a strong
+ * central midfielder to push Gilberto alongside Vieira. Vieira is then sold a
+ * year later (as in reality) to hand Fàbregas the midfield. Every summer they
+ * upgrade their weakest area within a realistic budget; RvP and Cesc grow into
+ * the reality-rail. Real signings (Adebayor, Rosický, …) still arrive. Run to
+ * 2009. Reality holds except where these user moves deviate from it.
  */
 
 import {
@@ -16,88 +19,94 @@ import {
   clubSquadPlayers,
   currentYear,
   parseYearMonth,
+  resolvePlayer,
   type GameState,
   type Position,
 } from '@director/engine';
 
-const KEEP = ['Vieira', 'Ashley Cole', 'Henry']; // decline these real sales
-
-const posGroup = (p: string): string =>
+const groupOf = (p: string): 'GK' | 'DEF' | 'MID' | 'ATT' =>
   p === 'GK' ? 'GK' : ['CB', 'LB', 'RB'].includes(p) ? 'DEF' : ['DM', 'CM', 'AM'].includes(p) ? 'MID' : 'ATT';
+const REP: Record<string, Position> = { GK: 'GK', DEF: 'CB', MID: 'CM', ATT: 'ST' };
 
-function finish(s: GameState): number {
-  const league = s.leagues['eng-2004']!;
-  return standingsOrder(league).indexOf('arsenal') + 1;
+// The board's aggressive backing: a big 2004, then leaner as the stadium bites.
+const budgetFor = (year: number): number => (year === 2004 ? 42 : year <= 2006 ? 24 : 18) * 1_000_000;
+
+const RIVALS = new Set(['man_utd', 'chelsea', 'liverpool']);
+
+/** A high-ceiling young Arsenal player still developing in this group — someone
+ *  who needs the minutes, so we must NOT block him with a signing. */
+function hasBlockableYouth(s: GameState, group: string): boolean {
+  return clubSquadPlayers(s, 'arsenal').some(
+    (p) => p.curated && groupOf(p.positions[0]!) === group && currentYear(s) - p.birthYear <= 24 && p.potentialCeiling >= 86 && p.ability < p.potentialCeiling - 3,
+  );
+}
+
+function buy(s: GameState, pos: Position, maxAge: number, label: string, force = false): boolean {
+  if (!force && hasBlockableYouth(s, groupOf(pos))) return false; // give the kid his minutes
+  const budget = s.clubs['arsenal']!.finances.transferBudget;
+  const opts = suggestTargets(s, pos, { maxResults: 16, favourAvailable: true }).filter(
+    (t) => t.willing && t.askingPrice <= budget && t.ability.high >= 80 && t.age <= maxAge && t.club !== 'arsenal' && !RIVALS.has(t.club ?? ''),
+  );
+  const pick = opts[0];
+  if (!pick) return false;
+  const res = attemptSigning(s, { playerId: pick.playerId, toClub: 'arsenal', fee: pick.askingPrice });
+  if (res.ok) console.log(`   💰 ${s.clock.date}  ${label}: ${pick.name} (${pick.clubName}, ${pos}, age ${pick.age}, £${Math.round(pick.askingPrice / 1e6)}m)`);
+  return res.ok;
+}
+
+/** The position group where Arsenal's best man is weakest AND no developing
+ *  youngster already owns the future there — their genuine upgrade target. */
+function weakestGroup(s: GameState): 'GK' | 'DEF' | 'MID' | 'ATT' {
+  const squad = clubSquadPlayers(s, 'arsenal');
+  const best: Record<string, number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
+  for (const p of squad) best[groupOf(p.positions[0]!)] = Math.max(best[groupOf(p.positions[0]!)]!, p.ability);
+  return (['GK', 'DEF', 'MID', 'ATT'] as const)
+    .filter((g) => !hasBlockableYouth(s, g))
+    .sort((a, b) => best[a]! - best[b]!)[0] ?? 'DEF';
 }
 
 function main(): void {
   let s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'aggressive-arsenal' });
   console.log('════════════════════════════════════════════════════════════════');
-  console.log('  BUILD ON THE INVINCIBLES — Arsenal 2004 → 2009');
+  console.log('  AGGRESSIVE ARSENAL — 2004 → 2009');
   console.log('════════════════════════════════════════════════════════════════');
-  console.log(`  ${s.clock.date} · Board: "${s.board.mandate}"`);
 
   const finishes: string[] = [];
   const titles: Record<string, number> = {};
-  let lastSeasonReported = 2003;
-  // Refresh a different area each summer with YOUNG talent, rather than stacking
-  // one position or gutting a direct rival.
-  const wantByYear: Record<number, Position> = { 2005: 'CM', 2006: 'CB', 2007: 'ST', 2008: 'LW' };
-  const rivals = new Set(['man_utd', 'chelsea', 'liverpool']);
+  let lastSeason = 2003;
 
   for (let step = 0; step < 60; step++) {
-    for (const d of [...s.pendingDecisions]) {
-      if (d.id.startsWith('real-out:')) {
-        const star = KEEP.find((n) => d.title.includes(n));
-        if (star) { s = applyDecision(s, d.id, 'keep').state; console.log(`   ✋ ${s.clock.date}  KEPT ${star} — the spine stays together.`); }
-        else s = applyDecision(s, d.id, 'sell').state;
-      } else if (d.id.startsWith('real-in:')) {
-        s = applyDecision(s, d.id, 'sign').state;
-        const who = d.title.match(/: ([^(]+)\(/)?.[1]?.trim();
-        if (who) console.log(`   ✍ ${s.clock.date}  Signed ${who}`);
-      } else {
-        s = applyDecision(s, d.id, d.choices[0]!.id).state;
-      }
-    }
+    // Reality-default on every offered window move (sign incoming / sanction
+    // outgoing) — Vieira leaves in 2005, the real signings arrive, etc.
+    for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
 
-    // Aggressive within reason: ONE young signing a summer, in a position that
-    // isn't already stacked, funded by the REAL (Emirates-constrained) budget —
-    // no gifted money.
     const yr = parseYearMonth(s.clock.date).year;
-    if (s.clock.window === 'summer' && wantByYear[yr]) {
-      const club = s.clubs['arsenal']!;
-      const pos = wantByYear[yr]!;
-      // Skip if we already have two 80+ players in that position group.
-      const strongHere = clubSquadPlayers(s, 'arsenal').filter(
-        (p) => p.curated && p.ability >= 80 && posGroup(p.positions[0]!) === posGroup(pos),
-      ).length;
-      if (strongHere < 2) {
-        const opts = suggestTargets(s, pos, { maxResults: 12, favourAvailable: true }).filter(
-          (tg) => tg.willing && tg.askingPrice <= club.finances.transferBudget && tg.ability.high >= 80 && tg.age <= 27 && !rivals.has(tg.club ?? ''),
-        );
-        const pick = opts[0];
-        if (pick) {
-          const res = attemptSigning(s, { playerId: pick.playerId, toClub: 'arsenal', fee: pick.askingPrice });
-          if (res.ok) console.log(`   💰 ${s.clock.date}  Signed ${pick.name} (${pick.clubName}, ${pos}, age ${pick.age}, ${Math.round(pick.askingPrice / 1e6)}m).`);
-        } else {
-          console.log(`   · ${s.clock.date}  No affordable ${pos} within budget (£${Math.round(club.finances.transferBudget / 1e6)}m).`);
-        }
+    if (s.clock.window === 'summer') {
+      s.clubs['arsenal']!.finances.transferBudget = Math.max(s.clubs['arsenal']!.finances.transferBudget, budgetFor(yr));
+      if (yr === 2004) {
+        // The statement window: a deep midfielder to push Gilberto (Cesc will
+        // inherit Vieira's creative role in 2005 — he is the real successor), and
+        // a top keeper, an area with no blocked youth.
+        buy(s, 'DM', 27, 'Midfield muscle for Gilberto', true);
+        buy(s, 'GK', 30, 'Goalkeeping upgrade');
+      } else {
+        // Upgrade the weakest area, realistically and with young quality.
+        const g = weakestGroup(s);
+        buy(s, REP[g]!, 27, `Upgrade weakest area (${g})`);
       }
     }
 
     const before = s.eventLog.length;
     s = advanceWindow(s).state;
 
-    // Record each completed season at the summer window.
     const y = currentYear(s);
-    if (s.clock.window === 'summer' && y > 2004 && s.leagues['eng-2004']!.roundsPlayed >= 38 && y > lastSeasonReported + 1) {
-      lastSeasonReported = y - 1;
-      const pos = finish(s);
+    if (s.clock.window === 'summer' && y > 2004 && s.leagues['eng-2004']!.roundsPlayed >= 38 && y > lastSeason + 1) {
+      lastSeason = y - 1;
+      const pos = standingsOrder(s.leagues['eng-2004']!).indexOf('arsenal') + 1;
       const champ = standingsOrder(s.leagues['eng-2004']!)[0]!;
       titles[champ] = (titles[champ] ?? 0) + 1;
-      finishes.push(`${y - 1}–${String(y).slice(2)}: ${pos}${pos === 1 ? 'st 🏆' : pos === 2 ? 'nd' : pos === 3 ? 'rd' : 'th'} (champions: ${s.clubs[champ]!.name})`);
+      finishes.push(`${y - 1}–${String(y).slice(2)}: ${pos}${pos === 1 ? 'st 🏆' : pos === 2 ? 'nd' : pos === 3 ? 'rd' : 'th'}  (champions: ${s.clubs[champ]!.name})`);
     }
-
     if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 30; s.board.warnings = 0; }
     if (before === s.eventLog.length) break;
     if (currentYear(s) >= 2009 && s.clock.window === 'summer') break;
@@ -106,19 +115,16 @@ function main(): void {
   console.log('\n════════════════════════════════════════════════════════════════');
   console.log('  ARSENAL 2004 → 2009');
   console.log('════════════════════════════════════════════════════════════════');
-  for (const f of finishes) console.log(`   ${f}`);
+  for (const f of finishes) console.log('   ' + f);
   console.log(`\n  PL titles: ${Object.entries(titles).map(([c, n]) => `${s.clubs[c]!.name} ×${n}`).join(', ')}`);
 
   console.log('\n  Arsenal squad in 2009 (curated, by ability):');
   for (const p of clubSquadPlayers(s, 'arsenal').filter((p) => p.curated).sort((a, b) => b.ability - a.ability).slice(0, 12)) {
-    const age = currentYear(s) - p.birthYear;
-    const mood = p.agitation >= 35 ? '  ☹' : '';
-    console.log(`   · ${p.name.padEnd(20)} ${p.positions.join('/').padEnd(7)} age ${age}  ability ${p.ability}${mood}`);
+    console.log(`   · ${p.name.padEnd(20)} ${p.positions.join('/').padEnd(7)} age ${currentYear(s) - p.birthYear}  ability ${p.ability}`);
   }
-
-  const where = (n: string) => { const p = clubSquadPlayers(s, 'arsenal').find((x) => x.name.includes(n)) ? 'Arsenal' : '(left)'; return p; };
-  console.log('\n  The Invincibles spine, kept:');
-  for (const n of ['Henry', 'Vieira', 'Cole']) console.log(`   · ${n}: ${where(n)}`);
+  const rvp = resolvePlayer(s, 'Robin van Persie');
+  const cesc = resolvePlayer(s, 'Fàbregas');
+  console.log(`\n  Youth on the reality-rail: RvP ${rvp?.ability} (ceiling ${rvp?.potentialCeiling}), Fàbregas ${cesc?.ability} (ceiling ${cesc?.potentialCeiling}).`);
 }
 
 main();

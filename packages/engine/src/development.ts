@@ -65,6 +65,12 @@ export function estimateMinutesShare(state: GameState, club: ClubState, player: 
   const slots = GROUP_SLOTS[group];
   if (rank < slots) return 0.85; // first choice
   if (rank < slots + 2) return 0.4; // rotation
+  // A real gem is blooded even when not yet the best on paper — a club plays its
+  // prized prospect. But FLOOD his position (rank ≥ slots+3) and he is genuinely
+  // buried: that is the "blocked pathway" butterfly (buy Duff/Kewell over a young
+  // Ronaldo). So moderate competition develops him; over-stacking blocks him.
+  const age = year - player.birthYear;
+  if (player.curated && age <= 23 && player.potentialCeiling >= 86 && rank < slots + 3) return 0.4;
   return 0.1; // benched
 }
 

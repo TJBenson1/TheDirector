@@ -38,6 +38,7 @@ export const ARSENAL_2004: CuratedSeed[] = [
   q('arsenal', 'henry', 'Thierry Henry', 1977, 'France', ['ST', 'LW'], 91, 92, 2007, 25, t(9, 7, 9, 8, 4, 8), { loyalty: 88 }),
   q('arsenal', 'reyes', 'José Antonio Reyes', 1983, 'Spain', ['LW', 'ST'], 80, 86, 2008, 35, t(6, 7, 7, 6, 7, 6)),
   q('arsenal', 'fabregas', 'Cesc Fàbregas', 1987, 'Spain', ['CM', 'AM'], 68, 90, 2008, 20, t(9, 6, 9, 7, 3, 8)),
+  q('arsenal', 'rvp', 'Robin van Persie', 1983, 'Netherlands', ['ST', 'LW'], 74, 90, 2009, 55, t(6, 7, 8, 6, 6, 7)),
   q('arsenal', 'clichy', 'Gaël Clichy', 1985, 'France', ['LB'], 70, 84, 2008, 30, t(8, 5, 7, 7, 4, 7)),
   q('arsenal', 'edu', 'Edu', 1978, 'Brazil', ['CM'], 80, 82, 2005, 30, t(8, 5, 7, 6, 4, 7)),
 ];
