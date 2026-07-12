@@ -14,7 +14,7 @@
  * On main-branch CI the flag must never be off (§6).
  */
 
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { createNewGame, type GameState } from '@director/engine';
 import { captureCareers } from './capture.js';
 import { sampleCareer } from './sampler.js';
@@ -33,6 +33,12 @@ interface Args {
   out: string;
   moderateThreshold: number;
   off: boolean;
+  /** Sample an existing playthrough save (a GameState JSON) instead of running a
+   *  fresh batch — the Mode 2 "feed the Historian a full playthrough" path. */
+  from: string;
+  /** Also write the sampled review items to this JSON, so a reviewer (an LLM in
+   *  a chat, or a human) can judge them without a live API key. */
+  dump: string;
 }
 
 function parseArgs(argv: string[]): Args {
@@ -50,10 +56,17 @@ function parseArgs(argv: string[]): Args {
     out: get('out', 'realism-report.md'),
     moderateThreshold: Math.max(0, Number(get('moderate-threshold', '10'))),
     off: get('historian', process.env.HISTORIAN ?? '') === 'off',
+    from: get('from', ''),
+    dump: get('dump', ''),
   };
 }
 
 function collectItems(args: Args): ReviewItem[] {
+  // Mode 2: review an existing playthrough save (a serialised GameState).
+  if (args.from) {
+    const state = JSON.parse(readFileSync(args.from, 'utf8')) as GameState;
+    return sampleCareer(state, state.meta.seed || 'playthrough');
+  }
   if (args.mode === 'datapack') {
     const state: GameState = createNewGame({ scenarioId: args.scenario, seed: `${args.seed}:datapack` });
     return sampleDataPack(state);
@@ -75,17 +88,29 @@ async function main(): Promise<void> {
   console.log('════════════════════════════════════════════════════════════════');
 
   const client = args.off ? null : createHistorianClientFromEnv();
-  if (!client) {
-    const report = skippedReport(args.mode);
-    writeFileSync(args.out, formatReport(report));
-    console.log(
-      args.off
-        ? '  SKIPPED — --historian=off (never permitted on main-branch CI).'
-        : '  SKIPPED — no ANTHROPIC_API_KEY / HISTORIAN_API_KEY in the environment.',
-    );
-    console.log(`  Wrote ${args.out}. Realism gate: PASS (nothing reviewed).`);
-    console.log('════════════════════════════════════════════════════════════════');
-    return;
+
+  // A --dump packet can be produced with OR without a client: it's the review
+  // material (items + grounded reference data) an offline reviewer judges.
+  if (args.dump || !client) {
+    const items = collectItems(args);
+    if (args.dump) {
+      writeFileSync(args.dump, JSON.stringify(items, null, 2));
+      console.log(`  Sampled ${items.length} items → dumped to ${args.dump}`);
+      console.log('  Review these against packages/harness/src/historian/prompt.md + rubric.md.');
+    }
+    if (!client) {
+      const report = skippedReport(args.mode);
+      writeFileSync(args.out, formatReport(report));
+      console.log(
+        args.off
+          ? '  Reviewer SKIPPED — --historian=off (never permitted on main-branch CI).'
+          : '  Reviewer SKIPPED — no ANTHROPIC_API_KEY / HISTORIAN_API_KEY set.' +
+              (args.dump ? ' Hand the dumped items to a reviewer (an LLM in chat, or a human).' : ''),
+      );
+      console.log(`  Wrote ${args.out}. Realism gate: PASS (nothing auto-reviewed).`);
+      console.log('════════════════════════════════════════════════════════════════');
+      return;
+    }
   }
 
   const items = collectItems(args);

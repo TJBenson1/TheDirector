@@ -112,8 +112,32 @@ it.**
 pnpm historian -- --mode=calibration --careers=20 --years=15   # review a batch
 pnpm historian -- --mode=datapack   --scenario=man-utd-1999    # validate a pack
 pnpm historian -- --mode=playtest   --careers=1                # review one career
-# Requires ANTHROPIC_API_KEY (or HISTORIAN_API_KEY); otherwise SKIPPED (never fails).
+# With ANTHROPIC_API_KEY (or HISTORIAN_API_KEY) the reviewer runs automatically;
+# otherwise the run is SKIPPED (never fails the build).
 ```
+
+### Reviewing an actual playthrough, and reviewing without an API key
+
+The reviewer is *an LLM*. In CI that LLM is the API client; in a coding chat it
+can be the assistant you are already talking to. Two flags bridge the gap:
+
+- `--from=<save.json>` — sample an existing **playthrough save** (a serialised
+  `GameState`, e.g. `playthrough.json` from `pnpm play`) instead of running a
+  fresh batch. This is the Mode 2 "feed the Historian a full playthrough" path.
+- `--dump=<items.json>` — also write the sampled, reference-grounded review
+  items to JSON. Works with or without an API key — it is the review *packet* a
+  reviewer judges.
+
+So the in-chat loop is:
+
+```bash
+pnpm play new man-utd-1999          # …play a career (or generate one), producing playthrough.json
+pnpm historian -- --mode=playtest --from=playthrough.json --dump=review-items.json
+# → hand review-items.json to a reviewer (an LLM in chat, or a human), who judges
+#   each item against prompt.md + rubric.md and writes the realism report.
+```
+
+With a key set, the same command auto-reviews and writes `realism-report.md`.
 
 ## Limits & honesty (§9)
 
