@@ -219,9 +219,12 @@ function collectEndOfCareerMetrics(state: GameState, metrics: CareerMetrics): vo
   for (const player of Object.values(state.players)) {
     if (!player.wonderkid) continue;
     if (player.benchedDevSeasons >= 2) {
+      // A blocked pathway plateaus any prospect — curated or not (the butterfly).
       metrics.benchedWonderkids += 1;
       if (player.reachedPotential) metrics.benchedWonderkidsReachedCeiling += 1;
-    } else {
+    } else if (!player.curated) {
+      // The ~40–60% anti-hindsight band is about the user's speculative PROCEDURAL
+      // gambles; curated real players follow the reality-rail and reach their peak.
       metrics.wellManagedWonderkids += 1;
       if (player.reachedPotential) metrics.wellManagedWonderkidsReachedCeiling += 1;
     }

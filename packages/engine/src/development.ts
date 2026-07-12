@@ -92,7 +92,11 @@ export function processSeasonDevelopment(state: GameState, rng: Rng): void {
     for (const player of clubSquadPlayers(state, club.id)) {
       const age = year - player.birthYear;
 
-      if (age <= DEV_AGE_MAX && player.ability < player.potentialCeiling) {
+      // Real players keep improving toward their peak into their mid-20s (many
+      // defenders/keepers peak at 27+); procedural filler follows the tighter
+      // youth curve.
+      const devMax = player.curated ? 27 : DEV_AGE_MAX;
+      if (age <= devMax && player.ability < player.potentialCeiling) {
         changed = developYoungster(state, club, player, age, devRng) || changed;
       } else if (age >= 25 && player.ability >= 82) {
         lifestyleDeclineCheck(state, club, player, devRng);
@@ -126,7 +130,30 @@ function developYoungster(
   }
   const gap = player.potentialCeiling - player.ability;
   if (gap <= 0) return false;
+  const per = player.personality;
 
+  // ── CURATED = reality-rail (§5, user directive) ────────────────────────────
+  // A real player became who he became: given minutes he closes the gap to his
+  // natural peak over a few seasons. The ONLY thing that derails him is a lack of
+  // minutes — a butterfly, usually on the user's own club (buy Ronaldo but also
+  // Duff/Kewell and keep Beckham, and his pathway is blocked). Below rotation he
+  // stagnates (and the bench erosion above bites); poor professionalism adds only
+  // slight friction.
+  if (player.curated) {
+    const drive = share >= 0.6 ? 0.34 : share >= 0.4 ? 0.18 : 0.0;
+    if (drive === 0) return false; // blocked — no progress this season
+    const ageTaper = age <= 24 ? 1.0 : 0.6; // still develops in the mid-20s, slower
+    let delta = Math.max(1, Math.round(gap * drive * ageTaper));
+    // Rare friction for the unprofessional, never a hard wall.
+    if (per.professionalism <= 5 && rng.chance(0.15)) delta = Math.max(0, delta - 1);
+    if (delta > 0) {
+      player.ability = Math.min(player.potentialCeiling, player.ability + delta);
+      return true;
+    }
+    return false;
+  }
+
+  // ── PROCEDURAL = the user's speculative gamble (anti-hindsight) ─────────────
   const coaching = 0.6 + 0.4 * (club.prestige / 100); // facilities proxy (§5)
   const prof = 0.7 + 0.3 * (player.personality.professionalism / 10);
   const ageFactor = age <= 19 ? 1.2 : age <= 21 ? 1.0 : 0.7;
@@ -136,30 +163,20 @@ function developYoungster(
   const realized = ideal * minutesFactor(share) * coaching * prof * ageFactor - injuryPenalty;
   let delta = Math.max(0, Math.round(realized + rng.gaussian(0, 0.6)));
 
-  // Development is NOT on rails (§5; internal-friction §5). Even a prospect
-  // getting minutes can stall or regress — fame/complacency (low
-  // professionalism, high ego/volatility) and plain stagnation. This is why a
-  // "generational" talent under good management still only reaches his ceiling
-  // ~40–60% of the time, not ~100%.
-  const per = player.personality;
+  // Even a well-managed procedural prospect only reaches his ceiling ~40–60% of
+  // the time — fame/complacency and plain stagnation shave the working ceiling.
   const stallChance =
     0.29 +
     (10 - per.professionalism) * 0.022 +
     per.volatility * 0.008 +
     (player.ability >= 78 ? per.ego * 0.01 : 0);
   if (rng.chance(stallChance)) {
-    delta = 0;
-    // A stalled season is a permanently missed window: it shaves the working
-    // ceiling, so enough stalls leave the prospect short of his birth potential
-    // for good (this is what pulls the generational hit-rate down to ~40–60%).
     player.potentialCeiling = Math.max(player.ability, player.potentialCeiling - 2);
-    // A sharper fame/complacency regression for the successful & unprofessional.
     if (player.ability >= 78 && per.professionalism <= 5 && rng.chance(0.35)) {
       player.ability = Math.max(40, player.ability - rng.int(1, 3));
     }
     return true;
   }
-
   if (delta > 0) {
     player.ability = Math.min(player.potentialCeiling, player.ability + delta);
     return true;
