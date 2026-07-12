@@ -26,6 +26,7 @@ import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow } from './ledgerExec.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
+import { renewSimulatedSquads } from './renewal.js';
 import { computeSeasonStats } from './stats.js';
 import { resolveAdaptationSeason } from './adaptation.js';
 import { recomputeClubStrength } from './players.js';
@@ -54,6 +55,9 @@ function runMonth(state: GameState, rng: Rng): void {
     processSeasonDevelopment(state, rng);
     processSeasonAgeing(state, rng);
     processSeasonMorale(state);
+    // 3b. AI clubs recruit to stay near their level (else the elite decay and the
+    //     table compresses over a long sim). The user renews his own squad.
+    renewSimulatedSquads(state, rng.fork(`renewal:${state.clock.date}`));
     // 4. Rubber-band: update world defiance from last season's finish (§9a #5).
     updateWorldDefiance(state);
     // 5. Board review (job security) + an imposed internal crisis (M9).

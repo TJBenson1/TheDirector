@@ -8,7 +8,7 @@
  * retired. Kept minimal on purpose — we are not pre-building the data layer.
  */
 
-import type { ClubId, ScenarioId, YearMonth } from './types.js';
+import type { ClubId, OwnershipModel, ScenarioId, YearMonth } from './types.js';
 
 export interface ClubSeed {
   id: ClubId;
@@ -34,6 +34,10 @@ export interface ScenarioSeed {
   domesticLeagueId: string;
   /** Clubs in real financial distress this era (fire-sale sources). */
   distressedClubs?: Record<ClubId, 'strained' | 'crisis'>;
+  /** Per-club ownership override (transfer-budget scale): a sugar-daddy buyer
+   *  (Abramovich) or a debt-laden club (Arsenal's Emirates build). Defaults to
+   *  'sustainable' for anyone unlisted. */
+  ownership?: Record<ClubId, OwnershipModel>;
 }
 
 /** The 12 elite clubs (§14), with rough late-90s prestige. Refined in M3. */
@@ -110,6 +114,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'mallorca', name: 'RCD Mallorca', prestige: 62 },
       { id: 'valencia', name: 'Valencia', prestige: 78 },
     ],
+    // Abramovich bankrolls Chelsea; Arsenal are servicing the Emirates debt.
+    ownership: { chelsea: 'sugar-daddy', arsenal: 'debt' },
     domesticLeagueId: 'eng-2004',
   },
   'man-utd-1999': {

@@ -22,6 +22,9 @@ import {
 
 const KEEP = ['Vieira', 'Ashley Cole', 'Henry']; // decline these real sales
 
+const posGroup = (p: string): string =>
+  p === 'GK' ? 'GK' : ['CB', 'LB', 'RB'].includes(p) ? 'DEF' : ['DM', 'CM', 'AM'].includes(p) ? 'MID' : 'ATT';
+
 function finish(s: GameState): number {
   const league = s.leagues['eng-2004']!;
   return standingsOrder(league).indexOf('arsenal') + 1;
@@ -57,20 +60,28 @@ function main(): void {
       }
     }
 
-    // Aggressive market: back a young marquee signing each summer to refresh the
-    // squad — from the wider market, not by gutting a title rival.
+    // Aggressive within reason: ONE young signing a summer, in a position that
+    // isn't already stacked, funded by the REAL (Emirates-constrained) budget —
+    // no gifted money.
     const yr = parseYearMonth(s.clock.date).year;
     if (s.clock.window === 'summer' && wantByYear[yr]) {
       const club = s.clubs['arsenal']!;
-      club.finances.transferBudget = Math.max(club.finances.transferBudget, 45_000_000); // owner backing
       const pos = wantByYear[yr]!;
-      const opts = suggestTargets(s, pos, { maxResults: 12, favourAvailable: true }).filter(
-        (tg) => tg.willing && tg.askingPrice <= club.finances.transferBudget && tg.ability.high >= 80 && tg.age <= 27 && !rivals.has(tg.club),
-      );
-      const pick = opts[0];
-      if (pick) {
-        const res = attemptSigning(s, { playerId: pick.playerId, toClub: 'arsenal', fee: pick.askingPrice });
-        if (res.ok) console.log(`   💰 ${s.clock.date}  Aggressive buy: ${pick.name} (${pick.clubName}, ${pos}, age ${pick.age}).`);
+      // Skip if we already have two 80+ players in that position group.
+      const strongHere = clubSquadPlayers(s, 'arsenal').filter(
+        (p) => p.curated && p.ability >= 80 && posGroup(p.positions[0]!) === posGroup(pos),
+      ).length;
+      if (strongHere < 2) {
+        const opts = suggestTargets(s, pos, { maxResults: 12, favourAvailable: true }).filter(
+          (tg) => tg.willing && tg.askingPrice <= club.finances.transferBudget && tg.ability.high >= 80 && tg.age <= 27 && !rivals.has(tg.club ?? ''),
+        );
+        const pick = opts[0];
+        if (pick) {
+          const res = attemptSigning(s, { playerId: pick.playerId, toClub: 'arsenal', fee: pick.askingPrice });
+          if (res.ok) console.log(`   💰 ${s.clock.date}  Signed ${pick.name} (${pick.clubName}, ${pos}, age ${pick.age}, ${Math.round(pick.askingPrice / 1e6)}m).`);
+        } else {
+          console.log(`   · ${s.clock.date}  No affordable ${pos} within budget (£${Math.round(club.finances.transferBudget / 1e6)}m).`);
+        }
       }
     }
 

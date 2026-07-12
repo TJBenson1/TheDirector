@@ -132,6 +132,11 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     const club = clubs[id];
     if (club) club.financialHealth = health;
   }
+  // Per-club ownership overrides (budget scale) — sugar-daddy / debt.
+  for (const [id, own] of Object.entries(scenario.ownership ?? {})) {
+    const club = clubs[id];
+    if (club) club.finances.ownership = own;
+  }
 
   const leagueState: LeagueState = {
     id: league.id,

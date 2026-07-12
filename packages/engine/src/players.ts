@@ -253,17 +253,48 @@ export function generateSquad(
 
 // ── Squad-strength derivation (§15) ──────────────────────────────────────────
 
-/** Best available player ability at each outfield/GK slot, weighted XI + depth. */
+/** Position group for XI selection (a striker can't fill a centre-back slot). */
+function strengthGroup(p: PlayerState): 'GK' | 'DEF' | 'MID' | 'ATT' {
+  const pos = p.positions[0] ?? 'CM';
+  if (pos === 'GK') return 'GK';
+  if (pos === 'CB' || pos === 'LB' || pos === 'RB') return 'DEF';
+  if (pos === 'DM' || pos === 'CM' || pos === 'AM') return 'MID';
+  return 'ATT';
+}
+
+/** A 4-3-3 skeleton: you field ONE team, so a fourth striker is depth, not XI. */
+const FORMATION: Record<'GK' | 'DEF' | 'MID' | 'ATT', number> = { GK: 1, DEF: 4, MID: 3, ATT: 3 };
+
+/**
+ * Best available XI by POSITION, plus a depth bonus. Crucially the XI is filled
+ * to a real shape (a 4-3-3), so stacking one position has sharply diminishing
+ * returns — a third elite striker rides the bench (depth), he doesn't add a
+ * fourth forward to the team. Prevents "buy every star" from inflating strength
+ * past a balanced side (§15, and the governing "no fantasy leaps" constraint).
+ */
 export function deriveRawStrength(players: PlayerState[]): number {
   if (players.length === 0) return 0;
   // Effective ability so an unsettled signing (adaptation penalty) genuinely
   // weakens the XI while he beds in (§3).
-  const abilities = players.map((p) => effectiveAbility(p)).sort((a, b) => b - a);
-  const xi = abilities.slice(0, 11);
-  const depth = abilities.slice(11, 20);
+  const byGroup: Record<string, number[]> = { GK: [], DEF: [], MID: [], ATT: [] };
+  for (const p of players) byGroup[strengthGroup(p)]!.push(effectiveAbility(p));
+  for (const g of Object.keys(byGroup)) byGroup[g]!.sort((a, b) => b - a);
+
+  const xi: number[] = [];
+  const leftover: number[] = [];
+  for (const g of ['GK', 'DEF', 'MID', 'ATT'] as const) {
+    const need = FORMATION[g];
+    xi.push(...byGroup[g]!.slice(0, need));
+    leftover.push(...byGroup[g]!.slice(need));
+  }
+  leftover.sort((a, b) => b - a);
+  // A short position (e.g. only three defenders) is patched from the best
+  // leftover — a real side still fields eleven.
+  while (xi.length < 11 && leftover.length) xi.push(leftover.shift()!);
+
   const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
   const xiAvg = avg(xi);
-  const depthAvg = avg(depth);
+  const depthAvg = avg(leftover.slice(0, 9));
   return xiAvg * 0.85 + depthAvg * 0.15;
 }
 
