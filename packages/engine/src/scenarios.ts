@@ -104,6 +104,12 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'milan', name: 'AC Milan', prestige: 86 },
       { id: 'bayern', name: 'Bayern Munich', prestige: 85 },
     ],
+    contextExtra: [
+      { id: 'marseille', name: 'Olympique de Marseille', prestige: 74 },
+      { id: 'psv', name: 'PSV Eindhoven', prestige: 72 },
+      { id: 'mallorca', name: 'RCD Mallorca', prestige: 62 },
+      { id: 'valencia', name: 'Valencia', prestige: 78 },
+    ],
     domesticLeagueId: 'eng-2004',
   },
   'man-utd-1999': {

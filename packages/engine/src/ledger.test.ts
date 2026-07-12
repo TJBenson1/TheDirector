@@ -109,8 +109,33 @@ describe('more start points (§4 data)', () => {
     const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'inv' });
     expect(s.playerClub).toBe('arsenal');
     expect(resolvePlayer(s, 'Henry')?.club).toBe('arsenal');
-    expect(resolvePlayer(s, 'Drogba')?.club).toBe('chelsea');
+    // Drogba starts at his real source club and joins Chelsea via the ledger.
+    expect(resolvePlayer(s, 'Drogba')?.club).toBe('marseille');
     expect(s.leagues['eng-2004']?.clubIds).toContain('arsenal');
+  });
+
+  it('intercepting a Chelsea target makes Chelsea sign a real alternative, not get gutted', () => {
+    // Ronaldo (a distant 2009 subject) must NEVER be hijacked to replace Drogba;
+    // and across seeds Chelsea signs a genuine comparable striker.
+    let sawAlternative = false;
+    for (let attempt = 0; attempt < 10; attempt++) {
+      let s = cloneState(createNewGame({ scenarioId: 'arsenal-2004', seed: `intercept:${attempt}` }));
+      s.clubs.arsenal!.finances.transferBudget = 40_000_000;
+      const drogba = resolvePlayer(s, 'Drogba')!;
+      expect(executeTransfer(s, { playerId: drogba.id, toClub: 'arsenal', fee: 24_000_000 }).ok).toBe(true);
+      for (let i = 0; i < 3; i++) {
+        for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+        s = advanceWindow(s).state;
+      }
+      expect(resolvePlayer(s, 'Cristiano Ronaldo')?.club).toBe('man_utd'); // never hijacked
+      const alt = s.eventLog.find((e) => e.code === 'ledger.alternative' && e.data?.to === 'chelsea');
+      if (alt) {
+        sawAlternative = true;
+        const altName = s.players[String(alt.data!.playerId)]!.name;
+        expect(['Samuel Eto’o', 'David Villa']).toContain(altName); // a real striker
+      }
+    }
+    expect(sawAlternative).toBe(true);
   });
 });
 

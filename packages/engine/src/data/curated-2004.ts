@@ -54,10 +54,28 @@ export const CHELSEA_2004: CuratedSeed[] = [
   q('chelsea', 'lampard2', 'Frank Lampard', 1978, 'England', ['CM'], 87, 88, 2008, 20, t(9, 6, 9, 8, 3, 7)),
   q('chelsea', 'essien', 'Michael Essien', 1982, 'Ghana', ['DM', 'CM'], 84, 88, 2010, 30, t(8, 5, 9, 7, 5, 7)),
   q('chelsea', 'duff', 'Damien Duff', 1979, 'Ireland', ['LW', 'RW'], 83, 84, 2008, 35, t(8, 5, 7, 7, 4, 7)),
-  q('chelsea', 'robben2', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 84, 89, 2008, 55, t(8, 7, 9, 6, 5, 7)),
   q('chelsea', 'cole_j', 'Joe Cole', 1981, 'England', ['AM', 'LW'], 82, 85, 2008, 30, t(7, 6, 8, 7, 5, 7)),
-  q('chelsea', 'drogba', 'Didier Drogba', 1978, 'Ivory Coast', ['ST'], 85, 88, 2009, 30, t(8, 7, 9, 7, 5, 7)),
   q('chelsea', 'gudjohnsen', 'Eiður Guðjohnsen', 1978, 'Iceland', ['ST', 'AM'], 82, 83, 2007, 30, t(8, 5, 7, 6, 4, 7)),
+];
+
+/**
+ * Chelsea's 2004 arrivals sit at their REAL source clubs, joining via the ledger
+ * — so intercepting Drogba or Robben is a traceable butterfly, and a deprived
+ * Chelsea signs a genuine alternative (Eto'o, Villa) rather than being gutted.
+ */
+export const MARSEILLE_2004: CuratedSeed[] = [
+  q('marseille', 'drogba', 'Didier Drogba', 1978, 'Ivory Coast', ['ST'], 84, 88, 2008, 30, t(8, 7, 9, 7, 5, 7)),
+];
+export const PSV_2004: CuratedSeed[] = [
+  q('psv', 'robben2', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 83, 89, 2008, 55, t(8, 7, 9, 6, 5, 7)),
+];
+export const MALLORCA_2004: CuratedSeed[] = [
+  q('mallorca', 'etoo', 'Samuel Eto’o', 1981, 'Cameroon', ['ST'], 84, 88, 2008, 30, t(7, 8, 9, 5, 6, 7)),
+];
+export const VALENCIA_2004: CuratedSeed[] = [
+  q('valencia', 'villa', 'David Villa', 1981, 'Spain', ['ST'], 82, 88, 2009, 30, t(8, 6, 9, 6, 5, 7)),
+  q('valencia', 'aimar', 'Pablo Aimar', 1979, 'Argentina', ['AM'], 82, 84, 2008, 40, t(7, 6, 7, 6, 5, 7)),
+  q('valencia', 'baraja', 'Rubén Baraja', 1975, 'Spain', ['CM', 'DM'], 81, 82, 2007, 30, t(8, 5, 8, 8, 4, 7)),
 ];
 
 /** Manchester United, 2004–05 — rebuilding around Rooney and Ronaldo. */
@@ -117,4 +135,8 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   liverpool: LIVERPOOL_2004,
   spurs: SPURS_2004,
   everton: EVERTON_2004,
+  marseille: MARSEILLE_2004,
+  psv: PSV_2004,
+  mallorca: MALLORCA_2004,
+  valencia: VALENCIA_2004,
 };

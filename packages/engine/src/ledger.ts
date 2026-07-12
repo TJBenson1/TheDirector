@@ -189,9 +189,15 @@ const INJURIES_2013: RealInjuryEntry[] = [
  * the rest of the world (the Cole↔Gallas swap; United cashing in on Ronaldo).
  */
 const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
+  // Chelsea's real 2004 arrivals — at their source clubs, joining via the ledger,
+  // so intercepting one is a butterfly and a deprived Chelsea buys an alternative.
+  { playerId: 'cur_drogba', from: 'marseille', to: 'chelsea', window: '2004-07', fee: 24_000_000, id: 'drogba-chelsea-2004' },
+  { playerId: 'cur_robben2', from: 'psv', to: 'chelsea', window: '2004-07', fee: 12_000_000, id: 'robben-chelsea-2004' },
   { playerId: 'cur_vieira2', from: 'arsenal', to: 'juventus', window: '2005-07', fee: 20_000_000, id: 'vieira-juve-2005' },
   { playerId: 'cur_acole', from: 'arsenal', to: 'chelsea', window: '2006-07', fee: 16_000_000, id: 'cole-chelsea-2006' },
-  { playerId: 'cur_gallas2', from: 'chelsea', to: 'arsenal', window: '2006-07', fee: 5_000_000, id: 'gallas-arsenal-2006' },
+  // The Gallas move was the OTHER HALF of the Cole deal — a swap. If the user
+  // keeps Cole, the swap never happens, so Gallas never arrives.
+  { playerId: 'cur_gallas2', from: 'chelsea', to: 'arsenal', window: '2006-08', fee: 5_000_000, id: 'gallas-arsenal-2006', enabledBy: 'cole-chelsea-2006' },
   { playerId: 'cur_henry', from: 'arsenal', to: 'barcelona', window: '2007-07', fee: 24_000_000, id: 'henry-barca-2007' },
   { playerId: 'cur_cristiano2', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cr7b-real-2009' },
 ];

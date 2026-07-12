@@ -162,18 +162,21 @@ export function queryPlayer(state: GameState, idOrName: string): PlayerQuery {
   };
 }
 
-/** Resolve a player by id or (case-insensitive) name. */
+/** Resolve a player by id or (case-insensitive) name. Name matching considers
+ *  CURATED (real) players only — procedural filler is anonymous depth (Principle
+ *  2), and its generated names can coincidentally reuse a real surname, so a
+ *  query for "Drogba" must never resolve to a procedural "Kolo Drogba". */
 export function resolvePlayer(state: GameState, idOrName: string): PlayerState | undefined {
   if (state.players[idOrName]) return state.players[idOrName];
   const needle = idOrName.toLowerCase();
-  const all = Object.values(state.players);
+  const real = Object.values(state.players).filter((p) => p.curated);
   // Prefer an exact full-name match, then a whole-word (first/surname) match —
   // so "Bale" finds Gareth Bale, not the "bale" inside "Zabaleta" — and only
   // then fall back to a loose substring match.
   return (
-    all.find((p) => p.name.toLowerCase() === needle) ??
-    all.find((p) => p.name.toLowerCase().split(/\s+/).includes(needle)) ??
-    all.find((p) => p.name.toLowerCase().includes(needle))
+    real.find((p) => p.name.toLowerCase() === needle) ??
+    real.find((p) => p.name.toLowerCase().split(/\s+/).includes(needle)) ??
+    real.find((p) => p.name.toLowerCase().includes(needle))
   );
 }
 
