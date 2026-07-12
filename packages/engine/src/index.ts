@@ -149,6 +149,7 @@ export {
   type AcquisitionTag,
   type SuggestOptions,
 } from './recommend.js';
+export { courtPlayer, decayPursuit, poleSuitorFor } from './wooing.js';
 export {
   simulateMatch,
   generateSchedule,

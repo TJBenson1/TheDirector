@@ -28,6 +28,8 @@ import {
   suggestTargets,
   queryPlayer,
   resolvePlayer,
+  courtPlayer,
+  poleSuitorFor,
   SCENARIOS,
   Rng,
   type GameState,
@@ -210,6 +212,21 @@ function main(): void {
         if (!t.willing) console.log(`       ↳ ${t.resistanceReason}`);
       }
       console.log(`\n  Query anyone with:  play query <name>`);
+      break;
+    }
+    case 'court': {
+      const s = load();
+      const target = resolvePlayer(s, process.argv.slice(3).join(' ') || a!);
+      if (!target) { console.log(`\n  ✗ No player matching "${a}".`); break; }
+      const r = courtPlayer(s, target.id);
+      if (r.ok) {
+        save(s);
+        console.log(`\n  ${r.reason}`);
+        const pole = poleSuitorFor(s, target.id);
+        if (pole) console.log(`   ↳ ${s.clubs[pole]?.name ?? pole} are in pole position for him — keep working his camp before you bid.`);
+      } else {
+        console.log(`\n  ✗ ${r.reason}`);
+      }
       break;
     }
     case 'query': {

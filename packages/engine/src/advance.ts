@@ -25,6 +25,7 @@ import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
+import { decayPursuit } from './wooing.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
@@ -82,6 +83,7 @@ function runMonth(state: GameState, rng: Rng): void {
   if (windowForMonthIndex(state.clock.monthIndex) !== null) {
     executeLedgerWindow(state, rng);
     runRivalWindow(state, rng);
+    decayPursuit(state); // courtship fades if you stop working a target
   }
 }
 

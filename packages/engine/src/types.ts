@@ -438,6 +438,10 @@ export interface GameState {
    *  response layer: a do-nothing user doesn't provoke poaching, so reality (and
    *  scripted history) holds — poaching is a RESPONSE to aggression (§9a). */
   userAggression: number;
+  /** Courtship level (0..100) per player the user is pursuing ("speak to his
+   *  people"). Sustained pursuit is what lets you prise a spoken-for target off
+   *  the club in pole position — a cold late bid won't. Decays each window. */
+  pursuit: Record<PlayerId, number>;
 }
 
 /** The current schema version. Bump on breaking GameState changes. */

@@ -12,6 +12,7 @@
 import type { ClubId, GameState, PlayerId } from './types.js';
 import { parseYearMonth } from './clock.js';
 import { styleKeyForClub } from './leaguestyle.js';
+import { poleSuitorFor } from './wooing.js';
 
 /** Willingness at/above which a player will consider a move at a fair package. */
 export const WILLINGNESS_THRESHOLD = 50;
@@ -107,6 +108,10 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
   if (res.careerStagePull === 'payday') pull += 8;
   if (res.careerStagePull === 'prove') pull += 5;
 
+  // Wooing: sustained pursuit ("speak to his people") warms a target to you.
+  const pursuit = state.pursuit[input.playerId] ?? 0;
+  pull += pursuit * 0.4;
+
   // 3) Resistance.
   let resistance = res.clubLoyalty * 0.45;
   if (res.careerStagePull === 'legacy') resistance += 12; // settled elder statesman
@@ -116,6 +121,18 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
   }
   // Rivalry: near-absolute at player level.
   if (fromClub && areRivals(fromClub.id, buyer.id)) resistance += 70;
+  // "Spoken for": if reality already has him lined up for another top club, that
+  // club is in pole position. A cold bid won't shift him; you must out-court them
+  // and/or be the bigger draw. Being clearly bigger than the pole suitor helps.
+  const pole = poleSuitorFor(state, input.playerId);
+  if (pole && pole !== input.toClub) {
+    const poleClub = state.clubs[pole];
+    const poleLead = (poleClub?.prestige ?? 72) - buyer.prestige;
+    // Strong by default (a cold late bid loses out to the club in pole), eased by
+    // pursuit and by being a bigger draw than that suitor. Pursuit is already in
+    // `pull`, so a fully-courted (100) target claws back ~40.
+    resistance += Math.max(10, 44 + poleLead * 1.3);
+  }
 
   const willingness = Math.max(0, Math.min(100, Math.round(pull - resistance + 30)));
   const willing = willingness >= WILLINGNESS_THRESHOLD;
