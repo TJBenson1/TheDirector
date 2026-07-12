@@ -65,9 +65,11 @@ export const CHELSEA_2004: CuratedSeed[] = [
  */
 export const MARSEILLE_2004: CuratedSeed[] = [
   q('marseille', 'drogba', 'Didier Drogba', 1978, 'Ivory Coast', ['ST'], 84, 88, 2008, 30, t(8, 7, 9, 7, 5, 7)),
+  q('marseille', 'nasri', 'Samir Nasri', 1987, 'France', ['AM', 'LW'], 76, 85, 2008, 30, t(6, 7, 7, 6, 6, 7)),
 ];
 export const PSV_2004: CuratedSeed[] = [
   q('psv', 'robben2', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 83, 89, 2008, 55, t(8, 7, 9, 6, 5, 7)),
+  q('psv', 'park', 'Park Ji-sung', 1981, 'South Korea', ['RW', 'CM'], 78, 82, 2005, 30, t(9, 4, 8, 8, 3, 8)),
 ];
 export const MALLORCA_2004: CuratedSeed[] = [
   q('mallorca', 'etoo', 'Samuel Eto’o', 1981, 'Cameroon', ['ST'], 84, 88, 2008, 30, t(7, 8, 9, 5, 6, 7)),
@@ -137,6 +139,7 @@ export const SPARTAK_2004: CuratedSeed[] = [
 ];
 export const MONACO_2004: CuratedSeed[] = [
   q('monaco', 'evra', 'Patrice Evra', 1981, 'France', ['LB'], 81, 85, 2010, 25, t(8, 6, 8, 8, 5, 7)),
+  q('monaco', 'adebayor', 'Emmanuel Adebayor', 1984, 'Togo', ['ST'], 79, 85, 2008, 35, t(5, 8, 7, 5, 7, 6)),
 ];
 export const ATLETICO_2004: CuratedSeed[] = [
   q('atletico', 'torres', 'Fernando Torres', 1984, 'Spain', ['ST'], 84, 90, 2009, 40, t(8, 6, 9, 7, 5, 7)),
@@ -155,6 +158,22 @@ export const PORTO_2004: CuratedSeed[] = [
 ];
 export const SPORTING_2004: CuratedSeed[] = [
   q('sporting', 'nani', 'Nani', 1986, 'Portugal', ['RW', 'LW'], 76, 86, 2011, 35, t(6, 8, 7, 6, 7, 7)),
+];
+
+// ── Further real 2004-09 movers, curated at their source clubs ────────────────
+/** Park (United '05), Berbatov (United '08 via Spurs), Shevchenko (Chelsea '06),
+ *  and the Arsenal targets the user is offered (Adebayor, Rosický, Nasri, …). */
+export const MILAN_2004: CuratedSeed[] = [
+  q('milan', 'shevchenko2', 'Andriy Shevchenko', 1976, 'Ukraine', ['ST'], 86, 87, 2006, 30, t(8, 6, 9, 6, 4, 7)),
+];
+export const DORTMUND_2004: CuratedSeed[] = [
+  q('dortmund', 'rosicky', 'Tomáš Rosický', 1980, 'Czech Republic', ['AM'], 82, 84, 2006, 45, t(8, 5, 7, 7, 4, 7)),
+];
+export const ZENIT_2004: CuratedSeed[] = [
+  q('zenit', 'arshavin', 'Andrey Arshavin', 1981, 'Russia', ['AM', 'ST'], 83, 85, 2009, 35, t(6, 7, 8, 6, 6, 7)),
+];
+export const LEVERKUSEN_2004: CuratedSeed[] = [
+  q('leverkusen', 'berbatov', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST'], 82, 87, 2006, 30, t(7, 7, 7, 6, 5, 7)),
 ];
 
 /** Curated squads for the arsenal-2004 scenario, keyed by club. */
@@ -176,4 +195,8 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   bayern: BAYERN_2004,
   porto: PORTO_2004,
   sporting: SPORTING_2004,
+  milan: MILAN_2004,
+  dortmund: DORTMUND_2004,
+  zenit: ZENIT_2004,
+  leverkusen: LEVERKUSEN_2004,
 };

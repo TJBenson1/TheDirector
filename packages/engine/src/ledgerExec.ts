@@ -43,7 +43,7 @@ export function executeLedgerWindow(state: GameState, rng: Rng): void {
   const nowYear = Number(now.slice(0, 4));
   const futureByPlayer = new Map<string, string[]>();
   for (const e of pack.realTransferLedger) {
-    if (e.window > now && Number(e.window.slice(0, 4)) - nowYear <= 1 && !state.meta.executedLedger.includes(entryKey(e))) {
+    if (e.window > now && Number(e.window.slice(0, 4)) - nowYear <= 2 && !state.meta.executedLedger.includes(entryKey(e))) {
       const arr = futureByPlayer.get(e.playerId) ?? [];
       arr.push(entryKey(e));
       futureByPlayer.set(e.playerId, arr);
@@ -250,22 +250,36 @@ function fallbackForLedger(
     return true;
   };
 
-  // Prefer hijacking a player reality was already moving (the realistic,
-  // compounding butterfly — Arsenal replace Campbell with Leeds' Ferdinand, who
-  // then never joins United) over parachuting in distant foreign depth.
-  let bestHijack: PlayerState | undefined;
-  let bestForeign: PlayerState | undefined;
-  const closer = (p: PlayerState, b: PlayerState | undefined) =>
-    !b || Math.abs(p.ability - targetAbility) < Math.abs(b.ability - targetAbility);
+  // Gather ALL plausible alternatives and pick one WEIGHTED-RANDOM, so there is
+  // real variance across playthroughs rather than a fixed target sequence. A
+  // candidate is weighted by fit (closeness to the lost man), availability (a
+  // settled star at a strong club is far harder to prise than one at a mid club,
+  // and a distressed seller is a soft touch), and a small boost if reality was
+  // already moving him.
+  const candidates: Array<{ p: PlayerState; w: number }> = [];
   for (const p of Object.values(state.players)) {
     if (!eligible(p)) continue;
-    if (futureByPlayer.has(p.id)) {
-      if (closer(p, bestHijack)) bestHijack = p;
-    } else if (closer(p, bestForeign)) {
-      bestForeign = p;
-    }
+    const seller = state.clubs[p.club!]!;
+    // Gentle fit curve: a slightly lesser but available player shouldn't be
+    // crowded out by a perfect-fit target who is hard to get.
+    const fit = 1 / (1 + Math.abs(p.ability - targetAbility) * 0.4);
+    let avail = Math.max(0.15, Math.min(1.4, (92 - seller.prestige) / 24));
+    if (seller.financialHealth !== 'healthy') avail *= 1.6; // fire-sale = easy prey
+    // Signing a genuinely-available player is the norm; pulling someone's real
+    // future move forward is the occasional, more disruptive exception.
+    const hijack = futureByPlayer.has(p.id) ? 0.4 : 1.0;
+    candidates.push({ p, w: fit * avail * hijack });
   }
-  const bestAlt = bestHijack ?? bestForeign;
+  let bestAlt: PlayerState | undefined;
+  if (candidates.length) {
+    const total = candidates.reduce((s, c) => s + c.w, 0);
+    let roll = rng.next() * total;
+    for (const c of candidates) {
+      roll -= c.w;
+      if (roll <= 0) { bestAlt = c.p; break; }
+    }
+    bestAlt ??= candidates[candidates.length - 1]!.p;
+  }
 
   // The user's best positional fit (a genuine asset the deprived club might
   // want) — but never the very player they just lost to the user.
@@ -273,10 +287,10 @@ function fallbackForLedger(
     .filter((p) => p.id !== original.id && positionGroupOf(p) === group && p.ability >= 78 && p.resistance.hardBlocks.length === 0 && !p.injury)
     .sort((a, b) => Math.abs(a.ability - targetAbility) - Math.abs(b.ability - targetAbility))[0];
 
-  // Come back for the user's player only sometimes: rarely when a clean market
-  // alternative exists (they'd usually just buy that), more often when nothing
-  // comparable is available and the user is holding the obvious replacement.
-  const poach = !!userAsset && rng.chance(bestAlt ? 0.35 : 0.7);
+  // Come back for the user's player only sometimes: a minority when a clean
+  // market alternative exists (they'd usually just buy that), more often when
+  // nothing comparable is available and the user holds the obvious replacement.
+  const poach = !!userAsset && rng.chance(bestAlt ? 0.35 : 0.75);
   if (poach) {
     createPoachBid(state, dest.id, userAsset!, original.name, year);
     return 'real-backup';

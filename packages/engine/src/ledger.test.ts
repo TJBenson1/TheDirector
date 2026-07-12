@@ -131,8 +131,9 @@ describe('more start points (§4 data)', () => {
       const alt = s.eventLog.find((e) => e.code === 'ledger.alternative' && e.data?.to === 'chelsea');
       if (alt) {
         sawAlternative = true;
-        const altName = s.players[String(alt.data!.playerId)]!.name;
-        expect(['Samuel Eto’o', 'David Villa']).toContain(altName); // a real striker
+        const altPlayer = s.players[String(alt.data!.playerId)]!;
+        expect(altPlayer.curated).toBe(true); // a real, named alternative (not procedural)
+        expect(altPlayer.name).not.toBe('Cristiano Ronaldo'); // never the distant marquee
       }
     }
     expect(sawAlternative).toBe(true);
