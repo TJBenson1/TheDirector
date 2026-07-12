@@ -141,6 +141,23 @@ export function advanceWindow(state: GameState, options: AdvanceOptions = {}): A
   // A dismissed manager's career is over — the sim does not advance (M9).
   if (draft.board.dismissed) return { state: draft, events: [] };
 
+  // A fresh, unprocessed open window (the LIVE opening window at game start):
+  // process it in place rather than stepping the calendar past it, so the player
+  // acts on the very window their scenario opens in — vetoing the real moves
+  // their club made and hijacking other live moves. Only reachable at game start,
+  // since a window opened mid-run is processed by the month loop before it pauses.
+  if (draft.clock.window !== null && draft.clock.windowStep === 0) {
+    if (pausePerStep) {
+      draft.clock.windowStep = 1;
+      runWindowStep(draft, rng, 1);
+    } else {
+      draft.clock.windowStep = WINDOW_STEPS;
+      runWindowStep(draft, rng, WINDOW_STEPS);
+    }
+    draft.meta.rngState = rng.state;
+    return { state: draft, events: eventsSince(draft, startSeq) };
+  }
+
   // Mid-window (per-step mode only): a window is open with steps remaining.
   // Unfold the next sub-step WITHOUT moving the calendar. Pending decisions are
   // carried forward, NOT lapsed — a real-move offer raised early in the window
@@ -154,14 +171,9 @@ export function advanceWindow(state: GameState, options: AdvanceOptions = {}): A
 
   // From here the calendar advances (to the next window). Decisions still
   // pending means the player chose to ignore them — apply their fallout as the
-  // window closes behind them (§9b).
+  // window closes behind them (§9b). A fully-unfolded window is left as-is: the
+  // month loop's first step moves off it, resetting the sub-step for the next one.
   if (draft.pendingDecisions.length > 0) resolveIgnoredDecisions(draft);
-
-  // A fully-unfolded window: clear the sub-step so the loop below advances the
-  // calendar on to the next window.
-  if (draft.clock.window !== null && draft.clock.windowStep >= WINDOW_STEPS) {
-    draft.clock.windowStep = 0;
-  }
 
   for (let stepped = 0; stepped < MAX_MONTHS_PER_ADVANCE; stepped++) {
     const window = advanceOneMonth(draft);

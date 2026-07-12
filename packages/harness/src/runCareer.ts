@@ -61,6 +61,11 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
   const decadeOf = () => Math.floor((parseYearMonth(state.clock.date).year - startYear) / 10);
 
   let iterations = 0;
+  // The bot does its transfer business once per window occurrence. A window can
+  // be visited on more than one advance (the live opening window returns on
+  // 'summer' both when it opens and when it is processed), so key on date+window
+  // to avoid double-acting.
+  let lastActedWindow = '';
   while (parseYearMonth(state.clock.date).year < endYear && iterations < MAX_ITERATIONS) {
     iterations++;
 
@@ -76,8 +81,10 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
       }
     }
 
-    // Summer transfer window.
-    if (state.clock.window === 'summer') {
+    // Summer transfer window — once per occurrence.
+    const windowKey = `${state.clock.date}:${state.clock.window}`;
+    if (state.clock.window === 'summer' && windowKey !== lastActedWindow) {
+      lastActedWindow = windowKey;
       const draft = cloneState(state);
 
       // Probe the hard-block invariant (§6), read-only: an unlimited-budget

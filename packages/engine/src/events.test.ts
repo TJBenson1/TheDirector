@@ -87,7 +87,13 @@ describe('decisions & interrupts (§9b)', () => {
       choices: [{ id: 'a', label: 'a' }],
       falloutIfIgnored: [{ kind: 'boardPatience', amount: -10 }],
     });
-    const next = advanceWindow(state).state;
+    // The opening window is live, so it is processed in place first (decisions
+    // carry across it); the fallout applies when the calendar actually advances
+    // past it. Advance until the ignored decision is lapsed.
+    let next = state;
+    for (let i = 0; i < 3 && next.pendingDecisions.some((d) => d.id === 'test:ignore'); i++) {
+      next = advanceWindow(next).state;
+    }
     // The ignored decision is gone (its fallout applied); other events may have
     // since raised new interrupts, so only assert the specific one cleared.
     expect(next.pendingDecisions.find((d) => d.id === 'test:ignore')).toBeUndefined();

@@ -47,7 +47,9 @@ describe('injuries (§9c)', () => {
     let state = createNewGame({ seed: 'inj-rate' });
     let serious = 0;
     let seasons = 0;
-    for (let i = 0; i < 8; i++) {
+    // The live opening window consumes one advance in place, so run a couple more
+    // to clear the same number of full seasons as before.
+    for (let i = 0; i < 10; i++) {
       const res = advanceWindow(state);
       state = res.state;
       serious += res.events.filter((e) => e.code === 'injury.serious').length;

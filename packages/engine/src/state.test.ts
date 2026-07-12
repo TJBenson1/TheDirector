@@ -16,12 +16,15 @@ import type { GameState } from './types.js';
 function advanceResolving(state: GameState): { state: GameState; months: number } {
   let s = state;
   let months = 0;
+  const startDate = s.clock.date;
   for (let i = 0; i < 24; i++) {
     for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
     const res = advanceWindow(s);
     s = res.state;
     months += res.events.filter((e) => e.code === 'month.advanced').length;
-    if (s.clock.window && s.pendingDecisions.length === 0) break;
+    // Stop at the NEXT window (the opening window is now live, so skip it — it
+    // resolves in place without moving the calendar).
+    if (s.clock.window && s.clock.date !== startDate && s.pendingDecisions.length === 0) break;
   }
   return { state: s, months };
 }

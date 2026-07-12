@@ -91,6 +91,15 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
     const player = state.players[entry.playerId];
     const dest = state.clubs[entry.to];
 
+    // Already at his real destination — the curated squad baked this move in (a
+    // pre-summer squad plus a live opening window can leave a player already
+    // where reality was taking him). Reality holds; realise it silently, with no
+    // spurious butterfly and no re-offer of a signing already made.
+    if (player && player.club === entry.to) {
+      state.meta.realizedLedger.push(key);
+      continue;
+    }
+
     // Causal chain: a move enabled by a funder the user pre-empted is (probably)
     // CANCELLED, not replaced — the club no longer needs/can afford it, so the
     // player stays put (Madrid keep Özil once they never sign Bale; keep Ronaldo

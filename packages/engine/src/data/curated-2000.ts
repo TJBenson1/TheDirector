@@ -41,7 +41,6 @@ export const REAL_MADRID_2000: CuratedSeed[] = [
   q('real_madrid', 'ivan_campo', 'Iván Campo', 1974, 'Spain', ['CB'], 76, 78, 2003, 30, t(6, 5, 6, 6, 6, 7)),
   q('real_madrid', 'makelele', 'Claude Makélélé', 1973, 'France', ['DM'], 85, 86, 2003, 25, t(9, 4, 8, 7, 3, 7)),
   q('real_madrid', 'flavio', 'Flávio Conceição', 1974, 'Brazil', ['DM', 'CM'], 79, 81, 2004, 30, t(7, 5, 6, 6, 6, 7)),
-  q('real_madrid', 'figo', 'Luís Figo', 1972, 'Portugal', ['RW', 'AM'], 89, 90, 2005, 25, t(8, 7, 9, 6, 4, 7)),
   q('real_madrid', 'guti', 'Guti', 1976, 'Spain', ['AM', 'CM'], 82, 86, 2004, 30, t(6, 7, 6, 8, 6, 7)),
   q('real_madrid', 'mcmanaman', 'Steve McManaman', 1972, 'England', ['RW', 'AM'], 82, 84, 2003, 30, t(8, 5, 7, 6, 4, 7)),
   q('real_madrid', 'solari', 'Santiago Solari', 1976, 'Argentina', ['LW', 'AM'], 79, 82, 2004, 25, t(8, 5, 7, 7, 4, 7)),
@@ -52,8 +51,10 @@ export const REAL_MADRID_2000: CuratedSeed[] = [
   q('real_madrid', 'munitis', 'Pedro Munitis', 1975, 'Spain', ['LW', 'RW'], 77, 79, 2003, 30, t(8, 4, 7, 7, 4, 7)),
 ];
 
-// ── Barcelona, 2000–01 (bruised by losing Figo to Madrid) ─────────────────────
+// ── Barcelona, 2000–01 (Figo still here — his move to Madrid is the opening
+//    decision the Real Madrid player faces, not a fait accompli) ──────────────
 export const BARCELONA_2000: CuratedSeed[] = [
+  q('barcelona', 'figo', 'Luís Figo', 1972, 'Portugal', ['RW', 'AM'], 89, 90, 2005, 25, t(8, 7, 9, 5, 4, 7)),
   q('barcelona', 'reina', 'Pepe Reina', 1982, 'Spain', ['GK'], 70, 86, 2004, 20, t(9, 5, 8, 7, 3, 8)),
   q('barcelona', 'dutruel', 'Richard Dutruel', 1972, 'France', ['GK'], 75, 76, 2003, 25, t(7, 4, 5, 6, 5, 6)),
   q('barcelona', 'puyol', 'Carles Puyol', 1978, 'Spain', ['CB', 'RB'], 78, 88, 2005, 25, t(9, 5, 9, 10, 3, 7)),
@@ -204,8 +205,25 @@ export const JUVENTUS_2000: CuratedSeed[] = [
   q('juventus', 'davids', 'Edgar Davids', 1973, 'Netherlands', ['CM', 'DM'], 85, 86, 2004, 35, t(7, 6, 8, 6, 6, 7)),
   q('juventus', 'thuram', 'Lilian Thuram', 1972, 'France', ['CB', 'RB'], 86, 87, 2005, 25, t(9, 5, 8, 7, 3, 7)),
   q('juventus', 'montero', 'Paolo Montero', 1971, 'Uruguay', ['CB'], 82, 83, 2004, 35, t(7, 6, 7, 7, 7, 6)),
-  q('juventus', 'cannavaro', 'Fabio Cannavaro', 1973, 'Italy', ['CB'], 85, 87, 2007, 20, t(9, 6, 9, 6, 4, 8)),
-  q('juventus', 'emerson', 'Emerson', 1976, 'Brazil', ['DM', 'CM'], 83, 85, 2007, 25, t(8, 5, 8, 6, 4, 7)),
+];
+// Parma — Cannavaro's real 2000 club, before Parmalat's collapse forced the
+// fire-sale that broke the side up (the Italy pack will model that distress).
+export const PARMA_2000: CuratedSeed[] = [
+  q('parma', 'cannavaro', 'Fabio Cannavaro', 1973, 'Italy', ['CB'], 85, 87, 2002, 20, t(9, 6, 9, 6, 4, 8)),
+  q('parma', 'di_vaio', 'Marco Di Vaio', 1976, 'Italy', ['ST'], 81, 84, 2002, 30, t(7, 6, 8, 6, 5, 7)),
+  q('parma', 'lamouchi', 'Sabri Lamouchi', 1971, 'France', ['CM', 'DM'], 78, 79, 2002, 30, t(8, 5, 7, 6, 5, 7)),
+  q('parma', 'sensini', 'Néstor Sensini', 1966, 'Argentina', ['CB', 'DM'], 79, 79, 2002, 30, t(8, 5, 7, 7, 4, 7)),
+  q('parma', 'junior_p', 'Júnior', 1973, 'Brazil', ['LB', 'LW'], 78, 80, 2003, 30, t(7, 5, 7, 6, 5, 7)),
+];
+// Roma — Emerson's real 2000 club, the Totti/Batistuta side that won 2001.
+export const ROMA_2000: CuratedSeed[] = [
+  q('roma', 'emerson', 'Emerson', 1976, 'Brazil', ['DM', 'CM'], 83, 85, 2004, 25, t(8, 5, 8, 6, 4, 7)),
+  q('roma', 'totti', 'Francesco Totti', 1976, 'Italy', ['AM', 'ST'], 87, 90, 2006, 30, t(8, 7, 8, 10, 5, 6), { loyalty: 96 }),
+  q('roma', 'batistuta', 'Gabriel Batistuta', 1969, 'Argentina', ['ST'], 86, 86, 2003, 35, t(8, 7, 9, 7, 5, 6)),
+  q('roma', 'cafu', 'Cafu', 1970, 'Brazil', ['RB'], 84, 85, 2003, 25, t(9, 5, 8, 7, 4, 7)),
+  q('roma', 'montella', 'Vincenzo Montella', 1974, 'Italy', ['ST'], 82, 83, 2004, 35, t(7, 7, 8, 7, 6, 6)),
+  q('roma', 'samuel', 'Walter Samuel', 1978, 'Argentina', ['CB'], 83, 85, 2004, 25, t(8, 5, 8, 6, 5, 7)),
+  q('roma', 'candela', 'Vincent Candela', 1973, 'France', ['LB'], 80, 81, 2004, 25, t(8, 5, 7, 7, 4, 7)),
 ];
 export const INTER_2000: CuratedSeed[] = [
   q('inter', 'ronaldo_r9', 'Ronaldo', 1976, 'Brazil', ['ST'], 90, 93, 2005, 75, t(6, 8, 8, 5, 6, 7)),
@@ -302,6 +320,8 @@ export const RIVER_2000: CuratedSeed[] = [
 
 export const CONTEXT_2000_SQUADS: Record<string, CuratedSeed[]> = {
   juventus: JUVENTUS_2000,
+  parma: PARMA_2000,
+  roma: ROMA_2000,
   inter: INTER_2000,
   milan: MILAN_2000,
   man_utd: MANUTD_2000,

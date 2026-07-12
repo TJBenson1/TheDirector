@@ -271,6 +271,9 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
  */
 const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
   // ── Real Madrid's galácticos — each a real-in decision for the user ──
+  // The opening galáctico: Figo's move from Barça is the first decision — sign
+  // the deal Pérez really did, or veto it and let him stay a rival.
+  { playerId: 'cur_figo', from: 'barcelona', to: 'real_madrid', window: '2000-07', fee: 37_000_000, id: 'figo-real-2000' },
   { playerId: 'cur_zidane', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 46_000_000, id: 'zidane-real-2001' },
   { playerId: 'cur_ronaldo_r9', from: 'inter', to: 'real_madrid', window: '2002-07', fee: 30_000_000, id: 'ronaldo-real-2002' },
   { playerId: 'cur_beckham', from: 'man_utd', to: 'real_madrid', window: '2003-07', fee: 25_000_000, id: 'beckham-real-2003' },
@@ -280,9 +283,15 @@ const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
   { playerId: 'cur_robinho', from: 'santos', to: 'real_madrid', window: '2005-07', fee: 24_000_000, id: 'robinho-real-2005' },
   { playerId: 'cur_baptista', from: 'sevilla', to: 'real_madrid', window: '2005-07', fee: 20_000_000, id: 'baptista-real-2005' },
   { playerId: 'cur_ramos_s', from: 'sevilla', to: 'real_madrid', window: '2005-07', fee: 27_000_000, id: 'ramos-real-2005' },
-  { playerId: 'cur_cannavaro', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },
-  { playerId: 'cur_emerson', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 4_000_000, id: 'emerson-real-2006' },
   { playerId: 'cur_vannistelrooy', from: 'man_utd', to: 'real_madrid', window: '2006-07', fee: 10_000_000, id: 'ruud-real-2006' },
+  // Cannavaro & Emerson reach Madrid in 2006 by their REAL paths through Italy —
+  // both viable Madrid targets at any earlier point too (Parmalat/Calciopoli
+  // distress is modelled in the Italy pack). Multi-move players, tracked by id.
+  { playerId: 'cur_cannavaro', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000, id: 'cannavaro-inter-2002' },
+  { playerId: 'cur_cannavaro', from: 'inter', to: 'juventus', window: '2004-07', fee: 10_000_000, id: 'cannavaro-juve-2004' },
+  { playerId: 'cur_cannavaro', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },
+  { playerId: 'cur_emerson', from: 'roma', to: 'juventus', window: '2004-07', fee: 28_000_000, id: 'emerson-juve-2004' },
+  { playerId: 'cur_emerson', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 4_000_000, id: 'emerson-real-2006' },
   // ── Real Madrid's real departures — offered to the user (sell / keep) ──
   { playerId: 'cur_makelele', from: 'real_madrid', to: 'chelsea', window: '2003-07', fee: 16_000_000, id: 'makelele-chelsea-2003' },
   { playerId: 'cur_mcmanaman', from: 'real_madrid', to: 'man_city', window: '2003-07', fee: 0, id: 'mcmanaman-city-2003' },
