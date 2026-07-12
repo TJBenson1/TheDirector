@@ -90,7 +90,11 @@ describe('more start points (§4 data)', () => {
   it('the galáctico Madrid start places Figo/Zidane/Makélélé and can keep Makélélé', () => {
     let s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'gal' });
     expect(s.playerClub).toBe('real_madrid');
-    expect(resolvePlayer(s, 'Figo')?.club).toBe('barcelona'); // his real move is TO the user
+    // Figo's summer-2000 arrival is baked into the opening squad (the pre-closed
+    // start window); the next galáctico, Zidane, is still at Juventus and his
+    // real move is TO the user.
+    expect(resolvePlayer(s, 'Figo')?.club).toBe('real_madrid');
+    expect(s.players.cur_zidane?.club).toBe('juventus');
     expect(s.players.cur_makelele?.club).toBe('real_madrid');
     // Keep Makélélé when his 2003 sale is offered; he stays, unsettled.
     for (let i = 0; i < 12; i++) {

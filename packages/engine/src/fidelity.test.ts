@@ -94,6 +94,34 @@ describe('passive-fidelity — reality holds when the user does nothing (§9f)',
     expect(fallbacks(s)).toBe(0);
   });
 
+  it('era-2000 (real-madrid-2000): the galácticos arrive and La Liga plays out as reality', () => {
+    const s = runPassive('real-madrid-2000', 'fidelity', 2008);
+    expectAt(s, {
+      // A galáctico a summer — each a real-in the user sanctioned.
+      cur_zidane: 'real_madrid',
+      cur_ronaldo_r9: 'real_madrid',
+      cur_beckham: 'real_madrid',
+      cur_owen: 'real_madrid',
+      cur_robinho: 'real_madrid',
+      cur_ramos_s: 'real_madrid',
+      cur_vannistelrooy: 'real_madrid',
+      // The pragmatic pivot: Makélélé sold to fund it (the user sanctioned it).
+      cur_makelele: 'chelsea',
+      // Barça's real rebuild holds around them.
+      cur_ronaldinho: 'barcelona',
+      cur_etoo: 'barcelona',
+      cur_deco: 'barcelona',
+      // La Liga rivals' real business.
+      cur_mendieta: 'lazio',
+      cur_makaay: 'bayern',
+      cur_xabi_alonso: 'liverpool',
+      cur_villa: 'valencia',
+    });
+    const m = ledgerSquadMatch(s);
+    expect(m.atRealClub / m.total).toBeGreaterThanOrEqual(0.95);
+    expect(fallbacks(s)).toBe(0);
+  });
+
   it('era-2001 (liverpool-2001): the Liverpool business holds; the Abramovich splurge is all-or-nothing', () => {
     const s = runPassive('liverpool-2001', 'fidelity', 2007);
     // Deterministic, non-conditional Liverpool moves (the user sanctions reality).

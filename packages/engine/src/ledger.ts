@@ -257,12 +257,71 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   { playerId: 'cur_bridge03', from: 'southampton', to: 'chelsea', window: '2003-07', fee: 7_000_000, id: 'bridge-chelsea-2003', enabledBy: 'abramovich' },
 ];
 
+/**
+ * Real 2000–06 transfers for the Galácticos era pack (Spain). Real Madrid's real
+ * story is one signing a summer (Zidane 2001, Ronaldo 2002, Beckham 2003, Owen
+ * 2004, Robinho 2005, Van Nistelrooy 2006) — each OFFERED to the user, and the
+ * pragmatic pivot of selling Makélélé (2003) to fund it. Around them, the real
+ * La Liga recruitment holds: Barça rebuild via Ronaldinho/Eto'o/Deco, Valencia's
+ * back-to-back titles, Deportivo cashing in Makaay.
+ *
+ * NB the opening 2000-07 window is pre-closed, so Figo (already at Madrid),
+ * Overmars/Petit (Barça) and Redondo (Milan) are baked into the starting squads;
+ * the ledger runs from 2001.
+ */
+const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
+  // ── Real Madrid's galácticos — each a real-in decision for the user ──
+  { playerId: 'cur_zidane', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 46_000_000, id: 'zidane-real-2001' },
+  { playerId: 'cur_ronaldo_r9', from: 'inter', to: 'real_madrid', window: '2002-07', fee: 30_000_000, id: 'ronaldo-real-2002' },
+  { playerId: 'cur_beckham', from: 'man_utd', to: 'real_madrid', window: '2003-07', fee: 25_000_000, id: 'beckham-real-2003' },
+  { playerId: 'cur_owen', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 8_000_000, id: 'owen-real-2004' },
+  { playerId: 'cur_woodgate', from: 'newcastle', to: 'real_madrid', window: '2004-07', fee: 13_400_000, id: 'woodgate-real-2004' },
+  { playerId: 'cur_gravesen', from: 'everton', to: 'real_madrid', window: '2005-01', fee: 3_000_000, id: 'gravesen-real-2005' },
+  { playerId: 'cur_robinho', from: 'santos', to: 'real_madrid', window: '2005-07', fee: 24_000_000, id: 'robinho-real-2005' },
+  { playerId: 'cur_baptista', from: 'sevilla', to: 'real_madrid', window: '2005-07', fee: 20_000_000, id: 'baptista-real-2005' },
+  { playerId: 'cur_ramos_s', from: 'sevilla', to: 'real_madrid', window: '2005-07', fee: 27_000_000, id: 'ramos-real-2005' },
+  { playerId: 'cur_cannavaro', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },
+  { playerId: 'cur_emerson', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 4_000_000, id: 'emerson-real-2006' },
+  { playerId: 'cur_vannistelrooy', from: 'man_utd', to: 'real_madrid', window: '2006-07', fee: 10_000_000, id: 'ruud-real-2006' },
+  // ── Real Madrid's real departures — offered to the user (sell / keep) ──
+  { playerId: 'cur_makelele', from: 'real_madrid', to: 'chelsea', window: '2003-07', fee: 16_000_000, id: 'makelele-chelsea-2003' },
+  { playerId: 'cur_mcmanaman', from: 'real_madrid', to: 'man_city', window: '2003-07', fee: 0, id: 'mcmanaman-city-2003' },
+  { playerId: 'cur_morientes', from: 'real_madrid', to: 'liverpool', window: '2005-01', fee: 8_000_000, id: 'morientes-liverpool-2005' },
+  // ── Barça's real rebuild (context) ──
+  { playerId: 'cur_saviola', from: 'river_plate', to: 'barcelona', window: '2001-07', fee: 15_000_000, id: 'saviola-barca-2001' },
+  { playerId: 'cur_ronaldinho', from: 'psg', to: 'barcelona', window: '2003-07', fee: 30_000_000, id: 'ronaldinho-barca-2003' },
+  { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 24_000_000, id: 'etoo-barca-2004' },
+  { playerId: 'cur_deco', from: 'porto', to: 'barcelona', window: '2004-07', fee: 21_000_000, id: 'deco-barca-2004' },
+  { playerId: 'cur_giuly', from: 'monaco', to: 'barcelona', window: '2004-07', fee: 8_000_000, id: 'giuly-barca-2004' },
+  { playerId: 'cur_kluivert', from: 'barcelona', to: 'newcastle', window: '2004-07', fee: 5_000_000, id: 'kluivert-newcastle-2004' },
+  // ── Valencia / Deportivo / Sociedad (context: title rivals' real business) ──
+  { playerId: 'cur_mendieta', from: 'valencia', to: 'lazio', window: '2001-07', fee: 48_000_000, id: 'mendieta-lazio-2001' },
+  { playerId: 'cur_makaay', from: 'deportivo', to: 'bayern', window: '2003-07', fee: 19_000_000, id: 'makaay-bayern-2003' },
+  { playerId: 'cur_xabi_alonso', from: 'real_sociedad', to: 'liverpool', window: '2004-07', fee: 11_000_000, id: 'xabi-liverpool-2004' },
+  { playerId: 'cur_villa', from: 'zaragoza', to: 'valencia', window: '2005-07', fee: 12_000_000, id: 'villa-valencia-2005' },
+  // ── Italy/England context that colours the wider world ──
+  { playerId: 'cur_veron', from: 'lazio', to: 'man_utd', window: '2001-07', fee: 28_000_000, id: 'veron-utd-2001' },
+  { playerId: 'cur_nesta', from: 'lazio', to: 'milan', window: '2002-07', fee: 30_000_000, id: 'nesta-milan-2002' },
+  { playerId: 'cur_crespo', from: 'lazio', to: 'inter', window: '2002-07', fee: 35_000_000, id: 'crespo-inter-2002' },
+  { playerId: 'cur_reyes', from: 'sevilla', to: 'arsenal', window: '2004-01', fee: 17_000_000, id: 'reyes-arsenal-2004' },
+  { playerId: 'cur_carvalho_r', from: 'porto', to: 'chelsea', window: '2004-07', fee: 20_000_000, id: 'carvalho-chelsea-2004' },
+  { playerId: 'cur_forlan', from: 'man_utd', to: 'villarreal', window: '2004-07', fee: 3_000_000, id: 'forlan-villarreal-2004' },
+];
+
+/** Real Galácticos-era injuries — fire only if the player is at his real club. */
+const INJURIES_2000: RealInjuryEntry[] = [
+  { playerId: 'cur_ronaldo_r9', atClub: 'real_madrid', since: '2003-11', months: 2, serious: false, note: 'recurrent muscle trouble' },
+  { playerId: 'cur_owen', atClub: 'real_madrid', since: '2004-12', months: 2, serious: false, note: 'hamstring' },
+  { playerId: 'cur_aimar', atClub: 'valencia', since: '2002-10', months: 3, serious: false, note: 'ankle ligament damage' },
+];
+
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004 },
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [] },
+  'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: [], realInjuries: INJURIES_2000 },
 };
 
 /** The era pack a scenario draws its reality data from. */
@@ -270,6 +329,7 @@ export function eraForScenario(scenarioId: string): string {
   if (scenarioId.endsWith('-2013')) return 'era-2013';
   if (scenarioId.endsWith('-2004')) return 'era-2004';
   if (scenarioId.endsWith('-2001')) return 'era-2001';
+  if (scenarioId.endsWith('-2000')) return 'era-2000';
   return 'era-1995-2005';
 }
 
