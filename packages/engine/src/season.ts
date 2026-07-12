@@ -197,7 +197,14 @@ function alreadyCrowned(league: LeagueState, seasonYear: number): boolean {
 /** Crown the champion of a completed season and record it. */
 export function finalizeSeason(state: GameState, league: LeagueState): void {
   if (alreadyCrowned(league, league.seasonYear)) return;
-  const championId = standingsOrder(league)[0]!;
+  const order = standingsOrder(league);
+  // Bottom three go down — their players become easy pickings next season.
+  const relegated = new Set(order.slice(-3));
+  for (const id of league.clubIds) {
+    const club = state.clubs[id];
+    if (club) club.relegationThreatened = relegated.has(id);
+  }
+  const championId = order[0]!;
   const points = league.standings[championId]!.points;
   league.titleHistory.push({ seasonYear: league.seasonYear, championId, points });
   logEvent(state, {

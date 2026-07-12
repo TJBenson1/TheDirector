@@ -25,9 +25,13 @@ import {
   valuePlayer,
   clubSquadPlayers,
   currentYear,
+  suggestTargets,
+  queryPlayer,
+  resolvePlayer,
   SCENARIOS,
   Rng,
   type GameState,
+  type Position,
 } from '@director/engine';
 
 const SAVE = process.env.DIRECTOR_SAVE ?? 'playthrough.json';
@@ -157,11 +161,12 @@ function main(): void {
     }
     case 'sign': {
       const s0 = load();
-      const feeM = b ? Number(b) * 1_000_000 : undefined;
-      const res = attemptSigning(s0, { playerId: a!, toClub: s0.playerClub, fee: feeM });
+      const target = resolvePlayer(s0, process.argv.slice(3, 4).join(' ') || a!);
+      if (!target) { console.log(`\n  ✗ No player matching "${a}".`); break; }
+      const res = attemptSigning(s0, { playerId: target.id, toClub: s0.playerClub });
       if (res.ok) {
         save(s0);
-        console.log(`\n  ✓ Signed ${s0.players[a!]?.name} for ${m(res.fee)}.`);
+        console.log(`\n  ✓ Signed ${target.name} for ${m(res.fee)}.`);
       } else {
         console.log(`\n  ✗ ${res.reason}`);
       }
@@ -170,13 +175,15 @@ function main(): void {
     }
     case 'scout': {
       const s = load();
-      const rep = scoutPlayer(s, s.playerClub, a!, new Rng(s.meta.rngState).fork('scout-cli'), { observation: 0.6 });
-      const verdict = evaluateApproach(s, { playerId: a!, toClub: s.playerClub });
+      const target = resolvePlayer(s, process.argv.slice(3).join(' ') || a!);
+      if (!target) { console.log(`\n  ✗ No player matching "${a}".`); break; }
+      const rep = scoutPlayer(s, s.playerClub, target.id, new Rng(s.meta.rngState).fork('scout-cli'), { observation: 0.6 });
+      const verdict = evaluateApproach(s, { playerId: target.id, toClub: s.playerClub });
       console.log(`\n  Scout report — ${rep.name}`);
       console.log(`   Ability   ${rep.ability.low}–${rep.ability.high}  (${rep.confidence} confidence)`);
       console.log(`   Potential ${rep.potential.low}–${rep.potential.high}`);
       console.log(`   Traits    professionalism ${rep.personalityHints.professionalism}, ambition ${rep.personalityHints.ambition}`);
-      console.log(`   Value     ${m(valuePlayer(s.players[a!]!, currentYear(s)))}`);
+      console.log(`   Value     ${m(valuePlayer(target, currentYear(s)))}`);
       console.log(`   Approach  ${verdict.willing ? 'would consider a move' : 'RESISTS'} — ${verdict.reason}`);
       break;
     }
@@ -190,8 +197,36 @@ function main(): void {
       }
       break;
     }
+    case 'targets': {
+      const s = load();
+      const pos = (a?.toUpperCase() ?? 'CM') as Position;
+      const budget = s.clubs[s.playerClub]!.finances.transferBudget;
+      const list = suggestTargets(s, pos, { maxResults: 10, favourAvailable: true });
+      console.log(`\n  Suggested ${pos} targets (budget ${m(budget)}):`);
+      for (const t of list) {
+        const tags = t.tags.length ? `  [${t.tags.join(', ')}]` : '';
+        const afford = t.askingPrice <= budget ? '' : '  (over budget)';
+        console.log(`   · ${t.name.padEnd(22)} ${t.clubName.padEnd(18)} age ${t.age}  ability ${t.ability.low}–${t.ability.high}  ~${m(t.askingPrice)}${tags}${afford}`);
+        if (!t.willing) console.log(`       ↳ ${t.resistanceReason}`);
+      }
+      console.log(`\n  Query anyone with:  play query <name>`);
+      break;
+    }
+    case 'query': {
+      const s = load();
+      const name = process.argv.slice(3).join(' ');
+      const q = queryPlayer(s, name);
+      if (!q.visible) { console.log(`\n  ${q.note}`); break; }
+      const r = q.report!;
+      console.log(`\n  ${r.name} — ${q.clubName} (age ${q.age})`);
+      console.log(`   Ability   ${r.ability.low}–${r.ability.high}  (${r.confidence} confidence)`);
+      console.log(`   Potential ${r.potential.low}–${r.potential.high}`);
+      console.log(`   Asking    ~${m(q.askingPrice!)}${q.tags!.length ? `   [${q.tags!.join(', ')}]` : ''}`);
+      console.log(`   Approach  ${q.willing ? 'would consider a move' : 'RESISTS'} — ${q.resistanceReason}`);
+      break;
+    }
     default:
-      console.log('Commands: new <scenario> | state | advance | decide <id> <choice> | sign <playerId> [feeM] | scout <playerId> | squad');
+      console.log('Commands: new <scenario> | state | advance | decide <id> <choice> | sign <playerId|name> [feeM] | scout <playerId> | squad | targets <pos> | query <name>');
   }
 }
 

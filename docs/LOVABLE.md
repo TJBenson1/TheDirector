@@ -58,7 +58,12 @@ GET  /game/:id/narrative  { since? }                              → NarrativeB
 4. **Tracking board** — targets, contingencies, tracked prospects, looming events.
 5. **Transfer/negotiation flow** — scout reports with confidence ranges, medical
    risk grades, resistance verdicts ("He will not leave Barcelona. This is not
-   about money."). (M5/M6.)
+   about money."). Use `suggestTargets(state, position)` for realistic ranked
+   options per position (tagged `bosman` / `unsettled` / `fire-sale` /
+   `relegation-threatened`, with fogged ability ranges and asking prices), and
+   `queryPlayer(state, nameOrId)` to look up any specific real player — subject
+   to the 16+ rule (under-16s are "not yet on the radar"). Distressed clubs
+   (Leeds, Lazio) and relegated sides sell cheaply.
 6. **Timeline / divergence view** — what you changed vs. real history
    (`GameState.timeline.divergenceLog`).
 

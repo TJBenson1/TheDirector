@@ -103,6 +103,8 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     finances: { ownership: 'sustainable', transferBudget: 0, wageBudget: 0, wageBill: 0 },
     pendingCounterPunch: 0,
     grudge: 0,
+    financialHealth: 'healthy',
+    relegationThreatened: false,
   });
   for (const clubSeed of scenario.clubs) {
     clubs[clubSeed.id] = newClub(
@@ -124,6 +126,11 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
   }
   for (const lc of league.clubs) {
     clubs[lc.id] = newClub(lc.id, lc.name, lc.prestige, lc.strength, league.id);
+  }
+  // Seed historically-distressed clubs of the era (fire-sale opportunities).
+  for (const [id, health] of Object.entries(scenario.distressedClubs ?? {})) {
+    const club = clubs[id];
+    if (club) club.financialHealth = health;
   }
 
   const leagueState: LeagueState = {

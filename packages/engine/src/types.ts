@@ -41,6 +41,10 @@ export interface DifficultySettings {
 
 export type OwnershipModel = 'debt' | 'sustainable' | 'sugar-daddy';
 
+/** A club's financial state (internal-friction §6). Distress makes it sell
+ *  cheaply and push players out — the fire-sale opportunity (Leeds, Lazio…). */
+export type FinancialHealth = 'healthy' | 'strained' | 'crisis';
+
 /** Club finances (§11). Fees/wages are in whole currency units (£). */
 export interface ClubFinances {
   /** Ownership shapes budgets and FFP exposure (§11). */
@@ -90,6 +94,10 @@ export interface ClubState {
   pendingCounterPunch: number;
   /** Grudge toward the user after being raided/gazumped (§9a #4). 0..100. */
   grudge: number;
+  /** Financial state — distress means a fire-sale (cheaper fees, willing sellers). */
+  financialHealth: FinancialHealth;
+  /** True the season after finishing in the relegation zone — easy pickings. */
+  relegationThreatened: boolean;
 }
 
 // ── Leagues & season sim (§15) ───────────────────────────────────────────────

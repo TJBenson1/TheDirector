@@ -32,6 +32,8 @@ export interface ScenarioSeed {
   contextExtra?: ClubSeed[];
   /** The player's simulated domestic league (§15). */
   domesticLeagueId: string;
+  /** Clubs in real financial distress this era (fire-sale sources). */
+  distressedClubs?: Record<ClubId, 'strained' | 'crisis'>;
 }
 
 /** The 12 elite clubs (§14), with rough late-90s prestige. Refined in M3. */
@@ -67,6 +69,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'marseille', name: 'Olympique de Marseille', prestige: 72 },
     ],
     domesticLeagueId: 'eng-1',
+    // Leeds' overreach and Lazio's Cragnotti crash are the era's fire-sales.
+    distressedClubs: { leeds: 'strained', lazio: 'crisis' },
   },
   'chelsea-2003': {
     id: 'chelsea-2003',

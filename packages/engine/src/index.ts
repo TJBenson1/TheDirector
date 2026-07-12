@@ -138,6 +138,17 @@ export {
 } from './ledger.js';
 export { executeLedgerWindow, ledgerSquadMatch, ledgerClubs } from './ledgerExec.js';
 export {
+  suggestTargets,
+  queryPlayer,
+  acquisitionTags,
+  askingPrice,
+  resolvePlayer,
+  type TargetSuggestion,
+  type PlayerQuery,
+  type AcquisitionTag,
+  type SuggestOptions,
+} from './recommend.js';
+export {
   simulateMatch,
   generateSchedule,
   standingsOrder,
