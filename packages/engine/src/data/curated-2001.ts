@@ -119,6 +119,35 @@ export const NEWCASTLE_2001: CuratedSeed[] = [
   q('newcastle', 'dyer', 'Kieron Dyer', 1978, 'England', ['CM', 'RW'], 80, 85, 2006, 66, t(6, 6, 7, 6, 6, 7)),
 ];
 
+/** FC Porto, 2001–04 — the feeder-club raid target (§ food-chain). In 2001 they
+ *  are a strong-but-sellable side a notch below the English/Spanish giants
+ *  (prestige 72): Deco and Ricardo Carvalho are the jewels, not yet the European
+ *  champions they became under Mourinho. A big club can prise them loose in
+ *  2002–03 at a food-chain discount BEFORE the 2004 Champions League win sends
+ *  their value — and Barça/Chelsea — after them (see the Porto sell-off ledger).
+ *  Ferreira/Maniche joined in 2002; seeded here so the raidable side is whole. */
+export const PORTO_2001: CuratedSeed[] = [
+  q('porto', 'baia01', 'Vítor Baía', 1969, 'Portugal', ['GK'], 82, 83, 2006, 25, t(8, 6, 8, 9, 4, 6)),
+  q('porto', 'jcosta01', 'Jorge Costa', 1971, 'Portugal', ['CB'], 80, 81, 2005, 30, t(9, 6, 8, 9, 5, 6)),
+  // Ricardo Carvalho — the jewel. A world-class centre-half in the making; Chelsea
+  // paid £30m for him after the 2004 CL win. Raidable years earlier and cheaper.
+  q('porto', 'carvalho01', 'Ricardo Carvalho', 1978, 'Portugal', ['CB'], 79, 88, 2006, 25, t(8, 5, 8, 7, 4, 7)),
+  q('porto', 'pedroemanuel01', 'Pedro Emanuel', 1975, 'Portugal', ['CB'], 75, 77, 2005, 30, t(8, 5, 7, 7, 5, 6)),
+  q('porto', 'nvalente01', 'Nuno Valente', 1974, 'Portugal', ['LB'], 77, 79, 2006, 25, t(8, 4, 7, 7, 4, 7)),
+  // Paulo Ferreira — the overlapping right-back Chelsea also took in 2004.
+  q('porto', 'pferreira01', 'Paulo Ferreira', 1979, 'Portugal', ['RB'], 77, 84, 2007, 25, t(8, 4, 8, 7, 4, 7)),
+  q('porto', 'costinha01', 'Costinha', 1974, 'Portugal', ['DM', 'CM'], 80, 82, 2006, 30, t(8, 6, 8, 7, 5, 7)),
+  q('porto', 'maniche01', 'Maniche', 1977, 'Portugal', ['CM', 'DM'], 80, 85, 2007, 30, t(7, 6, 8, 6, 6, 7)),
+  // Deco — the orchestrator. Barcelona's 2004 marquee buy; the definitive
+  // "raid Porto before his value explodes" target.
+  q('porto', 'deco01', 'Deco', 1977, 'Portugal', ['AM', 'CM'], 83, 88, 2006, 25, t(8, 6, 9, 6, 5, 8)),
+  q('porto', 'capucho01', 'Capucho', 1972, 'Portugal', ['RW', 'LW'], 78, 80, 2005, 30, t(7, 6, 7, 6, 5, 7)),
+  // Hélder Postiga — the academy striker sold to Spurs on a wave of hype in 2003,
+  // then faded; a mild lost talent (latent 84) if unlocked at home.
+  q('porto', 'postiga01', 'Hélder Postiga', 1982, 'Portugal', ['ST'], 68, 80, 2006, 30, t(6, 6, 7, 6, 6, 6), { latentCeiling: 84 }),
+  q('porto', 'derlei01', 'Derlei', 1975, 'Brazil', ['ST'], 77, 80, 2006, 35, t(7, 6, 8, 6, 5, 7)),
+];
+
 /** Source clubs for the Liverpool 2002 decisions + Chelsea's 2003 splurge. */
 export const LENS_2001: CuratedSeed[] = [
   // Diouf — a World Cup star who flopped in England on attitude. The riskiest
@@ -147,6 +176,7 @@ export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
   chelsea: CHELSEA_2001,
   leeds: LEEDS_2001,
   newcastle: NEWCASTLE_2001,
+  porto: PORTO_2001,
   lens: LENS_2001,
   lille: LILLE_2001,
   real_madrid: [CHELSEA_TARGETS_2003[0]!],

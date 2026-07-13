@@ -123,6 +123,38 @@ describe('capitalising on the food chain + clubs in distress', () => {
       expect(acquisitionTags(a, dp, 'arsenal')).toContain('fire-sale');
     }
   });
+
+  it('a user can pick Porto apart in 2002 — Deco/Carvalho cheap before the giants come', () => {
+    const s = createNewGame({ scenarioId: 'liverpool-2001', seed: 'porto-raid' });
+    const year = parseYearMonth(s.clock.date).year;
+    for (const id of ['cur_deco01', 'cur_carvalho01']) {
+      const p = s.players[id]!;
+      expect(p.club).toBe('porto'); // the jewels are still at Porto in 2001
+      const full = valuePlayer(p, year);
+      const toLiverpool = askingPrice(s, id, 'liverpool'); // Liverpool 82 vs Porto 72
+      expect(toLiverpool).toBeLessThan(full); // motivated feeder club — food-chain cut
+      expect(acquisitionTags(s, p, 'liverpool')).toContain('step-up');
+      // A peer/no-buyer pays full — the raid discount is buyer-specific.
+      expect(askingPrice(s, id)).toBe(Math.max(50_000, Math.round(full / 100_000) * 100_000));
+    }
+  });
+
+  it('leave Porto alone and the giants raid it in 2004 (Deco → Barça, as in reality)', () => {
+    let s = createNewGame({ scenarioId: 'liverpool-2001', seed: 'porto-passive' });
+    // Passive Liverpool career through the 2004 sell-off window (interrupt
+    // windows can fragment the way there, so allow plenty of steps).
+    for (let i = 0; i < 20 && parseYearMonth(s.clock.date).year < 2005; i++) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      s = advanceWindow(s).state;
+      if (s.board.dismissed) break;
+    }
+    // Deco's move is ungated — Barcelona took him regardless of Abramovich.
+    expect(s.players.cur_deco01?.club).toBe('barcelona');
+    // Carvalho/Ferreira needed Chelsea's new money: only if the takeover completed.
+    if (s.meta.realizedLedger.includes('abramovich')) {
+      expect(s.players.cur_carvalho01?.club).toBe('chelsea');
+    }
+  });
 });
 
 describe('near-miss ledger — "almost happened" deals', () => {

@@ -72,13 +72,21 @@ The user can now pick apart smaller/distressed clubs:
 - **Scheduled financial shocks** (`FinancialShock` on the era pack, applied at the
   rollover): **Calciopoli drops Juventus into crisis in 2006** — a cheap, raidable
   fire-sale (Del Piero ~£1.5m). Reusable for Leeds/Parma/etc.
-- **Porto sell-off** ledgered (Nuno Valente→Everton '05, Pepe→Madrid '07,
-  Bosingwa→Chelsea '08) so the user can hijack them early.
+- **Porto sell-off** ledgered TWICE, so both eras can raid it:
+  - **era-2004** (Nuno Valente→Everton '05, Pepe→Madrid '07, Bosingwa→Chelsea '08).
+  - ✅ **era-2001** (`liverpool-2001`): the full Mourinho side is now a curated,
+    raidable feeder club (prestige 72) — **Deco, Ricardo Carvalho, Paulo
+    Ferreira, Costinha, Maniche, Baía, Postiga…** — and the real 2004 break-up is
+    ledgered (**Deco→Barça**, **Carvalho & Ferreira→Chelsea**, the Chelsea legs
+    gated on the Abramovich takeover). The user's literal example works: pick
+    Deco/Carvalho off in 2002–03 at a food-chain discount + `step-up` tag,
+    BEFORE the 2004 CL win sends the giants after them. Passive career = the
+    real raid happens TO you.
 - Injuries packs added: **INJURIES_2004** (Woodgate's wrecked Madrid season,
   Hargreaves' knee) and **INJURIES_2009** (Kaká's knee, Robben's hamstring).
-- **Still to do:** era-2001 Porto (Deco/Carvalho 2001-03 — the user's literal
-  "pick apart Porto in 2002" example needs that pack); more financial shocks
-  (Leeds 2004, Parma/Parmalat 2004, Rangers 2012); injuries packs for 2013/2001.
+- **Still to do:** more financial shocks (Leeds 2004, Parma/Parmalat 2004,
+  Rangers 2012); injuries packs for 2013/2001; Porto's other onward sales
+  (Postiga→Spurs '03, Costinha/Maniche→Dynamo '05) once those clubs are curated.
 
 ## Lost-talent profile expansion
 More real under-achievers to curate with a `latentCeiling` (the reverse

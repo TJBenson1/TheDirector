@@ -430,6 +430,13 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   { playerId: 'cur_crespo03', from: 'inter', to: 'chelsea', window: '2003-07', fee: 16_800_000, id: 'crespo-chelsea-2003', enabledBy: 'abramovich' },
   { playerId: 'cur_mutu03', from: 'parma', to: 'chelsea', window: '2003-07', fee: 15_800_000, id: 'mutu-chelsea-2003', enabledBy: 'abramovich' },
   { playerId: 'cur_bridge03', from: 'southampton', to: 'chelsea', window: '2003-07', fee: 7_000_000, id: 'bridge-chelsea-2003', enabledBy: 'abramovich' },
+  // ── The Porto sell-off (§ food-chain). After the 2003 UEFA Cup and 2004
+  // Champions League, the giants picked Mourinho's side apart. Leave it alone and
+  // the raid happens ON the user (Barça take Deco, Chelsea take Carvalho/Ferreira)
+  // — beat them to it in 2002–03 at a food-chain discount and you keep the jewels.
+  { playerId: 'cur_deco01', from: 'porto', to: 'barcelona', window: '2004-07', fee: 21_000_000, id: 'deco-barca-2004' },
+  { playerId: 'cur_carvalho01', from: 'porto', to: 'chelsea', window: '2004-08', fee: 30_000_000, id: 'carvalho-chelsea-2004', enabledBy: 'abramovich' },
+  { playerId: 'cur_pferreira01', from: 'porto', to: 'chelsea', window: '2004-07', fee: 20_000_000, id: 'ferreira-chelsea-2004', enabledBy: 'abramovich' },
 ];
 
 // ── Real retirements (curated players hang up their boots ≈ when they did) ────

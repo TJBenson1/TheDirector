@@ -147,6 +147,11 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'lille', name: 'Lille', prestige: 64 },
       { id: 'parma', name: 'Parma', prestige: 68 },
       { id: 'man_city', name: 'Manchester City', prestige: 62 },
+      // Porto — the feeder club to pick apart before its 2004 CL win (Deco,
+      // Carvalho): prestige 72, a food-chain step-up for the English/Spanish elite.
+      { id: 'porto', name: 'FC Porto', prestige: 72 },
+      // Barcelona — where Deco really went in 2004 (destination for the sell-off ledger).
+      { id: 'barcelona', name: 'Barcelona', prestige: 86 },
     ],
     domesticLeagueId: 'eng-2001',
   },
