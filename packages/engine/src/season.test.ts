@@ -215,3 +215,29 @@ describe('butterflies reach the league table (§ butterfly showcase)', () => {
     expect(matchStrength(chelsea)).toBeLessThan(chelsea.strength + chelsea.form - 1);
   });
 });
+
+describe('player ratings have a realistic spread (§4)', () => {
+  it("a club's real stars lead their squad — no anonymous filler out-rates them", () => {
+    // The Liverpool benchmark: Gerrard clears the squad, the cast clusters below
+    // him, and the procedural filler is genuine DEPTH — never a nobody rated above
+    // the club's curated real players.
+    const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'spread' });
+    for (const club of ['liverpool', 'chelsea', 'man_utd', 'arsenal']) {
+      const squad = s.clubs[club]!.squad.map((id) => s.players[id]!);
+      const curated = squad.filter((p) => p.curated).map((p) => p.ability);
+      const filler = squad.filter((p) => !p.curated).map((p) => p.ability);
+      const topCurated = Math.max(...curated);
+      // Every anonymous filler sits below the club's best real player.
+      expect(Math.max(...filler)).toBeLessThan(topCurated);
+    }
+    // The specific benchmark: 2005 Gerrard is a clear talisman (~90), above the
+    // Liverpool cast which clusters in the low 80s.
+    const gerrard = s.players['cur_gerrard3']!;
+    expect(gerrard.ability).toBeGreaterThanOrEqual(89);
+    const otherLiverpool = s.clubs['liverpool']!.squad
+      .map((id) => s.players[id]!)
+      .filter((p) => p.id !== 'cur_gerrard3')
+      .map((p) => p.ability);
+    expect(Math.max(...otherLiverpool)).toBeLessThan(gerrard.ability); // he stands alone at the top
+  });
+});

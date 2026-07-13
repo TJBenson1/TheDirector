@@ -139,8 +139,11 @@ function seedOrder(n: number): number[] {
   return order;
 }
 
-/** Assemble this season's field: domestic top four + strongest context clubs. */
-function buildField(state: GameState): ClubId[] {
+/** Assemble this season's field: domestic top four + strongest context clubs,
+ *  plus any `mustInclude` clubs (the season's real qualifiers — a real winner who
+ *  slipped out of the domestic top four, like Liverpool 2005 who finished 5th and
+ *  won it as holders, must still be in the field for reality to be reproducible). */
+function buildField(state: GameState, mustInclude: ClubId[] = []): ClubId[] {
   const userLeague = state.leagues[state.clubs[state.playerClub]?.leagueId ?? ''];
   const seen = new Set<ClubId>();
   const field: ClubId[] = [];
@@ -150,6 +153,10 @@ function buildField(state: GameState): ClubId[] {
       field.push(id);
     }
   };
+
+  // The season's real qualifiers first — they historically got in, so they cannot
+  // be trimmed out below.
+  for (const id of mustInclude) add(id);
 
   // Real qualification: the domestic league's top four.
   if (userLeague) for (const id of standingsOrder(userLeague).slice(0, 4)) add(id);
@@ -169,12 +176,15 @@ function buildField(state: GameState): ClubId[] {
     add(id);
   }
 
-  // Trim to the largest power of two ≤ field size (min 4) for a clean bracket.
+  // Trim to the largest power of two ≤ field size (min 4) for a clean bracket —
+  // keeping the must-includes and then the strongest of the rest.
   let size = 1;
   while (size * 2 <= Math.min(field.length, FIELD_SIZE)) size *= 2;
-  return field
-    .sort((a, b) => (clStrength(state, b) - clStrength(state, a)))
-    .slice(0, size);
+  const forced = field.filter((id) => mustInclude.includes(id));
+  const rest = field
+    .filter((id) => !mustInclude.includes(id))
+    .sort((a, b) => clStrength(state, b) - clStrength(state, a));
+  return [...forced, ...rest].slice(0, size).sort((a, b) => clStrength(state, b) - clStrength(state, a));
 }
 
 /** Probability the stronger side (by `sa` vs `sb`) advances a single tie. */
@@ -189,7 +199,12 @@ function advanceProb(sa: number, sb: number): number {
  * July rollover for the season just completed (before the summer market runs).
  */
 export function simulateChampionsLeague(state: GameState, rng: Rng, seasonYear: number): void {
-  const seeds = buildField(state);
+  // The season's real winner/runner-up qualified historically, so the field must
+  // include them even if a butterfly (or a weak league season) dropped them out of
+  // the domestic top four — otherwise reality could not be reproduced.
+  const realFinal = REAL_UCL[eraForScenario(state.meta.scenarioId)]?.[seasonYear];
+  const mustInclude = realFinal ? [realFinal.w, realFinal.r].filter((id): id is ClubId => !!id) : [];
+  const seeds = buildField(state, mustInclude);
   if (seeds.length < 4) return; // not enough of a field to bother
 
   state.europeanCup ??= { name: 'Champions League', titleHistory: [] };
@@ -219,7 +234,7 @@ export function simulateChampionsLeague(state: GameState, rng: Rng, seasonYear: 
   // rival's above them by a clear swing. In a passive world every delta is ~0, so
   // every real winner is reproduced exactly.
   const delta = (id: ClubId): number => clStrength(state, id) - state.clubs[id]!.baseStrength;
-  const real = REAL_UCL[eraForScenario(state.meta.scenarioId)]?.[seasonYear];
+  const real = realFinal;
   // Reality holds ABSOLUTELY until the world has genuinely DIVERGED — the user has
   // acted on the market (aggression) or a butterfly has been banked into the
   // field. Ageing, form and reality's own transfers are not divergence: they must

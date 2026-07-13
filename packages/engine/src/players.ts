@@ -221,18 +221,25 @@ export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
   return player;
 }
 
-/** Generate a full procedural squad for a club, targeting its base strength. */
+/**
+ * Generate a full procedural squad for a club, targeting its base strength.
+ * `firstTeamSlots` is how many players are first-team quality (`baseStrength+2`);
+ * the rest are squad depth / prospects (`baseStrength-11`). It defaults to 14, but
+ * a club whose real first XI is already CURATED passes a small number (or zero),
+ * so the anonymous filler is genuine DEPTH sitting BELOW the real stars — never a
+ * wall of 88-rated nobodies drowning out a Gerrard (§4, the ratings-spread fix).
+ */
 export function generateSquad(
   clubId: ClubId,
   leagueId: string | null,
   baseStrength: number,
   currentYear: number,
   rng: Rng,
+  firstTeamSlots = 14,
 ): PlayerState[] {
   const squad: PlayerState[] = [];
   SQUAD_TEMPLATE.forEach((position, i) => {
-    // Front ~14 are first-team quality; the rest are squad depth / prospects.
-    const isStarter = i < 14;
+    const isStarter = i < firstTeamSlots;
     const target = isStarter ? baseStrength + 2 : baseStrength - 11;
     const ageBias = !isStarter && rng.chance(0.4) ? 'young' : 'mixed';
     squad.push(
