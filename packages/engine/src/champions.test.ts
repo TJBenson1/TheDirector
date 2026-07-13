@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createNewGame } from './state.js';
 import { advanceWindow } from './advance.js';
 import { applyDecision } from './events.js';
+import { attemptSigning, courtPlayer, evaluateApproach } from './index.js';
 import type { GameState } from './types.js';
 
 function play(scenarioId: string, seed: string, endYear: number, hook?: (s: GameState) => void): GameState {
@@ -44,6 +45,48 @@ describe('Champions League (§ butterfly showcase)', () => {
     expect(clWinner(s, 2009)).not.toBe('barcelona');
     // A year that never depended on Barça is untouched.
     expect(clWinner(s, 2008)).toBe('man_utd');
+  });
+});
+
+describe('the Ronaldinho gambit (playable counterfactual)', () => {
+  it("courting is required to prise Barça's spine away, and it moves the European board", () => {
+    // Passive: reality — Barça win the 2006 European Cup.
+    const base = play('manchester-united-2003', 'cf', 2010);
+    expect(clWinner(base, 2006)).toBe('barcelona');
+
+    // Counterfactual: United court and hijack Ronaldinho/Eto'o/Deco (a cold bid
+    // is refused — Barça are in pole), keep Piqué, and load up.
+    let s = createNewGame({ scenarioId: 'manchester-united-2003', seed: 'cf' });
+    const targets = ['cur_ronaldinho', 'cur_etoo', 'cur_deco'];
+    let signed = 0;
+    for (let i = 0; i < 60 && Number(s.clock.date.slice(0, 4)) < 2010; i++) {
+      for (const d of [...s.pendingDecisions]) {
+        const keep = d.id.includes('pique-barca') ? (d.choices.find((c) => c.id === 'keep')?.id ?? d.choices[0]!.id) : d.choices[0]!.id;
+        s = applyDecision(s, d.id, keep).state;
+      }
+      if (s.clock.window) {
+        s.clubs['man_utd']!.finances.transferBudget = 900_000_000;
+        for (const pid of targets) {
+          const p = s.players[pid];
+          if (!p || p.club === 'man_utd' || p.club === 'barcelona') continue;
+          courtPlayer(s, pid);
+          courtPlayer(s, pid);
+          courtPlayer(s, pid);
+          if (evaluateApproach(s, { playerId: pid, toClub: 'man_utd' }).willing) {
+            if (attemptSigning(s, { playerId: pid, toClub: 'man_utd', fee: 45_000_000 }).ok) signed++;
+          }
+        }
+      }
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
+      s = advanceWindow(s).state;
+    }
+    // The gambit landed the spine United really failed to sign.
+    expect(signed).toBeGreaterThanOrEqual(2);
+    expect(s.players.cur_ronaldinho?.club).toBe('man_utd');
+    // The European board is not identical to reality — United's super-team takes
+    // a final Barça won in the real world.
+    const changed = [2006, 2007, 2008, 2009].some((y) => clWinner(s, y) !== clWinner(base, y));
+    expect(changed).toBe(true);
   });
 });
 

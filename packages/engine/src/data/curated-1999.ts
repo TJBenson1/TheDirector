@@ -13,6 +13,7 @@ import { ARSENAL_2004_SQUADS } from './curated-2004.js';
 import { LIVERPOOL_2001_SQUADS } from './curated-2001.js';
 import { REAL_MADRID_2000_SQUADS } from './curated-2000.js';
 import { JUVENTUS_1995_SQUADS } from './curated-1995.js';
+import { MANUTD_2003_SQUADS } from './curated-2003.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -330,6 +331,8 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'man-utd-1999': MAN_UTD_1999_SQUADS,
   // The Lippi-era Juventus start has its own Serie A "Golden Age" pack.
   'juventus-1995': JUVENTUS_1995_SQUADS,
+  // The 2003 United start — home of the Barça counterfactual.
+  'manchester-united-2003': MANUTD_2003_SQUADS,
   // The Galácticos-era Madrid start has its own Spanish/European pack (La Liga
   // 2000–01 + the clubs Real bought their galácticos from).
   'real-madrid-2000': REAL_MADRID_2000_SQUADS,

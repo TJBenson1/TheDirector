@@ -205,8 +205,39 @@ export const ITALY_1995: LeagueSeed = {
   ],
 };
 
+/** England, 2003–04 Premier League — Arsenal's Invincibles, Abramovich's first
+ *  Chelsea season, United post-Beckham. Ordering follows the real final table. */
+export const ENGLAND_2003: LeagueSeed = {
+  id: 'eng-2003',
+  name: 'English Premier League',
+  season: '2003-07',
+  clubs: [
+    { id: 'arsenal', name: 'Arsenal', prestige: 84, strength: 88 },
+    { id: 'man_utd', name: 'Manchester United', prestige: 88, strength: 86 },
+    { id: 'chelsea', name: 'Chelsea', prestige: 78, strength: 84 },
+    { id: 'liverpool', name: 'Liverpool', prestige: 80, strength: 79 },
+    { id: 'newcastle', name: 'Newcastle United', prestige: 70, strength: 76 },
+    { id: 'aston_villa', name: 'Aston Villa', prestige: 62, strength: 68 },
+    { id: 'charlton', name: 'Charlton Athletic', prestige: 54, strength: 66 },
+    { id: 'bolton', name: 'Bolton Wanderers', prestige: 56, strength: 67 },
+    { id: 'fulham', name: 'Fulham', prestige: 58, strength: 65 },
+    { id: 'birmingham', name: 'Birmingham City', prestige: 54, strength: 64 },
+    { id: 'middlesbrough', name: 'Middlesbrough', prestige: 60, strength: 66 },
+    { id: 'southampton', name: 'Southampton', prestige: 56, strength: 68 },
+    { id: 'portsmouth', name: 'Portsmouth', prestige: 52, strength: 62 },
+    { id: 'spurs', name: 'Tottenham Hotspur', prestige: 68, strength: 66 },
+    { id: 'blackburn', name: 'Blackburn Rovers', prestige: 58, strength: 63 },
+    { id: 'man_city', name: 'Manchester City', prestige: 62, strength: 64 },
+    { id: 'everton', name: 'Everton', prestige: 64, strength: 62 },
+    { id: 'leicester', name: 'Leicester City', prestige: 50, strength: 58 },
+    { id: 'leeds', name: 'Leeds United', prestige: 62, strength: 60 },
+    { id: 'wolves', name: 'Wolverhampton', prestige: 48, strength: 55 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
+  'eng-2003': ENGLAND_2003,
   'esp-1': SPAIN_2000,
   'ita-1': ITALY_1995,
   'eng-2013': ENGLAND_2013,

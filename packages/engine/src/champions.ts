@@ -53,6 +53,16 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2007: { w: 'man_utd', r: 'chelsea' },
     2008: { w: 'barcelona', r: 'man_utd' },
   },
+  'era-2003': {
+    2003: { w: 'porto', r: 'monaco' },
+    2004: { w: 'liverpool', r: 'milan' },
+    2005: { w: 'barcelona', r: 'arsenal' },
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+  },
   'era-1995-2005': {
     1999: { w: 'real_madrid' },
     2000: { w: 'bayern' },

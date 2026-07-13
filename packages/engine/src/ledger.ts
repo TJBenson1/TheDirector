@@ -389,6 +389,47 @@ const INJURIES_2000: RealInjuryEntry[] = [
   { playerId: 'cur_aimar', atClub: 'valencia', since: '2002-10', months: 3, serious: false, note: 'ankle ligament damage' },
 ];
 
+/**
+ * Real 2003–2011 transfers for the "Manchester United 2003" pack — home of the
+ * great Barça counterfactual. The 2003 window is live: Ronaldinho's move to
+ * Barça (from PSG), Cristiano's to United (from Sporting) and Beckham's to Madrid
+ * are all decisions. Divert Ronaldinho/Eto'o/Deco away from Barça, or keep Piqué
+ * at United past 2008, and the Champions League board from 2006 rearranges.
+ */
+const LEDGER_2003_2011: RealTransferLedgerEntry[] = [
+  // ── The live 2003 window — the counterfactual's launch point ──
+  { playerId: 'cur_ronaldinho', from: 'psg', to: 'barcelona', window: '2003-07', fee: 30_000_000, id: 'ronaldinho-barca-2003' },
+  { playerId: 'cur_cristiano', from: 'sporting', to: 'man_utd', window: '2003-07', fee: 12_200_000, id: 'cristiano-utd-2003' },
+  { playerId: 'cur_beckham_u', from: 'man_utd', to: 'real_madrid', window: '2003-07', fee: 25_000_000, id: 'beckham-real-2003' },
+  // ── Barça's bought spine arrives (2004) — divertible by the user ──
+  { playerId: 'cur_deco', from: 'porto', to: 'barcelona', window: '2004-07', fee: 21_000_000, id: 'deco-barca-2004' },
+  { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 24_000_000, id: 'etoo-barca-2004' },
+  // Piqué to United (2004) then home to Barça (2008) — the "keep Piqué" decision.
+  { playerId: 'cur_pique_b', from: 'barcelona', to: 'man_utd', window: '2004-07', fee: 5_000_000, id: 'pique-utd-2004' },
+  { playerId: 'cur_pique_b', from: 'man_utd', to: 'barcelona', window: '2008-07', fee: 5_000_000, id: 'pique-barca-2008' },
+  // ── Real Madrid / Chelsea / Arsenal real business (context for the CL) ──
+  { playerId: 'cur_reyes_s', from: 'sevilla', to: 'arsenal', window: '2004-01', fee: 17_000_000, id: 'reyes-arsenal-2004' },
+  { playerId: 'cur_owen_l', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 8_000_000, id: 'owen-real-2004' },
+  { playerId: 'cur_baptista_s', from: 'sevilla', to: 'real_madrid', window: '2005-07', fee: 20_000_000, id: 'baptista-real-2005' },
+  { playerId: 'cur_henry_a', from: 'arsenal', to: 'barcelona', window: '2007-07', fee: 24_000_000, id: 'henry-barca-2007' },
+  { playerId: 'cur_alonso_l', from: 'liverpool', to: 'real_madrid', window: '2009-07', fee: 30_000_000, id: 'alonso-real-2009' },
+  { playerId: 'cur_kaka_m', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
+  { playerId: 'cur_cristiano', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cristiano-real-2009' },
+  // ── Barça's late-2000s reinforcements (the treble era) ──
+  { playerId: 'cur_dani_alves', from: 'sevilla', to: 'barcelona', window: '2008-07', fee: 30_000_000, id: 'alves-barca-2008' },
+  // The Ibrahimović–Eto'o swap (2009): Eto'o to Inter is what makes the 2010
+  // Nerazzurri treble — divert Eto'o from Barça and this chain never forms.
+  { playerId: 'cur_ibrahimovic_i', from: 'inter', to: 'barcelona', window: '2009-07', fee: 46_000_000, id: 'ibra-barca-2009' },
+  { playerId: 'cur_etoo', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000, id: 'etoo-inter-2009', enabledBy: 'ibra-barca-2009' },
+  { playerId: 'cur_villa_v', from: 'valencia', to: 'barcelona', window: '2010-07', fee: 40_000_000, id: 'villa-barca-2010' },
+];
+
+/** Real 2003-era injuries — fire only if the player is at his real club. */
+const INJURIES_2003: RealInjuryEntry[] = [
+  { playerId: 'cur_owen_l', atClub: 'real_madrid', since: '2004-12', months: 2, serious: false, note: 'hamstring trouble in Spain' },
+  { playerId: 'cur_messi', atClub: 'barcelona', since: '2006-03', months: 3, serious: false, note: 'metatarsal — the wonderkid’s early setback' },
+];
+
 /** Real Serie A "Golden Age" injuries — fire only if the player is at his club. */
 const INJURIES_1995: RealInjuryEntry[] = [
   { playerId: 'cur_delpiero_j', atClub: 'juventus', since: '1998-11', months: 6, serious: true, note: 'cruciate ligament rupture at Udine' },
@@ -403,12 +444,14 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [] },
   'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: [], realInjuries: INJURIES_2000 },
   'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: [], realInjuries: INJURIES_1995 },
+  'era-2003': { realTransferLedger: LEDGER_2003_2011, academyIntakes: [], realInjuries: INJURIES_2003 },
 };
 
 /** The era pack a scenario draws its reality data from. */
 export function eraForScenario(scenarioId: string): string {
   if (scenarioId.endsWith('-2013')) return 'era-2013';
   if (scenarioId.endsWith('-2004')) return 'era-2004';
+  if (scenarioId.endsWith('-2003')) return 'era-2003';
   if (scenarioId.endsWith('-2001')) return 'era-2001';
   if (scenarioId.endsWith('-2000')) return 'era-2000';
   if (scenarioId.endsWith('-1995')) return 'era-serie-a-1995';

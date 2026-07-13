@@ -94,6 +94,28 @@ describe('passive-fidelity — reality holds when the user does nothing (§9f)',
     expect(fallbacks(s)).toBe(0);
   });
 
+  it('era-2003 (manchester-united-2003): the Barça-counterfactual world holds to reality', () => {
+    const s = runPassive('manchester-united-2003', 'fidelity', 2011);
+    expectAt(s, {
+      // The live 2003 window resolves as reality.
+      cur_ronaldinho: 'barcelona',
+      cur_beckham_u: 'real_madrid',
+      // Barça's bought spine arrives; the academy core stays home.
+      cur_deco: 'barcelona',
+      cur_messi: 'barcelona',
+      cur_xavi: 'barcelona',
+      cur_iniesta: 'barcelona',
+      // Multi-hop reality: Cristiano ends at Madrid, Eto'o at Inter (the swap),
+      // Piqué home at Barça.
+      cur_cristiano: 'real_madrid',
+      cur_etoo: 'inter',
+      cur_pique_b: 'barcelona',
+    });
+    const m = ledgerSquadMatch(s);
+    expect(m.atRealClub / m.total).toBeGreaterThanOrEqual(0.95);
+    expect(fallbacks(s)).toBe(0);
+  });
+
   it('era-serie-a-1995 (juventus-1995): the calcio golden age plays out as reality', () => {
     const s = runPassive('juventus-1995', 'fidelity', 2003);
     expectAt(s, {
