@@ -432,6 +432,13 @@ const INJURIES_1998: RealInjuryEntry[] = [
   { playerId: 'cur_ronaldo', atClub: 'inter', since: '1999-11', months: 5, serious: true, note: 'knee tendon injury' },
 ];
 
+const ACADEMY_1998: AcademyGraduate[] = [
+  // Adriano — O Imperador. Arrived at Inter with the physique and shot of a
+  // generational striker; personal tragedy and lifestyle unravelled him. The
+  // definitive lost talent: latent 94, but a temperament almost no one reaches.
+  { year: 2001, seed: { id: 'cur_adriano', club: 'inter', name: 'Adriano', birthYear: 1982, nationality: 'Brazil', positions: ['ST'], ability: 72, potentialCeiling: 82, latentCeiling: 94, contractUntil: 2006, injuryProneness: 30, personality: per(4, 7, 8, 6, 8, 7) } },
+];
+
 const RETIREMENTS_1998: RealRetirement[] = [
   { playerId: 'cur_bergomi', year: 1999 }, { playerId: 'cur_pagliuca', year: 2007 },
   { playerId: 'cur_baggio_r', year: 2004 }, { playerId: 'cur_zamorano', year: 2003 },
@@ -448,7 +455,7 @@ const RETIREMENTS_1998: RealRetirement[] = [
 
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
-  'era-1998': { realTransferLedger: [], academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998 },
+  'era-1998': { realTransferLedger: [], academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998, academyGraduates: ACADEMY_1998 },
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004 },

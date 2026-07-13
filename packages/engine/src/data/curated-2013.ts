@@ -73,12 +73,13 @@ export const MAN_UTD_2013: CuratedSeed[] = [
   q('man_utd', 'anderson', 'Anderson', 1988, 'Brazil', ['CM'], 74, 84, 2015, 65, t(4, 7, 6, 6, 7, 6), { latentCeiling: 88 }),
   q('man_utd', 'fletcher', 'Darren Fletcher', 1984, 'Scotland', ['CM'], 76, 82, 2015, 60, t(9, 4, 8, 9, 3, 7)),
   q('man_utd', 'valencia', 'Antonio Valencia', 1985, 'Ecuador', ['RW', 'RB'], 80, 82, 2015, 30, t(8, 4, 7, 8, 3, 7)),
-  q('man_utd', 'nani', 'Nani', 1986, 'Portugal', ['RW', 'LW'], 79, 85, 2018, 35, t(5, 8, 7, 6, 7, 7)),
+  // Nani — flashes of brilliance, never the consistent star his gifts promised.
+  q('man_utd', 'nani', 'Nani', 1986, 'Portugal', ['RW', 'LW'], 79, 85, 2018, 35, t(5, 8, 7, 6, 7, 7), { latentCeiling: 88 }),
   q('man_utd', 'ashleyyoung', 'Ashley Young', 1985, 'England', ['LW', 'LB'], 76, 80, 2015, 30, t(6, 6, 7, 7, 5, 7)),
   q('man_utd', 'kagawa', 'Shinji Kagawa', 1989, 'Japan', ['AM', 'LW'], 79, 85, 2016, 30, t(8, 5, 7, 6, 4, 6)),
   q('man_utd', 'giggs2', 'Ryan Giggs', 1973, 'Wales', ['LW', 'CM'], 78, 79, 2014, 30, t(9, 5, 8, 10, 3, 7)),
   q('man_utd', 'rooney', 'Wayne Rooney', 1985, 'England', ['ST', 'AM'], 87, 89, 2015, 35, t(7, 8, 9, 7, 6, 7)),
-  q('man_utd', 'vanpersie', 'Robin van Persie', 1983, 'Netherlands', ['ST'], 87, 88, 2016, 60, t(8, 7, 9, 6, 5, 7)),
+  q('man_utd', 'vanpersie', 'Robin van Persie', 1983, 'Netherlands', ['ST'], 87, 88, 2016, 64, t(8, 7, 9, 6, 5, 7)),
   q('man_utd', 'welbeck', 'Danny Welbeck', 1990, 'England', ['ST', 'LW'], 76, 84, 2015, 35, t(8, 4, 8, 8, 4, 7)),
   q('man_utd', 'chicharito', 'Javier Hernández', 1988, 'Mexico', ['ST'], 78, 82, 2016, 30, t(8, 5, 8, 6, 4, 7)),
 ];
@@ -100,7 +101,7 @@ export const MAN_CITY_2013: CuratedSeed[] = [
   q('man_city', 'aguero', 'Sergio Agüero', 1988, 'Argentina', ['ST'], 89, 91, 2017, 45, t(8, 7, 9, 7, 5, 7)),
   q('man_city', 'negredo', 'Álvaro Negredo', 1985, 'Spain', ['ST'], 81, 83, 2017, 35, t(7, 6, 7, 6, 5, 7)),
   q('man_city', 'dzeko', 'Edin Džeko', 1986, 'Bosnia', ['ST'], 82, 84, 2016, 30, t(7, 6, 8, 6, 5, 7)),
-  q('man_city', 'jovetic', 'Stevan Jovetić', 1989, 'Montenegro', ['ST', 'AM'], 81, 86, 2017, 55, t(6, 7, 7, 6, 6, 6)),
+  q('man_city', 'jovetic', 'Stevan Jovetić', 1989, 'Montenegro', ['ST', 'AM'], 81, 86, 2017, 64, t(6, 7, 7, 6, 6, 6)),
 ];
 
 /** Chelsea, 2013–14 — Mourinho's second coming. */
@@ -136,6 +137,9 @@ export const ARSENAL_2013: CuratedSeed[] = [
   q('arsenal', 'cazorla', 'Santi Cazorla', 1984, 'Spain', ['AM', 'LW'], 84, 85, 2016, 25, t(9, 5, 7, 7, 3, 8)),
   q('arsenal', 'rosicky', 'Tomáš Rosický', 1980, 'Czech Republic', ['AM'], 79, 80, 2014, 55, t(8, 5, 7, 8, 4, 7)),
   q('arsenal', 'walcott', 'Theo Walcott', 1989, 'England', ['RW'], 81, 85, 2016, 45, t(7, 6, 7, 7, 4, 7)),
+  // Bendtner — rated himself world-class; almost nobody else did. The purest
+  // ego-bust gamble: prove him right, or watch the talent go to waste.
+  q('arsenal', 'bendtner', 'Nicklas Bendtner', 1988, 'Denmark', ['ST'], 74, 80, 2015, 30, t(4, 9, 8, 5, 6, 6), { latentCeiling: 86 }),
   q('arsenal', 'giroud', 'Olivier Giroud', 1986, 'France', ['ST'], 81, 83, 2016, 30, t(8, 5, 8, 7, 4, 7)),
   q('arsenal', 'podolski', 'Lukas Podolski', 1985, 'Germany', ['LW', 'ST'], 80, 82, 2016, 30, t(7, 6, 7, 6, 5, 7)),
 ];
@@ -154,7 +158,7 @@ export const LIVERPOOL_2013: CuratedSeed[] = [
   q('liverpool', 'coutinho', 'Philippe Coutinho', 1992, 'Brazil', ['AM', 'LW'], 82, 89, 2018, 30, t(8, 6, 8, 7, 4, 7)),
   q('liverpool', 'sterling', 'Raheem Sterling', 1994, 'England', ['RW', 'LW'], 78, 89, 2017, 25, t(7, 6, 8, 6, 5, 7)),
   q('liverpool', 'suarez', 'Luis Suárez', 1987, 'Uruguay', ['ST'], 89, 91, 2018, 30, t(6, 8, 10, 5, 8, 7)),
-  q('liverpool', 'sturridge', 'Daniel Sturridge', 1989, 'England', ['ST'], 83, 86, 2018, 60, t(6, 7, 8, 6, 6, 7)),
+  q('liverpool', 'sturridge', 'Daniel Sturridge', 1989, 'England', ['ST'], 83, 86, 2018, 70, t(6, 7, 8, 6, 6, 7)),
 ];
 
 /** Tottenham, 2013–14 — Bale is the marquee target (else he leaves via the ledger). */
@@ -188,9 +192,11 @@ export const EVERTON_2013: CuratedSeed[] = [
   q('everton', 'osman', 'Leon Osman', 1981, 'England', ['CM', 'AM'], 77, 78, 2015, 30, t(8, 4, 7, 8, 4, 7)),
   q('everton', 'pienaar', 'Steven Pienaar', 1982, 'South Africa', ['LW', 'AM'], 78, 80, 2016, 40, t(7, 5, 7, 7, 5, 7)),
   q('everton', 'mirallas', 'Kevin Mirallas', 1987, 'Belgium', ['LW', 'RW'], 80, 84, 2017, 45, t(6, 6, 7, 6, 6, 7)),
-  q('everton', 'barkley', 'Ross Barkley', 1993, 'England', ['AM', 'CM'], 77, 87, 2018, 35, t(6, 6, 8, 8, 5, 6)),
+  // Barkley & Deulofeu — two academy-golden talents who stalled; either can be
+  // the player everyone saw at 19 if a manager gets the best out of him.
+  q('everton', 'barkley', 'Ross Barkley', 1993, 'England', ['AM', 'CM'], 77, 87, 2018, 35, t(6, 6, 8, 8, 5, 6), { latentCeiling: 91 }),
   q('everton', 'lukaku', 'Romelu Lukaku', 1993, 'Belgium', ['ST'], 82, 89, 2018, 30, t(7, 7, 9, 6, 5, 7)),
-  q('everton', 'deulofeu', 'Gerard Deulofeu', 1994, 'Spain', ['LW', 'RW'], 75, 85, 2017, 35, t(6, 7, 7, 5, 6, 6)),
+  q('everton', 'deulofeu', 'Gerard Deulofeu', 1994, 'Spain', ['LW', 'RW'], 75, 85, 2017, 35, t(6, 7, 7, 5, 6, 6), { latentCeiling: 88 }),
 ];
 
 /** Southampton, 2013–14 — Shaw (a later Van Gaal target the user skips) + core. */
@@ -252,7 +258,7 @@ export const BAYERN_2013: CuratedSeed[] = [
   q('bayern', 'schweinsteiger', 'Bastian Schweinsteiger', 1984, 'Germany', ['CM', 'DM'], 85, 87, 2016, 45, t(9, 6, 9, 9, 4, 7)),
   q('bayern', 'kroos', 'Toni Kroos', 1990, 'Germany', ['CM'], 84, 89, 2015, 20, t(9, 5, 8, 7, 3, 7)),
   q('bayern', 'ribery', 'Franck Ribéry', 1983, 'France', ['LW'], 88, 89, 2017, 35, t(8, 7, 9, 8, 5, 7)),
-  q('bayern', 'robben', 'Arjen Robben', 1984, 'Netherlands', ['RW'], 87, 88, 2017, 55, t(8, 7, 9, 7, 5, 7)),
+  q('bayern', 'robben', 'Arjen Robben', 1984, 'Netherlands', ['RW'], 87, 88, 2017, 64, t(8, 7, 9, 7, 5, 7)),
   q('bayern', 'muller', 'Thomas Müller', 1989, 'Germany', ['AM', 'ST'], 85, 88, 2017, 20, t(9, 5, 9, 10, 3, 8)),
   q('bayern', 'mandzukic', 'Mario Mandžukić', 1986, 'Croatia', ['ST'], 82, 84, 2017, 30, t(8, 6, 8, 6, 6, 7)),
   q('bayern', 'gotze', 'Mario Götze', 1992, 'Germany', ['AM'], 83, 89, 2017, 40, t(7, 6, 8, 6, 5, 7)),
@@ -307,8 +313,18 @@ export const JUVENTUS_2013: CuratedSeed[] = [
   q('juventus', 'chiellini', 'Giorgio Chiellini', 1984, 'Italy', ['CB'], 85, 86, 2018, 30, t(9, 6, 9, 9, 5, 6)),
 ];
 
+/** West Ham, 2013–14 — home of Ravel Morrison, the ultimate what-might-have-been.
+ *  A 2013 United user can sign him back and try to unlock the talent that left
+ *  Old Trafford in 2012 (latent 90 — but a near-hopeless temperament to reach). */
+export const WESTHAM_2013: CuratedSeed[] = [
+  q('west_ham', 'ravel', 'Ravel Morrison', 1993, 'England', ['AM', 'CM'], 71, 78, 2016, 35, t(3, 8, 7, 4, 8, 6), { latentCeiling: 90 }),
+  q('west_ham', 'noble', 'Mark Noble', 1987, 'England', ['CM', 'DM'], 78, 79, 2016, 25, t(9, 5, 8, 10, 4, 6)),
+  q('west_ham', 'nolan', 'Kevin Nolan', 1982, 'England', ['CM', 'AM'], 76, 77, 2015, 30, t(8, 6, 8, 8, 4, 6)),
+];
+
 /** Curated squads for the man-utd-2013 scenario, keyed by club. */
 export const MAN_UTD_2013_SQUADS: Record<string, CuratedSeed[]> = {
+  west_ham: WESTHAM_2013,
   man_utd: MAN_UTD_2013,
   man_city: MAN_CITY_2013,
   chelsea: CHELSEA_2013,

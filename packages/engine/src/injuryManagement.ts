@@ -114,14 +114,18 @@ export function rollInjuryManagement(state: GameState, rng: Rng): void {
     // ── Load management: a fit, fragile star through a congested run ───────────
     // Rare and only in the congested midwinter run, so it reads as an occasional
     // strategic call, not a monthly nag. Non-interrupt (it doesn't pause the sim).
+    // Congested calendar: the festive pile-up (Nov–Jan) and the run-in (Mar–May),
+    // when resting a fragile body most matters.
+    const congested = isRunInMonth(state.clock.monthIndex) ||
+      (state.clock.monthIndex >= 4 && state.clock.monthIndex <= 6);
     if (
       !p.injury &&
       !p.restMonths &&
       p.injuryProneness >= FRAGILE_PRONENESS &&
       p.ability >= FRAGILE_ABILITY &&
-      isRunInMonth(state.clock.monthIndex) && // the congested winter run
+      congested &&
       !hasPendingFor(state, p.id, 'load') &&
-      r.chance(0.22)
+      r.chance(0.28)
     ) {
       const accept = restAcceptance(p);
       const decision: Decision = {

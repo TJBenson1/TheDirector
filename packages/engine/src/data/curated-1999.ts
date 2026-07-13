@@ -173,7 +173,7 @@ export const ARSENAL_1999: CuratedSeed[] = [
 ];
 export const LIVERPOOL_1999: CuratedSeed[] = [
   q('liverpool', 'mcmanaman', 'Steve McManaman', 1972, 'England', ['RW', 'AM'], 82, 83, 2000, 25, t(7, 6, 7, 5, 4, 8)),
-  q('liverpool', 'owen', 'Michael Owen', 1979, 'England', ['ST'], 87, 90, 2005, 45, t(8, 6, 8, 6, 4, 7)),
+  q('liverpool', 'owen', 'Michael Owen', 1979, 'England', ['ST'], 87, 90, 2005, 68, t(8, 6, 8, 6, 4, 7)),
 ];
 export const LEEDS_1999: CuratedSeed[] = [
   q('leeds', 'rkeane', 'Robbie Keane', 1980, 'Ireland', ['ST'], 79, 85, 2004, 25, t(7, 6, 8, 5, 5, 8)),

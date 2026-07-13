@@ -70,7 +70,7 @@ export const MARSEILLE_2004: CuratedSeed[] = [
   q('marseille', 'nasri', 'Samir Nasri', 1987, 'France', ['AM', 'LW'], 76, 85, 2008, 30, t(6, 7, 7, 6, 6, 7)),
 ];
 export const PSV_2004: CuratedSeed[] = [
-  q('psv', 'robben2', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 83, 89, 2008, 55, t(8, 7, 9, 6, 5, 7)),
+  q('psv', 'robben2', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 83, 89, 2008, 64, t(8, 7, 9, 6, 5, 7)),
   q('psv', 'park', 'Park Ji-sung', 1981, 'South Korea', ['RW', 'CM'], 78, 82, 2005, 30, t(9, 4, 8, 8, 3, 8)),
 ];
 export const MALLORCA_2004: CuratedSeed[] = [
@@ -117,7 +117,9 @@ export const LIVERPOOL_2004: CuratedSeed[] = [
 /** Tottenham, 2004–05 — the rising challenger. */
 export const SPURS_2004: CuratedSeed[] = [
   q('spurs', 'robinson_p', 'Paul Robinson', 1979, 'England', ['GK'], 80, 82, 2008, 25, t(7, 5, 7, 7, 5, 7)),
-  q('spurs', 'king', 'Ledley King', 1980, 'England', ['CB', 'DM'], 84, 87, 2008, 55, t(8, 5, 8, 9, 4, 7)),
+  // Ledley King — a world-class defender on one good knee; managed right, the
+  // Rio-level career the injuries denied him.
+  q('spurs', 'king', 'Ledley King', 1980, 'England', ['CB', 'DM'], 84, 87, 2008, 70, t(8, 5, 8, 9, 4, 7), { latentCeiling: 90 }),
   q('spurs', 'carrick2', 'Michael Carrick', 1981, 'England', ['CM', 'DM'], 81, 85, 2007, 25, t(9, 4, 7, 8, 3, 7)),
   q('spurs', 'defoe2', 'Jermain Defoe', 1982, 'England', ['ST'], 79, 84, 2008, 30, t(7, 6, 8, 6, 5, 7)),
   q('spurs', 'keane_r', 'Robbie Keane', 1980, 'Ireland', ['ST', 'AM'], 81, 84, 2008, 25, t(7, 6, 8, 6, 5, 8)),
@@ -152,11 +154,15 @@ export const WESTHAM_2004: CuratedSeed[] = [
 /** Ballack + Hargreaves join English clubs from Bayern (curated as the source). */
 export const BAYERN_2004: CuratedSeed[] = [
   q('bayern', 'ballack', 'Michael Ballack', 1976, 'Germany', ['CM', 'AM'], 85, 86, 2006, 30, t(8, 7, 9, 6, 5, 7)),
-  q('bayern', 'hargreaves', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 82, 85, 2007, 65, t(9, 5, 8, 7, 4, 7)),
+  // Owen Hargreaves — a fine midfielder whose body simply gave out. High latent
+  // if a manager can somehow keep him on the pitch.
+  q('bayern', 'hargreaves', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 82, 85, 2007, 76, t(9, 5, 8, 7, 4, 7), { latentCeiling: 88 }),
 ];
 export const PORTO_2004: CuratedSeed[] = [
   q('porto', 'anderson_p', 'Anderson', 1988, 'Brazil', ['CM'], 76, 86, 2011, 55, t(6, 7, 7, 6, 6, 7), { latentCeiling: 89 }),
-  q('porto', 'quaresma', 'Ricardo Quaresma', 1983, 'Portugal', ['RW'], 80, 85, 2008, 40, t(6, 8, 7, 5, 7, 6)),
+  // Quaresma — the trick that never became an end product. Flair for days, a
+  // temperament that squandered it (latent 90, but a nightmare to unlock).
+  q('porto', 'quaresma', 'Ricardo Quaresma', 1983, 'Portugal', ['RW'], 80, 85, 2008, 40, t(6, 8, 7, 5, 7, 6), { latentCeiling: 90 }),
 ];
 export const SPORTING_2004: CuratedSeed[] = [
   q('sporting', 'nani', 'Nani', 1986, 'Portugal', ['RW', 'LW'], 76, 86, 2011, 35, t(6, 8, 7, 6, 7, 7)),

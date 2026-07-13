@@ -6,12 +6,13 @@ Deferred items, captured so they aren't lost. Not yet built.
 More real under-achievers to curate with a `latentCeiling` (the reverse
 reality-rail gamble — see `development.ts` / DESIGN docs):
 
-- **1999/2004 era:** Anderson (Porto→United), Robinho, Adriano (the tragic arc —
-  latent very high, but temperament/lifestyle bust risk near-certain), Kaká
-  post-injuries, Freddy Adju-class hype busts, Denílson, Quaresma.
-- **2013 era:** Ravel Morrison (author him at West Ham so a 2013 user can sign +
-  centre him), Nicklas Bendtner, Alexandre Pato, Bojan, Balotelli (huge latent,
-  huge bust risk).
+- ✅ **Done:** Anderson, Reyes, Woodgate, Diouf, Alan Smith, Welbeck, Wes Brown,
+  Januzaj, James Wilson (earlier). Now added: **Ravel Morrison** (West Ham '13,
+  signable), **Adriano** (Inter '98 academy — the tragic arc, latent 94),
+  **Quaresma** ('04), **Bendtner/Nani/Barkley/Deulofeu** ('13). King & Hargreaves
+  are now fragile-AND-lost talents (manage the body to unlock the latent).
+- **Still to do:** Robinho, Kaká post-injuries, Alexandre Pato, Bojan, Balotelli,
+  Denílson, Freddy-Adu-class hype busts.
 - **General:** a "cautionary tier" of high-latent / high-bust talents where the
   smart play is often NOT to gamble — so the mechanic rewards judgement, not just
   minutes.
