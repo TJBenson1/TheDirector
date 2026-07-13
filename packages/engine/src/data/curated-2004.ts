@@ -76,10 +76,29 @@ export const PSV_2004: CuratedSeed[] = [
 export const MALLORCA_2004: CuratedSeed[] = [
   q('mallorca', 'etoo', 'Samuel Eto’o', 1981, 'Cameroon', ['ST'], 84, 88, 2008, 30, t(7, 8, 9, 5, 6, 7)),
 ];
+/** Valencia CF, 2004–05 — reigning La Liga + UEFA Cup winners. (David Villa was
+ *  still at Zaragoza in 2004-05, joining in 2005 — so he is not here yet.) */
 export const VALENCIA_2004: CuratedSeed[] = [
-  q('valencia', 'villa', 'David Villa', 1981, 'Spain', ['ST'], 82, 88, 2009, 30, t(8, 6, 9, 6, 5, 7)),
-  q('valencia', 'aimar', 'Pablo Aimar', 1979, 'Argentina', ['AM'], 82, 84, 2008, 40, t(7, 6, 7, 6, 5, 7)),
-  q('valencia', 'baraja', 'Rubén Baraja', 1975, 'Spain', ['CM', 'DM'], 81, 82, 2007, 30, t(8, 5, 8, 8, 4, 7)),
+  q('valencia', 'canizares04', 'Santiago Cañizares', 1969, 'Spain', ['GK'], 84, 84, 2007, 30, t(8, 7, 6, 8, 5, 6)),
+  q('valencia', 'ayala04', 'Roberto Ayala', 1973, 'Argentina', ['CB'], 85, 85, 2007, 20, t(9, 5, 7, 8, 3, 7)),
+  q('valencia', 'marchena04', 'Carlos Marchena', 1979, 'Spain', ['CB'], 80, 82, 2009, 25, t(8, 4, 6, 8, 3, 7)),
+  q('valencia', 'carboni2004', 'Amedeo Carboni', 1965, 'Italy', ['LB'], 76, 76, 2006, 45, t(8, 5, 5, 9, 4, 6)),
+  q('valencia', 'currotorres04', 'Curro Torres', 1976, 'Spain', ['RB'], 74, 75, 2007, 40, t(7, 3, 5, 9, 3, 6)),
+  q('valencia', 'albelda04', 'David Albelda', 1977, 'Spain', ['DM'], 82, 83, 2009, 25, t(8, 5, 7, 9, 6, 7)),
+  q('valencia', 'baraja04', 'Rubén Baraja', 1975, 'Spain', ['CM', 'DM'], 83, 83, 2008, 45, t(8, 5, 7, 8, 5, 7)),
+  // Vicente — a world-class left winger in 2004 whose prime was wrecked by
+  // recurrent hamstring/ankle trouble. Fragile-and-lost (latent 88).
+  q('valencia', 'vicente04', 'Vicente Rodríguez', 1981, 'Spain', ['LW'], 84, 87, 2009, 70, t(7, 6, 7, 7, 4, 6), { latentCeiling: 88 }),
+  q('valencia', 'rufete04', 'Francisco Rufete', 1976, 'Spain', ['RW', 'AM'], 76, 76, 2006, 30, t(7, 4, 5, 7, 4, 6)),
+  q('valencia', 'mista04', 'Mista', 1978, 'Spain', ['ST'], 79, 80, 2008, 30, t(7, 5, 6, 7, 4, 6)),
+  q('valencia', 'divaio04', 'Marco Di Vaio', 1976, 'Italy', ['ST'], 80, 81, 2008, 30, t(8, 6, 7, 5, 5, 6)),
+  // Aimar — a Maradona-anointed playmaker, sublime in flashes but never sustained
+  // the very top level as injuries kept interrupting him. Fragile-and-lost (90).
+  q('valencia', 'aimar04', 'Pablo Aimar', 1979, 'Argentina', ['AM'], 83, 85, 2007, 65, t(6, 6, 6, 6, 6, 6), { latentCeiling: 90 }),
+  q('valencia', 'fabioaurelio04', 'Fábio Aurélio', 1979, 'Brazil', ['LB'], 78, 80, 2007, 80, t(8, 4, 6, 7, 3, 6)),
+  q('valencia', 'sissoko04', 'Mohamed Sissoko', 1985, 'Mali', ['DM'], 76, 84, 2008, 35, t(7, 6, 8, 5, 6, 7)),
+  q('valencia', 'fiore04', 'Stefano Fiore', 1975, 'Italy', ['AM', 'CM'], 78, 78, 2008, 40, t(7, 6, 6, 5, 5, 5)),
+  q('valencia', 'corradi04', 'Bernardo Corradi', 1976, 'Italy', ['ST'], 76, 77, 2009, 35, t(7, 6, 6, 5, 6, 5)),
 ];
 
 /** Manchester United, 2004–05 — rebuilding around Rooney and Ronaldo. */
@@ -141,9 +160,24 @@ export const EVERTON_2004: CuratedSeed[] = [
 export const SPARTAK_2004: CuratedSeed[] = [
   q('spartak_moscow', 'vidic', 'Nemanja Vidić', 1981, 'Serbia', ['CB'], 82, 87, 2010, 40, t(9, 6, 9, 8, 5, 6)),
 ];
+/** AS Monaco, 2004–05 — the season after their run to the CL final. Evra and
+ *  Adebayor (both ledger subjects, off to United/Arsenal in 2006) lead a young side. */
 export const MONACO_2004: CuratedSeed[] = [
   q('monaco', 'evra', 'Patrice Evra', 1981, 'France', ['LB'], 81, 85, 2010, 25, t(8, 6, 8, 8, 5, 7)),
   q('monaco', 'adebayor', 'Emmanuel Adebayor', 1984, 'Togo', ['ST'], 79, 85, 2008, 35, t(5, 8, 7, 5, 7, 6)),
+  q('monaco', 'roma04', 'Flavio Roma', 1974, 'Italy', ['GK'], 78, 79, 2008, 20, t(8, 6, 7, 8, 4, 7)),
+  q('monaco', 'givet04', 'Gaël Givet', 1981, 'France', ['CB', 'LB'], 78, 82, 2008, 25, t(8, 5, 8, 7, 5, 7)),
+  q('monaco', 'squillaci04', 'Sébastien Squillaci', 1980, 'France', ['CB'], 77, 81, 2008, 30, t(8, 6, 8, 7, 5, 6)),
+  q('monaco', 'jrodriguez04', 'Julien Rodríguez', 1978, 'France', ['CB'], 75, 77, 2007, 30, t(8, 5, 7, 8, 5, 6)),
+  q('monaco', 'modesto04', 'François Modesto', 1978, 'France', ['RB', 'CB'], 72, 74, 2007, 30, t(7, 5, 7, 7, 5, 7)),
+  q('monaco', 'bernardi04', 'Lucas Bernardi', 1977, 'Argentina', ['DM', 'CM'], 79, 80, 2008, 25, t(8, 6, 8, 7, 5, 7)),
+  q('monaco', 'dperez04', 'Diego Pérez', 1980, 'Uruguay', ['DM', 'CM'], 74, 78, 2008, 30, t(8, 6, 8, 7, 6, 6)),
+  q('monaco', 'plasil04', 'Jaroslav Plašil', 1982, 'Czech Republic', ['CM', 'AM'], 72, 82, 2009, 25, t(8, 5, 8, 7, 5, 7)),
+  // Saviola — "the next Maradona" on loan from Barça; gifted, but never sustained
+  // the elite level his teenage years promised. A lost talent (latent 88).
+  q('monaco', 'saviola04', 'Javier Saviola', 1981, 'Argentina', ['ST', 'AM'], 82, 85, 2006, 30, t(8, 6, 8, 5, 6, 7), { latentCeiling: 88 }),
+  q('monaco', 'nonda04', 'Shabani Nonda', 1977, 'DR Congo', ['ST'], 78, 80, 2007, 70, t(7, 7, 8, 6, 6, 6)),
+  q('monaco', 'kallon04', 'Mohamed Kallon', 1979, 'Sierra Leone', ['ST', 'AM'], 76, 79, 2008, 40, t(6, 8, 7, 5, 7, 6)),
 ];
 export const ATLETICO_2004: CuratedSeed[] = [
   q('atletico', 'torres', 'Fernando Torres', 1984, 'Spain', ['ST'], 84, 90, 2009, 40, t(8, 6, 9, 7, 5, 7)),
@@ -152,17 +186,54 @@ export const WESTHAM_2004: CuratedSeed[] = [
   q('west_ham', 'tevez', 'Carlos Tévez', 1984, 'Argentina', ['ST', 'AM'], 83, 88, 2008, 30, t(7, 8, 9, 6, 7, 7)),
 ];
 /** Ballack + Hargreaves join English clubs from Bayern (curated as the source). */
+/** Bayern Munich, 2004–05 — Bundesliga champions: Kahn behind Ballack, with
+ *  teenage Schweinsteiger and Lahm coming through. */
 export const BAYERN_2004: CuratedSeed[] = [
+  // Ballack and Hargreaves are ledger subjects (Chelsea '06 / United '07) — keep.
   q('bayern', 'ballack', 'Michael Ballack', 1976, 'Germany', ['CM', 'AM'], 85, 86, 2006, 30, t(8, 7, 9, 6, 5, 7)),
   // Owen Hargreaves — a fine midfielder whose body simply gave out. High latent
   // if a manager can somehow keep him on the pitch.
   q('bayern', 'hargreaves', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 82, 85, 2007, 76, t(9, 5, 8, 7, 4, 7), { latentCeiling: 88 }),
+  q('bayern', 'kahn04', 'Oliver Kahn', 1969, 'Germany', ['GK'], 87, 87, 2008, 30, t(9, 8, 9, 9, 8, 6)),
+  q('bayern', 'lucio04', 'Lúcio', 1978, 'Brazil', ['CB'], 85, 86, 2008, 30, t(8, 7, 8, 6, 6, 8)),
+  q('bayern', 'sagnol04', 'Willy Sagnol', 1977, 'France', ['RB'], 82, 83, 2008, 40, t(8, 5, 7, 8, 4, 7)),
+  q('bayern', 'lizarazu04', 'Bixente Lizarazu', 1969, 'France', ['LB'], 82, 82, 2006, 45, t(8, 6, 7, 7, 5, 7)),
+  q('bayern', 'rkovac04', 'Robert Kovač', 1974, 'Croatia', ['CB'], 79, 80, 2007, 40, t(7, 6, 6, 7, 6, 7)),
+  q('bayern', 'zeroberto04', 'Zé Roberto', 1974, 'Brazil', ['CM', 'LW'], 84, 85, 2006, 30, t(8, 6, 7, 7, 4, 8)),
+  q('bayern', 'frings04', 'Torsten Frings', 1976, 'Germany', ['DM', 'CM'], 83, 84, 2008, 40, t(8, 6, 8, 7, 6, 7)),
+  q('bayern', 'schweinsteiger04', 'Bastian Schweinsteiger', 1984, 'Germany', ['CM', 'RW'], 74, 89, 2008, 45, t(8, 6, 9, 9, 6, 8)),
+  q('bayern', 'lahm04', 'Philipp Lahm', 1983, 'Germany', ['LB', 'RB'], 74, 90, 2009, 55, t(9, 4, 9, 9, 3, 8)),
+  q('bayern', 'makaay04', 'Roy Makaay', 1975, 'Netherlands', ['ST'], 85, 85, 2008, 30, t(8, 5, 7, 7, 4, 7)),
+  q('bayern', 'pizarro04', 'Claudio Pizarro', 1978, 'Peru', ['ST'], 83, 84, 2008, 35, t(7, 6, 7, 6, 5, 8)),
+  q('bayern', 'salihamidzic04', 'Hasan Salihamidžić', 1977, 'Bosnia and Herzegovina', ['RW', 'CM'], 79, 80, 2007, 30, t(8, 5, 7, 8, 5, 8)),
+  q('bayern', 'demichelis04', 'Martín Demichelis', 1980, 'Argentina', ['CB', 'DM'], 77, 82, 2008, 35, t(7, 6, 7, 7, 6, 7)),
+  // Deisler — the "German Beckham", a glorious talent destroyed by knee surgeries
+  // and depression; retired at 27. A genuine lost talent (latent 87).
+  q('bayern', 'deisler04', 'Sebastian Deisler', 1980, 'Germany', ['RW', 'AM'], 78, 84, 2007, 78, t(7, 4, 6, 7, 7, 6), { latentCeiling: 87 }),
 ];
 export const PORTO_2004: CuratedSeed[] = [
   q('porto', 'anderson_p', 'Anderson', 1988, 'Brazil', ['CM'], 76, 86, 2011, 55, t(6, 7, 7, 6, 6, 7), { latentCeiling: 89 }),
   // Quaresma — the trick that never became an end product. Flair for days, a
   // temperament that squandered it (latent 90, but a nightmare to unlock).
   q('porto', 'quaresma', 'Ricardo Quaresma', 1983, 'Portugal', ['RW'], 80, 85, 2008, 40, t(6, 8, 7, 5, 7, 6), { latentCeiling: 90 }),
+  // The post-2004-CL side (Deco/Carvalho/Ferreira had just left for Barça/Chelsea).
+  q('porto', 'baia04', 'Vítor Baía', 1969, 'Portugal', ['GK'], 82, 82, 2007, 30, t(8, 6, 6, 9, 4, 7)),
+  q('porto', 'jorgecosta04', 'Jorge Costa', 1971, 'Portugal', ['CB'], 78, 78, 2006, 30, t(8, 6, 7, 9, 5, 7)),
+  q('porto', 'pedroemanuel04', 'Pedro Emanuel', 1975, 'Portugal', ['CB'], 74, 74, 2008, 30, t(8, 4, 6, 8, 4, 7)),
+  q('porto', 'ricardocosta04', 'Ricardo Costa', 1981, 'Portugal', ['CB'], 70, 79, 2008, 30, t(7, 5, 7, 6, 5, 7)),
+  q('porto', 'pepe04', 'Pepe', 1983, 'Brazil', ['CB'], 74, 88, 2009, 55, t(8, 6, 9, 7, 8, 7)),
+  q('porto', 'nunovalente04', 'Nuno Valente', 1974, 'Portugal', ['LB'], 76, 76, 2006, 35, t(8, 4, 6, 7, 4, 7)),
+  q('porto', 'seitaridis04', 'Giourkas Seitaridis', 1981, 'Greece', ['RB'], 80, 82, 2006, 70, t(7, 6, 7, 5, 5, 6)),
+  q('porto', 'bosingwa04', 'José Bosingwa', 1982, 'Portugal', ['RB', 'LB'], 74, 85, 2009, 45, t(7, 7, 8, 5, 6, 7)),
+  q('porto', 'costinha04', 'Costinha', 1974, 'Portugal', ['DM'], 80, 80, 2006, 35, t(8, 6, 7, 7, 5, 7)),
+  q('porto', 'maniche04', 'Maniche', 1977, 'Portugal', ['CM', 'DM'], 83, 84, 2007, 30, t(7, 8, 8, 6, 7, 7)),
+  q('porto', 'diego04', 'Diego', 1985, 'Brazil', ['AM'], 82, 88, 2009, 30, t(8, 7, 9, 5, 6, 7)),
+  // Carlos Alberto — scored in the 2004 CL final at 19, then flamed out on
+  // attitude and off-field trouble. The cautionary lost talent (latent 88).
+  q('porto', 'carlosalberto04', 'Carlos Alberto', 1984, 'Brazil', ['AM', 'LW'], 76, 82, 2008, 40, t(5, 8, 7, 4, 8, 5), { latentCeiling: 88 }),
+  q('porto', 'mccarthy04', 'Benni McCarthy', 1977, 'South Africa', ['ST'], 82, 83, 2006, 30, t(6, 7, 7, 6, 6, 7)),
+  q('porto', 'derlei04', 'Derlei', 1975, 'Brazil', ['ST'], 79, 79, 2007, 50, t(8, 5, 7, 7, 5, 7)),
+  q('porto', 'luisfabiano04', 'Luís Fabiano', 1980, 'Brazil', ['ST'], 79, 86, 2008, 45, t(6, 8, 8, 4, 7, 6)),
 ];
 export const SPORTING_2004: CuratedSeed[] = [
   q('sporting', 'nani', 'Nani', 1986, 'Portugal', ['RW', 'LW'], 76, 86, 2011, 35, t(6, 8, 7, 6, 7, 7)),
@@ -242,6 +313,27 @@ export const REAL_MADRID_2004: CuratedSeed[] = [
   q('real_madrid', 'robinho04', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 74, 84, 2010, 30, t(5, 7, 7, 5, 8, 6), { latentCeiling: 90 }),
 ];
 
+/** Juventus, 2004–05 — Capello's champions (title later stripped in Calciopoli):
+ *  Buffon, the Thuram–Cannavaro wall, Nedvěd, Del Piero, Trezeguet, a young Zlatan. */
+export const JUVENTUS_2004: CuratedSeed[] = [
+  q('juventus', 'buffon04', 'Gianluigi Buffon', 1978, 'Italy', ['GK'], 90, 92, 2009, 35, t(9, 5, 8, 9, 3, 7)),
+  q('juventus', 'chimenti04', 'Antonio Chimenti', 1970, 'Italy', ['GK'], 68, 68, 2006, 25, t(7, 3, 5, 7, 3, 6)),
+  q('juventus', 'thuram04', 'Lilian Thuram', 1972, 'France', ['CB', 'RB'], 87, 87, 2006, 20, t(9, 4, 7, 7, 3, 8)),
+  q('juventus', 'cannavaro04', 'Fabio Cannavaro', 1973, 'Italy', ['CB'], 87, 89, 2008, 20, t(8, 6, 8, 6, 4, 8)),
+  q('juventus', 'zambrotta04', 'Gianluca Zambrotta', 1977, 'Italy', ['RB', 'LB'], 85, 86, 2008, 30, t(8, 4, 7, 6, 3, 8)),
+  q('juventus', 'zebina04', 'Jonathan Zebina', 1978, 'France', ['RB', 'CB'], 76, 77, 2009, 40, t(6, 6, 6, 5, 6, 6)),
+  q('juventus', 'pessotto04', 'Gianluca Pessotto', 1970, 'Italy', ['LB', 'DM'], 74, 74, 2006, 30, t(9, 3, 6, 9, 3, 7)),
+  q('juventus', 'chiellini04', 'Giorgio Chiellini', 1984, 'Italy', ['CB', 'LB'], 72, 88, 2010, 25, t(9, 4, 8, 9, 4, 7)),
+  q('juventus', 'nedved04', 'Pavel Nedvěd', 1972, 'Czech Republic', ['AM', 'LW'], 88, 88, 2008, 25, t(10, 5, 9, 8, 5, 8)),
+  q('juventus', 'emerson04', 'Emerson', 1976, 'Brazil', ['DM', 'CM'], 86, 86, 2008, 25, t(8, 6, 7, 5, 5, 7)),
+  q('juventus', 'camoranesi04', 'Mauro Camoranesi', 1976, 'Italy', ['RW', 'AM'], 82, 83, 2009, 40, t(7, 6, 7, 6, 6, 7)),
+  q('juventus', 'tacchinardi04', 'Alessio Tacchinardi', 1975, 'Italy', ['DM', 'CM'], 78, 78, 2008, 45, t(7, 5, 6, 8, 5, 6)),
+  q('juventus', 'appiah04', 'Stephen Appiah', 1980, 'Ghana', ['CM', 'DM'], 78, 80, 2007, 35, t(7, 5, 7, 6, 5, 7)),
+  q('juventus', 'delpiero04', 'Alessandro Del Piero', 1974, 'Italy', ['ST', 'AM'], 85, 86, 2009, 35, t(9, 5, 8, 10, 3, 7)),
+  q('juventus', 'trezeguet04', 'David Trezeguet', 1977, 'France', ['ST'], 86, 87, 2009, 30, t(8, 5, 7, 7, 4, 7)),
+  q('juventus', 'ibrahimovic04', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 82, 90, 2009, 20, t(8, 10, 10, 4, 7, 7)),
+];
+
 export const DORTMUND_2004: CuratedSeed[] = [
   q('dortmund', 'rosicky', 'Tomáš Rosický', 1980, 'Czech Republic', ['AM'], 82, 84, 2006, 45, t(8, 5, 7, 7, 4, 7)),
 ];
@@ -253,8 +345,24 @@ export const LEVERKUSEN_2004: CuratedSeed[] = [
 ];
 /** Essien at his real source club — Chelsea sign him in 2005, so a rival could
  *  legitimately hijack him from Lyon in 2004 (but never FROM Chelsea). */
+/** Olympique Lyonnais, 2004–05 — the Ligue 1 dynasty: Juninho's free-kicks,
+ *  Malouda and Diarra, with Essien the engine (his real Chelsea move is ledgered). */
 export const LYON_2004: CuratedSeed[] = [
   q('lyon', 'essien', 'Michael Essien', 1982, 'Ghana', ['DM', 'CM'], 82, 88, 2010, 30, t(8, 5, 9, 7, 5, 7)),
+  q('lyon', 'coupet04', 'Grégory Coupet', 1972, 'France', ['GK'], 84, 84, 2008, 25, t(9, 6, 8, 9, 5, 6)),
+  q('lyon', 'cris04', 'Cris', 1977, 'Brazil', ['CB'], 79, 82, 2009, 40, t(8, 6, 8, 7, 7, 7)),
+  q('lyon', 'cacapa04', 'Cláudio Caçapa', 1976, 'Brazil', ['CB'], 78, 79, 2007, 35, t(8, 4, 7, 8, 4, 7)),
+  q('lyon', 'brechet04', 'Jérémie Bréchet', 1979, 'France', ['CB', 'LB'], 73, 78, 2007, 40, t(7, 5, 6, 6, 5, 6)),
+  q('lyon', 'abidal04', 'Éric Abidal', 1979, 'France', ['LB', 'CB'], 78, 85, 2008, 30, t(9, 5, 8, 7, 5, 8)),
+  q('lyon', 'reveillere04', 'Anthony Réveillère', 1979, 'France', ['RB'], 74, 78, 2008, 45, t(8, 5, 7, 7, 5, 7)),
+  q('lyon', 'diarra04', 'Mahamadou Diarra', 1981, 'Mali', ['DM', 'CM'], 80, 84, 2007, 30, t(8, 6, 8, 6, 6, 7)),
+  q('lyon', 'juninho04', 'Juninho Pernambucano', 1975, 'Brazil', ['AM', 'CM'], 84, 84, 2008, 30, t(9, 7, 9, 9, 6, 8)),
+  q('lyon', 'malouda04', 'Florent Malouda', 1980, 'France', ['LW', 'AM'], 80, 85, 2008, 30, t(8, 6, 9, 6, 6, 8)),
+  q('lyon', 'govou04', 'Sidney Govou', 1979, 'France', ['RW', 'ST'], 78, 80, 2009, 45, t(8, 5, 7, 9, 5, 7)),
+  q('lyon', 'wiltord04', 'Sylvain Wiltord', 1974, 'France', ['ST', 'RW'], 79, 80, 2007, 40, t(7, 8, 8, 6, 7, 7)),
+  q('lyon', 'luyindula04', 'Péguy Luyindula', 1979, 'France', ['ST'], 74, 77, 2007, 45, t(7, 6, 7, 6, 6, 6)),
+  q('lyon', 'elber04', 'Giovane Élber', 1972, 'Brazil', ['ST'], 78, 78, 2006, 55, t(8, 6, 7, 7, 6, 7)),
+  q('lyon', 'frau04', 'Pierre-Alain Frau', 1980, 'France', ['ST'], 71, 76, 2008, 40, t(7, 6, 7, 5, 6, 6)),
 ];
 
 /** Curated squads for the arsenal-2004 scenario, keyed by club. */
@@ -279,6 +387,7 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   milan: MILAN_2004,
   barcelona: BARCELONA_2004,
   real_madrid: REAL_MADRID_2004,
+  juventus: JUVENTUS_2004,
   dortmund: DORTMUND_2004,
   zenit: ZENIT_2004,
   leverkusen: LEVERKUSEN_2004,

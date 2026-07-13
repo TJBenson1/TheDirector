@@ -193,6 +193,26 @@ describe('host-club curation — real squads + landed lost talents', () => {
     expect(c.players.cur_alfonso99?.club).toBe('betis');
     expect(c.players.cur_denilson99?.latentCeiling).toBe(89);
   });
+
+  it('era-2004 European context clubs now carry full real squads', () => {
+    const a = createNewGame({ scenarioId: 'arsenal-2004', seed: 'ctx-04' });
+    const curatedAt = (club: string) =>
+      (a.clubs[club]?.squad ?? []).map((id) => a.players[id]).filter((p) => p?.curated).length;
+    // Juventus was fully procedural before; Bayern/Porto/Valencia/Lyon/Monaco stubs.
+    expect(curatedAt('juventus')).toBeGreaterThanOrEqual(14);
+    expect(curatedAt('bayern')).toBeGreaterThanOrEqual(14);
+    expect(curatedAt('porto')).toBeGreaterThanOrEqual(14);
+    expect(curatedAt('lyon')).toBeGreaterThanOrEqual(14);
+    expect(a.players.cur_buffon04?.club).toBe('juventus');
+    expect(a.players.cur_saviola04?.latentCeiling).toBe(88); // a new lost talent
+  });
+
+  it('the 1999 La Liga adds Valencia and Deportivo with their lost talents', () => {
+    const c = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'ctx-99' });
+    expect(c.players.cur_mendieta99?.club).toBe('valencia');
+    expect(c.players.cur_valeron99?.latentCeiling).toBe(90); // injury-lost talent
+    expect(c.players.cur_djalminha99?.latentCeiling).toBe(90); // temperament-lost talent
+  });
 });
 
 describe('more start points (§4 data)', () => {

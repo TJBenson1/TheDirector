@@ -9,8 +9,25 @@ complete ledgers. How the data layer works (see `state.ts::populateSquads`):
 squad to 23; a foreign context club's strength becomes squad-derived once curated.
 
 **Progress:** user-club leagues are well curated. Host-club pass done for AC Milan
-('04 + '13), Barcelona '04, Real Madrid '04, Real Betis '99 (see below). Most
-OTHER European context clubs are still stubs (1–2 players) or absent.
+('04 + '13), Barcelona '04, Real Madrid '04, Real Betis '99. Context-deepening
+round 1 done: **era-2004** Juventus (new), Bayern, Porto, Valencia, Lyon, Monaco
+now have full real squads; **1999 La Liga** Valencia and Deportivo added. That
+surfaced a batch of new lost/fragile talents (Deisler, Carlos Alberto, Vicente,
+Aimar, Saviola, Mendieta, Gerard López, Djalminha, Valerón, Tristán). Priority
+eras per user: 1999, 2004, 2009, 2013 first; 1995 / late-2010s / 2020s last.
+
+**Known follow-ons from round 1 (data fidelity):**
+- **era-2009 does not exist yet** — needs establishing as a new start point
+  (scenario + a 2009 domestic league + curated 2009-10 world + ledger). Biggest
+  single item on the priority list.
+- Add the real transfer ledgers for the newly-curated clubs so a passive career
+  reproduces their history: the **2006 Calciopoli Juventus exodus** (Cannavaro/
+  Emerson→Madrid, Thuram/Zambrotta→Barça, Ibrahimović→Inter), Porto's onward
+  sales (Pepe→Madrid '07, Diego→Bremen '06, Maniche/Costinha→Dynamo Moscow), the
+  2000-01 Valencia/Depor breakups, Makaay→Bayern '03. Without these they sit as
+  frozen squads.
+- David Villa isn't placed in era-2004 (he was at Zaragoza in '04-05; Zaragoza
+  isn't curated). Add Zaragoza, or seed Villa on his 2005 move.
 
 **Approach that works (proven this round):** fan out one research agent per
 club-season (web-verify birth years / positions / squad membership), return data

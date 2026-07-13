@@ -222,6 +222,56 @@ export const BETIS_1999: CuratedSeed[] = [
   q('betis', 'oli99', 'Oli', 1972, 'Spain', ['ST'], 76, 76, 2003, 35, t(7, 5, 6, 6, 5, 7)),
 ];
 
+/** Valencia, 1999–2000 — the side that reached the 2000 Champions League final:
+ *  Cañizares behind Mendieta, the Argentine flair of the Lópezes. A La-Liga
+ *  power for the esp-1 scenarios; the ledger-worthy exodus began in 2000-01. */
+export const VALENCIA_1999: CuratedSeed[] = [
+  q('valencia', 'canizares99', 'Santiago Cañizares', 1969, 'Spain', ['GK'], 83, 84, 2004, 25, t(8, 6, 7, 7, 5, 7)),
+  q('valencia', 'angloma99', 'Jocelyn Angloma', 1965, 'France', ['RB', 'CB'], 79, 79, 2002, 25, t(8, 4, 6, 8, 3, 8)),
+  q('valencia', 'pellegrino99', 'Mauricio Pellegrino', 1971, 'Argentina', ['CB'], 80, 81, 2002, 30, t(9, 3, 7, 8, 2, 7)),
+  q('valencia', 'djukic99', 'Miroslav Đukić', 1966, 'Yugoslavia', ['CB'], 79, 79, 2001, 25, t(8, 4, 6, 7, 3, 7)),
+  q('valencia', 'carboni99', 'Amedeo Carboni', 1965, 'Italy', ['LB'], 78, 78, 2003, 22, t(8, 4, 6, 9, 3, 8)),
+  // Mendieta — the best midfielder in the 2000 CL, then a record move to Lazio in
+  // 2001 soured and he fell away sharply. A fragile star (latent 86).
+  q('valencia', 'mendieta99', 'Gaizka Mendieta', 1974, 'Spain', ['CM', 'AM'], 84, 86, 2004, 30, t(8, 6, 9, 6, 4, 7), { latentCeiling: 86 }),
+  q('valencia', 'albelda99', 'David Albelda', 1977, 'Spain', ['DM'], 76, 84, 2005, 35, t(9, 4, 7, 10, 5, 6)),
+  q('valencia', 'kily99', 'Kily González', 1974, 'Argentina', ['LW', 'CM'], 80, 82, 2004, 35, t(7, 6, 7, 6, 6, 7)),
+  // Gerard López — chased by Inter/Milan/United at 21, sold to Barça for ~€24m,
+  // then injuries and inconsistency stopped him reaching it. Lost talent (87).
+  q('valencia', 'gerard99', 'Gerard López', 1979, 'Spain', ['AM', 'CM'], 79, 84, 2003, 70, t(7, 5, 7, 6, 5, 6), { latentCeiling: 87 }),
+  q('valencia', 'claudiolopez99', 'Claudio López', 1974, 'Argentina', ['ST', 'LW'], 83, 84, 2003, 40, t(7, 6, 8, 5, 5, 7)),
+  q('valencia', 'ilie99', 'Adrian Ilie', 1974, 'Romania', ['ST', 'RW'], 80, 82, 2002, 55, t(6, 7, 7, 5, 6, 6)),
+  q('valencia', 'angulo99', 'Miguel Ángel Angulo', 1977, 'Spain', ['RW', 'ST'], 76, 82, 2005, 30, t(8, 4, 6, 9, 4, 7)),
+  q('valencia', 'farinos99', 'Javier Farinós', 1978, 'Spain', ['DM', 'CM'], 76, 82, 2002, 40, t(6, 6, 7, 5, 6, 5)),
+  q('valencia', 'juansanchez99', 'Juan Sánchez', 1972, 'Spain', ['ST'], 76, 77, 2003, 35, t(7, 4, 6, 8, 4, 7)),
+];
+
+/** Deportivo La Coruña, 1999–2000 — "SuperDépor", the shock La Liga champions:
+ *  Mauro Silva's screen, Fran and Djalminha's craft, Makaay's goals. Valerón and
+ *  Tristán join in 2000. Genuine La-Liga heavyweight of the era. */
+export const DEPORTIVO_1999: CuratedSeed[] = [
+  q('deportivo', 'songoo99', "Jacques Songo'o", 1964, 'Cameroon', ['GK'], 80, 80, 2001, 25, t(8, 5, 5, 7, 3, 7)),
+  q('deportivo', 'molina99', 'José Molina', 1970, 'Spain', ['GK'], 78, 80, 2002, 20, t(8, 5, 6, 6, 3, 7)),
+  q('deportivo', 'manuelpablo99', 'Manuel Pablo', 1976, 'Spain', ['RB'], 78, 82, 2004, 70, t(8, 4, 6, 10, 3, 7)),
+  q('deportivo', 'romero99', 'Enrique Romero', 1970, 'Spain', ['LB'], 76, 77, 2002, 35, t(7, 4, 5, 7, 4, 7)),
+  q('deportivo', 'naybet99', 'Noureddine Naybet', 1970, 'Morocco', ['CB'], 82, 84, 2003, 30, t(8, 5, 7, 7, 4, 7)),
+  q('deportivo', 'donato99', 'Donato', 1962, 'Spain', ['CB', 'DM'], 76, 76, 2001, 30, t(9, 4, 5, 8, 2, 7)),
+  q('deportivo', 'cesar99', 'César Martín', 1977, 'Spain', ['CB'], 74, 80, 2004, 30, t(7, 4, 6, 7, 4, 7)),
+  q('deportivo', 'mauro99', 'Mauro Silva', 1968, 'Brazil', ['DM'], 83, 84, 2002, 25, t(9, 3, 6, 9, 2, 8)),
+  q('deportivo', 'flavio99', 'Flávio Conceição', 1974, 'Brazil', ['DM', 'CM'], 81, 84, 2001, 30, t(7, 6, 8, 4, 5, 7)),
+  q('deportivo', 'victor99', 'Víctor Sánchez', 1976, 'Spain', ['CM', 'RB'], 77, 80, 2004, 35, t(8, 4, 6, 9, 3, 7)),
+  q('deportivo', 'fran99', 'Fran', 1969, 'Spain', ['LW', 'AM'], 81, 82, 2003, 30, t(8, 4, 6, 10, 3, 7)),
+  // Djalminha — the mercurial genius who head-butted his coach and torched his own
+  // career. A world-class ceiling wrecked by temperament. Lost talent (latent 90).
+  q('deportivo', 'djalminha99', 'Djalminha', 1970, 'Brazil', ['AM'], 84, 86, 2003, 40, t(4, 9, 6, 5, 9, 5), { latentCeiling: 90 }),
+  q('deportivo', 'makaay99', 'Roy Makaay', 1975, 'Netherlands', ['ST'], 83, 88, 2004, 20, t(9, 5, 8, 6, 3, 8)),
+  // Valerón — an elegant playmaker on the cusp of world-class, then serial knee
+  // ruptures took his prime. The definitive injury-lost talent (latent 90).
+  q('deportivo', 'valeron99', 'Juan Carlos Valerón', 1975, 'Spain', ['AM'], 82, 87, 2005, 55, t(9, 3, 6, 10, 2, 7), { latentCeiling: 90 }),
+  // Tristán — exploded to a Pichichi (2002), then fitness and lifestyle undid him.
+  q('deportivo', 'tristan99', 'Diego Tristán', 1976, 'Spain', ['ST'], 81, 85, 2005, 45, t(6, 7, 6, 6, 7, 6), { latentCeiling: 89 }),
+];
+
 /**
  * Long-horizon subjects for the Cristiano Ronaldo arc (2003 arrival, 2009 sale)
  * and the 2009 galáctico cascade. Curated at their source clubs as teenagers
@@ -344,6 +394,8 @@ const MAN_UTD_1999_SQUADS: Record<string, CuratedSeed[]> = {
   sporting: SPORTING_1999,
   wigan: WIGAN_1999,
   betis: BETIS_1999,
+  valencia: VALENCIA_1999,
+  deportivo: DEPORTIVO_1999,
 };
 // Merge the midfield pool + the broad era pool into the relevant clubs.
 for (const [club, seed] of [...MIDFIELD_POOL_1999, ...ERA_1999_POOL]) {
