@@ -58,7 +58,25 @@ export function entryKey(e: RealTransferLedgerEntry): string {
 }
 
 /** Which tier satisfied an invalidated ledger entry (recorded for audit). */
-export type FallbackTier = 'real-backup' | 'profile-similar' | 'generic-needs';
+export type FallbackTier = 'near-miss' | 'real-backup' | 'profile-similar' | 'generic-needs';
+
+/**
+ * A transfer that ALMOST happened in reality — a club's documented real intent
+ * that fell through (Chelsea's long pursuit of Gerrard, Barça's of Beckham). When
+ * a butterfly denies that club a target, it turns to its near-miss FIRST, ahead of
+ * any generic alternative — the deviation follows the grain of what nearly was
+ * (§ butterfly showcase). Curated, so it overrides the ordinary "no raiding a
+ * direct rival" caution: these moves were genuinely on the table.
+ */
+export interface NearMissEntry {
+  /** Curated player id (real player) who almost made the move. */
+  playerId: PlayerId;
+  /** The club that ALMOST signed him. */
+  to: ClubId;
+  /** Roughly when the pursuit was live. */
+  window: YearMonth;
+  note?: string;
+}
 
 /** Why a ledger entry could not execute as in reality. */
 export type InvalidationCause =
@@ -91,7 +109,28 @@ export interface EraRealityPack {
   realTransferLedger: RealTransferLedgerEntry[];
   academyIntakes: AcademyIntake[];
   realInjuries: RealInjuryEntry[];
+  /** Moves that ALMOST happened — preferred targets when a butterfly deprives
+   *  their club of a real signing (§ butterfly showcase). Optional. */
+  nearMissLedger?: NearMissEntry[];
 }
+
+/**
+ * Near-misses of the mid-2000s — famous pursuits that fell through. If a butterfly
+ * denies one of these clubs a real target, it turns HERE first: the alternate
+ * history follows the grain of what genuinely nearly happened.
+ */
+const NEAR_MISS_2004: NearMissEntry[] = [
+  // Chelsea chased Gerrard hard in 2004 and again in 2005; he stayed at Liverpool.
+  { playerId: 'cur_gerrard3', to: 'chelsea', window: '2004-07', note: 'Chelsea pursued Gerrard; he stayed at Liverpool' },
+  // Essien nearly joined Liverpool before Mourinho's Chelsea landed him.
+  { playerId: 'cur_essien', to: 'liverpool', window: '2005-07', note: 'Liverpool were in for Essien before Chelsea' },
+];
+
+/** Near-misses of 2003: the summer the game turns on. */
+const NEAR_MISS_2003: NearMissEntry[] = [
+  // Laporta campaigned on signing Beckham for Barcelona; he chose Real Madrid.
+  { playerId: 'cur_beckham_u', to: 'barcelona', window: '2003-07', note: "Barça's Laporta courted Beckham; he chose Real" },
+];
 
 /**
  * Real transfers among tracked (non-user) clubs, 1999–2004 — a seed slice of the
@@ -440,11 +479,11 @@ const INJURIES_1995: RealInjuryEntry[] = [
 export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013 },
-  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004 },
+  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, nearMissLedger: NEAR_MISS_2004 },
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [] },
   'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: [], realInjuries: INJURIES_2000 },
   'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: [], realInjuries: INJURIES_1995 },
-  'era-2003': { realTransferLedger: LEDGER_2003_2011, academyIntakes: [], realInjuries: INJURIES_2003 },
+  'era-2003': { realTransferLedger: LEDGER_2003_2011, academyIntakes: [], realInjuries: INJURIES_2003, nearMissLedger: NEAR_MISS_2003 },
 };
 
 /** The era pack a scenario draws its reality data from. */

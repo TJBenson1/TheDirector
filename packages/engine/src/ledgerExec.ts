@@ -295,15 +295,48 @@ function fallbackForLedger(
   // left with a lesser man, lose ground in the European Cup.
   dest.starButterfly -= playerStarValue(original.ability);
 
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  const ledgerSubjects = new Set((pack?.realTransferLedger ?? []).map((e) => e.playerId));
+
+  // NEAR-MISS FIRST (§ butterfly showcase): before any generic alternative, the
+  // deprived club turns to a move that ALMOST happened in reality — Chelsea to
+  // Gerrard, Barça to Beckham. A curated real intent overrides the ordinary "don't
+  // raid a direct rival" caution: these deals were genuinely on the table. Pulling
+  // him consumes any onward move reality had for him.
+  for (const nm of pack?.nearMissLedger ?? []) {
+    if (nm.to !== entry.to) continue;
+    if (Math.abs(Number(nm.window.slice(0, 4)) - year) > 2) continue; // roughly the right era
+    const p = state.players[nm.playerId];
+    if (!p || p.club === entry.to || p.injury || p.resistance.hardBlocks.length > 0) continue;
+    if (positionGroupOf(p) !== group) continue; // fills the same slot as the man they missed
+    if (!state.clubs[p.club ?? '']) continue;
+    const fee = valuePlayer(p, year);
+    dest.finances.transferBudget = Math.max(dest.finances.transferBudget, fee);
+    const res = executeTransfer(state, { playerId: p.id, toClub: entry.to, fee });
+    if (!res.ok) continue;
+    for (const k of futureByPlayer.get(p.id) ?? []) {
+      if (!state.meta.executedLedger.includes(k)) state.meta.executedLedger.push(k);
+    }
+    state.timeline.divergenceLog.push({
+      date: state.clock.date,
+      kind: 'butterfly',
+      detail: `${dest.name}, denied ${original.name}, land ${p.name} instead — a move that almost happened in reality now does.`,
+    });
+    logEvent(state, {
+      category: 'transfer',
+      code: 'ledger.nearmiss',
+      message: `${dest.name} turn to a near-miss: sign ${p.name} (denied ${original.name})`,
+      data: { clubId: dest.id, playerId: p.id, deniedOf: original.id, fee },
+    });
+    return 'near-miss';
+  }
+
   // A comparable, genuinely-available alternative. Two sources count as
   // "available": (a) foreign/context depth reality isn't otherwise using, and
   // (b) a player whose OWN real move is still ahead — reality was going to sell
   // him anyway, so the deprived club can hijack that (Arsenal, denied Campbell,
   // go for Leeds' Ferdinand). Picking (b) consumes his onward move: he joins the
   // new club and his later real transfer never happens.
-  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
-  const ledgerSubjects = new Set((pack?.realTransferLedger ?? []).map((e) => e.playerId));
-
   const eligible = (p: PlayerState): boolean => {
     if (!p.curated) return false; // a named narrative signing must be a real player (Principle 2)
     if (p.id === entry.playerId || p.club === entry.to) return false;

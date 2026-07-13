@@ -127,3 +127,47 @@ describe('a denied club fights back — but the miss leaves a mark (§ butterfly
     expect(escalated).toBe(true);
   });
 });
+
+describe('butterflies follow the grain of what almost happened (§ butterfly showcase)', () => {
+  it('a denied club turns FIRST to a move that nearly happened in reality', () => {
+    // Chelsea's real midfield signing (Essien) is intercepted. Reality nearly sent
+    // Gerrard to Stamford Bridge — so THAT is who Chelsea turn to, ahead of any
+    // generic alternative, prising him from a direct rival the ordinary caution
+    // would never allow.
+    let s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'nearmiss' });
+    s.clubs['arsenal']!.finances.transferBudget = 200_000_000;
+    expect(s.players['cur_gerrard3']?.club).toBe('liverpool');
+    executeTransfer(s, { playerId: 'cur_essien', toClub: 'arsenal', fee: 30_000_000 });
+    for (let i = 0; i < 20 && Number(s.clock.date.slice(0, 4)) < 2007; i++) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
+      s = advanceWindow(s).state;
+    }
+    // The near-miss became real: Gerrard to Chelsea, logged as such.
+    expect(s.players['cur_gerrard3']?.club).toBe('chelsea');
+    expect(s.eventLog.some((e) => e.code === 'ledger.nearmiss' && e.data?.clubId === 'chelsea')).toBe(true);
+  });
+
+  it("the near-miss follows the grain even across a title race: Barça, denied their forward, reach for Beckham", () => {
+    // era-2003: United hijack Eto'o. Barça, denied, turn to the man Laporta really
+    // courted — Beckham — pulling him off his real path to Real Madrid.
+    let s = createNewGame({ scenarioId: 'manchester-united-2003', seed: 'bk' });
+    for (let i = 0; i < 8 && Number(s.clock.date.slice(0, 4)) < 2005; i++) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      if (s.clock.window) {
+        s.clubs['man_utd']!.finances.transferBudget = 900_000_000;
+        const p = s.players['cur_etoo'];
+        if (p && p.club !== 'man_utd' && p.club !== 'barcelona') {
+          courtPlayer(s, 'cur_etoo'); courtPlayer(s, 'cur_etoo'); courtPlayer(s, 'cur_etoo');
+          if (evaluateApproach(s, { playerId: 'cur_etoo', toClub: 'man_utd' }).willing) {
+            attemptSigning(s, { playerId: 'cur_etoo', toClub: 'man_utd', fee: 45_000_000 });
+          }
+        }
+      }
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
+      s = advanceWindow(s).state;
+    }
+    expect(s.players['cur_etoo']?.club).toBe('man_utd'); // the hijack landed
+    expect(s.players['cur_beckham_u']?.club).toBe('barcelona'); // the near-miss became real
+  });
+});
