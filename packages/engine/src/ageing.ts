@@ -82,10 +82,10 @@ function retirementSchedule(state: GameState): Map<string, number> {
 
 /**
  * The year a curated player actually retires, adjusted by USER influence on his
- * own squad (the "played squad" directive): if his minutes have dried up — the
- * user built a stronger side around him — he steps aside a year or two early
- * (Giggs' minutes going earlier); if he is still a key starter he plays on a
- * touch (a graceful, planned send-off). Only the user's own club is influenced;
+ * own squad (the "played squad" directive): if he is still a key starter he
+ * plays on a touch (a graceful, planned send-off). A squeezed-out veteran does
+ * NOT retire early — he MOVES ON to keep playing elsewhere (shouldMoveOn), then
+ * retires off-screen on his real date. Only the user's own club is influenced;
  * elsewhere reality's date holds.
  */
 function effectiveRetireYear(state: GameState, player: PlayerState, realYear: number): number {
@@ -93,8 +93,6 @@ function effectiveRetireYear(state: GameState, player: PlayerState, realYear: nu
   const club = state.clubs[player.club];
   if (!club) return realYear;
   const share = estimateMinutesShare(state, club, player);
-  if (share < 0.2) return realYear - 2; // squeezed out — bows out early
-  if (share < 0.4) return realYear - 1;
   if (share >= 0.6) return realYear + 1; // still needed — plays on gracefully
   return realYear;
 }
@@ -119,21 +117,46 @@ function shouldRetire(
 const SQUAD_DEPTH_FLOOR = 22;
 
 /**
- * Retire a player. The NAMED youth pipeline is real academy graduates
- * (development.ts) — no fabricated academy stars. But a squad must still field a
- * viable bench, so if retirement leaves it below the depth floor it is topped up
- * with ANONYMOUS depth: unnamed, raw filler standing in for the dozens of
- * real-but-uncurated squad members (Principle 2). This filler is never surfaced
- * as a graduate, prospect, or named career (the sampler + scouting exclude
- * procedural players), so no fake player enters the narrative. Deterministic.
+ * Fill a squad back to the depth floor with ANONYMOUS depth after a player
+ * leaves — unnamed, raw filler standing in for the dozens of real-but-uncurated
+ * squad members (Principle 2). Never surfaced as a graduate, prospect, or named
+ * career (the sampler + scouting exclude procedural players), so no fake player
+ * enters the narrative. Real academy graduates and signings fill the visible
+ * gaps; this is only the safety net, and it comes in weaker than the man it
+ * replaced so an unmanaged squad still erodes.
+ *
+ * `ageBias` reflects who really fills the slot: a RETIREMENT opens a place for a
+ * youth ('young'); a veteran MOVING ON is replaced from the existing squad pool,
+ * a realistic age spread ('mixed') — which keeps the squad's real age/injury
+ * profile intact rather than pretending every departure hands the shirt to a
+ * fresh teenager (an unrealistically injury-light side otherwise).
  */
-function retirePlayer(
+function backfillDepth(
   state: GameState,
   club: ClubState,
-  player: PlayerState,
+  left: PlayerState,
   year: number,
   rng: Rng,
+  ageBias: 'young' | 'mixed' = 'young',
 ): void {
+  if (club.squad.length >= SQUAD_DEPTH_FLOOR) return;
+  const position = left.positions[0] ?? 'CM';
+  const kid = generatePlayer({
+    id: `p_${club.id}_y${year}_${left.id.replace(/[^a-z0-9]/gi, '')}`,
+    clubId: club.id,
+    leagueId: club.leagueId,
+    position,
+    targetAbility: Math.max(38, Math.min(left.ability - 6, club.baseStrength - 16)),
+    currentYear: year,
+    ageBias,
+    rng,
+  });
+  state.players[kid.id] = kid;
+  club.squad.push(kid.id);
+}
+
+/** Retire a player (end of career) and top the squad up if it drops too thin. */
+function retirePlayer(state: GameState, club: ClubState, player: PlayerState, year: number, rng: Rng): void {
   const age = year - player.birthYear;
   club.squad = club.squad.filter((id) => id !== player.id);
   delete state.players[player.id];
@@ -143,24 +166,53 @@ function retirePlayer(
     message: `${player.name} (${club.name}, ${age}) hangs up his boots`,
     data: { playerId: player.id, clubId: club.id, age, curated: player.curated },
   });
+  backfillDepth(state, club, player, year, rng);
+}
 
-  // Only top up when genuinely thin — real academy graduates and signings fill
-  // most gaps; anonymous depth is the safety net, raw and weaker than the man it
-  // replaces, so an unmanaged squad still erodes (renewal is not a free upgrade).
-  if (club.squad.length >= SQUAD_DEPTH_FLOOR) return;
-  const position = player.positions[0] ?? 'CM';
-  const kid = generatePlayer({
-    id: `p_${club.id}_y${year}_${player.id.replace(/[^a-z0-9]/gi, '')}`,
-    clubId: club.id,
-    leagueId: club.leagueId,
-    position,
-    targetAbility: Math.max(38, Math.min(player.ability - 6, club.baseStrength - 16)),
-    currentYear: year,
-    ageBias: 'young',
-    rng,
+/**
+ * Should this aging, surplus player MOVE ON — leave the club for regular football
+ * elsewhere, rather than sit in the reserves until he retires? This is the fix
+ * for "everyone just retires in place": a real squad sheds a declining player
+ * once a better option has passed him, years before he actually hangs up his
+ * boots (Baggio Inter→Brescia, Zamorano off to Mexico…). Excluded: one-club
+ * icons (they stay and retire at the club) and ledger subjects (their moves are
+ * scripted, and departing would break the reality squad-match).
+ */
+function shouldMoveOn(
+  state: GameState,
+  club: ClubState,
+  player: PlayerState,
+  age: number,
+  ledgerIds: Set<string>,
+  rng: Rng,
+): boolean {
+  if (!player.curated || ledgerIds.has(player.id)) return false;
+  const res = player.resistance;
+  if (res.clubLoyalty >= 82 || res.hardBlocks.length > 0) return false; // one-club icon stays
+  const yearsPast = age - declineStartFor(player.positions);
+  if (yearsPast < 2) return false; // must be clearly past peak
+  // Deep into decline (4+ years past his curve): a non-icon veteran is phased out
+  // even if the thin visible depth chart still nominally lists him as rotation.
+  // The minutes metric leans on ANONYMOUS backfill depth, which comes in weak, so
+  // a discounted 35-year-old still out-ranks it on paper — but a real club refreshes
+  // the position rather than run him on merit alone (Baggio/Djorkaeff phased out as
+  // Adriano rises). Only a still-first-choice younger veteran is kept on minutes.
+  if (yearsPast < 4 && estimateMinutesShare(state, club, player) >= 0.4) return false;
+  return rng.chance(0.6); // a displaced, declining veteran usually moves on
+}
+
+/** A veteran leaves for regular football elsewhere (not retirement). */
+function departPlayer(state: GameState, club: ClubState, player: PlayerState, year: number, rng: Rng): void {
+  const age = year - player.birthYear;
+  club.squad = club.squad.filter((id) => id !== player.id);
+  delete state.players[player.id];
+  logEvent(state, {
+    category: 'transfer',
+    code: 'veteran.movedon',
+    message: `${player.name} (${age}) leaves ${club.name} for regular football elsewhere`,
+    data: { playerId: player.id, clubId: club.id, age },
   });
-  state.players[kid.id] = kid;
-  club.squad.push(kid.id);
+  backfillDepth(state, club, player, year, rng, 'mixed');
 }
 
 /**
@@ -179,6 +231,7 @@ export function processSeasonAgeing(state: GameState, rng: Rng): void {
   for (const club of Object.values(state.clubs)) {
     let changed = false;
     const retirees: PlayerState[] = [];
+    const departures: PlayerState[] = [];
     for (const player of clubSquadPlayers(state, club.id)) {
       const age = year - player.birthYear;
 
@@ -186,6 +239,13 @@ export function processSeasonAgeing(state: GameState, rng: Rng): void {
       // the squad mid-iteration). Real players retire ≈ when they really did.
       if (shouldRetire(state, player, age, year, pendingMovers, schedule)) {
         retirees.push(player);
+        continue;
+      }
+
+      // Surplus to requirements: a declining, displaced veteran leaves for regular
+      // football elsewhere rather than lingering to retirement (frees the youth).
+      if (shouldMoveOn(state, club, player, age, ledgerIds, ageRng.fork(`moveon:${player.id}`))) {
+        departures.push(player);
         continue;
       }
 
@@ -219,6 +279,11 @@ export function processSeasonAgeing(state: GameState, rng: Rng): void {
         if (ledgerIds.has(r.id)) (state.meta.retiredLedgerSubjects ??= []).push(r.id);
         retirePlayer(state, club, r, year, retRng);
       }
+      changed = true;
+    }
+    if (departures.length > 0) {
+      const depRng = ageRng.fork(`depart:${club.id}`);
+      for (const d of departures) departPlayer(state, club, d, year, depRng);
       changed = true;
     }
     if (changed && club.leagueId !== null) recomputeClubStrength(state, club.id);

@@ -89,6 +89,7 @@ describe('ageing & decline (§5, §17.4)', () => {
     const kid = players[1]!;
     vet.birthYear = year - 34; // 34-year-old
     vet.positions = ['ST'];
+    vet.resistance.clubLoyalty = 90; // a one-club veteran — stays and declines rather than moving on
     const vetBefore = vet.ability;
     kid.birthYear = year - 20; // 20-year-old
     const kidBefore = kid.ability;

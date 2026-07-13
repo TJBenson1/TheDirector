@@ -432,6 +432,22 @@ const INJURIES_1998: RealInjuryEntry[] = [
   { playerId: 'cur_ronaldo', atClub: 'inter', since: '1999-11', months: 5, serious: true, note: 'knee tendon injury' },
 ];
 
+/**
+ * Real Serie A transfers of the era. The marquee one for an Inter save is VIERI
+ * from Lazio in 1999 (a world-record fee) — offered to the user as his call: pair
+ * him with Ronaldo, or trust the fit Fenomeno alone. Cannavaro follows in 2002.
+ * The rest colour the title race (Crespo/Nedvěd/Thuram moving), and Simeone's
+ * real 1999 exit to Lazio frees an Inter midfield berth.
+ */
+const LEDGER_1998: RealTransferLedgerEntry[] = [
+  { playerId: 'cur_vieri98', from: 'lazio', to: 'inter', window: '1999-06', fee: 31_000_000 },
+  { playerId: 'cur_simeone', from: 'inter', to: 'lazio', window: '1999-07', fee: 12_000_000 },
+  { playerId: 'cur_crespo98', from: 'parma', to: 'lazio', window: '2000-07', fee: 35_000_000 },
+  { playerId: 'cur_nedved98', from: 'lazio', to: 'juventus', window: '2001-07', fee: 41_000_000 },
+  { playerId: 'cur_thuram', from: 'parma', to: 'juventus', window: '2001-07', fee: 22_000_000 },
+  { playerId: 'cur_cannavaro', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000 },
+];
+
 const ACADEMY_1998: AcademyGraduate[] = [
   // Adriano — O Imperador. Arrived at Inter with the physique and shot of a
   // generational striker; personal tragedy and lifestyle unravelled him. The
@@ -455,7 +471,7 @@ const RETIREMENTS_1998: RealRetirement[] = [
 
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
-  'era-1998': { realTransferLedger: [], academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998, academyGraduates: ACADEMY_1998 },
+  'era-1998': { realTransferLedger: LEDGER_1998, academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998, academyGraduates: ACADEMY_1998 },
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004 },

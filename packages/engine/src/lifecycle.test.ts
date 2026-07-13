@@ -29,9 +29,15 @@ describe('player lifecycle (retirement / academy / lost talent)', () => {
     const y = Number(String(keane!.date).slice(0, 4));
     expect(y).toBeGreaterThanOrEqual(2005); // real: 2006
     expect(y).toBeLessThanOrEqual(2008);
-    // Cole/Yorke/Solskjær all bow out in the same era, not still playing in 2014.
+    // Cole/Yorke/Solskjær all leave the stage in the same era — not still playing
+    // in 2014. A displaced veteran may either retire OR move on for regular
+    // football elsewhere (Cole→Blackburn, Yorke→Blackburn were real); both mean
+    // "gone from United in the right era", which is the realism guarded here.
+    const gone = (id: string): boolean =>
+      ev(s, 'career.retired').some((e) => e.data?.playerId === id) ||
+      ev(s, 'veteran.movedon').some((e) => e.data?.playerId === id);
     for (const id of ['cur_cole', 'cur_yorke', 'cur_solskjaer']) {
-      expect(ev(s, 'career.retired').some((e) => e.data?.playerId === id)).toBe(true);
+      expect(gone(id)).toBe(true);
     }
   });
 
