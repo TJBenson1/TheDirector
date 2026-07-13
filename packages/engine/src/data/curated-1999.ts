@@ -11,6 +11,7 @@ import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import { MAN_UTD_2013_SQUADS } from './curated-2013.js';
 import { ARSENAL_2004_SQUADS } from './curated-2004.js';
 import { LIVERPOOL_2001_SQUADS } from './curated-2001.js';
+import { INTER_1998_SQUADS } from './curated-1998.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -328,11 +329,41 @@ for (const seed of [...REAL_MADRID_CASCADE_1999, ...REAL_MADRID_2000]) {
   (MAN_UTD_1999_SQUADS.real_madrid ??= []).push(seed);
 }
 
+/** Barcelona, 1999–2000 — Rivaldo's Ballon d'Or side, with Figo still at Camp Nou
+ *  (the ledger offers his real 2000 move to Real Madrid) and a teenage Xavi/Puyol. */
+export const BARCELONA_1999: CuratedSeed[] = [
+  q('barcelona', 'hesp', 'Ruud Hesp', 1965, 'Netherlands', ['GK'], 78, 79, 2001, 25, t(8, 4, 7, 7, 4, 6)),
+  q('barcelona', 'reiziger', 'Michael Reiziger', 1973, 'Netherlands', ['RB'], 81, 83, 2004, 25, t(8, 5, 8, 7, 4, 7)),
+  q('barcelona', 'fdeboer', 'Frank de Boer', 1970, 'Netherlands', ['CB'], 83, 84, 2003, 25, t(8, 6, 8, 8, 4, 7)),
+  q('barcelona', 'abelardo', 'Abelardo', 1970, 'Spain', ['CB'], 81, 82, 2002, 30, t(8, 5, 8, 8, 5, 6)),
+  q('barcelona', 'sergi', 'Sergi Barjuan', 1971, 'Spain', ['LB'], 80, 81, 2002, 30, t(8, 5, 8, 9, 4, 7)),
+  q('barcelona', 'puyol', 'Carles Puyol', 1978, 'Spain', ['CB', 'RB'], 68, 88, 2005, 20, t(10, 4, 9, 10, 4, 7)),
+  q('barcelona', 'cocu', 'Phillip Cocu', 1970, 'Netherlands', ['CM', 'DM'], 83, 84, 2003, 20, t(9, 5, 8, 8, 3, 7)),
+  q('barcelona', 'guardiola', 'Pep Guardiola', 1971, 'Spain', ['DM', 'CM'], 84, 85, 2001, 30, t(9, 6, 9, 9, 4, 7)),
+  q('barcelona', 'luisenrique', 'Luis Enrique', 1970, 'Spain', ['CM', 'RW'], 84, 85, 2004, 30, t(9, 6, 9, 9, 5, 7)),
+  q('barcelona', 'xavi', 'Xavi', 1980, 'Spain', ['CM'], 66, 90, 2005, 15, t(10, 4, 9, 10, 3, 8)),
+  q('barcelona', 'zenden', 'Boudewijn Zenden', 1976, 'Netherlands', ['LW', 'LB'], 80, 83, 2002, 25, t(8, 5, 7, 6, 4, 8)),
+  q('barcelona', 'figo', 'Luís Figo', 1972, 'Portugal', ['RW', 'AM'], 88, 90, 2004, 20, t(8, 7, 9, 6, 4, 8)),
+  q('barcelona', 'rivaldo', 'Rivaldo', 1972, 'Brazil', ['AM', 'ST'], 90, 91, 2004, 25, t(8, 7, 9, 7, 4, 7)),
+  q('barcelona', 'kluivert', 'Patrick Kluivert', 1976, 'Netherlands', ['ST'], 85, 88, 2004, 30, t(6, 7, 8, 6, 6, 7)),
+  q('barcelona', 'dani', 'Dani', 1974, 'Portugal', ['ST'], 76, 80, 2002, 35, t(6, 6, 7, 6, 6, 7)),
+  q('barcelona', 'gabri', 'Gabri', 1979, 'Spain', ['CM'], 66, 80, 2004, 25, t(8, 4, 7, 8, 4, 7)),
+];
+
+// Barcelona reuses the full 1999 curated world (so the real ledger — Figo to
+// Madrid, Anelka/Overmars, the galáctico cascade — all fires) plus a curated Barça.
+const BARCELONA_1999_SQUADS: Record<string, CuratedSeed[]> = {
+  ...MAN_UTD_1999_SQUADS,
+  barcelona: BARCELONA_1999,
+};
+
 // The era's curated real players are the same whichever club you play — only
 // the playerClub differs — so the galáctico-era Madrid start reuses the map.
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'man-utd-1999': MAN_UTD_1999_SQUADS,
   'real-madrid-2000': MAN_UTD_1999_SQUADS,
+  'barcelona-1999': BARCELONA_1999_SQUADS,
+  'inter-1998': INTER_1998_SQUADS,
   'man-utd-2013': MAN_UTD_2013_SQUADS,
   'arsenal-2004': ARSENAL_2004_SQUADS,
   'liverpool-2001': LIVERPOOL_2001_SQUADS,

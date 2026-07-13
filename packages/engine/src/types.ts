@@ -338,6 +338,9 @@ export interface Consequence {
     | 'fanTrust' // narrative memory + board patience nudge
     | 'boardPatience'
     | 'ban' // player unavailable for N months (injury-like)
+    | 'injuryHeal' // clear a player's injury now (rush him back); `amount` = return fitness
+    | 'injuryProneness' // adjust a player's injury-proneness (careful rehab / load management)
+    | 'reinjure' // a rushed return backfires: a fresh serious injury (`months`)
     | 'managerRelationship'
     | 'agitation' // raise a player's unrest
     | 'transferOut' // sell a player to `clubId` for `amount`

@@ -208,6 +208,48 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     clubs: ELITE_CLUBS,
     domesticLeagueId: 'esp-1',
   },
+  'inter-1998': {
+    id: 'inter-1998',
+    name: 'Internazionale — 1998: Il Fenomeno',
+    startDate: '1998-07',
+    playerClub: 'inter',
+    mandate: 'Win the Scudetto with Ronaldo — and, above all, keep him fit.',
+    boardPatience: 72,
+    boardExpectedFinish: 1,
+    // Tier-1 powers: the Serie A giants + the European elite of the day.
+    clubs: [
+      { id: 'inter', name: 'Internazionale', prestige: 88 },
+      { id: 'juventus', name: 'Juventus', prestige: 90 },
+      { id: 'milan', name: 'AC Milan', prestige: 88 },
+      { id: 'lazio', name: 'Lazio', prestige: 82 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 90 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 88 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 90 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 86 },
+    ],
+    domesticLeagueId: 'ita-1',
+  },
+  'barcelona-1999': {
+    id: 'barcelona-1999',
+    name: 'Barcelona — 1999: Rivaldo’s Camp Nou',
+    startDate: '1999-07',
+    playerClub: 'barcelona',
+    mandate: 'Rule Spain and win the elusive Champions League — before Figo’s head is turned.',
+    boardPatience: 72,
+    boardExpectedFinish: 1,
+    clubs: ELITE_CLUBS,
+    // Reuses the 1999 curated world + ledger — so the real Figo-to-Madrid saga is
+    // yours to sanction or fight. Same era selling clubs as the 1999 pack.
+    contextExtra: [
+      { id: 'monaco', name: 'AS Monaco', prestige: 74 },
+      { id: 'lazio', name: 'Lazio', prestige: 78 },
+      { id: 'psv', name: 'PSV Eindhoven', prestige: 72 },
+      { id: 'marseille', name: 'Olympique de Marseille', prestige: 72 },
+      { id: 'sporting', name: 'Sporting CP', prestige: 68 },
+    ],
+    domesticLeagueId: 'esp-1',
+    distressedClubs: { leeds: 'strained', lazio: 'crisis' },
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

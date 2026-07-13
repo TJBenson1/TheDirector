@@ -18,6 +18,7 @@ import { advanceOneMonth, windowForMonthIndex, windowStepLabel, WINDOW_STEPS } f
 import { eventsSince } from './eventLog.js';
 import { stepLeagueMonth } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
+import { rollInjuryManagement } from './injuryManagement.js';
 import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
 import { logEvent } from './eventLog.js';
@@ -79,6 +80,9 @@ function runMonth(state: GameState, rng: Rng): void {
   // M4: injuries/recoveries (§9c) — after matches, so a new injury bites the
   // following month and availability feeds strength.
   processInjuriesMonth(state, rng);
+  // Injury management (user-only): return-from-injury + load-management calls for
+  // the user's fragile stars — the decisions reality sometimes got wrong.
+  rollInjuryManagement(state, rng);
   // M7: scripted + procedural events, scandals (§9b, §9d). May raise interrupts.
   rollEventsMonth(state, rng);
   // NB: the transfer window itself (real-ledger execution + rival response) is

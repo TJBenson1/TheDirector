@@ -28,6 +28,7 @@ import { eventsSince } from './eventLog.js';
 import { appendMemory } from './memory.js';
 import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 import { executeTransfer } from './transfers.js';
+import { recomputeClubStrength } from './players.js';
 
 // ── Consequence application ──────────────────────────────────────────────────
 
@@ -93,6 +94,42 @@ export function applyConsequence(state: GameState, c: Consequence): void {
         if (user) user.finances.transferBudget = Math.max(user.finances.transferBudget, c.amount ?? 0);
         const res = executeTransfer(state, { playerId: c.playerId, toClub: state.playerClub, fee: c.amount ?? 0 });
         if (res.ok) markLedgerRealized(state, c.tag);
+      }
+      break;
+    }
+    case 'injuryHeal': {
+      // Rush him back: injury cleared now, but rusty (low fitness → elevated
+      // recurrence risk via the injury model's fitness factor).
+      const p = c.playerId ? state.players[c.playerId] : undefined;
+      if (p) {
+        p.injury = null;
+        p.fitness = clamp(c.amount ?? 55, 30, 100);
+        if (p.club) recomputeClubStrength(state, p.club);
+      }
+      break;
+    }
+    case 'injuryProneness': {
+      // Careful rehab / load management shifts long-run fragility.
+      const p = c.playerId ? state.players[c.playerId] : undefined;
+      if (p) p.injuryProneness = clamp(p.injuryProneness + (c.amount ?? 0), 5, 95);
+      break;
+    }
+    case 'reinjure': {
+      // A rushed return breaks down — the catastrophic recurrence (Ronaldo 2000).
+      const p = c.playerId ? state.players[c.playerId] : undefined;
+      if (p) {
+        const months = c.months ?? 7;
+        p.injury = { kind: 'serious', monthsRemaining: months, since: state.clock.date };
+        p.injuryHistory += 1;
+        p.injuryProneness = clamp(p.injuryProneness + 15, 5, 95);
+        p.ability = clamp(p.ability - 2, 20, 99);
+        if (p.club) recomputeClubStrength(state, p.club);
+        logEvent(state, {
+          category: 'injury',
+          code: 'injury.recurrence',
+          message: `${p.name} breaks down again — rushed back too soon, out ~${months} months`,
+          data: { playerId: p.id, clubId: p.club, months },
+        });
       }
       break;
     }

@@ -422,8 +422,33 @@ const ACADEMY_2001: AcademyGraduate[] = [
   { year: 2004, seed: { id: 'cur_mellor01', club: 'liverpool', name: 'Neil Mellor', birthYear: 1982, nationality: 'England', positions: ['ST'], ability: 56, potentialCeiling: 72, latentCeiling: 82, contractUntil: 2008, injuryProneness: 65, personality: per(7, 5, 7, 8, 5, 6) } },
 ];
 
+// ── era-1998 (Inter / Serie A) — Ronaldo's knee + Serie A retirements ─────────
+/** Ronaldo's real 1999 knee injury. His REAL catastrophe was the comeback: rushed
+ *  back in April 2000 he ruptured it completely. Here the first injury fires; the
+ *  return-from-injury decision (injuryManagement.ts) is where the user avoids —
+ *  or repeats — the mistake that cost him years. */
+const INJURIES_1998: RealInjuryEntry[] = [
+  { playerId: 'cur_r9', atClub: 'inter', since: '1999-11', months: 5, serious: true, note: 'ruptured knee tendon — the injury that defined his Inter years' },
+  { playerId: 'cur_ronaldo', atClub: 'inter', since: '1999-11', months: 5, serious: true, note: 'knee tendon injury' },
+];
+
+const RETIREMENTS_1998: RealRetirement[] = [
+  { playerId: 'cur_bergomi', year: 1999 }, { playerId: 'cur_pagliuca', year: 2007 },
+  { playerId: 'cur_baggio_r', year: 2004 }, { playerId: 'cur_zamorano', year: 2003 },
+  { playerId: 'cur_djorkaeff', year: 2006 }, { playerId: 'cur_winter', year: 2003 },
+  { playerId: 'cur_simeone', year: 2006 }, { playerId: 'cur_zanetti', year: 2014 },
+  { playerId: 'cur_r9', year: 2011 },
+  { playerId: 'cur_maldini98', year: 2009 }, { playerId: 'cur_weah', year: 2003 },
+  { playerId: 'cur_costacurta', year: 2007 }, { playerId: 'cur_bierhoff', year: 2003 },
+  { playerId: 'cur_boban', year: 2002 }, { playerId: 'cur_deschamps', year: 2001 },
+  { playerId: 'cur_batistuta', year: 2005 }, { playerId: 'cur_aldair', year: 2003 },
+  { playerId: 'cur_zidane98', year: 2006 }, { playerId: 'cur_delpiero', year: 2012 },
+  { playerId: 'cur_mihajlovic', year: 2006 }, { playerId: 'cur_weah', year: 2003 },
+];
+
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
+  'era-1998': { realTransferLedger: [], academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998 },
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004 },
@@ -435,6 +460,7 @@ export function eraForScenario(scenarioId: string): string {
   if (scenarioId.endsWith('-2013')) return 'era-2013';
   if (scenarioId.endsWith('-2004')) return 'era-2004';
   if (scenarioId.endsWith('-2001')) return 'era-2001';
+  if (scenarioId.endsWith('-1998')) return 'era-1998';
   return 'era-1995-2005';
 }
 

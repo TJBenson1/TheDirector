@@ -176,9 +176,41 @@ export const ENGLAND_2001: LeagueSeed = {
   ],
 };
 
+/** Italy, Serie A 1998–99 — then the strongest league in the world. Milan were
+ *  the real champions; Juventus/Inter/Lazio/Parma/Fiorentina the powers. 20 clubs
+ *  (the real 18 plus two, to fit the sim's double round-robin). */
+export const SERIE_A_1998: LeagueSeed = {
+  id: 'ita-1',
+  name: 'Serie A',
+  season: '1998-07',
+  clubs: [
+    { id: 'juventus', name: 'Juventus', prestige: 90, strength: 88 },
+    { id: 'inter', name: 'Internazionale', prestige: 88, strength: 87 },
+    { id: 'lazio', name: 'Lazio', prestige: 82, strength: 85 },
+    { id: 'milan', name: 'AC Milan', prestige: 88, strength: 84 },
+    { id: 'parma', name: 'Parma', prestige: 76, strength: 84 },
+    { id: 'fiorentina', name: 'Fiorentina', prestige: 74, strength: 82 },
+    { id: 'roma', name: 'AS Roma', prestige: 78, strength: 80 },
+    { id: 'bologna', name: 'Bologna', prestige: 60, strength: 74 },
+    { id: 'udinese', name: 'Udinese', prestige: 58, strength: 73 },
+    { id: 'sampdoria', name: 'Sampdoria', prestige: 62, strength: 70 },
+    { id: 'vicenza', name: 'Vicenza', prestige: 52, strength: 68 },
+    { id: 'perugia', name: 'Perugia', prestige: 52, strength: 66 },
+    { id: 'bari', name: 'Bari', prestige: 50, strength: 64 },
+    { id: 'piacenza', name: 'Piacenza', prestige: 48, strength: 62 },
+    { id: 'cagliari', name: 'Cagliari', prestige: 50, strength: 62 },
+    { id: 'empoli', name: 'Empoli', prestige: 46, strength: 60 },
+    { id: 'venezia', name: 'Venezia', prestige: 46, strength: 60 },
+    { id: 'salernitana', name: 'Salernitana', prestige: 44, strength: 58 },
+    { id: 'reggina', name: 'Reggina', prestige: 46, strength: 58 },
+    { id: 'lecce', name: 'Lecce', prestige: 46, strength: 56 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'esp-1': SPAIN_2000,
+  'ita-1': SERIE_A_1998,
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,
@@ -225,6 +257,17 @@ const SPANISH_POOL: LeagueClubSeed[] = [
   { id: 'hercules', name: 'Hércules', prestige: 44, strength: 50 },
 ];
 
+const ITALIAN_POOL: LeagueClubSeed[] = [
+  { id: 'napoli', name: 'Napoli', prestige: 58, strength: 62 },
+  { id: 'torino', name: 'Torino', prestige: 52, strength: 58 },
+  { id: 'atalanta', name: 'Atalanta', prestige: 52, strength: 60 },
+  { id: 'verona', name: 'Hellas Verona', prestige: 48, strength: 57 },
+  { id: 'brescia', name: 'Brescia', prestige: 46, strength: 56 },
+  { id: 'genoa', name: 'Genoa', prestige: 48, strength: 56 },
+  { id: 'ancona', name: 'Ancona', prestige: 42, strength: 53 },
+  { id: 'siena', name: 'Siena', prestige: 42, strength: 54 },
+];
+
 /** Reservoir seeds per league id (broad national pool; league members filtered
  *  out at attach time). */
 export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
@@ -233,9 +276,10 @@ export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
   'eng-2004': ENGLISH_POOL,
   'eng-2013': ENGLISH_POOL,
   'esp-1': SPANISH_POOL,
+  'ita-1': ITALIAN_POOL,
 };
 
 /** Flat lookup for instantiating a promoted club not yet in the world. */
 export const SECOND_TIER_CLUB: Record<string, LeagueClubSeed> = Object.fromEntries(
-  [...ENGLISH_POOL, ...SPANISH_POOL].map((c) => [c.id, c]),
+  [...ENGLISH_POOL, ...SPANISH_POOL, ...ITALIAN_POOL].map((c) => [c.id, c]),
 );
