@@ -171,9 +171,77 @@ export const SPORTING_2004: CuratedSeed[] = [
 // ── Further real 2004-09 movers, curated at their source clubs ────────────────
 /** Park (United '05), Berbatov (United '08 via Spurs), Shevchenko (Chelsea '06),
  *  and the Arsenal targets the user is offered (Adebayor, Rosický, Nasri, …). */
+/** AC Milan, 2003–04 — the Scudetto winners: an all-time defence (Maldini,
+ *  Nesta, Stam) in front of Dida, Pirlo's regista game, and a young Kaká. */
 export const MILAN_2004: CuratedSeed[] = [
   q('milan', 'shevchenko2', 'Andriy Shevchenko', 1976, 'Ukraine', ['ST'], 86, 87, 2006, 30, t(8, 6, 9, 6, 4, 7)),
+  q('milan', 'dida04', 'Dida', 1973, 'Brazil', ['GK'], 86, 86, 2007, 20, t(8, 5, 7, 8, 3, 7)),
+  q('milan', 'cafu04', 'Cafu', 1970, 'Brazil', ['RB'], 84, 84, 2006, 25, t(8, 6, 8, 7, 3, 8)),
+  q('milan', 'nesta04', 'Alessandro Nesta', 1976, 'Italy', ['CB'], 90, 90, 2008, 45, t(9, 4, 7, 8, 3, 7)),
+  q('milan', 'maldini04', 'Paolo Maldini', 1968, 'Italy', ['CB', 'LB'], 87, 87, 2006, 25, t(10, 5, 8, 10, 2, 8)),
+  q('milan', 'stam04', 'Jaap Stam', 1972, 'Netherlands', ['CB'], 85, 85, 2005, 30, t(8, 5, 7, 6, 4, 7)),
+  q('milan', 'kaladze04', 'Kakhaber Kaladze', 1978, 'Georgia', ['CB', 'LB'], 78, 80, 2008, 30, t(8, 5, 6, 7, 4, 7)),
+  q('milan', 'serginho04', 'Serginho', 1971, 'Brazil', ['LB', 'LW'], 79, 79, 2006, 25, t(7, 5, 6, 7, 4, 7)),
+  q('milan', 'costacurta04', 'Alessandro Costacurta', 1966, 'Italy', ['CB'], 76, 76, 2005, 40, t(9, 4, 6, 10, 3, 7)),
+  q('milan', 'gattuso04', 'Gennaro Gattuso', 1978, 'Italy', ['CM', 'DM'], 84, 85, 2008, 25, t(8, 5, 8, 9, 7, 7)),
+  q('milan', 'pirlo04', 'Andrea Pirlo', 1979, 'Italy', ['DM', 'CM'], 85, 88, 2008, 20, t(9, 4, 7, 8, 2, 8)),
+  q('milan', 'seedorf04', 'Clarence Seedorf', 1976, 'Netherlands', ['CM', 'AM'], 85, 85, 2008, 25, t(8, 7, 8, 7, 4, 8)),
+  q('milan', 'ambrosini04', 'Massimo Ambrosini', 1977, 'Italy', ['CM'], 77, 78, 2007, 45, t(8, 4, 6, 9, 3, 7)),
+  q('milan', 'ruicosta04', 'Rui Costa', 1972, 'Portugal', ['AM'], 82, 82, 2006, 30, t(8, 6, 6, 7, 4, 7)),
+  q('milan', 'kaka04', 'Kaká', 1982, 'Brazil', ['AM'], 84, 93, 2008, 25, t(9, 4, 9, 8, 2, 9)),
+  // Inzaghi — an elite finisher, but 2003–04 was a write-off (fractured ankle,
+  // recurring muscle trouble): a fragile star, not an unfulfilled one.
+  q('milan', 'inzaghi04', 'Filippo Inzaghi', 1973, 'Italy', ['ST'], 82, 82, 2007, 70, t(7, 6, 8, 8, 4, 6)),
+  q('milan', 'tomasson04', 'Jon Dahl Tomasson', 1976, 'Denmark', ['ST'], 78, 78, 2005, 25, t(8, 5, 7, 6, 3, 7)),
 ];
+/** FC Barcelona, 2004–05 — Rijkaard's first title: peak Ronaldinho and Eto'o,
+ *  Xavi/Deco running it, and a 17-year-old Messi breaking through. */
+export const BARCELONA_2004: CuratedSeed[] = [
+  q('barcelona', 'valdes04', 'Víctor Valdés', 1982, 'Spain', ['GK'], 80, 86, 2010, 25, t(8, 5, 7, 9, 6, 7)),
+  q('barcelona', 'puyol04', 'Carles Puyol', 1978, 'Spain', ['CB'], 85, 85, 2010, 35, t(10, 3, 9, 10, 3, 8)),
+  q('barcelona', 'marquez04', 'Rafael Márquez', 1979, 'Mexico', ['CB', 'DM'], 82, 83, 2010, 45, t(7, 6, 7, 7, 5, 8)),
+  q('barcelona', 'vanbronckhorst04', 'Giovanni van Bronckhorst', 1975, 'Netherlands', ['LB'], 79, 79, 2007, 30, t(8, 4, 7, 7, 3, 8)),
+  q('barcelona', 'belletti04', 'Juliano Belletti', 1976, 'Brazil', ['RB'], 77, 77, 2008, 30, t(7, 5, 6, 6, 4, 7)),
+  q('barcelona', 'oleguer04', 'Oleguer', 1980, 'Spain', ['RB', 'CB'], 73, 74, 2008, 25, t(8, 3, 6, 8, 3, 7)),
+  q('barcelona', 'sylvinho04', 'Sylvinho', 1974, 'Brazil', ['LB'], 77, 77, 2007, 30, t(8, 4, 6, 7, 3, 8)),
+  q('barcelona', 'edmilson04', 'Edmílson', 1976, 'Brazil', ['DM', 'CM'], 79, 79, 2008, 60, t(7, 5, 6, 6, 4, 7)),
+  q('barcelona', 'xavi04', 'Xavi', 1980, 'Spain', ['CM'], 84, 88, 2010, 30, t(10, 4, 9, 10, 3, 8)),
+  q('barcelona', 'deco04', 'Deco', 1977, 'Portugal', ['CM', 'AM'], 85, 85, 2008, 30, t(7, 7, 8, 6, 6, 7)),
+  q('barcelona', 'iniesta04', 'Andrés Iniesta', 1984, 'Spain', ['CM', 'AM'], 76, 90, 2010, 45, t(10, 2, 8, 10, 2, 8)),
+  q('barcelona', 'ronaldinho04', 'Ronaldinho', 1980, 'Brazil', ['LW', 'AM'], 90, 90, 2010, 35, t(6, 6, 7, 6, 5, 9)),
+  q('barcelona', 'etoo04', "Samuel Eto'o", 1981, 'Cameroon', ['ST'], 87, 89, 2009, 40, t(8, 9, 9, 5, 8, 7)),
+  q('barcelona', 'giuly04', 'Ludovic Giuly', 1976, 'France', ['RW'], 80, 80, 2008, 30, t(7, 5, 7, 6, 5, 7)),
+  q('barcelona', 'larsson04', 'Henrik Larsson', 1971, 'Sweden', ['ST'], 82, 82, 2006, 45, t(9, 3, 7, 8, 2, 8)),
+  q('barcelona', 'messi04', 'Lionel Messi', 1987, 'Argentina', ['RW', 'ST'], 68, 94, 2010, 55, t(9, 4, 10, 10, 3, 6)),
+];
+
+/** Real Madrid, 2004–05 — the Galácticos: Zidane, Ronaldo, Figo, Beckham, Raúl,
+ *  Owen. Star-studded and top-heavy, the balance reality never quite found. */
+export const REAL_MADRID_2004: CuratedSeed[] = [
+  q('real_madrid', 'casillas04', 'Iker Casillas', 1981, 'Spain', ['GK'], 85, 89, 2010, 20, t(8, 4, 8, 10, 3, 7)),
+  q('real_madrid', 'salgado04', 'Míchel Salgado', 1975, 'Spain', ['RB'], 80, 80, 2007, 30, t(8, 4, 6, 9, 4, 7)),
+  q('real_madrid', 'robertocarlos04', 'Roberto Carlos', 1973, 'Brazil', ['LB'], 85, 85, 2008, 25, t(8, 7, 8, 8, 5, 8)),
+  q('real_madrid', 'helguera04', 'Iván Helguera', 1975, 'Spain', ['CB', 'DM'], 81, 81, 2007, 30, t(7, 5, 6, 8, 6, 7)),
+  q('real_madrid', 'samuel04', 'Walter Samuel', 1978, 'Argentina', ['CB'], 82, 83, 2009, 30, t(8, 5, 7, 7, 4, 6)),
+  // Woodgate — England's brightest young centre-back, but his Madrid move was
+  // wrecked by injury (no competitive minutes in 2004–05). Fragile-and-lost.
+  q('real_madrid', 'woodgate04', 'Jonathan Woodgate', 1980, 'England', ['CB'], 78, 84, 2009, 82, t(7, 4, 6, 7, 5, 5), { latentCeiling: 86 }),
+  q('real_madrid', 'raulbravo04', 'Raúl Bravo', 1981, 'Spain', ['LB', 'CB'], 74, 77, 2008, 30, t(6, 4, 5, 7, 5, 6)),
+  q('real_madrid', 'zidane04', 'Zinedine Zidane', 1972, 'France', ['AM'], 90, 90, 2007, 25, t(9, 6, 9, 9, 4, 8)),
+  q('real_madrid', 'figo04', 'Luís Figo', 1972, 'Portugal', ['RW'], 86, 86, 2007, 25, t(8, 8, 8, 6, 6, 8)),
+  q('real_madrid', 'beckham04', 'David Beckham', 1975, 'England', ['CM', 'RW'], 84, 84, 2007, 20, t(9, 8, 8, 6, 4, 8)),
+  q('real_madrid', 'guti04', 'Guti', 1976, 'Spain', ['AM', 'CM'], 80, 82, 2008, 25, t(6, 7, 6, 10, 7, 7)),
+  q('real_madrid', 'gravesen04', 'Thomas Gravesen', 1976, 'Denmark', ['DM', 'CM'], 78, 79, 2008, 35, t(7, 6, 6, 5, 8, 6)),
+  q('real_madrid', 'solari04', 'Santiago Solari', 1976, 'Argentina', ['LW', 'AM'], 77, 77, 2007, 25, t(7, 4, 6, 7, 4, 7)),
+  q('real_madrid', 'ronaldo04', 'Ronaldo', 1976, 'Brazil', ['ST'], 88, 88, 2008, 60, t(6, 8, 8, 6, 6, 7)),
+  q('real_madrid', 'raul04', 'Raúl', 1977, 'Spain', ['ST'], 85, 85, 2010, 30, t(9, 6, 9, 10, 4, 7)),
+  q('real_madrid', 'owen04', 'Michael Owen', 1979, 'England', ['ST'], 84, 85, 2008, 45, t(8, 6, 8, 6, 4, 6)),
+  // Robinho — the "next Pelé" who dazzled but never dominated. Seeded from the
+  // 2004 start (he really arrived a year later, from Santos); the lost-talent
+  // gamble is to make the Bernabéu wonderkid finally deliver. Latent 90.
+  q('real_madrid', 'robinho04', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 74, 84, 2010, 30, t(5, 7, 7, 5, 8, 6), { latentCeiling: 90 }),
+];
+
 export const DORTMUND_2004: CuratedSeed[] = [
   q('dortmund', 'rosicky', 'Tomáš Rosický', 1980, 'Czech Republic', ['AM'], 82, 84, 2006, 45, t(8, 5, 7, 7, 4, 7)),
 ];
@@ -209,6 +277,8 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   porto: PORTO_2004,
   sporting: SPORTING_2004,
   milan: MILAN_2004,
+  barcelona: BARCELONA_2004,
+  real_madrid: REAL_MADRID_2004,
   dortmund: DORTMUND_2004,
   zenit: ZENIT_2004,
   leverkusen: LEVERKUSEN_2004,

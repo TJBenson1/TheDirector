@@ -460,6 +460,13 @@ const ACADEMY_2004: AcademyGraduate[] = [
   // 18, then broken by injuries. Latent 90 if a user can keep him fit and central.
   { year: 2008, seed: { id: 'cur_wilshere04', club: 'arsenal', name: 'Jack Wilshere', birthYear: 1992, nationality: 'England', positions: ['CM', 'AM'], ability: 60, potentialCeiling: 82, latentCeiling: 90, contractUntil: 2013, injuryProneness: 70, personality: per(6, 7, 8, 8, 6, 6) } },
   { year: 2009, seed: { id: 'cur_gibbs04', club: 'arsenal', name: 'Kieran Gibbs', birthYear: 1989, nationality: 'England', positions: ['LB'], ability: 58, potentialCeiling: 80, contractUntil: 2013, injuryProneness: 45, personality: per(7, 5, 7, 7, 4, 7) } },
+  // Alexandre Pato — "O Pato", the Milan wonderkid whose every season was cut
+  // short by muscle tears until the talent bled away. The definitive fragile-
+  // and-lost striker: latent 92 if a manager can ever keep him on the pitch.
+  { year: 2008, seed: { id: 'cur_pato04', club: 'milan', name: 'Alexandre Pato', birthYear: 1989, nationality: 'Brazil', positions: ['ST'], ability: 66, potentialCeiling: 82, latentCeiling: 92, contractUntil: 2013, injuryProneness: 68, personality: per(5, 7, 8, 6, 7, 6) } },
+  // Bojan Krkić — La Masia's record-breaking teenager (youngest-ever Barça
+  // scorer) who buckled under the weight of expectation and never kicked on.
+  { year: 2007, seed: { id: 'cur_bojan04', club: 'barcelona', name: 'Bojan Krkić', birthYear: 1990, nationality: 'Spain', positions: ['ST', 'AM'], ability: 62, potentialCeiling: 80, latentCeiling: 89, contractUntil: 2012, injuryProneness: 30, personality: per(6, 5, 7, 8, 7, 5) } },
 ];
 
 // ── era-2001 (Liverpool post-treble) retirements + academy ───────────────────

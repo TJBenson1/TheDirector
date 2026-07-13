@@ -198,6 +198,30 @@ export const MARSEILLE_1999: CuratedSeed[] = [
   q('marseille', 'pires', 'Robert Pirès', 1973, 'France', ['LW', 'AM'], 83, 87, 2002, 30, t(8, 5, 7, 6, 3, 7)),
 ];
 
+/** Real Betis, 1998–99 — home of Denílson, the world-record signing (~£21.5m from
+ *  São Paulo) who became the definitive expensive flop: mesmerising stepovers,
+ *  almost no end product. The lost-talent gamble is to make the fee finally make
+ *  sense (latent 89). A La-Liga selling club for the esp-1 scenarios. */
+export const BETIS_1999: CuratedSeed[] = [
+  q('betis', 'prats99', 'Toni Prats', 1971, 'Spain', ['GK'], 76, 77, 2003, 20, t(7, 5, 5, 8, 4, 7)),
+  q('betis', 'solozabal99', 'Roberto Solozábal', 1969, 'Spain', ['CB'], 75, 75, 2001, 30, t(7, 6, 6, 4, 6, 6)),
+  q('betis', 'vidakovic99', 'Risto Vidaković', 1969, 'Serbia', ['CB'], 73, 74, 2001, 65, t(7, 5, 5, 6, 5, 6)),
+  q('betis', 'filipescu99', 'Iulian Filipescu', 1974, 'Romania', ['CB'], 76, 79, 2003, 25, t(7, 5, 6, 6, 5, 6)),
+  q('betis', 'ito99', 'Ito', 1975, 'Spain', ['RB', 'DM'], 75, 78, 2003, 25, t(8, 5, 6, 7, 4, 7)),
+  q('betis', 'merino99', 'Juan Merino', 1970, 'Spain', ['DM', 'CB'], 73, 74, 2002, 25, t(8, 4, 5, 8, 3, 7)),
+  q('betis', 'alexis99', 'Alexis Trujillo', 1965, 'Spain', ['CM'], 72, 72, 2000, 30, t(8, 4, 5, 8, 3, 7)),
+  q('betis', 'canas99', 'Juanjo Cañas', 1972, 'Spain', ['CM', 'DM'], 70, 73, 2003, 25, t(8, 4, 5, 9, 3, 7)),
+  // Benjamín Zarandona — a Spain U-21 champion of prodigious gifts, undone by a
+  // hot temperament; a ceiling (81) his volatility keeps him from reaching.
+  q('betis', 'benjamin99', 'Benjamín Zarandona', 1976, 'Spain', ['AM', 'CM'], 73, 81, 2003, 30, t(5, 6, 6, 6, 8, 6)),
+  q('betis', 'finidi99', 'Finidi George', 1971, 'Nigeria', ['RW', 'LW'], 79, 80, 2001, 30, t(7, 5, 6, 7, 4, 7)),
+  // Denílson — the world-record flop. Real ability modest (76); the gap to his
+  // latent (89) IS the story: all flair, no end product, weak adaptability.
+  q('betis', 'denilson99', 'Denílson', 1977, 'Brazil', ['LW', 'RW'], 76, 82, 2005, 25, t(5, 6, 6, 5, 8, 4), { latentCeiling: 89 }),
+  q('betis', 'alfonso99', 'Alfonso Pérez', 1972, 'Spain', ['ST'], 80, 81, 2002, 40, t(8, 6, 8, 6, 4, 7)),
+  q('betis', 'oli99', 'Oli', 1972, 'Spain', ['ST'], 76, 76, 2003, 35, t(7, 5, 6, 6, 5, 7)),
+];
+
 /**
  * Long-horizon subjects for the Cristiano Ronaldo arc (2003 arrival, 2009 sale)
  * and the 2009 galáctico cascade. Curated at their source clubs as teenagers
@@ -319,6 +343,7 @@ const MAN_UTD_1999_SQUADS: Record<string, CuratedSeed[]> = {
   marseille: MARSEILLE_1999,
   sporting: SPORTING_1999,
   wigan: WIGAN_1999,
+  betis: BETIS_1999,
 };
 // Merge the midfield pool + the broad era pool into the relevant clubs.
 for (const [club, seed] of [...MIDFIELD_POOL_1999, ...ERA_1999_POOL]) {

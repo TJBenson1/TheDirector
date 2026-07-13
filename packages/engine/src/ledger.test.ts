@@ -156,6 +156,45 @@ describe('near-miss ledger — "almost happened" deals', () => {
   });
 });
 
+describe('host-club curation — real squads + landed lost talents', () => {
+  it('era-2004 curates Barça/Madrid/Milan and lands Robinho, Bojan, Pato', () => {
+    let a = createNewGame({ scenarioId: 'arsenal-2004', seed: 'hosts-04' });
+    // Real squads now exist at the European context clubs.
+    expect(a.players.cur_ronaldinho04?.club).toBe('barcelona');
+    expect(a.players.cur_zidane04?.club).toBe('real_madrid');
+    expect(a.players.cur_pirlo04?.club).toBe('milan');
+    // Robinho is a lost talent available from the start; Woodgate a fragile one.
+    expect(a.players.cur_robinho04?.latentCeiling).toBe(90);
+    expect(a.players.cur_woodgate04?.latentCeiling).toBe(86);
+    // Bojan (2007) and Pato (2008) arrive mid-era as breakthrough graduates.
+    // Their latent ceiling fades a little each season they aren't unlocked, so
+    // snapshot each the season he appears rather than asserting a fixed value.
+    let bojanLatent: number | undefined;
+    let patoLatent: number | undefined;
+    for (let i = 0; i < 40 && !(bojanLatent && patoLatent); i++) {
+      a = advanceWindow(a).state;
+      bojanLatent ??= a.players.cur_bojan04?.latentCeiling;
+      patoLatent ??= a.players.cur_pato04?.latentCeiling;
+      if (a.board.dismissed) break;
+    }
+    expect(bojanLatent).toBe(89); // La Masia prodigy, on arrival
+    expect(patoLatent).toBe(92); // O Pato, on arrival
+  });
+
+  it('era-2013 curates AC Milan and lands Balotelli', () => {
+    const b = createNewGame({ scenarioId: 'man-utd-2013', seed: 'hosts-13' });
+    expect(b.players.cur_montolivo13?.club).toBe('milan');
+    expect(b.players.cur_balotelli13?.latentCeiling).toBe(94);
+    expect(b.players.cur_elshaarawy13?.latentCeiling).toBe(88);
+  });
+
+  it('the La Liga worlds curate Real Betis and land Denílson', () => {
+    const c = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'hosts-99' });
+    expect(c.players.cur_alfonso99?.club).toBe('betis');
+    expect(c.players.cur_denilson99?.latentCeiling).toBe(89);
+  });
+});
+
 describe('more start points (§4 data)', () => {
   it('the galáctico Madrid start places Figo/Zidane/Makélélé and can keep Makélélé', () => {
     let s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'gal' });

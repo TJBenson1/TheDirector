@@ -307,6 +307,32 @@ export const PSG_2013: CuratedSeed[] = [
   q('psg', 'lavezzi', 'Ezequiel Lavezzi', 1985, 'Argentina', ['LW', 'ST'], 81, 83, 2016, 30, t(7, 6, 7, 6, 6, 7)),
 ];
 
+/** AC Milan, 2013–14 — a fading giant (finished 8th), home of the marquee lost
+ *  talent Mario Balotelli and the injury-hit "Faraone", Stephan El Shaarawy. */
+export const MILAN_2013: CuratedSeed[] = [
+  q('milan', 'abbiati13', 'Christian Abbiati', 1977, 'Italy', ['GK'], 76, 76, 2015, 30, t(9, 3, 5, 9, 2, 6)),
+  q('milan', 'abate13', 'Ignazio Abate', 1986, 'Italy', ['RB'], 77, 78, 2017, 35, t(7, 4, 5, 8, 3, 6)),
+  q('milan', 'desciglio13', 'Mattia De Sciglio', 1992, 'Italy', ['LB', 'RB'], 76, 83, 2018, 45, t(8, 4, 6, 8, 2, 6)),
+  q('milan', 'mexes13', 'Philippe Mexès', 1982, 'France', ['CB'], 77, 77, 2015, 35, t(6, 6, 5, 6, 7, 6)),
+  q('milan', 'zapata13', 'Cristián Zapata', 1986, 'Colombia', ['CB'], 75, 76, 2017, 30, t(7, 4, 5, 6, 4, 6)),
+  q('milan', 'constant13', 'Kévin Constant', 1987, 'Guinea', ['LB', 'DM'], 72, 73, 2017, 30, t(6, 5, 5, 5, 6, 5)),
+  q('milan', 'dejong13', 'Nigel de Jong', 1985, 'Netherlands', ['DM', 'CM'], 79, 79, 2015, 35, t(8, 5, 6, 6, 6, 7)),
+  q('milan', 'montolivo13', 'Riccardo Montolivo', 1985, 'Italy', ['CM', 'DM'], 80, 80, 2017, 35, t(8, 4, 6, 7, 3, 6)),
+  q('milan', 'muntari13', 'Sulley Muntari', 1984, 'Ghana', ['CM'], 76, 76, 2015, 30, t(6, 6, 6, 6, 7, 6)),
+  q('milan', 'poli13', 'Andrea Poli', 1989, 'Italy', ['CM', 'DM'], 74, 79, 2017, 30, t(8, 4, 6, 6, 3, 6)),
+  q('milan', 'kaka13', 'Kaká', 1982, 'Brazil', ['AM'], 80, 80, 2015, 55, t(9, 4, 6, 8, 2, 7)),
+  q('milan', 'honda13', 'Keisuke Honda', 1986, 'Japan', ['AM', 'RW'], 77, 78, 2017, 25, t(8, 6, 8, 6, 3, 7)),
+  q('milan', 'robinho13', 'Robinho', 1984, 'Brazil', ['LW', 'AM'], 77, 77, 2015, 35, t(5, 7, 5, 5, 5, 6)),
+  q('milan', 'pazzini13', 'Giampaolo Pazzini', 1984, 'Italy', ['ST'], 76, 76, 2016, 45, t(7, 6, 6, 6, 4, 5)),
+  // Balotelli — the marquee lost talent: the pace, power and technique of a
+  // world-class No. 9 (latent 94), squandered by temperament (prof 3, ego 9,
+  // volatility 9). Milan's top scorer at 23, yet never close to what he could be.
+  q('milan', 'balotelli13', 'Mario Balotelli', 1990, 'Italy', ['ST'], 84, 88, 2018, 30, t(3, 9, 7, 4, 9, 5), { latentCeiling: 94 }),
+  // El Shaarawy — "Il Faraone": a 16-goal breakout at 20, then a metatarsal
+  // fracture wrecked his season. Fragile-and-lost (latent 88) if kept fit.
+  q('milan', 'elshaarawy13', 'Stephan El Shaarawy', 1992, 'Italy', ['LW', 'ST'], 79, 86, 2018, 72, t(7, 5, 7, 7, 4, 6), { latentCeiling: 88 }),
+];
+
 /** Juventus, 2013–14 — Serie A identity for context. */
 export const JUVENTUS_2013: CuratedSeed[] = [
   q('juventus', 'buffon', 'Gianluigi Buffon', 1978, 'Italy', ['GK'], 86, 87, 2016, 25, t(9, 7, 9, 10, 3, 6)),
@@ -346,4 +372,5 @@ export const MAN_UTD_2013_SQUADS: Record<string, CuratedSeed[]> = {
   ajax: AJAX_2013,
   psg: PSG_2013,
   juventus: JUVENTUS_2013,
+  milan: MILAN_2013,
 };
