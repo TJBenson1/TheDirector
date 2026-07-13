@@ -84,9 +84,19 @@ The user can now pick apart smaller/distressed clubs:
     real raid happens TO you.
 - Injuries packs added: **INJURIES_2004** (Woodgate's wrecked Madrid season,
   Hargreaves' knee) and **INJURIES_2009** (Kaká's knee, Robben's hamstring).
+- ✅ **Loyalty-aware fire-sales:** a club's distress no longer dangles its LOYAL
+  icons as cheap bargains — Del Piero/Buffon/Nedvěd/Trézéguet followed Juve down
+  to Serie B, so an `openness` factor (from clubLoyalty) cancels the fire-sale /
+  food-chain discount for a one-club man (tagged `one-club-man`, not `fire-sale`).
+  The bargains are the LOWER-loyalty squad players a distressed club really lets go.
 - **Still to do:** more financial shocks (Leeds 2004, Parma/Parmalat 2004,
   Rangers 2012); injuries packs for 2013/2001; Porto's other onward sales
   (Postiga→Spurs '03, Costinha/Maniche→Dynamo '05) once those clubs are curated.
+  - **The "gettable but overlooked" data** (user ask): curate a few LOW-loyalty,
+    undervalued players at the distressed clubs a raider should pick off but
+    reality didn't — **Leeds** (2004 fire-sale), **Parma** (Parmalat collapse),
+    **Fiorentina** — plus their financial shocks. The mechanic is ready; it just
+    needs those squads seeded so the bargains actually exist to buy.
 
 ## Lost-talent profile expansion
 More real under-achievers to curate with a `latentCeiling` (the reverse
@@ -117,6 +127,36 @@ reality-rail gamble — see `development.ts` / DESIGN docs):
 - **General:** a "cautionary tier" of high-latent / high-bust talents where the
   smart play is often NOT to gamble — so the mechanic rewards judgement, not just
   minutes.
+
+## The head coach — Director vs Manager (✅ politics MVP built)
+The player IS the Director; the head coach is a hired agent (`manager.ts`,
+`ManagerState`). Built this pass:
+- **Inherited real coaches** at kickoff (Ferguson '99, Houllier '01, Wenger '04/'96,
+  Van Gaal '09/bar-99, Moyes '13, Ranieri '03, Del Bosque '00, Simoni '98).
+- **Hire & fire:** `directorSackManager` (proactive, any time) → caretaker + a
+  wooable hire shortlist; sacking a well-regarded coach costs Director credibility,
+  a failing one is accepted.
+- **Differentiated thresholds:** the coach's `standing` erodes FASTER than board
+  patience (−11/place vs −9) and trips a board-pressure "sack him?" decision at a
+  higher floor — the coach is blamed first. Director dismissal stays rarer
+  (`board.ts` unchanged) — measured **4.0%** (was 2.7%), still in band.
+- **Survive a sacking (lightning rod):** sacking the coach restores Director
+  patience; **×0.4 if the Director appointed him** (you own that hire).
+- **Director fired WITHOUT a coach sacking (rare):** `reviewDirectorStrategy` —
+  a board strategy rejection (patience < 42) or a powerful, estranged manager's
+  boardroom **coup** (reputation ≥ 84, relationship < 28).
+- **Wooing:** a marquee coach snubs a cold offer; `courtManager` ("speak to his
+  people") warms him until he'll take the job.
+- **Calibration-safe:** every added decision puts the reality-default option
+  FIRST (the passive first-choice bot backs the coach), so the baseline is
+  unperturbed; 205 tests + calibration 14/14.
+- **Still to do (deferred by design):**
+  - **On-pitch effect:** a manager `quality`/style that nudges match results and
+    youth development (the one deferred fork — needs harness re-tuning).
+  - **Manager tenure narrative:** trophies/relationships accruing to a coach's
+    reputation; a sacked big name resurfacing at a rival.
+  - **Era-real out-of-work pool per window** (the hire shortlist is currently a
+    single era-agnostic pool) + real compensation/contract cost.
 
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the

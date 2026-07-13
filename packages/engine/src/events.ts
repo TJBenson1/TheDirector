@@ -29,6 +29,7 @@ import { appendMemory } from './memory.js';
 import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 import { executeTransfer } from './transfers.js';
 import { recomputeClubStrength } from './players.js';
+import { performSack, appointManager } from './manager.js';
 
 // ── Consequence application ──────────────────────────────────────────────────
 
@@ -70,6 +71,19 @@ export function applyConsequence(state: GameState, c: Consequence): void {
         0,
         100,
       );
+      break;
+    case 'managerStanding':
+      state.managerRelations.standing = clamp(
+        state.managerRelations.standing + (c.amount ?? 0),
+        0,
+        100,
+      );
+      break;
+    case 'sackManager':
+      performSack(state, c.amount ?? 0, c.text ?? 'the board');
+      break;
+    case 'appointManager':
+      if (c.text) appointManager(state, c.text, c.amount ?? 70, c.tag === 'marquee');
       break;
     case 'agitation': {
       const p = c.playerId ? state.players[c.playerId] : undefined;

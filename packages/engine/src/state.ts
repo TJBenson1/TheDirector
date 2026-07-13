@@ -28,6 +28,7 @@ import {
   buildResistance,
 } from './players.js';
 import { processAcademyGraduates } from './development.js';
+import { initialManager } from './manager.js';
 import { initialFinances, suggestWage } from './finance.js';
 import { CURATED_SQUADS } from './data/curated-1999.js';
 
@@ -191,7 +192,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     clubs,
     leagues: { [leagueState.id]: leagueState },
     players: {},
-    managerRelations: { identity: 'Unassigned', relationshipWithUser: 50 },
+    managerRelations: initialManager(scenario.id, clubs[scenario.playerClub]?.prestige ?? 70),
     timeline: { divergenceLog: [], narrativeMemory: [] },
     pendingDecisions: [],
     eventLog: [],

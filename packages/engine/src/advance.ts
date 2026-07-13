@@ -23,6 +23,7 @@ import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
+import { reviewManager, reviewDirectorStrategy } from './manager.js';
 import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow, executeNearMisses, applyFinancialShocks } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
@@ -68,8 +69,13 @@ function runMonth(state: GameState, rng: Rng): void {
     // 4b. Conditional takeover butterflies (Abramovich buys Chelsea only if they
     //     take a CL place — resolved before the summer ledger runs).
     resolveAbramovich(state, rng.fork(`takeover:${state.clock.date}`));
-    // 5. Board review (job security) + an imposed internal crisis (M9).
+    // 5. Board review (job security) + an imposed internal crisis (M9). The head
+    //    coach is reviewed on a LOWER, faster-tripping threshold (he's blamed
+    //    first); then the rare direct routes to a Director dismissal that don't
+    //    involve sacking the coach (strategy rejection / a manager's boardroom coup).
     reviewBoard(state, rng.fork(`board:${state.clock.date}`));
+    reviewManager(state, rng.fork(`manager:${state.clock.date}`));
+    reviewDirectorStrategy(state, rng.fork(`director:${state.clock.date}`));
     rollInternalCrisis(state, rng.fork(`crisis:${state.clock.date}`), divergenceFactor(state) * 0.3);
     // Sustained unrest can force a kept-against-his-wishes player out.
     processAgitationDepartures(state, rng.fork(`agitation:${state.clock.date}`));

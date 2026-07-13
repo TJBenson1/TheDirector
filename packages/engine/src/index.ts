@@ -163,6 +163,17 @@ export {
 } from './recommend.js';
 export { courtPlayer, decayPursuit, poleSuitorFor } from './wooing.js';
 export {
+  initialManager,
+  reviewManager,
+  reviewDirectorStrategy,
+  directorSackManager,
+  performSack,
+  managerShortlist,
+  courtManager,
+  appointManager,
+  willManagerJoin,
+} from './manager.js';
+export {
   simulateMatch,
   generateSchedule,
   standingsOrder,

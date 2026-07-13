@@ -283,10 +283,27 @@ export interface InjuryState {
 
 // ── Later-milestone placeholders (shape only) ────────────────────────────────
 
-/** TODO(M8): manager as an agent. */
+/**
+ * The head coach — a hired agent, DISTINCT from the Director (the player). The
+ * Director hires and fires him (manager.ts). His own job security (`standing`)
+ * erodes faster than the board's patience with the Director — the coach is
+ * blamed first — and sacking him can absorb blame the Director would otherwise
+ * take. Sacking your OWN appointment to save your skin is a harder sell.
+ */
 export interface ManagerState {
   identity: string;
+  /** 0..100 rapport with the Director. */
   relationshipWithUser: number;
+  /** 0..100 reputation / quality: anchors board confidence, wooing pull, and the
+   *  standing to push a Director out in a boardroom power struggle. */
+  reputation: number;
+  /** 0..100 the manager's OWN job security. Erodes faster than board patience. */
+  standing: number;
+  /** Did the Director appoint him (vs inherit him)? Sacking your own hire to
+   *  deflect blame is worth less with the board. */
+  appointedByUser: boolean;
+  /** Completed seasons in charge. */
+  seasonsInCharge: number;
 }
 
 export interface DivergenceEntry {
@@ -346,6 +363,9 @@ export interface Consequence {
     | 'reinjure' // a rushed return backfires: a fresh serious injury (`months`)
     | 'restPlayer' // load-manage: rest him `months` (he misses games) + `amount` proneness shift
     | 'managerRelationship'
+    | 'managerStanding' // adjust the head coach's own job security
+    | 'sackManager' // dismiss the current head coach (opens the hire shortlist); `amount` = Director patience relief
+    | 'appointManager' // appoint a coach: `text` = name, `amount` = reputation, `tag` = 'byUser' if the Director's own hire
     | 'agitation' // raise a player's unrest
     | 'transferOut' // sell a player to `clubId` for `amount`
     | 'signReal' // sign an incoming real target to the user club (funds + moves)
