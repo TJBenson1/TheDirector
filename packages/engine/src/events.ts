@@ -88,7 +88,7 @@ export function applyConsequence(state: GameState, c: Consequence): void {
         // and any deal it enables (the Cole↔Gallas swap) wrongly cancels.
         const buyer = state.clubs[c.clubId];
         if (buyer && c.amount) buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, c.amount);
-        const res = executeTransfer(state, { playerId: c.playerId, toClub: c.clubId, fee: c.amount ?? 0 });
+        const res = executeTransfer(state, { playerId: c.playerId, toClub: c.clubId, fee: c.amount ?? 0 }, { reality: true });
         if (res.ok) markLedgerRealized(state, c.tag);
       }
       break;
@@ -99,7 +99,7 @@ export function applyConsequence(state: GameState, c: Consequence): void {
       if (c.playerId) {
         const user = state.clubs[state.playerClub];
         if (user) user.finances.transferBudget = Math.max(user.finances.transferBudget, c.amount ?? 0);
-        const res = executeTransfer(state, { playerId: c.playerId, toClub: state.playerClub, fee: c.amount ?? 0 });
+        const res = executeTransfer(state, { playerId: c.playerId, toClub: state.playerClub, fee: c.amount ?? 0 }, { reality: true });
         if (res.ok) markLedgerRealized(state, c.tag);
       }
       break;

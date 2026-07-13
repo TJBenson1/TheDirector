@@ -366,6 +366,16 @@ export function clubStarPremium(state: GameState, clubId: ClubId): number {
 }
 
 /**
+ * One player's CONTINENTAL value — the margin over replacement level his ability
+ * carries into the Champions League star model. Used to price a MISSED real
+ * target (§ butterfly showcase): a club denied a talisman and left with a lesser
+ * man is weaker in Europe by the gap between the two (Duff is no Ronaldinho).
+ */
+export function playerStarValue(ability: number): number {
+  return Math.max(0, ability - STAR_REPLACEMENT) * STAR_WEIGHT_CL;
+}
+
+/**
  * Recompute a club's live `strength` from its currently-AVAILABLE squad,
  * anchored so a fully-fit squad equals `baseStrength`. Injuries drop the best
  * XI to the next-best available player, so losing a star measurably weakens the

@@ -118,13 +118,17 @@ export function executeTransfer(
 
   // The user acting on the market provokes the rival response layer (§9a) — a
   // do-nothing user doesn't, so reality/scripted history holds for the passive.
-  if (req.toClub === state.playerClub && fromClubId !== state.playerClub) {
+  // Sanctioning a REAL move (reality) is "do-nothing": it must not stir the world
+  // off its real course, or the passive user's reality (and the Champions League)
+  // would drift for no reason.
+  if (!opts.reality && req.toClub === state.playerClub && fromClubId !== state.playerClub) {
     state.userAggression += 1;
   }
 
   // Raid detection (§9a): the user raiding a simulated rival provokes a
-  // counter-punch and a grudge. The rival has ≤2 windows to respond.
-  if (fromClubId && req.toClub === state.playerClub) {
+  // counter-punch and a grudge. The rival has ≤2 windows to respond. A reality
+  // move is not a raid — the seller's real response is already in the ledger.
+  if (!opts.reality && fromClubId && req.toClub === state.playerClub) {
     const seller = state.clubs[fromClubId];
     if (seller && seller.leagueId !== null && seller.id !== state.playerClub) {
       seller.pendingCounterPunch = 2;

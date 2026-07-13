@@ -215,13 +215,25 @@ export function simulateChampionsLeague(state: GameState, rng: Rng, seasonYear: 
   // every real winner is reproduced exactly.
   const delta = (id: ClubId): number => clStrength(state, id) - state.clubs[id]!.baseStrength;
   const real = REAL_UCL[eraForScenario(state.meta.scenarioId)]?.[seasonYear];
+  // Reality holds ABSOLUTELY until the world has genuinely DIVERGED — the user has
+  // acted on the market (aggression) or a butterfly has been banked into the
+  // field. Ageing, form and reality's own transfers are not divergence: they must
+  // never unseat a real winner (an upset winner like Liverpool 2005 sits close to
+  // the threshold, and squad ageing alone could otherwise tip them out). Only once
+  // the user starts bending history do the real results open up to merit.
+  const anyButterfly = seeds.some((id) => Math.abs(state.clubs[id]?.starButterfly ?? 0) > 0.01);
+  const diverged = state.userAggression > 0 || anyButterfly;
   if (real && field.has(real.w)) {
+    const runnerUp = real.r && field.has(real.r) ? real.r : seeds.find((id) => id !== real.w) ?? real.w;
+    if (!diverged) {
+      record(real.w, runnerUp, true);
+      return;
+    }
     const rwDelta = delta(real.w);
     let maxRivalSwing = -Infinity;
     for (const id of seeds) if (id !== real.w) maxRivalSwing = Math.max(maxRivalSwing, delta(id));
     const outSwung = maxRivalSwing - rwDelta > ANCHOR_SWING;
     if (rwDelta >= -ANCHOR_DROP && !outSwung) {
-      const runnerUp = real.r && field.has(real.r) ? real.r : seeds.find((id) => id !== real.w) ?? real.w;
       record(real.w, runnerUp, true);
       return;
     }

@@ -18,7 +18,7 @@ import { WINDOW_STEPS } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
-import { clubSquadPlayers } from './players.js';
+import { clubSquadPlayers, playerStarValue } from './players.js';
 import { appendMemory } from './memory.js';
 import { areDirectRivals } from './agency.js';
 import { applyPrematureMove } from './development.js';
@@ -264,6 +264,13 @@ function fallbackForLedger(
   const group = positionGroupOf(original);
   const targetAbility = original.ability;
   const year = Number(state.clock.date.slice(0, 4));
+
+  // The CONTINENTAL cost of the miss (§ butterfly showcase): a club denied a real
+  // talisman is weaker in Europe by his star value. Any like-for-like replacement
+  // signed below banks its own (smaller) positive butterfly through executeTransfer,
+  // so the NET on `dest` is precisely the downgrade — Barça, denied Ronaldinho and
+  // left with a lesser man, lose ground in the European Cup.
+  dest.starButterfly -= playerStarValue(original.ability);
 
   // A comparable, genuinely-available alternative. Two sources count as
   // "available": (a) foreign/context depth reality isn't otherwise using, and

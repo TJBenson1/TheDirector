@@ -35,11 +35,13 @@ describe('Champions League (§ butterfly showcase)', () => {
   });
 
   it('a butterfly that saps a champion flips the trophy to the next-best side', () => {
-    // Barça, weakened (never landed Ronaldinho/Eto'o/Deco) — a strength drop
-    // below their real baseline. Reality no longer holds where it depended on them.
+    // Barça, gutted of their continental spine by a deviation — a banked star
+    // butterfly (§ showcase) that drops them below their real baseline. This is
+    // the ONLY thing that opens reality up: ageing alone never would. Reality no
+    // longer holds where it depended on them.
     const weaken = (s: GameState) => {
       const b = s.clubs['barcelona'];
-      if (b) b.strength = Math.max(20, b.baseStrength - 7);
+      if (b) b.starButterfly = -7;
     };
     const s = play('arsenal-2004', 'ucl', 2010, weaken);
     expect(clWinner(s, 2006)).not.toBe('barcelona'); // someone else lifts it
@@ -68,6 +70,40 @@ describe('the continental star lens is reality-anchored (§ butterfly showcase)'
     // Deviation: the premium the talisman carried is stripped — a negative
     // continental butterfly.
     expect(move(false)).toBeLessThan(-0.5);
+  });
+
+  it('the BUYER side is symmetric: a deviation that lands a star LIFTS the club in Europe', () => {
+    // A marquee striker signed into a club that will PLAY him (a clear upgrade on
+    // their front line, so he makes the XI rather than riding the bench). As a
+    // deviation it banks a POSITIVE continental butterfly (the mirror of a star
+    // loss); as a reality move it banks none.
+    const move = (reality: boolean) => {
+      const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'anchor' });
+      s.clubs['liverpool']!.finances.transferBudget = 300_000_000;
+      const before = s.clubs['liverpool']!.starButterfly;
+      executeTransfer(s, { playerId: 'cur_henry', toClub: 'liverpool', fee: 60_000_000 }, { reality });
+      expect(s.players['cur_henry']!.club).toBe('liverpool');
+      return s.clubs['liverpool']!.starButterfly - before;
+    };
+    // Reality carries no butterfly; a deviation makes them genuinely stronger on
+    // the continent.
+    expect(Math.abs(move(true))).toBeLessThan(0.01);
+    expect(move(false)).toBeGreaterThan(0.5);
+  });
+
+  it("a stacked super-team's continental butterfly can flip a trophy toward the buyer", () => {
+    // Load a mid-strength context side (Valencia) with three genuine stars via
+    // deviations, into a team that plays them — a positive continental butterfly
+    // big enough to matter in the knockout.
+    const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'stack' });
+    const before = s.clubs['valencia']?.starButterfly ?? 0;
+    s.clubs['valencia']!.finances.transferBudget = 500_000_000;
+    for (const pid of ['cur_henry', 'cur_drogba', 'cur_ballack']) {
+      const p = s.players[pid];
+      if (p) executeTransfer(s, { playerId: pid, toClub: 'valencia', fee: 50_000_000 });
+    }
+    // Three stars into one XI lifts them well beyond the flat mean.
+    expect((s.clubs['valencia']?.starButterfly ?? 0) - before).toBeGreaterThan(1.5);
   });
 });
 
