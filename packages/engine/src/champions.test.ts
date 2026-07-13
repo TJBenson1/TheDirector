@@ -149,6 +149,57 @@ describe('the Ronaldinho gambit (playable counterfactual)', () => {
   });
 });
 
+describe('an upset champion is fragile once the timeline bends (§ butterfly showcase)', () => {
+  it("Liverpool's 2005 miracle evaporates when their spine is raided — yet holds when the world is left alone", () => {
+    // Undisturbed, the improbable is reproduced: Liverpool lift the 2005 European
+    // Cup (a weak side on a knockout run, reality not merit).
+    const passive = play('arsenal-2004', 'ucl', 2006);
+    expect(clWinner(passive, 2005)).toBe('liverpool');
+
+    // A rich rival prises away Gerrard and Xabi Alonso in the summer of 2004 — the
+    // spine Liverpool had no strength to replace. The timeline is bent AND the
+    // disturbance reaches the champion, so reality no longer shields the miracle:
+    // Liverpool take their true, long odds and the upset evaporates.
+    let s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'ucl' });
+    s.clubs['chelsea']!.finances.transferBudget = 400_000_000;
+    for (const pid of ['cur_gerrard3', 'cur_alonso']) {
+      expect(s.players[pid]?.club).toBe('liverpool');
+      executeTransfer(s, { playerId: pid, toClub: 'chelsea', fee: 45_000_000 });
+    }
+    expect(s.players['cur_gerrard3']?.club).toBe('chelsea'); // the raid landed
+    let guard = 0;
+    while (Number(s.clock.date.slice(0, 4)) < 2006 && guard++ < 40) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
+      s = advanceWindow(s).state;
+    }
+    expect(clWinner(s, 2005)).not.toBe('liverpool');
+  });
+});
+
+describe('continental butterfly accounting (§ butterfly showcase)', () => {
+  it('is deterministic: the same seed yields identical European Cup winners', () => {
+    const a = play('arsenal-2004', 'determinism', 2010);
+    const b = play('arsenal-2004', 'determinism', 2010);
+    expect(a.europeanCup?.titleHistory).toEqual(b.europeanCup?.titleHistory);
+  });
+
+  it('a round-trip nets out: buy a star then sell him on and the continental swing cancels', () => {
+    // Buying a star into a team that plays him lifts them; selling him straight on
+    // must return them to where they were — a butterfly must not leave a permanent
+    // scar from churn that reality would have shrugged off.
+    const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'roundtrip' });
+    const before = s.clubs['valencia']!.starButterfly;
+    s.clubs['valencia']!.finances.transferBudget = 300_000_000;
+    executeTransfer(s, { playerId: 'cur_henry', toClub: 'valencia', fee: 50_000_000 });
+    expect(s.clubs['valencia']!.starButterfly - before).toBeGreaterThan(0.5); // the buy lifts them
+    s.clubs['real_madrid']!.finances.transferBudget = 300_000_000;
+    executeTransfer(s, { playerId: 'cur_henry', toClub: 'real_madrid', fee: 50_000_000 });
+    // Back to roughly where they started — no lasting continental scar.
+    expect(Math.abs(s.clubs['valencia']!.starButterfly - before)).toBeLessThan(0.3);
+  });
+});
+
 describe('temporary relegation (Calciopoli)', () => {
   it('Juventus vanish from Serie A for a season and return', () => {
     const s = play('juventus-1995', 'releg', 2009);

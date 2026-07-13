@@ -101,6 +101,11 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
  *  far. Small, because squad-strength deltas from real transfers are small. */
 const ANCHOR_DROP = 3;
 const ANCHOR_SWING = 6;
+/** How far below the field's strongest a real winner must sit to count as an
+ *  UPSET — a side reality, not merit, crowned. Such a champion is shielded in an
+ *  undisturbed world but, once a butterfly reaches them, loses that shield and
+ *  takes their true (long) knockout odds. A dominant winner sits inside this gap. */
+const UPSET_GAP = 4;
 
 /** How many clubs contest the knockout (a clean 16-team bracket when possible). */
 const FIELD_SIZE = 16;
@@ -231,9 +236,24 @@ export function simulateChampionsLeague(state: GameState, rng: Rng, seasonYear: 
     }
     const rwDelta = delta(real.w);
     let maxRivalSwing = -Infinity;
-    for (const id of seeds) if (id !== real.w) maxRivalSwing = Math.max(maxRivalSwing, delta(id));
+    let fieldMax = -Infinity;
+    for (const id of seeds) {
+      fieldMax = Math.max(fieldMax, clStrength(state, id));
+      if (id !== real.w) maxRivalSwing = Math.max(maxRivalSwing, delta(id));
+    }
     const outSwung = maxRivalSwing - rwDelta > ANCHOR_SWING;
-    if (rwDelta >= -ANCHOR_DROP && !outSwung) {
+    // An UPSET winner (Liverpool 2005, Porto 2004) sits well below the field's
+    // best — reality, not merit, put the trophy in their hands. In an undisturbed
+    // world that miracle is reproduced (the !diverged branch above). But once the
+    // timeline is bent AND the disturbance actually reaches them (they have been
+    // sapped by a butterfly, however small — a raid on their spine), the miracle
+    // is no longer shielded: they take their true, long merit odds in the knockout
+    // and the upset most likely evaporates. A DOMINANT champion, near the top of
+    // the field, keeps the ordinary drop/out-swing protection.
+    const isUpset = fieldMax - clStrength(state, real.w) > UPSET_GAP;
+    const sapped = (state.clubs[real.w]?.starButterfly ?? 0) < -0.01;
+    const fragileUpsetFalls = isUpset && sapped;
+    if (rwDelta >= -ANCHOR_DROP && !outSwung && !fragileUpsetFalls) {
       record(real.w, runnerUp, true);
       return;
     }
