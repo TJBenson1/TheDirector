@@ -259,6 +259,10 @@ export const BAYERN_2004_EXTRA: CuratedSeed[] = [
   q('bayern', 'makaay_bay', 'Roy Makaay', 1975, 'Netherlands', ['ST'], 84, 85, 2007, 30, t(8, 6, 8, 7, 4, 7)),
   q('bayern', 'pizarro_bay', 'Claudio Pizarro', 1978, 'Peru', ['ST'], 82, 83, 2007, 30, t(7, 6, 8, 7, 5, 7)),
   q('bayern', 'demichelis_bay', 'Martín Demichelis', 1980, 'Argentina', ['CB', 'DM'], 79, 82, 2009, 30, t(8, 5, 8, 7, 5, 7)),
+  q('bayern', 'lizarazu_bay', 'Bixente Lizarazu', 1969, 'France', ['LB'], 80, 81, 2006, 30, t(8, 5, 8, 8, 4, 7)),
+  q('bayern', 'salihamidzic_bay', 'Hasan Salihamidžić', 1977, 'Bosnia', ['RM', 'RW'], 79, 80, 2007, 30, t(9, 5, 8, 8, 5, 7)),
+  q('bayern', 'deisler_bay', 'Sebastian Deisler', 1980, 'Germany', ['AM', 'RM'], 79, 85, 2007, 65, t(7, 5, 7, 7, 6, 7)),
+  q('bayern', 'santacruz_bay', 'Roque Santa Cruz', 1981, 'Paraguay', ['ST'], 78, 82, 2007, 55, t(7, 6, 7, 7, 5, 7)),
 ];
 
 /** Tottenham depth — the rest of the 2004–05 side (King, Carrick, Defoe above). */

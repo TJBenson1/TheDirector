@@ -50,3 +50,30 @@ describe('scenarios (§14 start points)', () => {
     });
   }
 });
+
+describe('every playable club is featured with a real squad (§4, §14)', () => {
+  // The 12 playable clubs (ELITE_CLUBS / Amendment B Tier 1). Each must be
+  // genuinely playable somewhere — a curated squad of at least a first XI + subs,
+  // not a wall of anonymous filler.
+  const PLAYABLE = [
+    'man_utd', 'real_madrid', 'barcelona', 'bayern', 'juventus', 'milan',
+    'inter', 'arsenal', 'liverpool', 'chelsea', 'man_city', 'spurs',
+  ];
+  const MIN_SQUAD = 13;
+
+  it('each of the 12 playable clubs has >= 13 curated players in at least one scenario', () => {
+    const best: Record<string, number> = {};
+    for (const scenarioId of Object.keys(SCENARIOS)) {
+      const s = createNewGame({ scenarioId, seed: 'curation' });
+      for (const club of PLAYABLE) {
+        const c = s.clubs[club];
+        if (!c) continue;
+        const curated = c.squad.map((id) => s.players[id]!).filter((p) => p.curated).length;
+        best[club] = Math.max(best[club] ?? 0, curated);
+      }
+    }
+    for (const club of PLAYABLE) {
+      expect(best[club] ?? 0, `${club} best curated squad`).toBeGreaterThanOrEqual(MIN_SQUAD);
+    }
+  });
+});
