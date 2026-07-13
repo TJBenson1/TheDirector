@@ -232,6 +232,35 @@ function offerUserLedgerMove(state: GameState, entry: RealTransferLedgerEntry, k
 }
 
 /**
+ * Apply any scheduled financial shocks now due (Calciopoli, Parmalat, a club's
+ * over-reach collapse). When the year arrives the club drops into distress, which
+ * makes it a cheap, willing, raidable seller — the "capitalise on a club in
+ * distress" window (see recommend.ts askingPrice + fallbackWantsUserPlayer). Runs
+ * at the season rollover, before the summer window, so the fire-sale is live the
+ * same summer. Each shock fires once.
+ */
+export function applyFinancialShocks(state: GameState): void {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack?.financialShocks?.length) return;
+  const year = Number(state.clock.date.slice(0, 4));
+  const applied = (state.meta.appliedFinancialShocks ??= []);
+  for (const shock of pack.financialShocks) {
+    const key = `${shock.clubId}@${shock.year}`;
+    if (applied.includes(key) || year < shock.year) continue;
+    applied.push(key);
+    const club = state.clubs[shock.clubId];
+    if (!club) continue;
+    club.financialHealth = shock.health;
+    logEvent(state, {
+      category: 'event',
+      code: 'club.distress',
+      message: `${club.name} ${shock.note ?? 'falls into financial distress — a fire-sale opens'}`,
+      data: { clubId: club.id, health: shock.health, year: shock.year },
+    });
+  }
+}
+
+/**
  * Process the "almost happened" ledger for the current window (once per window).
  * Each near-miss resolves exactly once:
  *   - the user's club nearly SIGNED him → offer the counterfactual signing;

@@ -184,6 +184,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'zenit', name: 'Zenit St Petersburg', prestige: 66 },
       { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 70 },
       { id: 'lyon', name: 'Olympique Lyonnais', prestige: 74 },
+      { id: 'inter', name: 'Internazionale', prestige: 82 },
     ],
     // Abramovich bankrolls Chelsea; Arsenal are servicing the Emirates debt.
     ownership: { chelsea: 'sugar-daddy', arsenal: 'debt' },

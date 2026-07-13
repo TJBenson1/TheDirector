@@ -63,6 +63,23 @@ outside that world is calibration-safe.
 - **Cross-cutting:** real transfer ledgers + retirements for every newly-curated
   club so a passive career reproduces their real history, not a frozen 1998 squad.
 
+## Capitalising on the food chain / clubs in distress (✅ model built)
+The user can now pick apart smaller/distressed clubs:
+- **Food-chain discount** (`recommend.ts` askingPrice + `step-up` tag): a much
+  bigger club is a magnet, and a smaller "selling club" is a motivated seller —
+  ~1.8%/prestige-point off (Arsenal→Porto ≈ 13%), capped ~32%, stacking on any
+  distress cut. Willingness already rewards "moving up".
+- **Scheduled financial shocks** (`FinancialShock` on the era pack, applied at the
+  rollover): **Calciopoli drops Juventus into crisis in 2006** — a cheap, raidable
+  fire-sale (Del Piero ~£1.5m). Reusable for Leeds/Parma/etc.
+- **Porto sell-off** ledgered (Nuno Valente→Everton '05, Pepe→Madrid '07,
+  Bosingwa→Chelsea '08) so the user can hijack them early.
+- Injuries packs added: **INJURIES_2004** (Woodgate's wrecked Madrid season,
+  Hargreaves' knee) and **INJURIES_2009** (Kaká's knee, Robben's hamstring).
+- **Still to do:** era-2001 Porto (Deco/Carvalho 2001-03 — the user's literal
+  "pick apart Porto in 2002" example needs that pack); more financial shocks
+  (Leeds 2004, Parma/Parmalat 2004, Rangers 2012); injuries packs for 2013/2001.
+
 ## Lost-talent profile expansion
 More real under-achievers to curate with a `latentCeiling` (the reverse
 reality-rail gamble — see `development.ts` / DESIGN docs):

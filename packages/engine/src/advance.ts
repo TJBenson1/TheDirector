@@ -24,7 +24,7 @@ import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from 
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
-import { executeLedgerWindow, executeNearMisses } from './ledgerExec.js';
+import { executeLedgerWindow, executeNearMisses, applyFinancialShocks } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
 import { decayPursuit } from './wooing.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
@@ -60,6 +60,9 @@ function runMonth(state: GameState, rng: Rng): void {
     processAcademyGraduates(state, rng.fork(`academy:${state.clock.date}`));
     processSeasonAgeing(state, rng);
     processSeasonMorale(state);
+    // Scheduled distress (Calciopoli, Parmalat…): drops a club into a fire-sale
+    // this summer — a cheap, raidable window for the user (before the ledger runs).
+    applyFinancialShocks(state);
     // 4. Rubber-band: update world defiance from last season's finish (§9a #5).
     updateWorldDefiance(state);
     // 4b. Conditional takeover butterflies (Abramovich buys Chelsea only if they

@@ -433,6 +433,9 @@ export interface GameStateMeta {
    *  or resolved to reality when the user isn't involved), so each near-miss is
    *  presented at most once. Optional for old-save loads. */
   processedNearMisses?: string[];
+  /** Scheduled financial shocks (e.g. Calciopoli) already applied, so each fires
+   *  once. Keyed `clubId@year`. Optional for old-save loads. */
+  appliedFinancialShocks?: string[];
 }
 
 export interface GameClock {

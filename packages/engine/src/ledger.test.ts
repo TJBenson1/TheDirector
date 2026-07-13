@@ -3,8 +3,10 @@ import { createNewGame, cloneState } from './state.js';
 import { advanceWindow } from './advance.js';
 import { applyDecision } from './events.js';
 import { executeTransfer } from './transfers.js';
-import { resolvePlayer } from './recommend.js';
+import { resolvePlayer, askingPrice, acquisitionTags } from './recommend.js';
+import { valuePlayer } from './finance.js';
 import { ledgerSquadMatch } from './ledgerExec.js';
+import { parseYearMonth } from './clock.js';
 import type { GameState } from './types.js';
 
 function play(state: GameState, windows: number): GameState {
@@ -86,6 +88,40 @@ describe('reality-ledger execution (§9f)', () => {
     expect(sawOffer).toBe(true);
     expect(s.players.cur_fellaini?.club).toBe('everton'); // declined → he stays
     expect(s.eventLog.some((e) => e.code === 'poach.bid' && e.data?.from === 'man_utd')).toBe(false);
+  });
+});
+
+describe('capitalising on the food chain + clubs in distress', () => {
+  it('a much bigger club raids a smaller selling club at a discount (step-up)', () => {
+    const a = createNewGame({ scenarioId: 'arsenal-2004', seed: 'foodchain' });
+    const year = parseYearMonth(a.clock.date).year;
+    const pepe = a.players.cur_pepe04!; // Porto (prestige 76) vs Arsenal (86+)
+    const full = valuePlayer(pepe, year);
+    const toArsenal = askingPrice(a, 'cur_pepe04', 'arsenal');
+    expect(toArsenal).toBeLessThan(full); // motivated seller — the food-chain cut
+    expect(acquisitionTags(a, pepe, 'arsenal')).toContain('step-up');
+    // A peer/no-buyer pays full — the discount is buyer-specific.
+    expect(askingPrice(a, 'cur_pepe04')).toBe(
+      Math.max(50_000, Math.round(full / 100_000) * 100_000),
+    );
+  });
+
+  it('Calciopoli drops Juventus into a raidable fire-sale in 2006', () => {
+    let a = createNewGame({ scenarioId: 'arsenal-2004', seed: 'calciopoli' });
+    for (let i = 0; i < 30 && parseYearMonth(a.clock.date).year < 2007; i++) {
+      for (const d of [...a.pendingDecisions]) a = applyDecision(a, d.id, d.choices[0]!.id).state;
+      a = advanceWindow(a).state;
+      if (a.board.dismissed) break;
+    }
+    // The scheduled financial shock has fired: Juve are in crisis, a fire-sale.
+    expect(a.clubs.juventus?.financialHealth).toBe('crisis');
+    expect(a.eventLog.some((e) => e.code === 'club.distress' && e.data?.clubId === 'juventus')).toBe(true);
+    // A Juve player still there is now a cheap, tagged fire-sale for a big club.
+    const dp = a.players.cur_delpiero04;
+    if (dp?.club === 'juventus') {
+      expect(askingPrice(a, 'cur_delpiero04', 'arsenal')).toBeLessThan(valuePlayer(dp, 2006) * 0.7);
+      expect(acquisitionTags(a, dp, 'arsenal')).toContain('fire-sale');
+    }
   });
 });
 

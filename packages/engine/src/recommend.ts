@@ -28,22 +28,31 @@ function ageOf(state: GameState, p: PlayerState): number {
   return year(state) - p.birthYear;
 }
 
-export type AcquisitionTag = 'bosman' | 'unsettled' | 'fire-sale' | 'relegation-threatened';
+export type AcquisitionTag = 'bosman' | 'unsettled' | 'fire-sale' | 'relegation-threatened' | 'step-up';
 
-/** How a player might be prised loose (§ internal-friction). */
-export function acquisitionTags(state: GameState, player: PlayerState): AcquisitionTag[] {
+/** How a player might be prised loose (§ internal-friction). A `buyerClubId`
+ *  surfaces the FOOD-CHAIN 'step-up' opportunity: a much bigger club can prise a
+ *  player from a smaller selling club before his value explodes. */
+export function acquisitionTags(state: GameState, player: PlayerState, buyerClubId?: ClubId): AcquisitionTag[] {
   const tags: AcquisitionTag[] = [];
   const club = player.club ? state.clubs[player.club] : undefined;
   if (player.contractUntil - year(state) <= 1) tags.push('bosman');
   if (player.agitation >= 30 || player.morale < 45) tags.push('unsettled');
   if (club && club.financialHealth !== 'healthy') tags.push('fire-sale');
   if (club?.relegationThreatened) tags.push('relegation-threatened');
+  const buyer = buyerClubId ? state.clubs[buyerClubId] : undefined;
+  if (buyer && club && buyer.prestige > club.prestige + 8) tags.push('step-up');
   return tags;
 }
 
-/** The fee a selling club would realistically accept (distress/relegation cut
- *  it; a Bosman is already cheap via the contract factor in valuePlayer). */
-export function askingPrice(state: GameState, playerId: PlayerId): number {
+/** The fee a selling club would realistically accept. Cut by distress/relegation
+ *  (a Bosman is already cheap via the contract factor in valuePlayer) and — when
+ *  a `buyerClubId` is given — by the FOOD CHAIN: a smaller "selling club" is a
+ *  motivated seller to a much bigger suitor. It can't realistically hold the
+ *  player and banks the fee to reinvest, so it takes a discount from the elite.
+ *  This is what lets a big side pick apart the feeder clubs (Porto, PSV, Ajax,
+ *  Lyon…) before a talent's value explodes; a peer or a smaller buyer pays full. */
+export function askingPrice(state: GameState, playerId: PlayerId, buyerClubId?: ClubId): number {
   const p = state.players[playerId];
   if (!p) return 0;
   const club = p.club ? state.clubs[p.club] : undefined;
@@ -51,6 +60,13 @@ export function askingPrice(state: GameState, playerId: PlayerId): number {
   if (club?.financialHealth === 'crisis') mult *= 0.5;
   else if (club?.financialHealth === 'strained') mult *= 0.72;
   if (club?.relegationThreatened) mult *= 0.75;
+  const buyer = buyerClubId ? state.clubs[buyerClubId] : undefined;
+  if (buyer && club && buyer.prestige > club.prestige + 4) {
+    // ~1.8% off per prestige point of gap beyond 4, capped at ~32% — a genuine
+    // "food-chain" raid discount (Arsenal→Porto ≈ 13% off) that a distressed
+    // small club stacks on top of its fire-sale cut.
+    mult *= Math.max(0.68, 1 - (buyer.prestige - club.prestige - 4) * 0.018);
+  }
   return Math.max(50_000, Math.round((valuePlayer(p, year(state)) * mult) / 100_000) * 100_000);
 }
 
@@ -97,10 +113,10 @@ export function suggestTargets(
     const inPosition = p.positions.includes(position) || p.positions.some((pos) => GROUP[pos] === group);
     if (!inPosition) continue;
 
-    const price = askingPrice(state, p.id);
+    const price = askingPrice(state, p.id, state.playerClub);
     if (opts.maxPrice !== undefined && price > opts.maxPrice) continue;
 
-    const tags = acquisitionTags(state, p);
+    const tags = acquisitionTags(state, p, state.playerClub);
     const verdict = evaluateApproach(state, { playerId: p.id, toClub: state.playerClub });
     const report = scoutPlayer(state, state.playerClub, p.id, deterministicScoutRng(state, p.id), { observation: 0.5 });
 
@@ -155,8 +171,8 @@ export function queryPlayer(state: GameState, idOrName: string): PlayerQuery {
     report: scoutPlayer(state, state.playerClub, p.id, deterministicScoutRng(state, p.id), { observation: 0.6 }),
     age,
     clubName: p.club ? state.clubs[p.club]?.name ?? p.club : 'Free agent',
-    tags: acquisitionTags(state, p),
-    askingPrice: askingPrice(state, p.id),
+    tags: acquisitionTags(state, p, state.playerClub),
+    askingPrice: askingPrice(state, p.id, state.playerClub),
     willing: verdict.willing,
     resistanceReason: verdict.reason,
   };

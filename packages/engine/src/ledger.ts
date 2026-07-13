@@ -14,7 +14,7 @@
  * scouting, academy and narrative.
  */
 
-import type { ClubId, PlayerId, YearMonth } from './types.js';
+import type { ClubId, FinancialHealth, PlayerId, YearMonth } from './types.js';
 
 /** One real historical transfer among tracked clubs. */
 export interface RealTransferLedgerEntry {
@@ -166,11 +166,27 @@ export function nearMissKey(e: NearMissEntry): string {
   return `${e.playerId}@${e.window}~>${e.almostTo}`;
 }
 
+/**
+ * A club that really fell into financial distress mid-era — Calciopoli's Serie-B
+ * Juventus, Leeds' post-overreach collapse, Parma's Parmalat crash. When the year
+ * arrives the club's `financialHealth` drops, which (see recommend.ts / ledgerExec)
+ * makes it a cheap, raidable fire-sale: exactly the "capitalise on a club in
+ * distress" window. Fires once (tracked in meta.appliedFinancialShocks).
+ */
+export interface FinancialShock {
+  clubId: ClubId;
+  year: number;
+  health: FinancialHealth;
+  note?: string;
+}
+
 /** Per-era reality data. */
 export interface EraRealityPack {
   realTransferLedger: RealTransferLedgerEntry[];
   academyIntakes: AcademyIntake[];
   realInjuries: RealInjuryEntry[];
+  /** Clubs that fall into distress mid-era (a raidable fire-sale opens). */
+  financialShocks?: FinancialShock[];
   /** Real retirement years for curated players (age-based fallback otherwise). */
   retirements?: RealRetirement[];
   /** Real youth graduates who break through during the era (real players only). */
@@ -351,12 +367,47 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_rosicky', from: 'dortmund', to: 'arsenal', window: '2006-07', fee: 6_800_000, id: 'rosicky-arsenal-2006' },
   { playerId: 'cur_nasri', from: 'marseille', to: 'arsenal', window: '2008-07', fee: 12_000_000, id: 'nasri-arsenal-2008' },
   { playerId: 'cur_arshavin', from: 'zenit', to: 'arsenal', window: '2009-01', fee: 15_000_000, id: 'arshavin-arsenal-2009' },
+
+  // ── Calciopoli (2006): Juventus, stripped of two titles and relegated to Serie
+  // B, are forced into a fire-sale (financialShocks drops them into crisis the
+  // same summer). The champions scatter cheaply — pick them from the wreckage, or
+  // let reality hold. This is the marquee "capitalise on a club in distress" beat.
+  { playerId: 'cur_cannavaro04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 5_000_000, id: 'cannavaro-madrid-2006' },
+  { playerId: 'cur_emerson04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 20_000_000, id: 'emerson-madrid-2006' },
+  { playerId: 'cur_thuram04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 5_000_000, id: 'thuram-barca-2006' },
+  { playerId: 'cur_zambrotta04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 10_000_000, id: 'zambrotta-barca-2006' },
+  { playerId: 'cur_ibrahimovic04', from: 'juventus', to: 'inter', window: '2006-08', fee: 24_800_000, id: 'ibra-inter-2006' },
+
+  // ── Porto's post-2004-CL sell-off: the classic feeder club cashing in as its
+  // stars rise. A big side can pick them off EARLY (food-chain discount + they
+  // want the step up) before these real moves land.
+  { playerId: 'cur_nunovalente04', from: 'porto', to: 'everton', window: '2005-08', fee: 1_500_000, id: 'valente-everton-2005' },
+  { playerId: 'cur_pepe04', from: 'porto', to: 'real_madrid', window: '2007-07', fee: 20_000_000, id: 'pepe-madrid-2007' },
+  { playerId: 'cur_bosingwa04', from: 'porto', to: 'chelsea', window: '2008-07', fee: 16_000_000, id: 'bosingwa-chelsea-2008' },
+];
+
+/** Calciopoli sends Juventus down to Serie B and into a forced fire-sale. */
+const SHOCKS_2004: FinancialShock[] = [
+  { clubId: 'juventus', year: 2006, health: 'crisis', note: 'is relegated to Serie B in the Calciopoli scandal — a forced fire-sale opens' },
 ];
 
 /** Real 2004-era injuries — fire only if the player is at his real club. */
 const INJURIES_2004: RealInjuryEntry[] = [
   { playerId: 'cur_king', atClub: 'spurs', since: '2005-11', months: 4, serious: true, note: 'chronic knee trouble' },
   { playerId: 'cur_rooney2', atClub: 'man_utd', since: '2006-04', months: 2, serious: false, note: 'metatarsal fracture before the World Cup' },
+  // Woodgate — the £13m Madrid signing who didn't play a competitive minute in
+  // his first season (thigh trouble, then an infamous debut own goal + red card).
+  { playerId: 'cur_woodgate04', atClub: 'real_madrid', since: '2004-09', months: 11, serious: true, note: 'thigh/muscle trouble wrecks his first season' },
+  { playerId: 'cur_hargreaves', atClub: 'bayern', since: '2005-09', months: 5, serious: true, note: 'recurring knee tendinitis' },
+];
+
+/** Real 2009–12 injuries — fire only if the player is at his real club. */
+const INJURIES_2009: RealInjuryEntry[] = [
+  // Kaká's Madrid years, wrecked by a chronic knee/patellar-tendon problem (a
+  // surgery in Aug 2010) — the injury that turned a Ballon d'Or into a shadow.
+  { playerId: 'cur_kaka09', atClub: 'real_madrid', since: '2010-08', months: 4, serious: true, note: 'knee/patellar-tendon surgery' },
+  { playerId: 'cur_robben09', atClub: 'bayern', since: '2010-04', months: 2, serious: false, note: 'hamstring trouble around the Champions League final' },
+  { playerId: 'cur_ibisevic09', atClub: 'hoffenheim', since: '2009-11', months: 2, serious: false, note: 'lingering effects of his cruciate rupture' },
 ];
 
 /**
@@ -622,10 +673,10 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1998': { realTransferLedger: LEDGER_1998, academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998, academyGraduates: ACADEMY_1998, nearMisses: NEARMISS_1998 },
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013, nearMisses: NEARMISS_2013 },
-  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004 },
+  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004, financialShocks: SHOCKS_2004 },
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2001, academyGraduates: ACADEMY_2001 },
   // era-2009 (Bayern / Van Gaal reset). Ledger + injuries + retirements are the
-  'era-2009': { realTransferLedger: LEDGER_2009, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2009, academyGraduates: ACADEMY_2009 },
+  'era-2009': { realTransferLedger: LEDGER_2009, academyIntakes: [], realInjuries: INJURIES_2009, retirements: RETIREMENTS_2009, academyGraduates: ACADEMY_2009 },
 };
 
 /** The era pack a scenario draws its reality data from. */
