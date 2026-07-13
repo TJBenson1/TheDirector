@@ -562,6 +562,51 @@ const RETIREMENTS_1998: RealRetirement[] = [
   { playerId: 'cur_mihajlovic', year: 2006 }, { playerId: 'cur_weah', year: 2003 },
 ];
 
+// ── era-2009 (Bayern / Van Gaal reset) ───────────────────────────────────────
+/**
+ * Real 2009–12 transfers of the era. Ronaldo/Kaká/Benzema/Alonso/Robben/Gómez all
+ * arrived in summer 2009 and are baked into the opening squads, so the ledger
+ * carries the ONWARD moves: Özil and Khedira to Madrid (2010), the Bundesliga's
+ * best sold on (Džeko to City, Vidal to Juve, Şahin to Madrid), and — offered to
+ * the user as Bayern — the real Bayern buys Neuer, Boateng and Kroos.
+ */
+const LEDGER_2009: RealTransferLedgerEntry[] = [
+  { playerId: 'cur_raul09', from: 'real_madrid', to: 'schalke', window: '2010-07', fee: 0 },
+  { playerId: 'cur_khedira09', from: 'stuttgart', to: 'real_madrid', window: '2010-07', fee: 12_000_000 },
+  { playerId: 'cur_ozil09', from: 'bremen', to: 'real_madrid', window: '2010-08', fee: 15_000_000 },
+  { playerId: 'cur_kroos09', from: 'leverkusen', to: 'bayern', window: '2010-07', fee: 0 },
+  { playerId: 'cur_boateng09', from: 'hamburg', to: 'man_city', window: '2010-07', fee: 10_500_000, id: 'boateng-city-2010' },
+  { playerId: 'cur_barzagli09', from: 'wolfsburg', to: 'juventus', window: '2011-01', fee: 300_000 },
+  { playerId: 'cur_dzeko09', from: 'wolfsburg', to: 'man_city', window: '2011-01', fee: 27_000_000 },
+  { playerId: 'cur_rakitic09', from: 'schalke', to: 'sevilla', window: '2011-01', fee: 2_500_000 },
+  { playerId: 'cur_neuer09', from: 'schalke', to: 'bayern', window: '2011-07', fee: 22_000_000 },
+  { playerId: 'cur_boateng09', from: 'man_city', to: 'bayern', window: '2011-07', fee: 13_500_000, id: 'boateng-bayern-2011' },
+  { playerId: 'cur_sahin09', from: 'dortmund', to: 'real_madrid', window: '2011-07', fee: 8_000_000 },
+  { playerId: 'cur_vidal09', from: 'leverkusen', to: 'juventus', window: '2011-07', fee: 10_500_000 },
+  { playerId: 'cur_merte09', from: 'bremen', to: 'arsenal', window: '2011-08', fee: 8_000_000 },
+  { playerId: 'cur_gustavo09', from: 'hoffenheim', to: 'bayern', window: '2011-01', fee: 15_000_000 },
+  { playerId: 'cur_schurrle09', from: 'mainz', to: 'leverkusen', window: '2011-07', fee: 8_000_000 },
+  { playerId: 'cur_marin09', from: 'bremen', to: 'chelsea', window: '2012-07', fee: 7_000_000 },
+  { playerId: 'cur_reus09', from: 'gladbach', to: 'dortmund', window: '2012-07', fee: 17_000_000 },
+  { playerId: 'cur_dante09', from: 'gladbach', to: 'bayern', window: '2012-07', fee: 4_500_000 },
+  { playerId: 'cur_podolski09', from: 'koln', to: 'arsenal', window: '2012-07', fee: 11_000_000 },
+];
+
+const RETIREMENTS_2009: RealRetirement[] = [
+  { playerId: 'cur_hyypia09', year: 2011 }, { playerId: 'cur_lehmann09', year: 2011 },
+  { playerId: 'cur_guti09', year: 2011 }, { playerId: 'cur_butt09', year: 2012 },
+  { playerId: 'cur_vannistelrooy09', year: 2012 }, { playerId: 'cur_frings09', year: 2013 },
+  { playerId: 'cur_klose09', year: 2014 }, { playerId: 'cur_raul09', year: 2015 },
+  { playerId: 'cur_casillas09', year: 2020 }, { playerId: 'cur_pizarro09', year: 2020 },
+];
+
+const ACADEMY_2009: AcademyGraduate[] = [
+  // Mario Götze — the Dortmund academy jewel of the era (and the man who scored
+  // the 2014 World Cup final winner), whose CLUB career never matched it: a move
+  // to Bayern and a metabolic illness derailed him. A lost talent (latent 91).
+  { year: 2010, seed: { id: 'cur_gotze09', club: 'dortmund', name: 'Mario Götze', birthYear: 1992, nationality: 'Germany', positions: ['AM', 'RW'], ability: 64, potentialCeiling: 84, latentCeiling: 91, contractUntil: 2014, injuryProneness: 45, personality: per(7, 6, 8, 6, 5, 7) } },
+];
+
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1998': { realTransferLedger: LEDGER_1998, academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998, academyGraduates: ACADEMY_1998, nearMisses: NEARMISS_1998 },
@@ -570,8 +615,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004 },
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2001, academyGraduates: ACADEMY_2001 },
   // era-2009 (Bayern / Van Gaal reset). Ledger + injuries + retirements are the
-  // next data pass; the seam exists so the scenario is playable now.
-  'era-2009': { realTransferLedger: [], academyIntakes: [], realInjuries: [] },
+  'era-2009': { realTransferLedger: LEDGER_2009, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2009, academyGraduates: ACADEMY_2009 },
 };
 
 /** The era pack a scenario draws its reality data from. */

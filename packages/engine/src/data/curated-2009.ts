@@ -231,7 +231,125 @@ export const REAL_MADRID_2009: CuratedSeed[] = [
   q('real_madrid', 'granero09', 'Esteban Granero', 1987, 'Spain', ['CM', 'AM'], 74, 82, 2015, 35, t(8, 5, 7, 8, 5, 7)),
 ];
 
-/** Curated squads for the bayern-2009 scenario, keyed by club. */
+/** 1. FC Köln, 2009–10 — Lukas Podolski home at his boyhood club; Novaković's goals. */
+export const KOLN_2009: CuratedSeed[] = [
+  q('koln', 'mondragon09', 'Faryd Mondragón', 1971, 'Colombia', ['GK'], 72, 72, 2011, 35, t(9, 5, 5, 7, 3, 8)),
+  q('koln', 'geromel09', 'Pedro Geromel', 1985, 'Brazil', ['CB'], 69, 76, 2012, 30, t(8, 4, 7, 6, 3, 6)),
+  q('koln', 'mohamad09', 'Youssef Mohamad', 1980, 'Lebanon', ['CB'], 68, 68, 2013, 40, t(7, 4, 5, 7, 4, 6)),
+  q('koln', 'brecko09', 'Miso Brečko', 1984, 'Slovenia', ['RB'], 68, 70, 2013, 30, t(8, 3, 5, 7, 3, 7)),
+  q('koln', 'ehret09', 'Fabrice Ehret', 1979, 'France', ['LB'], 66, 66, 2012, 40, t(7, 4, 4, 6, 4, 6)),
+  q('koln', 'mckenna09', 'Kevin McKenna', 1980, 'Canada', ['CB', 'ST'], 68, 68, 2012, 35, t(8, 3, 5, 8, 3, 7)),
+  q('koln', 'petit09', 'Petit', 1976, 'Portugal', ['DM'], 72, 72, 2011, 45, t(7, 5, 5, 6, 5, 7)),
+  q('koln', 'matuszczyk09', 'Adam Matuszczyk', 1989, 'Poland', ['DM', 'CM'], 58, 70, 2013, 30, t(6, 4, 6, 6, 5, 6)),
+  // Chihi — a winger of genuine flair tipped for the top, derailed by injuries and
+  // inconsistency. A fragile-and-lost talent (latent 80).
+  q('koln', 'chihi09', 'Adil Chihi', 1988, 'Morocco', ['LW', 'AM'], 65, 74, 2013, 70, t(4, 7, 6, 5, 7, 5), { latentCeiling: 80 }),
+  q('koln', 'freis09', 'Sebastian Freis', 1985, 'Germany', ['RW', 'ST'], 66, 68, 2011, 55, t(7, 4, 5, 7, 4, 6)),
+  q('koln', 'podolski09', 'Lukas Podolski', 1985, 'Germany', ['ST', 'LW'], 80, 84, 2012, 25, t(7, 6, 8, 9, 5, 7)),
+  q('koln', 'novakovic09', 'Milivoje Novaković', 1979, 'Slovenia', ['ST'], 74, 75, 2013, 30, t(8, 4, 6, 7, 3, 7)),
+  q('koln', 'kessler09', 'Thomas Kessler', 1986, 'Germany', ['GK'], 62, 68, 2011, 20, t(8, 3, 4, 9, 3, 6)),
+];
+
+/** 1899 Hoffenheim, 2009–10 — Rangnick's exciting young project; Gustavo and a
+ *  young Demba Ba on the way up, Carlos Eduardo the gifted flair man. */
+export const HOFFENHEIM_2009: CuratedSeed[] = [
+  q('hoffenheim', 'hildebrand09', 'Timo Hildebrand', 1979, 'Germany', ['GK'], 74, 76, 2012, 25, t(7, 6, 6, 5, 5, 6)),
+  q('hoffenheim', 'beck09', 'Andreas Beck', 1987, 'Germany', ['RB'], 73, 79, 2012, 20, t(8, 4, 6, 7, 3, 7)),
+  q('hoffenheim', 'compper09', 'Marvin Compper', 1985, 'Germany', ['CB'], 70, 74, 2012, 30, t(7, 4, 5, 6, 4, 6)),
+  q('hoffenheim', 'simunic09', 'Josip Šimunić', 1978, 'Croatia', ['CB'], 73, 74, 2012, 30, t(6, 6, 5, 6, 7, 6)),
+  q('hoffenheim', 'vorsah09', 'Isaac Vorsah', 1988, 'Ghana', ['CB'], 69, 78, 2013, 45, t(7, 3, 7, 7, 4, 6)),
+  q('hoffenheim', 'nilsson09', 'Per Nilsson', 1982, 'Sweden', ['CB', 'RB'], 70, 72, 2012, 25, t(8, 3, 5, 8, 3, 7)),
+  q('hoffenheim', 'gustavo09', 'Luiz Gustavo', 1987, 'Brazil', ['DM', 'CM'], 74, 86, 2013, 20, t(8, 5, 9, 5, 4, 7)),
+  q('hoffenheim', 'weis09', 'Tobias Weis', 1985, 'Germany', ['CM', 'DM'], 65, 72, 2012, 30, t(6, 4, 5, 6, 4, 6)),
+  q('hoffenheim', 'salihovic09', 'Sejad Salihović', 1984, 'Bosnia and Herzegovina', ['LW', 'LB'], 74, 77, 2013, 40, t(6, 6, 6, 7, 6, 6)),
+  // Carlos Eduardo — the side's most gifted footballer; a record move to Rubin
+  // Kazan and repeated injuries stalled him for good. Lost talent (latent 87).
+  q('hoffenheim', 'carloseduardo09', 'Carlos Eduardo', 1987, 'Brazil', ['AM', 'LW'], 78, 84, 2013, 65, t(6, 7, 8, 4, 6, 5), { latentCeiling: 87 }),
+  q('hoffenheim', 'demba09', 'Demba Ba', 1985, 'Senegal', ['ST'], 73, 85, 2012, 30, t(7, 6, 9, 4, 5, 7)),
+  // Ibišević — a runaway top scorer until an ACL rupture; a fragile-and-lost
+  // striker (latent 84) whose knee kept him from the level he'd shown.
+  q('hoffenheim', 'ibisevic09', 'Vedad Ibišević', 1984, 'Bosnia and Herzegovina', ['ST'], 76, 82, 2013, 70, t(8, 5, 7, 6, 5, 6), { latentCeiling: 84 }),
+  q('hoffenheim', 'obasi09', 'Chinedu Obasi', 1986, 'Nigeria', ['LW', 'ST'], 71, 79, 2012, 55, t(6, 6, 6, 5, 6, 6)),
+];
+
+/** Borussia Mönchengladbach, 2009–10 — a relegation-scrap side, but home to a
+ *  raw teenage Marco Reus and a young Dante at the back. */
+export const GLADBACH_2009: CuratedSeed[] = [
+  q('gladbach', 'bailly09', 'Logan Bailly', 1985, 'Belgium', ['GK'], 72, 76, 2012, 35, t(7, 6, 6, 6, 5, 7)),
+  q('gladbach', 'daems09', 'Filip Daems', 1978, 'Belgium', ['LB'], 74, 74, 2012, 30, t(8, 5, 6, 8, 4, 7)),
+  q('gladbach', 'brouwers09', 'Roel Brouwers', 1981, 'Netherlands', ['CB'], 71, 73, 2013, 30, t(7, 4, 5, 8, 4, 7)),
+  q('gladbach', 'dante09', 'Dante', 1983, 'Brazil', ['CB'], 75, 80, 2012, 25, t(7, 7, 8, 6, 6, 7)),
+  q('gladbach', 'levels09', 'Tobias Levels', 1986, 'Germany', ['RB', 'CB'], 68, 71, 2012, 40, t(7, 5, 6, 7, 4, 7)),
+  q('gladbach', 'jantschke09', 'Tony Jantschke', 1990, 'Germany', ['CB', 'RB'], 62, 74, 2012, 30, t(8, 4, 7, 10, 4, 8)),
+  q('gladbach', 'bradley09', 'Michael Bradley', 1987, 'United States', ['CM', 'DM'], 72, 78, 2012, 25, t(9, 6, 8, 6, 6, 7)),
+  q('gladbach', 'meeuwis09', 'Marcel Meeuwis', 1980, 'Netherlands', ['CM'], 66, 68, 2012, 40, t(6, 5, 5, 6, 5, 6)),
+  q('gladbach', 'arango09', 'Juan Arango', 1980, 'Venezuela', ['AM', 'LW'], 76, 76, 2012, 30, t(8, 7, 7, 6, 6, 7)),
+  q('gladbach', 'matmour09', 'Karim Matmour', 1985, 'Algeria', ['RW', 'LW'], 68, 71, 2012, 35, t(7, 6, 6, 6, 6, 7)),
+  // Reus — a raw wide forward here, a season from exploding into one of Europe's
+  // best. Reality-rail (huge ceiling); a modest fragility flag for later years.
+  q('gladbach', 'reus09', 'Marco Reus', 1989, 'Germany', ['RW', 'AM'], 70, 92, 2013, 45, t(9, 6, 9, 6, 6, 8)),
+  q('gladbach', 'herrmann09', 'Patrick Herrmann', 1991, 'Germany', ['RW'], 57, 74, 2014, 40, t(7, 5, 7, 9, 5, 7)),
+  q('gladbach', 'bobadilla09', 'Raúl Bobadilla', 1987, 'Argentina', ['ST'], 66, 72, 2012, 40, t(6, 7, 6, 5, 6, 6)),
+  q('gladbach', 'neuville09', 'Oliver Neuville', 1973, 'Germany', ['ST'], 63, 63, 2011, 55, t(9, 5, 5, 7, 5, 7)),
+];
+
+/** Hannover 96, 2009–10 — a lower-mid side led by Ya Konan's goals. */
+export const HANNOVER_2009: CuratedSeed[] = [
+  q('hannover', 'fromlowitz09', 'Florian Fromlowitz', 1986, 'Germany', ['GK'], 68, 71, 2011, 30, t(7, 4, 6, 6, 4, 6)),
+  q('hannover', 'cherundolo09', 'Steve Cherundolo', 1979, 'United States', ['RB'], 76, 76, 2012, 55, t(9, 3, 7, 10, 3, 8)),
+  q('hannover', 'djakpa09', 'Constant Djakpa', 1986, 'Ivory Coast', ['LB', 'CB'], 69, 74, 2011, 30, t(6, 5, 7, 5, 5, 6)),
+  q('hannover', 'haggui09', 'Karim Haggui', 1984, 'Tunisia', ['CB'], 72, 73, 2012, 35, t(7, 5, 6, 6, 5, 6)),
+  q('hannover', 'balitsch09', 'Hanno Balitsch', 1981, 'Germany', ['RB', 'DM'], 70, 70, 2011, 40, t(8, 4, 6, 7, 4, 7)),
+  q('hannover', 'schulz09', 'Christian Schulz', 1983, 'Germany', ['CB', 'LB'], 71, 72, 2012, 35, t(7, 4, 6, 7, 4, 7)),
+  q('hannover', 'pinto09', 'Sérgio Pinto', 1980, 'Portugal', ['DM', 'CM'], 70, 70, 2012, 30, t(7, 5, 6, 7, 5, 7)),
+  q('hannover', 'rosenthal09', 'Jan Rosenthal', 1986, 'Germany', ['AM', 'LW'], 69, 76, 2011, 55, t(7, 4, 6, 6, 4, 6)),
+  q('hannover', 'stajner09', 'Jiří Štajner', 1976, 'Czech Republic', ['LW', 'ST'], 71, 71, 2011, 40, t(6, 6, 6, 9, 7, 6)),
+  q('hannover', 'yakonan09', 'Didier Ya Konan', 1984, 'Ivory Coast', ['ST'], 77, 78, 2012, 30, t(8, 6, 8, 6, 4, 7)),
+  q('hannover', 'hanke09', 'Mike Hanke', 1983, 'Germany', ['ST'], 73, 73, 2012, 35, t(7, 5, 6, 6, 5, 7)),
+];
+
+/** Eintracht Frankfurt, 2009–10 — a mid-table side; Meier and Schwegler its spine. */
+export const FRANKFURT_2009: CuratedSeed[] = [
+  q('frankfurt', 'nikolov09', 'Oka Nikolov', 1974, 'North Macedonia', ['GK'], 73, 73, 2012, 30, t(8, 3, 5, 10, 3, 7)),
+  q('frankfurt', 'ochs09', 'Patrick Ochs', 1984, 'Germany', ['RB'], 70, 72, 2011, 30, t(7, 4, 6, 7, 4, 6)),
+  q('frankfurt', 'franz09', 'Maik Franz', 1981, 'Germany', ['CB'], 73, 73, 2011, 35, t(7, 6, 6, 6, 7, 6)),
+  q('frankfurt', 'russ09', 'Marco Russ', 1985, 'Germany', ['CB', 'DM'], 72, 75, 2013, 30, t(7, 3, 6, 9, 4, 7)),
+  q('frankfurt', 'chris09', 'Chris', 1978, 'Brazil', ['CB', 'DM'], 72, 72, 2011, 35, t(7, 4, 5, 8, 4, 6)),
+  q('frankfurt', 'spycher09', 'Christoph Spycher', 1978, 'Switzerland', ['LB'], 74, 74, 2011, 30, t(8, 4, 6, 7, 3, 7)),
+  q('frankfurt', 'schwegler09', 'Pirmin Schwegler', 1987, 'Switzerland', ['CM', 'DM'], 77, 79, 2013, 35, t(8, 5, 7, 7, 4, 7)),
+  q('frankfurt', 'teber09', 'Selim Teber', 1981, 'Germany', ['DM', 'CM'], 68, 68, 2012, 35, t(6, 4, 5, 6, 5, 6)),
+  q('frankfurt', 'meier09', 'Alexander Meier', 1983, 'Germany', ['AM', 'ST'], 75, 79, 2013, 40, t(7, 4, 6, 9, 3, 6)),
+  q('frankfurt', 'koehler09', 'Benjamin Köhler', 1980, 'Germany', ['LW', 'AM'], 71, 71, 2012, 40, t(7, 4, 5, 7, 4, 6)),
+  q('frankfurt', 'caio09', 'Caio', 1986, 'Brazil', ['AM', 'RW'], 72, 78, 2011, 30, t(5, 6, 6, 5, 6, 5)),
+  q('frankfurt', 'amanatidis09', 'Ioannis Amanatidis', 1981, 'Greece', ['ST'], 74, 74, 2011, 65, t(7, 5, 6, 7, 5, 6)),
+  q('frankfurt', 'liberopoulos09', 'Nikos Liberopoulos', 1975, 'Greece', ['ST'], 73, 73, 2011, 55, t(8, 5, 6, 6, 4, 6)),
+  // Fenin — a hat-trick on his Bundesliga debut, then injuries and off-field
+  // troubles collapsed the whole thing. A cautionary lost talent (latent 82).
+  q('frankfurt', 'fenin09', 'Martin Fenin', 1987, 'Czech Republic', ['ST'], 68, 76, 2012, 78, t(3, 7, 6, 4, 9, 4), { latentCeiling: 82 }),
+];
+
+/** 1. FSV Mainz 05, 2009–10 — newly promoted, finished a strong 9th under a young
+ *  Thomas Tuchel; a teenage André Schürrle emerging. */
+export const MAINZ_2009: CuratedSeed[] = [
+  q('mainz', 'hmueller09', 'Heinz Müller', 1978, 'Germany', ['GK'], 71, 72, 2012, 30, t(8, 6, 5, 7, 4, 7)),
+  q('mainz', 'noveski09', 'Nikolce Noveski', 1979, 'North Macedonia', ['CB'], 73, 74, 2013, 45, t(8, 5, 5, 9, 4, 7)),
+  q('mainz', 'svensson09', 'Bo Svensson', 1979, 'Denmark', ['CB', 'LB'], 71, 72, 2012, 55, t(8, 4, 6, 8, 3, 7)),
+  q('mainz', 'bungert09', 'Niko Bungert', 1986, 'Germany', ['CB'], 65, 76, 2013, 40, t(7, 5, 6, 9, 4, 7)),
+  q('mainz', 'zabavnik09', 'Radoslav Zabavník', 1980, 'Slovakia', ['RB', 'CB'], 69, 70, 2013, 40, t(7, 5, 6, 6, 5, 7)),
+  q('mainz', 'karhan09', 'Miroslav Karhan', 1976, 'Slovakia', ['DM', 'CM'], 72, 72, 2011, 45, t(9, 6, 7, 9, 3, 7)),
+  q('mainz', 'soto09', 'Elkin Soto', 1980, 'Colombia', ['CM', 'DM'], 72, 73, 2013, 50, t(8, 5, 6, 9, 5, 7)),
+  q('mainz', 'polanski09', 'Eugen Polanski', 1986, 'Germany', ['CM', 'DM'], 70, 78, 2012, 45, t(7, 6, 7, 6, 5, 7)),
+  q('mainz', 'ivanschitz09', 'Andreas Ivanschitz', 1983, 'Austria', ['AM', 'LW'], 72, 74, 2012, 40, t(7, 6, 6, 6, 5, 6)),
+  // Schürrle — the teenage breakout here; he reached the top (2014 World Cup) then
+  // faded early. Reality-rail (a genuine high ceiling), not a lost talent.
+  q('mainz', 'schurrle09', 'André Schürrle', 1990, 'Germany', ['LW', 'ST'], 69, 86, 2012, 45, t(7, 6, 8, 5, 6, 7)),
+  q('mainz', 'szalai09', 'Ádám Szalai', 1987, 'Hungary', ['ST'], 70, 82, 2013, 50, t(7, 6, 7, 6, 5, 7)),
+  q('mainz', 'bance09', 'Aristide Bancé', 1984, 'Burkina Faso', ['ST'], 70, 72, 2012, 45, t(6, 8, 6, 5, 7, 6)),
+  q('mainz', 'allagui09', 'Sami Allagui', 1986, 'Tunisia', ['ST', 'RW'], 68, 74, 2012, 40, t(6, 6, 6, 6, 5, 6)),
+];
+
+/** Curated squads for the bayern-2009 scenario, keyed by club — a fully real
+ *  top of the Bundesliga plus the galáctico Real Madrid as European context. */
 export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   bayern: BAYERN_2009,
   wolfsburg: WOLFSBURG_2009,
@@ -241,5 +359,11 @@ export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   stuttgart: STUTTGART_2009,
   hamburg: HAMBURG_2009,
   leverkusen: LEVERKUSEN_2009,
+  hoffenheim: HOFFENHEIM_2009,
+  gladbach: GLADBACH_2009,
+  koln: KOLN_2009,
+  hannover: HANNOVER_2009,
+  frankfurt: FRANKFURT_2009,
+  mainz: MAINZ_2009,
   real_madrid: REAL_MADRID_2009,
 };

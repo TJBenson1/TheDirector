@@ -17,15 +17,21 @@ Aimar, Saviola, Mendieta, Gerard López, Djalminha, Valerón, Tristán). Priorit
 eras per user: 1999, 2004, 2009, 2013 first; 1995 / late-2010s / 2020s last.
 
 **Known follow-ons (data fidelity):**
-- ✅ **era-2009 established** — bayern-2009 "Van Gaal reset" on a real 18-team
-  Bundesliga (season length now derives from club count). Curated: Bayern +
-  Wolfsburg, Schalke, Bremen, Dortmund, Stuttgart, Hamburg, Leverkusen, and the
-  CR7/Kaká Real Madrid as context. Still to do for 2009: the remaining Bundesliga
-  clubs (Hoffenheim, Frankfurt, Gladbach, Köln, Hannover, Mainz, Freiburg, Hertha,
-  Nürnberg, Bochum), more European context (Barça treble, Mourinho's Inter, Man
-  City post-takeover, Chelsea, Man Utd post-CR7), and the **era-2009 ledger**
-  (CR7/Kaká/Benzema→Madrid 2009, Özil→Madrid 2010, Robben→Bayern, Džeko→City,
-  Neuer/Boateng→Bayern 2011, etc.) + injuries/retirements/academy.
+- ✅ **era-2009 established + deepened** — bayern-2009 "Van Gaal reset" on a real
+  18-team Bundesliga (season length now derives from club count). **14 of 18
+  Bundesliga clubs fully curated** (Bayern, Wolfsburg, Schalke, Bremen, Dortmund,
+  Stuttgart, Hamburg, Leverkusen, Hoffenheim, Gladbach, Köln, Hannover, Frankfurt,
+  Mainz) + the CR7/Kaká Real Madrid as context. **era-2009 ledger live**: Özil/
+  Khedira→Madrid, Džeko→City, Şahin/Vidal/Barzagli sold on, Podolski→Arsenal,
+  Reus→Dortmund — and the real Bayern buys (Neuer, Boateng, Kroos, Gustavo, Dante)
+  offered to the user as decisions. + retirements + Götze (Dortmund '10 academy,
+  latent). Still to do for 2009:
+  - the **bottom-4 Bundesliga clubs** (Freiburg, Hertha, Nürnberg, Bochum) —
+    currently procedural.
+  - **more European context**: Barça treble, Mourinho's Inter (2010 treble), Man
+    City post-takeover, Chelsea (Ancelotti double), Man Utd post-CR7, Juventus.
+  - **era-2009 injuries** (Kaká's knee is flagged via proneness, but real dated
+    injuries aren't in the pack yet).
 - Add the real transfer ledgers for the newly-curated clubs so a passive career
   reproduces their history: the **2006 Calciopoli Juventus exodus** (Cannavaro/
   Emerson→Madrid, Thuram/Zambrotta→Barça, Ibrahimović→Inter), Porto's onward
