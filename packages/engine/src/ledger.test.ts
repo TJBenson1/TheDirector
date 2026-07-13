@@ -213,6 +213,24 @@ describe('host-club curation — real squads + landed lost talents', () => {
     expect(c.players.cur_valeron99?.latentCeiling).toBe(90); // injury-lost talent
     expect(c.players.cur_djalminha99?.latentCeiling).toBe(90); // temperament-lost talent
   });
+
+  it('the 2009 Bayern world is a real 18-team Bundesliga with European context', () => {
+    const b = createNewGame({ scenarioId: 'bayern-2009', seed: 'era-09' });
+    // 18-team Bundesliga (not the 20-team default).
+    const league = b.leagues[b.clubs.bayern!.leagueId!]!;
+    expect(league.clubIds.length).toBe(18);
+    // Van Gaal's Bayern + curated rivals + the CR7/Kaká galácticos as context.
+    expect(b.players.cur_muller09?.club).toBe('bayern');
+    expect(b.players.cur_ronaldo09?.club).toBe('real_madrid');
+    const curatedAt = (club: string) =>
+      (b.clubs[club]?.squad ?? []).map((id) => b.players[id]).filter((p) => p?.curated).length;
+    for (const club of ['bayern', 'dortmund', 'schalke', 'leverkusen', 'wolfsburg']) {
+      expect(curatedAt(club)).toBeGreaterThanOrEqual(14);
+    }
+    // Lost talents from the era: Şahin (injury) and Kaká (fragile at Madrid).
+    expect(b.players.cur_sahin09?.latentCeiling).toBe(88);
+    expect(b.players.cur_kaka09?.latentCeiling).toBe(90);
+  });
 });
 
 describe('more start points (§4 data)', () => {

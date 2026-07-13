@@ -16,10 +16,16 @@ surfaced a batch of new lost/fragile talents (Deisler, Carlos Alberto, Vicente,
 Aimar, Saviola, Mendieta, Gerard López, Djalminha, Valerón, Tristán). Priority
 eras per user: 1999, 2004, 2009, 2013 first; 1995 / late-2010s / 2020s last.
 
-**Known follow-ons from round 1 (data fidelity):**
-- **era-2009 does not exist yet** — needs establishing as a new start point
-  (scenario + a 2009 domestic league + curated 2009-10 world + ledger). Biggest
-  single item on the priority list.
+**Known follow-ons (data fidelity):**
+- ✅ **era-2009 established** — bayern-2009 "Van Gaal reset" on a real 18-team
+  Bundesliga (season length now derives from club count). Curated: Bayern +
+  Wolfsburg, Schalke, Bremen, Dortmund, Stuttgart, Hamburg, Leverkusen, and the
+  CR7/Kaká Real Madrid as context. Still to do for 2009: the remaining Bundesliga
+  clubs (Hoffenheim, Frankfurt, Gladbach, Köln, Hannover, Mainz, Freiburg, Hertha,
+  Nürnberg, Bochum), more European context (Barça treble, Mourinho's Inter, Man
+  City post-takeover, Chelsea, Man Utd post-CR7), and the **era-2009 ledger**
+  (CR7/Kaká/Benzema→Madrid 2009, Özil→Madrid 2010, Robben→Bayern, Džeko→City,
+  Neuer/Boateng→Bayern 2011, etc.) + injuries/retirements/academy.
 - Add the real transfer ledgers for the newly-curated clubs so a passive career
   reproduces their history: the **2006 Calciopoli Juventus exodus** (Cannavaro/
   Emerson→Madrid, Thuram/Zambrotta→Barça, Ibrahimović→Inter), Porto's onward
