@@ -38,8 +38,14 @@ const MAX_LAMBDA = 6; // safety cap on the Poisson mean
 const FORM_STEP = 1; // form nudge per win/loss
 const FORM_CAP = 5;
 const FORM_DECAY = 0.7; // per round, form drifts toward 0
-const ROUNDS = 38; // double round-robin, 20 teams
 const PLAYING_MONTHS = 10; // Aug (idx 1) … May (idx 10)
+
+/** Rounds in a double round-robin season, from the league's size: a 20-team
+ *  division is 38, an 18-team Bundesliga is 34. (For any 20-team league this is
+ *  exactly the old hardcoded 38, so existing worlds are bit-identical.) */
+function seasonRounds(league: LeagueState): number {
+  return 2 * (league.clubIds.length - 1);
+}
 
 export function emptyRecord(): TeamRecord {
   return { played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 };
@@ -346,7 +352,7 @@ export function stepLeagueMonth(state: GameState, rng: Rng): void {
         applyPromotionRelegation(state, league, leagueRng.fork('promrel'));
         initLeagueSeason(league, owningSeasonYear);
       }
-      const target = Math.round((ROUNDS * idx) / PLAYING_MONTHS);
+      const target = Math.round((seasonRounds(league) * idx) / PLAYING_MONTHS);
       const played = playRoundsUpTo(state, league, target, leagueRng);
       if (played > 0) {
         logEvent(state, {
@@ -356,7 +362,7 @@ export function stepLeagueMonth(state: GameState, rng: Rng): void {
           data: { leagueId: league.id, roundsPlayed: league.roundsPlayed, played },
         });
       }
-    } else if (idx === 11 && league.roundsPlayed >= ROUNDS) {
+    } else if (idx === 11 && league.roundsPlayed >= seasonRounds(league)) {
       // June — season complete; crown the champion (standings preserved).
       finalizeSeason(state, league);
     }

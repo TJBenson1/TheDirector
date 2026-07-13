@@ -207,6 +207,35 @@ export const SERIE_A_1998: LeagueSeed = {
   ],
 };
 
+/** Germany, 2009–10 Bundesliga — 18 teams (van Gaal's first Bayern season, which
+ *  ended in a domestic double). Wolfsburg are the reigning champions; Klopp's
+ *  Dortmund and Rangnick's Hoffenheim are the rising sides. */
+export const BUNDESLIGA_2009: LeagueSeed = {
+  id: 'ger-2009',
+  name: 'Bundesliga',
+  season: '2009-07',
+  clubs: [
+    { id: 'bayern', name: 'Bayern Munich', prestige: 88, strength: 87 },
+    { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 66, strength: 80 },
+    { id: 'schalke', name: 'Schalke 04', prestige: 74, strength: 80 },
+    { id: 'bremen', name: 'Werder Bremen', prestige: 72, strength: 80 },
+    { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 72, strength: 79 },
+    { id: 'dortmund', name: 'Borussia Dortmund', prestige: 74, strength: 77 },
+    { id: 'stuttgart', name: 'VfB Stuttgart', prestige: 70, strength: 76 },
+    { id: 'hamburg', name: 'Hamburger SV', prestige: 70, strength: 76 },
+    { id: 'hoffenheim', name: '1899 Hoffenheim', prestige: 58, strength: 73 },
+    { id: 'frankfurt', name: 'Eintracht Frankfurt', prestige: 62, strength: 69 },
+    { id: 'gladbach', name: "Borussia Mönchengladbach", prestige: 64, strength: 67 },
+    { id: 'koln', name: '1. FC Köln', prestige: 62, strength: 67 },
+    { id: 'hannover', name: 'Hannover 96', prestige: 56, strength: 65 },
+    { id: 'mainz', name: 'Mainz 05', prestige: 54, strength: 65 },
+    { id: 'freiburg', name: 'SC Freiburg', prestige: 54, strength: 63 },
+    { id: 'hertha', name: 'Hertha BSC', prestige: 62, strength: 62 },
+    { id: 'nurnberg', name: '1. FC Nürnberg', prestige: 56, strength: 61 },
+    { id: 'bochum', name: 'VfL Bochum', prestige: 52, strength: 60 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'esp-1': SPAIN_2000,
@@ -214,6 +243,7 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,
+  'ger-2009': BUNDESLIGA_2009,
 };
 
 /**
@@ -268,6 +298,17 @@ const ITALIAN_POOL: LeagueClubSeed[] = [
   { id: 'siena', name: 'Siena', prestige: 42, strength: 54 },
 ];
 
+const GERMAN_POOL: LeagueClubSeed[] = [
+  { id: 'kaiserslautern', name: '1. FC Kaiserslautern', prestige: 54, strength: 58 },
+  { id: 'st_pauli', name: 'FC St. Pauli', prestige: 48, strength: 55 },
+  { id: 'augsburg', name: 'FC Augsburg', prestige: 46, strength: 55 },
+  { id: 'union_berlin', name: 'Union Berlin', prestige: 46, strength: 54 },
+  { id: 'dusseldorf', name: 'Fortuna Düsseldorf', prestige: 48, strength: 54 },
+  { id: 'karlsruhe', name: 'Karlsruher SC', prestige: 46, strength: 53 },
+  { id: 'duisburg', name: 'MSV Duisburg', prestige: 44, strength: 52 },
+  { id: 'cottbus', name: 'Energie Cottbus', prestige: 44, strength: 52 },
+];
+
 /** Reservoir seeds per league id (broad national pool; league members filtered
  *  out at attach time). */
 export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
@@ -277,9 +318,10 @@ export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
   'eng-2013': ENGLISH_POOL,
   'esp-1': SPANISH_POOL,
   'ita-1': ITALIAN_POOL,
+  'ger-2009': GERMAN_POOL,
 };
 
 /** Flat lookup for instantiating a promoted club not yet in the world. */
 export const SECOND_TIER_CLUB: Record<string, LeagueClubSeed> = Object.fromEntries(
-  [...ENGLISH_POOL, ...SPANISH_POOL, ...ITALIAN_POOL].map((c) => [c.id, c]),
+  [...ENGLISH_POOL, ...SPANISH_POOL, ...ITALIAN_POOL, ...GERMAN_POOL].map((c) => [c.id, c]),
 );

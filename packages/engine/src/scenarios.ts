@@ -71,7 +71,41 @@ const ELITE_CLUBS_2013: ClubSeed[] = [
   { id: 'juventus', name: 'Juventus', prestige: 84 },
 ];
 
+/** The elite clubs as they stood in 2009 (Florentino's second Galácticos with
+ *  Ronaldo/Kaká; Guardiola's treble Barça; Mourinho's Inter; a moneyed City). */
+const ELITE_CLUBS_2009: ClubSeed[] = [
+  { id: 'real_madrid', name: 'Real Madrid', prestige: 95 },
+  { id: 'barcelona', name: 'Barcelona', prestige: 94 },
+  { id: 'man_utd', name: 'Manchester United', prestige: 90 },
+  { id: 'chelsea', name: 'Chelsea', prestige: 88 },
+  { id: 'inter', name: 'Internazionale', prestige: 86 },
+  { id: 'liverpool', name: 'Liverpool', prestige: 84 },
+  { id: 'arsenal', name: 'Arsenal', prestige: 82 },
+  { id: 'milan', name: 'AC Milan', prestige: 82 },
+  { id: 'juventus', name: 'Juventus', prestige: 80 },
+  { id: 'man_city', name: 'Manchester City', prestige: 76 },
+];
+
 export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
+  'bayern-2009': {
+    id: 'bayern-2009',
+    name: 'Bayern Munich — 2009: The Van Gaal Reset',
+    startDate: '2009-07',
+    playerClub: 'bayern',
+    mandate: 'Rebuild after the Klinsmann failure: blood the youth, reclaim the Bundesliga and reach the top of Europe.',
+    boardPatience: 74,
+    boardExpectedFinish: 1,
+    clubs: ELITE_CLUBS_2009,
+    contextExtra: [
+      { id: 'lyon', name: 'Olympique Lyonnais', prestige: 74 },
+      { id: 'sevilla', name: 'Sevilla', prestige: 70 },
+      { id: 'villarreal', name: 'Villarreal', prestige: 70 },
+      { id: 'porto', name: 'FC Porto', prestige: 74 },
+      { id: 'valencia', name: 'Valencia', prestige: 74 },
+      { id: 'atletico', name: 'Atlético Madrid', prestige: 74 },
+    ],
+    domesticLeagueId: 'ger-2009',
+  },
   'man-utd-2013': {
     id: 'man-utd-2013',
     name: 'Manchester United — 2013: After Ferguson',

@@ -569,11 +569,15 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013, nearMisses: NEARMISS_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004 },
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2001, academyGraduates: ACADEMY_2001 },
+  // era-2009 (Bayern / Van Gaal reset). Ledger + injuries + retirements are the
+  // next data pass; the seam exists so the scenario is playable now.
+  'era-2009': { realTransferLedger: [], academyIntakes: [], realInjuries: [] },
 };
 
 /** The era pack a scenario draws its reality data from. */
 export function eraForScenario(scenarioId: string): string {
   if (scenarioId.endsWith('-2013')) return 'era-2013';
+  if (scenarioId.endsWith('-2009')) return 'era-2009';
   if (scenarioId.endsWith('-2004')) return 'era-2004';
   if (scenarioId.endsWith('-2001')) return 'era-2001';
   if (scenarioId.endsWith('-1998')) return 'era-1998';

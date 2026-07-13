@@ -40,8 +40,11 @@ describe('scenarios (§14 start points)', () => {
       const ended = playASeason(state);
       const endLeague = ended.leagues[club!.leagueId!]!;
       expect(endLeague.titleHistory.length).toBeGreaterThanOrEqual(1);
+      // A double round-robin: every club plays 2*(N-1) games (38 for a 20-team
+      // league, 34 for the 18-team Bundesliga).
+      const gamesPerClub = 2 * (endLeague.clubIds.length - 1);
       for (const cid of endLeague.clubIds) {
-        expect(endLeague.standings[cid]!.played).toBe(38);
+        expect(endLeague.standings[cid]!.played).toBe(gamesPerClub);
       }
       // The user finished somewhere valid in the table.
       expect(standingsOrder(endLeague).indexOf(state.playerClub)).toBeGreaterThanOrEqual(0);
