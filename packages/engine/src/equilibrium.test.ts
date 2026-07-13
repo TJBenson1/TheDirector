@@ -16,6 +16,7 @@ import { describe, it, expect } from 'vitest';
 import { createNewGame } from './state.js';
 import { advanceWindow } from './advance.js';
 import { applyDecision } from './events.js';
+import { executeTransfer } from './transfers.js';
 import { attemptSigning, courtPlayer, evaluateApproach } from './index.js';
 import type { GameState } from './types.js';
 
@@ -97,5 +98,32 @@ describe('a denied club fights back — but the miss leaves a mark (§ butterfly
     // a lasting NEGATIVE continental butterfly — weaker in the Champions League
     // than the reality that had them sign Drogba.
     expect(s.clubs['chelsea']!.starButterfly).toBeLessThan(-0.5);
+  });
+
+  it('being denied AGAIN AND AGAIN escalates — a compounding strike-back, not a shrug', () => {
+    // The user (Arsenal) repeatedly gazumps Chelsea's real spine. Each miss deepens
+    // the deficit; once a club has genuinely fallen behind reality, the next fallback
+    // escalates (a more ambitious replacement, a readier raid on the culprit).
+    let s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'escalation' });
+    s.clubs['arsenal']!.finances.transferBudget = 500_000_000;
+    // Prise Chelsea's real signings away before their windows fall due.
+    for (const pid of ['cur_drogba', 'cur_essien', 'cur_ballack']) {
+      const p = s.players[pid];
+      if (p && p.club !== 'arsenal') executeTransfer(s, { playerId: pid, toClub: 'arsenal', fee: 30_000_000 });
+    }
+    for (let i = 0; i < 30 && Number(s.clock.date.slice(0, 4)) < 2008; i++) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
+      s = advanceWindow(s).state;
+    }
+
+    // Chelsea have been denied their spine and fallen well behind reality in Europe.
+    expect(s.clubs['chelsea']!.starButterfly).toBeLessThan(-2);
+    // And they did NOT shrug: a club far enough behind escalated its response — a
+    // logged, compounding strike-back that a single miss would never trigger.
+    const escalated = s.eventLog.some(
+      (e) => e.code === 'rival.escalate' && e.data?.clubId === 'chelsea',
+    );
+    expect(escalated).toBe(true);
   });
 });

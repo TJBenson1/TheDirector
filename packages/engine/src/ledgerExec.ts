@@ -32,6 +32,12 @@ function positionGroupOf(p: PlayerState): string {
   return 'ATT';
 }
 
+/** Ceiling on how far above a missed target's ability a frustrated club will
+ *  reach (§9a escalation). A club far enough behind reality can chase a genuine
+ *  upgrade — but not a limitless one; even an aggrieved giant works the real
+ *  market, not a fantasy one. */
+const AMBITION_MAX = 6;
+
 /**
  * Which sub-step of a window a real move lands in (§3 multi-step windows),
  * 1..WINDOW_STEPS. Marquee deals tend to resolve LATE (deadline-day drama),
@@ -265,7 +271,24 @@ function fallbackForLedger(
   const targetAbility = original.ability;
   const year = Number(state.clock.date.slice(0, 4));
 
-  // The CONTINENTAL cost of the miss (§ butterfly showcase): a club denied a real
+  // ESCALATION (§9a, compounding): how far this club had ALREADY fallen behind
+  // reality in Europe BEFORE this miss — the ground lost to being gazumped again
+  // and again. A first miss (prior deficit 0) is patched like-for-like; a club
+  // repeatedly denied reaches for genuine UPGRADES and comes for the culprit's own
+  // stars far more readily. Bounded, and zero for a club that has lost no ground
+  // (so a passive world never escalates).
+  const behind = Math.max(0, -dest.starButterfly);
+  const ambition = Math.min(AMBITION_MAX, behind);
+  if (ambition >= 2) {
+    logEvent(state, {
+      category: 'transfer',
+      code: 'rival.escalate',
+      message: `${dest.name}, ${behind.toFixed(1)} behind reality in Europe, escalate — chasing a more ambitious replacement`,
+      data: { clubId: dest.id, behind: Number(behind.toFixed(2)), ambition: Number(ambition.toFixed(2)) },
+    });
+  }
+
+  // The CONTINENTAL cost of THIS miss (§ butterfly showcase): a club denied a real
   // talisman is weaker in Europe by his star value. Any like-for-like replacement
   // signed below banks its own (smaller) positive butterfly through executeTransfer,
   // so the NET on `dest` is precisely the downgrade — Barça, denied Ronaldinho and
@@ -286,8 +309,8 @@ function fallbackForLedger(
     if (p.id === entry.playerId || p.club === entry.to) return false;
     if (positionGroupOf(p) !== group) return false;
     if (p.resistance.hardBlocks.length > 0 || p.injury) return false;
-    if (p.ability > targetAbility + 2) return false; // not a clear upgrade
-    if (targetAbility - p.ability > 6) return false; // like-for-like, not a big drop
+    if (p.ability > targetAbility + 2 + ambition) return false; // escalating clubs reach for upgrades
+    if (targetAbility - p.ability > 6) return false; // never a big drop — ambition rises, standards don't fall
     const seller = p.club ? state.clubs[p.club] : undefined;
     if (!seller) return false;
     if (areDirectRivals(state, seller.id, entry.to)) return false; // rivals don't trade
@@ -338,8 +361,11 @@ function fallbackForLedger(
 
   // Come back for the user's player only sometimes: a minority when a clean
   // market alternative exists (they'd usually just buy that), more often when
-  // nothing comparable is available and the user holds the obvious replacement.
-  const poach = !!userAsset && rng.chance(bestAlt ? 0.35 : 0.75);
+  // nothing comparable is available and the user holds the obvious replacement —
+  // and increasingly often the further behind the club has fallen (it turns on
+  // the very club that keeps outsmarting it).
+  const poachChance = Math.min(0.92, (bestAlt ? 0.35 : 0.75) + behind * 0.08);
+  const poach = !!userAsset && rng.chance(poachChance);
   if (poach) {
     createPoachBid(state, dest.id, userAsset!, original.name, year);
     return 'real-backup';
