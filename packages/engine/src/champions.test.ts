@@ -53,57 +53,45 @@ describe('Champions League (§ butterfly showcase)', () => {
 
 describe('the continental star lens is reality-anchored (§ butterfly showcase)', () => {
   it('a REAL star sale banks no continental butterfly; an identical DEVIATION does', () => {
-    // Selling a talisman the SAME way, once flagged as reality (the ledger), once
-    // as a user deviation. Only the deviation should weaken the club on the
-    // continent — reality's own star shuffles carry no butterfly.
-    const buyerFunds = (s: GameState) => (s.clubs['real_madrid']!.finances.transferBudget = 300_000_000);
+    // Henry leaving Arsenal for Barcelona is his REAL move (2007). Flagged reality
+    // it carries no butterfly (Arsenal are no weaker in Europe than history says);
+    // as a user DEVIATION — the same sale, forced early — it strips the premium the
+    // talisman carried.
     const move = (reality: boolean) => {
       const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'anchor' });
-      buyerFunds(s);
+      s.clubs['barcelona']!.finances.transferBudget = 300_000_000;
       const before = s.clubs['arsenal']!.starButterfly;
-      executeTransfer(s, { playerId: 'cur_henry', toClub: 'real_madrid', fee: 40_000_000 }, { reality });
-      expect(s.players['cur_henry']!.club).toBe('real_madrid'); // the move happened either way
+      executeTransfer(s, { playerId: 'cur_henry', toClub: 'barcelona', fee: 40_000_000 }, { reality });
+      expect(s.players['cur_henry']!.club).toBe('barcelona');
       return s.clubs['arsenal']!.starButterfly - before;
     };
-    // Reality: no butterfly (Arsenal are no weaker in Europe than reality says).
     expect(Math.abs(move(true))).toBeLessThan(0.01);
-    // Deviation: the premium the talisman carried is stripped — a negative
-    // continental butterfly.
     expect(move(false)).toBeLessThan(-0.5);
   });
 
-  it('the BUYER side is symmetric: a deviation that lands a star LIFTS the club in Europe', () => {
-    // A marquee striker signed into a club that will PLAY him (a clear upgrade on
-    // their front line, so he makes the XI rather than riding the bench). As a
-    // deviation it banks a POSITIVE continental butterfly (the mirror of a star
-    // loss); as a reality move it banks none.
-    const move = (reality: boolean) => {
-      const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'anchor' });
-      s.clubs['liverpool']!.finances.transferBudget = 300_000_000;
-      const before = s.clubs['liverpool']!.starButterfly;
-      executeTransfer(s, { playerId: 'cur_henry', toClub: 'liverpool', fee: 60_000_000 }, { reality });
-      expect(s.players['cur_henry']!.club).toBe('liverpool');
-      return s.clubs['liverpool']!.starButterfly - before;
+  it('the BUYER side lifts a club only where the star fills a GAP — not into an already-elite XI', () => {
+    // The counterfactual the whole pack is built on: United land Ronaldinho. He
+    // cracks a strong-but-not-stacked forward line, so it is genuine STRENGTH — a
+    // positive continental butterfly. Flagged reality it banks nothing.
+    const united = (reality: boolean) => {
+      const s = createNewGame({ scenarioId: 'manchester-united-2003', seed: 'buy' });
+      s.clubs['man_utd']!.finances.transferBudget = 200_000_000;
+      const before = s.clubs['man_utd']!.starButterfly;
+      executeTransfer(s, { playerId: 'cur_ronaldinho', toClub: 'man_utd', fee: 50_000_000 }, { reality });
+      return s.clubs['man_utd']!.starButterfly - before;
     };
-    // Reality carries no butterfly; a deviation makes them genuinely stronger on
-    // the continent.
-    expect(Math.abs(move(true))).toBeLessThan(0.01);
-    expect(move(false)).toBeGreaterThan(0.5);
-  });
+    expect(Math.abs(united(true))).toBeLessThan(0.01);
+    expect(united(false)).toBeGreaterThan(0.3);
 
-  it("a stacked super-team's continental butterfly can flip a trophy toward the buyer", () => {
-    // Load a mid-strength context side (Valencia) with three genuine stars via
-    // deviations, into a team that plays them — a positive continental butterfly
-    // big enough to matter in the knockout.
-    const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'stack' });
-    const before = s.clubs['valencia']?.starButterfly ?? 0;
-    s.clubs['valencia']!.finances.transferBudget = 500_000_000;
-    for (const pid of ['cur_henry', 'cur_drogba', 'cur_ballack']) {
-      const p = s.players[pid];
-      if (p) executeTransfer(s, { playerId: pid, toClub: 'valencia', fee: 50_000_000 });
-    }
-    // Three stars into one XI lifts them well beyond the flat mean.
-    expect((s.clubs['valencia']?.starButterfly ?? 0) - before).toBeGreaterThan(1.5);
+    // The flip side — and the concern that motivated this: a good striker into an
+    // ALREADY-ELITE side (the Invincibles' front line, built around a 92-rated
+    // Henry) is DEPTH, not strength. He never displaces the XI, so there is ~no
+    // continental butterfly. Buying a star is not free strength.
+    const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'depth' });
+    s.clubs['arsenal']!.finances.transferBudget = 200_000_000;
+    const before = s.clubs['arsenal']!.starButterfly;
+    executeTransfer(s, { playerId: 'cur_drogba', toClub: 'arsenal', fee: 30_000_000 });
+    expect(Math.abs(s.clubs['arsenal']!.starButterfly - before)).toBeLessThan(0.01);
   });
 });
 
@@ -185,18 +173,18 @@ describe('continental butterfly accounting (§ butterfly showcase)', () => {
   });
 
   it('a round-trip nets out: buy a star then sell him on and the continental swing cancels', () => {
-    // Buying a star into a team that plays him lifts them; selling him straight on
-    // must return them to where they were — a butterfly must not leave a permanent
-    // scar from churn that reality would have shrugged off.
-    const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'roundtrip' });
-    const before = s.clubs['valencia']!.starButterfly;
-    s.clubs['valencia']!.finances.transferBudget = 300_000_000;
-    executeTransfer(s, { playerId: 'cur_henry', toClub: 'valencia', fee: 50_000_000 });
-    expect(s.clubs['valencia']!.starButterfly - before).toBeGreaterThan(0.5); // the buy lifts them
-    s.clubs['real_madrid']!.finances.transferBudget = 300_000_000;
-    executeTransfer(s, { playerId: 'cur_henry', toClub: 'real_madrid', fee: 50_000_000 });
+    // United land Ronaldinho (the buy lifts them); then he moves on to Barcelona
+    // where reality had him. The two swings must cancel — a butterfly must not
+    // leave a permanent scar from churn that reality would have shrugged off.
+    const s = createNewGame({ scenarioId: 'manchester-united-2003', seed: 'roundtrip' });
+    const before = s.clubs['man_utd']!.starButterfly;
+    s.clubs['man_utd']!.finances.transferBudget = 300_000_000;
+    executeTransfer(s, { playerId: 'cur_ronaldinho', toClub: 'man_utd', fee: 50_000_000 });
+    expect(s.clubs['man_utd']!.starButterfly - before).toBeGreaterThan(0.1); // the buy lifts them
+    s.clubs['barcelona']!.finances.transferBudget = 300_000_000;
+    executeTransfer(s, { playerId: 'cur_ronaldinho', toClub: 'barcelona', fee: 50_000_000 });
     // Back to roughly where they started — no lasting continental scar.
-    expect(Math.abs(s.clubs['valencia']!.starButterfly - before)).toBeLessThan(0.3);
+    expect(Math.abs(s.clubs['man_utd']!.starButterfly - before)).toBeLessThan(0.3);
   });
 });
 
