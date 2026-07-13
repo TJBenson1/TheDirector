@@ -85,6 +85,13 @@ export interface ClubState {
   baseStrength: number;
   /** Raw squad-strength of the initial squad; the anchor for `strength`. */
   squadStrengthAnchor: number;
+  /** Accumulated change in the club's STAR PREMIUM caused by BUTTERFLY (non-
+   *  reality) transfers only — the extra weight the CONTINENTAL game gives the
+   *  XI's best few (§ butterfly showcase). Reality transfers and ageing never
+   *  touch it, so a passive world holds it at 0 and reproduces the real European
+   *  Cup winners exactly; a user/rival deviation that guts (or gorges) a spine
+   *  moves it, and a different side lifts the trophy. */
+  starButterfly: number;
   /** Rolling form modifier, roughly -6..+6, drifting toward 0. */
   form: number;
   /** The simulated league this club plays in, or null if not simulated yet. */

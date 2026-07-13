@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createNewGame } from './state.js';
 import { advanceWindow } from './advance.js';
 import { applyDecision } from './events.js';
+import { executeTransfer } from './transfers.js';
 import { attemptSigning, courtPlayer, evaluateApproach } from './index.js';
 import type { GameState } from './types.js';
 
@@ -45,6 +46,28 @@ describe('Champions League (§ butterfly showcase)', () => {
     expect(clWinner(s, 2009)).not.toBe('barcelona');
     // A year that never depended on Barça is untouched.
     expect(clWinner(s, 2008)).toBe('man_utd');
+  });
+});
+
+describe('the continental star lens is reality-anchored (§ butterfly showcase)', () => {
+  it('a REAL star sale banks no continental butterfly; an identical DEVIATION does', () => {
+    // Selling a talisman the SAME way, once flagged as reality (the ledger), once
+    // as a user deviation. Only the deviation should weaken the club on the
+    // continent — reality's own star shuffles carry no butterfly.
+    const buyerFunds = (s: GameState) => (s.clubs['real_madrid']!.finances.transferBudget = 300_000_000);
+    const move = (reality: boolean) => {
+      const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'anchor' });
+      buyerFunds(s);
+      const before = s.clubs['arsenal']!.starButterfly;
+      executeTransfer(s, { playerId: 'cur_henry', toClub: 'real_madrid', fee: 40_000_000 }, { reality });
+      expect(s.players['cur_henry']!.club).toBe('real_madrid'); // the move happened either way
+      return s.clubs['arsenal']!.starButterfly - before;
+    };
+    // Reality: no butterfly (Arsenal are no weaker in Europe than reality says).
+    expect(Math.abs(move(true))).toBeLessThan(0.01);
+    // Deviation: the premium the talisman carried is stripped — a negative
+    // continental butterfly.
+    expect(move(false)).toBeLessThan(-0.5);
   });
 });
 

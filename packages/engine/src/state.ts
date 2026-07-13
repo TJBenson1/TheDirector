@@ -98,6 +98,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     strength,
     baseStrength: strength,
     squadStrengthAnchor: 0,
+    starButterfly: 0,
     form: 0,
     leagueId,
     finances: { ownership: 'sustainable', transferBudget: 0, wageBudget: 0, wageBill: 0 },

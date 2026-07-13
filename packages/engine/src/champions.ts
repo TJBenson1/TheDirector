@@ -19,6 +19,21 @@ import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { standingsOrder } from './season.js';
 import { eraForScenario } from './ledger.js';
+/**
+ * The club's strength through the CONTINENTAL lens (§ butterfly showcase): the
+ * domestic `strength` PLUS the star premium a BUTTERFLY has added or stripped
+ * (`starButterfly`). Building on `strength` keeps every domestic signal (squad
+ * churn, ageing, a scripted sapping) intact; the added term is non-zero only when
+ * a USER or rival deviation has moved a talisman off his real path — reality's own
+ * star shuffles and ordinary ageing never touch it. So a passive world reads
+ * exactly `strength` (= `baseStrength`) and reproduces the real European Cup
+ * winners, while a spine gutted by a deviation bites: a different side lifts it.
+ */
+function clStrength(state: GameState, id: ClubId): number {
+  const c = state.clubs[id];
+  if (!c) return 0;
+  return Math.max(20, Math.min(99, c.strength + (c.starButterfly ?? 0)));
+}
 
 /**
  * Real Champions League / European Cup winners, by ERA pack and SEASON YEAR (the
@@ -138,7 +153,7 @@ function buildField(state: GameState): ClubId[] {
   // entrant), then, if still short, deeper domestic qualifiers.
   const context = Object.values(state.clubs)
     .filter((c) => c.leagueId === null)
-    .sort((a, b) => b.strength - a.strength)
+    .sort((a, b) => clStrength(state, b.id) - clStrength(state, a.id))
     .map((c) => c.id);
   for (const id of context) {
     if (field.length >= FIELD_SIZE) break;
@@ -153,7 +168,7 @@ function buildField(state: GameState): ClubId[] {
   let size = 1;
   while (size * 2 <= Math.min(field.length, FIELD_SIZE)) size *= 2;
   return field
-    .sort((a, b) => (state.clubs[b]!.strength - state.clubs[a]!.strength))
+    .sort((a, b) => (clStrength(state, b) - clStrength(state, a)))
     .slice(0, size);
 }
 
@@ -198,7 +213,7 @@ export function simulateChampionsLeague(state: GameState, rng: Rng, seasonYear: 
   // the balance — dropped THEIR strength below their real baseline, or lifted a
   // rival's above them by a clear swing. In a passive world every delta is ~0, so
   // every real winner is reproduced exactly.
-  const delta = (id: ClubId): number => state.clubs[id]!.strength - state.clubs[id]!.baseStrength;
+  const delta = (id: ClubId): number => clStrength(state, id) - state.clubs[id]!.baseStrength;
   const real = REAL_UCL[eraForScenario(state.meta.scenarioId)]?.[seasonYear];
   if (real && field.has(real.w)) {
     const rwDelta = delta(real.w);
@@ -222,7 +237,7 @@ export function simulateChampionsLeague(state: GameState, rng: Rng, seasonYear: 
     for (let i = 0; i < bracket.length; i += 2) {
       const a = bracket[i]!;
       const b = bracket[i + 1]!;
-      const aWins = r.next() < advanceProb(state.clubs[a]!.strength, state.clubs[b]!.strength);
+      const aWins = r.next() < advanceProb(clStrength(state, a), clStrength(state, b));
       if (bracket.length === 2) runnerUp = aWins ? b : a; // this tie is the final
       next.push(aWins ? a : b);
     }

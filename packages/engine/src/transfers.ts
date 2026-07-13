@@ -10,7 +10,7 @@ import type { ClubId, GameState, PlayerId } from './types.js';
 import { parseYearMonth } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer, suggestWage } from './finance.js';
-import { recomputeClubStrength, computeWageBill, clubSquadPlayers } from './players.js';
+import { recomputeClubStrength, computeWageBill, clubSquadPlayers, clubStarPremium } from './players.js';
 import { rollAdaptation } from './adaptation.js';
 import { Rng } from './rng.js';
 import { evaluateApproach, type ApproachVerdict } from './agency.js';
@@ -40,7 +40,11 @@ export function currentYear(state: GameState): number {
  * (engine transitions clone at their boundary). Refuses any deal that would
  * push the buyer's transfer budget negative — the §18 property invariant.
  */
-export function executeTransfer(state: GameState, req: TransferRequest): TransferResult {
+export function executeTransfer(
+  state: GameState,
+  req: TransferRequest,
+  opts: { reality?: boolean } = {},
+): TransferResult {
   const player = state.players[req.playerId];
   if (!player) return { ok: false, reason: `Unknown player "${req.playerId}"` };
 
@@ -49,6 +53,12 @@ export function executeTransfer(state: GameState, req: TransferRequest): Transfe
 
   const fromClubId = player.club;
   if (fromClubId === req.toClub) return { ok: false, reason: 'Player already at this club' };
+
+  // Star premium BEFORE the move, for the continental butterfly (§ showcase). A
+  // reality (ledger) move leaves the premium's real trajectory intact; only a
+  // DEVIATION banks its change as a butterfly, so the CL sees a gutted spine.
+  const buyerStarBefore = opts.reality ? 0 : clubStarPremium(state, req.toClub);
+  const sellerStarBefore = !opts.reality && fromClubId ? clubStarPremium(state, fromClubId) : 0;
 
   const year = currentYear(state);
   const fee = fromClubId ? Math.max(0, req.fee ?? valuePlayer(player, year)) : 0;
@@ -89,6 +99,14 @@ export function executeTransfer(state: GameState, req: TransferRequest): Transfe
   if (fromClubId && state.clubs[fromClubId]) {
     state.clubs[fromClubId]!.finances.wageBill = computeWageBill(state, fromClubId);
     recomputeClubStrength(state, fromClubId);
+  }
+  // Bank the star-premium swing of a DEVIATION as a continental butterfly (a
+  // reality move banks nothing — its premium change is reality's own).
+  if (!opts.reality) {
+    buyer.starButterfly += clubStarPremium(state, buyer.id) - buyerStarBefore;
+    if (fromClubId && state.clubs[fromClubId]) {
+      state.clubs[fromClubId]!.starButterfly += clubStarPremium(state, fromClubId) - sellerStarBefore;
+    }
   }
 
   logEvent(state, {

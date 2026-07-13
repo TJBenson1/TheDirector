@@ -265,14 +265,41 @@ function strengthGroup(p: PlayerState): 'GK' | 'DEF' | 'MID' | 'ATT' {
 /** A 4-3-3 skeleton: you field ONE team, so a fourth striker is depth, not XI. */
 const FORMATION: Record<'GK' | 'DEF' | 'MID' | 'ATT', number> = { GK: 1, DEF: 4, MID: 3, ATT: 3 };
 
+/** How many of the XI's best count toward the star term. Summing each one's
+ *  MARGIN over a FIXED replacement level keeps the term monotonic and responsive:
+ *  pull one talisman out and the sum drops by his margin (a bench player of
+ *  ~replacement quality takes his place). The reference must be FIXED, not the
+ *  squad's own mean or bench — those shift when the star leaves and perversely
+ *  inflate the survivors' margins, masking the loss. */
+const STAR_CORE = 4;
+/** A replacement-level top-division regular. A player at or below this adds no
+ *  star premium; the margin above it is what a talisman brings to the continent. */
+const STAR_REPLACEMENT = 74;
+/** The star weight the CONTINENTAL game uses (§ butterfly showcase). Domestic
+ *  strength passes 0 — the league tables, ageing curves and board calibration all
+ *  run on the flat mean, untouched. The Champions League passes this, so a side
+ *  truly built around superstars is stronger in the knockout than eleven
+ *  journeymen of the same mean, and — the point — loses more than the mean when
+ *  one of those stars is prised away. Only butterfly (non-reality) moves bank the
+ *  change (see `ClubState.starButterfly`), so a passive world still reproduces
+ *  the real winners exactly. */
+export const STAR_WEIGHT_CL = 0.2;
+
 /**
- * Best available XI by POSITION, plus a depth bonus. Crucially the XI is filled
- * to a real shape (a 4-3-3), so stacking one position has sharply diminishing
- * returns — a third elite striker rides the bench (depth), he doesn't add a
- * fourth forward to the team. Prevents "buy every star" from inflating strength
- * past a balanced side (§15, and the governing "no fantasy leaps" constraint).
+ * Best available XI by POSITION, plus a depth bonus and (optionally) a star term.
+ * Crucially the XI is filled to a real shape (a 4-3-3), so stacking one position
+ * has sharply diminishing returns — a third elite striker rides the bench
+ * (depth), he doesn't add a fourth forward to the team. Prevents "buy every star"
+ * from inflating strength past a balanced side (§15, and the governing "no
+ * fantasy leaps" constraint).
+ *
+ * `starWeight` defaults to 0 — the flat, calibrated mean used everywhere domestic.
+ * A positive weight (the Champions League) adds a CONVEX peak term: the summed
+ * MARGIN of the XI's best few over a fixed replacement level. A balanced XI has
+ * ~zero premium; a star-built one loses that premium — and more than the mean —
+ * when a talisman departs, which is what makes the continental butterfly bite.
  */
-export function deriveRawStrength(players: PlayerState[]): number {
+export function deriveRawStrength(players: PlayerState[], starWeight = 0): number {
   if (players.length === 0) return 0;
   // Effective ability so an unsettled signing (adaptation penalty) genuinely
   // weakens the XI while he beds in (§3).
@@ -295,7 +322,17 @@ export function deriveRawStrength(players: PlayerState[]): number {
   const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
   const xiAvg = avg(xi);
   const depthAvg = avg(leftover.slice(0, 9));
-  return xiAvg * 0.85 + depthAvg * 0.15;
+  const base = xiAvg * 0.85 + depthAvg * 0.15;
+  if (starWeight === 0) return base;
+  // Convex peak: the summed MARGIN of the XI's best few over a FIXED replacement
+  // level. Near-zero for a flat side; large for a star-built one — and each
+  // talisman's margin vanishes when he is prised away and a bench player takes
+  // his place, so a star's exit bites past the linear mean (the counterfactual
+  // lever), while a star bought onto a full bench never reaches the top few and
+  // so never inflates the buyer.
+  const top = [...xi].sort((a, b) => b - a).slice(0, STAR_CORE);
+  const starBonus = starWeight * top.reduce((sum, a) => sum + Math.max(0, a - STAR_REPLACEMENT), 0);
+  return base + starBonus;
 }
 
 /** Squad players for a club, in a stable order. */
@@ -313,6 +350,19 @@ export function isAvailable(player: PlayerState): boolean {
 /** Selectable (fit) squad players — what the season sim can actually field. */
 export function availableSquadPlayers(state: GameState, clubId: ClubId): PlayerState[] {
   return clubSquadPlayers(state, clubId).filter(isAvailable);
+}
+
+/**
+ * A club's STAR PREMIUM: how much its star-weighted XI outstrips the flat mean
+ * the domestic model runs on (§ butterfly showcase). The Champions League tracks
+ * the change in this across BUTTERFLY (non-reality) transfers only (see
+ * `ClubState.starButterfly`), so a squad gutted of its talismen by a deviation is
+ * weaker on the continent than the mean alone says — the counterfactual lever —
+ * while reality's own star shuffles and ordinary ageing leave it untouched.
+ */
+export function clubStarPremium(state: GameState, clubId: ClubId): number {
+  const players = availableSquadPlayers(state, clubId);
+  return deriveRawStrength(players, STAR_WEIGHT_CL) - deriveRawStrength(players);
 }
 
 /**

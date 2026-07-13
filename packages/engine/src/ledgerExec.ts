@@ -142,7 +142,7 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
     if (validReality) {
       // Reality holds: execute the real transfer (the buyer funds it).
       dest.finances.transferBudget = Math.max(dest.finances.transferBudget, entry.fee);
-      const res = executeTransfer(state, { playerId: entry.playerId, toClub: entry.to, fee: entry.fee });
+      const res = executeTransfer(state, { playerId: entry.playerId, toClub: entry.to, fee: entry.fee }, { reality: true });
       if (res.ok) {
         state.meta.realizedLedger.push(key); // funders for dependents
         logEvent(state, {
