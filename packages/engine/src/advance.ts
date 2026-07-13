@@ -14,7 +14,8 @@
 import type { GameState, LoggedEvent } from './types.js';
 import { cloneState } from './state.js';
 import { Rng } from './rng.js';
-import { advanceOneMonth, windowForMonthIndex, windowStepLabel, WINDOW_STEPS } from './clock.js';
+import { advanceOneMonth, windowForMonthIndex, windowStepLabel, WINDOW_STEPS, parseYearMonth } from './clock.js';
+import { simulateChampionsLeague } from './champions.js';
 import { eventsSince } from './eventLog.js';
 import { stepLeagueMonth } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
@@ -26,6 +27,7 @@ import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli } from './italyEvents.js';
+import { restoreRelegatedClubs } from './relegation.js';
 import { decayPursuit } from './wooing.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
@@ -59,22 +61,33 @@ function runMonth(state: GameState, rng: Rng): void {
     processSeasonMorale(state);
     // 4. Rubber-band: update world defiance from last season's finish (§9a #5).
     updateWorldDefiance(state);
-    // 4b. Conditional takeover butterflies (Abramovich buys Chelsea only if they
+    // 5. Reconcile strength for the simulated (in-league) clubs after ability
+    //    changes. Context clubs are NOT age-drifted here — they sit at their
+    //    authored baseline plus the effect of any real/butterfly transfers (which
+    //    recompute on the deal), so the continental cup reads squad butterflies
+    //    cleanly rather than an unrealistic slow decline of unrefreshed squads.
+    for (const club of Object.values(state.clubs)) {
+      if (club.leagueId !== null) recomputeClubStrength(state, club.id);
+    }
+    // 6. The Champions League for the season just completed — run BEFORE this
+    //    summer's scandals/relegations so a club that played last season is in
+    //    the field, and a club relegated for NEXT season is not.
+    simulateChampionsLeague(state, rng.fork(`ucl:${state.clock.date}`), parseYearMonth(state.clock.date).year - 1);
+    // 6b. Conditional takeover butterflies (Abramovich buys Chelsea only if they
     //     take a CL place — resolved before the summer ledger runs).
     resolveAbramovich(state, rng.fork(`takeover:${state.clock.date}`));
-    // 4c. Serie A era scandals — Parmalat's collapse (2004) tips Parma into a
-    //     distress fire-sale; Calciopoli (2006) strips and guts Juventus.
+    // 6c. Serie A era scandals — Parmalat's collapse (2004) tips Parma into a
+    //     distress fire-sale; Calciopoli (2006) strips, guts and RELEGATES
+    //     Juventus (they vanish from the top flight for a season), then returns
+    //     any club whose relegation has served its term.
     resolveParmalat(state, rng.fork(`parmalat:${state.clock.date}`));
     resolveCalciopoli(state, rng.fork(`calciopoli:${state.clock.date}`));
-    // 5. Board review (job security) + an imposed internal crisis (M9).
+    restoreRelegatedClubs(state);
+    // 7. Board review (job security) + an imposed internal crisis (M9).
     reviewBoard(state, rng.fork(`board:${state.clock.date}`));
     rollInternalCrisis(state, rng.fork(`crisis:${state.clock.date}`), divergenceFactor(state) * 0.3);
     // Sustained unrest can force a kept-against-his-wishes player out.
     processAgitationDepartures(state, rng.fork(`agitation:${state.clock.date}`));
-    // 6. Reconcile strength for all simulated clubs after ability changes.
-    for (const club of Object.values(state.clubs)) {
-      if (club.leagueId !== null) recomputeClubStrength(state, club.id);
-    }
   }
   // M2: monthly league results, tables, form, season boundaries (§15).
   stepLeagueMonth(state, rng);

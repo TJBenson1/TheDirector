@@ -19,6 +19,7 @@ import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { eraForScenario } from './ledger.js';
 import { recomputeClubStrength } from './players.js';
+import { relegateClub } from './relegation.js';
 
 function isSerieA1995(state: GameState): boolean {
   return eraForScenario(state.meta.scenarioId) === 'era-serie-a-1995';
@@ -59,7 +60,7 @@ export function resolveParmalat(state: GameState, _rng: Rng): void {
  * regardless. This resolver applies the PUNISHMENT the engine can't route through
  * a non-existent second division: titles voided, prestige/finances/strength hit.
  */
-export function resolveCalciopoli(state: GameState, _rng: Rng): void {
+export function resolveCalciopoli(state: GameState, rng: Rng): void {
   if (!isSerieA1995(state)) return;
   if (state.clock.monthIndex !== 0 || !state.clock.date.startsWith('2006')) return;
   if (state.meta.firedScripted.includes('calciopoli')) return;
@@ -84,6 +85,10 @@ export function resolveCalciopoli(state: GameState, _rng: Rng): void {
   juve.finances.ownership = 'debt';
   juve.baseStrength = Math.max(50, juve.baseStrength - 8);
   recomputeClubStrength(state, 'juventus');
+
+  // Relegation: Juventus vanish from Serie A (and Europe) for 2006–07, back for
+  // 2007–08, with Catania promoted in their place. Lower tiers aren't simulated.
+  relegateClub(state, 'juventus', 2007, 'Catania', rng.fork('calciopoli:relegate'));
 
   state.timeline.divergenceLog.push({
     date: state.clock.date,

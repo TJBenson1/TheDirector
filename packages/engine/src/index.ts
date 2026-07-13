@@ -125,6 +125,9 @@ export {
   type DecisionResult,
 } from './events.js';
 export { runRivalWindow, updateWorldDefiance } from './rival.js';
+export { simulateChampionsLeague } from './champions.js';
+export { relegateClub, restoreRelegatedClubs } from './relegation.js';
+export { resolveParmalat, resolveCalciopoli } from './italyEvents.js';
 export { reviewBoard, rollInternalCrisis } from './board.js';
 export { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 export { appendMemory, memoriesWithTag } from './memory.js';

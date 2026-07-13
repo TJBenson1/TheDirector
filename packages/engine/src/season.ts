@@ -41,11 +41,13 @@ export function emptyRecord(): TeamRecord {
   return { played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 };
 }
 
-/** Points-first ordering with GD then GF then id as deterministic tie-breaks. */
+/** Points-first ordering with GD then GF then id as deterministic tie-breaks. A
+ *  club not yet in the standings (e.g. a promotion swapped in at the rollover,
+ *  before the new season's table is initialised) sorts as a blank record. */
 export function standingsOrder(league: LeagueState): ClubId[] {
   return [...league.clubIds].sort((a, b) => {
-    const ra = league.standings[a]!;
-    const rb = league.standings[b]!;
+    const ra = league.standings[a] ?? emptyRecord();
+    const rb = league.standings[b] ?? emptyRecord();
     if (rb.points !== ra.points) return rb.points - ra.points;
     const gdA = ra.goalsFor - ra.goalsAgainst;
     const gdB = rb.goalsFor - rb.goalsAgainst;

@@ -98,6 +98,11 @@ export interface ClubState {
   financialHealth: FinancialHealth;
   /** True the season after finishing in the relegation zone — easy pickings. */
   relegationThreatened: boolean;
+  /** If set, the club is OUT of the top flight (and Europe) until this opening
+   *  year — a temporary disappearance (Juventus after Calciopoli; a demoted City).
+   *  Lower divisions aren't simulated: the club simply steps out of the picture
+   *  and returns. Absent/undefined for the overwhelming majority that never drop. */
+  relegatedUntil?: number;
 }
 
 // ── Leagues & season sim (§15) ───────────────────────────────────────────────
@@ -117,6 +122,21 @@ export interface TitleEntry {
   seasonYear: number; // the opening calendar year (1999 = the 1999–2000 season)
   championId: ClubId;
   points: number;
+}
+
+/** One European Cup / Champions League final result (§ butterfly showcase). */
+export interface EuroTitleEntry {
+  seasonYear: number;
+  winnerId: ClubId;
+  runnerUpId: ClubId;
+}
+
+/** The continental knockout that runs alongside the domestic leagues. Its winner
+ *  is the single sharpest lens on butterfly effects — a squad weakened or
+ *  strengthened by the user's moves changes who lifts the European Cup. */
+export interface EuropeanCupState {
+  name: string;
+  titleHistory: EuroTitleEntry[];
 }
 
 /** A simulated league and its live season. Standings reset each season; the
@@ -430,6 +450,9 @@ export interface GameState {
   playerClub: ClubId;
   clubs: Record<ClubId, ClubState>;
   leagues: Record<string, LeagueState>;
+  /** The continental knockout (Champions League / European Cup), or undefined
+   *  before it has run once. Winner recorded per season. */
+  europeanCup?: EuropeanCupState;
   players: Record<PlayerId, PlayerState>;
   managerRelations: ManagerState;
   timeline: {
