@@ -4,9 +4,11 @@ import {
   simulateMatch,
   standingsOrder,
   maxConsecutiveTitles,
+  matchStrength,
 } from './season.js';
 import { createNewGame, cloneState, hashState } from './state.js';
 import { advanceWindow } from './advance.js';
+import { executeTransfer } from './transfers.js';
 import { Rng } from './rng.js';
 import { applyDecision } from './events.js';
 import type { GameState } from './types.js';
@@ -176,5 +178,40 @@ describe('season sim determinism & purity', () => {
     const clone = cloneState(state);
     clone.leagues['eng-1']!.standings.man_utd!.points = 999;
     expect(state.leagues['eng-1']!.standings.man_utd!.points).not.toBe(999);
+  });
+});
+
+describe('butterflies reach the league table (§ butterfly showcase)', () => {
+  it('a passive club takes only its squad strength and form into a match', () => {
+    // No butterfly banked → match strength is exactly strength + form, so the
+    // calibrated tables are undisturbed.
+    const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'tbl-passive' });
+    const c = s.clubs['chelsea']!;
+    expect(matchStrength(c)).toBeCloseTo(c.strength + c.form, 5);
+  });
+
+  it('a club gutted by a butterfly carries the deficit into every league match', () => {
+    // An aggressive Arsenal prises away Chelsea's real spine. The miss leaves Chelsea
+    // with a negative continental butterfly — and that same deficit now follows them
+    // into the LEAGUE, not just the Champions League: their match strength drops by
+    // the butterfly, so they slip down the table.
+    let s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'tbl-gut' });
+    s.clubs['arsenal']!.finances.transferBudget = 500_000_000;
+    for (const pid of ['cur_drogba', 'cur_essien', 'cur_ballack', 'cur_shevchenko2']) {
+      const p = s.players[pid];
+      if (p) executeTransfer(s, { playerId: pid, toClub: 'arsenal', fee: 30_000_000 });
+    }
+    let guard = 0;
+    while (Number(s.clock.date.slice(0, 4)) < 2006 && guard++ < 20) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
+      s = advanceWindow(s).state;
+    }
+    const chelsea = s.clubs['chelsea']!;
+    // Chelsea have been genuinely gutted in Europe...
+    expect(chelsea.starButterfly).toBeLessThan(-1.5);
+    // ...and that deficit reaches the league: match strength is below squad+form by
+    // (almost exactly) the butterfly.
+    expect(matchStrength(chelsea)).toBeLessThan(chelsea.strength + chelsea.form - 1);
   });
 });

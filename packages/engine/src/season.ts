@@ -12,6 +12,7 @@
 
 import type {
   ClubId,
+  ClubState,
   GameState,
   LeagueState,
   TeamRecord,
@@ -154,10 +155,19 @@ function nudgeForm(state: GameState, clubId: ClubId, delta: number): void {
   club.form = Math.max(-FORM_CAP, Math.min(FORM_CAP, club.form + delta));
 }
 
+/** Strength a club takes into a league match: its squad strength, current form,
+ *  AND any BUTTERFLY that has gorged or gutted it (§ butterfly showcase). The same
+ *  star-premium swing that moves the Champions League moves the league table too —
+ *  an aggressive user who guts a rival's spine climbs past them, a raided club
+ *  slips. Zero in a passive world, so the calibrated tables are undisturbed. */
+export function matchStrength(club: ClubState): number {
+  return club.strength + club.form + (club.starButterfly ?? 0);
+}
+
 function playMatch(state: GameState, league: LeagueState, fixture: Fixture, rng: Rng): void {
   const home = state.clubs[fixture.home]!;
   const away = state.clubs[fixture.away]!;
-  const result = simulateMatch(home.strength + home.form, away.strength + away.form, rng);
+  const result = simulateMatch(matchStrength(home), matchStrength(away), rng);
 
   applyResult(league.standings[fixture.home]!, result.homeGoals, result.awayGoals);
   applyResult(league.standings[fixture.away]!, result.awayGoals, result.homeGoals);
