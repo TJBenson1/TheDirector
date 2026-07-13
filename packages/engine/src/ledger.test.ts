@@ -116,11 +116,24 @@ describe('capitalising on the food chain + clubs in distress', () => {
     // The scheduled financial shock has fired: Juve are in crisis, a fire-sale.
     expect(a.clubs.juventus?.financialHealth).toBe('crisis');
     expect(a.eventLog.some((e) => e.code === 'club.distress' && e.data?.clubId === 'juventus')).toBe(true);
-    // A Juve player still there is now a cheap, tagged fire-sale for a big club.
+    const now = parseYearMonth(a.clock.date).year;
+    // A LOYAL icon rides the crisis out — Del Piero, Buffon & co. followed Juve
+    // down to Serie B, so the fire-sale can't buy them on the cheap: his loyalty
+    // cancels the discount (buyer price ≈ full value, no fire-sale tag).
     const dp = a.players.cur_delpiero04;
     if (dp?.club === 'juventus') {
-      expect(askingPrice(a, 'cur_delpiero04', 'arsenal')).toBeLessThan(valuePlayer(dp, 2006) * 0.7);
-      expect(acquisitionTags(a, dp, 'arsenal')).toContain('fire-sale');
+      const full = Math.max(50_000, Math.round(valuePlayer(dp, now) / 100_000) * 100_000);
+      expect(askingPrice(a, 'cur_delpiero04', 'arsenal')).toBeGreaterThanOrEqual(full * 0.98);
+      const dpTags = acquisitionTags(a, dp, 'arsenal');
+      expect(dpTags).not.toContain('fire-sale');
+      expect(dpTags).toContain('one-club-man');
+    }
+    // But a LOWER-loyalty squad player around them is a genuine bargain — the
+    // "gettable but overlooked" pieces a distressed club really does let go.
+    const zeb = a.players.cur_zebina04;
+    if (zeb?.club === 'juventus') {
+      expect(askingPrice(a, 'cur_zebina04', 'arsenal')).toBeLessThan(valuePlayer(zeb, now) * 0.7);
+      expect(acquisitionTags(a, zeb, 'arsenal')).toContain('fire-sale');
     }
   });
 

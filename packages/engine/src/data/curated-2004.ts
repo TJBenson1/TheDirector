@@ -315,22 +315,28 @@ export const REAL_MADRID_2004: CuratedSeed[] = [
 
 /** Juventus, 2004–05 — Capello's champions (title later stripped in Calciopoli):
  *  Buffon, the Thuram–Cannavaro wall, Nedvěd, Del Piero, Trezeguet, a young Zlatan. */
+// The 2006 Calciopoli split the squad: the LOYALISTS followed Juve down to Serie
+// B (Del Piero, Buffon, Nedvěd, Trézéguet, Camoranesi, Chiellini) — an explicit
+// high `loyalty` shields them from the fire-sale so a raider can't buy them on the
+// cheap. The rest JUMPED SHIP (Thuram/Cannavaro→La Liga, Zambrotta→Barça,
+// Emerson→Madrid, Ibrahimović→Inter) — they carry no shield and are the sell-off
+// ledger's subjects. See recommend.ts `openness` + the Calciopoli tests.
 export const JUVENTUS_2004: CuratedSeed[] = [
-  q('juventus', 'buffon04', 'Gianluigi Buffon', 1978, 'Italy', ['GK'], 90, 92, 2009, 35, t(9, 5, 8, 9, 3, 7)),
+  q('juventus', 'buffon04', 'Gianluigi Buffon', 1978, 'Italy', ['GK'], 90, 92, 2009, 35, t(9, 5, 8, 9, 3, 7), { loyalty: 92 }),
   q('juventus', 'chimenti04', 'Antonio Chimenti', 1970, 'Italy', ['GK'], 68, 68, 2006, 25, t(7, 3, 5, 7, 3, 6)),
   q('juventus', 'thuram04', 'Lilian Thuram', 1972, 'France', ['CB', 'RB'], 87, 87, 2006, 20, t(9, 4, 7, 7, 3, 8)),
   q('juventus', 'cannavaro04', 'Fabio Cannavaro', 1973, 'Italy', ['CB'], 87, 89, 2008, 20, t(8, 6, 8, 6, 4, 8)),
   q('juventus', 'zambrotta04', 'Gianluca Zambrotta', 1977, 'Italy', ['RB', 'LB'], 85, 86, 2008, 30, t(8, 4, 7, 6, 3, 8)),
   q('juventus', 'zebina04', 'Jonathan Zebina', 1978, 'France', ['RB', 'CB'], 76, 77, 2009, 40, t(6, 6, 6, 5, 6, 6)),
   q('juventus', 'pessotto04', 'Gianluca Pessotto', 1970, 'Italy', ['LB', 'DM'], 74, 74, 2006, 30, t(9, 3, 6, 9, 3, 7)),
-  q('juventus', 'chiellini04', 'Giorgio Chiellini', 1984, 'Italy', ['CB', 'LB'], 72, 88, 2010, 25, t(9, 4, 8, 9, 4, 7)),
-  q('juventus', 'nedved04', 'Pavel Nedvěd', 1972, 'Czech Republic', ['AM', 'LW'], 88, 88, 2008, 25, t(10, 5, 9, 8, 5, 8)),
+  q('juventus', 'chiellini04', 'Giorgio Chiellini', 1984, 'Italy', ['CB', 'LB'], 72, 88, 2010, 25, t(9, 4, 8, 9, 4, 7), { loyalty: 90 }),
+  q('juventus', 'nedved04', 'Pavel Nedvěd', 1972, 'Czech Republic', ['AM', 'LW'], 88, 88, 2008, 25, t(10, 5, 9, 8, 5, 8), { loyalty: 88 }),
   q('juventus', 'emerson04', 'Emerson', 1976, 'Brazil', ['DM', 'CM'], 86, 86, 2008, 25, t(8, 6, 7, 5, 5, 7)),
-  q('juventus', 'camoranesi04', 'Mauro Camoranesi', 1976, 'Italy', ['RW', 'AM'], 82, 83, 2009, 40, t(7, 6, 7, 6, 6, 7)),
+  q('juventus', 'camoranesi04', 'Mauro Camoranesi', 1976, 'Italy', ['RW', 'AM'], 82, 83, 2009, 40, t(7, 6, 7, 6, 6, 7), { loyalty: 84 }),
   q('juventus', 'tacchinardi04', 'Alessio Tacchinardi', 1975, 'Italy', ['DM', 'CM'], 78, 78, 2008, 45, t(7, 5, 6, 8, 5, 6)),
   q('juventus', 'appiah04', 'Stephen Appiah', 1980, 'Ghana', ['CM', 'DM'], 78, 80, 2007, 35, t(7, 5, 7, 6, 5, 7)),
-  q('juventus', 'delpiero04', 'Alessandro Del Piero', 1974, 'Italy', ['ST', 'AM'], 85, 86, 2009, 35, t(9, 5, 8, 10, 3, 7)),
-  q('juventus', 'trezeguet04', 'David Trezeguet', 1977, 'France', ['ST'], 86, 87, 2009, 30, t(8, 5, 7, 7, 4, 7)),
+  q('juventus', 'delpiero04', 'Alessandro Del Piero', 1974, 'Italy', ['ST', 'AM'], 85, 86, 2009, 35, t(9, 5, 8, 10, 3, 7), { loyalty: 96 }),
+  q('juventus', 'trezeguet04', 'David Trezeguet', 1977, 'France', ['ST'], 86, 87, 2009, 30, t(8, 5, 7, 7, 4, 7), { loyalty: 87 }),
   q('juventus', 'ibrahimovic04', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 82, 90, 2009, 20, t(8, 10, 10, 4, 7, 7)),
 ];
 

@@ -21,12 +21,14 @@ describe('target suggestions (§16 UI)', () => {
 
   it('surfaces fire-sale (distressed-club) options and prices them cheaply', () => {
     const state = createNewGame({ seed: 'firesale' });
-    // Lazio is in crisis this scenario — its stars should be flagged + cheap.
-    const nesta = resolvePlayer(state, 'Nesta')!;
-    expect(state.clubs[nesta.club!]!.financialHealth).toBe('crisis');
-    expect(acquisitionTags(state, nesta)).toContain('fire-sale');
-    // A crisis club sells below market.
-    expect(askingPrice(state, nesta.id)).toBeLessThan(valuePlayer(nesta, 1999));
+    // Lazio is in crisis this scenario. A LOWER-loyalty mercenary (Verón, whom
+    // the real collapse sold to United) is a flagged, cheap fire-sale — while a
+    // loyal one-club icon like Nesta rides it out and is shielded (not a bargain).
+    const veron = resolvePlayer(state, 'Verón')!;
+    expect(state.clubs[veron.club!]!.financialHealth).toBe('crisis');
+    expect(acquisitionTags(state, veron)).toContain('fire-sale');
+    // A crisis club sells its non-loyalists below market.
+    expect(askingPrice(state, veron.id)).toBeLessThan(valuePlayer(veron, 1999));
   });
 
   it('flags a player in the last year of his deal as a Bosman', () => {

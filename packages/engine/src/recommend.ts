@@ -28,20 +28,42 @@ function ageOf(state: GameState, p: PlayerState): number {
   return year(state) - p.birthYear;
 }
 
-export type AcquisitionTag = 'bosman' | 'unsettled' | 'fire-sale' | 'relegation-threatened' | 'step-up';
+export type AcquisitionTag = 'bosman' | 'unsettled' | 'fire-sale' | 'relegation-threatened' | 'step-up' | 'one-club-man';
+
+function clamp01(x: number): number {
+  return Math.max(0, Math.min(1, x));
+}
+
+/** How OPEN a player is to being prised loose by his club's distress or by a
+ *  bigger suitor. A loyal one-club icon FOLLOWS his club down rather than cash in
+ *  on its trouble — Del Piero, Buffon, Nedvěd and Trézéguet all stayed for
+ *  Juventus's Serie B season after Calciopoli — so his loyalty cancels the
+ *  fire-sale / food-chain cut. The gettable bargains a distressed club really
+ *  does part with are the LOWER-loyalty squad players around those icons.
+ *  1 = fully gettable · 0 = a loyal icon reality's fire-sale never touched. */
+function openness(player: PlayerState): number {
+  const loyalty = player.resistance?.clubLoyalty ?? 50;
+  return clamp01((86 - loyalty) / 24); // ≥86 shielded, ≤62 fully open
+}
 
 /** How a player might be prised loose (§ internal-friction). A `buyerClubId`
  *  surfaces the FOOD-CHAIN 'step-up' opportunity: a much bigger club can prise a
- *  player from a smaller selling club before his value explodes. */
+ *  player from a smaller selling club before his value explodes. A loyal one-club
+ *  man is flagged as such and is NOT surfaced as a fire-sale/step-up bargain. */
 export function acquisitionTags(state: GameState, player: PlayerState, buyerClubId?: ClubId): AcquisitionTag[] {
   const tags: AcquisitionTag[] = [];
   const club = player.club ? state.clubs[player.club] : undefined;
+  const open = openness(player);
   if (player.contractUntil - year(state) <= 1) tags.push('bosman');
   if (player.agitation >= 30 || player.morale < 45) tags.push('unsettled');
-  if (club && club.financialHealth !== 'healthy') tags.push('fire-sale');
-  if (club?.relegationThreatened) tags.push('relegation-threatened');
+  // A loyal icon rides out his club's distress — not a fire-sale, however deep
+  // the trouble. Surface WHY (he won't be a cheap way in) rather than dangling him.
+  const loyalIcon = open <= 0.15;
+  if (club && club.financialHealth !== 'healthy' && !loyalIcon) tags.push('fire-sale');
+  if (club?.relegationThreatened && !loyalIcon) tags.push('relegation-threatened');
   const buyer = buyerClubId ? state.clubs[buyerClubId] : undefined;
-  if (buyer && club && buyer.prestige > club.prestige + 8) tags.push('step-up');
+  if (buyer && club && buyer.prestige > club.prestige + 8 && !loyalIcon) tags.push('step-up');
+  if (loyalIcon && club) tags.push('one-club-man');
   return tags;
 }
 
@@ -56,16 +78,22 @@ export function askingPrice(state: GameState, playerId: PlayerId, buyerClubId?: 
   const p = state.players[playerId];
   if (!p) return 0;
   const club = p.club ? state.clubs[p.club] : undefined;
-  let mult = 1;
-  if (club?.financialHealth === 'crisis') mult *= 0.5;
-  else if (club?.financialHealth === 'strained') mult *= 0.72;
-  if (club?.relegationThreatened) mult *= 0.75;
   const buyer = buyerClubId ? state.clubs[buyerClubId] : undefined;
+  // Loyalty shields a one-club icon from his club's fire-sale: the discounts
+  // below are scaled by how OPEN he is, so a Del-Piero-type follows the club down
+  // at (near) full value while a lower-loyalty squad player is the real bargain.
+  const open = openness(p);
+  const scale = (factor: number): number => 1 - (1 - factor) * open;
+  let mult = 1;
+  if (club?.financialHealth === 'crisis') mult *= scale(0.5);
+  else if (club?.financialHealth === 'strained') mult *= scale(0.72);
+  if (club?.relegationThreatened) mult *= scale(0.75);
   if (buyer && club && buyer.prestige > club.prestige + 4) {
     // ~1.8% off per prestige point of gap beyond 4, capped at ~32% — a genuine
     // "food-chain" raid discount (Arsenal→Porto ≈ 13% off) that a distressed
-    // small club stacks on top of its fire-sale cut.
-    mult *= Math.max(0.68, 1 - (buyer.prestige - club.prestige - 4) * 0.018);
+    // small club stacks on top of its fire-sale cut. Also loyalty-scaled: a loyal
+    // man at a feeder club won't leave on the cheap either.
+    mult *= scale(Math.max(0.68, 1 - (buyer.prestige - club.prestige - 4) * 0.018));
   }
   return Math.max(50_000, Math.round((valuePlayer(p, year(state)) * mult) / 100_000) * 100_000);
 }
