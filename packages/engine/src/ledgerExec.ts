@@ -18,7 +18,7 @@ import { WINDOW_STEPS } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
-import { clubSquadPlayers, playerStarValue, needBucket } from './players.js';
+import { clubSquadPlayers, playerStarValue } from './players.js';
 import { appendMemory } from './memory.js';
 import { areDirectRivals } from './agency.js';
 import { applyPrematureMove } from './development.js';
@@ -125,32 +125,6 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
           code: 'ledger.cancelled',
           message: `Chain broken: ${player?.name ?? entry.playerId} stays put (the deal that funded his move never happened)`,
           data: { playerId: entry.playerId, from: entry.from, to: entry.to, enabledBy: entry.enabledBy },
-        });
-        continue;
-      }
-    }
-
-    // NEED ALREADY FILLED (§ butterfly showcase): a butterfly signing pre-filled
-    // this slot in an EARLIER window, so a RIVAL's real move is obviated — they no
-    // longer need it (a club that lands a marquee forward doesn't come back for
-    // another). The user's own club keeps full agency over its signings, so this
-    // only fires for rivals; and a funder (something depends on it) is spared.
-    if (player && dest && entry.to !== state.playerClub) {
-      const bucket = needBucket(player);
-      const fi = state.meta.filledNeeds.findIndex((f) => f.club === entry.to && f.bucket === bucket && f.window < now);
-      const isFunder = pack.realTransferLedger.some((e) => e.enabledBy === key);
-      if (fi >= 0 && !isFunder) {
-        state.meta.filledNeeds.splice(fi, 1); // consume the filled need
-        state.timeline.divergenceLog.push({
-          date: now,
-          kind: 'butterfly',
-          detail: `${dest.name} had already filled that need with an earlier signing, so the move for ${player.name} never happens — he stays at ${state.clubs[entry.from ?? '']?.name ?? entry.from ?? 'his club'}.`,
-        });
-        logEvent(state, {
-          category: 'transfer',
-          code: 'ledger.obviated',
-          message: `Need already met: ${dest.name} pass on ${player.name} (a butterfly signing filled the slot)`,
-          data: { playerId: entry.playerId, to: entry.to, bucket },
         });
         continue;
       }

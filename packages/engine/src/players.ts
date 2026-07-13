@@ -335,19 +335,6 @@ export function deriveRawStrength(players: PlayerState[], starWeight = 0): numbe
   return base + starBonus;
 }
 
-/** Coarse squad NEED bucket for the reality knock-on (§ butterfly showcase): a
- *  club that fills one of these with a butterfly signing no longer needs its later
- *  REAL signing of the same kind. Attack-aware — an attacking midfielder, a
- *  winger and a striker all answer the same "we need firepower" need, so signing
- *  Ronaldinho obviates a later move for another forward. */
-export function needBucket(player: PlayerState): 'GK' | 'DEF' | 'MID' | 'ATT' {
-  const pos = player.positions[0] ?? 'CM';
-  if (pos === 'GK') return 'GK';
-  if (['CB', 'LB', 'RB', 'WB'].includes(pos)) return 'DEF';
-  if (['DM', 'CM'].includes(pos)) return 'MID';
-  return 'ATT'; // AM, LW, RW, ST, SS — attacking reinforcement
-}
-
 /** Squad players for a club, in a stable order. */
 export function clubSquadPlayers(state: GameState, clubId: ClubId): PlayerState[] {
   const club = state.clubs[clubId];
