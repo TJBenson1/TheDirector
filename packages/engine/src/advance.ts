@@ -25,6 +25,7 @@ import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
+import { resolveParmalat, resolveCalciopoli } from './italyEvents.js';
 import { decayPursuit } from './wooing.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
@@ -61,6 +62,10 @@ function runMonth(state: GameState, rng: Rng): void {
     // 4b. Conditional takeover butterflies (Abramovich buys Chelsea only if they
     //     take a CL place — resolved before the summer ledger runs).
     resolveAbramovich(state, rng.fork(`takeover:${state.clock.date}`));
+    // 4c. Serie A era scandals — Parmalat's collapse (2004) tips Parma into a
+    //     distress fire-sale; Calciopoli (2006) strips and guts Juventus.
+    resolveParmalat(state, rng.fork(`parmalat:${state.clock.date}`));
+    resolveCalciopoli(state, rng.fork(`calciopoli:${state.clock.date}`));
     // 5. Board review (job security) + an imposed internal crisis (M9).
     reviewBoard(state, rng.fork(`board:${state.clock.date}`));
     rollInternalCrisis(state, rng.fork(`crisis:${state.clock.date}`), divergenceFactor(state) * 0.3);

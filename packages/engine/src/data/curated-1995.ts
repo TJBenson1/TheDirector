@@ -345,6 +345,7 @@ export const DEPTH_1995: Array<[ClubId, CuratedSeed]> = [
   ['vicenza', q('vicenza', 'di_napoli', 'Giuseppe Di Napoli', 1968, 'Italy', ['ST'], 74, 75, 1998, 30, t(7, 5, 6, 6, 5, 6))],
   ['cremonese', q('cremonese', 'maspero', 'Marco Maspero', 1972, 'Italy', ['CM'], 73, 76, 1998, 25, t(8, 4, 6, 7, 4, 7))],
   ['bari', q('bari', 'loseto', 'Nicola Loseto', 1971, 'Italy', ['CM'], 71, 74, 1998, 25, t(8, 4, 6, 7, 4, 7))],
+  ['bari', q('bari', 'zambrotta_j', 'Gianluca Zambrotta', 1977, 'Italy', ['RB', 'LB', 'LW'], 74, 85, 2000, 25, t(8, 5, 8, 7, 4, 7))],
   ['cagliari', q('cagliari', 'herrera_c', 'José Herrera', 1967, 'Argentina', ['ST'], 74, 75, 1998, 30, t(7, 5, 6, 6, 5, 7))],
   ['torino', q('torino', 'sinigaglia', 'Roberto Sinigaglia', 1968, 'Italy', ['DM'], 72, 73, 1998, 25, t(8, 4, 6, 7, 4, 7))],
   ['juventus', q('juventus', 'dimas', 'Dimas', 1969, 'Portugal', ['LB', 'CB'], 76, 77, 1998, 25, t(8, 4, 7, 7, 4, 7))],

@@ -372,6 +372,14 @@ const LEDGER_1995_2001: RealTransferLedgerEntry[] = [
   { playerId: 'cur_mihajlovic_s', from: 'sampdoria', to: 'lazio', window: '1998-07', fee: 9_000_000, id: 'miha-lazio-1998' },
   { playerId: 'cur_bierhoff', from: 'udinese', to: 'milan', window: '1998-07', fee: 10_000_000, id: 'bierhoff-milan-1998' },
   { playerId: 'cur_ayala_n', from: 'napoli', to: 'milan', window: '1998-07', fee: 8_000_000, id: 'ayala-milan-1998' },
+  { playerId: 'cur_zambrotta_j', from: 'bari', to: 'juventus', window: '1999-07', fee: 12_000_000, id: 'zambrotta-juve-1999' },
+  // Cannavaro's return to Turin (2004) sets up his Ballon d'Or-winning exit.
+  { playerId: 'cur_cannavaro_p', from: 'inter', to: 'juventus', window: '2004-07', fee: 10_000_000, id: 'cannavaro-juve-2004' },
+  // ── The Calciopoli exodus (2006): the mercenaries leave, offered to the user
+  //    if they are Juventus (the legends — Del Piero, Buffon, Nedvěd — stay). ──
+  { playerId: 'cur_cannavaro_p', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },
+  { playerId: 'cur_thuram_p', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 5_000_000, id: 'thuram-barca-2006' },
+  { playerId: 'cur_zambrotta_j', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 14_000_000, id: 'zambrotta-barca-2006' },
 ];
 
 /** Real Galácticos-era injuries — fire only if the player is at his real club. */

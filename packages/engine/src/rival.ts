@@ -24,14 +24,31 @@ import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
 import { evaluateApproach } from './agency.js';
 import { standingsOrder } from './season.js';
-import { ERA_REALITY, eraForScenario } from './ledger.js';
+import { ERA_REALITY, eraForScenario, entryKey } from './ledger.js';
 
-/** Real players reality is tracking in this scenario's era pack — never poached
- *  by the reactive layer out of the club reality put them at (that would rewrite
- *  history for a settled star). */
+/** Real players reality is tracking in this scenario's era pack. A counter-punch
+ *  may deviate one off course, but only LOGICALLY — never a settled star at the
+ *  club reality put him at; only one still EN ROUTE (a future real move), whose
+ *  move can be pulled forward. The vast majority therefore stay on their real
+ *  path (§9a — deviations are the exception, not the rule). */
 function ledgerSubjectIds(state: GameState): Set<string> {
   const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   return new Set((pack?.realTransferLedger ?? []).map((e) => e.playerId));
+}
+
+/** Ledger subjects with a real move still AHEAD (hijackable — reality was moving
+ *  them anyway), mapped to their remaining unprocessed entry keys. */
+function hijackableSubjects(state: GameState): Map<string, string[]> {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  const now = state.clock.date;
+  const out = new Map<string, string[]>();
+  for (const e of pack?.realTransferLedger ?? []) {
+    if (e.window <= now) continue; // already due/processed — not a future move
+    const key = entryKey(e);
+    if (state.meta.executedLedger.includes(key)) continue;
+    (out.get(e.playerId) ?? out.set(e.playerId, []).get(e.playerId)!).push(key);
+  }
+  return out;
 }
 
 const STAR_ABILITY = 82;
@@ -49,30 +66,56 @@ function richRivals(state: GameState): ClubState[] {
 function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean {
   const budget = club.finances.transferBudget;
   const target = club.baseStrength;
+  const year = Number(state.clock.date.slice(0, 4));
   const tracked = ledgerSubjectIds(state);
-  let best: PlayerState | undefined;
+  const hijackable = hijackableSubjects(state);
+
+  // Prefer genuine depth (a player reality isn't tracking). A tracked ledger
+  // subject is only ever an option if he is still EN ROUTE (a future move to
+  // pull forward) — never one settled at his real destination — and even then
+  // only if no untracked option fits, so the deviation is a logical minority.
+  let bestDepth: PlayerState | undefined;
+  let bestHijack: PlayerState | undefined;
   for (const p of Object.values(state.players)) {
     const seller = p.club ? state.clubs[p.club] : undefined;
     if (!seller || seller.leagueId !== null) continue; // foreign/context only
-    if (tracked.has(p.id)) continue; // never prise a real ledger star off his real path
     if (p.ability < target - 10 || p.ability > target + 5) continue;
     if (p.resistance.hardBlocks.length > 0) continue;
-    if (valuePlayer(p, Number(state.clock.date.slice(0, 4))) > budget) continue;
-    if (!best || p.ability > best.ability) best = p;
+    if (valuePlayer(p, year) > budget) continue;
+    if (tracked.has(p.id)) {
+      if (!hijackable.has(p.id)) continue; // settled real star — off limits (illogical)
+      if (!bestHijack || p.ability > bestHijack.ability) bestHijack = p;
+    } else if (!bestDepth || p.ability > bestDepth.ability) {
+      bestDepth = p;
+    }
   }
+  // Depth wins outright; a real subject is pulled forward only when nothing else
+  // fits (and consuming his onward move, so reality diverges cleanly, not twice).
+  const best = bestDepth ?? bestHijack;
   if (!best) return false;
-  const fee = valuePlayer(best, Number(state.clock.date.slice(0, 4)));
+  const isHijack = !bestDepth;
+
+  const fee = valuePlayer(best, year);
   const res = executeTransfer(state, { playerId: best.id, toClub: club.id, fee });
-  if (res.ok) {
-    logEvent(state, {
-      category: 'transfer',
-      code: 'rival.counterpunch',
-      message: `${club.name} counter-punch: signs ${best.name}`,
-      data: { clubId: club.id, playerId: best.id, fee },
+  if (!res.ok) return false;
+
+  if (isHijack) {
+    for (const key of hijackable.get(best.id) ?? []) {
+      if (!state.meta.executedLedger.includes(key)) state.meta.executedLedger.push(key);
+    }
+    state.timeline.divergenceLog.push({
+      date: state.clock.date,
+      kind: 'butterfly',
+      detail: `${club.name}, raided by the user, counter-punch for ${best.name} — pulling forward a move reality had ahead of him.`,
     });
-    return true;
   }
-  return false;
+  logEvent(state, {
+    category: 'transfer',
+    code: 'rival.counterpunch',
+    message: `${club.name} counter-punch: signs ${best.name}`,
+    data: { clubId: club.id, playerId: best.id, fee, hijack: isHijack },
+  });
+  return true;
 }
 
 /**
@@ -128,6 +171,13 @@ export function runRivalWindow(state: GameState, rng: Rng): void {
   // Counter-punch any club still owed a response.
   for (const club of Object.values(state.clubs)) {
     if (club.pendingCounterPunch <= 0) continue;
+    // A club in financial distress does NOT counter-punch — it has no money to
+    // reinvest (in reality the cash it raises goes to its creditors, not the
+    // market). The debt simply eats the window; it stops chasing a replacement.
+    if (club.financialHealth !== 'healthy') {
+      club.pendingCounterPunch = 0;
+      continue;
+    }
     if (counterPunchSign(state, club, r)) {
       club.pendingCounterPunch = 0;
     } else {

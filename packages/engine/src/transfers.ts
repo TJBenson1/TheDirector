@@ -65,7 +65,10 @@ export function executeTransfer(state: GameState, req: TransferRequest): Transfe
     const seller = state.clubs[fromClubId];
     if (seller) {
       seller.squad = seller.squad.filter((id) => id !== player.id);
-      seller.finances.transferBudget += fee;
+      // A healthy club banks the fee to reinvest. A club in financial distress
+      // does NOT — its fire-sale proceeds go to its creditors, not a transfer
+      // kitty (the real Parma/Leeds/Lazio pattern), so distress can't rebuild.
+      if (seller.financialHealth === 'healthy') seller.finances.transferBudget += fee;
     }
   }
   buyer.squad.push(player.id);
