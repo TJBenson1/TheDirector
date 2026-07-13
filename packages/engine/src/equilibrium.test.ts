@@ -171,3 +171,26 @@ describe('butterflies follow the grain of what almost happened (§ butterfly sho
     expect(s.players['cur_beckham_u']?.club).toBe('barcelona'); // the near-miss became real
   });
 });
+
+describe('a filled need obviates a later real signing (§ butterfly showcase)', () => {
+  it("a club that lands a forward early doesn't come back for another — the knock-on", () => {
+    // Passive: reality — Shevchenko joins Chelsea in 2006.
+    const passive = runPassive('arsenal-2004', 'needfill', 2007);
+    expect(passive.players['cur_shevchenko2']?.club).toBe('chelsea');
+
+    // A butterfly puts a marquee forward (Henry) into Chelsea in 2004. Their real
+    // 2006 move for another forward is now redundant — it never happens, and he
+    // stays where reality's alternate branch leaves him.
+    let s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'needfill' });
+    s.clubs['chelsea']!.finances.transferBudget = 200_000_000;
+    executeTransfer(s, { playerId: 'cur_henry', toClub: 'chelsea', fee: 50_000_000 });
+    let guard = 0;
+    while (Number(s.clock.date.slice(0, 4)) < 2007 && guard++ < 40) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
+      s = advanceWindow(s).state;
+    }
+    expect(s.players['cur_shevchenko2']?.club).not.toBe('chelsea');
+    expect(s.eventLog.some((e) => e.code === 'ledger.obviated' && e.data?.to === 'chelsea')).toBe(true);
+  });
+});

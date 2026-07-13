@@ -10,7 +10,11 @@ import type { ClubId, GameState, PlayerId } from './types.js';
 import { parseYearMonth } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer, suggestWage } from './finance.js';
-import { recomputeClubStrength, computeWageBill, clubSquadPlayers, clubStarPremium } from './players.js';
+import { recomputeClubStrength, computeWageBill, clubSquadPlayers, clubStarPremium, needBucket } from './players.js';
+
+/** Minimum ability for a butterfly signing to count as FILLING a need (a genuine
+ *  contributor, not squad depth) and so obviate a later real move (§ showcase). */
+const FILLED_NEED_MIN = 80;
 import { rollAdaptation } from './adaptation.js';
 import { Rng } from './rng.js';
 import { evaluateApproach, type ApproachVerdict } from './agency.js';
@@ -106,6 +110,12 @@ export function executeTransfer(
     buyer.starButterfly += clubStarPremium(state, buyer.id) - buyerStarBefore;
     if (fromClubId && state.clubs[fromClubId]) {
       state.clubs[fromClubId]!.starButterfly += clubStarPremium(state, fromClubId) - sellerStarBefore;
+    }
+    // A butterfly signing of a genuine contributor FILLS a need — the club's later
+    // real signing of the same kind is then obviated (sign Ronaldinho and the deal
+    // for another forward never comes). Depth signings don't count (§ showcase).
+    if (player.ability >= FILLED_NEED_MIN) {
+      state.meta.filledNeeds.push({ club: buyer.id, bucket: needBucket(player), window: state.clock.date });
     }
   }
 

@@ -433,6 +433,13 @@ export interface GameStateMeta {
   /** Real historical injuries already fired (by subject playerId), so each
    *  scheduled real injury triggers at most once (reality-default). */
   firedRealInjuries: string[];
+  /** Needs a club has already filled with a BUTTERFLY signing (a non-reality
+   *  acquisition of a genuine contributor). A later real signing into the same
+   *  club and position bucket is then OBVIATED — the club no longer needs it (sign
+   *  Ronaldinho and the January move for another forward never comes). Each marker
+   *  carries the window it was created in, so a same-window real move (the deal
+   *  that triggered the divergence) is never retroactively cancelled. */
+  filledNeeds: Array<{ club: ClubId; bucket: string; window: YearMonth }>;
 }
 
 export interface GameClock {
