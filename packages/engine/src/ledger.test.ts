@@ -231,6 +231,21 @@ describe('host-club curation — real squads + landed lost talents', () => {
     expect(b.players.cur_sahin09?.latentCeiling).toBe(88);
     expect(b.players.cur_kaka09?.latentCeiling).toBe(90);
   });
+
+  it('the 2013 European context clubs are now deep real squads', () => {
+    const m = createNewGame({ scenarioId: 'man-utd-2013', seed: 'ctx-13' });
+    const curatedAt = (club: string) =>
+      (m.clubs[club]?.squad ?? []).map((id) => m.players[id]).filter((p) => p?.curated).length;
+    for (const club of ['juventus', 'psg', 'roma', 'benfica', 'valencia']) {
+      expect(curatedAt(club)).toBeGreaterThanOrEqual(13);
+    }
+    // Real players at their real 2013-14 clubs, and a couple of the era's lost talents.
+    expect(m.players.cur_pjanic13?.club).toBe('roma');
+    expect(m.players.cur_pastore13?.latentCeiling).toBe(89);
+    expect(m.players.cur_markovic13?.latentCeiling).toBe(88);
+    // Daley Blind is seeded at Ajax for his real move to United (a user decision).
+    expect(m.players.cur_blind13?.club).toBe('ajax');
+  });
 });
 
 describe('more start points (§4 data)', () => {

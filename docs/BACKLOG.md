@@ -50,8 +50,14 @@ outside that world is calibration-safe.
 
 **Priority queue (per era):**
 - **era-2004:** deepen Juventus, Bayern, Chelsea, Porto, Valencia, Lyon, Atlético
-  to full squads; add the real 2004–09 ledger for the new European clubs.
-- **era-2013:** deepen Bayern, PSG, Juventus, Roma; add Serie A/ Bundesliga ledger.
+  to full squads (✅ mostly done); add the real 2004–09 ledger for the new
+  European clubs (Calciopoli exodus etc.).
+- ✅ **era-2013 European context done:** Juventus, PSG, Roma, Benfica, Ajax,
+  Valencia, West Ham now deep real squads; 2013 ledger extended (Matić→Chelsea,
+  Blind→United as a user signing, Benatia→Bayern, Mathieu→Barça, Marković→
+  Liverpool, Ménez→Milan, Pjanić→Juve). Lost talents: Pastore, Ménez, Giovinco,
+  Destro, Ljajić, Marković, Cavaleiro, Fischer, Banega, Carroll, Bojan(-loan).
+  Remaining 2013: real injuries pack; deepen Bayern (12→full).
 - **era-1998 (Serie A):** deepen Roma, Fiorentina, Parma, Lazio beyond marquee names.
 - **1999 world:** flesh out La Liga (Depor, Valencia, Celta) + Serie A selling clubs.
 - **Cross-cutting:** real transfer ledgers + retirements for every newly-curated

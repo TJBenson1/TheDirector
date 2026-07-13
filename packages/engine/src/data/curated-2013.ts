@@ -276,6 +276,22 @@ export const BENFICA_2013: CuratedSeed[] = [
   q('benfica', 'maxipereira', 'Maxi Pereira', 1984, 'Uruguay', ['RB'], 79, 80, 2016, 30, t(8, 5, 8, 7, 5, 7)),
   q('benfica', 'enzoperez', 'Enzo Pérez', 1986, 'Argentina', ['CM'], 80, 83, 2017, 30, t(8, 5, 8, 6, 5, 7)),
   q('benfica', 'rodrigo', 'Rodrigo', 1991, 'Spain', ['ST'], 78, 85, 2017, 35, t(7, 6, 8, 6, 5, 7)),
+  q('benfica', 'artur13', 'Artur Moraes', 1981, 'Brazil', ['GK'], 72, 72, 2015, 30, t(7, 4, 5, 7, 3, 7)),
+  q('benfica', 'andrealmeida13', 'André Almeida', 1990, 'Portugal', ['RB', 'DM', 'CB'], 73, 80, 2018, 30, t(8, 3, 7, 9, 3, 8)),
+  q('benfica', 'silvio13', 'Sílvio', 1987, 'Portugal', ['RB', 'LB'], 72, 74, 2017, 40, t(7, 4, 6, 6, 4, 7)),
+  q('benfica', 'matic13', 'Nemanja Matić', 1988, 'Serbia', ['DM', 'CM'], 82, 86, 2015, 20, t(8, 5, 9, 4, 3, 7)),
+  q('benfica', 'fejsa13', 'Ljubomir Fejsa', 1988, 'Serbia', ['DM'], 76, 79, 2018, 35, t(8, 4, 6, 8, 3, 7)),
+  q('benfica', 'gaitan13', 'Nicolás Gaitán', 1988, 'Argentina', ['AM', 'LW'], 80, 82, 2017, 30, t(7, 6, 7, 6, 5, 7)),
+  q('benfica', 'salvio13', 'Eduardo Salvio', 1990, 'Argentina', ['RW', 'AM'], 78, 82, 2017, 45, t(7, 6, 7, 6, 6, 7)),
+  q('benfica', 'lima13', 'Lima', 1983, 'Brazil', ['ST'], 76, 77, 2016, 30, t(7, 4, 6, 6, 4, 7)),
+  q('benfica', 'cardozo13', 'Óscar Cardozo', 1983, 'Paraguay', ['ST'], 78, 79, 2015, 35, t(7, 6, 6, 7, 4, 7)),
+  q('benfica', 'olajohn13', 'Ola John', 1992, 'Netherlands', ['LW', 'RW'], 71, 78, 2017, 40, t(6, 6, 7, 4, 7, 6)),
+  // Marković — an explosive teenage winger, domestic treble here then a £20m
+  // Liverpool move that badly flopped. A high-ceiling lost talent (latent 88).
+  q('benfica', 'markovic13', 'Lazar Marković', 1994, 'Serbia', ['LW', 'RW'], 77, 82, 2018, 30, t(6, 7, 8, 3, 7, 5), { latentCeiling: 88 }),
+  q('benfica', 'djuricic13', 'Filip Đuričić', 1992, 'Serbia', ['AM', 'LW'], 72, 78, 2018, 40, t(6, 5, 7, 4, 6, 5), { latentCeiling: 83 }),
+  // Cavaleiro — an academy graduate of huge youth hype; a solid-not-elite career.
+  q('benfica', 'cavaleiro13', 'Ivan Cavaleiro', 1993, 'Portugal', ['LW', 'RW'], 68, 80, 2018, 35, t(6, 6, 8, 5, 6, 6), { latentCeiling: 85 }),
 ];
 
 /** Context selling-clubs for Spurs' post-Bale rebuild (via the ledger). */
@@ -287,15 +303,63 @@ export const ROMA_2013: CuratedSeed[] = [
   }),
   q('roma', 'derossi', 'Daniele De Rossi', 1983, 'Italy', ['DM', 'CM'], 83, 85, 2017, 30, t(8, 6, 9, 9, 6, 6)),
   q('roma', 'strootman', 'Kevin Strootman', 1990, 'Netherlands', ['CM', 'DM'], 82, 87, 2018, 45, t(8, 5, 8, 7, 5, 7)),
+  q('roma', 'desanctis13', 'Morgan De Sanctis', 1977, 'Italy', ['GK'], 79, 79, 2016, 30, t(8, 4, 6, 7, 3, 7)),
+  q('roma', 'benatia13', 'Mehdi Benatia', 1987, 'Morocco', ['CB'], 83, 86, 2018, 25, t(8, 6, 9, 4, 4, 7)),
+  q('roma', 'castan13', 'Leandro Castán', 1986, 'Brazil', ['CB'], 79, 81, 2017, 40, t(7, 4, 7, 7, 4, 7)),
+  q('roma', 'balzaretti13', 'Federico Balzaretti', 1981, 'Italy', ['LB'], 78, 78, 2015, 75, t(8, 4, 6, 8, 3, 7)),
+  q('roma', 'maicon13', 'Maicon', 1981, 'Brazil', ['RB'], 80, 80, 2015, 55, t(6, 6, 6, 5, 5, 6)),
+  q('roma', 'torosidis13', 'Vasilis Torosidis', 1985, 'Greece', ['RB', 'CB'], 78, 79, 2017, 25, t(7, 4, 7, 7, 4, 7)),
+  q('roma', 'dodo13', 'Dodô', 1992, 'Brazil', ['LB'], 76, 82, 2017, 30, t(6, 5, 7, 5, 5, 7)),
+  q('roma', 'pjanic13', 'Miralem Pjanić', 1990, 'Bosnia and Herzegovina', ['AM', 'CM'], 82, 87, 2018, 30, t(8, 6, 8, 4, 4, 8)),
+  q('roma', 'nainggolan13', 'Radja Nainggolan', 1988, 'Belgium', ['CM', 'DM'], 81, 85, 2018, 25, t(8, 6, 8, 6, 7, 7)),
+  q('roma', 'florenzi13', 'Alessandro Florenzi', 1991, 'Italy', ['RW', 'CM', 'RB'], 78, 84, 2018, 30, t(8, 5, 8, 9, 4, 7)),
+  q('roma', 'gervinho13', 'Gervinho', 1987, 'Ivory Coast', ['LW', 'ST'], 81, 82, 2017, 30, t(6, 6, 7, 5, 7, 6)),
+  q('roma', 'borriello13', 'Marco Borriello', 1982, 'Italy', ['ST'], 73, 73, 2015, 45, t(6, 6, 5, 5, 5, 7)),
+  // Destro — a lethal poacher whose 2013-14 form promised a top striker, then
+  // chronic injuries stopped it. Fragile-and-lost (latent 86).
+  q('roma', 'destro13', 'Mattia Destro', 1991, 'Italy', ['ST'], 78, 82, 2017, 70, t(6, 7, 7, 5, 6, 6), { latentCeiling: 86 }),
+  // Ljajić — huge technical gift, low professionalism and a temperament that
+  // stalled it. A lost talent (latent 86).
+  q('roma', 'ljajic13', 'Adem Ljajić', 1991, 'Serbia', ['LW', 'AM'], 78, 82, 2018, 35, t(5, 7, 6, 4, 7, 6), { latentCeiling: 86 }),
 ];
 export const VALENCIA_2013: CuratedSeed[] = [
   q('valencia', 'soldado', 'Roberto Soldado', 1985, 'Spain', ['ST'], 81, 82, 2017, 30, t(8, 5, 8, 7, 4, 7)),
   q('valencia', 'guardado', 'Andrés Guardado', 1986, 'Mexico', ['LW', 'LB'], 78, 80, 2017, 30, t(7, 5, 7, 7, 5, 7)),
   q('valencia', 'feghouli', 'Sofiane Feghouli', 1989, 'Algeria', ['RW', 'AM'], 78, 83, 2016, 30, t(7, 6, 7, 6, 5, 7)),
+  q('valencia', 'dalves13', 'Diego Alves', 1985, 'Brazil', ['GK'], 78, 80, 2017, 45, t(7, 5, 6, 7, 4, 6)),
+  q('valencia', 'barragan13', 'Antonio Barragán', 1987, 'Spain', ['RB'], 68, 70, 2015, 30, t(6, 5, 5, 6, 5, 6)),
+  q('valencia', 'rami13', 'Adil Rami', 1985, 'France', ['CB'], 75, 78, 2016, 35, t(5, 7, 6, 5, 7, 6)),
+  q('valencia', 'mathieu13', 'Jérémy Mathieu', 1983, 'France', ['CB', 'LB'], 77, 78, 2016, 30, t(7, 5, 8, 5, 4, 7)),
+  q('valencia', 'jpereira13', 'João Pereira', 1984, 'Portugal', ['RB'], 72, 73, 2016, 25, t(7, 5, 6, 6, 4, 7)),
+  q('valencia', 'parejo13', 'Dani Parejo', 1989, 'Spain', ['CM', 'AM'], 74, 82, 2018, 25, t(5, 7, 7, 6, 6, 6)),
+  q('valencia', 'michel13', 'Michel', 1985, 'Spain', ['DM', 'CM'], 70, 73, 2016, 30, t(7, 4, 6, 7, 4, 6)),
+  q('valencia', 'piatti13', 'Pablo Piatti', 1989, 'Argentina', ['LW', 'RW'], 71, 76, 2017, 65, t(7, 5, 6, 7, 4, 7)),
+  q('valencia', 'postiga13', 'Hélder Postiga', 1982, 'Portugal', ['ST'], 71, 72, 2015, 60, t(6, 6, 5, 5, 6, 6)),
+  q('valencia', 'alcacer13', 'Paco Alcácer', 1993, 'Spain', ['ST'], 68, 86, 2018, 25, t(7, 4, 8, 7, 3, 7)),
+  // Banega — a mercurial passing talent perennially undercut by professionalism
+  // and temperament. A lost talent (latent 84).
+  q('valencia', 'banega13', 'Éver Banega', 1988, 'Argentina', ['CM', 'AM'], 76, 79, 2016, 30, t(4, 7, 7, 4, 8, 6), { latentCeiling: 84 }),
 ];
 export const AJAX_2013: CuratedSeed[] = [
   q('ajax', 'eriksen', 'Christian Eriksen', 1992, 'Denmark', ['AM', 'CM'], 81, 88, 2016, 25, t(8, 5, 8, 6, 4, 8)),
   q('ajax', 'alderweireld', 'Toby Alderweireld', 1989, 'Belgium', ['CB'], 80, 86, 2016, 25, t(8, 5, 8, 7, 4, 7)),
+  q('ajax', 'cillessen13', 'Jasper Cillessen', 1989, 'Netherlands', ['GK'], 76, 82, 2016, 20, t(8, 5, 7, 6, 4, 7)),
+  q('ajax', 'blind13', 'Daley Blind', 1990, 'Netherlands', ['LB', 'DM', 'CM'], 79, 84, 2016, 18, t(9, 4, 8, 6, 3, 8)),
+  q('ajax', 'veltman13', 'Joël Veltman', 1992, 'Netherlands', ['CB', 'RB'], 71, 79, 2017, 25, t(8, 5, 7, 7, 4, 7)),
+  q('ajax', 'moisander13', 'Niklas Moisander', 1985, 'Finland', ['CB'], 74, 76, 2015, 30, t(8, 5, 7, 6, 4, 7)),
+  q('ajax', 'vanrhijn13', 'Ricardo van Rhijn', 1991, 'Netherlands', ['RB', 'CB'], 72, 77, 2016, 22, t(7, 5, 7, 6, 4, 6)),
+  q('ajax', 'schone13', 'Lasse Schöne', 1986, 'Denmark', ['CM', 'AM'], 74, 76, 2016, 22, t(8, 4, 6, 7, 3, 7)),
+  q('ajax', 'klaassen13', 'Davy Klaassen', 1993, 'Netherlands', ['AM', 'CM'], 72, 84, 2016, 20, t(9, 5, 8, 8, 3, 7)),
+  q('ajax', 'siemdejong13', 'Siem de Jong', 1988, 'Netherlands', ['AM', 'ST'], 76, 79, 2015, 45, t(8, 6, 8, 6, 4, 7)),
+  q('ajax', 'poulsen13', 'Christian Poulsen', 1980, 'Denmark', ['DM', 'CM'], 71, 71, 2015, 50, t(7, 6, 6, 6, 6, 6)),
+  // Bojan — the ex-Barça wonderkid on a season's loan, his once-huge ceiling long
+  // since sapped by pressure and volatility. A lost talent (latent 84).
+  q('ajax', 'bojan13', 'Bojan Krkić', 1990, 'Spain', ['ST', 'AM', 'LW'], 74, 78, 2015, 45, t(7, 4, 6, 5, 7, 6), { latentCeiling: 84 }),
+  // Fischer — an electric young winger whose knee ligaments kept betraying him.
+  // Fragile-and-lost (latent 88).
+  q('ajax', 'fischer13', 'Viktor Fischer', 1994, 'Denmark', ['LW', 'ST'], 71, 82, 2017, 80, t(7, 6, 8, 5, 6, 6), { latentCeiling: 88 }),
+  q('ajax', 'elghazi13', 'Anwar El Ghazi', 1995, 'Netherlands', ['RW', 'LW'], 62, 82, 2017, 30, t(6, 7, 8, 4, 6, 6)),
+  q('ajax', 'sigthorsson13', 'Kolbeinn Sigþórsson', 1990, 'Iceland', ['ST'], 73, 78, 2015, 72, t(7, 5, 7, 6, 5, 6)),
 ];
 
 /** PSG, 2013–14 — Ibrahimović-era context for cross-European realism/queries. */
@@ -305,6 +369,21 @@ export const PSG_2013: CuratedSeed[] = [
   q('psg', 'cavani', 'Edinson Cavani', 1987, 'Uruguay', ['ST'], 85, 87, 2018, 30, t(8, 6, 9, 7, 5, 7)),
   q('psg', 'verratti', 'Marco Verratti', 1992, 'Italy', ['CM', 'DM'], 81, 90, 2018, 30, t(7, 6, 8, 7, 6, 7)),
   q('psg', 'lavezzi', 'Ezequiel Lavezzi', 1985, 'Argentina', ['LW', 'ST'], 81, 83, 2016, 30, t(7, 6, 7, 6, 6, 7)),
+  q('psg', 'sirigu13', 'Salvatore Sirigu', 1987, 'Italy', ['GK'], 82, 84, 2018, 20, t(8, 5, 7, 7, 4, 7)),
+  q('psg', 'alexpsg13', 'Alex', 1982, 'Brazil', ['CB'], 81, 82, 2015, 35, t(8, 5, 7, 7, 4, 6)),
+  q('psg', 'maxwell13', 'Maxwell', 1981, 'Brazil', ['LB'], 80, 81, 2015, 25, t(9, 4, 7, 8, 3, 7)),
+  q('psg', 'vanderwiel13', 'Gregory van der Wiel', 1988, 'Netherlands', ['RB'], 79, 83, 2015, 30, t(7, 6, 7, 6, 5, 7)),
+  q('psg', 'marquinhos13', 'Marquinhos', 1994, 'Brazil', ['CB'], 78, 90, 2018, 25, t(8, 5, 8, 7, 3, 8)),
+  q('psg', 'matuidi13', 'Blaise Matuidi', 1987, 'France', ['DM', 'CM'], 83, 85, 2017, 20, t(9, 4, 9, 8, 3, 7)),
+  q('psg', 'thiagomotta13', 'Thiago Motta', 1982, 'Italy', ['DM', 'CM'], 82, 83, 2016, 45, t(8, 6, 8, 7, 6, 7)),
+  // Pastore — "El Flaco", a €42m gem billed for the very top; the talent was
+  // always there but fragility and inconsistency capped him. Lost talent (89).
+  q('psg', 'pastore13', 'Javier Pastore', 1989, 'Argentina', ['AM'], 82, 87, 2016, 45, t(7, 6, 7, 6, 6, 6), { latentCeiling: 89 }),
+  // Ménez — dazzling flair undone by attitude. A lost talent (latent 86).
+  q('psg', 'menez13', 'Jérémy Ménez', 1987, 'France', ['AM', 'RW', 'ST'], 80, 83, 2015, 40, t(5, 8, 7, 5, 7, 6), { latentCeiling: 86 }),
+  q('psg', 'lucasmoura13', 'Lucas Moura', 1992, 'Brazil', ['RW', 'LW'], 81, 88, 2018, 25, t(8, 6, 8, 6, 4, 8)),
+  q('psg', 'cabaye13', 'Yohan Cabaye', 1986, 'France', ['CM', 'DM'], 82, 84, 2017, 25, t(8, 5, 8, 6, 5, 7)),
+  q('psg', 'digne13', 'Lucas Digne', 1993, 'France', ['LB'], 76, 85, 2018, 30, t(8, 5, 7, 6, 4, 7)),
 ];
 
 /** AC Milan, 2013–14 — a fading giant (finished 8th), home of the marquee lost
@@ -341,6 +420,22 @@ export const JUVENTUS_2013: CuratedSeed[] = [
   q('juventus', 'pogba', 'Paul Pogba', 1993, 'France', ['CM'], 82, 92, 2019, 30, t(6, 8, 9, 6, 6, 7)),
   q('juventus', 'tevez', 'Carlos Tévez', 1984, 'Argentina', ['ST'], 84, 85, 2016, 30, t(6, 8, 9, 5, 7, 7)),
   q('juventus', 'chiellini', 'Giorgio Chiellini', 1984, 'Italy', ['CB'], 85, 86, 2018, 30, t(9, 6, 9, 9, 5, 6)),
+  q('juventus', 'barzagli13', 'Andrea Barzagli', 1981, 'Italy', ['CB'], 84, 85, 2016, 35, t(9, 3, 7, 9, 3, 7)),
+  q('juventus', 'bonucci13', 'Leonardo Bonucci', 1987, 'Italy', ['CB'], 84, 88, 2018, 20, t(8, 6, 8, 7, 6, 7)),
+  q('juventus', 'lichtsteiner13', 'Stephan Lichtsteiner', 1984, 'Switzerland', ['RB'], 82, 83, 2016, 15, t(9, 5, 7, 7, 6, 8)),
+  q('juventus', 'ogbonna13', 'Angelo Ogbonna', 1988, 'Italy', ['CB'], 77, 84, 2018, 25, t(7, 4, 6, 6, 4, 6)),
+  q('juventus', 'caceres13', 'Martín Cáceres', 1987, 'Uruguay', ['CB', 'RB'], 78, 82, 2016, 55, t(5, 6, 6, 6, 7, 7)),
+  q('juventus', 'isla13', 'Mauricio Isla', 1988, 'Chile', ['RB', 'RW'], 77, 81, 2016, 30, t(6, 5, 6, 5, 6, 7)),
+  q('juventus', 'asamoah13', 'Kwadwo Asamoah', 1988, 'Ghana', ['LB', 'CM'], 80, 83, 2017, 55, t(8, 4, 6, 7, 3, 7)),
+  q('juventus', 'marchisio13', 'Claudio Marchisio', 1986, 'Italy', ['CM', 'DM'], 83, 85, 2018, 30, t(8, 4, 7, 10, 3, 7)),
+  q('juventus', 'padoin13', 'Simone Padoin', 1984, 'Italy', ['CM', 'RB'], 70, 72, 2016, 20, t(8, 2, 5, 8, 2, 7)),
+  q('juventus', 'llorente13', 'Fernando Llorente', 1985, 'Spain', ['ST'], 81, 83, 2018, 20, t(7, 5, 6, 6, 4, 6)),
+  q('juventus', 'vucinic13', 'Mirko Vučinić', 1983, 'Montenegro', ['ST', 'AM'], 80, 82, 2015, 45, t(6, 6, 6, 5, 6, 6)),
+  q('juventus', 'quagliarella13', 'Fabio Quagliarella', 1983, 'Italy', ['ST'], 78, 80, 2016, 40, t(7, 5, 6, 6, 5, 6)),
+  q('juventus', 'storari13', 'Marco Storari', 1977, 'Italy', ['GK'], 74, 75, 2015, 25, t(7, 3, 5, 7, 3, 6)),
+  // Giovinco — the "Atomic Ant", a gifted trequartista who never nailed a starting
+  // role in Italy, then exploded in MLS. A lost talent (latent 85).
+  q('juventus', 'giovinco13', 'Sebastian Giovinco', 1987, 'Italy', ['AM', 'ST'], 76, 80, 2015, 30, t(6, 7, 7, 5, 6, 6), { latentCeiling: 85 }),
 ];
 
 /** West Ham, 2013–14 — home of Ravel Morrison, the ultimate what-might-have-been.
@@ -350,6 +445,22 @@ export const WESTHAM_2013: CuratedSeed[] = [
   q('west_ham', 'ravel', 'Ravel Morrison', 1993, 'England', ['AM', 'CM'], 71, 78, 2016, 35, t(3, 8, 7, 4, 8, 6), { latentCeiling: 90 }),
   q('west_ham', 'noble', 'Mark Noble', 1987, 'England', ['CM', 'DM'], 78, 79, 2016, 25, t(9, 5, 8, 10, 4, 6)),
   q('west_ham', 'nolan', 'Kevin Nolan', 1982, 'England', ['CM', 'AM'], 76, 77, 2015, 30, t(8, 6, 8, 8, 4, 6)),
+  q('west_ham', 'jaaskelainen13', 'Jussi Jääskeläinen', 1975, 'Finland', ['GK'], 72, 72, 2015, 20, t(9, 4, 5, 8, 3, 7)),
+  q('west_ham', 'adrian13', 'Adrián', 1987, 'Spain', ['GK'], 73, 80, 2016, 20, t(7, 6, 7, 6, 5, 6)),
+  q('west_ham', 'reid13', 'Winston Reid', 1988, 'New Zealand', ['CB'], 76, 80, 2015, 35, t(8, 5, 7, 7, 3, 7)),
+  q('west_ham', 'jcollins13', 'James Collins', 1983, 'Wales', ['CB'], 73, 74, 2016, 45, t(7, 5, 6, 8, 5, 6)),
+  q('west_ham', 'demel13', 'Guy Demel', 1981, 'Ivory Coast', ['RB', 'CB'], 72, 73, 2015, 55, t(6, 6, 5, 6, 6, 6)),
+  q('west_ham', 'rat13', 'Răzvan Raț', 1981, 'Romania', ['LB'], 72, 73, 2015, 40, t(7, 5, 5, 6, 5, 5)),
+  q('west_ham', 'tomkins13', 'James Tomkins', 1989, 'England', ['CB'], 72, 78, 2016, 40, t(7, 5, 6, 8, 5, 6)),
+  q('west_ham', 'diame13', 'Mohamed Diamé', 1987, 'Senegal', ['CM', 'AM'], 76, 78, 2016, 45, t(6, 7, 7, 5, 6, 6)),
+  q('west_ham', 'downing13', 'Stewart Downing', 1984, 'England', ['LW', 'AM', 'RW'], 74, 76, 2016, 25, t(8, 5, 6, 7, 4, 7)),
+  q('west_ham', 'jarvis13', 'Matt Jarvis', 1986, 'England', ['LW', 'RW'], 72, 74, 2017, 35, t(7, 5, 6, 7, 5, 6)),
+  q('west_ham', 'ccole13', 'Carlton Cole', 1983, 'England', ['ST'], 70, 71, 2015, 45, t(6, 5, 5, 8, 5, 6)),
+  q('west_ham', 'maiga13', 'Modibo Maïga', 1987, 'Mali', ['ST'], 68, 72, 2016, 40, t(6, 6, 6, 5, 6, 5)),
+  q('west_ham', 'joecole13', 'Joe Cole', 1981, 'England', ['AM', 'LW'], 70, 72, 2015, 70, t(7, 6, 6, 7, 5, 6)),
+  // Carroll — a physically dominant target man when fit, but the definitive
+  // fragile star: a body that never let the £35m talent deliver. Latent 84.
+  q('west_ham', 'carroll13', 'Andy Carroll', 1989, 'England', ['ST'], 76, 80, 2017, 88, t(5, 7, 6, 6, 7, 5), { latentCeiling: 84 }),
 ];
 
 /** Curated squads for the man-utd-2013 scenario, keyed by club. */

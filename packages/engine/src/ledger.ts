@@ -258,6 +258,16 @@ const LEDGER_2013_2016: RealTransferLedgerEntry[] = [
   { playerId: 'cur_dimaria', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000 },
   { playerId: 'cur_lukeshaw', from: 'southampton', to: 'man_utd', window: '2014-06', fee: 30_000_000 },
   { playerId: 'cur_lallana', from: 'southampton', to: 'liverpool', window: '2014-07', fee: 25_000_000 },
+  // The newly-curated European clubs sell on: Matić back to Chelsea, Benatia to
+  // Bayern, Mathieu to Barça, Ménez to Milan, Marković to Liverpool, Pjanić to
+  // Juve — and Daley Blind's real move to United, offered to the user as a signing.
+  { playerId: 'cur_matic13', from: 'benfica', to: 'chelsea', window: '2014-01', fee: 21_000_000 },
+  { playerId: 'cur_blind13', from: 'ajax', to: 'man_utd', window: '2014-08', fee: 14_000_000 },
+  { playerId: 'cur_benatia13', from: 'roma', to: 'bayern', window: '2014-08', fee: 28_000_000 },
+  { playerId: 'cur_mathieu13', from: 'valencia', to: 'barcelona', window: '2014-07', fee: 16_000_000 },
+  { playerId: 'cur_menez13', from: 'psg', to: 'milan', window: '2014-07', fee: 0 },
+  { playerId: 'cur_markovic13', from: 'benfica', to: 'liverpool', window: '2014-07', fee: 20_000_000 },
+  { playerId: 'cur_pjanic13', from: 'roma', to: 'juventus', window: '2016-07', fee: 32_000_000 },
 ];
 
 /**
