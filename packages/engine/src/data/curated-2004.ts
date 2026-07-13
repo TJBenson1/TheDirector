@@ -181,14 +181,120 @@ export const LYON_2004: CuratedSeed[] = [
   q('lyon', 'essien', 'Michael Essien', 1982, 'Ghana', ['DM', 'CM'], 82, 88, 2010, 30, t(8, 5, 9, 7, 5, 7)),
 ];
 
+// ── Continental heavyweights (§4) — real 2004–05 first XIs so the Champions
+//    League contests real sides, not anonymous fillers. Squad strength stays
+//    anchored to each club's baseStrength, so these are names + spread, not power.
+//    Ledger arrivals are EXCLUDED (Eto'o joins Barça from Mallorca; Owen/van
+//    Nistelrooy reach Real later; Vieira joins Juve in 2005).
+
+/** Real Madrid, 2004–05 — the galácticos. */
+export const REAL_MADRID_2004: CuratedSeed[] = [
+  q('real_madrid', 'casillas_rm', 'Iker Casillas', 1981, 'Spain', ['GK'], 87, 90, 2009, 20, t(9, 5, 8, 10, 4, 7)),
+  q('real_madrid', 'salgado_rm', 'Míchel Salgado', 1975, 'Spain', ['RB'], 80, 81, 2007, 30, t(8, 5, 7, 8, 5, 7)),
+  q('real_madrid', 'helguera_rm', 'Iván Helguera', 1975, 'Spain', ['CB', 'DM'], 81, 82, 2007, 30, t(8, 5, 7, 7, 5, 7)),
+  q('real_madrid', 'samuel_rm', 'Walter Samuel', 1978, 'Argentina', ['CB'], 83, 85, 2008, 30, t(8, 6, 8, 7, 5, 6)),
+  q('real_madrid', 'rcarlos_rm', 'Roberto Carlos', 1973, 'Brazil', ['LB'], 85, 86, 2007, 25, t(8, 7, 8, 8, 4, 7)),
+  q('real_madrid', 'beckham_rm', 'David Beckham', 1975, 'England', ['RM', 'CM'], 85, 86, 2007, 20, t(9, 7, 8, 7, 4, 7)),
+  q('real_madrid', 'guti_rm', 'Guti', 1976, 'Spain', ['CM', 'AM'], 81, 84, 2008, 30, t(6, 7, 7, 8, 6, 7)),
+  q('real_madrid', 'zidane_rm', 'Zinédine Zidane', 1972, 'France', ['AM'], 90, 91, 2006, 25, t(9, 6, 9, 8, 4, 8), { loyalty: 85 }),
+  q('real_madrid', 'figo_rm', 'Luís Figo', 1972, 'Portugal', ['RW', 'AM'], 85, 86, 2005, 30, t(8, 7, 8, 6, 5, 7)),
+  q('real_madrid', 'raul_rm', 'Raúl', 1977, 'Spain', ['ST', 'AM'], 85, 87, 2008, 25, t(9, 7, 9, 10, 4, 7), { loyalty: 95 }),
+  q('real_madrid', 'ronaldo_rm', 'Ronaldo', 1976, 'Brazil', ['ST'], 88, 90, 2007, 55, t(6, 8, 8, 6, 6, 8)),
+];
+
+/** Barcelona, 2004–05 — Rijkaard's champions (Eto'o arrives from Mallorca). */
+export const BARCELONA_2004: CuratedSeed[] = [
+  q('barcelona', 'valdes_fcb', 'Víctor Valdés', 1982, 'Spain', ['GK'], 82, 86, 2010, 25, t(7, 6, 8, 9, 6, 7)),
+  q('barcelona', 'belletti_fcb', 'Juliano Belletti', 1976, 'Brazil', ['RB'], 80, 81, 2007, 30, t(8, 5, 7, 7, 5, 7)),
+  q('barcelona', 'puyol_fcb', 'Carles Puyol', 1978, 'Spain', ['CB'], 85, 87, 2010, 25, t(10, 5, 9, 10, 4, 7), { loyalty: 96 }),
+  q('barcelona', 'marquez_fcb', 'Rafael Márquez', 1979, 'Mexico', ['CB', 'DM'], 83, 84, 2010, 30, t(8, 6, 8, 7, 5, 7)),
+  q('barcelona', 'vanbronckhorst_fcb', 'Giovanni van Bronckhorst', 1975, 'Netherlands', ['LB'], 80, 81, 2007, 30, t(8, 5, 7, 7, 4, 7)),
+  q('barcelona', 'xavi_fcb', 'Xavi', 1980, 'Spain', ['CM'], 84, 89, 2010, 20, t(10, 5, 9, 10, 3, 8), { loyalty: 95 }),
+  q('barcelona', 'deco_fcb', 'Deco', 1977, 'Portugal', ['CM', 'AM'], 85, 86, 2008, 30, t(8, 6, 8, 7, 5, 7)),
+  q('barcelona', 'edmilson_fcb', 'Edmílson', 1976, 'Brazil', ['DM'], 80, 81, 2007, 40, t(8, 5, 7, 7, 5, 7)),
+  q('barcelona', 'giuly_fcb', 'Ludovic Giuly', 1976, 'France', ['RW'], 81, 82, 2007, 35, t(8, 6, 7, 7, 5, 7)),
+  q('barcelona', 'ronaldinho_fcb', 'Ronaldinho', 1980, 'Brazil', ['LW', 'AM'], 91, 92, 2010, 30, t(6, 8, 8, 7, 6, 8)),
+  q('barcelona', 'larsson_fcb', 'Henrik Larsson', 1971, 'Sweden', ['ST'], 82, 83, 2006, 30, t(9, 6, 8, 8, 4, 8)),
+  q('barcelona', 'iniesta_fcb', 'Andrés Iniesta', 1984, 'Spain', ['CM', 'AM'], 76, 90, 2010, 25, t(10, 4, 9, 10, 3, 8)),
+  q('barcelona', 'messi_fcb', 'Lionel Messi', 1987, 'Argentina', ['RW', 'ST'], 66, 99, 2010, 30, t(9, 6, 10, 9, 4, 8)),
+];
+
+/** AC Milan, 2004–05 — the Champions-League final side (Shevchenko above). */
+export const MILAN_2004_EXTRA: CuratedSeed[] = [
+  q('milan', 'dida_mil', 'Dida', 1973, 'Brazil', ['GK'], 84, 85, 2008, 25, t(8, 5, 7, 8, 5, 7)),
+  q('milan', 'cafu_mil', 'Cafu', 1970, 'Brazil', ['RB'], 83, 84, 2006, 30, t(8, 6, 8, 8, 4, 7)),
+  q('milan', 'nesta_mil', 'Alessandro Nesta', 1976, 'Italy', ['CB'], 88, 89, 2009, 45, t(9, 6, 8, 9, 4, 7)),
+  q('milan', 'maldini_mil', 'Paolo Maldini', 1968, 'Italy', ['CB', 'LB'], 86, 87, 2007, 25, t(10, 6, 9, 10, 3, 7), { loyalty: 98 }),
+  q('milan', 'kaladze_mil', 'Kakha Kaladze', 1978, 'Georgia', ['LB', 'CB'], 80, 81, 2008, 30, t(8, 5, 7, 7, 5, 7)),
+  q('milan', 'pirlo_mil', 'Andrea Pirlo', 1979, 'Italy', ['DM', 'CM'], 85, 88, 2009, 25, t(9, 5, 8, 8, 3, 8)),
+  q('milan', 'gattuso_mil', 'Gennaro Gattuso', 1978, 'Italy', ['CM', 'DM'], 82, 83, 2009, 35, t(9, 6, 9, 9, 6, 6)),
+  q('milan', 'seedorf_mil', 'Clarence Seedorf', 1976, 'Netherlands', ['CM', 'AM'], 84, 85, 2008, 25, t(8, 7, 8, 7, 5, 8)),
+  q('milan', 'kaka_mil', 'Kaká', 1982, 'Brazil', ['AM'], 87, 92, 2009, 25, t(9, 6, 9, 8, 3, 8)),
+  q('milan', 'crespo_mil', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 84, 85, 2006, 40, t(8, 6, 8, 6, 5, 7)),
+];
+
+/** Juventus, 2004–05 — Capello's champions (Vieira arrives in 2005). */
+export const JUVENTUS_2004: CuratedSeed[] = [
+  q('juventus', 'buffon_juv', 'Gianluigi Buffon', 1978, 'Italy', ['GK'], 89, 91, 2009, 25, t(9, 6, 9, 9, 4, 7)),
+  q('juventus', 'thuram_juv', 'Lilian Thuram', 1972, 'France', ['CB', 'RB'], 85, 86, 2006, 25, t(9, 5, 8, 8, 4, 7)),
+  q('juventus', 'cannavaro_juv', 'Fabio Cannavaro', 1973, 'Italy', ['CB'], 86, 88, 2007, 25, t(9, 6, 9, 8, 4, 7)),
+  q('juventus', 'zambrotta_juv', 'Gianluca Zambrotta', 1977, 'Italy', ['LB', 'RB'], 84, 85, 2008, 30, t(8, 6, 8, 7, 5, 7)),
+  q('juventus', 'nedved_juv', 'Pavel Nedvěd', 1972, 'Czech Republic', ['LW', 'AM'], 87, 88, 2007, 30, t(9, 6, 9, 8, 5, 7)),
+  q('juventus', 'emerson_juv', 'Emerson', 1976, 'Brazil', ['CM', 'DM'], 83, 84, 2007, 30, t(8, 6, 8, 7, 5, 7)),
+  q('juventus', 'tacchinardi_juv', 'Alessio Tacchinardi', 1975, 'Italy', ['CM', 'DM'], 79, 80, 2007, 35, t(8, 5, 7, 8, 5, 6)),
+  q('juventus', 'camoranesi_juv', 'Mauro Camoranesi', 1976, 'Italy', ['RW'], 81, 82, 2008, 35, t(7, 6, 8, 7, 6, 7)),
+  q('juventus', 'delpiero_juv', 'Alessandro Del Piero', 1974, 'Italy', ['ST', 'AM'], 85, 86, 2008, 35, t(9, 6, 9, 10, 4, 7), { loyalty: 96 }),
+  q('juventus', 'trezeguet_juv', 'David Trezeguet', 1977, 'France', ['ST'], 85, 86, 2008, 35, t(8, 6, 8, 7, 4, 7)),
+  q('juventus', 'ibrahimovic_juv', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 83, 90, 2009, 25, t(7, 9, 9, 6, 6, 7)),
+];
+
+/** Bayern Munich, 2004–05 — Ballack & Hargreaves curated above. */
+export const BAYERN_2004_EXTRA: CuratedSeed[] = [
+  q('bayern', 'kahn_bay', 'Oliver Kahn', 1969, 'Germany', ['GK'], 86, 87, 2008, 25, t(9, 8, 9, 9, 6, 6)),
+  q('bayern', 'sagnol_bay', 'Willy Sagnol', 1977, 'France', ['RB'], 81, 82, 2008, 30, t(8, 5, 8, 8, 4, 7)),
+  q('bayern', 'lucio_bay', 'Lúcio', 1978, 'Brazil', ['CB'], 84, 85, 2008, 30, t(8, 6, 8, 7, 5, 7)),
+  q('bayern', 'kovac_bay', 'Robert Kovač', 1974, 'Croatia', ['CB'], 80, 81, 2007, 30, t(8, 5, 7, 7, 5, 6)),
+  q('bayern', 'zeroberto_bay', 'Zé Roberto', 1974, 'Brazil', ['LM', 'CM'], 82, 83, 2006, 30, t(8, 6, 8, 7, 5, 8)),
+  q('bayern', 'schweinsteiger_bay', 'Bastian Schweinsteiger', 1984, 'Germany', ['RW', 'CM'], 74, 88, 2010, 30, t(8, 6, 8, 8, 5, 7)),
+  q('bayern', 'makaay_bay', 'Roy Makaay', 1975, 'Netherlands', ['ST'], 84, 85, 2007, 30, t(8, 6, 8, 7, 4, 7)),
+  q('bayern', 'pizarro_bay', 'Claudio Pizarro', 1978, 'Peru', ['ST'], 82, 83, 2007, 30, t(7, 6, 8, 7, 5, 7)),
+  q('bayern', 'demichelis_bay', 'Martín Demichelis', 1980, 'Argentina', ['CB', 'DM'], 79, 82, 2009, 30, t(8, 5, 8, 7, 5, 7)),
+];
+
+/** Tottenham depth — the rest of the 2004–05 side (King, Carrick, Defoe above). */
+export const SPURS_2004_EXTRA: CuratedSeed[] = [
+  q('spurs', 'naybet_spu', 'Noureddine Naybet', 1970, 'Morocco', ['CB'], 80, 81, 2006, 30, t(8, 5, 7, 7, 5, 7)),
+  q('spurs', 'edman_spu', 'Erik Edman', 1978, 'Sweden', ['LB'], 77, 78, 2007, 30, t(8, 4, 7, 7, 4, 7)),
+  q('spurs', 'pamarot_spu', 'Noé Pamarot', 1979, 'France', ['RB', 'CB'], 75, 76, 2008, 30, t(7, 5, 7, 6, 5, 7)),
+  q('spurs', 'davids_spu', 'Edgar Davids', 1973, 'Netherlands', ['CM', 'DM'], 81, 82, 2006, 35, t(8, 7, 9, 6, 7, 7)),
+  q('spurs', 'reid_spu', 'Steed Malbranque', 1980, 'France', ['CM', 'AM'], 78, 80, 2008, 30, t(8, 5, 7, 7, 5, 7)),
+  q('spurs', 'mido_spu', 'Mido', 1983, 'Egypt', ['ST'], 78, 82, 2008, 35, t(5, 8, 7, 5, 7, 6)),
+];
+
+/** Everton depth — the rest of the 2004–05 CL-chasing side (Cahill, Arteta above). */
+export const EVERTON_2004_EXTRA: CuratedSeed[] = [
+  q('everton', 'martyn_eve', 'Nigel Martyn', 1966, 'England', ['GK'], 79, 80, 2006, 30, t(9, 4, 7, 8, 4, 7)),
+  q('everton', 'weir_eve', 'David Weir', 1970, 'Scotland', ['CB'], 79, 80, 2007, 25, t(9, 4, 8, 8, 4, 6)),
+  q('everton', 'yobo_eve', 'Joseph Yobo', 1980, 'Nigeria', ['CB'], 80, 82, 2009, 30, t(8, 5, 7, 7, 5, 7)),
+  q('everton', 'hibbert_eve', 'Tony Hibbert', 1981, 'England', ['RB'], 76, 78, 2008, 30, t(8, 4, 7, 8, 5, 6)),
+  q('everton', 'naysmith_eve', 'Gary Naysmith', 1978, 'Scotland', ['LB'], 76, 77, 2007, 30, t(8, 4, 7, 7, 5, 7)),
+  q('everton', 'carsley_eve', 'Lee Carsley', 1974, 'Ireland', ['DM', 'CM'], 78, 79, 2007, 30, t(9, 4, 8, 8, 5, 6)),
+  q('everton', 'osman_eve', 'Leon Osman', 1981, 'England', ['CM', 'AM'], 77, 80, 2009, 25, t(8, 5, 7, 8, 4, 7)),
+  q('everton', 'kilbane_eve', 'Kevin Kilbane', 1977, 'Ireland', ['LW', 'LB'], 77, 78, 2008, 25, t(8, 4, 8, 8, 4, 7)),
+  q('everton', 'beattie_eve', 'James Beattie', 1978, 'England', ['ST'], 78, 80, 2008, 35, t(7, 6, 7, 6, 5, 7)),
+];
+
 /** Curated squads for the arsenal-2004 scenario, keyed by club. */
 export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   arsenal: ARSENAL_2004,
   chelsea: CHELSEA_2004,
   man_utd: MAN_UTD_2004,
   liverpool: LIVERPOOL_2004,
-  spurs: SPURS_2004,
-  everton: EVERTON_2004,
+  spurs: [...SPURS_2004, ...SPURS_2004_EXTRA],
+  everton: [...EVERTON_2004, ...EVERTON_2004_EXTRA],
+  real_madrid: REAL_MADRID_2004,
+  barcelona: BARCELONA_2004,
+  juventus: JUVENTUS_2004,
   marseille: MARSEILLE_2004,
   psv: PSV_2004,
   mallorca: MALLORCA_2004,
@@ -197,10 +303,10 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   monaco: MONACO_2004,
   atletico: ATLETICO_2004,
   west_ham: WESTHAM_2004,
-  bayern: BAYERN_2004,
+  bayern: [...BAYERN_2004, ...BAYERN_2004_EXTRA],
   porto: PORTO_2004,
   sporting: SPORTING_2004,
-  milan: MILAN_2004,
+  milan: [...MILAN_2004, ...MILAN_2004_EXTRA],
   dortmund: DORTMUND_2004,
   zenit: ZENIT_2004,
   leverkusen: LEVERKUSEN_2004,
