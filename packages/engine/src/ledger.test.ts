@@ -89,6 +89,73 @@ describe('reality-ledger execution (§9f)', () => {
   });
 });
 
+describe('near-miss ledger — "almost happened" deals', () => {
+  it('offers the user the counterfactual signing, and completing it diverges', () => {
+    // Moyes-2013: United really bid twice for Fàbregas and bottled it. The user
+    // is offered the deal reality never closed; taking it brings Cesc to United.
+    let s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'nm-sign' });
+    let signed = false;
+    for (let i = 0; i < 6 && !signed; i++) {
+      for (const d of [...s.pendingDecisions]) {
+        if (d.id.startsWith('near-miss-in:') && d.title.includes('Fàbregas')) {
+          signed = true;
+          s = applyDecision(s, d.id, 'sign').state;
+        } else {
+          s = applyDecision(s, d.id, d.choices[0]!.id).state;
+        }
+      }
+      if (!signed) s = advanceWindow(s).state;
+    }
+    expect(signed).toBe(true);
+    expect(s.players.cur_cesc?.club).toBe('man_utd'); // the deal reality bottled
+  });
+
+  it('passing a near-miss sends the player to his real destination (reality)', () => {
+    // Inter chased Batistuta; Roma really got him in 2000. Pass, and reality holds
+    // — he moves to Roma exactly as he did.
+    let s = createNewGame({ scenarioId: 'inter-1998', seed: 'nm-pass' });
+    let resolved = false;
+    for (let i = 0; i < 10 && !resolved; i++) {
+      for (const d of [...s.pendingDecisions]) {
+        if (d.id.startsWith('near-miss-in:') && d.title.includes('Batistuta')) {
+          resolved = true;
+          s = applyDecision(s, d.id, 'pass').state;
+        } else {
+          s = applyDecision(s, d.id, d.choices[0]!.id).state;
+        }
+      }
+      if (!resolved) s = advanceWindow(s).state;
+    }
+    expect(resolved).toBe(true);
+    expect(s.players.cur_batistuta?.club).toBe('roma'); // reality holds on a pass
+  });
+
+  it('ignoring near-misses preserves reality — the deals collapse as they did', () => {
+    // Answer everything EXCEPT the near-misses; leaving them pending = ignore, and
+    // Fàbregas/Baines stay exactly where they really did.
+    let s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'nm-ignore' });
+    for (let i = 0; i < 6; i++) {
+      for (const d of [...s.pendingDecisions]) {
+        if (!d.id.startsWith('near-miss')) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      }
+      s = advanceWindow(s).state;
+    }
+    expect(s.players.cur_cesc?.club).toBe('barcelona'); // stayed, as in reality
+    expect(s.players.cur_baines?.club).toBe('everton'); // stayed, as in reality
+    // Each near-miss was presented at most once.
+    const processed = s.meta.processedNearMisses ?? [];
+    expect(new Set(processed).size).toBe(processed.length);
+    expect(processed.some((k) => k.startsWith('cur_cesc@'))).toBe(true);
+  });
+
+  it('curates the new fragile-and-lost talents with a latent ceiling', () => {
+    const utd = createNewGame({ scenarioId: 'man-utd-2013', seed: 'lt-jones' });
+    expect(utd.players.cur_jones?.latentCeiling).toBe(89); // Phil Jones
+    const inter = createNewGame({ scenarioId: 'inter-1998', seed: 'lt-ventola' });
+    expect(inter.players.cur_ventola?.latentCeiling).toBe(87); // Nicola Ventola
+  });
+});
+
 describe('more start points (§4 data)', () => {
   it('the galáctico Madrid start places Figo/Zidane/Makélélé and can keep Makélélé', () => {
     let s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'gal' });

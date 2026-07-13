@@ -22,7 +22,8 @@ import { clubSquadPlayers } from './players.js';
 import { appendMemory } from './memory.js';
 import { areDirectRivals } from './agency.js';
 import { applyPrematureMove } from './development.js';
-import { ERA_REALITY, eraForScenario, entryKey, type RealTransferLedgerEntry, type FallbackTier, type InvalidationCause } from './ledger.js';
+import { ERA_REALITY, eraForScenario, entryKey, nearMissKey, type RealTransferLedgerEntry, type NearMissEntry, type FallbackTier, type InvalidationCause } from './ledger.js';
+import type { Consequence } from './types.js';
 
 function positionGroupOf(p: PlayerState): string {
   const pos = p.positions[0] ?? 'CM';
@@ -227,6 +228,121 @@ function offerUserLedgerMove(state: GameState, entry: RealTransferLedgerEntry, k
     ],
     falloutIfIgnored: [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.to, amount: entry.fee, tag: realizedTag }],
     memoryTags: ['real-move', entry.playerId],
+  });
+}
+
+/**
+ * Process the "almost happened" ledger for the current window (once per window).
+ * Each near-miss resolves exactly once:
+ *   - the user's club nearly SIGNED him → offer the counterfactual signing;
+ *   - the user's club nearly SOLD him → offer the sale a rival came back for;
+ *   - the user isn't involved → reality holds automatically (he goes to `realTo`
+ *     if the deal really moved him, else stays put).
+ * Doing nothing reproduces history, so a passive career is byte-for-byte reality.
+ */
+export function executeNearMisses(state: GameState): void {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack?.nearMisses?.length) return;
+  const now = state.clock.date;
+  const processed = (state.meta.processedNearMisses ??= []);
+
+  for (const entry of pack.nearMisses) {
+    const key = nearMissKey(entry);
+    if (processed.includes(key)) continue;
+    if (entry.window > now) continue; // not due yet (YYYY-MM compares lexically)
+    processed.push(key);
+
+    const player = state.players[entry.playerId];
+    // An earlier butterfly already moved him, or he's gone — the near-miss lapses.
+    if (!player || player.club !== entry.from) continue;
+
+    if (entry.almostTo === state.playerClub) {
+      offerNearMissIn(state, entry, player);
+    } else if (entry.from === state.playerClub) {
+      offerNearMissOut(state, entry, player);
+    } else {
+      // Not the user's business: reality holds. If the deal really moved him on
+      // to a third club, complete that move; otherwise he simply stays.
+      resolveNearMissAsReality(state, entry, player);
+    }
+  }
+}
+
+/** Reality holds for a near-miss the user isn't part of: he ends up where he
+ *  really did (`realTo`), or stays if the deal collapsed entirely. */
+function resolveNearMissAsReality(state: GameState, entry: NearMissEntry, player: PlayerState): void {
+  if (!entry.realTo || entry.realTo === entry.from || !state.clubs[entry.realTo]) return;
+  const dest = state.clubs[entry.realTo]!;
+  dest.finances.transferBudget = Math.max(dest.finances.transferBudget, entry.realFee ?? entry.fee);
+  const res = executeTransfer(state, { playerId: entry.playerId, toClub: entry.realTo, fee: entry.realFee ?? entry.fee });
+  if (res.ok) {
+    logEvent(state, {
+      category: 'transfer',
+      code: 'nearmiss.reality',
+      message: `Reality holds: ${player.name} → ${dest.name} (the club that really landed him)`,
+      data: { playerId: entry.playerId, from: entry.from, to: entry.realTo },
+    });
+  }
+}
+
+/** The consequences of NOT taking a near-miss: he goes to his real destination
+ *  (if any) or stays put — either way, reality. Used for both the explicit "pass"
+ *  choice and the ignore-fallout, so doing nothing = history. */
+function nearMissRealityFallout(state: GameState, entry: NearMissEntry, player: PlayerState): Consequence[] {
+  if (entry.realTo && entry.realTo !== entry.from && state.clubs[entry.realTo]) {
+    return [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.realTo, amount: entry.realFee ?? entry.fee }];
+  }
+  const where = state.clubs[entry.from ?? '']?.name ?? 'his club';
+  return [{ kind: 'memory', tag: 'reality', text: `${player.name} stayed at ${where}, as in reality.` }];
+}
+
+/** The user's club nearly signed him — offer the deal reality bottled. */
+function offerNearMissIn(state: GameState, entry: NearMissEntry, player: PlayerState): void {
+  const feeM = (entry.fee / 1_000_000).toFixed(1);
+  // Fund his REAL destination up front, so the reality fallout (pass / ignore)
+  // can complete that move — the buyer paid it in reality (Roma for Batistuta).
+  if (entry.realTo && entry.realTo !== entry.from) {
+    const realDestClub = state.clubs[entry.realTo];
+    if (realDestClub) realDestClub.finances.transferBudget = Math.max(realDestClub.finances.transferBudget, entry.realFee ?? entry.fee);
+  }
+  const fromName = entry.from ? state.clubs[entry.from]?.name ?? entry.from : 'a free transfer';
+  const realDest = entry.realTo && entry.realTo !== entry.from ? state.clubs[entry.realTo]?.name ?? entry.realTo : null;
+  const passLabel = realDest ? `Pass — he joins ${realDest}, as in reality` : `Pass — he stays at ${fromName}, as in reality`;
+  state.pendingDecisions.push({
+    id: `near-miss-in:${nearMissKey(entry)}`,
+    title: `The one that got away: ${player.name} (${fromName}, £${feeM}m)`,
+    description: `${entry.note} You can complete the deal reality never did — or let history stand.`,
+    interrupt: false,
+    clubId: state.playerClub,
+    category: 'transfer',
+    choices: [
+      { id: 'sign', label: `Complete the signing (£${feeM}m)`, onSuccess: [{ kind: 'signReal', playerId: entry.playerId, amount: entry.fee }] },
+      { id: 'pass', label: passLabel, onSuccess: nearMissRealityFallout(state, entry, player) },
+    ],
+    falloutIfIgnored: nearMissRealityFallout(state, entry, player),
+    memoryTags: ['near-miss', entry.playerId],
+  });
+}
+
+/** The user owns him and a club that nearly bought him comes back. Default =
+ *  keep (reality: the near-miss failed and he stayed). */
+function offerNearMissOut(state: GameState, entry: NearMissEntry, player: PlayerState): void {
+  const feeM = (entry.fee / 1_000_000).toFixed(1);
+  const buyer = state.clubs[entry.almostTo];
+  if (buyer) buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, entry.fee);
+  state.pendingDecisions.push({
+    id: `near-miss-out:${nearMissKey(entry)}`,
+    title: `${buyer?.name ?? entry.almostTo} come back for ${player.name} (£${feeM}m)`,
+    description: `${entry.note} Sanction the sale reality didn't complete — or keep him, as you really did.`,
+    interrupt: false,
+    clubId: state.playerClub,
+    category: 'transfer',
+    choices: [
+      { id: 'sell', label: `Sanction the £${feeM}m sale to ${buyer?.name ?? entry.almostTo}`, onSuccess: [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.almostTo, amount: entry.fee }] },
+      { id: 'keep', label: `Keep ${player.name} (reality — he stayed)`, onSuccess: [{ kind: 'memory', tag: 'reality', text: `Kept ${player.name}, as in reality.` }] },
+    ],
+    falloutIfIgnored: [{ kind: 'memory', tag: 'reality', text: `Kept ${player.name}, as in reality.` }],
+    memoryTags: ['near-miss', entry.playerId],
   });
 }
 

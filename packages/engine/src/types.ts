@@ -429,6 +429,10 @@ export interface GameStateMeta {
    *  squad-match metric — a retired legend isn't "misplaced from his real club",
    *  he ended his career (as he did in reality). Optional for old-save loads. */
   retiredLedgerSubjects?: string[];
+  /** "Almost happened" ledger entries already processed (offered as a decision,
+   *  or resolved to reality when the user isn't involved), so each near-miss is
+   *  presented at most once. Optional for old-save loads. */
+  processedNearMisses?: string[];
 }
 
 export interface GameClock {

@@ -64,7 +64,11 @@ export const MAN_UTD_2013: CuratedSeed[] = [
   q('man_utd', 'ferdinand2', 'Rio Ferdinand', 1978, 'England', ['CB'], 81, 82, 2014, 45, t(8, 6, 8, 8, 4, 6)),
   q('man_utd', 'evans', 'Jonny Evans', 1988, 'Northern Ireland', ['CB'], 79, 83, 2016, 35, t(8, 4, 7, 8, 4, 7)),
   q('man_utd', 'smalling', 'Chris Smalling', 1989, 'England', ['CB', 'RB'], 78, 85, 2016, 35, t(7, 5, 7, 7, 4, 7)),
-  q('man_utd', 'jones', 'Phil Jones', 1992, 'England', ['CB', 'DM'], 77, 86, 2017, 55, t(7, 5, 8, 8, 6, 6)),
+  // Phil Jones — Ferguson called him a potential all-time United great; injuries
+  // and inconsistency wasted it. A fragile-AND-lost talent (latent 89): keep his
+  // body right (injury management) and give him minutes, and the defender he was
+  // billed as can still emerge — but the odds fight you.
+  q('man_utd', 'jones', 'Phil Jones', 1992, 'England', ['CB', 'DM'], 77, 86, 2017, 55, t(7, 5, 8, 8, 6, 6), { latentCeiling: 89 }),
   q('man_utd', 'carrick', 'Michael Carrick', 1981, 'England', ['CM', 'DM'], 84, 85, 2015, 25, t(9, 4, 7, 9, 3, 7)),
   q('man_utd', 'cleverley', 'Tom Cleverley', 1989, 'England', ['CM'], 74, 80, 2015, 30, t(7, 5, 7, 7, 4, 7)),
   // Anderson — a £27m talent wasted by fitness/complacency. A user who instils

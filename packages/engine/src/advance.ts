@@ -24,7 +24,7 @@ import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from 
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
-import { executeLedgerWindow } from './ledgerExec.js';
+import { executeLedgerWindow, executeNearMisses } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
 import { decayPursuit } from './wooing.js';
 import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
@@ -103,6 +103,9 @@ function runWindowStep(state: GameState, rng: Rng, step: number): void {
   // step's slice of it (or the whole window, on a final-step sweep).
   executeLedgerWindow(state, rng, step);
   if (step >= WINDOW_STEPS) {
+    // "Almost happened" deals resolve once per window (marquee, not sliced): the
+    // user is offered the counterfactual, or reality holds if he isn't involved.
+    executeNearMisses(state);
     // M8: the rival-AI reactive response layer, at the deadline.
     runRivalWindow(state, rng);
     decayPursuit(state); // courtship fades if you stop working a target

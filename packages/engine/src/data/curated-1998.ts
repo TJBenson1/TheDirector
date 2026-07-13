@@ -41,7 +41,11 @@ export const INTER_1998: CuratedSeed[] = [
   // Ronaldo — the phenomenon, and a knee that reality wrecked. High proneness +
   // his real 1999 injury (era pack) make injury management THE call of this save.
   q('inter', 'r9', 'Ronaldo', 1976, 'Brazil', ['ST'], 93, 95, 2002, 72, t(7, 7, 9, 6, 5, 8), { latentCeiling: 96 }),
-  q('inter', 'ventola', 'Nicola Ventola', 1978, 'Italy', ['ST'], 74, 83, 2003, 45, t(6, 6, 8, 7, 6, 7)),
+  // Nicola Ventola — a quick, gifted Inter striker of real promise whose career
+  // was broken up by one knee injury after another. A fragile-AND-lost talent
+  // (latent 87): manage the body and give him the run reality never did, and he
+  // becomes the forward Inter hoped for rather than a what-might-have-been.
+  q('inter', 'ventola', 'Nicola Ventola', 1978, 'Italy', ['ST'], 74, 83, 2003, 45, t(6, 6, 8, 7, 6, 7), { latentCeiling: 87 }),
   q('inter', 'moriero', 'Francesco Moriero', 1969, 'Italy', ['RW', 'LW'], 77, 79, 2001, 30, t(7, 5, 7, 7, 5, 7)),
   q('inter', 'silvestrin', 'Gianluca Silvestrin', 1976, 'Italy', ['CB'], 70, 78, 2002, 30, t(7, 4, 7, 7, 4, 6)),
 ];

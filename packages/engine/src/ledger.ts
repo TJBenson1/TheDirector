@@ -129,6 +129,43 @@ export interface RealInjuryEntry {
   note?: string;
 }
 
+/**
+ * A transfer that ALMOST happened — a real, well-documented deal that collapsed
+ * or was passed up in reality (Moyes's United bidding twice for Cesc and bottling
+ * it; Inter chasing Batistuta for years before Roma got him). Unlike the reality
+ * ledger (which HOLDS reality by default), a near-miss is a COUNTERFACTUAL the
+ * user can seize:
+ *   - If `almostTo` is the user's club, he is offered the signing reality didn't
+ *     complete — take it (divergence) or let it collapse as it really did.
+ *   - If `from` is the user's club, a club that nearly bought his player comes
+ *     back — sanction the sale (divergence) or keep him (reality).
+ *   - When the user is not involved, reality holds automatically (see `realTo`).
+ * Doing nothing always reproduces history — that is the whole point.
+ */
+export interface NearMissEntry {
+  /** Curated player who must still be at `from` for the near-miss to be live. */
+  playerId: PlayerId;
+  from: ClubId | null;
+  /** The club that ALMOST signed him (the counterfactual buyer). */
+  almostTo: ClubId;
+  /** Where he ACTUALLY ended up if the deal collapsed. Omit/null = he stayed at
+   *  `from` (Cesc, Baines). Set it (Batistuta → Roma) and reality moves him there
+   *  when the user passes or isn't involved. */
+  realTo?: ClubId | null;
+  window: YearMonth;
+  /** The fee the `almostTo` club would have paid (the counterfactual deal). */
+  fee: number;
+  /** The fee of the real move, if `realTo` is set (defaults to `fee`). */
+  realFee?: number;
+  /** One-line narrative of what really happened (shown in the decision). */
+  note: string;
+}
+
+/** The key a near-miss is tracked by (one presentation per player per window). */
+export function nearMissKey(e: NearMissEntry): string {
+  return `${e.playerId}@${e.window}~>${e.almostTo}`;
+}
+
 /** Per-era reality data. */
 export interface EraRealityPack {
   realTransferLedger: RealTransferLedgerEntry[];
@@ -138,6 +175,8 @@ export interface EraRealityPack {
   retirements?: RealRetirement[];
   /** Real youth graduates who break through during the era (real players only). */
   academyGraduates?: AcademyGraduate[];
+  /** "Almost happened" deals the user can seize (see `NearMissEntry`). */
+  nearMisses?: NearMissEntry[];
 }
 
 /**
@@ -219,6 +258,34 @@ const LEDGER_2013_2016: RealTransferLedgerEntry[] = [
   { playerId: 'cur_dimaria', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000 },
   { playerId: 'cur_lukeshaw', from: 'southampton', to: 'man_utd', window: '2014-06', fee: 30_000_000 },
   { playerId: 'cur_lallana', from: 'southampton', to: 'liverpool', window: '2014-07', fee: 25_000_000 },
+];
+
+/**
+ * The Moyes summer of near-misses (2013). United, defending champions, spent the
+ * window chasing and bottling: two bids for Fàbregas rejected by Barça, a low
+ * offer for Baines snubbed by Everton, dithering over Thiago and Bale (both in
+ * the reality ledger, going to Bayern/Madrid). Playing that United, you get the
+ * deals Moyes couldn't close — take them, or repeat the summer that set the tone
+ * for the whole reign. Fàbregas and Baines both stayed put in reality (realTo
+ * omitted); pass, and they stay exactly as they did.
+ */
+const NEARMISS_2013: NearMissEntry[] = [
+  {
+    playerId: 'cur_cesc',
+    from: 'barcelona',
+    almostTo: 'man_utd',
+    window: '2013-08',
+    fee: 30_000_000,
+    note: 'United bid twice for Fàbregas; Barcelona rejected both and he stayed.',
+  },
+  {
+    playerId: 'cur_baines',
+    from: 'everton',
+    almostTo: 'man_utd',
+    window: '2013-08',
+    fee: 15_000_000,
+    note: 'United’s offers for Baines were snubbed by Everton; he stayed on Merseyside.',
+  },
 ];
 
 /** Real 2013–14 injuries — fire only if the player is at his real club. */
@@ -448,6 +515,25 @@ const LEDGER_1998: RealTransferLedgerEntry[] = [
   { playerId: 'cur_cannavaro', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000 },
 ];
 
+/**
+ * "Almost happened" deals of the era. Inter chased Batistuta for years — the
+ * Fenomeno-plus-Batigol front line that never was — before Roma finally landed
+ * him in 2000. Playing Inter, you get the call reality bottled: pair him with
+ * Ronaldo, or let him go to Roma as he really did.
+ */
+const NEARMISS_1998: NearMissEntry[] = [
+  {
+    playerId: 'cur_batistuta',
+    from: 'fiorentina',
+    almostTo: 'inter',
+    realTo: 'roma',
+    window: '2000-07',
+    fee: 32_000_000,
+    realFee: 23_000_000,
+    note: 'Inter courted Batistuta for years; Roma won the race in 2000.',
+  },
+];
+
 const ACADEMY_1998: AcademyGraduate[] = [
   // Adriano — O Imperador. Arrived at Inter with the physique and shot of a
   // generational striker; personal tragedy and lifestyle unravelled him. The
@@ -471,9 +557,9 @@ const RETIREMENTS_1998: RealRetirement[] = [
 
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
-  'era-1998': { realTransferLedger: LEDGER_1998, academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998, academyGraduates: ACADEMY_1998 },
+  'era-1998': { realTransferLedger: LEDGER_1998, academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998, academyGraduates: ACADEMY_1998, nearMisses: NEARMISS_1998 },
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999 },
-  'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013 },
+  'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013, nearMisses: NEARMISS_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004 },
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2001, academyGraduates: ACADEMY_2001 },
 };
