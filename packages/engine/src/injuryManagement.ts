@@ -17,10 +17,18 @@
  * are handled by the base injury model.
  */
 
-import type { Decision, GameState } from './types.js';
-import { Rng } from './rng.js';
+import type { Decision, GameState, PlayerState } from './types.js';
+import { Rng, clamp01 } from './rng.js';
 import { isRunInMonth } from './clock.js';
 import { clubSquadPlayers } from './players.js';
+
+/** How readily a player accepts being rested. A humble pro takes the doctor's
+ *  advice; a big-ego, driven star resents the bench and pushes to play — so
+ *  load-management is not always his call to accept (he occasionally resists). */
+function restAcceptance(p: PlayerState): number {
+  const { ego, ambition, professionalism } = p.personality;
+  return clamp01(0.9 - ego * 0.045 - ambition * 0.02 + professionalism * 0.02);
+}
 
 /** A serious injury this close to return triggers the comeback decision. */
 const RETURN_WINDOW_MONTHS = 2;
@@ -85,7 +93,10 @@ export function rollInjuryManagement(state: GameState, rng: Rng): void {
             // Deterministic: he returns on schedule and the careful rehab lowers
             // his long-run fragility a notch.
             onSuccess: [
-              { kind: 'injuryProneness', playerId: p.id, amount: -8 },
+              // A properly-managed comeback more than offsets the fragility a
+              // serious injury leaves behind — so a well-handled body trends
+              // DURABLE over a career, not into a spiral of recurrences.
+              { kind: 'injuryProneness', playerId: p.id, amount: -12 },
               { kind: 'memory', tag: 'injury', text: `Handled ${p.name}'s comeback patiently.` },
             ],
           },
@@ -105,32 +116,39 @@ export function rollInjuryManagement(state: GameState, rng: Rng): void {
     // strategic call, not a monthly nag. Non-interrupt (it doesn't pause the sim).
     if (
       !p.injury &&
+      !p.restMonths &&
       p.injuryProneness >= FRAGILE_PRONENESS &&
       p.ability >= FRAGILE_ABILITY &&
-      p.injuryHistory >= 1 &&
-      isRunInMonth(state.clock.monthIndex) &&
+      isRunInMonth(state.clock.monthIndex) && // the congested winter run
       !hasPendingFor(state, p.id, 'load') &&
-      r.chance(0.05)
+      r.chance(0.22)
     ) {
+      const accept = restAcceptance(p);
       const decision: Decision = {
         id: `load:${p.id}`,
         title: `Manage ${p.name}'s workload?`,
-        description: `${p.name} is a proven injury risk. Wrap him in cotton wool through the busy period — rotate and rest him — and you ease the strain on his body over time, at the cost of some minutes now. Or ride him hard while he's fit.`,
+        description: `${p.name} is a proven injury risk. Rest him through the busy period — he'll miss games and you'll be weaker for it now — but you ease the strain on his body and he plays more football across the season. Or ride him hard while he's fit, and take the chance.`,
         interrupt: false,
         clubId: state.playerClub,
         category: 'injury',
         choices: [
           {
             id: 'rest',
-            label: `Load-manage ${p.name} (fewer minutes, fitter body)`,
+            // He may RESIST — a proud star hates the bench and talks his way back in.
+            label: `Rest ${p.name} through the run (he sits out ~2 months)`,
+            successProbability: accept,
             onSuccess: [
-              { kind: 'injuryProneness', playerId: p.id, amount: -6 },
-              { kind: 'memory', tag: 'injury', text: `Load-managing ${p.name} to keep him fit.` },
+              { kind: 'restPlayer', playerId: p.id, months: 2, amount: -10 },
+              { kind: 'memory', tag: 'injury', text: `Load-managing ${p.name} to protect his body.` },
+            ],
+            onFailure: [
+              { kind: 'agitation', playerId: p.id, amount: 12, text: `bristled at being rested — he wants to play` },
+              { kind: 'log', text: `${p.name} insists he is fit and refuses to sit out — he plays on.` },
             ],
           },
           {
             id: 'ride',
-            label: `Play ${p.name} every game`,
+            label: `Play ${p.name} every game (leave his fitness to chance)`,
             onSuccess: [{ kind: 'memory', tag: 'injury', text: `Riding ${p.name} hard.` }],
           },
         ],

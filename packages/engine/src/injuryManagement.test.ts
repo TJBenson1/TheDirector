@@ -41,4 +41,52 @@ describe('injury management (fragile-star return + load calls)', () => {
     for (let seed = 0; seed < 20; seed++) recurrences += playInter(`rush-${seed}`, 'rush').recurrences;
     expect(recurrences).toBeGreaterThan(0); // the Ronaldo-2000 catastrophe can recur
   });
+
+  it('load-managing has a cost (games missed) and can be resisted', () => {
+    // Across seeds, resting Ronaldo through the run should sometimes stick (he sits
+    // out — games missed) and sometimes be refused (a proud star wants to play).
+    let rested = 0;
+    let resisted = 0;
+    for (let seed = 0; seed < 24; seed++) {
+      let s = createNewGame({ scenarioId: 'inter-1998', seed: `load-${seed}` });
+      for (let i = 0; i < 24 && Number(s.clock.date.slice(0, 4)) < 2005; i++) {
+        for (const d of [...s.pendingDecisions]) {
+          if (d.id === 'load:cur_r9') {
+            const ag = s.players.cur_r9?.agitation ?? 0;
+            s = applyDecision(s, d.id, 'rest').state;
+            if ((s.players.cur_r9?.agitation ?? 0) > ag) resisted++;
+          }
+        }
+        s = advanceWindow(s).state;
+        if (s.board.dismissed) break;
+      }
+      rested += s.eventLog.filter((e) => e.code === 'load.return' && e.data?.playerId === 'cur_r9').length;
+    }
+    expect(rested).toBeGreaterThan(0); // he genuinely sits out — the team feels it
+    expect(resisted).toBeGreaterThan(0); // and he doesn't always accept the bench
+  });
+
+  it('bad management (rushing) costs far more games than careful management', () => {
+    // Over full careers, rushing Ronaldo back racks up recurrences → far more time
+    // out than managing him. This is the Ronaldo counterfactual made mechanical.
+    const monthsOut = (policy: 'rush' | 'manage') => {
+      let total = 0;
+      for (let seed = 0; seed < 12; seed++) {
+        let s = createNewGame({ scenarioId: 'inter-1998', seed: `cmp-${seed}` });
+        for (let i = 0; i < 26 && Number(s.clock.date.slice(0, 4)) < 2010; i++) {
+          for (const d of [...s.pendingDecisions]) {
+            if (d.id === 'return:cur_r9') s = applyDecision(s, d.id, policy === 'rush' ? 'rush' : 'manage').state;
+            else if (d.id === 'load:cur_r9' && policy === 'manage') s = applyDecision(s, d.id, 'rest').state;
+          }
+          s = advanceWindow(s).state;
+          if (s.board.dismissed) break;
+        }
+        total += s.eventLog
+          .filter((e) => e.data?.playerId === 'cur_r9' && ['injury.serious', 'injury.real.serious', 'injury.recurrence'].includes(e.code))
+          .reduce((a, e) => a + (Number(e.data?.months) || 7), 0);
+      }
+      return total;
+    };
+    expect(monthsOut('rush')).toBeGreaterThan(monthsOut('manage') * 1.5);
+  });
 });

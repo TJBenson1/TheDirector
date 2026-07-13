@@ -198,6 +198,9 @@ export interface PlayerState {
   injury: InjuryState | null;
   /** Count of serious injuries suffered (raises proneness + recurrence risk). */
   injuryHistory: number;
+  /** Months of voluntary load-management rest remaining. Unavailable while >0 (he
+   *  misses games — the cost of managing a fragile star), but no injury risk. */
+  restMonths?: number;
 
   // ── M5 development (§5) ───────────────────────────────────────
   /** A high-ceiling young talent at generation (potentialCeiling ≥ 85, age ≤ 21). */
@@ -341,6 +344,7 @@ export interface Consequence {
     | 'injuryHeal' // clear a player's injury now (rush him back); `amount` = return fitness
     | 'injuryProneness' // adjust a player's injury-proneness (careful rehab / load management)
     | 'reinjure' // a rushed return backfires: a fresh serious injury (`months`)
+    | 'restPlayer' // load-manage: rest him `months` (he misses games) + `amount` proneness shift
     | 'managerRelationship'
     | 'agitation' // raise a player's unrest
     | 'transferOut' // sell a player to `clubId` for `amount`

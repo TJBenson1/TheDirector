@@ -56,6 +56,30 @@ function rollSeverity(rng: Rng): { kind: InjuryKind; months: number } {
 }
 
 /**
+ * Narrative CAUSE of a serious injury. A genuinely fragile player's injuries read
+ * as OVERLOAD — the manager could have protected him (rest, load management), so
+ * they're on you. A robust player's are bad luck — a heavy tackle or a freak
+ * incident, not a management failure. This is what lets the game distinguish "you
+ * rode him into the ground" from "nothing you could do".
+ */
+const CAUSE_PHRASE: Record<string, string> = {
+  overload: 'breaks down under his workload',
+  muscle: 'pulls up with a muscle injury',
+  tackle: 'is hurt by a heavy challenge',
+  freak: 'suffers a freak injury',
+};
+function injuryCause(player: PlayerState, rng: Rng): { cause: string; phrase: string } {
+  const fragile = player.injuryProneness >= 55;
+  const r = rng.next();
+  if (fragile) {
+    const cause = r < 0.5 ? 'overload' : r < 0.75 ? 'muscle' : 'tackle';
+    return { cause, phrase: CAUSE_PHRASE[cause]! };
+  }
+  const cause = r < 0.5 ? 'tackle' : r < 0.8 ? 'freak' : 'muscle';
+  return { cause, phrase: CAUSE_PHRASE[cause]! };
+}
+
+/**
  * Fire real historical injuries scheduled for this exact month — but only if the
  * player is still at the club he was at in reality (so injuries "match up", per
  * feedback). If the user has already moved him, the real injury lapses: it was a
@@ -106,6 +130,25 @@ export function processInjuriesMonth(state: GameState, rng: Rng): void {
     let changed = false;
 
     for (const player of clubSquadPlayers(state, club.id)) {
+      // Load-managed rest: he sits out (unavailable → weaker side) but picks up no
+      // injury this month, and returns fresh.
+      if (player.restMonths && player.restMonths > 0) {
+        player.restMonths -= 1;
+        player.seasonMonthsInjured += 1; // games missed this season (drives valuation §1)
+        if (player.restMonths <= 0) {
+          player.restMonths = 0;
+          player.fitness = Math.max(player.fitness, 90);
+          logEvent(state, {
+            category: 'injury',
+            code: 'load.return',
+            message: `${player.name} (${club.name}) returns from a managed rest, fresh`,
+            data: { playerId: player.id, clubId: club.id },
+          });
+          changed = true;
+        }
+        continue;
+      }
+
       if (player.injury) {
         player.seasonMonthsInjured += 1; // time lost this season (drives valuation §1)
         // Recover.
@@ -136,11 +179,14 @@ export function processInjuriesMonth(state: GameState, rng: Rng): void {
         player.injury = { kind, monthsRemaining: months, since: state.clock.date };
         if (kind === 'serious') {
           player.injuryHistory += 1;
+          // Fork for the cause flavour so we don't perturb the injury stream
+          // (determinism + calibration preserved).
+          const { cause, phrase } = injuryCause(player, injRng.fork(`cause:${player.id}`));
           logEvent(state, {
             category: 'injury',
             code: 'injury.serious',
-            message: `${player.name} (${club.name}) suffers a serious injury — out ~${months} months`,
-            data: { playerId: player.id, clubId: club.id, months },
+            message: `${player.name} (${club.name}) ${phrase} — out ~${months} months`,
+            data: { playerId: player.id, clubId: club.id, months, cause },
           });
         }
         changed = true;

@@ -305,9 +305,11 @@ export function clubSquadPlayers(state: GameState, clubId: ClubId): PlayerState[
   return club.squad.map((id) => state.players[id]).filter((p): p is PlayerState => !!p);
 }
 
-/** A player is available if not currently injured (§9c). */
+/** A player is available if not injured AND not being load-managed (§9c). A
+ *  rested star is unavailable — the team feels his absence, the cost of managing
+ *  him — even though he isn't hurt. */
 export function isAvailable(player: PlayerState): boolean {
-  return player.injury === null;
+  return player.injury === null && !(player.restMonths && player.restMonths > 0);
 }
 
 /** Selectable (fit) squad players — what the season sim can actually field. */

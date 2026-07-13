@@ -114,6 +114,17 @@ export function applyConsequence(state: GameState, c: Consequence): void {
       if (p) p.injuryProneness = clamp(p.injuryProneness + (c.amount ?? 0), 5, 95);
       break;
     }
+    case 'restPlayer': {
+      // Load management: he sits out `months` (unavailable → team weaker now) and
+      // his long-run fragility eases (`amount`, usually negative) — the trade.
+      const p = c.playerId ? state.players[c.playerId] : undefined;
+      if (p) {
+        p.restMonths = Math.max(p.restMonths ?? 0, c.months ?? 2);
+        p.injuryProneness = clamp(p.injuryProneness + (c.amount ?? 0), 5, 95);
+        if (p.club) recomputeClubStrength(state, p.club);
+      }
+      break;
+    }
     case 'reinjure': {
       // A rushed return breaks down — the catastrophic recurrence (Ronaldo 2000).
       const p = c.playerId ? state.players[c.playerId] : undefined;
