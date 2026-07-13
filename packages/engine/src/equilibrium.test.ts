@@ -17,6 +17,7 @@ import { createNewGame } from './state.js';
 import { advanceWindow } from './advance.js';
 import { applyDecision } from './events.js';
 import { executeTransfer } from './transfers.js';
+import { ledgerSquadMatch } from './ledgerExec.js';
 import { attemptSigning, courtPlayer, evaluateApproach } from './index.js';
 import type { GameState } from './types.js';
 
@@ -169,5 +170,119 @@ describe('butterflies follow the grain of what almost happened (§ butterfly sho
     }
     expect(s.players['cur_etoo']?.club).toBe('man_utd'); // the hijack landed
     expect(s.players['cur_beckham_u']?.club).toBe('barcelona'); // the near-miss became real
+  });
+});
+
+describe('a butterfly stays contained — the world holds its course (§9a)', () => {
+  // An aggressive user hijacks one or more of a rival's real targets to Arsenal,
+  // then leaves the world to play out. We measure how far the ripple spreads.
+  function hijackRun(pids: string[]): GameState {
+    let s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'contain' });
+    s.clubs['arsenal']!.finances.transferBudget = 400_000_000;
+    for (const pid of pids) {
+      const p = s.players[pid];
+      if (p) executeTransfer(s, { playerId: pid, toClub: 'arsenal', fee: 30_000_000 });
+    }
+    let guard = 0;
+    while (Number(s.clock.date.slice(0, 4)) < 2010 && guard++ < 40) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
+      s = advanceWindow(s).state;
+    }
+    return s;
+  }
+  const matchPct = (s: GameState) => {
+    const m = ledgerSquadMatch(s);
+    return m.atRealClub / m.total;
+  };
+  const touchedClubs = (s: GameState) =>
+    Object.values(s.clubs).filter((c) => Math.abs(c.starButterfly) > 0.01).map((c) => c.id);
+
+  it('a passive world is disturbed nowhere — reality holds absolutely', () => {
+    const s = hijackRun([]);
+    expect(matchPct(s)).toBe(1);
+    expect(touchedClubs(s)).toEqual([]);
+  });
+
+  it('a single deviation ripples only through the clubs in its causal chain', () => {
+    const s = hijackRun(['cur_drogba']);
+    // The overwhelming majority of tracked players still reach their real clubs.
+    expect(matchPct(s)).toBeGreaterThanOrEqual(0.9);
+    // Only clubs actually in the chain are disturbed — the club denied Drogba, his
+    // old club, and wherever the replacement came from. A handful, not the world.
+    expect(touchedClubs(s).length).toBeLessThanOrEqual(4);
+    // An unrelated club's real business is completely untouched.
+    expect(s.players['cur_vidic']?.club).toBe('man_utd');
+  });
+
+  it('the ripple scales PROPORTIONALLY with aggression — it never explodes', () => {
+    const single = hijackRun(['cur_drogba']);
+    const triple = hijackRun(['cur_drogba', 'cur_essien', 'cur_ballack']);
+    // Three times the aggression is not exponentially more chaos: the world still
+    // mostly holds, and the touched-club set grows roughly linearly, not without
+    // bound.
+    expect(matchPct(triple)).toBeGreaterThanOrEqual(0.85);
+    expect(touchedClubs(triple).length).toBeLessThanOrEqual(touchedClubs(single).length + 4);
+    // Knock-on signings stay a handful — no runaway chain of misses.
+    const knockOns = triple.eventLog.filter(
+      (e) => e.code === 'ledger.fallback' || e.code === 'ledger.nearmiss',
+    ).length;
+    expect(knockOns).toBeLessThanOrEqual(6);
+    // And still no unrelated club dragged in.
+    expect(triple.players['cur_vidic']?.club).toBe('man_utd');
+  });
+});
+
+describe('a near-miss consumes cleanly — no double-processing (§ butterfly showcase)', () => {
+  it('the hijacked man ends at exactly one club and his ledger entry is consumed once', () => {
+    // United hijack Eto'o; Barça turn to their near-miss, Beckham. However Beckham
+    // reaches Barça, the STATE must stay coherent: he is at one club only, his old
+    // clubs no longer list him, and his real ledger move is recorded once — never a
+    // loop or a phantom double-move at the bookkeeping level.
+    let s = createNewGame({ scenarioId: 'manchester-united-2003', seed: 'consume' });
+    for (let i = 0; i < 10 && Number(s.clock.date.slice(0, 4)) < 2005; i++) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      if (s.clock.window) {
+        s.clubs['man_utd']!.finances.transferBudget = 900_000_000;
+        const p = s.players['cur_etoo'];
+        if (p && p.club !== 'man_utd' && p.club !== 'barcelona') {
+          courtPlayer(s, 'cur_etoo'); courtPlayer(s, 'cur_etoo'); courtPlayer(s, 'cur_etoo');
+          if (evaluateApproach(s, { playerId: 'cur_etoo', toClub: 'man_utd' }).willing) {
+            attemptSigning(s, { playerId: 'cur_etoo', toClub: 'man_utd', fee: 45_000_000 });
+          }
+        }
+      }
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
+      s = advanceWindow(s).state;
+    }
+
+    const beckhamClub = s.players['cur_beckham_u']?.club;
+    expect(beckhamClub).toBe('barcelona');
+    // He is in exactly ONE squad — no club still holds a phantom copy of him.
+    const holders = Object.values(s.clubs).filter((c) => c.squad.includes('cur_beckham_u')).map((c) => c.id);
+    expect(holders).toEqual(['barcelona']);
+    // His real ledger entry is recorded once — the consumption never double-fires.
+    expect(s.meta.executedLedger.filter((k) => k === 'beckham-real-2003').length).toBe(1);
+  });
+});
+
+describe('multi-era passive CL fidelity — every era reproduces its real winners (§ butterfly showcase)', () => {
+  it('era-2000 (real-madrid-2000): a passive world reproduces the real European Cup winners', () => {
+    const s = runPassive('real-madrid-2000', 'cl2000', 2007);
+    expect(clWinner(s, 2000)).toBe('bayern');
+    expect(clWinner(s, 2001)).toBe('real_madrid');
+    expect(clWinner(s, 2002)).toBe('milan');
+    expect(clWinner(s, 2004)).toBe('liverpool'); // the real Istanbul-eve upset holds
+    expect(clWinner(s, 2005)).toBe('barcelona');
+  });
+
+  it('era-serie-a-1995 (juventus-1995): the calcio golden age reproduces its real winners', () => {
+    const s = runPassive('juventus-1995', 'cl1995', 2004);
+    expect(clWinner(s, 1995)).toBe('juventus');
+    expect(clWinner(s, 1996)).toBe('dortmund');
+    expect(clWinner(s, 1997)).toBe('real_madrid');
+    expect(clWinner(s, 2000)).toBe('bayern');
+    expect(clWinner(s, 2001)).toBe('real_madrid');
+    expect(clWinner(s, 2002)).toBe('milan');
   });
 });
