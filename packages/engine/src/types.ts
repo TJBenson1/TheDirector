@@ -184,6 +184,14 @@ export interface PlayerState {
   personality: Personality;
   injuryProneness: number; // 1–100 baseline, history-modified (M4)
 
+  /** PLAYER TYPE (docs/DESIGN-player-attributes.md). An optional archetype tag
+   *  ('poacher', 'ball-playing-cb', 'destroyer'…) from which his hidden attribute
+   *  vector is DERIVED (see attributes.ts `attributesOf`); absent ⇒ a sensible
+   *  default by position. The vector never feeds `ability` in Phase 1, so it is
+   *  calibration-inert — it only shapes style-fit, player-type development and
+   *  scouting. Curated seeds may set it; procedural filler uses the default. */
+  archetype?: string;
+
   /** True for hand-authored real players; false for procedural filler. */
   curated: boolean;
 

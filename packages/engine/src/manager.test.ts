@@ -15,7 +15,7 @@ import {
   applyDirectiveEffects,
   managerStrengthMod,
   managerDevMod,
-  managerPositionDevMod,
+  managerAttributeDevMod,
   managerStyleStrengthMod,
   styleMatchAffinity,
   coachStyle,
@@ -249,17 +249,20 @@ describe('the coach\'s on-pitch effect (anchored to par)', () => {
 });
 
 describe('style shapes which player TYPES develop + coach occupancy', () => {
-  it('a possession coach develops midfielders faster, a pragmatist defenders (vs par)', () => {
+  it('a possession coach develops ball-players faster, a pragmatist athletes (vs par)', () => {
     const s = createNewGame({ scenarioId: 'man-utd-1999' }); // par: Ferguson (possession 0.5)
+    // A technical player (playmaker) and a physical one (a stopper CB).
+    const playmaker = { ability: 78, positions: ['AM'] as const, archetype: 'playmaker' } as any;
+    const stopper = { ability: 78, positions: ['CB'] as const, archetype: 'stopper' } as any;
     const pep = { ...s.managerRelations, style: coachStyle('Pep Guardiola') };
-    expect(managerPositionDevMod(pep, 'MID')).toBeGreaterThan(1); // his midfielders bloom
-    expect(managerPositionDevMod(pep, 'DEF')).toBeLessThan(1); // defenders less so
+    expect(managerAttributeDevMod(pep, playmaker)).toBeGreaterThan(1); // his ball-player blooms
+    expect(managerAttributeDevMod(pep, stopper)).toBeLessThan(1); // his stopper less so
     const prag = { ...s.managerRelations, style: coachStyle('Sam Allardyce') };
-    expect(managerPositionDevMod(prag, 'DEF')).toBeGreaterThan(1); // he forges defenders
-    expect(managerPositionDevMod(prag, 'MID')).toBeLessThan(1);
-    // Keeping the inherited coach is neutral for every position.
-    expect(managerPositionDevMod(s.managerRelations, 'MID')).toBe(1);
-    expect(managerPositionDevMod(s.managerRelations, 'DEF')).toBe(1);
+    expect(managerAttributeDevMod(prag, stopper)).toBeGreaterThan(1); // he forges the defender
+    expect(managerAttributeDevMod(prag, playmaker)).toBeLessThan(1);
+    // Keeping the inherited coach is neutral for every player.
+    expect(managerAttributeDevMod(s.managerRelations, playmaker)).toBe(1);
+    expect(managerAttributeDevMod(s.managerRelations, stopper)).toBe(1);
   });
 
   it('a coach under contract elsewhere (Pep at Bayern, 2013) needs harder wooing', () => {
@@ -340,19 +343,21 @@ describe('management style reflects reality (Mourinho is Mourinho, Pep is Pep)',
     expect(createNewGame({ scenarioId: 'arsenal-2004' }).managerRelations.style.possession).toBeGreaterThan(0.7);
   });
 
-  it('a style is judged by how it FITS the squad you have built', () => {
+  it('a style is judged by the PLAYER TYPES in the squad, not their positions', () => {
     const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'fit' });
-    // Build a midfield-heavy side: crank MID, drop DEF/ATT.
+    // Build a TECHNICAL squad (ball-players everywhere, whatever the position).
     for (const p of clubSquadPlayers(s, s.playerClub)) {
-      const pos = p.positions[0] ?? 'CM';
-      if (['DM', 'CM', 'AM'].includes(pos)) p.ability = 90;
-      else if (pos !== 'GK') p.ability = 68;
+      if ((p.positions[0] ?? 'CM') !== 'GK') p.archetype = 'playmaker';
     }
     const possession = coachStyle('Pep Guardiola');
     const pragmatic = coachStyle('Sam Allardyce');
-    // A possession coach gets more out of a midfield-dominant squad than a
-    // route-one pragmatist does.
+    // A possession coach gets more out of a technical squad than a route-one one.
     expect(styleMatchAffinity(s, possession)).toBeGreaterThan(styleMatchAffinity(s, pragmatic));
+    // Now re-type them as physical destroyers — the fit flips to the pragmatist.
+    for (const p of clubSquadPlayers(s, s.playerClub)) {
+      if ((p.positions[0] ?? 'CM') !== 'GK') p.archetype = 'stopper';
+    }
+    expect(styleMatchAffinity(s, pragmatic)).toBeGreaterThan(styleMatchAffinity(s, possession));
   });
 
   it('keeping the inherited coach\'s style is neutral, even as the squad drifts', () => {
@@ -365,12 +370,11 @@ describe('management style reflects reality (Mourinho is Mourinho, Pep is Pep)',
 
   it('appointing a style that suits your squad adds strength; a mismatch subtracts', () => {
     const base = createNewGame({ scenarioId: 'liverpool-2001', seed: 'stylefit' });
-    // A midfield-dominant squad.
+    // A technically-gifted squad (ball-players throughout).
     for (const p of clubSquadPlayers(base, base.playerClub)) {
-      const pos = p.positions[0] ?? 'CM';
-      p.ability = ['DM', 'CM', 'AM'].includes(pos) ? 90 : pos === 'GK' ? 75 : 66;
+      if ((p.positions[0] ?? 'CM') !== 'GK') p.archetype = 'playmaker';
     }
-    // Court + appoint Pep (possession) — fits — vs Allardyce (direct) — misfit.
+    // Appoint Pep (possession) — fits — vs Allardyce (direct) — misfit.
     const withPep = cloneStyle(base, 'Pep Guardiola');
     const withBig = cloneStyle(base, 'Sam Allardyce');
     expect(managerStyleStrengthMod(withPep)).toBeGreaterThan(managerStyleStrengthMod(withBig));

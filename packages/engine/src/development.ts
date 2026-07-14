@@ -23,7 +23,7 @@ import { logEvent } from './eventLog.js';
 import { clubSquadPlayers, recomputeClubStrength, buildResistance } from './players.js';
 import { suggestWage } from './finance.js';
 import { ERA_REALITY, eraForScenario } from './ledger.js';
-import { managerDevMod, managerPositionDevMod } from './manager.js';
+import { managerDevMod, managerAttributeDevMod } from './manager.js';
 
 const DEV_AGE_MAX = 23; // growth window (§5 age curve)
 const REACHED_MARGIN = 2; // ability within this of ceiling ⇒ "reached potential"
@@ -185,7 +185,7 @@ function developYoungster(
     // his STYLE favours the player types it suits (a possession coach his
     // midfielders, a pragmatist his defenders).
     const coachMod = club.id === state.playerClub
-      ? managerDevMod(state.managerRelations) * managerPositionDevMod(state.managerRelations, groupOf(player))
+      ? managerDevMod(state.managerRelations) * managerAttributeDevMod(state.managerRelations, player)
       : 1;
     let delta = Math.max(1, Math.round(gap * drive * ageTaper * coachMod));
     // Rare friction for the unprofessional, never a hard wall.
@@ -199,7 +199,7 @@ function developYoungster(
 
   // ── PROCEDURAL = the user's speculative gamble (anti-hindsight) ─────────────
   const coachQuality = club.id === state.playerClub
-    ? managerDevMod(state.managerRelations) * managerPositionDevMod(state.managerRelations, groupOf(player))
+    ? managerDevMod(state.managerRelations) * managerAttributeDevMod(state.managerRelations, player)
     : 1;
   const coaching = (0.6 + 0.4 * (club.prestige / 100)) * coachQuality; // facilities + head coach (§5)
   const prof = 0.7 + 0.3 * (player.personality.professionalism / 10);

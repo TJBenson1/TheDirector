@@ -1,6 +1,7 @@
-# DESIGN — Richer player attributes (SCOPE)
+# DESIGN — Richer player attributes
 
-> **Status: scoped, not built.** A foundational change to the player model:
+> **Status: Phase 1 SHIPPED (2026-07); Phases 2–3 queued.** A foundational change
+> to the player model:
 > replace the single hidden `ability` scalar's role as the *only* descriptor of a
 > player with a small **attribute vector** (technical / physical / mental), so
 > style-fit, player-type development, scouting and valuation can key off *what
@@ -136,11 +137,15 @@ it. Deterministic (same RNG), so save/replay is unaffected.
 
 ## 6. Phasing
 
-- **Phase 1 — model + invariant (one focused build).** Add the vector + archetype
-  shapes + generator with the roll-up-equals-ability invariant; fill every player
-  (curated default-by-position + procedural). Rewire style-fit and player-type dev
-  off attributes (keeping par-anchoring). Surface attributes in scouting. **Ship
-  with calibration byte-identical** (invariant guarantees it) — verify 14/14.
+- ✅ **Phase 1 — model + invariant (SHIPPED).** `attributes.ts`: the 8-attribute
+  vector, archetype shapes + position weights, `fillVector`/`deriveAbility` with
+  the roll-up invariant, and `attributesOf(player)` deriving the vector on demand
+  from `ability` + `archetype` (default by position) — no storage, no RNG, so the
+  sim never reads it. Rewired `styleMatchAffinity` and (new) `managerAttributeDevMod`
+  off real attributes instead of the position stand-in, keeping par-anchoring.
+  Scouting now returns fogged per-attribute ranges. **Calibration byte-identical,
+  14/14; 234 tests.** (A high-ability standout attribute can hit the 99 cap, so the
+  roll-up is exact only pre-clamp — fine while `ability` stays authoritative.)
 - **Phase 2 — fidelity (incremental data).** Archetype tags on the notable
   curated players per era; hand-tuned overrides for the marquee handful. Pure data,
   calibration-safe (roll-up preserved), no engine change.

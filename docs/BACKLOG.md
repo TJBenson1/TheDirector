@@ -217,13 +217,14 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
 - **Still to do (deferred by design):**
   - **Manager tenure narrative:** trophies/relationships accruing to a coach's
     reputation; a sacked big name resurfacing at a rival.
-  - **Richer player attributes** (SCOPED — see `docs/DESIGN-player-attributes.md`):
-    a technical/physical/mental attribute vector, with `ability` kept as its
-    position-weighted roll-up so the change is calibration-safe by construction.
-    Rewires style-fit and player-type development off real attributes instead of
-    the position stand-in, and gives scouting an attribute profile. Phase 1 (model
-    + invariant + rewire) is a bounded focused build; Phase 2 is incremental era
-    data; Phase 3 (make attributes authoritative) is optional.
+  - ✅ **Richer player attributes — Phase 1 shipped** (`attributes.ts`; see
+    `docs/DESIGN-player-attributes.md`): an 8-attribute vector derived on demand
+    from `ability` + archetype, so it's calibration-inert (14/14 byte-identical).
+    Style-fit and player-type development now read real attributes, not position;
+    scouting returns per-attribute ranges. **Still to do: Phase 2** — archetype
+    tags on the notable curated players per era (e.g. Beckham a crosser not a
+    pace-winger, Cannavaro defending≫physical), pure data. **Phase 3** (optional) —
+    make the vector authoritative and derive `ability` from it.
 
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the

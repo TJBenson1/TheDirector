@@ -1,0 +1,125 @@
+/**
+ * Player attributes (docs/DESIGN-player-attributes.md — Phase 1).
+ *
+ * A player's TYPE, not just his overall level. Eight hidden attributes across
+ * three groups (technical / physical / mental) describe WHAT KIND of player he
+ * is; `ability` remains the single number the match sim uses.
+ *
+ * Phase-1 invariant (what keeps this calibration-safe): the vector is DERIVED on
+ * demand from `ability` + `archetype` + position — it is never stored, never fed
+ * back into `ability`, and the simulation never reads it. So adding attributes
+ * changes no match, and calibration holds by construction. Only the style-fit,
+ * player-type development and scouting layers read the vector. An `archetype`
+ * shape is normalised against the position's roll-up weights so a player's
+ * derived attributes roll BACK UP to (approximately) his `ability`.
+ */
+
+import type { Position } from './types.js';
+
+export type AttributeKey =
+  | 'finishing' | 'passing' | 'technique' | 'defending' // technical
+  | 'pace' | 'physical' // physical
+  | 'vision' | 'workrate'; // mental
+
+export type Attributes = Record<AttributeKey, number>;
+
+export const ATTRIBUTE_KEYS: AttributeKey[] = [
+  'finishing', 'passing', 'technique', 'defending', 'pace', 'physical', 'vision', 'workrate',
+];
+
+/** How much each attribute contributes to `ability` for a given position (each
+ *  row sums to 1). A striker's ability is mostly finishing/pace; a centre-half's
+ *  is mostly defending/physical. Used both to roll a vector up to an ability and
+ *  to normalise an archetype so its derived vector rolls back up to it. */
+const POS_WEIGHTS: Record<Position, Attributes> = {
+  GK: { finishing: 0.125, passing: 0.125, technique: 0.125, defending: 0.125, pace: 0.125, physical: 0.125, vision: 0.125, workrate: 0.125 },
+  CB: { finishing: 0.02, passing: 0.10, technique: 0.04, defending: 0.34, pace: 0.12, physical: 0.24, vision: 0.06, workrate: 0.08 },
+  LB: { finishing: 0.04, passing: 0.12, technique: 0.10, defending: 0.22, pace: 0.18, physical: 0.12, vision: 0.06, workrate: 0.16 },
+  RB: { finishing: 0.04, passing: 0.12, technique: 0.10, defending: 0.22, pace: 0.18, physical: 0.12, vision: 0.06, workrate: 0.16 },
+  DM: { finishing: 0.02, passing: 0.14, technique: 0.06, defending: 0.24, pace: 0.10, physical: 0.16, vision: 0.08, workrate: 0.20 },
+  CM: { finishing: 0.06, passing: 0.18, technique: 0.14, defending: 0.12, pace: 0.08, physical: 0.12, vision: 0.14, workrate: 0.16 },
+  AM: { finishing: 0.12, passing: 0.20, technique: 0.20, defending: 0.04, pace: 0.10, physical: 0.04, vision: 0.22, workrate: 0.08 },
+  LW: { finishing: 0.16, passing: 0.10, technique: 0.20, defending: 0.06, pace: 0.22, physical: 0.06, vision: 0.10, workrate: 0.10 },
+  RW: { finishing: 0.16, passing: 0.10, technique: 0.20, defending: 0.06, pace: 0.22, physical: 0.06, vision: 0.10, workrate: 0.10 },
+  ST: { finishing: 0.28, passing: 0.06, technique: 0.14, defending: 0.04, pace: 0.18, physical: 0.14, vision: 0.10, workrate: 0.06 },
+};
+
+/** Archetype = relative emphasis per attribute (1.0 = neutral). The generator
+ *  spreads a player's ability across the vector in these proportions. */
+const ARCHETYPES: Record<string, Attributes> = {
+  // Strikers
+  poacher: { finishing: 1.5, passing: 0.7, technique: 1.0, defending: 0.4, pace: 1.15, physical: 0.9, vision: 0.85, workrate: 0.75 },
+  'target-man': { finishing: 1.25, passing: 0.85, technique: 0.9, defending: 0.5, pace: 0.75, physical: 1.5, vision: 0.9, workrate: 0.9 },
+  'complete-forward': { finishing: 1.3, passing: 0.95, technique: 1.15, defending: 0.5, pace: 1.15, physical: 1.1, vision: 1.0, workrate: 0.9 },
+  // Wingers
+  'winger-pace': { finishing: 1.0, passing: 1.0, technique: 1.25, defending: 0.6, pace: 1.5, physical: 0.8, vision: 1.0, workrate: 1.0 },
+  // Attacking mids
+  playmaker: { finishing: 0.95, passing: 1.4, technique: 1.3, defending: 0.6, pace: 0.85, physical: 0.75, vision: 1.4, workrate: 0.9 },
+  // Central mids
+  'box-to-box': { finishing: 0.9, passing: 1.05, technique: 1.0, defending: 1.05, pace: 1.05, physical: 1.2, vision: 1.0, workrate: 1.35 },
+  'deep-playmaker': { finishing: 0.7, passing: 1.4, technique: 1.2, defending: 1.05, pace: 0.8, physical: 0.9, vision: 1.3, workrate: 1.0 },
+  destroyer: { finishing: 0.5, passing: 0.9, technique: 0.8, defending: 1.4, pace: 0.9, physical: 1.3, vision: 0.85, workrate: 1.35 },
+  // Defenders
+  'ball-playing-cb': { finishing: 0.5, passing: 1.2, technique: 1.05, defending: 1.35, pace: 0.95, physical: 1.15, vision: 1.0, workrate: 0.95 },
+  stopper: { finishing: 0.5, passing: 0.75, technique: 0.7, defending: 1.5, pace: 0.9, physical: 1.4, vision: 0.8, workrate: 1.0 },
+  'full-back-attacking': { finishing: 0.75, passing: 1.1, technique: 1.05, defending: 1.1, pace: 1.3, physical: 1.0, vision: 0.95, workrate: 1.3 },
+  'full-back-defensive': { finishing: 0.6, passing: 0.95, technique: 0.9, defending: 1.3, pace: 1.1, physical: 1.2, vision: 0.85, workrate: 1.2 },
+  keeper: { finishing: 1, passing: 1, technique: 1, defending: 1, pace: 1, physical: 1, vision: 1, workrate: 1 },
+};
+
+/** The archetype a player defaults to from his primary position when none is set. */
+export function defaultArchetypeFor(position: Position): string {
+  switch (position) {
+    case 'GK': return 'keeper';
+    case 'CB': return 'stopper';
+    case 'LB': case 'RB': return 'full-back-defensive';
+    case 'DM': return 'destroyer';
+    case 'CM': return 'box-to-box';
+    case 'AM': return 'playmaker';
+    case 'LW': case 'RW': return 'winger-pace';
+    case 'ST': return 'complete-forward';
+  }
+}
+
+function clampAttr(v: number): number {
+  return Math.max(1, Math.min(99, Math.round(v)));
+}
+
+/** Spread an `ability` across the eight attributes per an archetype, normalised
+ *  against the position weights so the vector rolls back up to (≈) `ability`. */
+export function fillVector(ability: number, archetype: string, position: Position): Attributes {
+  const shape = ARCHETYPES[archetype] ?? ARCHETYPES[defaultArchetypeFor(position)]!;
+  const w = POS_WEIGHTS[position];
+  let norm = 0;
+  for (const k of ATTRIBUTE_KEYS) norm += w[k] * shape[k];
+  const out = {} as Attributes;
+  for (const k of ATTRIBUTE_KEYS) out[k] = clampAttr((ability * shape[k]) / norm);
+  return out;
+}
+
+/** Roll a vector back up to an overall ability for the given position (Phase 3
+ *  will make this authoritative; Phase 1 uses it only to check the invariant). */
+export function deriveAbility(attrs: Attributes, position: Position): number {
+  const w = POS_WEIGHTS[position];
+  let sum = 0;
+  for (const k of ATTRIBUTE_KEYS) sum += w[k] * attrs[k];
+  return Math.round(sum);
+}
+
+/** The (derived) attribute vector of a player — his TYPE at his current level. */
+export function attributesOf(player: { ability: number; positions: Position[]; archetype?: string }): Attributes {
+  const pos = player.positions[0] ?? 'CM';
+  return fillVector(player.ability, player.archetype ?? defaultArchetypeFor(pos), pos);
+}
+
+/** Ball-playing index: how much a player is about keeping and using the ball —
+ *  what a POSSESSION coach prizes. */
+export function possessionScore(a: Attributes): number {
+  return (a.passing + a.technique + a.vision) / 3;
+}
+
+/** Athletic/defensive index: solidity and a counter threat — what a PRAGMATIC
+ *  coach prizes. */
+export function pragmaticScore(a: Attributes): number {
+  return (a.defending + a.physical + a.pace) / 3;
+}

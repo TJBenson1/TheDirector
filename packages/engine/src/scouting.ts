@@ -16,6 +16,7 @@
 import type { ClubId, GameState, PlayerState } from './types.js';
 import { Rng } from './rng.js';
 import { isProcedural } from './ledger.js';
+import { attributesOf, ATTRIBUTE_KEYS, type AttributeKey } from './attributes.js';
 
 export type ScoutConfidence = 'low' | 'medium' | 'high';
 
@@ -30,6 +31,9 @@ export interface ScoutReport {
   ability: Range;
   potential: Range;
   confidence: ScoutConfidence;
+  /** Fogged per-attribute ranges — the player's TYPE, not just his level
+   *  ("quick, elite finisher, poor defender"). Same fog as ability. */
+  attributes: Record<AttributeKey, Range>;
   /** Partial personality signal (§7): volatility can stay hidden. */
   personalityHints: { professionalism: string; ambition: string };
 }
@@ -89,12 +93,17 @@ export function scoutPlayer(
 
   const confidence: ScoutConfidence = halfWidth <= 4 ? 'high' : halfWidth <= 8 ? 'medium' : 'low';
 
+  const attrs = attributesOf(player);
+  const attributes = {} as Record<AttributeKey, Range>;
+  for (const k of ATTRIBUTE_KEYS) attributes[k] = mkRange(attrs[k]);
+
   return {
     playerId,
     name: player.name,
     ability: mkRange(player.ability),
     potential: mkRange(player.potentialCeiling),
     confidence,
+    attributes,
     personalityHints: {
       professionalism: bandLabel(player.personality.professionalism),
       ambition: bandLabel(player.personality.ambition),

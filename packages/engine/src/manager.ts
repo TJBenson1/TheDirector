@@ -22,13 +22,14 @@
  * results, so this is calibration-neutral on the passive path.
  */
 
-import type { Decision, GameState, ManagerState, ManagerStyle, PlayerId, Position } from './types.js';
+import type { Decision, GameState, ManagerState, ManagerStyle, PlayerId, PlayerState } from './types.js';
 import { Rng, hashStringToU32, clamp01 } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { appendMemory } from './memory.js';
 import { standingsOrder } from './season.js';
 import { estimateMinutesShare } from './development.js';
 import { recomputeClubStrength, clubSquadPlayers } from './players.js';
+import { attributesOf, possessionScore, pragmaticScore } from './attributes.js';
 
 // ── Real coaching styles — Mourinho is Mourinho, Pep is Pep ───────────────────
 const st = (label: string, possession: number, youth: number): ManagerStyle => ({ label, possession, youth });
@@ -177,58 +178,45 @@ export function managerDevMod(mgr: ManagerState): number {
   return repTerm * youthTerm;
 }
 
-/** How much a style favours developing a given POSITION GROUP. Position stands in
- *  for player type until richer attributes exist: a POSSESSION coach brings on
- *  ball-players (midfield, and to a degree attackers) faster; a PRAGMATIC coach
- *  forges defenders and holding midfielders. Centred on 0.5 possession. */
-function styleDevBias(style: ManagerStyle, group: 'GK' | 'DEF' | 'MID' | 'ATT'): number {
-  const lean = style.possession - 0.5; // + = possession, − = pragmatic
-  if (group === 'MID') return lean * 0.3;
-  if (group === 'ATT') return lean * 0.18;
-  if (group === 'DEF') return -lean * 0.3;
-  return 0; // GK neutral
+/** A player's TYPE tilt: how much he is a ball-player vs an athlete/defender,
+ *  from his real attributes (positive = technical, negative = physical). */
+function playerTypeTilt(player: PlayerState): number {
+  const a = attributesOf(player);
+  return possessionScore(a) - pragmaticScore(a);
 }
 
-/** Position-specific youth-development multiplier (×1 at par): a possession coach
- *  develops your midfielders faster and your defenders slower than the coach you
- *  had, and a pragmatist the reverse. 0-delta when the style is unchanged, so the
- *  passive path (and calibration) is untouched. */
-export function managerPositionDevMod(mgr: ManagerState, group: 'GK' | 'DEF' | 'MID' | 'ATT'): number {
+/** How a style favours developing a given player, from his ATTRIBUTE profile: a
+ *  POSSESSION coach brings on ball-players (high passing/technique/vision) faster
+ *  and athletes slower; a PRAGMATIST the reverse. 0-delta when the style is
+ *  unchanged, so the passive path (and calibration) is untouched. Replaces the
+ *  old position stand-in. */
+export function managerAttributeDevMod(mgr: ManagerState, player: PlayerState): number {
   if (mgr.style.possession === mgr.parStyle.possession) return 1;
-  const delta = styleDevBias(mgr.style, group) - styleDevBias(mgr.parStyle, group);
-  return Math.max(0.82, Math.min(1.18, 1 + delta));
-}
-
-const POS_GROUP: Record<Position, 'GK' | 'DEF' | 'MID' | 'ATT'> = {
-  GK: 'GK', CB: 'DEF', LB: 'DEF', RB: 'DEF', DM: 'MID', CM: 'MID', AM: 'MID', LW: 'ATT', RW: 'ATT', ST: 'ATT',
-};
-
-/** Position-group average ability for the user's outfield squad. */
-function squadGroupAverages(state: GameState): { def: number; mid: number; att: number; overall: number } {
-  const players = clubSquadPlayers(state, state.playerClub).filter((p) => (p.positions[0] ?? 'CM') !== 'GK');
-  if (players.length === 0) return { def: 70, mid: 70, att: 70, overall: 70 };
-  const buckets: Record<'DEF' | 'MID' | 'ATT', number[]> = { DEF: [], MID: [], ATT: [] };
-  for (const p of players) {
-    const g = POS_GROUP[p.positions[0] ?? 'CM'];
-    if (g !== 'GK') buckets[g].push(p.ability);
-  }
-  const avg = (a: number[]): number => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 70);
-  const overall = players.reduce((s, p) => s + p.ability, 0) / players.length;
-  return { def: avg(buckets.DEF), mid: avg(buckets.MID), att: avg(buckets.ATT), overall };
+  const tilt = playerTypeTilt(player);
+  const bias = (style: ManagerStyle) => (style.possession - 0.5) * tilt;
+  return Math.max(0.82, Math.min(1.18, 1 + (bias(mgr.style) - bias(mgr.parStyle)) * 0.016));
 }
 
 /**
- * How well a style fits the user's current squad. A POSSESSION coach wants a
- * squad whose strength is in MIDFIELD (control the ball); a PRAGMATIC coach wants
- * defensive solidity and a threat to counter with. Returns a signed edge — the
- * ability by which the style-relevant units out- (or under-) perform the squad
- * as a whole.
+ * How well a style fits the user's squad — from its real attributes now, not a
+ * position stand-in. A POSSESSION coach prizes ball-players (passing/technique/
+ * vision); a PRAGMATIST prizes solidity + a counter (defending/physical/pace).
+ * So a technically-gifted squad rewards a possession coach and a route-one one
+ * a pragmatist — whatever positions those qualities sit in.
  */
 export function styleMatchAffinity(state: GameState, style: ManagerStyle): number {
-  const { def, mid, att, overall } = squadGroupAverages(state);
-  const midEdge = mid - overall; // possession lives on midfield control
-  const defAttEdge = (def + att) / 2 - overall; // pragmatism lives on defence + a counter threat
-  return style.possession * midEdge + (1 - style.possession) * defAttEdge;
+  const players = clubSquadPlayers(state, state.playerClub).filter((p) => (p.positions[0] ?? 'CM') !== 'GK');
+  if (players.length === 0) return 0;
+  let poss = 0;
+  let prag = 0;
+  for (const p of players) {
+    const a = attributesOf(p);
+    poss += possessionScore(a);
+    prag += pragmaticScore(a);
+  }
+  poss /= players.length;
+  prag /= players.length;
+  return style.possession * poss + (1 - style.possession) * prag;
 }
 
 /** Strength points from how much better the coach's STYLE fits the squad than

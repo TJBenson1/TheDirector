@@ -107,6 +107,17 @@ export {
   type MedicalGrade,
 } from './scouting.js';
 export {
+  attributesOf,
+  fillVector,
+  deriveAbility,
+  defaultArchetypeFor,
+  possessionScore,
+  pragmaticScore,
+  ATTRIBUTE_KEYS,
+  type Attributes,
+  type AttributeKey,
+} from './attributes.js';
+export {
   executeTransfer,
   attemptSigning,
   affordableTargets,
@@ -179,7 +190,7 @@ export {
   applyDirectiveEffects,
   managerStrengthMod,
   managerDevMod,
-  managerPositionDevMod,
+  managerAttributeDevMod,
   managerStyleStrengthMod,
   styleMatchAffinity,
   coachStyle,
