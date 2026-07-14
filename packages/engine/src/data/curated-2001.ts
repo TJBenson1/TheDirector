@@ -132,19 +132,117 @@ export const CHELSEA_TARGETS_2003: CuratedSeed[] = [
   q('southampton', 'bridge03', 'Wayne Bridge', 1980, 'England', ['LB'], 79, 82, 2007, 35, t(7, 5, 7, 6, 4, 7)),
 ];
 
+/**
+ * The other two playable giants of the era, as full sides so the pack is a
+ * complete 2001–02 board (§4, §14). Real Madrid's Galácticos (Figo + Zidane just
+ * in) and Cúper's beaten-to-the-post Inter. Makélélé/Crespo keep their ledger ids
+ * so Chelsea's 2003 splurge still resolves. Foreign to eng-2001 — zero kickoff
+ * calibration risk (anchored strength).
+ */
+export const REAL_MADRID_2001: CuratedSeed[] = [
+  q('real_madrid', 'casillas01', 'Iker Casillas', 1981, 'Spain', ['GK'], 84, 91, 2007, 15, t(9, 6, 9, 10, 3, 7), { loyalty: 92 }),
+  q('real_madrid', 'cesar01', 'César Sánchez', 1971, 'Spain', ['GK'], 78, 79, 2004, 20, t(8, 4, 6, 7, 4, 6)),
+  q('real_madrid', 'salgado01', 'Míchel Salgado', 1975, 'Spain', ['RB'], 82, 83, 2006, 30, t(8, 5, 8, 8, 5, 7)),
+  q('real_madrid', 'hierro01', 'Fernando Hierro', 1968, 'Spain', ['CB', 'DM'], 85, 85, 2003, 25, t(9, 6, 8, 9, 4, 6), { loyalty: 90 }),
+  q('real_madrid', 'helguera01', 'Iván Helguera', 1975, 'Spain', ['CB', 'DM'], 83, 84, 2006, 25, t(8, 5, 8, 8, 5, 7)),
+  q('real_madrid', 'karanka01', 'Aitor Karanka', 1973, 'Spain', ['CB'], 78, 79, 2004, 25, t(8, 4, 7, 8, 4, 6)),
+  q('real_madrid', 'robertocarlos01', 'Roberto Carlos', 1973, 'Brazil', ['LB', 'LW'], 87, 88, 2006, 25, t(8, 6, 8, 8, 4, 8)),
+  q('real_madrid', 'zidane01', 'Zinedine Zidane', 1972, 'France', ['AM', 'CM'], 93, 94, 2006, 25, t(9, 7, 9, 8, 3, 8)),
+  q('real_madrid', 'figo01', 'Luís Figo', 1972, 'Portugal', ['RW', 'AM'], 90, 91, 2006, 30, t(8, 7, 9, 6, 4, 8)),
+  q('real_madrid', 'makelele03', 'Claude Makélélé', 1973, 'France', ['DM'], 85, 86, 2007, 25, t(9, 4, 8, 7, 3, 7)),
+  q('real_madrid', 'guti01', 'Guti', 1976, 'Spain', ['AM', 'CM'], 81, 84, 2006, 25, t(6, 7, 7, 8, 6, 7)),
+  q('real_madrid', 'mcmanaman01', 'Steve McManaman', 1972, 'England', ['RW', 'AM'], 81, 82, 2003, 25, t(7, 6, 7, 6, 4, 8)),
+  q('real_madrid', 'solari01', 'Santiago Solari', 1976, 'Argentina', ['LW', 'AM'], 80, 82, 2006, 30, t(8, 5, 7, 7, 4, 7)),
+  q('real_madrid', 'raul01', 'Raúl', 1977, 'Spain', ['ST', 'AM'], 89, 90, 2007, 25, t(9, 6, 9, 10, 4, 7), { loyalty: 93 }),
+  q('real_madrid', 'morientes01', 'Fernando Morientes', 1976, 'Spain', ['ST'], 84, 85, 2006, 30, t(8, 6, 8, 7, 4, 7)),
+  q('real_madrid', 'conceicao01', 'Flávio Conceição', 1974, 'Brazil', ['DM', 'CM'], 79, 80, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+];
+export const INTER_2001: CuratedSeed[] = [
+  q('inter', 'toldo01', 'Francesco Toldo', 1971, 'Italy', ['GK'], 84, 85, 2006, 25, t(8, 5, 7, 8, 4, 6)),
+  q('inter', 'jzanetti01', 'Javier Zanetti', 1973, 'Argentina', ['RB', 'CM'], 86, 87, 2007, 15, t(10, 5, 9, 10, 3, 8), { loyalty: 95 }),
+  q('inter', 'cordoba01', 'Iván Córdoba', 1976, 'Colombia', ['CB'], 82, 83, 2007, 25, t(8, 5, 8, 8, 4, 7)),
+  q('inter', 'materazzi01', 'Marco Materazzi', 1973, 'Italy', ['CB'], 80, 82, 2006, 30, t(6, 7, 8, 7, 8, 6)),
+  q('inter', 'coco01', 'Francesco Coco', 1977, 'Italy', ['LB'], 78, 81, 2005, 40, t(5, 7, 6, 5, 7, 6)),
+  q('inter', 'dibiagio01', 'Luigi Di Biagio', 1971, 'Italy', ['DM', 'CM'], 79, 80, 2004, 30, t(8, 5, 8, 7, 5, 7)),
+  q('inter', 'czanetti01', 'Cristiano Zanetti', 1977, 'Italy', ['DM', 'CM'], 78, 80, 2006, 30, t(8, 4, 7, 7, 4, 7)),
+  q('inter', 'sconceicao01', 'Sérgio Conceição', 1974, 'Portugal', ['RW'], 80, 81, 2005, 30, t(7, 6, 8, 6, 5, 7)),
+  q('inter', 'seedorf01', 'Clarence Seedorf', 1976, 'Netherlands', ['CM', 'AM'], 85, 86, 2005, 25, t(8, 7, 8, 6, 5, 8)),
+  q('inter', 'recoba01', 'Álvaro Recoba', 1976, 'Uruguay', ['AM', 'LW'], 83, 85, 2007, 30, t(5, 8, 7, 6, 7, 7)),
+  q('inter', 'vieri01', 'Christian Vieri', 1973, 'Italy', ['ST'], 88, 89, 2006, 45, t(6, 8, 8, 6, 6, 6)),
+  q('inter', 'crespo03', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 85, 86, 2007, 40, t(7, 6, 8, 5, 5, 7)),
+  q('inter', 'kallon01', 'Mohamed Kallon', 1979, 'Sierra Leone', ['ST', 'RW'], 78, 82, 2006, 35, t(6, 6, 7, 5, 6, 7)),
+  q('inter', 'ventola01', 'Nicola Ventola', 1978, 'Italy', ['ST'], 77, 80, 2005, 50, t(6, 6, 7, 6, 6, 6)),
+];
+
+/** Arsenal & Chelsea depth — completing the two English giants' squads (§4). */
+export const ARSENAL_2001_EXTRA: CuratedSeed[] = [
+  q('arsenal', 'kanu01', 'Nwankwo Kanu', 1976, 'Nigeria', ['ST', 'AM'], 80, 82, 2004, 30, t(7, 6, 7, 6, 5, 7)),
+  q('arsenal', 'parlour01', 'Ray Parlour', 1973, 'England', ['CM', 'RW'], 78, 79, 2004, 25, t(8, 5, 8, 8, 5, 7)),
+  q('arsenal', 'keown01', 'Martin Keown', 1966, 'England', ['CB'], 80, 80, 2003, 30, t(8, 6, 8, 9, 5, 6)),
+  q('arsenal', 'dixon01', 'Lee Dixon', 1964, 'England', ['RB'], 74, 74, 2002, 25, t(9, 4, 7, 9, 3, 6)),
+  q('arsenal', 'edu01', 'Edu', 1978, 'Brazil', ['CM', 'DM'], 78, 82, 2005, 30, t(8, 5, 7, 6, 4, 7)),
+];
+export const CHELSEA_2001_EXTRA: CuratedSeed[] = [
+  q('chelsea', 'desailly01', 'Marcel Desailly', 1968, 'France', ['CB', 'DM'], 85, 85, 2004, 25, t(9, 6, 8, 8, 3, 7)),
+  q('chelsea', 'babayaro01', 'Celestine Babayaro', 1978, 'Nigeria', ['LB'], 77, 80, 2005, 35, t(6, 6, 7, 6, 5, 7)),
+  q('chelsea', 'stanic01', 'Mario Stanić', 1972, 'Croatia', ['RW', 'AM'], 77, 78, 2004, 40, t(7, 6, 7, 6, 5, 7)),
+  q('chelsea', 'ferrer01', 'Albert Ferrer', 1970, 'Spain', ['RB'], 76, 77, 2003, 30, t(8, 4, 7, 7, 4, 7)),
+  q('chelsea', 'zenden01', 'Boudewijn Zenden', 1976, 'Netherlands', ['LW', 'AM'], 78, 80, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+];
+
+/** Manchester City, 2001–02 — Division One champions on the way up (2nd-tier
+ *  ratings; a promotion-chasing side, not yet the modern superpower). */
+export const MAN_CITY_2001: CuratedSeed[] = [
+  q('man_city', 'weaver01', 'Nicky Weaver', 1979, 'England', ['GK'], 68, 74, 2005, 30, t(7, 5, 7, 7, 5, 6)),
+  q('man_city', 'nash01', 'Carlo Nash', 1973, 'England', ['GK'], 64, 66, 2004, 25, t(7, 4, 6, 6, 5, 6)),
+  q('man_city', 'pearce_mc01', 'Stuart Pearce', 1962, 'England', ['LB', 'CB'], 72, 72, 2002, 30, t(9, 6, 9, 9, 6, 6)),
+  q('man_city', 'dunne01', 'Richard Dunne', 1979, 'Ireland', ['CB'], 72, 80, 2006, 30, t(7, 4, 7, 8, 5, 6)),
+  q('man_city', 'howey01', 'Steve Howey', 1971, 'England', ['CB'], 70, 72, 2004, 40, t(7, 5, 7, 7, 5, 6)),
+  q('man_city', 'wiekens01', 'Gerard Wiekens', 1973, 'Netherlands', ['CB', 'DM'], 66, 68, 2004, 25, t(8, 4, 7, 7, 4, 7)),
+  q('man_city', 'tiatto_mc01', 'Danny Tiatto', 1973, 'Australia', ['LB', 'LW'], 66, 68, 2004, 35, t(6, 6, 7, 6, 7, 6)),
+  q('man_city', 'benarbia01', 'Ali Benarbia', 1968, 'Algeria', ['AM'], 76, 77, 2004, 30, t(7, 6, 7, 6, 5, 7)),
+  q('man_city', 'berkovic01', 'Eyal Berkovic', 1972, 'Israel', ['AM'], 74, 76, 2004, 35, t(6, 7, 7, 5, 6, 6)),
+  q('man_city', 'horlock01', 'Kevin Horlock', 1972, 'Northern Ireland', ['CM', 'LW'], 68, 70, 2004, 30, t(8, 5, 7, 7, 5, 6)),
+  q('man_city', 'goater01', 'Shaun Goater', 1970, 'Bermuda', ['ST'], 72, 74, 2004, 25, t(8, 5, 8, 8, 4, 7)),
+  q('man_city', 'huckerby01', 'Darren Huckerby', 1976, 'England', ['LW', 'ST'], 74, 76, 2005, 30, t(6, 6, 7, 6, 6, 7)),
+  q('man_city', 'wanchope01', 'Paulo Wanchope', 1976, 'Costa Rica', ['ST'], 74, 76, 2005, 40, t(6, 6, 7, 6, 6, 6)),
+  q('man_city', 'swp01', 'Shaun Wright-Phillips', 1981, 'England', ['RW'], 66, 82, 2006, 25, t(8, 6, 8, 7, 4, 7)),
+];
+
+/** Tottenham Hotspur, 2001–02 — a mid-table cup side (Worthington Cup finalists). */
+export const SPURS_2001: CuratedSeed[] = [
+  q('spurs', 'keller01', 'Kasey Keller', 1969, 'United States', ['GK'], 78, 79, 2004, 25, t(8, 5, 7, 7, 4, 7)),
+  q('spurs', 'sullivan01', 'Neil Sullivan', 1970, 'Scotland', ['GK'], 76, 77, 2004, 25, t(8, 4, 7, 7, 4, 6)),
+  q('spurs', 'carr01', 'Stephen Carr', 1976, 'Ireland', ['RB'], 79, 81, 2005, 30, t(8, 5, 8, 7, 4, 7)),
+  q('spurs', 'king01', 'Ledley King', 1980, 'England', ['CB', 'DM'], 80, 87, 2006, 45, t(9, 5, 8, 10, 3, 7), { loyalty: 90 }),
+  q('spurs', 'perry01', 'Chris Perry', 1973, 'England', ['CB'], 75, 76, 2004, 25, t(8, 4, 7, 7, 4, 6)),
+  q('spurs', 'doherty01', 'Gary Doherty', 1980, 'Ireland', ['CB', 'ST'], 68, 72, 2005, 35, t(7, 5, 7, 7, 5, 6)),
+  q('spurs', 'thatcher01', 'Ben Thatcher', 1975, 'England', ['LB'], 72, 74, 2004, 35, t(6, 6, 7, 6, 6, 6)),
+  q('spurs', 'ziege_s01', 'Christian Ziege', 1972, 'Germany', ['LB', 'LW'], 79, 80, 2005, 40, t(7, 6, 7, 7, 5, 7)),
+  q('spurs', 'anderton01', 'Darren Anderton', 1972, 'England', ['RW', 'AM'], 78, 80, 2004, 55, t(7, 5, 7, 7, 5, 7)),
+  q('spurs', 'poyet01', 'Gus Poyet', 1967, 'Uruguay', ['CM', 'AM'], 80, 81, 2004, 30, t(8, 6, 8, 6, 5, 7)),
+  q('spurs', 'freund01', 'Steffen Freund', 1970, 'Germany', ['DM'], 75, 76, 2004, 30, t(8, 5, 8, 7, 6, 6)),
+  q('spurs', 'davies_s01', 'Simon Davies', 1979, 'Wales', ['RW', 'CM'], 74, 79, 2006, 25, t(8, 5, 7, 7, 4, 7)),
+  q('spurs', 'sheringham01', 'Teddy Sheringham', 1966, 'England', ['ST', 'AM'], 82, 83, 2004, 30, t(9, 6, 8, 7, 4, 7)),
+  q('spurs', 'ferdinand_l01', 'Les Ferdinand', 1966, 'England', ['ST'], 79, 80, 2003, 40, t(8, 6, 8, 7, 5, 6)),
+  q('spurs', 'rebrov01', 'Sergei Rebrov', 1974, 'Ukraine', ['ST', 'AM'], 78, 81, 2005, 30, t(7, 6, 7, 6, 5, 6)),
+];
+
 /** Curated squads for the liverpool-2001 scenario, keyed by club. */
 export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
   liverpool: LIVERPOOL_2001,
   man_utd: MAN_UTD_2001,
-  arsenal: ARSENAL_2001,
-  chelsea: CHELSEA_2001,
+  arsenal: [...ARSENAL_2001, ...ARSENAL_2001_EXTRA],
+  chelsea: [...CHELSEA_2001, ...CHELSEA_2001_EXTRA],
   leeds: LEEDS_2001,
   newcastle: NEWCASTLE_2001,
   lens: LENS_2001,
   lille: LILLE_2001,
-  real_madrid: [CHELSEA_TARGETS_2003[0]!],
+  real_madrid: REAL_MADRID_2001,
+  inter: INTER_2001,
+  man_city: MAN_CITY_2001,
+  spurs: SPURS_2001,
   blackburn: [CHELSEA_TARGETS_2003[1]!],
-  inter: [CHELSEA_TARGETS_2003[2]!],
   parma: [CHELSEA_TARGETS_2003[3]!],
   southampton: [CHELSEA_TARGETS_2003[4]!],
 };

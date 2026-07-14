@@ -354,11 +354,74 @@ export const DEPTH_1995: Array<[ClubId, CuratedSeed]> = [
   ['real_madrid', q('real_madrid', 'amavisca', 'José Amavisca', 1971, 'Spain', ['LW', 'AM'], 77, 78, 1998, 30, t(7, 5, 7, 7, 5, 7))],
 ];
 
+/**
+ * Full-squad completion for the playable giants abroad (§4, §14): every playable
+ * club that features must field >=13 real players. All are foreign to Serie A
+ * (leagueId null) — zero kickoff calibration risk (anchored strength).
+ */
+export const REAL_1995_EXTRA: CuratedSeed[] = [
+  q('real_madrid', 'buyo_rm95', 'Francisco Buyo', 1958, 'Spain', ['GK'], 78, 78, 1997, 25, t(8, 5, 7, 9, 4, 6)),
+  q('real_madrid', 'alkorta_rm95', 'Rafael Alkorta', 1968, 'Spain', ['CB'], 80, 80, 1998, 25, t(8, 5, 7, 8, 4, 6)),
+  q('real_madrid', 'chendo_rm95', 'Chendo', 1961, 'Spain', ['RB'], 76, 76, 1997, 25, t(8, 4, 7, 10, 3, 6), { loyalty: 94 }),
+  q('real_madrid', 'zamorano_rm95', 'Iván Zamorano', 1967, 'Chile', ['ST'], 82, 83, 1997, 30, t(8, 6, 8, 8, 5, 7)),
+  q('real_madrid', 'laudrup_rm95', 'Michael Laudrup', 1964, 'Denmark', ['AM'], 85, 85, 1996, 25, t(9, 6, 8, 6, 4, 8)),
+  q('real_madrid', 'luisenrique_rm95', 'Luís Enrique', 1970, 'Spain', ['CM', 'RW'], 82, 84, 1996, 30, t(9, 6, 9, 7, 4, 7)),
+];
+export const BARCA_1995_EXTRA: CuratedSeed[] = [
+  q('barcelona', 'busquets_ba95', 'Carles Busquets', 1967, 'Spain', ['GK'], 76, 76, 1998, 25, t(7, 5, 6, 9, 5, 6)),
+  q('barcelona', 'ferrer_ba95', 'Albert Ferrer', 1970, 'Spain', ['RB'], 79, 80, 1998, 25, t(8, 4, 7, 8, 4, 7)),
+  q('barcelona', 'abelardo_ba95', 'Abelardo', 1970, 'Spain', ['CB'], 81, 82, 1999, 30, t(8, 5, 7, 8, 5, 6)),
+  q('barcelona', 'popescu_ba95', 'Gheorghe Popescu', 1967, 'Romania', ['CB', 'DM'], 82, 83, 1998, 25, t(8, 5, 8, 6, 4, 7)),
+  q('barcelona', 'bakero_ba95', 'José Mari Bakero', 1963, 'Spain', ['CM', 'AM'], 80, 80, 1997, 25, t(9, 5, 8, 9, 4, 6)),
+  q('barcelona', 'kodro_ba95', 'Meho Kodro', 1967, 'Bosnia', ['ST'], 79, 80, 1998, 30, t(7, 6, 7, 6, 5, 7)),
+  q('barcelona', 'prosinecki_ba95', 'Robert Prosinečki', 1969, 'Croatia', ['AM'], 82, 83, 1997, 45, t(6, 7, 7, 6, 6, 6)),
+  q('barcelona', 'jordicruyff_ba95', 'Jordi Cruyff', 1974, 'Netherlands', ['AM', 'ST'], 76, 79, 1996, 30, t(7, 6, 7, 6, 4, 7)),
+];
+export const BAYERN_1995_EXTRA: CuratedSeed[] = [
+  q('bayern', 'herzog_by95', 'Andreas Herzog', 1968, 'Austria', ['AM'], 79, 80, 1998, 30, t(7, 6, 7, 6, 5, 7)),
+  q('bayern', 'papin_by95', 'Jean-Pierre Papin', 1963, 'France', ['ST'], 80, 80, 1996, 35, t(8, 7, 8, 6, 5, 7)),
+  q('bayern', 'nerlinger_by95', 'Christian Nerlinger', 1973, 'Germany', ['CM', 'DM'], 76, 79, 1999, 30, t(8, 5, 7, 7, 4, 7)),
+  q('bayern', 'hamann_by95', 'Dietmar Hamann', 1973, 'Germany', ['DM', 'CM'], 76, 84, 2000, 30, t(8, 4, 7, 6, 3, 7)),
+  q('bayern', 'zickler_by95', 'Alexander Zickler', 1974, 'Germany', ['ST'], 74, 78, 1999, 35, t(7, 5, 7, 7, 5, 6)),
+];
+/** Arsenal, 1995–96 — Rioch's season; Bergkamp just arrived, Wenger a year off. */
+export const ARSENAL_1995: CuratedSeed[] = [
+  q('arsenal', 'seaman_ar95', 'David Seaman', 1963, 'England', ['GK'], 84, 84, 1999, 25, t(8, 6, 8, 9, 3, 6)),
+  q('arsenal', 'dixon_ar95', 'Lee Dixon', 1964, 'England', ['RB'], 78, 78, 1998, 25, t(9, 4, 7, 9, 3, 6)),
+  q('arsenal', 'adams_ar95', 'Tony Adams', 1966, 'England', ['CB'], 84, 85, 1999, 30, t(9, 7, 9, 10, 4, 6), { loyalty: 96 }),
+  q('arsenal', 'bould_ar95', 'Steve Bould', 1962, 'England', ['CB'], 79, 79, 1997, 30, t(8, 4, 7, 8, 4, 6)),
+  q('arsenal', 'winterburn_ar95', 'Nigel Winterburn', 1963, 'England', ['LB'], 78, 78, 1998, 25, t(9, 4, 7, 9, 3, 6)),
+  q('arsenal', 'keown_ar95', 'Martin Keown', 1966, 'England', ['CB'], 79, 81, 1999, 30, t(8, 6, 8, 9, 5, 6)),
+  q('arsenal', 'platt_ar95', 'David Platt', 1966, 'England', ['CM'], 81, 82, 1998, 30, t(9, 6, 8, 8, 4, 7)),
+  q('arsenal', 'merson_ar95', 'Paul Merson', 1968, 'England', ['AM', 'ST'], 80, 81, 1998, 30, t(5, 7, 7, 7, 7, 6)),
+  q('arsenal', 'wright_ar95', 'Ian Wright', 1963, 'England', ['ST'], 84, 84, 1998, 30, t(7, 8, 9, 9, 6, 6)),
+  q('arsenal', 'bergkamp_ar95', 'Dennis Bergkamp', 1969, 'Netherlands', ['AM', 'ST'], 86, 88, 1999, 20, t(9, 6, 8, 8, 3, 6)),
+  q('arsenal', 'hartson_ar95', 'John Hartson', 1975, 'Wales', ['ST'], 76, 80, 1999, 35, t(6, 7, 7, 6, 7, 6)),
+  q('arsenal', 'parlour_ar95', 'Ray Parlour', 1973, 'England', ['CM', 'RW'], 76, 80, 1999, 25, t(8, 5, 7, 8, 5, 7)),
+  q('arsenal', 'helder_ar95', 'Glenn Helder', 1968, 'Netherlands', ['LW'], 74, 76, 1998, 30, t(6, 6, 6, 6, 6, 7)),
+];
+export const CHELSEA_1995_EXTRA: CuratedSeed[] = [
+  q('chelsea', 'kharine_ch95', 'Dmitri Kharine', 1968, 'Russia', ['GK'], 78, 79, 1998, 30, t(7, 5, 7, 7, 5, 6)),
+  q('chelsea', 'clarke_ch95', 'Steve Clarke', 1963, 'Scotland', ['RB', 'CB'], 77, 77, 1997, 25, t(9, 4, 7, 9, 3, 6)),
+  q('chelsea', 'sinclair_ch95', 'Frank Sinclair', 1971, 'Jamaica', ['CB', 'RB'], 76, 78, 1999, 25, t(7, 5, 7, 7, 5, 7)),
+  q('chelsea', 'duberry_ch95', 'Michael Duberry', 1975, 'England', ['CB'], 74, 80, 2000, 30, t(7, 5, 7, 7, 5, 6)),
+  q('chelsea', 'phelan_ch95', 'Terry Phelan', 1967, 'Ireland', ['LB'], 74, 75, 1998, 30, t(7, 4, 6, 7, 5, 7)),
+  q('chelsea', 'burley_ch95', 'Craig Burley', 1971, 'Scotland', ['CM'], 76, 79, 1999, 25, t(8, 5, 7, 7, 5, 7)),
+  q('chelsea', 'peacock_ch95', 'Gavin Peacock', 1967, 'England', ['AM', 'CM'], 75, 76, 1997, 25, t(8, 5, 7, 7, 4, 6)),
+  q('chelsea', 'spencer_ch95', 'John Spencer', 1970, 'Scotland', ['ST'], 77, 78, 1998, 30, t(7, 6, 7, 7, 6, 6)),
+  q('chelsea', 'furlong_ch95', 'Paul Furlong', 1968, 'England', ['ST'], 74, 75, 1998, 30, t(7, 5, 7, 6, 5, 6)),
+];
+
 /** Curated squads for the Lippi-era Juventus start, keyed by club. */
 export const JUVENTUS_1995_SQUADS: Record<string, CuratedSeed[]> = {
   ...SERIE_A_1995_SQUADS,
   ...CONTEXT_1995_SQUADS,
+  arsenal: ARSENAL_1995,
 };
 for (const [club, seed] of DEPTH_1995) {
   (JUVENTUS_1995_SQUADS[club] ??= []).push(seed);
+}
+// Full-squad completion for the playable giants abroad (§4, §14).
+for (const extra of [REAL_1995_EXTRA, BARCA_1995_EXTRA, BAYERN_1995_EXTRA, CHELSEA_1995_EXTRA]) {
+  for (const seed of extra) (JUVENTUS_1995_SQUADS[seed.club as ClubId] ??= []).push(seed);
 }

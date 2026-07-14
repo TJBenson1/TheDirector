@@ -76,4 +76,19 @@ describe('every playable club is featured with a real squad (§4, §14)', () => 
       expect(best[club] ?? 0, `${club} best curated squad`).toBeGreaterThanOrEqual(MIN_SQUAD);
     }
   });
+
+  // The stricter scope the design took (§4, §14): a playable club must be a real,
+  // playable side in EVERY scenario it appears in — never a thin spine propped up
+  // by anonymous filler in one pack while being complete in another.
+  it('every playable club has >= 13 curated players in EVERY scenario it appears in', () => {
+    for (const scenarioId of Object.keys(SCENARIOS)) {
+      const s = createNewGame({ scenarioId, seed: 'curation' });
+      for (const club of PLAYABLE) {
+        const c = s.clubs[club];
+        if (!c) continue; // a club can be absent from a scenario; presence is what's tested
+        const curated = c.squad.map((id) => s.players[id]!).filter((p) => p.curated).length;
+        expect(curated, `${club} in ${scenarioId}`).toBeGreaterThanOrEqual(MIN_SQUAD);
+      }
+    }
+  });
 });

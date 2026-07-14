@@ -382,11 +382,117 @@ export const DEPTH_2000: Array<[ClubId, CuratedSeed]> = [
   ['monaco', q('monaco', 'squillaci', 'Sébastien Squillaci', 1980, 'France', ['CB'], 76, 81, 2005, 25, t(8, 4, 7, 7, 4, 7))],
 ];
 
+/**
+ * Full-squad completion for the other playable giants (§4, §14): every playable
+ * club that appears must field >=13 real players, not a thin spine plus filler.
+ * All are foreign to La Liga (leagueId null) — zero kickoff calibration risk.
+ */
+export const MANUTD_2000_EXTRA: CuratedSeed[] = [
+  q('man_utd', 'barthez_mu00', 'Fabien Barthez', 1971, 'France', ['GK'], 82, 83, 2004, 25, t(6, 7, 7, 6, 6, 6)),
+  q('man_utd', 'stam_mu00', 'Jaap Stam', 1972, 'Netherlands', ['CB'], 88, 89, 2004, 35, t(8, 6, 8, 6, 5, 6)),
+  q('man_utd', 'silvestre_mu00', 'Mikaël Silvestre', 1977, 'France', ['CB', 'LB'], 79, 85, 2005, 28, t(7, 5, 7, 6, 4, 8)),
+  q('man_utd', 'irwin_mu00', 'Denis Irwin', 1965, 'Ireland', ['LB', 'RB'], 80, 80, 2002, 22, t(9, 3, 7, 9, 2, 8)),
+  q('man_utd', 'butt_mu00', 'Nicky Butt', 1975, 'England', ['CM', 'DM'], 79, 82, 2004, 25, t(8, 4, 7, 9, 4, 7)),
+  q('man_utd', 'sheringham_mu00', 'Teddy Sheringham', 1966, 'England', ['ST', 'AM'], 83, 84, 2003, 30, t(9, 6, 8, 7, 4, 7)),
+  q('man_utd', 'yorke_mu00', 'Dwight Yorke', 1971, 'Trinidad & Tobago', ['ST'], 82, 83, 2003, 35, t(6, 7, 7, 6, 7, 8)),
+];
+export const BAYERN_2000_EXTRA: CuratedSeed[] = [
+  q('bayern', 'kuffour_bay00', 'Samuel Kuffour', 1976, 'Ghana', ['CB'], 80, 82, 2005, 30, t(8, 5, 8, 7, 5, 7)),
+  q('bayern', 'andersson_bay00', 'Patrik Andersson', 1971, 'Sweden', ['CB'], 79, 80, 2003, 30, t(8, 4, 7, 7, 4, 7)),
+  q('bayern', 'linke_bay00', 'Thomas Linke', 1969, 'Germany', ['CB'], 78, 79, 2004, 30, t(8, 4, 7, 8, 4, 6)),
+  q('bayern', 'jeremies_bay00', 'Jens Jeremies', 1974, 'Germany', ['DM'], 79, 80, 2004, 40, t(8, 5, 8, 8, 5, 6)),
+  q('bayern', 'jancker_bay00', 'Carsten Jancker', 1974, 'Germany', ['ST'], 79, 80, 2004, 35, t(7, 5, 7, 7, 5, 6)),
+  q('bayern', 'hargreaves_bay00', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 74, 85, 2006, 55, t(8, 5, 8, 7, 4, 8)),
+];
+export const JUVENTUS_2000_EXTRA: CuratedSeed[] = [
+  q('juventus', 'ferrara_juv00', 'Ciro Ferrara', 1967, 'Italy', ['CB'], 80, 80, 2003, 30, t(9, 5, 8, 9, 4, 6)),
+  q('juventus', 'conte_juv00', 'Antonio Conte', 1969, 'Italy', ['CM', 'DM'], 80, 81, 2004, 30, t(9, 6, 9, 10, 6, 6), { loyalty: 92 }),
+  q('juventus', 'pessotto_juv00', 'Gianluca Pessotto', 1970, 'Italy', ['LB', 'RB'], 78, 79, 2004, 30, t(8, 4, 7, 8, 4, 7)),
+  q('juventus', 'iuliano_juv00', 'Mark Iuliano', 1973, 'Italy', ['CB'], 77, 78, 2004, 30, t(7, 5, 7, 7, 5, 6)),
+];
+export const MILAN_2000_EXTRA: CuratedSeed[] = [
+  q('milan', 'abbiati_mil00', 'Christian Abbiati', 1977, 'Italy', ['GK'], 82, 84, 2005, 20, t(8, 5, 7, 8, 4, 7)),
+  q('milan', 'costacurta_mil00', 'Alessandro Costacurta', 1966, 'Italy', ['CB'], 80, 80, 2003, 30, t(9, 5, 8, 10, 3, 6), { loyalty: 95 }),
+  q('milan', 'roque_mil00', 'Roque Júnior', 1976, 'Brazil', ['CB'], 80, 82, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+  q('milan', 'serginho_mil00', 'Serginho', 1971, 'Brazil', ['LB', 'LW'], 78, 80, 2004, 30, t(7, 5, 7, 6, 5, 7)),
+  q('milan', 'albertini_mil00', 'Demetrio Albertini', 1971, 'Italy', ['CM', 'DM'], 82, 83, 2004, 25, t(9, 5, 8, 9, 3, 7)),
+  q('milan', 'bierhoff_mil00', 'Oliver Bierhoff', 1968, 'Germany', ['ST'], 80, 81, 2003, 30, t(8, 6, 8, 7, 4, 6)),
+];
+export const INTER_2000_EXTRA: CuratedSeed[] = [
+  q('inter', 'peruzzi_int00', 'Angelo Peruzzi', 1969, 'Italy', ['GK'], 83, 83, 2004, 25, t(8, 6, 7, 8, 5, 6)),
+  q('inter', 'blanc_int00', 'Laurent Blanc', 1965, 'France', ['CB'], 81, 81, 2001, 25, t(9, 6, 8, 8, 3, 6)),
+  q('inter', 'dibiagio_int00', 'Luigi Di Biagio', 1971, 'Italy', ['DM', 'CM'], 79, 80, 2003, 30, t(8, 5, 8, 7, 5, 7)),
+  q('inter', 'zamorano_int00', 'Iván Zamorano', 1967, 'Chile', ['ST'], 80, 80, 2002, 30, t(8, 6, 8, 8, 5, 7)),
+  q('inter', 'robbie_keane_int00', 'Robbie Keane', 1980, 'Ireland', ['ST', 'AM'], 79, 85, 2004, 25, t(7, 6, 8, 5, 5, 8)),
+  q('inter', 'ventola_int00', 'Nicola Ventola', 1978, 'Italy', ['ST'], 77, 80, 2004, 50, t(6, 6, 7, 6, 6, 6)),
+];
+export const ARSENAL_2000_EXTRA: CuratedSeed[] = [
+  q('arsenal', 'seaman_ars00', 'David Seaman', 1963, 'England', ['GK'], 82, 82, 2003, 25, t(8, 6, 8, 9, 3, 6)),
+  q('arsenal', 'dixon_ars00', 'Lee Dixon', 1964, 'England', ['RB'], 75, 75, 2002, 25, t(9, 4, 7, 9, 3, 6)),
+  q('arsenal', 'adams_ars00', 'Tony Adams', 1966, 'England', ['CB'], 83, 83, 2002, 30, t(9, 7, 9, 10, 4, 6), { loyalty: 96 }),
+  q('arsenal', 'keown_ars00', 'Martin Keown', 1966, 'England', ['CB'], 81, 81, 2003, 30, t(8, 6, 8, 9, 5, 6)),
+  q('arsenal', 'acole_ars00', 'Ashley Cole', 1980, 'England', ['LB'], 76, 88, 2005, 25, t(8, 6, 8, 7, 5, 7)),
+  q('arsenal', 'lauren_ars00', 'Lauren', 1977, 'Cameroon', ['RB', 'CM'], 78, 82, 2005, 30, t(8, 5, 8, 7, 4, 7)),
+  q('arsenal', 'grimandi_ars00', 'Gilles Grimandi', 1970, 'France', ['DM', 'CB'], 76, 77, 2003, 25, t(8, 4, 7, 7, 5, 7)),
+  q('arsenal', 'parlour_ars00', 'Ray Parlour', 1973, 'England', ['CM', 'RW'], 79, 80, 2004, 25, t(8, 5, 8, 8, 5, 7)),
+  q('arsenal', 'pires_ars00', 'Robert Pirès', 1973, 'France', ['LW', 'AM'], 84, 87, 2005, 30, t(8, 5, 8, 7, 3, 7)),
+  q('arsenal', 'ljungberg_ars00', 'Fredrik Ljungberg', 1977, 'Sweden', ['RW', 'AM'], 81, 84, 2005, 35, t(8, 6, 8, 7, 4, 7)),
+  q('arsenal', 'kanu_ars00', 'Nwankwo Kanu', 1976, 'Nigeria', ['ST', 'AM'], 81, 82, 2004, 30, t(7, 6, 7, 6, 5, 7)),
+  q('arsenal', 'wiltord_ars00', 'Sylvain Wiltord', 1974, 'France', ['ST', 'RW'], 81, 83, 2005, 30, t(7, 6, 7, 6, 5, 7)),
+];
+export const CHELSEA_2000_EXTRA: CuratedSeed[] = [
+  q('chelsea', 'degoey_che00', 'Ed de Goey', 1966, 'Netherlands', ['GK'], 79, 79, 2003, 25, t(8, 4, 7, 7, 4, 6)),
+  q('chelsea', 'cudicini_che00', 'Carlo Cudicini', 1973, 'Italy', ['GK'], 80, 83, 2005, 25, t(8, 5, 7, 7, 4, 7)),
+  q('chelsea', 'desailly_che00', 'Marcel Desailly', 1968, 'France', ['CB', 'DM'], 85, 85, 2004, 25, t(9, 6, 8, 8, 3, 7)),
+  q('chelsea', 'leboeuf_che00', 'Frank Leboeuf', 1968, 'France', ['CB'], 80, 81, 2001, 25, t(8, 6, 7, 7, 5, 7)),
+  q('chelsea', 'melchiot_che00', 'Mario Melchiot', 1976, 'Netherlands', ['RB'], 77, 79, 2004, 25, t(7, 5, 7, 6, 4, 7)),
+  q('chelsea', 'babayaro_che00', 'Celestine Babayaro', 1978, 'Nigeria', ['LB'], 77, 80, 2005, 35, t(6, 6, 7, 6, 5, 7)),
+  q('chelsea', 'lesaux_che00', 'Graeme Le Saux', 1968, 'England', ['LB'], 78, 79, 2003, 30, t(8, 5, 7, 7, 5, 7)),
+  q('chelsea', 'wise_che00', 'Dennis Wise', 1966, 'England', ['CM'], 79, 80, 2003, 25, t(7, 7, 8, 8, 7, 6)),
+  q('chelsea', 'poyet_che00', 'Gustavo Poyet', 1967, 'Uruguay', ['CM', 'AM'], 81, 82, 2001, 30, t(8, 6, 8, 6, 5, 7)),
+  q('chelsea', 'hasselbaink_che00', 'Jimmy Floyd Hasselbaink', 1972, 'Netherlands', ['ST'], 84, 85, 2004, 30, t(7, 7, 8, 6, 5, 7)),
+  q('chelsea', 'gudjohnsen_che00', 'Eiður Guðjohnsen', 1978, 'Iceland', ['ST', 'AM'], 80, 84, 2005, 30, t(8, 5, 7, 6, 4, 7)),
+  q('chelsea', 'stanic_che00', 'Mario Stanić', 1972, 'Croatia', ['RW', 'AM'], 77, 78, 2004, 40, t(7, 6, 7, 6, 5, 7)),
+];
+export const LIVERPOOL_2000_EXTRA: CuratedSeed[] = [
+  q('liverpool', 'westerveld_liv00', 'Sander Westerveld', 1974, 'Netherlands', ['GK'], 79, 80, 2004, 25, t(8, 5, 7, 6, 5, 6)),
+  q('liverpool', 'henchoz_liv00', 'Stéphane Henchoz', 1974, 'Switzerland', ['CB'], 80, 81, 2005, 30, t(8, 4, 7, 7, 4, 6)),
+  q('liverpool', 'babbel_liv00', 'Markus Babbel', 1972, 'Germany', ['RB', 'CB'], 81, 82, 2005, 40, t(8, 5, 8, 7, 4, 7)),
+  q('liverpool', 'carragher_liv00', 'Jamie Carragher', 1978, 'England', ['CB', 'RB'], 79, 86, 2007, 25, t(9, 4, 8, 10, 5, 6)),
+  q('liverpool', 'mcallister_liv00', 'Gary McAllister', 1964, 'Scotland', ['CM'], 80, 80, 2002, 25, t(9, 5, 8, 8, 3, 7)),
+  q('liverpool', 'smicer_liv00', 'Vladimír Šmicer', 1973, 'Czech Republic', ['RW', 'AM'], 77, 79, 2004, 45, t(7, 5, 7, 6, 5, 7)),
+  q('liverpool', 'fowler_liv00', 'Robbie Fowler', 1975, 'England', ['ST'], 83, 84, 2003, 45, t(6, 7, 7, 8, 6, 7)),
+  q('liverpool', 'barmby_liv00', 'Nick Barmby', 1974, 'England', ['AM', 'LW'], 78, 79, 2004, 30, t(7, 5, 7, 6, 5, 7)),
+  q('liverpool', 'berger_liv00', 'Patrik Berger', 1973, 'Czech Republic', ['LW', 'AM'], 79, 81, 2004, 40, t(7, 5, 7, 6, 5, 7)),
+];
+/** Manchester City, 2000–01 — a top-flight season that ended in relegation. */
+export const MAN_CITY_2000: CuratedSeed[] = [
+  q('man_city', 'weaver_mc00', 'Nicky Weaver', 1979, 'England', ['GK'], 68, 74, 2004, 30, t(7, 5, 7, 7, 5, 6)),
+  q('man_city', 'dunne_mc00', 'Richard Dunne', 1979, 'Ireland', ['CB'], 72, 80, 2005, 30, t(7, 4, 7, 8, 5, 6)),
+  q('man_city', 'howey_mc00', 'Steve Howey', 1971, 'England', ['CB'], 72, 73, 2003, 40, t(7, 5, 7, 7, 5, 6)),
+  q('man_city', 'morrison_mc00', 'Andy Morrison', 1970, 'Scotland', ['CB'], 68, 69, 2002, 45, t(7, 6, 8, 8, 6, 5)),
+  q('man_city', 'edghill_mc00', 'Richard Edghill', 1974, 'England', ['RB'], 66, 67, 2003, 30, t(7, 4, 7, 8, 5, 6)),
+  q('man_city', 'granville_mc00', 'Danny Granville', 1975, 'England', ['LB'], 68, 70, 2003, 30, t(7, 4, 7, 7, 5, 6)),
+  q('man_city', 'haaland_mc00', 'Alf-Inge Håland', 1972, 'Norway', ['CM', 'CB'], 74, 75, 2003, 45, t(7, 6, 8, 7, 6, 6)),
+  q('man_city', 'horlock_mc00', 'Kevin Horlock', 1972, 'Northern Ireland', ['CM', 'LW'], 70, 71, 2004, 30, t(8, 5, 7, 7, 5, 6)),
+  q('man_city', 'dickov_mc00', 'Paul Dickov', 1972, 'Scotland', ['ST'], 70, 72, 2003, 30, t(7, 6, 8, 8, 7, 6)),
+  q('man_city', 'goater_mc00', 'Shaun Goater', 1970, 'Bermuda', ['ST'], 72, 74, 2004, 25, t(8, 5, 8, 8, 4, 7)),
+  q('man_city', 'weah_mc00', 'George Weah', 1966, 'Liberia', ['ST'], 76, 76, 2001, 35, t(8, 6, 8, 7, 5, 7)),
+  q('man_city', 'wanchope_mc00', 'Paulo Wanchope', 1976, 'Costa Rica', ['ST'], 75, 77, 2004, 40, t(6, 6, 7, 6, 6, 6)),
+  q('man_city', 'huckerby_mc00', 'Darren Huckerby', 1976, 'England', ['LW', 'ST'], 74, 76, 2004, 30, t(6, 6, 7, 6, 6, 7)),
+  q('man_city', 'kennedy_mc00', 'Mark Kennedy', 1976, 'Ireland', ['LW'], 72, 74, 2004, 30, t(7, 5, 7, 6, 5, 7)),
+];
+
 /** Curated squads for the Galácticos-era Madrid start, keyed by club. */
 export const REAL_MADRID_2000_SQUADS: Record<string, CuratedSeed[]> = {
   ...LA_LIGA_2000_SQUADS,
   ...CONTEXT_2000_SQUADS,
+  man_city: MAN_CITY_2000,
 };
 for (const [club, seed] of DEPTH_2000) {
   (REAL_MADRID_2000_SQUADS[club] ??= []).push(seed);
+}
+// Full-squad completion for the playable giants (§4, §14).
+for (const extra of [MANUTD_2000_EXTRA, BAYERN_2000_EXTRA, JUVENTUS_2000_EXTRA, MILAN_2000_EXTRA, INTER_2000_EXTRA, ARSENAL_2000_EXTRA, CHELSEA_2000_EXTRA, LIVERPOOL_2000_EXTRA]) {
+  for (const seed of extra) (REAL_MADRID_2000_SQUADS[seed.club as ClubId] ??= []).push(seed);
 }
