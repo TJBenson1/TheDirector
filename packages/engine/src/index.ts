@@ -177,6 +177,8 @@ export {
   imposeDirective,
   revokeDirective,
   applyDirectiveEffects,
+  managerStrengthMod,
+  managerDevMod,
 } from './manager.js';
 export {
   simulateMatch,

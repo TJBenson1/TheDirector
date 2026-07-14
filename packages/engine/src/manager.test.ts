@@ -12,7 +12,10 @@ import {
   issueDirective,
   coachResistanceChance,
   applyDirectiveEffects,
+  managerStrengthMod,
+  managerDevMod,
 } from './manager.js';
+import { recomputeClubStrength } from './players.js';
 import { estimateMinutesShare } from './development.js';
 import { Rng } from './rng.js';
 import type { GameState, PlayerState } from './types.js';
@@ -190,6 +193,53 @@ describe('the coach may resist a directive on minutes or load', () => {
     // A season of managed load makes the body more durable.
     applyDirectiveEffects(s);
     expect(star.injuryProneness).toBe(56);
+  });
+});
+
+describe('the coach\'s on-pitch effect (anchored to par)', () => {
+  it('keeping the inherited coach is exactly neutral (0 strength / ×1 dev)', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'par' });
+    // Inherited coach: reputation === parReputation → no effect at all.
+    expect(s.managerRelations.reputation).toBe(s.managerRelations.parReputation);
+    expect(managerStrengthMod(s.managerRelations)).toBe(0);
+    expect(managerDevMod(s.managerRelations)).toBe(1);
+  });
+
+  it('a caretaker gap drags the side; a marquee upgrade sharpens it', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'onpitch' }); // par = Moyes 68
+    const par = s.managerRelations.parReputation;
+    // Worse than par (a caretaker) → negative strength, sub-1 development.
+    s.managerRelations = { ...s.managerRelations, reputation: par - 30 };
+    expect(managerStrengthMod(s.managerRelations)).toBeLessThan(0);
+    expect(managerDevMod(s.managerRelations)).toBeLessThan(1);
+    // Better than par (a marquee) → positive, but bounded (a coach can't carry a
+    // squad on his own).
+    s.managerRelations = { ...s.managerRelations, reputation: par + 22 };
+    expect(managerStrengthMod(s.managerRelations)).toBeGreaterThan(0);
+    expect(managerStrengthMod(s.managerRelations)).toBeLessThanOrEqual(4);
+    expect(managerDevMod(s.managerRelations)).toBeGreaterThan(1);
+  });
+
+  it('the effect flows into the club\'s live match strength', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'strength' });
+    recomputeClubStrength(s, s.playerClub);
+    const parStrength = s.clubs[s.playerClub]!.strength;
+    // Drop to a caretaker-calibre coach → the side is measurably weaker.
+    s.managerRelations = { ...s.managerRelations, reputation: s.managerRelations.parReputation - 40 };
+    recomputeClubStrength(s, s.playerClub);
+    expect(s.clubs[s.playerClub]!.strength).toBeLessThan(parStrength);
+    // AI clubs are never touched by the user's coach.
+    const rivalBefore = s.clubs.chelsea!.strength;
+    recomputeClubStrength(s, 'chelsea');
+    expect(s.clubs.chelsea!.strength).toBe(rivalBefore);
+  });
+
+  it('sacking the coach dips the side immediately (the caretaker XI)', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'sackdip' });
+    recomputeClubStrength(s, s.playerClub);
+    const before = s.clubs[s.playerClub]!.strength;
+    directorSackManager(s); // Ferguson out, caretaker in
+    expect(s.clubs[s.playerClub]!.strength).toBeLessThan(before);
   });
 });
 

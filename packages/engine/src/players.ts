@@ -24,6 +24,7 @@ import type {
 import { Rng } from './rng.js';
 import { suggestWage } from './finance.js';
 import { effectiveAbility } from './adaptation.js';
+import { managerStrengthMod } from './manager.js';
 
 /** Marquee clubs a player might carry as a boyhood/dream pull (§6). */
 const DREAM_POOL: ClubId[] = ['real_madrid', 'barcelona', 'man_utd', 'bayern', 'milan'];
@@ -328,7 +329,11 @@ export function recomputeClubStrength(state: GameState, clubId: ClubId): void {
   const club = state.clubs[clubId];
   if (!club) return;
   const raw = deriveRawStrength(availableSquadPlayers(state, clubId));
-  club.strength = Math.max(20, Math.min(99, club.baseStrength + (raw - club.squadStrengthAnchor)));
+  // The head coach nudges the user's club up or down from what the squad alone
+  // gives — measured against the coach reality had (0 at par), so keeping the
+  // inherited coach is neutral and calibration is untouched.
+  const coachMod = clubId === state.playerClub ? managerStrengthMod(state.managerRelations) : 0;
+  club.strength = Math.max(20, Math.min(99, club.baseStrength + (raw - club.squadStrengthAnchor) + coachMod));
 }
 
 /** Sum of a club's committed wages. */

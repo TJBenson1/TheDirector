@@ -297,6 +297,11 @@ export interface ManagerState {
   /** 0..100 reputation / quality: anchors board confidence, wooing pull, and the
    *  standing to push a Director out in a boardroom power struggle. */
   reputation: number;
+  /** The reputation of the coach the club REALLY had at kickoff — the "par" the
+   *  on-pitch effect is measured against. Keeping the inherited coach is neutral
+   *  (results as reality); a better/worse appointment (or a caretaker gap) moves
+   *  the club's strength and youth development from there. Constant for the run. */
+  parReputation: number;
   /** 0..100 the manager's OWN job security. Erodes faster than board patience. */
   standing: number;
   /** Did the Director appoint him (vs inherit him)? Sacking your own hire to

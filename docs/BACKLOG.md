@@ -158,10 +158,18 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
   directives override `estimateMinutesShare` and ease a managed body's proneness.
 - **Calibration-safe:** every added decision puts the reality-default option
   FIRST (the passive first-choice bot backs the coach), so the baseline is
-  unperturbed; 205 tests + calibration 14/14.
+  unperturbed; 215 tests + calibration 14/14.
+- ✅ **On-pitch effect (`managerStrengthMod` / `managerDevMod`):** the coach's
+  calibre now nudges MATCH STRENGTH and youth development — but **anchored to
+  `parReputation`** (the coach reality gave the club), so keeping the inherited
+  coach is exactly neutral (0 strength / ×1 dev) and the passive path is
+  byte-identical → no re-tuning needed. Asymmetric ([−7, +4] strength): a marquee
+  upgrade sharpens the side a little, a caretaker/mismatch drags it a lot.
+  Verified end-to-end: over 16 seeds × ~6 seasons of man-utd-2013, the par coach
+  wins 7 user titles, a −7 caretaker 0.
 - **Still to do (deferred by design):**
-  - **On-pitch effect:** a manager `quality`/style that nudges match results and
-    youth development (the one deferred fork — needs harness re-tuning).
+  - **Manager STYLE** (not just quality): tactical bias that suits some squads
+    over others, so the "right" appointment is squad-dependent.
   - **Manager tenure narrative:** trophies/relationships accruing to a coach's
     reputation; a sacked big name resurfacing at a rival.
   - **Era-real out-of-work pool per window** (the hire shortlist is currently a

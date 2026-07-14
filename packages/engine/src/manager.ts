@@ -28,6 +28,7 @@ import { logEvent } from './eventLog.js';
 import { appendMemory } from './memory.js';
 import { standingsOrder } from './season.js';
 import { estimateMinutesShare } from './development.js';
+import { recomputeClubStrength } from './players.js';
 
 /** The real head coach each scenario inherits at kickoff (reality-default). */
 const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
@@ -65,14 +66,38 @@ const COACH_POOL: Array<{ name: string; reputation: number }> = [
  *  club's stature for scenarios without a curated coach. */
 export function initialManager(scenarioId: string, clubPrestige: number): ManagerState {
   const real = REAL_COACHES[scenarioId];
+  const reputation = real?.reputation ?? Math.max(45, clubPrestige - 8);
   return {
     identity: real?.name ?? 'the incumbent manager',
     relationshipWithUser: 60,
-    reputation: real?.reputation ?? Math.max(45, clubPrestige - 8),
+    reputation,
+    parReputation: reputation, // par = the coach reality gave this club
     standing: 62,
     appointedByUser: false,
     seasonsInCharge: 0,
   };
+}
+
+// ── On-pitch effect (calibration-anchored to par) ────────────────────────────
+//
+// The coach's quality nudges results and youth development — but measured
+// AGAINST the coach reality gave the club (`parReputation`). Keeping the
+// inherited coach is exactly neutral (0 / ×1), so a passive career (and the
+// calibration harness, which never changes coach) is byte-identical to before.
+// Only the Director's OWN coaching moves matter: upgrade the dugout and the side
+// sharpens; sack a great coach for a caretaker and it dips. Asymmetric — a good
+// coach lifts a squad only so far, but a bad appointment can really drag it.
+
+/** Strength points added to the user's club from the coach (0 at par). */
+export function managerStrengthMod(mgr: ManagerState): number {
+  const dev = mgr.reputation - mgr.parReputation;
+  return Math.max(-7, Math.min(4, dev * 0.1));
+}
+
+/** Youth-development multiplier from the coach (×1 at par). */
+export function managerDevMod(mgr: ManagerState): number {
+  const dev = mgr.reputation - mgr.parReputation;
+  return Math.max(0.8, Math.min(1.12, 1 + dev * 0.005));
 }
 
 function ordinal(n: number): string {
@@ -199,6 +224,7 @@ export function performSack(state: GameState, directorRelief: number, initiatedB
   mgr.appointedByUser = false;
   mgr.seasonsInCharge = 0;
   mgr.relationshipWithUser = 55;
+  recomputeClubStrength(state, state.playerClub); // the caretaker XI dips at once
 
   pushHireDecision(state);
 }
@@ -300,6 +326,7 @@ export function appointManager(state: GameState, name: string, reputation: numbe
   mgr.standing = 60;
   mgr.appointedByUser = true;
   mgr.seasonsInCharge = 0;
+  recomputeClubStrength(state, state.playerClub); // the new man's effect lands now
   logEvent(state, {
     category: 'system',
     code: 'manager.appointed',
