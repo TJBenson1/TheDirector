@@ -46,20 +46,38 @@ function clStrength(state: GameState, id: ClubId): number {
 type RealFinal = { w: ClubId; r?: ClubId };
 const REAL_UCL: Record<string, Record<number, RealFinal>> = {
   'era-serie-a-1995': {
+    // Winners not in this pack (Man Utd 1999 & 2008 finals, Porto 2004, Liverpool
+    // 2005) can't be anchored and fall to field sim; the rest track reality.
     1995: { w: 'juventus', r: 'ajax' },
     1996: { w: 'dortmund', r: 'juventus' },
     1997: { w: 'real_madrid', r: 'juventus' },
+    1999: { w: 'real_madrid' },
     2000: { w: 'bayern' },
     2001: { w: 'real_madrid' },
-    2002: { w: 'milan' },
-    2005: { w: 'barcelona' },
+    2002: { w: 'milan', r: 'juventus' },
+    2005: { w: 'barcelona', r: 'arsenal' },
+    2006: { w: 'milan' },
+    2008: { w: 'barcelona' },
+    2009: { w: 'inter', r: 'bayern' },
   },
   'era-2000': {
-    2000: { w: 'bayern' },
-    2001: { w: 'real_madrid' },
-    2002: { w: 'milan' },
-    2004: { w: 'liverpool' },
-    2005: { w: 'barcelona' },
+    // The full 2000–15 board — every real winner's club is in this pack (Porto's
+    // 2004 miracle included), so a passive walk reproduces the European Cup exactly.
+    2000: { w: 'bayern', r: 'valencia' },
+    2001: { w: 'real_madrid', r: 'valencia' },
+    2002: { w: 'milan', r: 'juventus' },
+    2003: { w: 'porto', r: 'monaco' },
+    2004: { w: 'liverpool', r: 'milan' },
+    2005: { w: 'barcelona', r: 'arsenal' },
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern' },
+    2013: { w: 'real_madrid' },
+    2014: { w: 'barcelona', r: 'juventus' },
   },
   'era-2001': {
     // Real finalists 2002–2016 among clubs in the pack (2004 Porto/Monaco and the
