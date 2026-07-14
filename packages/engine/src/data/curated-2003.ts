@@ -178,6 +178,108 @@ export const BAYERN_2003: CuratedSeed[] = [
   q('bayern', 'schweinsteiger_b', 'Bastian Schweinsteiger', 1984, 'Germany', ['CM', 'RW'], 66, 88, 2008, 25, t(9, 5, 9, 9, 4, 7)),
 ];
 
+// ── Depth top-ups: every playable club that appears in this pack fields a full
+//    real 2003-04 squad (>=13), not a first XI padded with anonymous filler. ──────
+const REAL_2003_EXTRA: CuratedSeed[] = [
+  q('real_madrid', 'salgado_r3', 'Míchel Salgado', 1975, 'Spain', ['RB'], 80, 81, 2007, 30, t(8, 5, 7, 8, 5, 7)),
+  q('real_madrid', 'cambiasso_r3', 'Esteban Cambiasso', 1980, 'Argentina', ['CM', 'DM'], 79, 85, 2004, 25, t(9, 5, 8, 7, 4, 7)),
+  q('real_madrid', 'solari_r3', 'Santiago Solari', 1976, 'Argentina', ['LW', 'AM'], 79, 80, 2005, 30, t(8, 5, 7, 7, 5, 7)),
+  q('real_madrid', 'pavon_r3', 'Francisco Pavón', 1980, 'Spain', ['CB'], 77, 79, 2007, 30, t(7, 4, 7, 8, 5, 6)),
+  q('real_madrid', 'raulbravo_r3', 'Raúl Bravo', 1981, 'Spain', ['LB', 'CB'], 75, 78, 2007, 30, t(7, 4, 7, 7, 5, 6)),
+];
+const BAYERN_2003_EXTRA: CuratedSeed[] = [
+  q('bayern', 'sagnol_b3', 'Willy Sagnol', 1977, 'France', ['RB'], 80, 82, 2007, 30, t(8, 5, 8, 8, 4, 7)),
+  q('bayern', 'rkovac_b3', 'Robert Kovač', 1974, 'Croatia', ['CB'], 79, 80, 2006, 30, t(8, 5, 7, 7, 5, 6)),
+  q('bayern', 'hargreaves_b3', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 81, 85, 2006, 60, t(9, 5, 8, 7, 4, 7)),
+  q('bayern', 'zeroberto_b3', 'Zé Roberto', 1974, 'Brazil', ['LM', 'CM'], 82, 83, 2006, 30, t(8, 6, 8, 7, 5, 8)),
+  q('bayern', 'salihamidzic_b3', 'Hasan Salihamidžić', 1977, 'Bosnia', ['RM', 'RW'], 79, 80, 2007, 30, t(9, 5, 8, 8, 5, 7)),
+  q('bayern', 'pizarro_b3', 'Claudio Pizarro', 1978, 'Peru', ['ST'], 82, 83, 2006, 30, t(7, 6, 8, 7, 5, 7)),
+  q('bayern', 'santacruz_b3', 'Roque Santa Cruz', 1981, 'Paraguay', ['ST'], 78, 82, 2006, 55, t(7, 6, 7, 7, 5, 7)),
+  q('bayern', 'demichelis_b3', 'Martín Demichelis', 1980, 'Argentina', ['CB', 'DM'], 77, 82, 2008, 30, t(8, 5, 8, 7, 5, 7)),
+];
+const JUVENTUS_2003_EXTRA: CuratedSeed[] = [
+  q('juventus', 'zambrotta_j3', 'Gianluca Zambrotta', 1977, 'Italy', ['LB', 'RB'], 84, 85, 2008, 30, t(8, 6, 8, 7, 5, 7)),
+  q('juventus', 'montero_j3', 'Paolo Montero', 1971, 'Uruguay', ['CB'], 82, 83, 2005, 40, t(8, 7, 8, 8, 7, 6)),
+  q('juventus', 'tudor_j3', 'Igor Tudor', 1978, 'Croatia', ['CB'], 79, 80, 2007, 35, t(8, 6, 8, 7, 6, 6)),
+  q('juventus', 'davids_j3', 'Edgar Davids', 1973, 'Netherlands', ['CM', 'DM'], 83, 84, 2004, 35, t(8, 7, 9, 6, 7, 7)),
+  q('juventus', 'tacchinardi_j3', 'Alessio Tacchinardi', 1975, 'Italy', ['CM', 'DM'], 79, 80, 2007, 35, t(8, 5, 7, 8, 5, 6)),
+  q('juventus', 'divaio_j3', 'Marco Di Vaio', 1976, 'Italy', ['ST'], 79, 81, 2006, 35, t(7, 6, 8, 7, 5, 7)),
+  q('juventus', 'pessotto_j3', 'Gianluca Pessotto', 1970, 'Italy', ['LB', 'RB'], 77, 78, 2005, 30, t(8, 4, 7, 9, 4, 6)),
+];
+const MILAN_2003_EXTRA: CuratedSeed[] = [
+  q('milan', 'dida_m3', 'Dida', 1973, 'Brazil', ['GK'], 84, 85, 2007, 25, t(8, 5, 7, 8, 5, 7)),
+  q('milan', 'kaladze_m3', 'Kakha Kaladze', 1978, 'Georgia', ['LB', 'CB'], 80, 81, 2008, 30, t(8, 5, 7, 7, 5, 7)),
+  q('milan', 'ruicosta_m3', 'Rui Costa', 1972, 'Portugal', ['AM'], 82, 83, 2006, 30, t(8, 6, 7, 7, 5, 7)),
+  q('milan', 'inzaghi_m3', 'Filippo Inzaghi', 1973, 'Italy', ['ST'], 84, 85, 2006, 45, t(8, 6, 9, 8, 5, 7)),
+  q('milan', 'ambrosini_m3', 'Massimo Ambrosini', 1977, 'Italy', ['CM', 'DM'], 80, 81, 2008, 35, t(9, 5, 8, 9, 4, 6)),
+];
+const INTER_2003_EXTRA: CuratedSeed[] = [
+  q('inter', 'toldo_i3', 'Francesco Toldo', 1971, 'Italy', ['GK'], 83, 84, 2007, 30, t(8, 6, 8, 8, 5, 6)),
+  q('inter', 'materazzi_i3', 'Marco Materazzi', 1973, 'Italy', ['CB'], 82, 83, 2007, 40, t(7, 7, 8, 8, 8, 6)),
+  q('inter', 'cannavaro_i3', 'Fabio Cannavaro', 1973, 'Italy', ['CB'], 85, 87, 2006, 25, t(9, 6, 9, 8, 4, 7)),
+  q('inter', 'favalli_i3', 'Giuseppe Favalli', 1972, 'Italy', ['LB', 'CB'], 78, 79, 2006, 30, t(8, 4, 7, 8, 5, 6)),
+  q('inter', 'emre_i3', 'Emre Belözoğlu', 1980, 'Turkey', ['CM', 'AM'], 79, 82, 2007, 40, t(6, 7, 8, 6, 7, 7)),
+  q('inter', 'czanetti_i3', 'Cristiano Zanetti', 1977, 'Italy', ['DM', 'CM'], 78, 79, 2007, 35, t(8, 5, 7, 7, 5, 6)),
+  q('inter', 'recoba_i3', 'Álvaro Recoba', 1976, 'Uruguay', ['AM', 'LW'], 80, 82, 2007, 35, t(6, 8, 7, 6, 6, 7)),
+  q('inter', 'adriano_i3', 'Adriano', 1982, 'Brazil', ['ST'], 83, 88, 2008, 35, t(6, 7, 8, 6, 7, 7)),
+];
+const ARSENAL_2003_EXTRA: CuratedSeed[] = [
+  q('arsenal', 'lehmann_a3', 'Jens Lehmann', 1969, 'Germany', ['GK'], 82, 83, 2007, 25, t(7, 8, 8, 7, 6, 6)),
+  q('arsenal', 'lauren_a3', 'Lauren', 1977, 'Cameroon', ['RB'], 81, 82, 2007, 30, t(8, 5, 8, 7, 4, 7)),
+  q('arsenal', 'gilberto_a3', 'Gilberto Silva', 1976, 'Brazil', ['DM'], 82, 84, 2008, 25, t(9, 4, 8, 8, 3, 7)),
+  q('arsenal', 'kanu_a3', 'Nwankwo Kanu', 1976, 'Nigeria', ['ST'], 79, 80, 2004, 35, t(7, 6, 7, 7, 5, 7)),
+];
+const LIVERPOOL_2003_EXTRA: CuratedSeed[] = [
+  q('liverpool', 'dudek_l3', 'Jerzy Dudek', 1973, 'Poland', ['GK'], 80, 82, 2006, 25, t(7, 5, 7, 7, 5, 7)),
+  q('liverpool', 'finnan_l3', 'Steve Finnan', 1976, 'Ireland', ['RB'], 80, 81, 2008, 25, t(8, 4, 7, 7, 3, 7)),
+  q('liverpool', 'riise_l3', 'John Arne Riise', 1980, 'Norway', ['LB', 'LW'], 80, 82, 2008, 25, t(8, 5, 7, 7, 4, 7)),
+  q('liverpool', 'hamann_l3', 'Dietmar Hamann', 1973, 'Germany', ['DM', 'CM'], 81, 82, 2006, 30, t(8, 4, 7, 6, 3, 7)),
+  q('liverpool', 'kewell_l3', 'Harry Kewell', 1978, 'Australia', ['LW'], 81, 84, 2008, 50, t(6, 6, 7, 6, 6, 7)),
+  q('liverpool', 'baros_l3', 'Milan Baroš', 1981, 'Czech Republic', ['ST'], 79, 83, 2007, 35, t(7, 6, 7, 6, 5, 7)),
+  q('liverpool', 'murphy_l3', 'Danny Murphy', 1977, 'England', ['CM', 'AM'], 79, 80, 2006, 25, t(8, 5, 7, 8, 4, 7)),
+  q('liverpool', 'biscan_l3', 'Igor Bišćan', 1978, 'Croatia', ['DM', 'CB'], 77, 79, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+];
+const CHELSEA_2003_EXTRA: CuratedSeed[] = [
+  q('chelsea', 'bridge_c3', 'Wayne Bridge', 1980, 'England', ['LB'], 79, 81, 2008, 35, t(7, 5, 7, 6, 4, 7)),
+  q('chelsea', 'gallas_c3', 'William Gallas', 1977, 'France', ['CB', 'LB'], 83, 85, 2007, 30, t(7, 6, 7, 5, 6, 7)),
+  q('chelsea', 'veron_c3', 'Juan Sebastián Verón', 1975, 'Argentina', ['CM'], 82, 84, 2007, 40, t(7, 7, 8, 6, 6, 6)),
+  q('chelsea', 'crespo_c3', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 84, 85, 2007, 40, t(8, 6, 8, 6, 5, 7)),
+  q('chelsea', 'mutu_c3', 'Adrian Mutu', 1979, 'Romania', ['ST', 'AM'], 81, 84, 2008, 35, t(5, 8, 8, 5, 8, 6)),
+  q('chelsea', 'joecole_c3', 'Joe Cole', 1981, 'England', ['AM', 'LW'], 80, 85, 2008, 30, t(7, 6, 8, 7, 5, 7)),
+];
+/** Manchester City, 2003–04 — a mid-table side (Anelka up front, pre-takeover). */
+const MAN_CITY_2003: CuratedSeed[] = [
+  q('man_city', 'james_mc3', 'David James', 1970, 'England', ['GK'], 81, 82, 2006, 30, t(7, 6, 7, 7, 6, 6)),
+  q('man_city', 'sunjihai_mc3', 'Sun Jihai', 1977, 'China', ['RB'], 76, 77, 2006, 30, t(8, 4, 7, 7, 4, 7)),
+  q('man_city', 'distin_mc3', 'Sylvain Distin', 1977, 'France', ['CB'], 80, 82, 2008, 25, t(8, 5, 8, 7, 4, 7)),
+  q('man_city', 'dunne_mc3', 'Richard Dunne', 1979, 'Ireland', ['CB'], 79, 81, 2007, 30, t(8, 5, 8, 8, 5, 6)),
+  q('man_city', 'tarnat_mc3', 'Michael Tarnat', 1969, 'Germany', ['LB'], 77, 78, 2006, 30, t(8, 5, 7, 7, 5, 7)),
+  q('man_city', 'barton_mc3', 'Joey Barton', 1982, 'England', ['CM'], 74, 82, 2007, 35, t(5, 8, 8, 6, 9, 6)),
+  q('man_city', 'bosvelt_mc3', 'Paul Bosvelt', 1970, 'Netherlands', ['DM', 'CM'], 77, 78, 2005, 30, t(8, 5, 8, 7, 5, 7)),
+  q('man_city', 'swp_mc3', 'Shaun Wright-Phillips', 1981, 'England', ['RW'], 78, 84, 2006, 30, t(8, 6, 8, 7, 5, 7)),
+  q('man_city', 'berkovic_mc3', 'Eyal Berkovic', 1972, 'Israel', ['AM'], 77, 78, 2005, 30, t(7, 6, 7, 6, 6, 7)),
+  q('man_city', 'sibierski_mc3', 'Antoine Sibierski', 1974, 'France', ['AM', 'ST'], 76, 77, 2006, 30, t(8, 5, 7, 7, 5, 7)),
+  q('man_city', 'anelka_mc3', 'Nicolas Anelka', 1979, 'France', ['ST'], 82, 84, 2007, 30, t(6, 8, 8, 5, 7, 7)),
+  q('man_city', 'fowler_mc3', 'Robbie Fowler', 1975, 'England', ['ST'], 80, 81, 2006, 40, t(7, 7, 8, 7, 6, 6)),
+  q('man_city', 'wanchope_mc3', 'Paulo Wanchope', 1976, 'Costa Rica', ['ST'], 77, 79, 2005, 40, t(6, 6, 7, 6, 6, 7)),
+];
+/** Tottenham, 2003–04 — a mid-table side before the Carrick/Berbatov years. */
+const SPURS_2003: CuratedSeed[] = [
+  q('spurs', 'keller_s3', 'Kasey Keller', 1969, 'United States', ['GK'], 79, 80, 2005, 25, t(8, 5, 7, 8, 5, 7)),
+  q('spurs', 'kelly_s3', 'Stephen Kelly', 1983, 'Ireland', ['RB'], 72, 76, 2007, 30, t(7, 4, 7, 7, 4, 7)),
+  q('spurs', 'king_s3', 'Ledley King', 1980, 'England', ['CB', 'DM'], 83, 87, 2008, 55, t(8, 5, 8, 9, 4, 7)),
+  q('spurs', 'doherty_s3', 'Gary Doherty', 1980, 'Ireland', ['CB'], 73, 75, 2006, 30, t(7, 4, 7, 7, 5, 6)),
+  q('spurs', 'taricco_s3', 'Mauricio Taricco', 1973, 'Argentina', ['LB'], 76, 77, 2005, 35, t(7, 5, 7, 7, 6, 7)),
+  q('spurs', 'anderton_s3', 'Darren Anderton', 1972, 'England', ['RW', 'AM'], 78, 79, 2004, 45, t(8, 5, 7, 8, 4, 7)),
+  q('spurs', 'redknapp_s3', 'Jamie Redknapp', 1973, 'England', ['CM'], 78, 80, 2005, 55, t(8, 5, 7, 7, 4, 7)),
+  q('spurs', 'davies_s3', 'Simon Davies', 1979, 'Wales', ['RW', 'CM'], 76, 78, 2006, 30, t(8, 5, 7, 7, 4, 7)),
+  q('spurs', 'ziege_s3', 'Christian Ziege', 1972, 'Germany', ['LB', 'LM'], 78, 79, 2004, 40, t(7, 6, 7, 7, 5, 7)),
+  q('spurs', 'keane_s3', 'Robbie Keane', 1980, 'Ireland', ['ST', 'AM'], 81, 84, 2007, 25, t(7, 6, 8, 6, 5, 8)),
+  q('spurs', 'kanoute_s3', 'Frédéric Kanouté', 1977, 'Mali', ['ST'], 80, 82, 2006, 35, t(7, 6, 7, 6, 5, 7)),
+  q('spurs', 'postiga_s3', 'Hélder Postiga', 1982, 'Portugal', ['ST'], 76, 80, 2007, 30, t(6, 6, 7, 6, 6, 6)),
+  q('spurs', 'poyet_s3', 'Gustavo Poyet', 1967, 'Uruguay', ['CM', 'AM'], 78, 79, 2004, 35, t(8, 6, 8, 7, 5, 7)),
+];
+
 export const CURATED_2003: Record<string, CuratedSeed[]> = {
   man_utd: MANUTD_2003,
   barcelona: BARCELONA_2003,
@@ -187,14 +289,16 @@ export const CURATED_2003: Record<string, CuratedSeed[]> = {
   porto: PORTO_2003,
   sevilla: SEVILLA_2003,
   valencia: VALENCIA_2003,
-  real_madrid: REAL_2003,
-  chelsea: CHELSEA_2003,
-  arsenal: ARSENAL_2003,
-  liverpool: LIVERPOOL_2003,
-  milan: MILAN_2003,
-  inter: INTER_2003,
-  juventus: JUVENTUS_2003,
-  bayern: BAYERN_2003,
+  real_madrid: [...REAL_2003, ...REAL_2003_EXTRA],
+  chelsea: [...CHELSEA_2003, ...CHELSEA_2003_EXTRA],
+  arsenal: [...ARSENAL_2003, ...ARSENAL_2003_EXTRA],
+  liverpool: [...LIVERPOOL_2003, ...LIVERPOOL_2003_EXTRA],
+  milan: [...MILAN_2003, ...MILAN_2003_EXTRA],
+  inter: [...INTER_2003, ...INTER_2003_EXTRA],
+  juventus: [...JUVENTUS_2003, ...JUVENTUS_2003_EXTRA],
+  bayern: [...BAYERN_2003, ...BAYERN_2003_EXTRA],
+  man_city: MAN_CITY_2003,
+  spurs: SPURS_2003,
 };
 
 export const MANUTD_2003_SQUADS: Record<string, CuratedSeed[]> = { ...CURATED_2003 };

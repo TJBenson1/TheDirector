@@ -339,4 +339,9 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'man-utd-2013': MAN_UTD_2013_SQUADS,
   'arsenal-2004': ARSENAL_2004_SQUADS,
   'liverpool-2001': LIVERPOOL_2001_SQUADS,
+  // Legacy secondary starts reuse their era's curated pack rather than duplicate
+  // it: Chelsea 2003 shares the 2003 (Roman-empire) squads; Wenger's 1996 Arsenal
+  // shares the 1999 English/European pack (same era-1995-2005 data).
+  'chelsea-2003': MANUTD_2003_SQUADS,
+  'arsenal-1996': MAN_UTD_1999_SQUADS,
 };
