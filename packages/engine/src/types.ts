@@ -309,6 +309,25 @@ export interface ManagerState {
   appointedByUser: boolean;
   /** Completed seasons in charge. */
   seasonsInCharge: number;
+  /** His footballing identity — Mourinho is Mourinho, Pep is Pep. Suits some
+   *  squads more than others; a mismatch with the squad you've built costs you. */
+  style: ManagerStyle;
+  /** The style of the coach the club REALLY had at kickoff — the "par" the style
+   *  fit is measured against, so keeping the inherited coach is neutral. */
+  parStyle: ManagerStyle;
+}
+
+/** A coach's footballing identity. Two axes carry the real archetypes: how he
+ *  wants the ball (pragmatic/counter ↔ possession/positional), and how much he
+ *  builds around youth (win-now ↔ developer). Mourinho ≈ {0.2, 0.2}; Pep ≈
+ *  {0.98, 0.75}; Wenger ≈ {0.8, 0.9}; Allardyce ≈ {0.2, 0.3}. */
+export interface ManagerStyle {
+  /** Human-readable label for the UI ("Positional possession"). */
+  label: string;
+  /** 0 = pragmatic, low-block & counter · 1 = possession / positional. */
+  possession: number;
+  /** 0 = win-now, ready-made · 1 = youth developer. */
+  youth: number;
 }
 
 export interface DivergenceEntry {

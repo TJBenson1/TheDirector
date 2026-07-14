@@ -22,13 +22,51 @@
  * results, so this is calibration-neutral on the passive path.
  */
 
-import type { Decision, GameState, ManagerState, PlayerId } from './types.js';
+import type { Decision, GameState, ManagerState, ManagerStyle, PlayerId, Position } from './types.js';
 import { Rng, hashStringToU32, clamp01 } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { appendMemory } from './memory.js';
 import { standingsOrder } from './season.js';
 import { estimateMinutesShare } from './development.js';
-import { recomputeClubStrength } from './players.js';
+import { recomputeClubStrength, clubSquadPlayers } from './players.js';
+
+// ── Real coaching styles — Mourinho is Mourinho, Pep is Pep ───────────────────
+const st = (label: string, possession: number, youth: number): ManagerStyle => ({ label, possession, youth });
+
+/** Signature style per named coach. Real archetypes on two axes (possession,
+ *  youth). Anyone not listed gets a balanced default. */
+const STYLE_BY_NAME: Record<string, ManagerStyle> = {
+  'Alex Ferguson': st('Relentless, youth-driven', 0.5, 0.82),
+  'Gérard Houllier': st('Structured, counter-attacking', 0.4, 0.55),
+  'Arsène Wenger': st('Flowing possession, youth', 0.8, 0.9),
+  'Louis van Gaal': st('Positional, academy-first', 0.85, 0.82),
+  'David Moyes': st('Hard-working, pragmatic', 0.35, 0.5),
+  'Claudio Ranieri': st('Pragmatic, rotational', 0.45, 0.4),
+  'Vicente del Bosque': st('Calm possession', 0.7, 0.6),
+  'Gigi Simoni': st('Balanced', 0.5, 0.45),
+  'Fabio Capello': st('Pragmatic, defensive rigour', 0.35, 0.25),
+  'Marcello Lippi': st('Balanced winning machine', 0.5, 0.35),
+  'Carlo Ancelotti': st('Adaptable man-management', 0.55, 0.45),
+  'Rafael Benítez': st('Pragmatic, zonal, rotation', 0.4, 0.45),
+  'Guus Hiddink': st('Pragmatic, tournament nous', 0.5, 0.45),
+  'Sven-Göran Eriksson': st('Balanced, unflustered', 0.5, 0.4),
+  'Martin O’Neill': st('Direct, motivational', 0.3, 0.4),
+  'Gordon Strachan': st('Tidy, possession-leaning', 0.5, 0.5),
+  'Alan Curbishley': st('Organised, pragmatic', 0.35, 0.45),
+  'Roy Hodgson': st('Compact defensive block', 0.3, 0.35),
+  'Sam Allardyce': st('Direct, physical, set-pieces', 0.2, 0.3),
+  'Steve McClaren': st('Balanced', 0.45, 0.45),
+  // The two the Director will chase — polar opposites, era-appropriate names.
+  'José Mourinho': st('Pragmatic — low block & lethal counter', 0.2, 0.2),
+  'Pep Guardiola': st('Positional possession — total control', 0.98, 0.75),
+};
+const DEFAULT_STYLE = st('Balanced', 0.5, 0.45);
+const CARETAKER_STYLE = st('Caretaker — keep it steady', 0.45, 0.4);
+
+/** The footballing identity of a named coach (for the UI + appointments). */
+export function coachStyle(name: string): ManagerStyle {
+  return STYLE_BY_NAME[name] ?? DEFAULT_STYLE;
+}
 
 /** The real head coach each scenario inherits at kickoff (reality-default). */
 const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
@@ -47,6 +85,8 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
 /** A pool of coaches available to hire (era-agnostic — real managers who moved
  *  clubs across this window). The shortlist is drawn from here, ranked by fit. */
 const COACH_POOL: Array<{ name: string; reputation: number }> = [
+  { name: 'Pep Guardiola', reputation: 90 },
+  { name: 'José Mourinho', reputation: 90 },
   { name: 'Fabio Capello', reputation: 90 },
   { name: 'Marcello Lippi', reputation: 88 },
   { name: 'Carlo Ancelotti', reputation: 88 },
@@ -67,6 +107,7 @@ const COACH_POOL: Array<{ name: string; reputation: number }> = [
 export function initialManager(scenarioId: string, clubPrestige: number): ManagerState {
   const real = REAL_COACHES[scenarioId];
   const reputation = real?.reputation ?? Math.max(45, clubPrestige - 8);
+  const style = real ? coachStyle(real.name) : DEFAULT_STYLE;
   return {
     identity: real?.name ?? 'the incumbent manager',
     relationshipWithUser: 60,
@@ -75,6 +116,8 @@ export function initialManager(scenarioId: string, clubPrestige: number): Manage
     standing: 62,
     appointedByUser: false,
     seasonsInCharge: 0,
+    style,
+    parStyle: style, // his style is the baseline the fit is measured against
   };
 }
 
@@ -88,16 +131,62 @@ export function initialManager(scenarioId: string, clubPrestige: number): Manage
 // sharpens; sack a great coach for a caretaker and it dips. Asymmetric — a good
 // coach lifts a squad only so far, but a bad appointment can really drag it.
 
-/** Strength points added to the user's club from the coach (0 at par). */
+/** Strength points added to the user's club from the coach's REPUTATION (0 at
+ *  par). The style-fit term is separate (`managerStyleStrengthMod`). */
 export function managerStrengthMod(mgr: ManagerState): number {
   const dev = mgr.reputation - mgr.parReputation;
   return Math.max(-7, Math.min(4, dev * 0.1));
 }
 
-/** Youth-development multiplier from the coach (×1 at par). */
+/** Youth-development multiplier (×1 at par): a better coach AND a more
+ *  youth-oriented style than the club had both bring prospects on faster. */
 export function managerDevMod(mgr: ManagerState): number {
   const dev = mgr.reputation - mgr.parReputation;
-  return Math.max(0.8, Math.min(1.12, 1 + dev * 0.005));
+  const repTerm = Math.max(0.8, Math.min(1.12, 1 + dev * 0.005));
+  const youthTerm = Math.max(0.85, Math.min(1.15, 1 + (mgr.style.youth - mgr.parStyle.youth) * 0.25));
+  return repTerm * youthTerm;
+}
+
+const POS_GROUP: Record<Position, 'GK' | 'DEF' | 'MID' | 'ATT'> = {
+  GK: 'GK', CB: 'DEF', LB: 'DEF', RB: 'DEF', DM: 'MID', CM: 'MID', AM: 'MID', LW: 'ATT', RW: 'ATT', ST: 'ATT',
+};
+
+/** Position-group average ability for the user's outfield squad. */
+function squadGroupAverages(state: GameState): { def: number; mid: number; att: number; overall: number } {
+  const players = clubSquadPlayers(state, state.playerClub).filter((p) => (p.positions[0] ?? 'CM') !== 'GK');
+  if (players.length === 0) return { def: 70, mid: 70, att: 70, overall: 70 };
+  const buckets: Record<'DEF' | 'MID' | 'ATT', number[]> = { DEF: [], MID: [], ATT: [] };
+  for (const p of players) {
+    const g = POS_GROUP[p.positions[0] ?? 'CM'];
+    if (g !== 'GK') buckets[g].push(p.ability);
+  }
+  const avg = (a: number[]): number => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 70);
+  const overall = players.reduce((s, p) => s + p.ability, 0) / players.length;
+  return { def: avg(buckets.DEF), mid: avg(buckets.MID), att: avg(buckets.ATT), overall };
+}
+
+/**
+ * How well a style fits the user's current squad. A POSSESSION coach wants a
+ * squad whose strength is in MIDFIELD (control the ball); a PRAGMATIC coach wants
+ * defensive solidity and a threat to counter with. Returns a signed edge — the
+ * ability by which the style-relevant units out- (or under-) perform the squad
+ * as a whole.
+ */
+export function styleMatchAffinity(state: GameState, style: ManagerStyle): number {
+  const { def, mid, att, overall } = squadGroupAverages(state);
+  const midEdge = mid - overall; // possession lives on midfield control
+  const defAttEdge = (def + att) / 2 - overall; // pragmatism lives on defence + a counter threat
+  return style.possession * midEdge + (1 - style.possession) * defAttEdge;
+}
+
+/** Strength points from how much better the coach's STYLE fits the squad than
+ *  the inherited coach's did (0 when the style is unchanged — calibration-safe,
+ *  even as the squad drifts). Build a midfield-heavy side and Pep out-adds a
+ *  route-one pragmatist; build around a back line and a counter, and it flips. */
+export function managerStyleStrengthMod(state: GameState): number {
+  const mgr = state.managerRelations;
+  const delta = styleMatchAffinity(state, mgr.style) - styleMatchAffinity(state, mgr.parStyle);
+  return Math.max(-3, Math.min(3, delta * 0.4));
 }
 
 function ordinal(n: number): string {
@@ -224,6 +313,7 @@ export function performSack(state: GameState, directorRelief: number, initiatedB
   mgr.appointedByUser = false;
   mgr.seasonsInCharge = 0;
   mgr.relationshipWithUser = 55;
+  mgr.style = CARETAKER_STYLE;
   recomputeClubStrength(state, state.playerClub); // the caretaker XI dips at once
 
   pushHireDecision(state);
@@ -326,6 +416,7 @@ export function appointManager(state: GameState, name: string, reputation: numbe
   mgr.standing = 60;
   mgr.appointedByUser = true;
   mgr.seasonsInCharge = 0;
+  mgr.style = coachStyle(name); // his real footballing identity
   recomputeClubStrength(state, state.playerClub); // the new man's effect lands now
   logEvent(state, {
     category: 'system',

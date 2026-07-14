@@ -179,6 +179,9 @@ export {
   applyDirectiveEffects,
   managerStrengthMod,
   managerDevMod,
+  managerStyleStrengthMod,
+  styleMatchAffinity,
+  coachStyle,
 } from './manager.js';
 export {
   simulateMatch,

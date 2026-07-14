@@ -14,8 +14,11 @@ import {
   applyDirectiveEffects,
   managerStrengthMod,
   managerDevMod,
+  managerStyleStrengthMod,
+  styleMatchAffinity,
+  coachStyle,
 } from './manager.js';
-import { recomputeClubStrength } from './players.js';
+import { recomputeClubStrength, clubSquadPlayers } from './players.js';
 import { estimateMinutesShare } from './development.js';
 import { Rng } from './rng.js';
 import type { GameState, PlayerState } from './types.js';
@@ -242,6 +245,65 @@ describe('the coach\'s on-pitch effect (anchored to par)', () => {
     expect(s.clubs[s.playerClub]!.strength).toBeLessThan(before);
   });
 });
+
+describe('management style reflects reality (Mourinho is Mourinho, Pep is Pep)', () => {
+  it('real coaches carry their signature, opposite styles', () => {
+    const pep = coachStyle('Pep Guardiola');
+    const mou = coachStyle('José Mourinho');
+    expect(pep.possession).toBeGreaterThan(0.9); // total control
+    expect(mou.possession).toBeLessThan(0.3); // low block & counter
+    expect(pep.possession).toBeGreaterThan(mou.possession);
+    // Wenger develops youth; Allardyce does not.
+    expect(coachStyle('Arsène Wenger').youth).toBeGreaterThan(coachStyle('Sam Allardyce').youth);
+    // Each scenario's inherited coach carries his real identity.
+    expect(createNewGame({ scenarioId: 'arsenal-2004' }).managerRelations.style.possession).toBeGreaterThan(0.7);
+  });
+
+  it('a style is judged by how it FITS the squad you have built', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'fit' });
+    // Build a midfield-heavy side: crank MID, drop DEF/ATT.
+    for (const p of clubSquadPlayers(s, s.playerClub)) {
+      const pos = p.positions[0] ?? 'CM';
+      if (['DM', 'CM', 'AM'].includes(pos)) p.ability = 90;
+      else if (pos !== 'GK') p.ability = 68;
+    }
+    const possession = coachStyle('Pep Guardiola');
+    const pragmatic = coachStyle('Sam Allardyce');
+    // A possession coach gets more out of a midfield-dominant squad than a
+    // route-one pragmatist does.
+    expect(styleMatchAffinity(s, possession)).toBeGreaterThan(styleMatchAffinity(s, pragmatic));
+  });
+
+  it('keeping the inherited coach\'s style is neutral, even as the squad drifts', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'stylepar' });
+    expect(managerStyleStrengthMod(s)).toBe(0); // style === parStyle
+    // Reshape the squad — still neutral, because the style hasn't changed.
+    for (const p of clubSquadPlayers(s, s.playerClub)) p.ability = 88;
+    expect(managerStyleStrengthMod(s)).toBe(0);
+  });
+
+  it('appointing a style that suits your squad adds strength; a mismatch subtracts', () => {
+    const base = createNewGame({ scenarioId: 'liverpool-2001', seed: 'stylefit' });
+    // A midfield-dominant squad.
+    for (const p of clubSquadPlayers(base, base.playerClub)) {
+      const pos = p.positions[0] ?? 'CM';
+      p.ability = ['DM', 'CM', 'AM'].includes(pos) ? 90 : pos === 'GK' ? 75 : 66;
+    }
+    // Court + appoint Pep (possession) — fits — vs Allardyce (direct) — misfit.
+    const withPep = cloneStyle(base, 'Pep Guardiola');
+    const withBig = cloneStyle(base, 'Sam Allardyce');
+    expect(managerStyleStrengthMod(withPep)).toBeGreaterThan(managerStyleStrengthMod(withBig));
+    expect(managerStyleStrengthMod(withPep)).toBeGreaterThan(0); // possession suits this squad
+  });
+});
+
+/** Clone a state and swap in a coach's style (leaving parStyle as the inherited
+ *  baseline), so the style-fit delta reflects that appointment. */
+function cloneStyle(s: GameState, coachName: string): GameState {
+  const c = structuredClone(s);
+  c.managerRelations = { ...c.managerRelations, style: coachStyle(coachName) };
+  return c;
+}
 
 /** Run reviewDirectorStrategy with fresh RNG streams until it dismisses (or give
  *  up), returning the outcome + the dismissal code that fired. */

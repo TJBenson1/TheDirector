@@ -167,13 +167,24 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
   upgrade sharpens the side a little, a caretaker/mismatch drags it a lot.
   Verified end-to-end: over 16 seeds × ~6 seasons of man-utd-2013, the par coach
   wins 7 user titles, a −7 caretaker 0.
+- ✅ **Management style — real archetypes** (`ManagerStyle`, `coachStyle`):
+  Mourinho is Mourinho, Pep is Pep. Every coach carries a signature style on two
+  axes (possession ↔ pragmatic, youth ↔ win-now): Pep {0.98, 0.75}, Mourinho
+  {0.2, 0.2}, Wenger {0.8, 0.9}, Allardyce {0.2, 0.3}, Ferguson {0.5, 0.82}…
+  Style bites through **squad fit** (`styleMatchAffinity`): a possession coach
+  gets more from a MIDFIELD-strong squad, a pragmatist from DEFENCE + a counter —
+  so the right appointment is squad-dependent. Also anchored to a `parStyle`
+  baseline (0 when the inherited coach is kept → calibration-neutral) and folds a
+  youth-emphasis term into development. Pep & Mourinho are hireable names.
+  Verified: on a midfield-heavy squad Pep out-adds Allardyce (+4.8 str); on a
+  defensive one Mourinho out-adds Pep (+3.4).
 - **Still to do (deferred by design):**
-  - **Manager STYLE** (not just quality): tactical bias that suits some squads
-    over others, so the "right" appointment is squad-dependent.
   - **Manager tenure narrative:** trophies/relationships accruing to a coach's
     reputation; a sacked big name resurfacing at a rival.
-  - **Era-real out-of-work pool per window** (the hire shortlist is currently a
-    single era-agnostic pool) + real compensation/contract cost.
+  - **Era-real out-of-work pool per window** (the hire shortlist is a single
+    era-agnostic pool — so Pep can appear pre-2008) + real compensation cost.
+  - **Style ↔ player-type development:** a possession coach developing technical
+    youth faster, a pragmatist defenders (needs per-attribute player data).
 
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the
