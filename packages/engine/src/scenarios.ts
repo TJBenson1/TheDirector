@@ -190,9 +190,13 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 70 },
       { id: 'lyon', name: 'Olympique Lyonnais', prestige: 74 },
       { id: 'inter', name: 'Internazionale', prestige: 82 },
+      // Parma — Parmalat has just collapsed; a crisis club to pick apart (Gilardino).
+      { id: 'parma', name: 'Parma', prestige: 68 },
     ],
     // Abramovich bankrolls Chelsea; Arsenal are servicing the Emirates debt.
     ownership: { chelsea: 'sugar-daddy', arsenal: 'debt' },
+    // Parmalat's fraud has bankrupted Parma — a distressed seller from kickoff.
+    distressedClubs: { parma: 'crisis' },
     domesticLeagueId: 'eng-2004',
   },
   'man-utd-1999': {

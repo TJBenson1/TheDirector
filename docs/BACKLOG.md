@@ -92,11 +92,18 @@ The user can now pick apart smaller/distressed clubs:
 - **Still to do:** more financial shocks (Leeds 2004, Parma/Parmalat 2004,
   Rangers 2012); injuries packs for 2013/2001; Porto's other onward sales
   (Postiga→Spurs '03, Costinha/Maniche→Dynamo '05) once those clubs are curated.
-  - **The "gettable but overlooked" data** (user ask): curate a few LOW-loyalty,
-    undervalued players at the distressed clubs a raider should pick off but
-    reality didn't — **Leeds** (2004 fire-sale), **Parma** (Parmalat collapse),
-    **Fiorentina** — plus their financial shocks. The mechanic is ready; it just
-    needs those squads seeded so the bargains actually exist to buy.
+  - ✅ **The "gettable but overlooked" data** (user ask) — two of the three built:
+    - **Leeds** (`liverpool-2001`): the "living the dream" collapse is now a
+      scheduled shock (strained '02 → crisis '03) plus the real fire-sale ledger
+      (Ferdinand→United £30m, Woodgate & Bowyer→Newcastle, Smith→United, and
+      **Kewell→Liverpool ~£5m** as the user's own real-in). Beat reality's raiders
+      and it's your discount fire-sale.
+    - **Parma** (`arsenal-2004`): Parmalat's fraud collapsed them, so Parma starts
+      in **crisis** (`distressedClubs`) with a curated squad. The jewel is a
+      22-year-old **Gilardino** — a raider gets him for ~£6.7m in 2004 (fire-sale +
+      step-up) before Milan really paid ~£19m in 2005; the onward sale is ledgered.
+    - **Still to do: Fiorentina** — their 2002 bankruptcy gutted them pre-era (Rui
+      Costa/Toldo left in 2001), so a clean raid window needs an era-2001 curation.
 
 ## Lost-talent profile expansion
 More real under-achievers to curate with a `latentCeiling` (the reverse

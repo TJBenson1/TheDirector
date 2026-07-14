@@ -340,6 +340,26 @@ export const JUVENTUS_2004: CuratedSeed[] = [
   q('juventus', 'ibrahimovic04', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 82, 90, 2009, 20, t(8, 10, 10, 4, 7, 7)),
 ];
 
+/** Parma, 2004–05 — Parmalat's €14bn accounting fraud collapsed the parent
+ *  company in Dec 2003, forcing the club into administration and a fire-sale. The
+ *  jewel is a 22-year-old Alberto Gilardino (23 goals that season → Milan for
+ *  ~£19m in 2005): the "gettable but overlooked" star a big club could prise away
+ *  a year early and cheap, off a distressed seller (crisis from kickoff). */
+export const PARMA_2004: CuratedSeed[] = [
+  q('parma', 'frey04', 'Sébastien Frey', 1980, 'France', ['GK'], 82, 85, 2008, 30, t(7, 7, 8, 6, 6, 7)),
+  q('parma', 'zaccardo04', 'Cristian Zaccardo', 1981, 'Italy', ['RB', 'CB'], 76, 80, 2007, 35, t(7, 5, 7, 6, 5, 7)),
+  q('parma', 'bonera04', 'Daniele Bonera', 1981, 'Italy', ['CB', 'RB'], 77, 83, 2006, 30, t(8, 5, 7, 6, 5, 7)),
+  q('parma', 'cardone04', 'Giuseppe Cardone', 1974, 'Italy', ['CB'], 73, 74, 2006, 35, t(8, 4, 6, 8, 4, 6)),
+  q('parma', 'dellorco04', 'Manuele Blasi', 1980, 'Italy', ['DM', 'CM'], 74, 79, 2007, 35, t(7, 5, 7, 6, 5, 7)),
+  q('parma', 'barone04', 'Simone Barone', 1978, 'Italy', ['CM'], 75, 78, 2007, 40, t(8, 5, 7, 6, 5, 7)),
+  q('parma', 'morrone04', 'Stefano Morrone', 1978, 'Italy', ['CM', 'DM'], 73, 76, 2008, 40, t(7, 5, 7, 6, 5, 6)),
+  q('parma', 'marchionni04', 'Marco Marchionni', 1980, 'Italy', ['RW', 'LW'], 75, 79, 2007, 40, t(7, 6, 7, 6, 6, 7)),
+  q('parma', 'morfeo04', 'Domenico Morfeo', 1976, 'Italy', ['AM'], 77, 79, 2006, 45, t(6, 7, 6, 5, 7, 6)),
+  // Alberto Gilardino — the raid target. Young, prolific, and at a broke club.
+  q('parma', 'gilardino04', 'Alberto Gilardino', 1982, 'Italy', ['ST'], 80, 87, 2007, 30, t(8, 6, 8, 6, 5, 7)),
+  q('parma', 'budan04', 'Igor Budan', 1980, 'Croatia', ['ST'], 71, 75, 2007, 40, t(7, 5, 7, 6, 5, 6)),
+];
+
 export const DORTMUND_2004: CuratedSeed[] = [
   q('dortmund', 'rosicky', 'Tomáš Rosický', 1980, 'Czech Republic', ['AM'], 82, 84, 2006, 45, t(8, 5, 7, 7, 4, 7)),
 ];
@@ -394,6 +414,7 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   barcelona: BARCELONA_2004,
   real_madrid: REAL_MADRID_2004,
   juventus: JUVENTUS_2004,
+  parma: PARMA_2004,
   dortmund: DORTMUND_2004,
   zenit: ZENIT_2004,
   leverkusen: LEVERKUSEN_2004,

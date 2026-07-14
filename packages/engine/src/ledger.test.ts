@@ -152,6 +152,40 @@ describe('capitalising on the food chain + clubs in distress', () => {
     }
   });
 
+  it('Parmalat leaves Parma a crisis seller — raid Gilardino before Milan (2004)', () => {
+    const a = createNewGame({ scenarioId: 'arsenal-2004', seed: 'parma-raid' });
+    expect(a.clubs.parma?.financialHealth).toBe('crisis'); // the fraud collapsed them at kickoff
+    const gila = a.players.cur_gilardino04!;
+    expect(gila.club).toBe('parma');
+    const year = parseYearMonth(a.clock.date).year;
+    // A crisis seller + a much bigger buyer = a deep discount on the overlooked jewel.
+    expect(askingPrice(a, 'cur_gilardino04', 'arsenal')).toBeLessThan(valuePlayer(gila, year) * 0.7);
+    expect(acquisitionTags(a, gila, 'arsenal')).toContain('fire-sale');
+  });
+
+  it('leave Parma alone and Milan take Gilardino in 2005 (reality)', () => {
+    let a = createNewGame({ scenarioId: 'arsenal-2004', seed: 'parma-passive' });
+    for (let i = 0; i < 10 && parseYearMonth(a.clock.date).year < 2006; i++) {
+      for (const d of [...a.pendingDecisions]) a = applyDecision(a, d.id, d.choices[0]!.id).state;
+      a = advanceWindow(a).state;
+      if (a.board.dismissed) break;
+    }
+    expect(a.players.cur_gilardino04?.club).toBe('milan');
+  });
+
+  it('Leeds "living the dream" collapse becomes a crisis fire-sale by 2003', () => {
+    let s = createNewGame({ scenarioId: 'liverpool-2001', seed: 'leeds-fall' });
+    for (let i = 0; i < 16 && parseYearMonth(s.clock.date).year < 2004; i++) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      s = advanceWindow(s).state;
+      if (s.board.dismissed) break;
+    }
+    expect(s.clubs.leeds?.financialHealth).toBe('crisis');
+    expect(s.eventLog.some((e) => e.code === 'club.distress' && e.data?.clubId === 'leeds')).toBe(true);
+    // The real fire-sale reproduced: Ferdinand banked United's £30m in 2002.
+    expect(s.players.cur_ferdinand01?.club).toBe('man_utd');
+  });
+
   it('leave Porto alone and the giants raid it in 2004 (Deco → Barça, as in reality)', () => {
     let s = createNewGame({ scenarioId: 'liverpool-2001', seed: 'porto-passive' });
     // Passive Liverpool career through the 2004 sell-off window (interrupt

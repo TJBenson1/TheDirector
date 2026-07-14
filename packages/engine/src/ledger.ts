@@ -384,11 +384,23 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_nunovalente04', from: 'porto', to: 'everton', window: '2005-08', fee: 1_500_000, id: 'valente-everton-2005' },
   { playerId: 'cur_pepe04', from: 'porto', to: 'real_madrid', window: '2007-07', fee: 20_000_000, id: 'pepe-madrid-2007' },
   { playerId: 'cur_bosingwa04', from: 'porto', to: 'chelsea', window: '2008-07', fee: 16_000_000, id: 'bosingwa-chelsea-2008' },
+  // ── Parma's post-Parmalat sell-off. The broke club cashed in a year after the
+  // crash: Gilardino to Milan (2005), Bonera the year after. Beat Milan to the
+  // punch in 2004 — Parma is a `crisis` seller, so it's a food-chain steal.
+  { playerId: 'cur_gilardino04', from: 'parma', to: 'milan', window: '2005-07', fee: 19_000_000, id: 'gilardino-milan-2005' },
+  { playerId: 'cur_bonera04', from: 'parma', to: 'milan', window: '2006-07', fee: 8_000_000, id: 'bonera-milan-2006' },
 ];
 
 /** Calciopoli sends Juventus down to Serie B and into a forced fire-sale. */
 const SHOCKS_2004: FinancialShock[] = [
   { clubId: 'juventus', year: 2006, health: 'crisis', note: 'is relegated to Serie B in the Calciopoli scandal — a forced fire-sale opens' },
+];
+
+/** Leeds's over-reach for the Champions League tips them into meltdown — the
+ *  books slide from strained (2002) to a full fire-sale crisis (2003). */
+const SHOCKS_2001: FinancialShock[] = [
+  { clubId: 'leeds', year: 2002, health: 'strained', note: 'are straining under the debt from "living the dream" — cash must be raised' },
+  { clubId: 'leeds', year: 2003, health: 'crisis', note: 'have collapsed financially — a forced fire-sale of the whole squad opens' },
 ];
 
 /** Real 2004-era injuries — fire only if the player is at his real club. */
@@ -437,6 +449,17 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   { playerId: 'cur_deco01', from: 'porto', to: 'barcelona', window: '2004-07', fee: 21_000_000, id: 'deco-barca-2004' },
   { playerId: 'cur_carvalho01', from: 'porto', to: 'chelsea', window: '2004-08', fee: 30_000_000, id: 'carvalho-chelsea-2004', enabledBy: 'abramovich' },
   { playerId: 'cur_pferreira01', from: 'porto', to: 'chelsea', window: '2004-07', fee: 20_000_000, id: 'ferreira-chelsea-2004', enabledBy: 'abramovich' },
+  // ── Leeds "living the dream" collapse (§ distress). Overspending on the
+  // Champions League run tipped them into meltdown; from 2002 the side was
+  // dismantled dirt-cheap. Ferdinand banked £30m, but the rest went for a
+  // pittance — Kewell to the user for ~£5m, Woodgate & Bowyer to Newcastle, Smith
+  // to United. Leave it and reality's raiders take them; get there first and it's
+  // your fire-sale (Leeds is a `crisis` seller — a food-chain steal).
+  { playerId: 'cur_ferdinand01', from: 'leeds', to: 'man_utd', window: '2002-07', fee: 30_000_000, id: 'ferdinand-utd-2002' },
+  { playerId: 'cur_woodgate01', from: 'leeds', to: 'newcastle', window: '2003-01', fee: 9_000_000, id: 'woodgate-newcastle-2003' },
+  { playerId: 'cur_kewell01', from: 'leeds', to: 'liverpool', window: '2003-07', fee: 5_000_000, id: 'kewell-liverpool-2003' },
+  { playerId: 'cur_bowyer', from: 'leeds', to: 'newcastle', window: '2003-07', fee: 500_000, id: 'bowyer-newcastle-2003' },
+  { playerId: 'cur_smith01', from: 'leeds', to: 'man_utd', window: '2004-07', fee: 7_000_000, id: 'smith-utd-2004' },
 ];
 
 // ── Real retirements (curated players hang up their boots ≈ when they did) ────
@@ -681,7 +704,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013, nearMisses: NEARMISS_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004, financialShocks: SHOCKS_2004 },
-  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2001, academyGraduates: ACADEMY_2001 },
+  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2001, academyGraduates: ACADEMY_2001, financialShocks: SHOCKS_2001 },
   // era-2009 (Bayern / Van Gaal reset). Ledger + injuries + retirements are the
   'era-2009': { realTransferLedger: LEDGER_2009, academyIntakes: [], realInjuries: INJURIES_2009, retirements: RETIREMENTS_2009, academyGraduates: ACADEMY_2009 },
 };
