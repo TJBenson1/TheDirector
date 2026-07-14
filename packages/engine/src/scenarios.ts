@@ -152,6 +152,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'porto', name: 'FC Porto', prestige: 72 },
       // Barcelona — where Deco really went in 2004 (destination for the sell-off ledger).
       { id: 'barcelona', name: 'Barcelona', prestige: 86 },
+      // Fiorentina — heading for the 2002 bankruptcy; a doomed side to raid (Chiesa,
+      // Nuno Gomes, a young Adriano) before liquidation scatters them.
+      { id: 'fiorentina', name: 'Fiorentina', prestige: 70 },
     ],
     domesticLeagueId: 'eng-2001',
   },

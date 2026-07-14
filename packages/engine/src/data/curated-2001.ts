@@ -148,6 +148,32 @@ export const PORTO_2001: CuratedSeed[] = [
   q('porto', 'derlei01', 'Derlei', 1975, 'Brazil', ['ST'], 77, 80, 2006, 35, t(7, 6, 8, 6, 5, 7)),
 ];
 
+/** ACF Fiorentina, 2001–02 — their LAST season before Cecchi Gori's finances
+ *  collapsed and the club was liquidated into Serie C2 (summer 2002). Rui Costa
+ *  and Toldo were already cashed in (2001); what's left is a raidable, doomed side
+ *  (crisis from 2002). Di Livio is the loyal captain who followed them all the way
+ *  down; Chiesa and Nuno Gomes are the sellable stars; Adriano (on loan, latent
+ *  93) is the lost-talent gamble before "L'Imperatore" rose and then fell. */
+export const FIORENTINA_2001: CuratedSeed[] = [
+  q('fiorentina', 'manninger02', 'Alexander Manninger', 1977, 'Austria', ['GK'], 76, 78, 2002, 30, t(7, 6, 7, 4, 5, 5)),
+  q('fiorentina', 'torricelli02', 'Moreno Torricelli', 1970, 'Italy', ['RB', 'CB'], 74, 74, 2003, 35, t(8, 4, 6, 7, 3, 7)),
+  q('fiorentina', 'tarozzi02', 'Andrea Tarozzi', 1973, 'Italy', ['RB', 'CB'], 70, 71, 2003, 35, t(7, 4, 5, 7, 3, 6)),
+  q('fiorentina', 'adani02', 'Daniele Adani', 1974, 'Italy', ['CB'], 74, 75, 2002, 35, t(7, 7, 7, 5, 5, 7)),
+  q('fiorentina', 'moretti02', 'Emiliano Moretti', 1981, 'Italy', ['LB', 'CB'], 72, 82, 2005, 30, t(8, 4, 7, 6, 3, 7)),
+  // Di Livio — the loyal captain, the only man who stayed down into Serie C2.
+  q('fiorentina', 'dilivio02', 'Angelo Di Livio', 1966, 'Italy', ['DM', 'CM'], 74, 74, 2003, 35, t(9, 3, 6, 10, 2, 8), { loyalty: 92 }),
+  q('fiorentina', 'amaral02', 'Amaral', 1973, 'Brazil', ['DM', 'CB'], 75, 76, 2004, 35, t(7, 6, 6, 5, 5, 6)),
+  q('fiorentina', 'baronio02', 'Roberto Baronio', 1977, 'Italy', ['CM'], 71, 76, 2002, 40, t(6, 5, 6, 5, 5, 6)),
+  q('fiorentina', 'amoroso02', 'Christian Amoroso', 1976, 'Italy', ['CM', 'AM'], 72, 74, 2003, 35, t(7, 5, 6, 6, 4, 6)),
+  // Morfeo — a gifted playmaker who drifted through a journeyman career (latent 84).
+  q('fiorentina', 'morfeo02', 'Domenico Morfeo', 1976, 'Italy', ['AM'], 77, 80, 2003, 40, t(5, 7, 6, 4, 7, 5), { latentCeiling: 84 }),
+  q('fiorentina', 'nunogomes02', 'Nuno Gomes', 1976, 'Portugal', ['ST'], 80, 82, 2004, 45, t(7, 6, 7, 5, 5, 6)),
+  q('fiorentina', 'chiesa02', 'Enrico Chiesa', 1970, 'Italy', ['ST'], 83, 84, 2004, 55, t(8, 6, 7, 6, 4, 6)),
+  // Adriano — on loan from Inter; the definitive lost talent (latent 93): rose to
+  // "L'Imperatore", then a spectacular off-pitch collapse. A cheap gamble here.
+  q('fiorentina', 'adriano02', 'Adriano', 1982, 'Brazil', ['ST'], 76, 84, 2004, 35, t(4, 7, 6, 4, 8, 6), { latentCeiling: 93 }),
+];
+
 /** Source clubs for the Liverpool 2002 decisions + Chelsea's 2003 splurge. */
 export const LENS_2001: CuratedSeed[] = [
   // Diouf — a World Cup star who flopped in England on attitude. The riskiest
@@ -177,6 +203,7 @@ export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
   leeds: LEEDS_2001,
   newcastle: NEWCASTLE_2001,
   porto: PORTO_2001,
+  fiorentina: FIORENTINA_2001,
   lens: LENS_2001,
   lille: LILLE_2001,
   real_madrid: [CHELSEA_TARGETS_2003[0]!],

@@ -102,8 +102,10 @@ The user can now pick apart smaller/distressed clubs:
       in **crisis** (`distressedClubs`) with a curated squad. The jewel is a
       22-year-old **Gilardino** — a raider gets him for ~£6.7m in 2004 (fire-sale +
       step-up) before Milan really paid ~£19m in 2005; the onward sale is ledgered.
-    - **Still to do: Fiorentina** — their 2002 bankruptcy gutted them pre-era (Rui
-      Costa/Toldo left in 2001), so a clean raid window needs an era-2001 curation.
+    - ✅ **Fiorentina** (`liverpool-2001`): their real 2001–02 squad curated (the
+      last season before the Cecchi Gori bankruptcy), crisis from 2002 — Chiesa,
+      Nuno Gomes and a young **Adriano** (loan, latent 93) are raidable, while
+      loyal captain **Di Livio** (who followed them down to Serie C2) is shielded.
 
 ## Lost-talent profile expansion
 More real under-achievers to curate with a `latentCeiling` (the reverse
@@ -203,13 +205,20 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
   and give him the time United never did, or make the change and pick from the
   era-real 2014 pool (Van Gaal, Mourinho, Ancelotti…). Data-driven; add a row per
   arc.
+- ✅ **Style ↔ player-type development** (`managerPositionDevMod`): position
+  stands in for player type — a POSSESSION coach brings midfielders (and
+  attackers) on faster and defenders slower than the coach the club had; a
+  PRAGMATIST the reverse (Pep MID ×1.14 / DEF ×0.86; Mourinho the mirror).
+  Anchored to par → 0-delta for a kept coach, calibration-inert.
+- ✅ **Coach occupancy** (`COACH_JOBS`): the big names carry real job tenures, so a
+  coach under contract elsewhere (Pep at Bayern in 2013–16) is a "stretch" target
+  the shortlist flags as "under contract, hard to prise" and that needs
+  materially harder wooing than one out of work.
 - **Still to do (deferred by design):**
   - **Manager tenure narrative:** trophies/relationships accruing to a coach's
     reputation; a sacked big name resurfacing at a rival.
-  - **Style ↔ player-type development:** a possession coach developing technical
-    youth faster, a pragmatist defenders (needs per-attribute player data).
-  - **Coach occupancy:** a marquee currently employed elsewhere (Pep at Bayern in
-    2014) should be harder to prise than one out of work.
+  - **Richer player attributes:** a technical/physical/pace breakdown would let
+    style-fit and player-type development key off real attributes, not position.
 
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the

@@ -173,6 +173,29 @@ describe('capitalising on the food chain + clubs in distress', () => {
     expect(a.players.cur_gilardino04?.club).toBe('milan');
   });
 
+  it('Fiorentina go bankrupt in 2002 — a raidable side, but loyal Di Livio is shielded', () => {
+    let s = createNewGame({ scenarioId: 'liverpool-2001', seed: 'fiore' });
+    for (let i = 0; i < 12 && parseYearMonth(s.clock.date).year < 2003; i++) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      s = advanceWindow(s).state;
+      if (s.board.dismissed) break;
+    }
+    expect(s.clubs.fiorentina?.financialHealth).toBe('crisis');
+    const now = parseYearMonth(s.clock.date).year;
+    // Chiesa is a cheap fire-sale for a big buyer...
+    const chiesa = s.players.cur_chiesa02;
+    if (chiesa?.club === 'fiorentina') {
+      expect(askingPrice(s, 'cur_chiesa02', 'liverpool')).toBeLessThan(valuePlayer(chiesa, now) * 0.7);
+      expect(acquisitionTags(s, chiesa, 'liverpool')).toContain('fire-sale');
+    }
+    // ...but Di Livio, who really went down to Serie C2 with them, is not for sale.
+    const dilivio = s.players.cur_dilivio02;
+    if (dilivio?.club === 'fiorentina') {
+      expect(acquisitionTags(s, dilivio, 'liverpool')).toContain('one-club-man');
+      expect(acquisitionTags(s, dilivio, 'liverpool')).not.toContain('fire-sale');
+    }
+  });
+
   it('Leeds "living the dream" collapse becomes a crisis fire-sale by 2003', () => {
     let s = createNewGame({ scenarioId: 'liverpool-2001', seed: 'leeds-fall' });
     for (let i = 0; i < 16 && parseYearMonth(s.clock.date).year < 2004; i++) {

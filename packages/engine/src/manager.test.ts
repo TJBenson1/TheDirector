@@ -15,6 +15,7 @@ import {
   applyDirectiveEffects,
   managerStrengthMod,
   managerDevMod,
+  managerPositionDevMod,
   managerStyleStrengthMod,
   styleMatchAffinity,
   coachStyle,
@@ -244,6 +245,36 @@ describe('the coach\'s on-pitch effect (anchored to par)', () => {
     const before = s.clubs[s.playerClub]!.strength;
     directorSackManager(s); // Ferguson out, caretaker in
     expect(s.clubs[s.playerClub]!.strength).toBeLessThan(before);
+  });
+});
+
+describe('style shapes which player TYPES develop + coach occupancy', () => {
+  it('a possession coach develops midfielders faster, a pragmatist defenders (vs par)', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-1999' }); // par: Ferguson (possession 0.5)
+    const pep = { ...s.managerRelations, style: coachStyle('Pep Guardiola') };
+    expect(managerPositionDevMod(pep, 'MID')).toBeGreaterThan(1); // his midfielders bloom
+    expect(managerPositionDevMod(pep, 'DEF')).toBeLessThan(1); // defenders less so
+    const prag = { ...s.managerRelations, style: coachStyle('Sam Allardyce') };
+    expect(managerPositionDevMod(prag, 'DEF')).toBeGreaterThan(1); // he forges defenders
+    expect(managerPositionDevMod(prag, 'MID')).toBeLessThan(1);
+    // Keeping the inherited coach is neutral for every position.
+    expect(managerPositionDevMod(s.managerRelations, 'MID')).toBe(1);
+    expect(managerPositionDevMod(s.managerRelations, 'DEF')).toBe(1);
+  });
+
+  it('a coach under contract elsewhere (Pep at Bayern, 2013) needs harder wooing', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'occ' }); // 2013
+    // Pep is at Bayern (employed) — the shortlist flags him as under contract.
+    const list = managerShortlist(s);
+    const pep = list.find((c) => c.name === 'Pep Guardiola');
+    if (pep) expect(pep.employed).toBe(true);
+    // One round of courting isn't enough to prise an employed marquee...
+    courtManager(s, 'Pep Guardiola');
+    expect(willManagerJoin(s, 'Pep Guardiola', 90, true)).toBe(false);
+    // ...but sustained pursuit turns his head.
+    courtManager(s, 'Pep Guardiola');
+    courtManager(s, 'Pep Guardiola');
+    expect(willManagerJoin(s, 'Pep Guardiola', 90, true)).toBe(true);
   });
 });
 

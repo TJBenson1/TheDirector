@@ -112,6 +112,25 @@ function availableInYear(c: PoolCoach, year: number): boolean {
   return c.from <= year && year <= (c.to ?? 9999);
 }
 
+/** Real job tenures for the big names — the years each was CONTRACTED to a club
+ *  and so hard to prise (you'd have to tempt him away, not just phone him up).
+ *  Names not listed are treated as journeymen who are usually gettable. */
+const COACH_JOBS: Record<string, Array<[number, number]>> = {
+  'Pep Guardiola': [[2008, 2012], [2013, 2016], [2016, 2099]], // Barça, Bayern, City
+  'José Mourinho': [[2002, 2004], [2004, 2007], [2008, 2010], [2010, 2013], [2013, 2015], [2016, 2018], [2019, 2021]],
+  'Fabio Capello': [[1991, 1998], [1999, 2004], [2004, 2007], [2008, 2012]],
+  'Carlo Ancelotti': [[1999, 2009], [2009, 2011], [2011, 2013], [2013, 2015], [2016, 2017]],
+  'Marcello Lippi': [[1994, 2000], [2001, 2004], [2004, 2006]],
+  'Louis van Gaal': [[1997, 2000], [2009, 2011], [2014, 2016]],
+  'Rafael Benítez': [[2001, 2004], [2004, 2010], [2010, 2011], [2012, 2013], [2015, 2016]],
+  'Ottmar Hitzfeld': [[1998, 2004], [2007, 2008]], // Bayern spells
+};
+
+/** Is the coach under contract elsewhere in `year` (so harder to prise)? */
+function coachEmployed(name: string, year: number): boolean {
+  return (COACH_JOBS[name] ?? []).some(([f, t]) => f <= year && year < t);
+}
+
 /** The manager the world starts with — the real coach, inherited (not the
  *  Director's own appointment). Falls back to a generic incumbent scaled to the
  *  club's stature for scenarios without a curated coach. */
@@ -156,6 +175,28 @@ export function managerDevMod(mgr: ManagerState): number {
   const repTerm = Math.max(0.8, Math.min(1.12, 1 + dev * 0.005));
   const youthTerm = Math.max(0.85, Math.min(1.15, 1 + (mgr.style.youth - mgr.parStyle.youth) * 0.25));
   return repTerm * youthTerm;
+}
+
+/** How much a style favours developing a given POSITION GROUP. Position stands in
+ *  for player type until richer attributes exist: a POSSESSION coach brings on
+ *  ball-players (midfield, and to a degree attackers) faster; a PRAGMATIC coach
+ *  forges defenders and holding midfielders. Centred on 0.5 possession. */
+function styleDevBias(style: ManagerStyle, group: 'GK' | 'DEF' | 'MID' | 'ATT'): number {
+  const lean = style.possession - 0.5; // + = possession, − = pragmatic
+  if (group === 'MID') return lean * 0.3;
+  if (group === 'ATT') return lean * 0.18;
+  if (group === 'DEF') return -lean * 0.3;
+  return 0; // GK neutral
+}
+
+/** Position-specific youth-development multiplier (×1 at par): a possession coach
+ *  develops your midfielders faster and your defenders slower than the coach you
+ *  had, and a pragmatist the reverse. 0-delta when the style is unchanged, so the
+ *  passive path (and calibration) is untouched. */
+export function managerPositionDevMod(mgr: ManagerState, group: 'GK' | 'DEF' | 'MID' | 'ATT'): number {
+  if (mgr.style.possession === mgr.parStyle.possession) return 1;
+  const delta = styleDevBias(mgr.style, group) - styleDevBias(mgr.parStyle, group);
+  return Math.max(0.82, Math.min(1.18, 1 + delta));
 }
 
 const POS_GROUP: Record<Position, 'GK' | 'DEF' | 'MID' | 'ATT'> = {
@@ -341,7 +382,7 @@ function beginSuccession(state: GameState): void {
 /** A shortlist of hireable coaches, ranked by fit to the club and ERA-GATED to
  *  the current year (deterministic per club + date). The top name is a stretch (a
  *  marquee who must be WOOED); the others are attainable. */
-export function managerShortlist(state: GameState): Array<{ name: string; reputation: number; marquee: boolean }> {
+export function managerShortlist(state: GameState): Array<{ name: string; reputation: number; marquee: boolean; employed: boolean }> {
   const club = state.clubs[state.playerClub];
   const prestige = club?.prestige ?? 70;
   const year = Number(state.clock.date.slice(0, 4));
@@ -353,11 +394,16 @@ export function managerShortlist(state: GameState): Array<{ name: string; reputa
     .map((c, i) => ({ c, key: Math.abs(c.reputation - (prestige - 2)) + ((seed >> (i % 16)) & 3) }))
     .sort((a, b) => a.key - b.key)
     .map((x) => x.c);
-  const marquee = ranked.find((c) => c.reputation > prestige + 2);
-  const attainable = ranked.filter((c) => c.reputation <= prestige + 2).slice(0, marquee ? 2 : 3);
-  const out: Array<{ name: string; reputation: number; marquee: boolean }> = [];
-  if (marquee) out.push({ ...marquee, marquee: true });
-  for (const c of attainable) out.push({ ...c, marquee: false });
+  // A "stretch" target needs WOOING: either out of the club's reach on reputation,
+  // OR already under contract elsewhere (Pep at Bayern). Everyone else is an
+  // available, in-reach appointment who'll simply say yes.
+  const isStretch = (c: PoolCoach) => c.reputation > prestige + 2 || coachEmployed(c.name, year);
+  const attainable = ranked.filter((c) => !isStretch(c));
+  const stretch = ranked.find(isStretch);
+  const tag = (c: PoolCoach, marquee: boolean) => ({ name: c.name, reputation: c.reputation, marquee, employed: coachEmployed(c.name, year) });
+  const out: Array<{ name: string; reputation: number; marquee: boolean; employed: boolean }> = [];
+  if (stretch) out.push(tag(stretch, true));
+  for (const c of attainable.slice(0, stretch ? 2 : 3)) out.push(tag(c, false));
   return out.slice(0, 3);
 }
 
@@ -388,8 +434,12 @@ export function willManagerJoin(state: GameState, name: string, reputation: numb
   const club = state.clubs[state.playerClub];
   const prestige = club?.prestige ?? 70;
   const pursuit = state.pursuit[managerPursuitKey(name)] ?? 0;
+  // A coach CONTRACTED elsewhere (Pep at Bayern in 2014) is far harder to prise
+  // than one out of work — you must court him much harder to turn his head.
+  const year = Number(state.clock.date.slice(0, 4));
+  const employedPremium = coachEmployed(name, year) ? 12 : 0;
   // Pull rises with the club's stature and with how hard you've courted him.
-  return prestige + pursuit * 0.5 >= reputation + 4;
+  return prestige + pursuit * 0.5 >= reputation + 4 + employedPremium;
 }
 
 /** Offer the Director the hire shortlist. FIRST choice is the top ATTAINABLE
@@ -407,7 +457,9 @@ export function pushHireDecision(state: GameState): void {
     category: 'system',
     choices: attainableFirst.map((c) => ({
       id: `appoint:${c.name}`,
-      label: c.marquee ? `Appoint ${c.name} (marquee — needs wooing)` : `Appoint ${c.name}`,
+      label: c.marquee
+        ? `Appoint ${c.name} (marquee — ${c.employed ? 'under contract, hard to prise' : 'needs wooing'})`
+        : `Appoint ${c.name}`,
       onSuccess: [{ kind: 'appointManager', text: c.name, amount: c.reputation, tag: c.marquee ? 'marquee' : 'attainable' }],
     })),
     falloutIfIgnored: [{ kind: 'appointManager', text: attainableFirst[0]!.name, amount: attainableFirst[0]!.reputation, tag: 'attainable' }],

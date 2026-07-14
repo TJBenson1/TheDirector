@@ -23,7 +23,7 @@ import { logEvent } from './eventLog.js';
 import { clubSquadPlayers, recomputeClubStrength, buildResistance } from './players.js';
 import { suggestWage } from './finance.js';
 import { ERA_REALITY, eraForScenario } from './ledger.js';
-import { managerDevMod } from './manager.js';
+import { managerDevMod, managerPositionDevMod } from './manager.js';
 
 const DEV_AGE_MAX = 23; // growth window (§5 age curve)
 const REACHED_MARGIN = 2; // ability within this of ceiling ⇒ "reached potential"
@@ -181,8 +181,12 @@ function developYoungster(
     if (drive === 0) return false; // blocked — no progress this season
     const ageTaper = age <= 24 ? 1.0 : 0.6; // still develops in the mid-20s, slower
     // The head coach's calibre nudges even a real player's climb (×1 at par →
-    // neutral for a kept inherited coach; a top coach unlocks a touch more).
-    const coachMod = club.id === state.playerClub ? managerDevMod(state.managerRelations) : 1;
+    // neutral for a kept inherited coach; a top coach unlocks a touch more), and
+    // his STYLE favours the player types it suits (a possession coach his
+    // midfielders, a pragmatist his defenders).
+    const coachMod = club.id === state.playerClub
+      ? managerDevMod(state.managerRelations) * managerPositionDevMod(state.managerRelations, groupOf(player))
+      : 1;
     let delta = Math.max(1, Math.round(gap * drive * ageTaper * coachMod));
     // Rare friction for the unprofessional, never a hard wall.
     if (per.professionalism <= 5 && rng.chance(0.15)) delta = Math.max(0, delta - 1);
@@ -194,7 +198,9 @@ function developYoungster(
   }
 
   // ── PROCEDURAL = the user's speculative gamble (anti-hindsight) ─────────────
-  const coachQuality = club.id === state.playerClub ? managerDevMod(state.managerRelations) : 1;
+  const coachQuality = club.id === state.playerClub
+    ? managerDevMod(state.managerRelations) * managerPositionDevMod(state.managerRelations, groupOf(player))
+    : 1;
   const coaching = (0.6 + 0.4 * (club.prestige / 100)) * coachQuality; // facilities + head coach (§5)
   const prof = 0.7 + 0.3 * (player.personality.professionalism / 10);
   const ageFactor = age <= 19 ? 1.2 : age <= 21 ? 1.0 : 0.7;

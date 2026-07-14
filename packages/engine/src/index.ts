@@ -179,6 +179,7 @@ export {
   applyDirectiveEffects,
   managerStrengthMod,
   managerDevMod,
+  managerPositionDevMod,
   managerStyleStrengthMod,
   styleMatchAffinity,
   coachStyle,

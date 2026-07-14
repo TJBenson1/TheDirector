@@ -401,6 +401,7 @@ const SHOCKS_2004: FinancialShock[] = [
 const SHOCKS_2001: FinancialShock[] = [
   { clubId: 'leeds', year: 2002, health: 'strained', note: 'are straining under the debt from "living the dream" — cash must be raised' },
   { clubId: 'leeds', year: 2003, health: 'crisis', note: 'have collapsed financially — a forced fire-sale of the whole squad opens' },
+  { clubId: 'fiorentina', year: 2002, health: 'crisis', note: 'have gone bankrupt (Cecchi Gori) — the squad is up for grabs before liquidation' },
 ];
 
 /** Real 2004-era injuries — fire only if the player is at his real club. */
