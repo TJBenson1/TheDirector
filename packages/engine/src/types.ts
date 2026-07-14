@@ -391,6 +391,7 @@ export interface Consequence {
     | 'sackManager' // dismiss the current head coach (opens the hire shortlist); `amount` = Director patience relief
     | 'appointManager' // appoint a coach: `text` = name, `amount` = reputation, `tag` = 'byUser' if the Director's own hire
     | 'imposeDirective' // overrule the coach: apply a player directive; `playerId` + `tag` = 'minutes' | 'load'
+    | 'retireManager' // the head coach retires → caretaker + hire shortlist
     | 'agitation' // raise a player's unrest
     | 'transferOut' // sell a player to `clubId` for `amount`
     | 'signReal' // sign an incoming real target to the user club (funds + moves)

@@ -178,13 +178,24 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
   youth-emphasis term into development. Pep & Mourinho are hireable names.
   Verified: on a midfield-heavy squad Pep out-adds Allardyce (+4.8 str); on a
   defensive one Mourinho out-adds Pep (+3.4).
+- ✅ **Era-real coach pool** (`COACH_POOL` with availability windows): the hire
+  shortlist is now ERA-GATED to the current year, so a 2001 vacancy sees the real
+  names in the frame (Eriksson, Capello, Hitzfeld, Lippi) and never a pre-Barça
+  Pep (gated `from: 2008`). Added Ottmar Hitzfeld (a real 2002 United target).
+- ✅ **Ferguson 2001 retirement counterfactual** (`rollManagerRetirement`, scripted
+  for man-utd-1999): in 2001 the Director gets the call reality's board didn't
+  force — Sir Alex is weighing retirement (framed "on a high" or "the team needs
+  rebuilding" from where United actually sit). **Talk him round with a
+  squad-building plan and he stays, as he did** (reality-default → calibration
+  byte-identical), or let him bow out and appoint an era-real successor. Data-driven
+  (`MANAGER_RETIREMENTS`) so more can be added (e.g. Wenger, Moyes-successor arcs).
 - **Still to do (deferred by design):**
   - **Manager tenure narrative:** trophies/relationships accruing to a coach's
     reputation; a sacked big name resurfacing at a rival.
-  - **Era-real out-of-work pool per window** (the hire shortlist is a single
-    era-agnostic pool — so Pep can appear pre-2008) + real compensation cost.
   - **Style ↔ player-type development:** a possession coach developing technical
     youth faster, a pragmatist defenders (needs per-attribute player data).
+  - **More retirement/succession crossroads:** Wenger's later years, a
+    Moyes-fails-so-who-next branch, Lippi/Capello international exits.
 
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the

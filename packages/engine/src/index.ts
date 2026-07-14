@@ -182,6 +182,8 @@ export {
   managerStyleStrengthMod,
   styleMatchAffinity,
   coachStyle,
+  rollManagerRetirement,
+  retireManager,
 } from './manager.js';
 export {
   simulateMatch,

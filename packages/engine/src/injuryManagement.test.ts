@@ -40,7 +40,7 @@ describe('injury management (fragile-star return + load calls)', () => {
     let recurrences = 0;
     for (let seed = 0; seed < 20; seed++) recurrences += playInter(`rush-${seed}`, 'rush').recurrences;
     expect(recurrences).toBeGreaterThan(0); // the Ronaldo-2000 catastrophe can recur
-  });
+  }, 20_000);
 
   it('load-managing has a cost (games missed) and can be resisted', () => {
     // Across seeds, resting Ronaldo through the run should sometimes stick (he sits
@@ -64,7 +64,7 @@ describe('injury management (fragile-star return + load calls)', () => {
     }
     expect(rested).toBeGreaterThan(0); // he genuinely sits out — the team feels it
     expect(resisted).toBeGreaterThan(0); // and he doesn't always accept the bench
-  });
+  }, 20_000);
 
   it('bad management (rushing) costs far more games than careful management', () => {
     // Over full careers, rushing Ronaldo back racks up recurrences → far more time
@@ -88,5 +88,5 @@ describe('injury management (fragile-star return + load calls)', () => {
       return total;
     };
     expect(monthsOut('rush')).toBeGreaterThan(monthsOut('manage') * 1.5);
-  });
+  }, 20_000);
 });

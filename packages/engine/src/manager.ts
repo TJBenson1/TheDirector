@@ -56,6 +56,7 @@ const STYLE_BY_NAME: Record<string, ManagerStyle> = {
   'Roy Hodgson': st('Compact defensive block', 0.3, 0.35),
   'Sam Allardyce': st('Direct, physical, set-pieces', 0.2, 0.3),
   'Steve McClaren': st('Balanced', 0.45, 0.45),
+  'Ottmar Hitzfeld': st('Balanced, tournament-hardened', 0.5, 0.55),
   // The two the Director will chase — polar opposites, era-appropriate names.
   'José Mourinho': st('Pragmatic — low block & lethal counter', 0.2, 0.2),
   'Pep Guardiola': st('Positional possession — total control', 0.98, 0.75),
@@ -82,24 +83,33 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
   'inter-1998': { name: 'Gigi Simoni', reputation: 66 },
 };
 
-/** A pool of coaches available to hire (era-agnostic — real managers who moved
- *  clubs across this window). The shortlist is drawn from here, ranked by fit. */
-const COACH_POOL: Array<{ name: string; reputation: number }> = [
-  { name: 'Pep Guardiola', reputation: 90 },
-  { name: 'José Mourinho', reputation: 90 },
-  { name: 'Fabio Capello', reputation: 90 },
-  { name: 'Marcello Lippi', reputation: 88 },
-  { name: 'Carlo Ancelotti', reputation: 88 },
-  { name: 'Rafael Benítez', reputation: 82 },
-  { name: 'Guus Hiddink', reputation: 82 },
-  { name: 'Sven-Göran Eriksson', reputation: 78 },
-  { name: 'Martin O’Neill', reputation: 74 },
-  { name: 'Gordon Strachan', reputation: 68 },
-  { name: 'Alan Curbishley', reputation: 66 },
-  { name: 'Roy Hodgson', reputation: 70 },
-  { name: 'Sam Allardyce', reputation: 68 },
-  { name: 'Steve McClaren', reputation: 66 },
+/** A pool of coaches available to hire, each with the YEARS he was a plausible
+ *  hire (his real managerial availability). The shortlist is drawn from here,
+ *  ERA-GATED to the current year — so a 2001 vacancy sees Eriksson, Capello,
+ *  Hitzfeld and Lippi (the real names in the frame), never a pre-Barcelona Pep. */
+interface PoolCoach { name: string; reputation: number; from: number; to?: number }
+const COACH_POOL: PoolCoach[] = [
+  { name: 'Pep Guardiola', reputation: 90, from: 2008 }, // no dugout before Barça B → Barça
+  { name: 'José Mourinho', reputation: 88, from: 2002 }, // emerges at Porto
+  { name: 'Fabio Capello', reputation: 90, from: 1991, to: 2012 },
+  { name: 'Marcello Lippi', reputation: 88, from: 1994, to: 2011 },
+  { name: 'Carlo Ancelotti', reputation: 88, from: 1999 },
+  { name: 'Ottmar Hitzfeld', reputation: 86, from: 1991, to: 2008 }, // a real United 2002 target
+  { name: 'Rafael Benítez', reputation: 82, from: 2001 },
+  { name: 'Guus Hiddink', reputation: 82, from: 1987 },
+  { name: 'Sven-Göran Eriksson', reputation: 80, from: 1982, to: 2010 }, // the board's real 2002 choice
+  { name: 'Martin O’Neill', reputation: 76, from: 1995 },
+  { name: 'Steve McClaren', reputation: 66, from: 2000 },
+  { name: 'Gordon Strachan', reputation: 68, from: 1996 },
+  { name: 'Alan Curbishley', reputation: 66, from: 1991 },
+  { name: 'Roy Hodgson', reputation: 70, from: 1982 },
+  { name: 'Sam Allardyce', reputation: 68, from: 1994 },
 ];
+
+/** Was this coach a plausible hire in `year`? */
+function availableInYear(c: PoolCoach, year: number): boolean {
+  return c.from <= year && year <= (c.to ?? 9999);
+}
 
 /** The manager the world starts with — the real coach, inherited (not the
  *  Director's own appointment). Falls back to a generic incumbent scaled to the
@@ -185,6 +195,10 @@ export function styleMatchAffinity(state: GameState, style: ManagerStyle): numbe
  *  route-one pragmatist; build around a back line and a counter, and it flips. */
 export function managerStyleStrengthMod(state: GameState): number {
   const mgr = state.managerRelations;
+  // The fit delta depends only on the possession axis; if it's unchanged from par
+  // (every passive career, and any like-for-like appointment) the delta is 0, so
+  // skip the squad scan entirely — this keeps recomputeClubStrength cheap.
+  if (mgr.style.possession === mgr.parStyle.possession) return 0;
   const delta = styleMatchAffinity(state, mgr.style) - styleMatchAffinity(state, mgr.parStyle);
   return Math.max(-3, Math.min(3, delta * 0.4));
 }
@@ -305,8 +319,13 @@ export function performSack(state: GameState, directorRelief: number, initiatedB
     data: { manager: oldName, initiatedBy, patienceDelta: applied, wasOwnHire: mgr.appointedByUser },
   });
   appendMemory(state, 'manager', `Sacked ${oldName}.`);
+  beginSuccession(state);
+}
 
-  // A caretaker takes charge until the Director appoints a successor.
+/** Install a caretaker and open the (era-gated) hire shortlist — shared by a
+ *  sacking and a retirement. */
+function beginSuccession(state: GameState): void {
+  const mgr = state.managerRelations;
   mgr.identity = 'caretaker manager';
   mgr.reputation = Math.max(40, mgr.reputation - 25);
   mgr.standing = 55;
@@ -315,26 +334,26 @@ export function performSack(state: GameState, directorRelief: number, initiatedB
   mgr.relationshipWithUser = 55;
   mgr.style = CARETAKER_STYLE;
   recomputeClubStrength(state, state.playerClub); // the caretaker XI dips at once
-
   pushHireDecision(state);
 }
 
-/** A shortlist of hireable coaches, ranked by fit to the club (deterministic per
- *  club + date). The top name is a stretch (a marquee who must be WOOED); the
- *  others are attainable. */
+/** A shortlist of hireable coaches, ranked by fit to the club and ERA-GATED to
+ *  the current year (deterministic per club + date). The top name is a stretch (a
+ *  marquee who must be WOOED); the others are attainable. */
 export function managerShortlist(state: GameState): Array<{ name: string; reputation: number; marquee: boolean }> {
   const club = state.clubs[state.playerClub];
   const prestige = club?.prestige ?? 70;
+  const year = Number(state.clock.date.slice(0, 4));
   const seed = hashStringToU32(`${state.playerClub}:${state.clock.date}`);
   // Rank the pool by closeness to what the club can plausibly attract, with a
   // deterministic jitter so the same club at different times sees different names.
   const ranked = COACH_POOL
-    .filter((c) => c.name !== state.managerRelations.identity)
+    .filter((c) => c.name !== state.managerRelations.identity && availableInYear(c, year))
     .map((c, i) => ({ c, key: Math.abs(c.reputation - (prestige - 2)) + ((seed >> (i % 16)) & 3) }))
     .sort((a, b) => a.key - b.key)
     .map((x) => x.c);
-  const attainable = ranked.filter((c) => c.reputation <= prestige + 2).slice(0, 2);
   const marquee = ranked.find((c) => c.reputation > prestige + 2);
+  const attainable = ranked.filter((c) => c.reputation <= prestige + 2).slice(0, marquee ? 2 : 3);
   const out: Array<{ name: string; reputation: number; marquee: boolean }> = [];
   if (marquee) out.push({ ...marquee, marquee: true });
   for (const c of attainable) out.push({ ...c, marquee: false });
@@ -465,6 +484,97 @@ export function reviewDirectorStrategy(state: GameState, rng: Rng): void {
       data: { manager: mgr.identity, reputation: mgr.reputation, relationship: Math.round(mgr.relationshipWithUser) },
     });
   }
+}
+
+// ── Scripted manager-retirement counterfactuals ──────────────────────────────
+//
+// A great coach at a crossroads reality really faced. The canonical case: Sir
+// Alex Ferguson announced in 2001 he would retire at the end of 2001–02, then
+// reversed it in February 2002 — a decision swayed by the team's direction and
+// his family. Here the Director gets the call reality's board didn't force: talk
+// him round with a squad-building plan (he stays, as he did), or let him bow out
+// and appoint a successor from the era's REAL candidates (Eriksson, Capello,
+// Hitzfeld, Lippi…). Reality holds if you back him, so the passive path (and
+// calibration) is unperturbed.
+
+interface RetirementFlirtation { year: number; name: string }
+const MANAGER_RETIREMENTS: Record<string, RetirementFlirtation> = {
+  'man-utd-1999': { year: 2001, name: 'Alex Ferguson' },
+};
+
+/** Fire the scripted retirement crossroads once, when its year arrives and the
+ *  real coach is still in charge. Called at the season rollover. */
+export function rollManagerRetirement(state: GameState): void {
+  if (state.board.dismissed) return;
+  const flirt = MANAGER_RETIREMENTS[state.meta.scenarioId];
+  if (!flirt) return;
+  const key = `retirement:${flirt.name}`;
+  if (state.meta.firedScripted.includes(key)) return;
+  const year = Number(state.clock.date.slice(0, 4));
+  if (year < flirt.year) return;
+  const mgr = state.managerRelations;
+  if (mgr.identity !== flirt.name) { state.meta.firedScripted.push(key); return; } // already changed coach
+  state.meta.firedScripted.push(key);
+
+  // "Falling apart" vs "going out on a high", from where the club actually sits.
+  const league = state.leagues[state.clubs[state.playerClub]?.leagueId ?? ''];
+  const order = league ? standingsOrder(league) : [];
+  const pos = order.indexOf(state.playerClub) + 1;
+  const onAHigh = pos >= 1 && pos <= 2;
+  const framing = onAHigh
+    ? `With the trophies still coming, ${flirt.name} is tempted to walk away at the very top.`
+    : `With the team looking like it needs rebuilding, ${flirt.name} is questioning whether he still has the appetite for it.`;
+
+  logEvent(state, {
+    category: 'system',
+    code: 'manager.retirement.considering',
+    message: `${flirt.name} has told the board he is thinking of retiring at the end of the season.`,
+    data: { manager: flirt.name, onAHigh, position: pos || null },
+  });
+  state.pendingDecisions.push({
+    id: `manager-retirement:${flirt.name}`,
+    title: `${flirt.name} is considering retirement`,
+    description: `${framing} You can try to talk him round — lay out an ambitious squad-building plan and convince him the best is still to come — or accept his decision and line up a successor.`,
+    interrupt: true,
+    clubId: state.playerClub,
+    category: 'system',
+    choices: [
+      // choices[0] = reality-default: he stays (as Ferguson really did). No sim
+      // change beyond goodwill, so the passive path stays byte-identical.
+      {
+        id: 'persuade',
+        label: `Talk him round with a squad-building plan (he stays)`,
+        onSuccess: [
+          { kind: 'managerRelationship', amount: 10 },
+          { kind: 'memory', tag: 'manager', text: `Persuaded ${flirt.name} to stay on with a rebuild plan.` },
+          { kind: 'log', text: `${flirt.name} signs on — the project convinced him to stay.` },
+        ],
+      },
+      {
+        id: 'accept',
+        label: `Let him retire — appoint his successor`,
+        onSuccess: [{ kind: 'retireManager', text: flirt.name }],
+      },
+    ],
+    // Ignore it and, as in reality, he stays on — nothing changes.
+    falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: `${flirt.name} stayed on, as in reality.` }],
+    memoryTags: ['manager', flirt.name],
+  });
+}
+
+/** The head coach retires; a caretaker steps in and the (era-gated) hire
+ *  shortlist opens. No Director-patience penalty — a legend leaving on his own
+ *  terms isn't a sacking. */
+export function retireManager(state: GameState): void {
+  const name = state.managerRelations.identity;
+  logEvent(state, {
+    category: 'system',
+    code: 'manager.retired',
+    message: `${name} retires. An era ends — the Director must find a successor.`,
+    data: { manager: name },
+  });
+  appendMemory(state, 'manager', `${name} retired.`);
+  beginSuccession(state);
 }
 
 // ── Directives: the Director tells the coach how to use a player ──────────────

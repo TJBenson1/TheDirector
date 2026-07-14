@@ -29,7 +29,7 @@ import { appendMemory } from './memory.js';
 import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 import { executeTransfer } from './transfers.js';
 import { recomputeClubStrength } from './players.js';
-import { performSack, appointManager, imposeDirective } from './manager.js';
+import { performSack, appointManager, imposeDirective, retireManager } from './manager.js';
 
 // ── Consequence application ──────────────────────────────────────────────────
 
@@ -87,6 +87,9 @@ export function applyConsequence(state: GameState, c: Consequence): void {
       break;
     case 'imposeDirective':
       if (c.playerId && (c.tag === 'minutes' || c.tag === 'load')) imposeDirective(state, c.playerId, c.tag);
+      break;
+    case 'retireManager':
+      retireManager(state);
       break;
     case 'agitation': {
       const p = c.playerId ? state.players[c.playerId] : undefined;

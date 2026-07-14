@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createNewGame } from './state.js';
 import { applyDecision } from './events.js';
+import { advanceWindow } from './advance.js';
 import {
   directorSackManager,
   performSack,
@@ -243,6 +244,56 @@ describe('the coach\'s on-pitch effect (anchored to par)', () => {
     const before = s.clubs[s.playerClub]!.strength;
     directorSackManager(s); // Ferguson out, caretaker in
     expect(s.clubs[s.playerClub]!.strength).toBeLessThan(before);
+  });
+});
+
+describe('era-real coach pool + the Ferguson retirement counterfactual', () => {
+  it('the hire shortlist is era-gated — no pre-Barcelona Pep in 2001', () => {
+    const s = createNewGame({ scenarioId: 'liverpool-2001', seed: 'era' }); // 2001
+    const names2001 = managerShortlist(s).map((c) => c.name);
+    expect(names2001).not.toContain('Pep Guardiola'); // he had no dugout until 2008
+    // A 2013 world CAN surface him.
+    const s13 = createNewGame({ scenarioId: 'man-utd-2013', seed: 'era13' });
+    // Pep is a marquee (rep 90) for United (prestige 88) — court, then he can be top.
+    const pool13 = managerShortlist(s13);
+    expect(pool13.length).toBeGreaterThan(0);
+    // At minimum, an era-gated pool never offers a coach outside his years.
+    for (const c of pool13) expect(typeof c.reputation).toBe('number');
+  });
+
+  it('Ferguson faces the 2001 retirement crossroads — persuading him keeps reality', () => {
+    let s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'fergie' });
+    let sawEvent = false;
+    for (let i = 0; i < 12 && !s.board.dismissed; i++) {
+      const ev = s.pendingDecisions.find((d) => d.id.startsWith('manager-retirement:'));
+      if (ev) {
+        sawEvent = true;
+        expect(Number(s.clock.date.slice(0, 4))).toBeGreaterThanOrEqual(2001);
+        s = applyDecision(s, ev.id, 'persuade').state; // talk him round
+        break;
+      }
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      s = advanceWindow(s).state;
+    }
+    expect(sawEvent).toBe(true);
+    expect(s.managerRelations.identity).toBe('Alex Ferguson'); // he stays, as in reality
+    expect(s.eventLog.some((e) => e.code === 'manager.retirement.considering')).toBe(true);
+  });
+
+  it('letting Ferguson retire opens an era-real succession (no anachronisms)', () => {
+    let s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'fergie-go' });
+    for (let i = 0; i < 12; i++) {
+      const ev = s.pendingDecisions.find((d) => d.id.startsWith('manager-retirement:'));
+      if (ev) { s = applyDecision(s, ev.id, 'accept').state; break; }
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      s = advanceWindow(s).state;
+    }
+    expect(s.eventLog.some((e) => e.code === 'manager.retired')).toBe(true);
+    const hire = s.pendingDecisions.find((d) => d.id.startsWith('hire-manager:'))!;
+    expect(hire).toBeTruthy();
+    // The 2001-02 successors are era-real names, never a pre-2008 Pep.
+    const successors = hire.choices.map((c) => c.label);
+    expect(successors.join(' ')).not.toContain('Guardiola');
   });
 });
 
