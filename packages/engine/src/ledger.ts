@@ -283,6 +283,16 @@ const INJURIES_2004: RealInjuryEntry[] = [
  * Champions-League place in 2003 and the takeover — and the splurge — may vanish.
  */
 const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
+  // The Leeds fire-sale — O'Leary's over-leveraged side broke up piece by piece.
+  // Seeding the real departures makes their historical collapse happen by default:
+  // stripped of its spine, Leeds' anchored strength falls and they stop being a
+  // European force, as reality demanded (they were relegated by 2004).
+  { playerId: 'cur_ferdinand01', from: 'leeds', to: 'man_utd', window: '2002-07', fee: 30_000_000, id: 'ferdinand-utd-2002' },
+  { playerId: 'cur_woodgate01', from: 'leeds', to: 'newcastle', window: '2003-01', fee: 9_000_000, id: 'woodgate-newcastle-2003' },
+  { playerId: 'cur_bowyer', from: 'leeds', to: 'newcastle', window: '2003-07', fee: 100_000, id: 'bowyer-newcastle-2003' },
+  { playerId: 'cur_kewell01', from: 'leeds', to: 'liverpool', window: '2003-07', fee: 5_000_000, id: 'kewell-liverpool-2003' },
+  { playerId: 'cur_smith01', from: 'leeds', to: 'man_utd', window: '2004-07', fee: 7_000_000, id: 'smith-utd-2004' },
+  { playerId: 'cur_viduka01', from: 'leeds', to: 'middlesbrough', window: '2004-07', fee: 4_500_000, id: 'viduka-boro-2004' },
   // Anelka's loan ends and he really left in 2002 — offered as the user's call
   // (keep him permanently, the counterfactual, or let him go, as reality did).
   { playerId: 'cur_anelka01', from: 'liverpool', to: 'man_city', window: '2002-07', fee: 13_000_000, id: 'anelka-out-2002' },

@@ -114,6 +114,10 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'man_city', name: 'Manchester City', prestige: 62 },
     ],
     domesticLeagueId: 'eng-2001',
+    // O'Leary's Champions-League semi-finalists were living on borrowed money;
+    // the 2001 gamble collapsed into the era's great fire-sale (Ferdinand, Woodgate,
+    // Kewell, Robbie Keane all cashed in), so Leeds must decline, not endure.
+    distressedClubs: { leeds: 'crisis' },
   },
   'arsenal-2004': {
     id: 'arsenal-2004',
