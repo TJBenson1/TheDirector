@@ -242,6 +242,44 @@ export const CHELSEA_1995: CuratedSeed[] = [
   q('chelsea', 'hughes_c', 'Mark Hughes', 1963, 'Wales', ['ST'], 79, 79, 1997, 30, t(8, 6, 7, 7, 6, 6)),
   q('chelsea', 'wise', 'Dennis Wise', 1966, 'England', ['CM'], 78, 79, 1999, 30, t(6, 7, 8, 8, 7, 6)),
 ];
+// Manchester United, 1995–96 — Ferguson's Double winners ("you can't win anything
+// with kids"), the English force the European board must reckon with.
+export const MANUTD_1995: CuratedSeed[] = [
+  q('man_utd', 'schmeichel_mu95', 'Peter Schmeichel', 1963, 'Denmark', ['GK'], 88, 89, 1999, 20, t(9, 7, 9, 8, 5, 6)),
+  q('man_utd', 'gneville_mu95', 'Gary Neville', 1975, 'England', ['RB'], 76, 84, 2001, 25, t(9, 5, 8, 10, 4, 7), { loyalty: 94 }),
+  q('man_utd', 'irwin_mu95', 'Denis Irwin', 1965, 'Ireland', ['LB', 'RB'], 82, 82, 1999, 22, t(9, 3, 7, 9, 2, 8)),
+  q('man_utd', 'pallister_mu95', 'Gary Pallister', 1965, 'England', ['CB'], 84, 84, 1998, 25, t(8, 5, 7, 8, 3, 7)),
+  q('man_utd', 'bruce_mu95', 'Steve Bruce', 1960, 'England', ['CB'], 80, 80, 1997, 30, t(9, 6, 8, 9, 4, 6)),
+  q('man_utd', 'may_mu95', 'David May', 1970, 'England', ['CB'], 74, 76, 1998, 35, t(6, 6, 6, 7, 5, 6)),
+  q('man_utd', 'pneville_mu95', 'Phil Neville', 1977, 'England', ['LB', 'CM'], 72, 82, 2001, 25, t(8, 4, 7, 9, 3, 8)),
+  q('man_utd', 'keane_mu95', 'Roy Keane', 1971, 'Ireland', ['CM', 'DM'], 86, 90, 2000, 40, t(9, 7, 10, 8, 8, 6)),
+  q('man_utd', 'butt_mu95', 'Nicky Butt', 1975, 'England', ['CM', 'DM'], 74, 82, 2001, 25, t(8, 4, 7, 9, 4, 7)),
+  q('man_utd', 'beckham_mu95', 'David Beckham', 1975, 'England', ['RW', 'CM'], 74, 90, 2002, 20, t(9, 7, 9, 8, 4, 7)),
+  q('man_utd', 'giggs_mu95', 'Ryan Giggs', 1973, 'Wales', ['LW'], 84, 88, 2001, 30, t(9, 5, 8, 10, 3, 7), { loyalty: 95 }),
+  q('man_utd', 'sharpe_mu95', 'Lee Sharpe', 1971, 'England', ['LW', 'LB'], 76, 78, 1997, 35, t(6, 6, 7, 6, 6, 7)),
+  q('man_utd', 'scholes_mu95', 'Paul Scholes', 1974, 'England', ['CM', 'ST'], 74, 90, 2001, 20, t(9, 3, 8, 10, 5, 7), { loyalty: 95 }),
+  q('man_utd', 'cantona_mu95', 'Eric Cantona', 1966, 'France', ['AM', 'ST'], 89, 90, 1998, 25, t(7, 9, 9, 8, 8, 7)),
+  q('man_utd', 'cole_mu95', 'Andy Cole', 1971, 'England', ['ST'], 82, 84, 1999, 30, t(7, 7, 8, 7, 6, 6)),
+  q('man_utd', 'mcclair_mu95', 'Brian McClair', 1963, 'Scotland', ['ST', 'CM'], 76, 76, 1997, 25, t(9, 4, 7, 9, 3, 7)),
+];
+// Liverpool, 1995–96 — Roy Evans' entertainers, McManaman and Fowler at the fore.
+export const LIVERPOOL_1995: CuratedSeed[] = [
+  q('liverpool', 'james_lv95', 'David James', 1970, 'England', ['GK'], 79, 82, 1999, 30, t(6, 6, 7, 7, 6, 6)),
+  q('liverpool', 'rjones_lv95', 'Rob Jones', 1971, 'England', ['RB'], 78, 80, 1998, 45, t(8, 4, 7, 9, 4, 7)),
+  q('liverpool', 'mcateer_lv95', 'Jason McAteer', 1971, 'Ireland', ['RB', 'CM'], 76, 78, 1999, 30, t(7, 5, 7, 7, 5, 7)),
+  q('liverpool', 'bjornebye_lv95', 'Stig Inge Bjørnebye', 1969, 'Norway', ['LB'], 76, 78, 1999, 30, t(8, 4, 7, 7, 4, 7)),
+  q('liverpool', 'mwright_lv95', 'Mark Wright', 1963, 'England', ['CB'], 79, 79, 1998, 35, t(8, 5, 7, 7, 5, 6)),
+  q('liverpool', 'ruddock_lv95', 'Neil Ruddock', 1968, 'England', ['CB'], 77, 78, 1998, 40, t(6, 6, 7, 7, 7, 6)),
+  q('liverpool', 'scales_lv95', 'John Scales', 1966, 'England', ['CB'], 76, 77, 1998, 30, t(8, 4, 7, 7, 4, 7)),
+  q('liverpool', 'babb_lv95', 'Phil Babb', 1970, 'Ireland', ['CB'], 76, 78, 1999, 30, t(7, 5, 7, 6, 5, 7)),
+  q('liverpool', 'redknapp_lv95', 'Jamie Redknapp', 1973, 'England', ['CM'], 80, 84, 2000, 45, t(8, 5, 8, 8, 4, 7)),
+  q('liverpool', 'barnes_lv95', 'John Barnes', 1963, 'England', ['CM', 'AM'], 81, 82, 1997, 30, t(8, 6, 8, 9, 4, 7)),
+  q('liverpool', 'mthomas_lv95', 'Michael Thomas', 1967, 'England', ['CM', 'DM'], 76, 77, 1998, 35, t(7, 5, 7, 7, 5, 7)),
+  q('liverpool', 'mcmanaman_lv95', 'Steve McManaman', 1972, 'England', ['RW', 'AM'], 83, 85, 1999, 25, t(7, 6, 7, 6, 4, 8)),
+  q('liverpool', 'fowler_lv95', 'Robbie Fowler', 1975, 'England', ['ST'], 84, 87, 2001, 35, t(6, 7, 8, 9, 6, 6)),
+  q('liverpool', 'collymore_lv95', 'Stan Collymore', 1971, 'England', ['ST'], 82, 84, 1999, 35, t(4, 8, 7, 5, 8, 5)),
+  q('liverpool', 'rush_lv95', 'Ian Rush', 1961, 'Wales', ['ST'], 79, 79, 1996, 30, t(9, 6, 8, 9, 4, 7)),
+];
 export const NEWCASTLE_1995: CuratedSeed[] = [
   q('newcastle', 'ferdinand_l', 'Les Ferdinand', 1966, 'England', ['ST'], 82, 83, 1998, 30, t(8, 6, 8, 7, 5, 6)),
   q('newcastle', 'ginola', 'David Ginola', 1967, 'France', ['LW'], 82, 83, 1998, 30, t(6, 7, 7, 6, 6, 6)),
@@ -285,6 +323,8 @@ export const CONTEXT_1995_SQUADS: Record<string, CuratedSeed[]> = {
   real_madrid: REAL_1995,
   barcelona: BARCA_1995,
   bayern: BAYERN_1995,
+  man_utd: MANUTD_1995,
+  liverpool: LIVERPOOL_1995,
   chelsea: CHELSEA_1995,
   newcastle: NEWCASTLE_1995,
   middlesbrough: MIDDLESBROUGH_1995,

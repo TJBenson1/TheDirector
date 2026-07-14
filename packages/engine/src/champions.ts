@@ -46,18 +46,22 @@ function clStrength(state: GameState, id: ClubId): number {
 type RealFinal = { w: ClubId; r?: ClubId };
 const REAL_UCL: Record<string, Record<number, RealFinal>> = {
   'era-serie-a-1995': {
-    // Winners not in this pack (Man Utd 1999 & 2008 finals, Porto 2004, Liverpool
-    // 2005) can't be anchored and fall to field sim; the rest track reality.
+    // With Man Utd and Liverpool now in the pack, only Porto's 2004 win falls
+    // outside it (no Porto here) and defaults to field sim; every other final is
+    // anchored to reality.
     1995: { w: 'juventus', r: 'ajax' },
     1996: { w: 'dortmund', r: 'juventus' },
     1997: { w: 'real_madrid', r: 'juventus' },
+    1998: { w: 'man_utd', r: 'bayern' },
     1999: { w: 'real_madrid' },
     2000: { w: 'bayern' },
     2001: { w: 'real_madrid' },
     2002: { w: 'milan', r: 'juventus' },
+    2004: { w: 'liverpool', r: 'milan' },
     2005: { w: 'barcelona', r: 'arsenal' },
-    2006: { w: 'milan' },
-    2008: { w: 'barcelona' },
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
     2009: { w: 'inter', r: 'bayern' },
   },
   'era-2000': {

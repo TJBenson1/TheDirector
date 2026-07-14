@@ -272,6 +272,11 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'newcastle', name: 'Newcastle United', prestige: 68 },
       { id: 'middlesbrough', name: 'Middlesbrough', prestige: 56 },
       { id: 'dynamo_kyiv', name: 'Dynamo Kyiv', prestige: 66 },
+      // The English powers of the era — Ferguson's Double winners and Roy Evans'
+      // Liverpool — as context sides so the European Cup they really won can be
+      // anchored (Man Utd 1999 & 2008, Liverpool 2005).
+      { id: 'man_utd', name: 'Manchester United', prestige: 84 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 80 },
     ],
     domesticLeagueId: 'ita-1',
   },
