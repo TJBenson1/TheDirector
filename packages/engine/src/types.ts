@@ -366,6 +366,7 @@ export interface Consequence {
     | 'managerStanding' // adjust the head coach's own job security
     | 'sackManager' // dismiss the current head coach (opens the hire shortlist); `amount` = Director patience relief
     | 'appointManager' // appoint a coach: `text` = name, `amount` = reputation, `tag` = 'byUser' if the Director's own hire
+    | 'imposeDirective' // overrule the coach: apply a player directive; `playerId` + `tag` = 'minutes' | 'load'
     | 'agitation' // raise a player's unrest
     | 'transferOut' // sell a player to `clubId` for `amount`
     | 'signReal' // sign an incoming real target to the user club (funds + moves)
@@ -500,6 +501,19 @@ export interface GameState {
    *  people"). Sustained pursuit is what lets you prise a spoken-for target off
    *  the club in pole position — a cold late bid won't. Decays each window. */
   pursuit: Record<PlayerId, number>;
+  /** Standing Director directives on the user's own players that the HEAD COACH
+   *  has accepted (after possibly resisting): guarantee a player first-team
+   *  minutes, or manage his load. The coach picks the team by ability, so these
+   *  are how a Director overrides him — to blood a prospect the coach would bench,
+   *  or protect a fragile star the coach would ride. Empty by default (a hands-off
+   *  Director and the passive harness never populate it, so it's calibration-inert). */
+  directives?: Record<PlayerId, ManagerDirective>;
+}
+
+/** A Director directive the coach is honouring for one of the user's players. */
+export interface ManagerDirective {
+  kind: 'minutes' | 'load';
+  setAt: YearMonth;
 }
 
 /** The current schema version. Bump on breaking GameState changes. */

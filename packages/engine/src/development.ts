@@ -50,6 +50,20 @@ function groupOf(player: PlayerState): PositionGroup {
  * at a weaker club plays → develops. This is the core anti-hindsight lever.
  */
 export function estimateMinutesShare(state: GameState, club: ClubState, player: PlayerState): number {
+  const raw = rawMinutesShare(state, club, player);
+  // A Director directive the coach has ACCEPTED overrides his ability-based
+  // selection for the user's OWN players: guarantee a prospect first-team
+  // football (the develop-him lever), or cap a fragile star's load. Empty by
+  // default, so a hands-off Director (and the passive harness) is unaffected.
+  if (club.id === state.playerClub) {
+    const d = state.directives?.[player.id];
+    if (d?.kind === 'minutes') return Math.max(raw, 0.7); // first-choice minutes, guaranteed
+    if (d?.kind === 'load') return Math.min(raw, 0.4); // rotation at most — his body is protected
+  }
+  return raw;
+}
+
+function rawMinutesShare(state: GameState, club: ClubState, player: PlayerState): number {
   const group = groupOf(player);
   const year = Number(state.clock.date.slice(0, 4));
   // Rank by EFFECTIVE ability: a fading veteran (32+) is discounted, because

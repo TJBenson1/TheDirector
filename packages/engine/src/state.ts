@@ -206,6 +206,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     worldDefiance: 0,
     userAggression: 0,
     pursuit: {},
+    directives: {},
   };
 
   // Build squads (curated where available + procedural filler), anchor each

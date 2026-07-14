@@ -147,6 +147,15 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
   boardroom **coup** (reputation ≥ 84, relationship < 28).
 - **Wooing:** a marquee coach snubs a cold offer; `courtManager` ("speak to his
   people") warms him until he'll take the job.
+- ✅ **The coach may resist a directive** (`issueDirective`): the coach picks the
+  XI by ability, so a Director who wants to blood a benched prospect (a `minutes`
+  directive — the develop-him / unlock-latent lever) or protect a fragile star (a
+  `load` directive) may be pushed back on. Resistance rises with the coach's
+  reputation, a poor relationship, and how much it fights winning football; a
+  coach you hired complies more readily. A resisted directive is a confrontation:
+  DEFER, or OVERRULE (it takes effect, at a cost to his goodwill and standing —
+  overrule a big name too often and he may win a boardroom coup). Honoured
+  directives override `estimateMinutesShare` and ease a managed body's proneness.
 - **Calibration-safe:** every added decision puts the reality-default option
   FIRST (the passive first-choice bot backs the coach), so the baseline is
   unperturbed; 205 tests + calibration 14/14.

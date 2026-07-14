@@ -23,7 +23,7 @@ import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
-import { reviewManager, reviewDirectorStrategy } from './manager.js';
+import { reviewManager, reviewDirectorStrategy, applyDirectiveEffects } from './manager.js';
 import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow, executeNearMisses, applyFinancialShocks } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
@@ -61,6 +61,10 @@ function runMonth(state: GameState, rng: Rng): void {
     processAcademyGraduates(state, rng.fork(`academy:${state.clock.date}`));
     processSeasonAgeing(state, rng);
     processSeasonMorale(state);
+    // Standing Director directives the coach is honouring: a managed-load player
+    // grows more durable; directives on departed players are cleared. (Inert
+    // unless the user has issued directives — the passive path never does.)
+    applyDirectiveEffects(state);
     // Scheduled distress (Calciopoli, Parmalat…): drops a club into a fire-sale
     // this summer — a cheap, raidable window for the user (before the ledger runs).
     applyFinancialShocks(state);

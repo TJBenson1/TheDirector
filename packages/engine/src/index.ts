@@ -172,6 +172,11 @@ export {
   courtManager,
   appointManager,
   willManagerJoin,
+  issueDirective,
+  coachResistanceChance,
+  imposeDirective,
+  revokeDirective,
+  applyDirectiveEffects,
 } from './manager.js';
 export {
   simulateMatch,

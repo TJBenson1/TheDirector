@@ -22,11 +22,12 @@
  * results, so this is calibration-neutral on the passive path.
  */
 
-import type { Decision, GameState, ManagerState } from './types.js';
-import { Rng, hashStringToU32 } from './rng.js';
+import type { Decision, GameState, ManagerState, PlayerId } from './types.js';
+import { Rng, hashStringToU32, clamp01 } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { appendMemory } from './memory.js';
 import { standingsOrder } from './season.js';
+import { estimateMinutesShare } from './development.js';
 
 /** The real head coach each scenario inherits at kickoff (reality-default). */
 const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
@@ -345,5 +346,147 @@ export function reviewDirectorStrategy(state: GameState, rng: Rng): void {
       message: `${mgr.identity} has won the boardroom power struggle — the board backs the manager and dismisses the Director.`,
       data: { manager: mgr.identity, reputation: mgr.reputation, relationship: Math.round(mgr.relationshipWithUser) },
     });
+  }
+}
+
+// ── Directives: the Director tells the coach how to use a player ──────────────
+//
+// The coach picks the team by ability. When the Director wants otherwise — blood
+// a prospect the coach would bench, or protect a fragile star the coach would
+// ride — he issues a DIRECTIVE, and the coach may RESIST it. Resistance rises
+// with the coach's reputation (a big name guards selection), a poor relationship,
+// and how much the directive fights winning football (playing a raw kid over a
+// proven one, or resting your best XI). A coach the Director hired complies more
+// readily. A resisted directive becomes a confrontation: defer, or overrule him
+// (it takes effect, but it costs the relationship and his standing — overrule him
+// too often and a big name may turn the boardroom against you).
+
+/** How much a directive fights the coach's winning-XI instinct (0..1). */
+function directiveContradiction(state: GameState, playerId: PlayerId, kind: 'minutes' | 'load'): number {
+  const club = state.clubs[state.playerClub];
+  const player = state.players[playerId];
+  if (!club || !player) return 0.3;
+  const share = estimateMinutesShare(state, club, player); // 0.1..0.85 by ability rank
+  if (kind === 'minutes') {
+    // Forcing a benched/rotation player in fights the coach most; a player who's
+    // already first-choice needs no fight.
+    return clamp01((0.85 - share) / 0.75);
+  }
+  // load: resting a KEY, fit starter costs results now — the coach fights that;
+  // resting a squad player, or one already carrying a knock, is uncontroversial.
+  return clamp01(share - (player.injury ? 0.35 : 0));
+}
+
+/** The coach's chance of pushing back on a directive of this contradiction. */
+export function coachResistanceChance(state: GameState, contradicts: number): number {
+  const m = state.managerRelations;
+  let p = 0.12;
+  p += Math.max(0, m.reputation - 62) * 0.006; // a big name guards selection
+  p += Math.max(0, 60 - m.relationshipWithUser) * 0.005; // a poor relationship digs in
+  p += contradicts * 0.4; // fighting winning football
+  if (m.appointedByUser) p -= 0.1; // your own hire extends you the benefit of the doubt
+  return Math.max(0.03, Math.min(0.92, p));
+}
+
+function setDirective(state: GameState, playerId: PlayerId, kind: 'minutes' | 'load'): void {
+  (state.directives ??= {})[playerId] = { kind, setAt: state.clock.date };
+}
+
+/**
+ * The Director issues a directive on one of his players (minutes / load). The
+ * coach either accepts it, or resists — in which case a confrontation decision is
+ * raised (defer to him, or overrule him). Returns whether the coach pushed back.
+ */
+export function issueDirective(
+  state: GameState,
+  rng: Rng,
+  playerId: PlayerId,
+  kind: 'minutes' | 'load',
+): { ok: boolean; resisted: boolean; reason: string } {
+  const player = state.players[playerId];
+  if (!player || player.club !== state.playerClub) {
+    return { ok: false, resisted: false, reason: 'Not one of your players.' };
+  }
+  const mgr = state.managerRelations;
+  const contradicts = directiveContradiction(state, playerId, kind);
+  const resisted = rng.chance(coachResistanceChance(state, contradicts));
+
+  if (!resisted) {
+    setDirective(state, playerId, kind);
+    logEvent(state, {
+      category: 'decision',
+      code: 'directive.accepted',
+      message: `${mgr.identity} accepts the directive on ${player.name} (${kind === 'minutes' ? 'guaranteed minutes' : 'managed load'}).`,
+      data: { playerId, kind },
+    });
+    return { ok: true, resisted: false, reason: `${mgr.identity} will do it.` };
+  }
+
+  const want = kind === 'minutes'
+    ? `You want ${player.name} given first-team minutes; ${mgr.identity} would rather pick on form and results.`
+    : `You want ${player.name}'s workload managed; ${mgr.identity} wants his strongest XI out there every week.`;
+  state.pendingDecisions.push({
+    id: `directive-clash:${kind}:${playerId}`,
+    title: `${mgr.identity} resists your call on ${player.name}`,
+    description: `${want} Defer to your coach, or overrule him — impose it yourself, at a cost to his goodwill and his authority.`,
+    interrupt: true,
+    clubId: state.playerClub,
+    category: 'decision',
+    choices: [
+      // choices[0] = reality-default: back the coach's judgement (no directive).
+      { id: 'defer', label: `Defer to ${mgr.identity}`, onSuccess: [{ kind: 'managerRelationship', amount: 5 }, { kind: 'log', text: `Deferred to ${mgr.identity} on ${player.name}.` }] },
+      { id: 'overrule', label: `Overrule him — impose it on ${player.name}`, onSuccess: [{ kind: 'imposeDirective', playerId, tag: kind }, { kind: 'managerRelationship', amount: -12 }, { kind: 'managerStanding', amount: -6 }] },
+    ],
+    // Ignore it and the coach keeps control — the directive lapses (reality holds).
+    falloutIfIgnored: [{ kind: 'managerRelationship', amount: 5 }],
+    memoryTags: ['manager', playerId],
+  });
+  logEvent(state, {
+    category: 'decision',
+    code: 'directive.resisted',
+    message: `${mgr.identity} pushes back on your directive over ${player.name}.`,
+    data: { playerId, kind, resistance: Math.round(coachResistanceChance(state, contradicts) * 100) },
+  });
+  return { ok: true, resisted: true, reason: `${mgr.identity} resists — overrule him or defer.` };
+}
+
+/** Apply an overruled directive (consequence handler). */
+export function imposeDirective(state: GameState, playerId: PlayerId, kind: 'minutes' | 'load'): void {
+  const player = state.players[playerId];
+  if (!player || player.club !== state.playerClub) return;
+  setDirective(state, playerId, kind);
+  logEvent(state, {
+    category: 'decision',
+    code: 'directive.imposed',
+    message: `You overrule ${state.managerRelations.identity} and impose your directive on ${player.name}.`,
+    data: { playerId, kind },
+  });
+  appendMemory(state, 'manager', `Overruled the coach on ${player.name}.`);
+}
+
+/** Lift a directive (the Director changes his mind, or the player leaves). */
+export function revokeDirective(state: GameState, playerId: PlayerId): void {
+  if (state.directives) delete state.directives[playerId];
+}
+
+/**
+ * Season-rollover upkeep for standing directives (called from advance.ts):
+ *  - a `load` directive gently eases the player's injury-proneness (a managed
+ *    body grows more durable — the same easing careful rehab gives);
+ *  - directives on players who have left the user's club are cleared.
+ * Empty by default, so calibration is untouched.
+ */
+export function applyDirectiveEffects(state: GameState): void {
+  const dir = state.directives;
+  if (!dir) return;
+  for (const [playerId, directive] of Object.entries(dir)) {
+    const player = state.players[playerId];
+    if (!player || player.club !== state.playerClub) {
+      delete dir[playerId];
+      continue;
+    }
+    if (directive.kind === 'load') {
+      player.injuryProneness = Math.max(20, player.injuryProneness - 4);
+    }
   }
 }
