@@ -261,39 +261,38 @@ describe('era-real coach pool + the Ferguson retirement counterfactual', () => {
     for (const c of pool13) expect(typeof c.reputation).toBe('number');
   });
 
-  it('Ferguson faces the 2001 retirement crossroads — persuading him keeps reality', () => {
+  it('Ferguson faces the 2001 retirement crossroads — backing him keeps reality', () => {
     let s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'fergie' });
-    let sawEvent = false;
-    for (let i = 0; i < 12 && !s.board.dismissed; i++) {
-      const ev = s.pendingDecisions.find((d) => d.id.startsWith('manager-retirement:'));
-      if (ev) {
-        sawEvent = true;
-        expect(Number(s.clock.date.slice(0, 4))).toBeGreaterThanOrEqual(2001);
-        s = applyDecision(s, ev.id, 'persuade').state; // talk him round
-        break;
-      }
-      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
-      s = advanceWindow(s).state;
-    }
-    expect(sawEvent).toBe(true);
+    const ev = advanceToCrossroads(s, 'Alex Ferguson');
+    s = ev.state;
+    expect(ev.decision).toBeTruthy();
+    expect(Number(s.clock.date.slice(0, 4))).toBeGreaterThanOrEqual(2001);
+    // For a coach who really STAYED, choices[0] is backing him (reality-default).
+    expect(ev.decision!.choices[0]!.id).toBe('back');
+    s = applyDecision(s, ev.decision!.id, 'back').state;
     expect(s.managerRelations.identity).toBe('Alex Ferguson'); // he stays, as in reality
-    expect(s.eventLog.some((e) => e.code === 'manager.retirement.considering')).toBe(true);
+    expect(s.eventLog.some((e) => e.code === 'manager.crossroads')).toBe(true);
   });
 
   it('letting Ferguson retire opens an era-real succession (no anachronisms)', () => {
     let s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'fergie-go' });
-    for (let i = 0; i < 12; i++) {
-      const ev = s.pendingDecisions.find((d) => d.id.startsWith('manager-retirement:'));
-      if (ev) { s = applyDecision(s, ev.id, 'accept').state; break; }
-      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
-      s = advanceWindow(s).state;
-    }
-    expect(s.eventLog.some((e) => e.code === 'manager.retired')).toBe(true);
+    const ev = advanceToCrossroads(s, 'Alex Ferguson');
+    s = applyDecision(ev.state, ev.decision!.id, 'change').state;
+    expect(s.eventLog.some((e) => e.code === 'manager.departed')).toBe(true);
     const hire = s.pendingDecisions.find((d) => d.id.startsWith('hire-manager:'))!;
     expect(hire).toBeTruthy();
-    // The 2001-02 successors are era-real names, never a pre-2008 Pep.
-    const successors = hire.choices.map((c) => c.label);
-    expect(successors.join(' ')).not.toContain('Guardiola');
+    expect(hire.choices.map((c) => c.label).join(' ')).not.toContain('Guardiola');
+  });
+
+  it('a coach who really LEFT (Moyes 2014) defaults to the change; you can back him instead', () => {
+    let s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'moyes' });
+    const ev = advanceToCrossroads(s, 'David Moyes');
+    expect(ev.decision).toBeTruthy();
+    // Reality: Moyes was sacked — so choices[0] is making the change.
+    expect(ev.decision!.choices[0]!.id).toBe('change');
+    // The counterfactual the Director CAN take: back him, and he stays.
+    s = applyDecision(ev.state, ev.decision!.id, 'back').state;
+    expect(s.managerRelations.identity).toBe('David Moyes');
   });
 });
 
@@ -347,6 +346,20 @@ describe('management style reflects reality (Mourinho is Mourinho, Pep is Pep)',
     expect(managerStyleStrengthMod(withPep)).toBeGreaterThan(0); // possession suits this squad
   });
 });
+
+/** Advance a passive career (first-choice on all OTHER decisions) until the named
+ *  coach's scripted crossroads surfaces; returns the state and that decision. */
+function advanceToCrossroads(start: GameState, coach: string): { state: GameState; decision: GameState['pendingDecisions'][number] | undefined } {
+  let s = start;
+  for (let i = 0; i < 14; i++) {
+    const ev = s.pendingDecisions.find((d) => d.id === `manager-crossroads:${coach}`);
+    if (ev) return { state: s, decision: ev };
+    for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+    s = advanceWindow(s).state;
+    if (s.board.dismissed) break;
+  }
+  return { state: s, decision: undefined };
+}
 
 /** Clone a state and swap in a coach's style (leaving parStyle as the inherited
  *  baseline), so the style-fit delta reflects that appointment. */

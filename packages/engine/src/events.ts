@@ -89,7 +89,7 @@ export function applyConsequence(state: GameState, c: Consequence): void {
       if (c.playerId && (c.tag === 'minutes' || c.tag === 'load')) imposeDirective(state, c.playerId, c.tag);
       break;
     case 'retireManager':
-      retireManager(state);
+      retireManager(state, c.text);
       break;
     case 'agitation': {
       const p = c.playerId ? state.players[c.playerId] : undefined;

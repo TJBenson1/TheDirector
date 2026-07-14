@@ -189,13 +189,20 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
   squad-building plan and he stays, as he did** (reality-default → calibration
   byte-identical), or let him bow out and appoint an era-real successor. Data-driven
   (`MANAGER_RETIREMENTS`) so more can be added (e.g. Wenger, Moyes-successor arcs).
+- ✅ **More succession crossroads** (`MANAGER_CROSSROADS`, generalised): three
+  flavours — RETIREMENT (Ferguson 2001, stayed), COURTED (Wenger 2007, stayed),
+  PRESSURE (Moyes 2014, sacked). Doing nothing reproduces reality (so man-utd-1999
+  stays byte-identical), and the counterfactual is the road not taken — back Moyes
+  and give him the time United never did, or make the change and pick from the
+  era-real 2014 pool (Van Gaal, Mourinho, Ancelotti…). Data-driven; add a row per
+  arc.
 - **Still to do (deferred by design):**
   - **Manager tenure narrative:** trophies/relationships accruing to a coach's
     reputation; a sacked big name resurfacing at a rival.
   - **Style ↔ player-type development:** a possession coach developing technical
     youth faster, a pragmatist defenders (needs per-attribute player data).
-  - **More retirement/succession crossroads:** Wenger's later years, a
-    Moyes-fails-so-who-next branch, Lippi/Capello international exits.
+  - **Coach occupancy:** a marquee currently employed elsewhere (Pep at Bayern in
+    2014) should be harder to prise than one out of work.
 
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the

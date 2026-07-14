@@ -182,7 +182,7 @@ export {
   managerStyleStrengthMod,
   styleMatchAffinity,
   coachStyle,
-  rollManagerRetirement,
+  rollManagerCrossroads,
   retireManager,
 } from './manager.js';
 export {

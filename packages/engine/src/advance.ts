@@ -23,7 +23,7 @@ import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
-import { reviewManager, reviewDirectorStrategy, applyDirectiveEffects, rollManagerRetirement } from './manager.js';
+import { reviewManager, reviewDirectorStrategy, applyDirectiveEffects, rollManagerCrossroads } from './manager.js';
 import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow, executeNearMisses, applyFinancialShocks } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
@@ -80,9 +80,10 @@ function runMonth(state: GameState, rng: Rng): void {
     reviewBoard(state, rng.fork(`board:${state.clock.date}`));
     reviewManager(state, rng.fork(`manager:${state.clock.date}`));
     reviewDirectorStrategy(state, rng.fork(`director:${state.clock.date}`));
-    // A scripted retirement crossroads (Ferguson 2001): reality holds if the
-    // Director talks him round, so the passive path is unperturbed.
-    rollManagerRetirement(state);
+    // Scripted manager crossroads (Ferguson 2001 retirement, Wenger 2007 courted,
+    // Moyes 2014 pressure): doing nothing reproduces reality, so the passive path
+    // (and the man-utd-1999 calibration world) is unperturbed.
+    rollManagerCrossroads(state);
     rollInternalCrisis(state, rng.fork(`crisis:${state.clock.date}`), divergenceFactor(state) * 0.3);
     // Sustained unrest can force a kept-against-his-wishes player out.
     processAgitationDepartures(state, rng.fork(`agitation:${state.clock.date}`));

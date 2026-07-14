@@ -94,6 +94,7 @@ const COACH_POOL: PoolCoach[] = [
   { name: 'Fabio Capello', reputation: 90, from: 1991, to: 2012 },
   { name: 'Marcello Lippi', reputation: 88, from: 1994, to: 2011 },
   { name: 'Carlo Ancelotti', reputation: 88, from: 1999 },
+  { name: 'Louis van Gaal', reputation: 85, from: 1991, to: 2016 }, // the real 2014 United successor
   { name: 'Ottmar Hitzfeld', reputation: 86, from: 1991, to: 2008 }, // a real United 2002 target
   { name: 'Rafael Benítez', reputation: 82, from: 2001 },
   { name: 'Guus Hiddink', reputation: 82, from: 1987 },
@@ -486,94 +487,129 @@ export function reviewDirectorStrategy(state: GameState, rng: Rng): void {
   }
 }
 
-// ── Scripted manager-retirement counterfactuals ──────────────────────────────
+// ── Scripted manager crossroads counterfactuals ──────────────────────────────
 //
-// A great coach at a crossroads reality really faced. The canonical case: Sir
-// Alex Ferguson announced in 2001 he would retire at the end of 2001–02, then
-// reversed it in February 2002 — a decision swayed by the team's direction and
-// his family. Here the Director gets the call reality's board didn't force: talk
-// him round with a squad-building plan (he stays, as he did), or let him bow out
-// and appoint a successor from the era's REAL candidates (Eriksson, Capello,
-// Hitzfeld, Lippi…). Reality holds if you back him, so the passive path (and
-// calibration) is unperturbed.
+// A great coach at a crossroads reality really faced. Three flavours:
+//   • RETIREMENT (he flirted with walking away) — Ferguson 2001: announced he'd
+//     retire, then reversed it in Feb 2002. Reality: he STAYED.
+//   • COURTED (a bigger job comes calling) — Wenger 2007, tapped up by the giants
+//     but loyal to Arsenal. Reality: he STAYED.
+//   • PRESSURE (a failing start, the board wants a change) — Moyes 2014, sacked
+//     after ten months. Reality: he LEFT.
+// The Director gets the call reality's board made for him: back the man (the road
+// not taken for Moyes — give him time; reality for Ferguson/Wenger), or make the
+// change and appoint an era-real successor. Doing nothing reproduces reality, so
+// the man-utd-1999 (calibration) case — Ferguson stays — is byte-identical.
 
-interface RetirementFlirtation { year: number; name: string }
-const MANAGER_RETIREMENTS: Record<string, RetirementFlirtation> = {
-  'man-utd-1999': { year: 2001, name: 'Alex Ferguson' },
+type CrossroadsReason = 'retirement' | 'courted' | 'pressure';
+interface ManagerCrossroads { year: number; name: string; reason: CrossroadsReason; realOutcome: 'stays' | 'leaves' }
+const MANAGER_CROSSROADS: Record<string, ManagerCrossroads[]> = {
+  'man-utd-1999': [{ year: 2001, name: 'Alex Ferguson', reason: 'retirement', realOutcome: 'stays' }],
+  'arsenal-2004': [{ year: 2007, name: 'Arsène Wenger', reason: 'courted', realOutcome: 'stays' }],
+  'man-utd-2013': [{ year: 2014, name: 'David Moyes', reason: 'pressure', realOutcome: 'leaves' }],
 };
 
-/** Fire the scripted retirement crossroads once, when its year arrives and the
- *  real coach is still in charge. Called at the season rollover. */
-export function rollManagerRetirement(state: GameState): void {
+/** Fire each scripted crossroads once, when its year arrives and the real coach
+ *  is still in charge. Called at the season rollover. */
+export function rollManagerCrossroads(state: GameState): void {
   if (state.board.dismissed) return;
-  const flirt = MANAGER_RETIREMENTS[state.meta.scenarioId];
-  if (!flirt) return;
-  const key = `retirement:${flirt.name}`;
-  if (state.meta.firedScripted.includes(key)) return;
+  const list = MANAGER_CROSSROADS[state.meta.scenarioId];
+  if (!list) return;
   const year = Number(state.clock.date.slice(0, 4));
-  if (year < flirt.year) return;
-  const mgr = state.managerRelations;
-  if (mgr.identity !== flirt.name) { state.meta.firedScripted.push(key); return; } // already changed coach
-  state.meta.firedScripted.push(key);
+  for (const cr of list) {
+    const key = `crossroads:${cr.name}:${cr.year}`;
+    if (state.meta.firedScripted.includes(key) || year < cr.year) continue;
+    if (state.managerRelations.identity !== cr.name) { state.meta.firedScripted.push(key); continue; }
+    state.meta.firedScripted.push(key);
+    buildCrossroadsDecision(state, cr);
+  }
+}
 
-  // "Falling apart" vs "going out on a high", from where the club actually sits.
+function buildCrossroadsDecision(state: GameState, cr: ManagerCrossroads): void {
   const league = state.leagues[state.clubs[state.playerClub]?.leagueId ?? ''];
   const order = league ? standingsOrder(league) : [];
   const pos = order.indexOf(state.playerClub) + 1;
   const onAHigh = pos >= 1 && pos <= 2;
-  const framing = onAHigh
-    ? `With the trophies still coming, ${flirt.name} is tempted to walk away at the very top.`
-    : `With the team looking like it needs rebuilding, ${flirt.name} is questioning whether he still has the appetite for it.`;
+
+  let title: string;
+  let framing: string;
+  if (cr.reason === 'retirement') {
+    title = `${cr.name} is considering retirement`;
+    framing = onAHigh
+      ? `With the trophies still coming, ${cr.name} is tempted to walk away at the very top.`
+      : `With the team looking like it needs rebuilding, ${cr.name} is questioning whether he still has the appetite for it.`;
+  } else if (cr.reason === 'courted') {
+    title = `${cr.name} has been approached by a bigger job`;
+    framing = `One of Europe's giants has come calling for ${cr.name}. He is loyal — but flattered, and weighing whether his best work here is behind him.`;
+  } else {
+    title = `The board has run out of patience with ${cr.name}`;
+    framing = `A poor start has the board pushing to dismiss ${cr.name} — as, in reality, they did. But the change reality never explored is BACKING him: give him the time to turn it around.`;
+  }
 
   logEvent(state, {
     category: 'system',
-    code: 'manager.retirement.considering',
-    message: `${flirt.name} has told the board he is thinking of retiring at the end of the season.`,
-    data: { manager: flirt.name, onAHigh, position: pos || null },
+    code: 'manager.crossroads',
+    message: `${cr.name}'s future is in the balance (${cr.reason}).`,
+    data: { manager: cr.name, reason: cr.reason, realOutcome: cr.realOutcome, position: pos || null },
   });
+
+  const backHim = (label: string) => ({
+    id: 'back',
+    label,
+    onSuccess: [
+      { kind: 'managerRelationship', amount: 10 } as const,
+      { kind: 'memory', tag: 'manager', text: `Backed ${cr.name} to stay on.` } as const,
+      { kind: 'log', text: `${cr.name} stays — the Director's commitment convinced him.` } as const,
+    ],
+  });
+  const makeChange = (label: string) => ({
+    id: 'change',
+    label,
+    onSuccess: [{ kind: 'retireManager', text: cr.reason } as const],
+  });
+
+  // Reality-default is choices[0] and the ignore-fallout. For a coach who really
+  // STAYED, that's backing him (byte-identical passive path). For one who really
+  // LEFT, it's making the change — so a passive career reproduces his departure.
+  const stays = cr.realOutcome === 'stays';
+  const backLabel = cr.reason === 'retirement'
+    ? `Talk him round with a squad-building plan (he stays)`
+    : cr.reason === 'courted'
+      ? `Convince him his future is here (he stays)`
+      : `Back ${cr.name} — give him the time reality didn't`;
+  const changeLabel = cr.reason === 'pressure'
+    ? `Make the change — appoint a successor (as reality did)`
+    : `Let him go — appoint his successor`;
+
   state.pendingDecisions.push({
-    id: `manager-retirement:${flirt.name}`,
-    title: `${flirt.name} is considering retirement`,
-    description: `${framing} You can try to talk him round — lay out an ambitious squad-building plan and convince him the best is still to come — or accept his decision and line up a successor.`,
+    id: `manager-crossroads:${cr.name}`,
+    title,
+    description: `${framing}`,
     interrupt: true,
     clubId: state.playerClub,
     category: 'system',
-    choices: [
-      // choices[0] = reality-default: he stays (as Ferguson really did). No sim
-      // change beyond goodwill, so the passive path stays byte-identical.
-      {
-        id: 'persuade',
-        label: `Talk him round with a squad-building plan (he stays)`,
-        onSuccess: [
-          { kind: 'managerRelationship', amount: 10 },
-          { kind: 'memory', tag: 'manager', text: `Persuaded ${flirt.name} to stay on with a rebuild plan.` },
-          { kind: 'log', text: `${flirt.name} signs on — the project convinced him to stay.` },
-        ],
-      },
-      {
-        id: 'accept',
-        label: `Let him retire — appoint his successor`,
-        onSuccess: [{ kind: 'retireManager', text: flirt.name }],
-      },
-    ],
-    // Ignore it and, as in reality, he stays on — nothing changes.
-    falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: `${flirt.name} stayed on, as in reality.` }],
-    memoryTags: ['manager', flirt.name],
+    choices: stays
+      ? [backHim(backLabel), makeChange(changeLabel)]
+      : [makeChange(changeLabel), backHim(backLabel)],
+    falloutIfIgnored: stays
+      ? [{ kind: 'memory', tag: 'manager', text: `${cr.name} stayed on, as in reality.` }]
+      : [{ kind: 'retireManager', text: cr.reason }],
+    memoryTags: ['manager', cr.name],
   });
 }
 
-/** The head coach retires; a caretaker steps in and the (era-gated) hire
- *  shortlist opens. No Director-patience penalty — a legend leaving on his own
- *  terms isn't a sacking. */
-export function retireManager(state: GameState): void {
+/** The head coach steps down (retirement / a move / a dismissal); a caretaker
+ *  takes over and the era-gated hire shortlist opens. No Director-patience
+ *  penalty — this is a scripted departure, not the board turning on the Director. */
+export function retireManager(state: GameState, reason?: string): void {
   const name = state.managerRelations.identity;
-  logEvent(state, {
-    category: 'system',
-    code: 'manager.retired',
-    message: `${name} retires. An era ends — the Director must find a successor.`,
-    data: { manager: name },
-  });
-  appendMemory(state, 'manager', `${name} retired.`);
+  const message = reason === 'courted'
+    ? `${name} leaves for a new challenge — the Director must find a successor.`
+    : reason === 'pressure'
+      ? `${name} is relieved of his duties — the Director makes a change.`
+      : `${name} retires. An era ends — the Director must find a successor.`;
+  logEvent(state, { category: 'system', code: 'manager.departed', message, data: { manager: name, reason } });
+  appendMemory(state, 'manager', `${name} departed (${reason ?? 'retirement'}).`);
   beginSuccession(state);
 }
 
