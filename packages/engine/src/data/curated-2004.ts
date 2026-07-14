@@ -194,7 +194,7 @@ export const REAL_MADRID_2004: CuratedSeed[] = [
   q('real_madrid', 'helguera_rm', 'Iván Helguera', 1975, 'Spain', ['CB', 'DM'], 81, 82, 2007, 30, t(8, 5, 7, 7, 5, 7)),
   q('real_madrid', 'samuel_rm', 'Walter Samuel', 1978, 'Argentina', ['CB'], 83, 85, 2008, 30, t(8, 6, 8, 7, 5, 6)),
   q('real_madrid', 'rcarlos_rm', 'Roberto Carlos', 1973, 'Brazil', ['LB'], 85, 86, 2007, 25, t(8, 7, 8, 8, 4, 7)),
-  q('real_madrid', 'beckham_rm', 'David Beckham', 1975, 'England', ['RM', 'CM'], 85, 86, 2007, 20, t(9, 7, 8, 7, 4, 7)),
+  q('real_madrid', 'beckham_rm', 'David Beckham', 1975, 'England', ['RW', 'CM'], 85, 86, 2007, 20, t(9, 7, 8, 7, 4, 7)),
   q('real_madrid', 'guti_rm', 'Guti', 1976, 'Spain', ['CM', 'AM'], 81, 84, 2008, 30, t(6, 7, 7, 8, 6, 7)),
   q('real_madrid', 'zidane_rm', 'Zinédine Zidane', 1972, 'France', ['AM'], 90, 91, 2006, 25, t(9, 6, 9, 8, 4, 8), { loyalty: 85 }),
   q('real_madrid', 'figo_rm', 'Luís Figo', 1972, 'Portugal', ['RW', 'AM'], 85, 86, 2005, 30, t(8, 7, 8, 6, 5, 7)),
@@ -254,14 +254,14 @@ export const BAYERN_2004_EXTRA: CuratedSeed[] = [
   q('bayern', 'sagnol_bay', 'Willy Sagnol', 1977, 'France', ['RB'], 81, 82, 2008, 30, t(8, 5, 8, 8, 4, 7)),
   q('bayern', 'lucio_bay', 'Lúcio', 1978, 'Brazil', ['CB'], 84, 85, 2008, 30, t(8, 6, 8, 7, 5, 7)),
   q('bayern', 'kovac_bay', 'Robert Kovač', 1974, 'Croatia', ['CB'], 80, 81, 2007, 30, t(8, 5, 7, 7, 5, 6)),
-  q('bayern', 'zeroberto_bay', 'Zé Roberto', 1974, 'Brazil', ['LM', 'CM'], 82, 83, 2006, 30, t(8, 6, 8, 7, 5, 8)),
+  q('bayern', 'zeroberto_bay', 'Zé Roberto', 1974, 'Brazil', ['LW', 'CM'], 82, 83, 2006, 30, t(8, 6, 8, 7, 5, 8)),
   q('bayern', 'schweinsteiger_bay', 'Bastian Schweinsteiger', 1984, 'Germany', ['RW', 'CM'], 74, 88, 2010, 30, t(8, 6, 8, 8, 5, 7)),
   q('bayern', 'makaay_bay', 'Roy Makaay', 1975, 'Netherlands', ['ST'], 84, 85, 2007, 30, t(8, 6, 8, 7, 4, 7)),
   q('bayern', 'pizarro_bay', 'Claudio Pizarro', 1978, 'Peru', ['ST'], 82, 83, 2007, 30, t(7, 6, 8, 7, 5, 7)),
   q('bayern', 'demichelis_bay', 'Martín Demichelis', 1980, 'Argentina', ['CB', 'DM'], 79, 82, 2009, 30, t(8, 5, 8, 7, 5, 7)),
   q('bayern', 'lizarazu_bay', 'Bixente Lizarazu', 1969, 'France', ['LB'], 80, 81, 2006, 30, t(8, 5, 8, 8, 4, 7)),
-  q('bayern', 'salihamidzic_bay', 'Hasan Salihamidžić', 1977, 'Bosnia', ['RM', 'RW'], 79, 80, 2007, 30, t(9, 5, 8, 8, 5, 7)),
-  q('bayern', 'deisler_bay', 'Sebastian Deisler', 1980, 'Germany', ['AM', 'RM'], 79, 85, 2007, 65, t(7, 5, 7, 7, 6, 7)),
+  q('bayern', 'salihamidzic_bay', 'Hasan Salihamidžić', 1977, 'Bosnia', ['RW'], 79, 80, 2007, 30, t(9, 5, 8, 8, 5, 7)),
+  q('bayern', 'deisler_bay', 'Sebastian Deisler', 1980, 'Germany', ['AM', 'RW'], 79, 85, 2007, 65, t(7, 5, 7, 7, 6, 7)),
   q('bayern', 'santacruz_bay', 'Roque Santa Cruz', 1981, 'Paraguay', ['ST'], 78, 82, 2007, 55, t(7, 6, 7, 7, 5, 7)),
 ];
 
@@ -291,7 +291,7 @@ export const EVERTON_2004_EXTRA: CuratedSeed[] = [
 // ── Depth top-ups so every FEATURED playable club fields a full real squad
 //    (>=13) in this pack, not a first XI padded with anonymous filler. ───────────
 export const MAN_UTD_2004_EXTRA: CuratedSeed[] = [
-  q('man_utd', 'fletcher_mu', 'Darren Fletcher', 1984, 'Scotland', ['CM', 'RM'], 76, 83, 2009, 25, t(9, 4, 8, 9, 3, 7)),
+  q('man_utd', 'fletcher_mu', 'Darren Fletcher', 1984, 'Scotland', ['CM', 'RW'], 76, 83, 2009, 25, t(9, 4, 8, 9, 3, 7)),
   q('man_utd', 'asmith_mu', 'Alan Smith', 1980, 'England', ['ST', 'CM'], 79, 81, 2008, 35, t(7, 7, 9, 8, 7, 6)),
 ];
 export const REAL_MADRID_2004_EXTRA: CuratedSeed[] = [
@@ -316,7 +316,7 @@ export const LIVERPOOL_2004_EXTRA: CuratedSeed[] = [
 export const CHELSEA_2004_EXTRA: CuratedSeed[] = [
   q('chelsea', 'kezman_che', 'Mateja Kežman', 1979, 'Serbia', ['ST'], 79, 81, 2007, 30, t(7, 7, 8, 6, 6, 6)),
   q('chelsea', 'tiago_che', 'Tiago', 1981, 'Portugal', ['CM'], 79, 81, 2008, 25, t(8, 5, 8, 7, 4, 7)),
-  q('chelsea', 'geremi_che', 'Geremi', 1978, 'Cameroon', ['RM', 'CM'], 78, 79, 2007, 30, t(8, 5, 7, 7, 5, 7)),
+  q('chelsea', 'geremi_che', 'Geremi', 1978, 'Cameroon', ['RW', 'CM'], 78, 79, 2007, 30, t(8, 5, 7, 7, 5, 7)),
 ];
 export const SPURS_2004_DEPTH: CuratedSeed[] = [
   q('spurs', 'ziegler_spu', 'Reto Ziegler', 1986, 'Switzerland', ['LB'], 72, 80, 2009, 30, t(7, 5, 7, 6, 5, 7)),

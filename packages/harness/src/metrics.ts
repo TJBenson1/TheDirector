@@ -69,6 +69,11 @@ export interface CareerMetrics {
   // ── Governing constraint (DESIGN-internal-friction) — M8/M9 ──
   /** Career ended in dismissal (sackable job, §1). */
   careerEndedInSack: number;
+  /** Board warnings issued this career — the signal that the board genuinely
+   *  lost patience (a run that went wrong). The denominator for "dismissal in a
+   *  meaningful minority of UNDERPERFORMING runs": a dominant club rarely
+   *  underperforms, so sackings are measured against warned runs, not all runs. */
+  boardWarningsIssued: number;
   /** Titles won by big-money clubs (Chelsea/City/Madrid), and total titles, for
    *  the "money still talks" share. */
   moneyClubTitles: number;
@@ -114,6 +119,7 @@ export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
     logicalSignings: 0,
     signingsUnderperformingFirstSeason: 0,
     careerEndedInSack: 0,
+    boardWarningsIssued: 0,
     moneyClubTitles: 0,
     leagueTitlesTotal: 0,
     internalCrises: 0,

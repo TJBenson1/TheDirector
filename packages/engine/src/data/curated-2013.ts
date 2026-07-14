@@ -305,7 +305,7 @@ export const JUVENTUS_2013: CuratedSeed[] = [
   q('juventus', 'barzagli_j13', 'Andrea Barzagli', 1981, 'Italy', ['CB'], 84, 85, 2017, 30, t(9, 5, 8, 9, 4, 6)),
   q('juventus', 'bonucci_j13', 'Leonardo Bonucci', 1987, 'Italy', ['CB'], 84, 88, 2018, 25, t(8, 6, 8, 8, 5, 7)),
   q('juventus', 'lichtsteiner_j13', 'Stephan Lichtsteiner', 1984, 'Switzerland', ['RB'], 82, 83, 2017, 30, t(9, 6, 9, 8, 5, 7)),
-  q('juventus', 'asamoah_j13', 'Kwadwo Asamoah', 1988, 'Ghana', ['LB', 'LM'], 80, 83, 2017, 30, t(8, 5, 8, 7, 5, 7)),
+  q('juventus', 'asamoah_j13', 'Kwadwo Asamoah', 1988, 'Ghana', ['LB', 'LW'], 80, 83, 2017, 30, t(8, 5, 8, 7, 5, 7)),
   q('juventus', 'marchisio_j13', 'Claudio Marchisio', 1986, 'Italy', ['CM'], 84, 85, 2018, 30, t(9, 5, 8, 9, 4, 7)),
   q('juventus', 'llorente_j13', 'Fernando Llorente', 1985, 'Spain', ['ST'], 82, 83, 2017, 30, t(8, 6, 8, 7, 4, 7)),
   q('juventus', 'giovinco_j13', 'Sebastian Giovinco', 1987, 'Italy', ['AM', 'ST'], 79, 82, 2017, 35, t(7, 6, 8, 6, 5, 7)),

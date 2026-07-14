@@ -145,6 +145,8 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
     for (const e of result.events) {
       if (e.code === 'scandal.fired' && e.data?.user === true) scandalDecades.add(decadeOf());
       if (e.code === 'rival.counterpunch') metrics.raidsCounterPunchedWithin2Windows += 1;
+      // Board lost patience after a bad season — this run genuinely underperformed.
+      if (e.code === 'board.warning') metrics.boardWarningsIssued += 1;
       // A logical poach bid (butterfly of the user's own move) on a user player.
       if (e.code === 'poach.bid' && e.data?.from === state.playerClub) {
         poachBidTargets.add(String(e.data.playerId));
