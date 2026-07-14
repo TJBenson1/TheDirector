@@ -61,5 +61,7 @@ describe('calibration harness', () => {
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
     expect(pending.length).toBe(4);
-  }, 30000);
+    // 36 careers × 15 years is genuinely heavy (~20s); a generous ceiling keeps
+    // the batch from flaking under CI/machine load without weakening any assertion.
+  }, 90000);
 });

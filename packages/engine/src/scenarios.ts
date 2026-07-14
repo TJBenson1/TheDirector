@@ -106,6 +106,12 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'newcastle', name: 'Newcastle United', prestige: 70 },
       { id: 'real_madrid', name: 'Real Madrid', prestige: 94 },
       { id: 'inter', name: 'Internazionale', prestige: 82 },
+      // The continental giants of the era — as real context sides so the European
+      // Cup is contested by the whole of Europe, not just the English top four.
+      { id: 'bayern', name: 'Bayern München', prestige: 86 },
+      { id: 'juventus', name: 'Juventus', prestige: 86 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 84 },
+      { id: 'milan', name: 'AC Milan', prestige: 84 },
     ],
     contextExtra: [
       { id: 'lens', name: 'RC Lens', prestige: 66 },

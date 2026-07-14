@@ -228,8 +228,81 @@ export const SPURS_2001: CuratedSeed[] = [
   q('spurs', 'rebrov01', 'Sergei Rebrov', 1974, 'Ukraine', ['ST', 'AM'], 78, 81, 2005, 30, t(7, 6, 7, 6, 5, 6)),
 ];
 
+/**
+ * The continental giants of 2001–02, as context sides so the European Cup is
+ * contested by all of Europe (§4, §14). Foreign to eng-2001 — zero kickoff risk.
+ */
+export const BARCELONA_2001: CuratedSeed[] = [
+  q('barcelona', 'bonano_ba01', 'Roberto Bonano', 1970, 'Argentina', ['GK'], 78, 79, 2004, 25, t(7, 5, 7, 6, 5, 7)),
+  q('barcelona', 'puyol_ba01', 'Carles Puyol', 1978, 'Spain', ['CB', 'RB'], 82, 87, 2007, 25, t(10, 5, 9, 10, 3, 7), { loyalty: 95 }),
+  q('barcelona', 'fdeboer_ba01', 'Frank de Boer', 1970, 'Netherlands', ['CB'], 81, 82, 2003, 25, t(8, 5, 7, 6, 3, 7)),
+  q('barcelona', 'christanval_ba01', 'Philippe Christanval', 1978, 'France', ['CB', 'DM'], 78, 82, 2005, 40, t(6, 5, 7, 6, 6, 6)),
+  q('barcelona', 'sergi_ba01', 'Sergi Barjuán', 1971, 'Spain', ['LB'], 78, 79, 2002, 25, t(8, 5, 7, 9, 4, 7)),
+  q('barcelona', 'reiziger_ba01', 'Michael Reiziger', 1973, 'Netherlands', ['RB'], 79, 80, 2004, 25, t(8, 4, 7, 6, 4, 7)),
+  q('barcelona', 'cocu_ba01', 'Phillip Cocu', 1970, 'Netherlands', ['CM', 'DM'], 82, 83, 2003, 20, t(8, 4, 7, 7, 3, 8)),
+  q('barcelona', 'xavi_ba01', 'Xavi', 1980, 'Spain', ['CM'], 80, 91, 2007, 15, t(10, 5, 9, 10, 2, 8), { loyalty: 95 }),
+  q('barcelona', 'gabri_ba01', 'Gabri', 1979, 'Spain', ['CM'], 77, 80, 2005, 25, t(8, 4, 7, 8, 4, 7)),
+  q('barcelona', 'luisenrique_ba01', 'Luís Enrique', 1970, 'Spain', ['CM', 'RW'], 81, 82, 2004, 35, t(9, 6, 9, 10, 4, 7), { loyalty: 90 }),
+  q('barcelona', 'overmars_ba01', 'Marc Overmars', 1973, 'Netherlands', ['LW'], 82, 83, 2004, 45, t(8, 6, 8, 6, 4, 7)),
+  q('barcelona', 'rivaldo_ba01', 'Rivaldo', 1972, 'Brazil', ['AM', 'LW'], 88, 88, 2004, 30, t(7, 7, 8, 5, 5, 6)),
+  q('barcelona', 'kluivert_ba01', 'Patrick Kluivert', 1976, 'Netherlands', ['ST'], 85, 86, 2004, 30, t(6, 7, 7, 6, 6, 7)),
+  q('barcelona', 'saviola_ba01', 'Javier Saviola', 1981, 'Argentina', ['ST'], 80, 86, 2006, 30, t(7, 6, 8, 6, 5, 7)),
+];
+export const BAYERN_2001: CuratedSeed[] = [
+  q('bayern', 'kahn_by01', 'Oliver Kahn', 1969, 'Germany', ['GK'], 88, 88, 2006, 20, t(9, 7, 9, 9, 5, 6)),
+  q('bayern', 'sagnol_by01', 'Willy Sagnol', 1977, 'France', ['RB'], 80, 82, 2006, 25, t(8, 5, 7, 7, 4, 7)),
+  q('bayern', 'kuffour_by01', 'Samuel Kuffour', 1976, 'Ghana', ['CB'], 80, 82, 2005, 30, t(8, 5, 8, 7, 5, 7)),
+  q('bayern', 'linke_by01', 'Thomas Linke', 1969, 'Germany', ['CB'], 78, 79, 2004, 30, t(8, 4, 7, 8, 4, 6)),
+  q('bayern', 'lizarazu_by01', 'Bixente Lizarazu', 1969, 'France', ['LB'], 82, 82, 2005, 25, t(8, 5, 7, 7, 4, 7)),
+  q('bayern', 'robertkovac_by01', 'Robert Kovač', 1974, 'Croatia', ['CB'], 78, 79, 2005, 30, t(7, 5, 7, 6, 6, 6)),
+  q('bayern', 'effenberg_by01', 'Stefan Effenberg', 1968, 'Germany', ['CM'], 83, 83, 2002, 30, t(6, 8, 8, 6, 7, 6)),
+  q('bayern', 'jeremies_by01', 'Jens Jeremies', 1974, 'Germany', ['DM'], 79, 80, 2005, 40, t(8, 5, 8, 8, 5, 6)),
+  q('bayern', 'scholl_by01', 'Mehmet Scholl', 1970, 'Germany', ['AM'], 81, 82, 2005, 35, t(7, 6, 7, 8, 5, 7)),
+  q('bayern', 'salihamidzic_by01', 'Hasan Salihamidžić', 1977, 'Bosnia', ['RW', 'CM'], 79, 80, 2006, 30, t(9, 5, 8, 8, 5, 7)),
+  q('bayern', 'hargreaves_by01', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 78, 85, 2006, 55, t(8, 5, 8, 7, 4, 8)),
+  q('bayern', 'elber_by01', 'Giovane Élber', 1972, 'Brazil', ['ST'], 82, 83, 2004, 30, t(7, 6, 7, 6, 5, 7)),
+  q('bayern', 'pizarro_by01', 'Claudio Pizarro', 1978, 'Peru', ['ST'], 80, 85, 2006, 30, t(7, 6, 8, 6, 5, 7)),
+  q('bayern', 'jancker_by01', 'Carsten Jancker', 1974, 'Germany', ['ST'], 78, 79, 2004, 35, t(7, 5, 7, 7, 5, 6)),
+];
+export const JUVENTUS_2001: CuratedSeed[] = [
+  q('juventus', 'buffon_ju01', 'Gianluigi Buffon', 1978, 'Italy', ['GK'], 86, 91, 2007, 20, t(9, 6, 9, 8, 4, 7)),
+  q('juventus', 'thuram_ju01', 'Lilian Thuram', 1972, 'France', ['CB', 'RB'], 85, 86, 2006, 25, t(9, 5, 8, 7, 3, 7)),
+  q('juventus', 'ferrara_ju01', 'Ciro Ferrara', 1967, 'Italy', ['CB'], 80, 80, 2004, 30, t(9, 5, 8, 9, 4, 6)),
+  q('juventus', 'tudor_ju01', 'Igor Tudor', 1978, 'Croatia', ['CB'], 79, 81, 2005, 30, t(7, 5, 7, 7, 6, 6)),
+  q('juventus', 'montero_ju01', 'Paolo Montero', 1971, 'Uruguay', ['CB'], 81, 82, 2004, 35, t(7, 6, 7, 7, 7, 6)),
+  q('juventus', 'pessotto_ju01', 'Gianluca Pessotto', 1970, 'Italy', ['LB', 'RB'], 78, 79, 2004, 30, t(8, 4, 7, 8, 4, 7)),
+  q('juventus', 'zambrotta_ju01', 'Gianluca Zambrotta', 1977, 'Italy', ['RB', 'LB'], 82, 85, 2006, 25, t(8, 5, 8, 7, 5, 7)),
+  q('juventus', 'nedved_ju01', 'Pavel Nedvěd', 1972, 'Czech Republic', ['AM', 'LW'], 86, 88, 2006, 25, t(9, 6, 9, 7, 4, 7)),
+  q('juventus', 'davids_ju01', 'Edgar Davids', 1973, 'Netherlands', ['CM', 'DM'], 84, 85, 2004, 35, t(7, 6, 8, 6, 6, 7)),
+  q('juventus', 'conte_ju01', 'Antonio Conte', 1969, 'Italy', ['CM', 'DM'], 79, 80, 2004, 30, t(9, 6, 9, 10, 6, 6), { loyalty: 92 }),
+  q('juventus', 'tacchinardi_ju01', 'Alessio Tacchinardi', 1975, 'Italy', ['DM', 'CM'], 79, 81, 2005, 30, t(7, 4, 7, 7, 4, 6)),
+  q('juventus', 'delpiero_ju01', 'Alessandro Del Piero', 1974, 'Italy', ['ST', 'AM'], 86, 88, 2007, 35, t(8, 7, 8, 9, 4, 7), { loyalty: 92 }),
+  q('juventus', 'trezeguet_ju01', 'David Trezeguet', 1977, 'France', ['ST'], 84, 88, 2006, 30, t(7, 6, 8, 7, 5, 7)),
+  q('juventus', 'salas_ju01', 'Marcelo Salas', 1974, 'Chile', ['ST'], 79, 80, 2004, 40, t(7, 6, 8, 6, 6, 7)),
+];
+export const MILAN_2001: CuratedSeed[] = [
+  q('milan', 'abbiati_mi01', 'Christian Abbiati', 1977, 'Italy', ['GK'], 82, 84, 2006, 20, t(8, 5, 7, 8, 4, 7)),
+  q('milan', 'maldini_mi01', 'Paolo Maldini', 1968, 'Italy', ['LB', 'CB'], 87, 88, 2006, 20, t(10, 6, 9, 10, 3, 7), { loyalty: 99, hardBlocks: [{ reason: 'Paolo Maldini is Milan for life.', untilYear: 2099 }] }),
+  q('milan', 'costacurta_mi01', 'Alessandro Costacurta', 1966, 'Italy', ['CB'], 79, 79, 2004, 30, t(9, 5, 8, 10, 3, 6), { loyalty: 95 }),
+  q('milan', 'kaladze_mi01', 'Kakha Kaladze', 1978, 'Georgia', ['CB', 'DM'], 80, 83, 2006, 30, t(8, 5, 8, 7, 5, 7)),
+  q('milan', 'roque_mi01', 'Roque Júnior', 1976, 'Brazil', ['CB'], 80, 81, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+  q('milan', 'contra_mi01', 'Cosmin Contra', 1975, 'Romania', ['RB'], 77, 79, 2004, 25, t(8, 5, 7, 6, 5, 7)),
+  q('milan', 'albertini_mi01', 'Demetrio Albertini', 1971, 'Italy', ['CM', 'DM'], 81, 82, 2003, 25, t(9, 5, 8, 9, 3, 7)),
+  q('milan', 'gattuso_mi01', 'Gennaro Gattuso', 1978, 'Italy', ['DM'], 81, 85, 2006, 30, t(8, 5, 9, 8, 6, 7)),
+  q('milan', 'pirlo_mi01', 'Andrea Pirlo', 1979, 'Italy', ['DM', 'AM'], 82, 89, 2006, 25, t(9, 5, 8, 7, 3, 7)),
+  q('milan', 'ruicosta_mi01', 'Manuel Rui Costa', 1972, 'Portugal', ['AM'], 84, 85, 2006, 25, t(8, 6, 8, 7, 4, 7)),
+  q('milan', 'serginho_mi01', 'Serginho', 1971, 'Brazil', ['LB', 'LW'], 78, 79, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+  q('milan', 'shevchenko_mi01', 'Andriy Shevchenko', 1976, 'Ukraine', ['ST'], 88, 90, 2006, 30, t(8, 6, 9, 7, 4, 7)),
+  q('milan', 'inzaghi_mi01', 'Filippo Inzaghi', 1973, 'Italy', ['ST'], 84, 85, 2006, 30, t(7, 6, 8, 7, 5, 6)),
+  q('milan', 'javimoreno_mi01', 'Javi Moreno', 1974, 'Spain', ['ST'], 76, 78, 2004, 30, t(7, 6, 7, 6, 6, 7)),
+];
+
 /** Curated squads for the liverpool-2001 scenario, keyed by club. */
 export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
+  barcelona: BARCELONA_2001,
+  bayern: BAYERN_2001,
+  juventus: JUVENTUS_2001,
+  milan: MILAN_2001,
   liverpool: LIVERPOOL_2001,
   man_utd: MAN_UTD_2001,
   arsenal: [...ARSENAL_2001, ...ARSENAL_2001_EXTRA],

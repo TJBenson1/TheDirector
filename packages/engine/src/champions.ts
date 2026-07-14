@@ -61,6 +61,24 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2004: { w: 'liverpool' },
     2005: { w: 'barcelona' },
   },
+  'era-2001': {
+    // Real finalists 2002–2016 among clubs in the pack (2004 Porto/Monaco and the
+    // 2013 Dortmund runner-up fall outside it, so those years default to field sim).
+    2001: { w: 'real_madrid' },
+    2002: { w: 'milan', r: 'juventus' },
+    2004: { w: 'liverpool', r: 'milan' },
+    2005: { w: 'barcelona', r: 'arsenal' },
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern' },
+    2013: { w: 'real_madrid' },
+    2014: { w: 'barcelona', r: 'juventus' },
+    2015: { w: 'real_madrid' },
+  },
   'era-2004': {
     2004: { w: 'liverpool', r: 'milan' },
     2005: { w: 'barcelona', r: 'arsenal' },
