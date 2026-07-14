@@ -302,6 +302,19 @@ export const JUVENTUS_2013: CuratedSeed[] = [
   q('juventus', 'pogba', 'Paul Pogba', 1993, 'France', ['CM'], 82, 92, 2019, 30, t(6, 8, 9, 6, 6, 7)),
   q('juventus', 'tevez', 'Carlos Tévez', 1984, 'Argentina', ['ST'], 84, 85, 2016, 30, t(6, 8, 9, 5, 7, 7)),
   q('juventus', 'chiellini', 'Giorgio Chiellini', 1984, 'Italy', ['CB'], 85, 86, 2018, 30, t(9, 6, 9, 9, 5, 6)),
+  q('juventus', 'barzagli_j13', 'Andrea Barzagli', 1981, 'Italy', ['CB'], 84, 85, 2017, 30, t(9, 5, 8, 9, 4, 6)),
+  q('juventus', 'bonucci_j13', 'Leonardo Bonucci', 1987, 'Italy', ['CB'], 84, 88, 2018, 25, t(8, 6, 8, 8, 5, 7)),
+  q('juventus', 'lichtsteiner_j13', 'Stephan Lichtsteiner', 1984, 'Switzerland', ['RB'], 82, 83, 2017, 30, t(9, 6, 9, 8, 5, 7)),
+  q('juventus', 'asamoah_j13', 'Kwadwo Asamoah', 1988, 'Ghana', ['LB', 'LM'], 80, 83, 2017, 30, t(8, 5, 8, 7, 5, 7)),
+  q('juventus', 'marchisio_j13', 'Claudio Marchisio', 1986, 'Italy', ['CM'], 84, 85, 2018, 30, t(9, 5, 8, 9, 4, 7)),
+  q('juventus', 'llorente_j13', 'Fernando Llorente', 1985, 'Spain', ['ST'], 82, 83, 2017, 30, t(8, 6, 8, 7, 4, 7)),
+  q('juventus', 'giovinco_j13', 'Sebastian Giovinco', 1987, 'Italy', ['AM', 'ST'], 79, 82, 2017, 35, t(7, 6, 8, 6, 5, 7)),
+];
+
+export const BAYERN_2013_EXTRA: CuratedSeed[] = [
+  q('bayern', 'javimartinez_b13', 'Javi Martínez', 1988, 'Spain', ['DM', 'CB'], 84, 86, 2017, 35, t(9, 5, 8, 8, 4, 7)),
+  q('bayern', 'rafinha_b13', 'Rafinha', 1985, 'Brazil', ['RB'], 79, 80, 2017, 30, t(8, 5, 8, 7, 5, 7)),
+  q('bayern', 'shaqiri_b13', 'Xherdan Shaqiri', 1991, 'Switzerland', ['RW', 'AM'], 80, 85, 2017, 30, t(7, 7, 8, 6, 6, 7)),
 ];
 
 /** Curated squads for the man-utd-2013 scenario, keyed by club. */
@@ -316,7 +329,7 @@ export const MAN_UTD_2013_SQUADS: Record<string, CuratedSeed[]> = {
   southampton: SOUTHAMPTON_2013,
   real_madrid: REAL_MADRID_2013,
   barcelona: BARCELONA_2013,
-  bayern: BAYERN_2013,
+  bayern: [...BAYERN_2013, ...BAYERN_2013_EXTRA],
   benfica: BENFICA_2013,
   roma: ROMA_2013,
   valencia: VALENCIA_2013,
