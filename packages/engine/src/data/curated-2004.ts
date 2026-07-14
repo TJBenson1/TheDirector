@@ -288,17 +288,70 @@ export const EVERTON_2004_EXTRA: CuratedSeed[] = [
   q('everton', 'beattie_eve', 'James Beattie', 1978, 'England', ['ST'], 78, 80, 2008, 35, t(7, 6, 7, 6, 5, 7)),
 ];
 
+// ── Depth top-ups so every FEATURED playable club fields a full real squad
+//    (>=13) in this pack, not a first XI padded with anonymous filler. ───────────
+export const MAN_UTD_2004_EXTRA: CuratedSeed[] = [
+  q('man_utd', 'fletcher_mu', 'Darren Fletcher', 1984, 'Scotland', ['CM', 'RM'], 76, 83, 2009, 25, t(9, 4, 8, 9, 3, 7)),
+  q('man_utd', 'asmith_mu', 'Alan Smith', 1980, 'England', ['ST', 'CM'], 79, 81, 2008, 35, t(7, 7, 9, 8, 7, 6)),
+];
+export const REAL_MADRID_2004_EXTRA: CuratedSeed[] = [
+  q('real_madrid', 'solari_rm', 'Santiago Solari', 1976, 'Argentina', ['LW', 'AM'], 79, 80, 2005, 30, t(8, 5, 7, 7, 5, 7)),
+  q('real_madrid', 'pavon_rm', 'Francisco Pavón', 1980, 'Spain', ['CB'], 77, 79, 2007, 30, t(7, 4, 7, 8, 5, 6)),
+  q('real_madrid', 'woodgate_rm', 'Jonathan Woodgate', 1980, 'England', ['CB'], 80, 84, 2008, 70, t(7, 5, 7, 6, 5, 6)),
+];
+export const JUVENTUS_2004_EXTRA: CuratedSeed[] = [
+  q('juventus', 'appiah_juv', 'Stephen Appiah', 1980, 'Ghana', ['CM', 'DM'], 79, 81, 2007, 30, t(8, 5, 8, 7, 5, 7)),
+  q('juventus', 'zebina_juv', 'Jonathan Zebina', 1978, 'France', ['RB', 'CB'], 77, 79, 2008, 35, t(6, 6, 7, 6, 6, 6)),
+  q('juventus', 'blasi_juv', 'Manuele Blasi', 1980, 'Italy', ['DM', 'CM'], 76, 78, 2008, 30, t(8, 4, 7, 7, 5, 6)),
+];
+export const MILAN_2004_DEPTH: CuratedSeed[] = [
+  q('milan', 'ruicosta_mil', 'Rui Costa', 1972, 'Portugal', ['AM'], 82, 83, 2006, 30, t(8, 6, 7, 7, 5, 7)),
+  q('milan', 'serginho_mil', 'Serginho', 1971, 'Brazil', ['LB', 'LW'], 79, 80, 2006, 30, t(8, 5, 7, 8, 5, 7)),
+  q('milan', 'ambrosini_mil', 'Massimo Ambrosini', 1977, 'Italy', ['CM', 'DM'], 80, 81, 2008, 35, t(9, 5, 8, 9, 4, 6)),
+];
+export const LIVERPOOL_2004_EXTRA: CuratedSeed[] = [
+  q('liverpool', 'biscan_liv', 'Igor Bišćan', 1978, 'Croatia', ['DM', 'CB'], 77, 79, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+  q('liverpool', 'traore_liv', 'Djimi Traoré', 1980, 'France', ['LB', 'CB'], 76, 78, 2007, 30, t(7, 4, 7, 6, 6, 6)),
+];
+export const CHELSEA_2004_EXTRA: CuratedSeed[] = [
+  q('chelsea', 'kezman_che', 'Mateja Kežman', 1979, 'Serbia', ['ST'], 79, 81, 2007, 30, t(7, 7, 8, 6, 6, 6)),
+  q('chelsea', 'tiago_che', 'Tiago', 1981, 'Portugal', ['CM'], 79, 81, 2008, 25, t(8, 5, 8, 7, 4, 7)),
+  q('chelsea', 'geremi_che', 'Geremi', 1978, 'Cameroon', ['RM', 'CM'], 78, 79, 2007, 30, t(8, 5, 7, 7, 5, 7)),
+];
+export const SPURS_2004_DEPTH: CuratedSeed[] = [
+  q('spurs', 'ziegler_spu', 'Reto Ziegler', 1986, 'Switzerland', ['LB'], 72, 80, 2009, 30, t(7, 5, 7, 6, 5, 7)),
+  q('spurs', 'gardner_spu', 'Anthony Gardner', 1980, 'England', ['CB'], 76, 78, 2008, 40, t(7, 4, 7, 7, 5, 6)),
+];
+
+/** Manchester City, 2004–05 — a mid-table Premier League side (pre-takeover). */
+export const MAN_CITY_2004: CuratedSeed[] = [
+  q('man_city', 'djames_mc', 'David James', 1970, 'England', ['GK'], 81, 82, 2007, 30, t(7, 6, 7, 7, 6, 6)),
+  q('man_city', 'sunjihai_mc', 'Sun Jihai', 1977, 'China', ['RB'], 76, 77, 2007, 30, t(8, 4, 7, 7, 4, 7)),
+  q('man_city', 'distin_mc', 'Sylvain Distin', 1977, 'France', ['CB'], 80, 82, 2008, 25, t(8, 5, 8, 7, 4, 7)),
+  q('man_city', 'dunne_mc', 'Richard Dunne', 1979, 'Ireland', ['CB'], 79, 81, 2008, 30, t(8, 5, 8, 8, 5, 6)),
+  q('man_city', 'thatcher_mc', 'Ben Thatcher', 1975, 'Wales', ['LB'], 75, 76, 2007, 35, t(6, 6, 7, 6, 7, 6)),
+  q('man_city', 'barton_mc', 'Joey Barton', 1982, 'England', ['CM'], 76, 82, 2008, 35, t(5, 8, 8, 6, 9, 6)),
+  q('man_city', 'bosvelt_mc', 'Paul Bosvelt', 1970, 'Netherlands', ['DM', 'CM'], 77, 78, 2006, 30, t(8, 5, 8, 7, 5, 7)),
+  q('man_city', 'sibierski_mc', 'Antoine Sibierski', 1974, 'France', ['AM', 'ST'], 76, 77, 2007, 30, t(8, 5, 7, 7, 5, 7)),
+  q('man_city', 'swp_mc', 'Shaun Wright-Phillips', 1981, 'England', ['RW'], 80, 84, 2005, 30, t(8, 6, 8, 7, 5, 7)),
+  q('man_city', 'musampa_mc', 'Kiki Musampa', 1977, 'Netherlands', ['LW'], 76, 77, 2006, 35, t(7, 5, 7, 6, 6, 7)),
+  q('man_city', 'anelka_mc', 'Nicolas Anelka', 1979, 'France', ['ST'], 82, 84, 2007, 30, t(6, 8, 8, 5, 7, 7)),
+  q('man_city', 'fowler_mc', 'Robbie Fowler', 1975, 'England', ['ST'], 79, 81, 2006, 40, t(7, 7, 8, 7, 6, 6)),
+  q('man_city', 'onuoha_mc', 'Nedum Onuoha', 1986, 'England', ['CB', 'RB'], 70, 80, 2009, 30, t(8, 5, 7, 8, 4, 7)),
+];
+
 /** Curated squads for the arsenal-2004 scenario, keyed by club. */
 export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   arsenal: ARSENAL_2004,
-  chelsea: CHELSEA_2004,
-  man_utd: MAN_UTD_2004,
-  liverpool: LIVERPOOL_2004,
-  spurs: [...SPURS_2004, ...SPURS_2004_EXTRA],
+  chelsea: [...CHELSEA_2004, ...CHELSEA_2004_EXTRA],
+  man_utd: [...MAN_UTD_2004, ...MAN_UTD_2004_EXTRA],
+  liverpool: [...LIVERPOOL_2004, ...LIVERPOOL_2004_EXTRA],
+  spurs: [...SPURS_2004, ...SPURS_2004_EXTRA, ...SPURS_2004_DEPTH],
   everton: [...EVERTON_2004, ...EVERTON_2004_EXTRA],
-  real_madrid: REAL_MADRID_2004,
+  man_city: MAN_CITY_2004,
+  real_madrid: [...REAL_MADRID_2004, ...REAL_MADRID_2004_EXTRA],
   barcelona: BARCELONA_2004,
-  juventus: JUVENTUS_2004,
+  juventus: [...JUVENTUS_2004, ...JUVENTUS_2004_EXTRA],
   marseille: MARSEILLE_2004,
   psv: PSV_2004,
   mallorca: MALLORCA_2004,
@@ -310,7 +363,7 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   bayern: [...BAYERN_2004, ...BAYERN_2004_EXTRA],
   porto: PORTO_2004,
   sporting: SPORTING_2004,
-  milan: [...MILAN_2004, ...MILAN_2004_EXTRA],
+  milan: [...MILAN_2004, ...MILAN_2004_EXTRA, ...MILAN_2004_DEPTH],
   dortmund: DORTMUND_2004,
   zenit: ZENIT_2004,
   leverkusen: LEVERKUSEN_2004,
