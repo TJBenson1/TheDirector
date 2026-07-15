@@ -176,6 +176,13 @@ export {
 } from './recommend.js';
 export { courtPlayer, decayPursuit, poleSuitorFor } from './wooing.js';
 export {
+  isMoneyClub,
+  plausibleCeiling,
+  exceedsPlausibleCeiling,
+  MONEY_PRESTIGE,
+  CEILING_MARGIN,
+} from './ambition.js';
+export {
   initialManager,
   reviewManager,
   reviewDirectorStrategy,

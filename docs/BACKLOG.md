@@ -245,6 +245,24 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
     his head coach's philosophy (`applyCoachSkew`, par-anchored so a kept coach is
     inert). Long tail of curated players still keeps position defaults until tagged.
 
+## M8 — AI ambition & "money still talks" (⏳ Increment 1 shipped)
+See `docs/DESIGN-ambition.md`. Turns the world into an economic actor and lights
+up the three long-pending harness targets.
+- ✅ **Increment 1 — measurement (shipped, byte-identical).** `ambition.ts`:
+  `isMoneyClub` (sugar-daddy ownership OR prestige ≥ 80) + `plausibleCeiling`
+  (`baseStrength` + 8). Wired the harness to count league titles / money-club
+  titles / fantasy leaps / significant AI transfers. On the untouched sim:
+  **money-club title share 92.2%** (band ≥50%) and **fantasy leaps 0** (band 0) —
+  both **activated**. Ambition-override share stays pending (numerator is 0 with
+  no mechanic yet). 16 active targets, 0 failing.
+- **Increment 2 — the mechanic (queued; first perturbing build).** `ClubPressure`
+  goes live on `ClubState`; a high-pressure AI club makes one plausibility-gated,
+  ceiling-guarded ambition-override signing per window (emits `ambition.override`,
+  logs a `divergenceLog` butterfly). Activates the override-share target. NOT
+  byte-identical — re-verify all active bands stay in band, tuning override
+  rate/threshold/seller-preference. Gates: zero hard-block breaches; overrides
+  prefer foreign/context sellers to protect squad-match; cap ~10–15% share.
+
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the
 user as a counterfactual (`NearMissEntry` in `ledger.ts`, executed in

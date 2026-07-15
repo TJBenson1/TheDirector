@@ -21,6 +21,8 @@ import {
   significantInjuredCount,
   ledgerSquadMatch,
   cloneState,
+  isMoneyClub,
+  exceedsPlausibleCeiling,
   type GameState,
   type NewGameOptions,
   Rng,
@@ -187,6 +189,16 @@ export function traceCareer(options: RunCareerOptions): CareerTrace {
     // Internal crises imposed on the player (§ internal-friction).
     metrics.internalCrises += result.events.filter((e) => e.code === 'internal.crisis').length;
 
+    // M8: significant AI transfers (the denominator for the ambition-override
+    // share). A real ledger move, a counter-punch, or an ambition override is
+    // each a meaningful AI signing; the override subset is counted separately.
+    for (const e of result.events) {
+      if (e.code === 'ledger.executed' || e.code === 'rival.counterpunch' || e.code === 'ambition.override') {
+        metrics.significantAiTransfers += 1;
+      }
+      if (e.code === 'ambition.override') metrics.ambitionOverrides += 1;
+    }
+
     // Sample the user club for a major injury crisis.
     if (significantInjuredCount(state, state.playerClub) >= 3) crisisDecades.add(decadeOf());
 
@@ -234,6 +246,26 @@ function collectEndOfCareerMetrics(state: GameState, metrics: CareerMetrics): vo
     squadSeasons += league.clubIds.length * league.titleHistory.length;
   }
   metrics.squadSeasons = squadSeasons;
+
+  // M8: "money still talks" — every league title, and the subset won by a
+  // big-money club (the user included: an elite, wealthy club winning IS money
+  // talking). Strength-driven titles at anchored strengths should leave the
+  // wealthy winning the clear majority.
+  for (const league of Object.values(state.leagues)) {
+    for (const t of league.titleHistory) {
+      metrics.leagueTitlesTotal += 1;
+      const champ = state.clubs[t.championId];
+      if (champ && isMoneyClub(champ)) metrics.moneyClubTitles += 1;
+    }
+  }
+
+  // M8: no fantasy leaps — a simulated club whose live strength has run above its
+  // plausible ceiling. The user's own club is exempt (its climb is authored by
+  // the user, hence always "caused"). Held at 0 by the strength anchor.
+  for (const club of Object.values(state.clubs)) {
+    if (club.leagueId === null || club.id === state.playerClub) continue;
+    if (exceedsPlausibleCeiling(club)) metrics.fantasyLeaps += 1;
+  }
 
   // M5: wonderkid outcomes (§12 + internal-friction §5). Benched (<40% mins,
   // 2+ yrs) should almost never reach ceiling; well-managed should reach it

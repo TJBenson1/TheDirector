@@ -253,7 +253,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Title share won by big-money clubs (money still talks)',
     band: 'clear majority vs field',
     ownedBy: 'M8',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const money = sum(c, (x) => x.moneyClubTitles);
       const total = sum(c, (x) => x.leagueTitlesTotal);
@@ -283,7 +283,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Clubs exceeding their plausible ceiling without cause',
     band: '0 (hard)',
     ownedBy: 'M8',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const leaps = sum(c, (x) => x.fantasyLeaps);
       return { value: String(leaps), pass: leaps === 0 };
