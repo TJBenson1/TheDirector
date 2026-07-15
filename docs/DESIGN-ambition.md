@@ -1,10 +1,14 @@
 # DESIGN — M8: AI club ambition & the "money still talks" constraint
 
-> **Status: SCOPED (2026-07). Increment 1 (measurement) SHIPPED — activated the
-> money-club-title-share (measured 92.2%, band ≥50%) and no-fantasy-leaps
-> (measured 0, band 0) targets on the untouched sim, calibration byte-identical.
-> Increment 2 (the ambition-override mechanic) is queued — the first
-> calibration-perturbing build of the project.**
+> **Status: SHIPPED (2026-07).**
+> - **Increment 1 (measurement)** — activated money-club-title-share (92.2%, band
+>   ≥50%) and no-fantasy-leaps (0, band 0) on the untouched sim, byte-identical.
+> - **Increment 2 (the ambition-override mechanic)** — the first
+>   calibration-perturbing build of the project. Club pressure now drives at most
+>   one plausibility-gated, ceiling-guarded statement signing per summer.
+>   Overrides land at **9.4%** of significant AI transfers (band ~10–15%, fail
+>   >20%); every other active band held (fantasy leaps 0, squad-match 97.7%,
+>   ledger fidelity 100%). **All 17 active targets pass; determinism intact.**
 
 M8 is the milestone that makes the *rest of the world* an economic actor. Today
 AI clubs only move players two ways: they execute the real transfer ledger, and
@@ -212,17 +216,29 @@ before a single override exists.
 
 This alone turns 2 of the 3 pending targets green with no calibration risk.
 
-### Increment 2 — the mechanic (perturbs; re-verify end-to-end)
+### Increment 2 — the mechanic (perturbs; re-verified end-to-end) — SHIPPED
 
-1. `club.pressure` field + per-season pressure update (forked).
-2. Ambition-override step at the summer window, with every gate from §1.4.
-3. `ambition.override` event + `divergenceLog` entry.
-4. `runCareer`: count `ambitionOverrides` and fold overrides into
+1. ✅ `club.pressure` field (optional on `ClubState`; `ClubPressure`/
+   `AmbitionOverride` moved from `ledger.ts` to `types.ts` to avoid the import
+   cycle) + `updateClubPressure` each July rollover (derived fresh from the
+   honours board + grudge; the user's club is never pressured).
+2. ✅ `runAmbitionOverrides` at the summer deadline, with every gate from §1.4 —
+   foreign/context sellers only, never a reality-timeline subject, never a
+   hard block, ceiling-guarded, budget-stretched not invented.
+3. ✅ `ambition.override` event (the code the sampler watches) + `divergenceLog`
+   butterfly with the pressure cause.
+4. ✅ `runCareer` counts `ambitionOverrides` and folds them into
    `significantAiTransfers`.
-5. Activate `reality-ambition-overrides`.
-6. **Re-run the full harness and drive all 14 (now 16) active targets into band**,
-   tuning override rate/threshold/seller-preference as needed. Byte-identity is
-   *not* expected here; in-band is the bar.
+5. ✅ `reality-ambition-overrides` activated.
+6. ✅ **Re-verified: all 17 active targets in band.**
+
+**The one tuning lesson.** The first run measured 48% overrides — a dominant user
+pressures the *whole field*, so many clubs fired at once. The fix was a **global
+cap of one override per window**: only the single most-desperate club makes a
+statement move in any summer. That dropped the share to a stable ~9.4% and also
+reads truer — a splash-the-cash summer is one club's story, not everyone's. The
+ceiling gate did its job untouched (fantasy leaps stayed 0 even at 48%), as did
+the seller/subject gates (squad-match and ledger fidelity never moved).
 
 ---
 

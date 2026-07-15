@@ -185,7 +185,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Ambition overrides as a share of significant AI transfers',
     band: '~10–15% (fail >20%)',
     ownedBy: 'M8',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const overrides = sum(c, (x) => x.ambitionOverrides);
       const significant = sum(c, (x) => x.significantAiTransfers);

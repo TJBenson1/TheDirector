@@ -45,6 +45,33 @@ export type OwnershipModel = 'debt' | 'sustainable' | 'sugar-daddy';
  *  cheaply and push players out — the fire-sale opportunity (Leeds, Lazio…). */
 export type FinancialHealth = 'healthy' | 'strained' | 'crisis';
 
+/**
+ * M8 ambition pressure (docs/DESIGN-ambition.md, DESIGN-reality-default Amendment
+ * A). Higher = more likely to deviate from the real ledger with an ambitious,
+ * plausibility-gated, ceiling-guarded statement signing. Each field 0–100.
+ */
+export interface ClubPressure {
+  /** Seasons without a trophy relative to what prestige expects. */
+  trophyDrought: number;
+  /** Manager job security, 0 (about to be sacked) – 100. */
+  jobSecurity: number;
+  /** Fan/board unrest, 0 (content) – 100. */
+  unrest: number;
+  /** A rival's perceived dominance (a dominant user drives the whole field up). */
+  rivalDominance: number;
+  /** Cash burning a hole after a recent sale (incl. selling to the user). */
+  windfall: number;
+}
+
+/** An ambition override: a pressure-driven deviation from the real ledger. */
+export interface AmbitionOverride {
+  clubId: ClubId;
+  targetPlayerId: PlayerId;
+  /** Which pressure component crossed threshold. */
+  cause: keyof ClubPressure;
+  window: YearMonth;
+}
+
 /** Club finances (§11). Fees/wages are in whole currency units (£). */
 export interface ClubFinances {
   /** Ownership shapes budgets and FFP exposure (§11). */
@@ -98,6 +125,10 @@ export interface ClubState {
   financialHealth: FinancialHealth;
   /** True the season after finishing in the relegation zone — easy pickings. */
   relegationThreatened: boolean;
+  /** M8: ambition pressure driving occasional off-ledger statement signings
+   *  (docs/DESIGN-ambition.md). Recomputed each season for simulated AI clubs;
+   *  absent on the user's club and on old saves. */
+  pressure?: ClubPressure;
 }
 
 // ── Leagues & season sim (§15) ───────────────────────────────────────────────

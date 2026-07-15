@@ -9,7 +9,13 @@
  * mechanic, which perturb the world (the first non-byte-identical build).
  */
 
-import type { ClubState } from './types.js';
+import type { ClubId, ClubPressure, ClubState, GameState, PlayerState } from './types.js';
+import { Rng } from './rng.js';
+import { logEvent } from './eventLog.js';
+import { valuePlayer } from './finance.js';
+import { executeTransfer } from './transfers.js';
+import { evaluateApproach } from './agency.js';
+import { ERA_REALITY, eraForScenario } from './ledger.js';
 
 /** Prestige at or above which a club is treated as a wealth power (a "money
  *  club"), independent of ownership. The moneyed-era signal is already carried
@@ -47,4 +53,228 @@ export function plausibleCeiling(club: ClubState): number {
  *  user, so its climb is always "caused".) */
 export function exceedsPlausibleCeiling(club: ClubState): boolean {
   return club.strength > plausibleCeiling(club);
+}
+
+// ── Increment 2: club pressure → ambition overrides ──────────────────────────
+//
+// The world pushes back. A high-pressure AI club occasionally makes ONE off-
+// ledger statement signing — plausibility-gated, ceiling-guarded, never a hard-
+// block breach, always from a foreign/context seller (no domestic cascade, so
+// the tracked real players and the real ledger are left intact). This is the
+// first mechanic on the branch that is NOT byte-identical: an override changes a
+// squad, so the world diverges. It stays deterministic (all rolls forked).
+
+/** How many trophy-less seasons a club of a given prestige tolerates before the
+ *  drought bites. Only genuine trophy-expecting clubs feel it; a mid-table side
+ *  that never wins isn't "under pressure" for not winning. */
+function expectedTitleGap(prestige: number): number {
+  if (prestige >= 85) return 2;
+  if (prestige >= 80) return 3;
+  if (prestige >= 76) return 5;
+  if (prestige >= 72) return 8;
+  return 99; // no title expectation → no drought pressure
+}
+
+function clamp100(v: number): number {
+  return Math.max(0, Math.min(100, Math.round(v)));
+}
+
+/** The streak-holder at the top of a league's honours (who is dominating, and by
+ *  how many consecutive titles) — the driver of everyone else's rivalDominance. */
+function currentDominant(championIds: ClubId[]): { id: ClubId | null; streak: number } {
+  let id: ClubId | null = null;
+  let streak = 0;
+  for (const champ of championIds) {
+    streak = champ === id ? streak + 1 : 1;
+    id = champ;
+  }
+  return { id, streak };
+}
+
+/**
+ * Recompute ambition pressure for every simulated AI club (never the user's —
+ * the user IS the ambition). Derived fresh each season from honours + grudge, so
+ * it's deterministic and path-light. Stored on `club.pressure` for the override
+ * step, the Historian and the UI.
+ */
+export function updateClubPressure(state: GameState): void {
+  for (const league of Object.values(state.leagues)) {
+    const champions = league.titleHistory.map((t) => t.championId);
+    const seasonsElapsed = champions.length;
+    const dominant = currentDominant(champions);
+
+    for (const clubId of league.clubIds) {
+      if (clubId === state.playerClub) continue;
+      const club = state.clubs[clubId];
+      if (!club || club.leagueId === null) continue;
+
+      const lastWinIdx = champions.lastIndexOf(clubId);
+      const seasonsSinceTitle = lastWinIdx < 0 ? seasonsElapsed : seasonsElapsed - 1 - lastWinIdx;
+      const gap = expectedTitleGap(club.prestige);
+      const trophyDrought = gap >= 99 ? 0 : clamp100((seasonsSinceTitle - gap) * 18);
+
+      // Someone else is dominating (a runaway user especially) — but a club that
+      // is ITSELF the dominant one feels no rival pressure.
+      const rivalDominance =
+        dominant.id && dominant.id !== clubId && dominant.streak >= 2
+          ? clamp100(dominant.streak * 20)
+          : 0;
+
+      const windfall = clamp100(club.grudge); // raided → cash in hand, primed to spend
+      const unrest = clamp100(trophyDrought * 0.6 + rivalDominance * 0.3 + club.grudge * 0.4);
+      const jobSecurity = clamp100(100 - unrest);
+
+      club.pressure = { trophyDrought, jobSecurity, unrest, rivalDominance, windfall };
+    }
+  }
+}
+
+/** The dominant pressure cause and its magnitude (higher = more pressure). Job
+ *  security is inverted (low security = high pressure) so all causes compare on
+ *  one scale. */
+function dominantPressure(p: ClubPressure): { cause: keyof ClubPressure; score: number } {
+  const scores: Record<keyof ClubPressure, number> = {
+    trophyDrought: p.trophyDrought,
+    rivalDominance: p.rivalDominance,
+    unrest: p.unrest,
+    windfall: p.windfall,
+    jobSecurity: 100 - p.jobSecurity,
+  };
+  let cause: keyof ClubPressure = 'unrest';
+  let score = -1;
+  for (const k of Object.keys(scores) as (keyof ClubPressure)[]) {
+    if (scores[k] > score) { score = scores[k]; cause = k; }
+  }
+  return { cause, score };
+}
+
+const CAUSE_PHRASE: Record<keyof ClubPressure, string> = {
+  trophyDrought: 'a trophy drought',
+  rivalDominance: "a rival's dominance",
+  unrest: 'board & fan unrest',
+  windfall: 'cash to spend',
+  jobSecurity: "the manager's job on the line",
+};
+
+// ── Tunables (calibrated against the harness — the override SHARE target) ──────
+const OVERRIDE_THRESHOLD = 52; // dominant-pressure score to be eligible
+const OVERRIDE_PROB_SLOPE = 0.5; // how sharply probability rises past threshold
+const OVERRIDE_MAX_PROB = 0.42; // per-summer ceiling on a single club's chance
+const AMBITION_BUDGET_STRETCH = 1.6; // a statement buy stretches, doesn't invent, the budget
+const NEED_MIN = -1; // target must be at least (baseStrength + this) — improves the side
+const NEED_MAX = 6; // …but at most (baseStrength + this) — a plausible, not fantasy, target
+
+function overrideProbability(score: number): number {
+  const over = Math.max(0, score - OVERRIDE_THRESHOLD) / 100;
+  return Math.max(0, Math.min(OVERRIDE_MAX_PROB, over * OVERRIDE_PROB_SLOPE));
+}
+
+/** All players who are subjects of the era's real timeline (ledger moves, near-
+ *  misses, academy graduates, retirements). An override never touches these, so
+ *  reality-fidelity and squad-match are untouched by the mechanic. */
+function realityTimelineSubjects(state: GameState): Set<string> {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  const set = new Set<string>();
+  if (!pack) return set;
+  for (const e of pack.realTransferLedger) set.add(e.playerId);
+  for (const e of pack.nearMisses ?? []) set.add(e.playerId);
+  for (const g of pack.academyGraduates ?? []) set.add(g.seed.id);
+  for (const r of pack.retirements ?? []) set.add(r.playerId);
+  return set;
+}
+
+/** Pick a plausible, ceiling-safe target for a club's statement signing, or
+ *  undefined if nothing fits. Foreign/context sellers only; never a reality-
+ *  timeline subject; never a hard-blocked player; must improve the side without
+ *  breaching the plausible ceiling; the target must be willing (§6 prestige pull). */
+function pickAmbitionTarget(
+  state: GameState,
+  club: ClubState,
+  subjects: Set<string>,
+  year: number,
+): PlayerState | undefined {
+  const ceiling = plausibleCeiling(club);
+  const budgetCap = club.finances.transferBudget * AMBITION_BUDGET_STRETCH;
+  let best: PlayerState | undefined;
+  for (const p of Object.values(state.players)) {
+    if (!p.club) continue;
+    const seller = state.clubs[p.club];
+    if (!seller || seller.leagueId !== null) continue; // foreign/context only — no domestic cascade
+    if (subjects.has(p.id)) continue; // never a tracked real player
+    if (p.resistance.hardBlocks.length > 0) continue; // never breach a hard block
+    if (p.ability < club.baseStrength + NEED_MIN) continue; // must strengthen the side
+    if (p.ability > club.baseStrength + NEED_MAX) continue; // …plausibly, not a galáctico to a mid club
+    if (p.ability > ceiling) continue; // ceiling gate — an override can't fantasy-leap a club
+    if (valuePlayer(p, year) > budgetCap) continue; // budget reality (a stretch, not invention)
+    if (!evaluateApproach(state, { playerId: p.id, toClub: club.id, wageOffer: p.wage * 3 }).willing) continue;
+    if (!best || p.ability > best.ability) best = p;
+  }
+  return best;
+}
+
+/**
+ * Run the ambition-override step for one summer window (called at the deadline,
+ * after the real ledger and counter-punch).
+ *
+ * At most ONE override per window, across the whole league: a dominant user
+ * pressures the entire field, but only the single most-desperate club actually
+ * makes the statement move in any given summer. This global cap is what keeps
+ * overrides a rare MINORITY of AI activity (the ~10–15% share target) rather than
+ * a league-wide spending spree, and it reads truer — a splash-the-cash summer is
+ * one club's story, not everyone's at once. Emits `ambition.override` (the event
+ * the Historian sampler already watches) and a divergence-log butterfly.
+ */
+export function runAmbitionOverrides(state: GameState, rng: Rng): void {
+  if (state.clock.window !== 'summer') return; // statement signings land in the summer
+  const r = rng.fork(`ambition:${state.clock.date}`);
+  const year = Number(state.clock.date.slice(0, 4));
+
+  // Eligible = a simulated AI club, with ceiling headroom, over the pressure
+  // threshold. Ranked by pressure; ties broken by id for determinism.
+  const eligible: Array<{ club: ClubState; cause: keyof ClubPressure; score: number }> = [];
+  for (const club of Object.values(state.clubs)) {
+    if (club.leagueId === null || club.id === state.playerClub || !club.pressure) continue;
+    // A club already near its plausible ceiling has no room for a statement buy —
+    // this is what stops a repeat buyer running away (the ceiling IS the cooldown).
+    if (club.strength >= plausibleCeiling(club) - 3) continue;
+    const { cause, score } = dominantPressure(club.pressure);
+    if (score < OVERRIDE_THRESHOLD) continue;
+    eligible.push({ club, cause, score });
+  }
+  if (eligible.length === 0) return;
+  eligible.sort((a, b) => b.score - a.score || (a.club.id < b.club.id ? -1 : 1));
+
+  // One roll for the window, on the most-pressured club's score.
+  const top = eligible[0]!;
+  if (!r.chance(overrideProbability(top.score))) return;
+
+  // Give the override to the highest-pressure club that actually has a plausible
+  // target available (the most desperate club that can act on it).
+  const subjects = realityTimelineSubjects(state);
+  for (const { club, cause } of eligible) {
+    const target = pickAmbitionTarget(state, club, subjects, year);
+    if (!target) continue;
+
+    const fee = valuePlayer(target, year);
+    club.finances.transferBudget = Math.max(club.finances.transferBudget, fee); // ambition frees the cash
+    const fromId: ClubId | null = target.club;
+    const res = executeTransfer(state, { playerId: target.id, toClub: club.id, fee });
+    if (!res.ok) continue;
+
+    logEvent(state, {
+      category: 'transfer',
+      code: 'ambition.override',
+      message: `${club.name} break from the script — ${target.name} signs, driven by ${CAUSE_PHRASE[cause]}`,
+      data: { override: true, clubId: club.id, playerId: target.id, from: fromId, fee, cause },
+    });
+    state.timeline.divergenceLog.push({
+      date: state.clock.date,
+      kind: 'butterfly',
+      detail: `${club.name}, under ${CAUSE_PHRASE[cause]}, deviated from the real ledger to sign ${target.name} — a pressure-driven ambition override.`,
+    });
+
+    // The statement signing relieves the pressure that drove it.
+    club.grudge = Math.max(0, club.grudge - 25);
+    return; // one override per window
+  }
 }

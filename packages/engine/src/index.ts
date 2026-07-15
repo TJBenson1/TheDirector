@@ -179,6 +179,8 @@ export {
   isMoneyClub,
   plausibleCeiling,
   exceedsPlausibleCeiling,
+  updateClubPressure,
+  runAmbitionOverrides,
   MONEY_PRESTIGE,
   CEILING_MARGIN,
 } from './ambition.js';

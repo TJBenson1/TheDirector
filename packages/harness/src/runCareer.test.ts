@@ -58,12 +58,12 @@ describe('calibration harness', () => {
     }
 
     // Targets owned by later milestones stay pending — no false pass/fail.
-    // M8 Increment 1 activated money-club-trophy-share + no-fantasy-leaps
-    // (measured on the untouched sim), leaving the ambition-override share
-    // (M8 Increment 2) and the >4-consecutive-titles dynasty row (M2/M9) pending.
+    // M8 activated money-club-trophy-share, no-fantasy-leaps and the
+    // ambition-override share; only the >4-consecutive-titles dynasty row
+    // (M2/M9) remains pending.
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
-    expect(pending.length).toBe(2);
+    expect(pending.length).toBe(1);
     // Higher budget than the early milestones: a mature world now also ages
     // players into retirement and runs promotion/relegation each season, so a
     // 36-career smoke batch does materially more work per career.

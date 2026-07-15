@@ -720,32 +720,11 @@ export function eraForScenario(scenarioId: string): string {
   return 'era-1995-2005';
 }
 
-/**
- * Pressure state driving ambition overrides (Amendment A). Higher = more likely
- * to deviate from the real ledger with an ambitious, logged, plausibility-gated
- * move. Wired into ClubState and the Rival AI in M8.
- */
-export interface ClubPressure {
-  /** Seasons without a trophy relative to expectation. */
-  trophyDrought: number;
-  /** Manager job security, 0 (about to be sacked) – 100. */
-  jobSecurity: number;
-  /** Fan/board unrest, 0 (content) – 100. */
-  unrest: number;
-  /** A rival's perceived dominance, 0 – 100. */
-  rivalDominance: number;
-  /** Recent financial windfall available for a statement signing, 0 – 100. */
-  windfall: number;
-}
-
-/** An ambition override: a pressure-driven deviation from the real ledger. */
-export interface AmbitionOverride {
-  clubId: ClubId;
-  targetPlayerId: PlayerId;
-  /** Which pressure component crossed threshold. */
-  cause: keyof ClubPressure;
-  window: YearMonth;
-}
+// Pressure/override types moved to types.ts (ClubState now carries `pressure`,
+// so they must live where ClubState does to avoid a circular import). Re-exported
+// here so existing import sites (index.ts) are unchanged. Wired live in M8
+// (ambition.ts) — see docs/DESIGN-ambition.md.
+export type { ClubPressure, AmbitionOverride } from './types.js';
 
 /**
  * A procedural player is anonymous depth (Principle 2): NEVER a scoutable

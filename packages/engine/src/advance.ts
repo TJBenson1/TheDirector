@@ -21,6 +21,7 @@ import { processInjuriesMonth } from './injuries.js';
 import { rollInjuryManagement } from './injuryManagement.js';
 import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
+import { updateClubPressure, runAmbitionOverrides } from './ambition.js';
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { reviewManager, reviewDirectorStrategy, applyDirectiveEffects, rollManagerCrossroads } from './manager.js';
@@ -70,6 +71,10 @@ function runMonth(state: GameState, rng: Rng): void {
     applyFinancialShocks(state);
     // 4. Rubber-band: update world defiance from last season's finish (§9a #5).
     updateWorldDefiance(state);
+    // M8: recompute each AI club's ambition pressure from the new honours board
+    // (a dominant user drives the whole field's pressure up) — feeds the summer
+    // override step below.
+    updateClubPressure(state);
     // 4b. Conditional takeover butterflies (Abramovich buys Chelsea only if they
     //     take a CL place — resolved before the summer ledger runs).
     resolveAbramovich(state, rng.fork(`takeover:${state.clock.date}`));
@@ -125,6 +130,11 @@ function runWindowStep(state: GameState, rng: Rng, step: number): void {
     executeNearMisses(state);
     // M8: the rival-AI reactive response layer, at the deadline.
     runRivalWindow(state, rng);
+    // M8: pressure-driven ambition overrides — a high-pressure club may break
+    // from the real ledger with one plausibility-gated, ceiling-guarded statement
+    // signing (docs/DESIGN-ambition.md). After the ledger + counter-punch so it
+    // sees the settled window.
+    runAmbitionOverrides(state, rng);
     decayPursuit(state); // courtship fades if you stop working a target
   }
   logEvent(state, {

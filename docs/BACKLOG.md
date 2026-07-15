@@ -245,23 +245,30 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
     his head coach's philosophy (`applyCoachSkew`, par-anchored so a kept coach is
     inert). Long tail of curated players still keeps position defaults until tagged.
 
-## M8 — AI ambition & "money still talks" (⏳ Increment 1 shipped)
-See `docs/DESIGN-ambition.md`. Turns the world into an economic actor and lights
-up the three long-pending harness targets.
-- ✅ **Increment 1 — measurement (shipped, byte-identical).** `ambition.ts`:
-  `isMoneyClub` (sugar-daddy ownership OR prestige ≥ 80) + `plausibleCeiling`
-  (`baseStrength` + 8). Wired the harness to count league titles / money-club
-  titles / fantasy leaps / significant AI transfers. On the untouched sim:
-  **money-club title share 92.2%** (band ≥50%) and **fantasy leaps 0** (band 0) —
-  both **activated**. Ambition-override share stays pending (numerator is 0 with
-  no mechanic yet). 16 active targets, 0 failing.
-- **Increment 2 — the mechanic (queued; first perturbing build).** `ClubPressure`
-  goes live on `ClubState`; a high-pressure AI club makes one plausibility-gated,
-  ceiling-guarded ambition-override signing per window (emits `ambition.override`,
-  logs a `divergenceLog` butterfly). Activates the override-share target. NOT
-  byte-identical — re-verify all active bands stay in band, tuning override
-  rate/threshold/seller-preference. Gates: zero hard-block breaches; overrides
-  prefer foreign/context sellers to protect squad-match; cap ~10–15% share.
+## M8 — AI ambition & "money still talks" (✅ shipped)
+See `docs/DESIGN-ambition.md`. Turns the world into an economic actor; lit up all
+three long-pending harness targets.
+- ✅ **Increment 1 — measurement (byte-identical).** `ambition.ts`: `isMoneyClub`
+  (sugar-daddy ownership OR prestige ≥ 80) + `plausibleCeiling` (`baseStrength` +
+  8). Harness counts league titles / money-club titles / fantasy leaps /
+  significant AI transfers. On the untouched sim: **money-club title share 92.2%**
+  (band ≥50%) and **fantasy leaps 0** (band 0) — both activated.
+- ✅ **Increment 2 — the ambition-override mechanic (first perturbing build).**
+  `ClubPressure` is live on `ClubState` (recomputed each July from honours +
+  grudge; the user is never pressured). At the summer deadline the single
+  most-pressured club may make ONE off-ledger statement signing — gated:
+  foreign/context sellers only, never a reality-timeline subject, never a hard
+  block, ceiling-guarded (this keeps fantasy leaps at 0), budget-stretched not
+  invented. Emits `ambition.override` + a `divergenceLog` butterfly. **Overrides
+  9.4% of significant AI transfers** (band ~10–15%, fail >20%); squad-match 97.7%
+  and ledger fidelity 100% unmoved. Not byte-identical but deterministic — all 17
+  active targets in band. The tuning lesson: a global one-per-window cap was what
+  turned a 48% league-wide spree into a realistic ~9% (the most-desperate club's
+  story, not everyone's).
+- **Follow-ons (backlog):** pressure/override on the OTHER era worlds (the mechanic
+  is scenario-agnostic but only man-utd-1999 is harness-verified); marquee
+  narrative for overrides (a named "statement signing" beat in the UI); FFP
+  scrutiny on sugar-daddy budgets post-2011 (already flagged in `finance.ts`).
 
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the
