@@ -45,6 +45,15 @@ export interface AdvanceResult {
 const MAX_MONTHS_PER_ADVANCE = 12;
 
 /**
+ * The edge of curated reality: the world runs through the 2024–25 season (crowned
+ * June 2025, its European Cup contested at the July 2025 rollover) and then stops —
+ * there is no real data beyond it to be faithful to, so we don't invent seasons.
+ * The producing advance lands on this July and records the 2025 final; any advance
+ * that would BEGIN a season past it is a no-op (the career/world has ended).
+ */
+const WORLD_END = '2025-07';
+
+/**
  * Per-month simulation hook. Later milestones fill this in (M2 season sim, M4
  * injuries/form). It may push onto `state.pendingDecisions` to raise an
  * interrupt. Kept as a seam so `advanceWindow`'s control flow is stable.
@@ -164,6 +173,10 @@ export function advanceWindow(state: GameState, options: AdvanceOptions = {}): A
 
   // A dismissed manager's career is over — the sim does not advance (M9).
   if (draft.board.dismissed) return { state: draft, events: [] };
+
+  // The world ends at the edge of curated reality (2025) — do not simulate a
+  // season for which there is no history to reproduce.
+  if (draft.clock.date >= WORLD_END) return { state: draft, events: [] };
 
   // A fresh, unprocessed open window (the LIVE opening window at game start):
   // process it in place rather than stepping the calendar past it, so the player

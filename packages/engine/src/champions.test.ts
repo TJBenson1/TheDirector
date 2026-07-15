@@ -207,3 +207,41 @@ describe('temporary relegation (Calciopoli)', () => {
     expect(cl0607?.winnerId).not.toBe('juventus');
   });
 });
+
+describe('the world ends at the edge of reality (2025)', () => {
+  it('a 2013 career stops after the 2024-25 season — no invented future beyond the data', () => {
+    const s = play('man-utd-2013', 'worldend', 2035);
+    // The clock halts at the 2025 rollover and advances no further.
+    expect(s.clock.date).toBe('2025-07');
+    const cl = s.europeanCup?.titleHistory ?? [];
+    // The last European Cup is the real 2025 final (season 2024); nothing past it.
+    expect(Math.max(...cl.map((t) => t.seasonYear))).toBe(2024);
+    expect(clWinner(s, 2025)).toBe('psg');
+  });
+});
+
+describe('a talisman-carried dynasty opens up when he is diverted (§ butterfly showcase)', () => {
+  it("Real Madrid's Ronaldo-era European Cups hold in a passive world but not once he is prised away", () => {
+    // Passive: Ronaldo stays and Real reproduce the Décima run to the letter.
+    const passive = play('man-utd-2013', 'talisman', 2020);
+    expect(clWinner(passive, 2014)).toBe('real_madrid');
+    expect(clWinner(passive, 2017)).toBe('real_madrid');
+    expect(clWinner(passive, 2018)).toBe('real_madrid');
+
+    // A rival prises Ronaldo away before it all begins — those finals, which he
+    // carried, are thrown open to merit (his weight travels to his new club).
+    let s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'talisman' });
+    s.clubs['man_city']!.finances.transferBudget = 500_000_000;
+    executeTransfer(s, { playerId: 'cur_ronaldo2', toClub: 'man_city', fee: 120_000_000 });
+    expect(s.players['cur_ronaldo2']!.club).toBe('man_city');
+    let guard = 0;
+    while (Number(s.clock.date.slice(0, 4)) < 2019 && guard++ < 80) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
+      s = advanceWindow(s).state;
+    }
+    // At least one final Real really won (2014/16/17/18) is now someone else's.
+    const held = [2014, 2016, 2017, 2018].filter((y) => clWinner(s, y) === 'real_madrid').length;
+    expect(held).toBeLessThan(4);
+  });
+});

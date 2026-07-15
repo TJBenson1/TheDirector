@@ -43,7 +43,11 @@ function clStrength(state: GameState, id: ClubId): number {
  * in the relevant pack are listed; anything else falls through to a pure strength
  * knockout. `r` is the runner-up where it too is modelled.
  */
-type RealFinal = { w: ClubId; r?: ClubId };
+// `talisman` (a player id) marks a win that was CARRIED by one star: if a butterfly
+// has moved him away from the winning club, that win loses its anchor and is thrown
+// open to merit — and his strength travels WITH him (the magnet: Ronaldo elsewhere
+// makes THAT club a force), so the knockout is genuinely up for grabs.
+type RealFinal = { w: ClubId; r?: ClubId; talisman?: string };
 const REAL_UCL: Record<string, Record<number, RealFinal>> = {
   'era-serie-a-1995': {
     // With Man Utd, Liverpool and Porto now in the pack, every European Cup of the
@@ -116,11 +120,14 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     // the anchored wins lose their shield) or otherwise bends the timeline. 2025+
     // is genuine future, left to field sim. Runners-up absent from the pack
     // (Atlético, Inter, Dortmund) are omitted.
-    2013: { w: 'real_madrid' },
+    // Real's Décima and three-in-a-row were carried by Ronaldo — divert him and
+    // these are open to Pep's Bayern, Messi's Barça, City, Atlético et al. Their
+    // post-Ronaldo wins (2022, 2024) carry no such flag.
+    2013: { w: 'real_madrid', talisman: 'cur_ronaldo2' },
     2014: { w: 'barcelona', r: 'juventus' },
-    2015: { w: 'real_madrid' },
-    2016: { w: 'real_madrid', r: 'juventus' },
-    2017: { w: 'real_madrid', r: 'liverpool' },
+    2015: { w: 'real_madrid', talisman: 'cur_ronaldo2' },
+    2016: { w: 'real_madrid', r: 'juventus', talisman: 'cur_ronaldo2' },
+    2017: { w: 'real_madrid', r: 'liverpool', talisman: 'cur_ronaldo2' },
     2018: { w: 'liverpool', r: 'spurs' },
     2019: { w: 'bayern', r: 'psg' },
     2020: { w: 'chelsea', r: 'man_city' },
@@ -167,6 +174,11 @@ const ANCHOR_SWING = 6;
  *  undisturbed world but, once a butterfly reaches them, loses that shield and
  *  takes their true (long) knockout odds. A dominant winner sits inside this gap. */
 const UPSET_GAP = 4;
+/** Knockout weight of a defining talisman — subtracted from the club he left and
+ *  added to the club he joined when a `talisman`-flagged win is thrown open. Big
+ *  enough to unseat a champion who relied on him and to lift his new side into
+ *  contention (the magnet), without being decisive on its own. */
+const TALISMAN_STRENGTH = 6;
 
 /** How many clubs contest the knockout (a clean 16-team bracket when possible). */
 const FIELD_SIZE = 16;
@@ -303,7 +315,11 @@ export function simulateChampionsLeague(state: GameState, rng: Rng, seasonYear: 
   // the threshold, and squad ageing alone could otherwise tip them out). Only once
   // the user starts bending history do the real results open up to merit.
   const anyButterfly = seeds.some((id) => Math.abs(state.clubs[id]?.starButterfly ?? 0) > 0.01);
-  const diverged = state.userAggression > 0 || anyButterfly;
+  // A talisman-carried win: where is that star now, and has he left the club he won
+  // it for? (Absent from the pack entirely counts as gone.)
+  const talismanClub = real?.talisman ? state.players[real.talisman]?.club ?? undefined : undefined;
+  const talismanGone = real?.talisman != null && talismanClub !== real.w;
+  const diverged = state.userAggression > 0 || anyButterfly || talismanGone;
   if (real && field.has(real.w)) {
     const runnerUp = real.r && field.has(real.r) ? real.r : seeds.find((id) => id !== real.w) ?? real.w;
     if (!diverged) {
@@ -329,14 +345,26 @@ export function simulateChampionsLeague(state: GameState, rng: Rng, seasonYear: 
     const isUpset = fieldMax - clStrength(state, real.w) > UPSET_GAP;
     const sapped = (state.clubs[real.w]?.starButterfly ?? 0) < -0.01;
     const fragileUpsetFalls = isUpset && sapped;
-    if (rwDelta >= -ANCHOR_DROP && !outSwung && !fragileUpsetFalls) {
+    // A win carried by a talisman falls when a butterfly has taken him elsewhere —
+    // even a deep side loses the man who won it these finals, and it opens up.
+    if (rwDelta >= -ANCHOR_DROP && !outSwung && !fragileUpsetFalls && !talismanGone) {
       record(real.w, runnerUp, true);
       return;
     }
   }
 
   // Otherwise the knockout decides on merit (a butterfly-driven deviation, or a
-  // year/era with no anchored real winner in the field).
+  // year/era with no anchored real winner in the field). When a talisman was
+  // diverted, his weight leaves the club he carried and travels to the club he
+  // joined (the magnet), so the bracket reflects where the star power now is.
+  const eff = (id: ClubId): number => {
+    let s = clStrength(state, id);
+    if (talismanGone) {
+      if (id === real!.w) s -= TALISMAN_STRENGTH;
+      if (id === talismanClub) s += TALISMAN_STRENGTH;
+    }
+    return s;
+  };
   const r = rng.fork(`ucl:${seasonYear}`);
   let bracket: ClubId[] = seedOrder(seeds.length).map((seed) => seeds[seed - 1]!);
   let runnerUp: ClubId = seeds[1] ?? seeds[0]!;
@@ -345,7 +373,7 @@ export function simulateChampionsLeague(state: GameState, rng: Rng, seasonYear: 
     for (let i = 0; i < bracket.length; i += 2) {
       const a = bracket[i]!;
       const b = bracket[i + 1]!;
-      const aWins = r.next() < advanceProb(clStrength(state, a), clStrength(state, b));
+      const aWins = r.next() < advanceProb(eff(a), eff(b));
       if (bracket.length === 2) runnerUp = aWins ? b : a; // this tie is the final
       next.push(aWins ? a : b);
     }
