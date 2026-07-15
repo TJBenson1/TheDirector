@@ -18,7 +18,7 @@ const t = (prof: number, ego: number, amb: number, loy: number, vol: number, ada
 function q(
   club: ClubId, id: string, name: string, birthYear: number, nationality: string, positions: Position[],
   ability: number, potentialCeiling: number, contractUntil: number, injuryProneness: number, personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string } = {},
 ): CuratedSeed {
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
@@ -29,12 +29,12 @@ export const ARSENAL_2004: CuratedSeed[] = [
   q('arsenal', 'lauren', 'Lauren', 1977, 'Cameroon', ['RB'], 81, 82, 2007, 30, t(8, 5, 8, 7, 4, 7)),
   q('arsenal', 'toure', 'Kolo Touré', 1981, 'Ivory Coast', ['CB'], 82, 86, 2008, 25, t(8, 5, 8, 7, 4, 7)),
   q('arsenal', 'campbell2', 'Sol Campbell', 1974, 'England', ['CB'], 85, 86, 2006, 25, t(8, 6, 8, 7, 4, 6)),
-  q('arsenal', 'acole', 'Ashley Cole', 1980, 'England', ['LB'], 84, 88, 2006, 25, t(8, 6, 8, 6, 5, 7)),
+  q('arsenal', 'acole', 'Ashley Cole', 1980, 'England', ['LB'], 84, 88, 2006, 25, t(8, 6, 8, 6, 5, 7), { archetype: 'full-back-attacking' }),
   q('arsenal', 'gilberto', 'Gilberto Silva', 1976, 'Brazil', ['DM'], 82, 84, 2008, 25, t(9, 4, 8, 8, 3, 7)),
   q('arsenal', 'vieira2', 'Patrick Vieira', 1976, 'France', ['CM', 'DM'], 88, 89, 2005, 25, t(8, 7, 9, 6, 6, 7)),
   q('arsenal', 'pires2', 'Robert Pirès', 1973, 'France', ['LW', 'AM'], 86, 87, 2006, 30, t(8, 5, 8, 7, 3, 7)),
   q('arsenal', 'ljungberg', 'Fredrik Ljungberg', 1977, 'Sweden', ['RW', 'AM'], 83, 85, 2007, 35, t(8, 6, 8, 7, 4, 7)),
-  q('arsenal', 'bergkamp2', 'Dennis Bergkamp', 1969, 'Netherlands', ['AM', 'ST'], 85, 86, 2006, 25, t(9, 6, 8, 8, 3, 6)),
+  q('arsenal', 'bergkamp2', 'Dennis Bergkamp', 1969, 'Netherlands', ['AM', 'ST'], 85, 86, 2006, 25, t(9, 6, 8, 8, 3, 6), { archetype: 'playmaker' }),
   q('arsenal', 'henry', 'Thierry Henry', 1977, 'France', ['ST', 'LW'], 91, 92, 2007, 25, t(9, 7, 9, 8, 4, 8), { loyalty: 88 }),
   // Reyes — dazzled at 20, then faded under pressure. A flaky (low-prof, volatile)
   // lost talent: centre him and he MIGHT become the star Highbury dreamed of.
@@ -50,7 +50,7 @@ export const CHELSEA_2004: CuratedSeed[] = [
   q('chelsea', 'cech2', 'Petr Čech', 1982, 'Czech Republic', ['GK'], 85, 89, 2009, 25, t(9, 5, 8, 8, 3, 7)),
   q('chelsea', 'ferreira', 'Paulo Ferreira', 1979, 'Portugal', ['RB'], 80, 82, 2008, 25, t(8, 4, 7, 7, 4, 7)),
   q('chelsea', 'terry2', 'John Terry', 1980, 'England', ['CB'], 86, 88, 2009, 30, t(8, 7, 9, 9, 5, 6)),
-  q('chelsea', 'carvalho', 'Ricardo Carvalho', 1978, 'Portugal', ['CB'], 85, 86, 2009, 30, t(8, 6, 8, 7, 5, 7)),
+  q('chelsea', 'carvalho', 'Ricardo Carvalho', 1978, 'Portugal', ['CB'], 85, 86, 2009, 30, t(8, 6, 8, 7, 5, 7), { archetype: 'covering-cb' }),
   q('chelsea', 'gallas2', 'William Gallas', 1977, 'France', ['CB', 'LB'], 83, 85, 2008, 30, t(7, 6, 7, 5, 6, 7)),
   q('chelsea', 'bridge', 'Wayne Bridge', 1980, 'England', ['LB'], 79, 81, 2008, 35, t(7, 5, 7, 6, 4, 7)),
   q('chelsea', 'makelele2', 'Claude Makélélé', 1973, 'France', ['DM'], 85, 85, 2007, 25, t(9, 4, 8, 7, 3, 7)),
@@ -70,7 +70,7 @@ export const MARSEILLE_2004: CuratedSeed[] = [
   q('marseille', 'nasri', 'Samir Nasri', 1987, 'France', ['AM', 'LW'], 76, 85, 2008, 30, t(6, 7, 7, 6, 6, 7)),
 ];
 export const PSV_2004: CuratedSeed[] = [
-  q('psv', 'robben2', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 83, 89, 2008, 64, t(8, 7, 9, 6, 5, 7)),
+  q('psv', 'robben2', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 83, 89, 2008, 64, t(8, 7, 9, 6, 5, 7), { archetype: 'inside-forward' }),
   q('psv', 'park', 'Park Ji-sung', 1981, 'South Korea', ['RW', 'CM'], 78, 82, 2005, 30, t(9, 4, 8, 8, 3, 8)),
 ];
 export const MALLORCA_2004: CuratedSeed[] = [
@@ -245,21 +245,21 @@ export const SPORTING_2004: CuratedSeed[] = [
 /** AC Milan, 2003–04 — the Scudetto winners: an all-time defence (Maldini,
  *  Nesta, Stam) in front of Dida, Pirlo's regista game, and a young Kaká. */
 export const MILAN_2004: CuratedSeed[] = [
-  q('milan', 'shevchenko2', 'Andriy Shevchenko', 1976, 'Ukraine', ['ST'], 86, 87, 2006, 30, t(8, 6, 9, 6, 4, 7)),
+  q('milan', 'shevchenko2', 'Andriy Shevchenko', 1976, 'Ukraine', ['ST'], 86, 87, 2006, 30, t(8, 6, 9, 6, 4, 7), { archetype: 'poacher' }),
   q('milan', 'dida04', 'Dida', 1973, 'Brazil', ['GK'], 86, 86, 2007, 20, t(8, 5, 7, 8, 3, 7)),
-  q('milan', 'cafu04', 'Cafu', 1970, 'Brazil', ['RB'], 84, 84, 2006, 25, t(8, 6, 8, 7, 3, 8)),
-  q('milan', 'nesta04', 'Alessandro Nesta', 1976, 'Italy', ['CB'], 90, 90, 2008, 45, t(9, 4, 7, 8, 3, 7)),
-  q('milan', 'maldini04', 'Paolo Maldini', 1968, 'Italy', ['CB', 'LB'], 87, 87, 2006, 25, t(10, 5, 8, 10, 2, 8)),
+  q('milan', 'cafu04', 'Cafu', 1970, 'Brazil', ['RB'], 84, 84, 2006, 25, t(8, 6, 8, 7, 3, 8), { archetype: 'full-back-attacking' }),
+  q('milan', 'nesta04', 'Alessandro Nesta', 1976, 'Italy', ['CB'], 90, 90, 2008, 45, t(9, 4, 7, 8, 3, 7), { archetype: 'covering-cb' }),
+  q('milan', 'maldini04', 'Paolo Maldini', 1968, 'Italy', ['CB', 'LB'], 87, 87, 2006, 25, t(10, 5, 8, 10, 2, 8), { archetype: 'ball-playing-cb' }),
   q('milan', 'stam04', 'Jaap Stam', 1972, 'Netherlands', ['CB'], 85, 85, 2005, 30, t(8, 5, 7, 6, 4, 7)),
   q('milan', 'kaladze04', 'Kakhaber Kaladze', 1978, 'Georgia', ['CB', 'LB'], 78, 80, 2008, 30, t(8, 5, 6, 7, 4, 7)),
   q('milan', 'serginho04', 'Serginho', 1971, 'Brazil', ['LB', 'LW'], 79, 79, 2006, 25, t(7, 5, 6, 7, 4, 7)),
   q('milan', 'costacurta04', 'Alessandro Costacurta', 1966, 'Italy', ['CB'], 76, 76, 2005, 40, t(9, 4, 6, 10, 3, 7)),
-  q('milan', 'gattuso04', 'Gennaro Gattuso', 1978, 'Italy', ['CM', 'DM'], 84, 85, 2008, 25, t(8, 5, 8, 9, 7, 7)),
-  q('milan', 'pirlo04', 'Andrea Pirlo', 1979, 'Italy', ['DM', 'CM'], 85, 88, 2008, 20, t(9, 4, 7, 8, 2, 8)),
-  q('milan', 'seedorf04', 'Clarence Seedorf', 1976, 'Netherlands', ['CM', 'AM'], 85, 85, 2008, 25, t(8, 7, 8, 7, 4, 8)),
+  q('milan', 'gattuso04', 'Gennaro Gattuso', 1978, 'Italy', ['CM', 'DM'], 84, 85, 2008, 25, t(8, 5, 8, 9, 7, 7), { archetype: 'destroyer' }),
+  q('milan', 'pirlo04', 'Andrea Pirlo', 1979, 'Italy', ['DM', 'CM'], 85, 88, 2008, 20, t(9, 4, 7, 8, 2, 8), { archetype: 'deep-playmaker' }),
+  q('milan', 'seedorf04', 'Clarence Seedorf', 1976, 'Netherlands', ['CM', 'AM'], 85, 85, 2008, 25, t(8, 7, 8, 7, 4, 8), { archetype: 'deep-playmaker' }),
   q('milan', 'ambrosini04', 'Massimo Ambrosini', 1977, 'Italy', ['CM'], 77, 78, 2007, 45, t(8, 4, 6, 9, 3, 7)),
   q('milan', 'ruicosta04', 'Rui Costa', 1972, 'Portugal', ['AM'], 82, 82, 2006, 30, t(8, 6, 6, 7, 4, 7)),
-  q('milan', 'kaka04', 'Kaká', 1982, 'Brazil', ['AM'], 84, 93, 2008, 25, t(9, 4, 9, 8, 2, 9)),
+  q('milan', 'kaka04', 'Kaká', 1982, 'Brazil', ['AM'], 84, 93, 2008, 25, t(9, 4, 9, 8, 2, 9), { archetype: 'playmaker' }),
   // Inzaghi — an elite finisher, but 2003–04 was a write-off (fractured ankle,
   // recurring muscle trouble): a fragile star, not an unfulfilled one.
   q('milan', 'inzaghi04', 'Filippo Inzaghi', 1973, 'Italy', ['ST'], 82, 82, 2007, 70, t(7, 6, 8, 8, 4, 6)),
@@ -291,7 +291,7 @@ export const BARCELONA_2004: CuratedSeed[] = [
 export const REAL_MADRID_2004: CuratedSeed[] = [
   q('real_madrid', 'casillas04', 'Iker Casillas', 1981, 'Spain', ['GK'], 85, 89, 2010, 20, t(8, 4, 8, 10, 3, 7)),
   q('real_madrid', 'salgado04', 'Míchel Salgado', 1975, 'Spain', ['RB'], 80, 80, 2007, 30, t(8, 4, 6, 9, 4, 7)),
-  q('real_madrid', 'robertocarlos04', 'Roberto Carlos', 1973, 'Brazil', ['LB'], 85, 85, 2008, 25, t(8, 7, 8, 8, 5, 8)),
+  q('real_madrid', 'robertocarlos04', 'Roberto Carlos', 1973, 'Brazil', ['LB'], 85, 85, 2008, 25, t(8, 7, 8, 8, 5, 8), { archetype: 'full-back-attacking' }),
   q('real_madrid', 'helguera04', 'Iván Helguera', 1975, 'Spain', ['CB', 'DM'], 81, 81, 2007, 30, t(7, 5, 6, 8, 6, 7)),
   q('real_madrid', 'samuel04', 'Walter Samuel', 1978, 'Argentina', ['CB'], 82, 83, 2009, 30, t(8, 5, 7, 7, 4, 6)),
   // Woodgate — England's brightest young centre-back, but his Madrid move was
@@ -299,18 +299,18 @@ export const REAL_MADRID_2004: CuratedSeed[] = [
   q('real_madrid', 'woodgate04', 'Jonathan Woodgate', 1980, 'England', ['CB'], 78, 84, 2009, 82, t(7, 4, 6, 7, 5, 5), { latentCeiling: 86 }),
   q('real_madrid', 'raulbravo04', 'Raúl Bravo', 1981, 'Spain', ['LB', 'CB'], 74, 77, 2008, 30, t(6, 4, 5, 7, 5, 6)),
   q('real_madrid', 'zidane04', 'Zinedine Zidane', 1972, 'France', ['AM'], 90, 90, 2007, 25, t(9, 6, 9, 9, 4, 8)),
-  q('real_madrid', 'figo04', 'Luís Figo', 1972, 'Portugal', ['RW'], 86, 86, 2007, 25, t(8, 8, 8, 6, 6, 8)),
-  q('real_madrid', 'beckham04', 'David Beckham', 1975, 'England', ['CM', 'RW'], 84, 84, 2007, 20, t(9, 8, 8, 6, 4, 8)),
+  q('real_madrid', 'figo04', 'Luís Figo', 1972, 'Portugal', ['RW'], 86, 86, 2007, 25, t(8, 8, 8, 6, 6, 8), { archetype: 'crosser' }),
+  q('real_madrid', 'beckham04', 'David Beckham', 1975, 'England', ['CM', 'RW'], 84, 84, 2007, 20, t(9, 8, 8, 6, 4, 8), { archetype: 'crosser' }),
   q('real_madrid', 'guti04', 'Guti', 1976, 'Spain', ['AM', 'CM'], 80, 82, 2008, 25, t(6, 7, 6, 10, 7, 7)),
   q('real_madrid', 'gravesen04', 'Thomas Gravesen', 1976, 'Denmark', ['DM', 'CM'], 78, 79, 2008, 35, t(7, 6, 6, 5, 8, 6)),
   q('real_madrid', 'solari04', 'Santiago Solari', 1976, 'Argentina', ['LW', 'AM'], 77, 77, 2007, 25, t(7, 4, 6, 7, 4, 7)),
   q('real_madrid', 'ronaldo04', 'Ronaldo', 1976, 'Brazil', ['ST'], 88, 88, 2008, 60, t(6, 8, 8, 6, 6, 7)),
-  q('real_madrid', 'raul04', 'Raúl', 1977, 'Spain', ['ST'], 85, 85, 2010, 30, t(9, 6, 9, 10, 4, 7)),
+  q('real_madrid', 'raul04', 'Raúl', 1977, 'Spain', ['ST'], 85, 85, 2010, 30, t(9, 6, 9, 10, 4, 7), { archetype: 'poacher' }),
   q('real_madrid', 'owen04', 'Michael Owen', 1979, 'England', ['ST'], 84, 85, 2008, 45, t(8, 6, 8, 6, 4, 6)),
   // Robinho — the "next Pelé" who dazzled but never dominated. Seeded from the
   // 2004 start (he really arrived a year later, from Santos); the lost-talent
   // gamble is to make the Bernabéu wonderkid finally deliver. Latent 90.
-  q('real_madrid', 'robinho04', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 74, 84, 2010, 30, t(5, 7, 7, 5, 8, 6), { latentCeiling: 90 }),
+  q('real_madrid', 'robinho04', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 74, 84, 2010, 30, t(5, 7, 7, 5, 8, 6), { latentCeiling: 90 , archetype: 'inside-forward' }),
 ];
 
 /** Juventus, 2004–05 — Capello's champions (title later stripped in Calciopoli):
@@ -325,8 +325,8 @@ export const JUVENTUS_2004: CuratedSeed[] = [
   q('juventus', 'buffon04', 'Gianluigi Buffon', 1978, 'Italy', ['GK'], 90, 92, 2009, 35, t(9, 5, 8, 9, 3, 7), { loyalty: 92 }),
   q('juventus', 'chimenti04', 'Antonio Chimenti', 1970, 'Italy', ['GK'], 68, 68, 2006, 25, t(7, 3, 5, 7, 3, 6)),
   q('juventus', 'thuram04', 'Lilian Thuram', 1972, 'France', ['CB', 'RB'], 87, 87, 2006, 20, t(9, 4, 7, 7, 3, 8)),
-  q('juventus', 'cannavaro04', 'Fabio Cannavaro', 1973, 'Italy', ['CB'], 87, 89, 2008, 20, t(8, 6, 8, 6, 4, 8)),
-  q('juventus', 'zambrotta04', 'Gianluca Zambrotta', 1977, 'Italy', ['RB', 'LB'], 85, 86, 2008, 30, t(8, 4, 7, 6, 3, 8)),
+  q('juventus', 'cannavaro04', 'Fabio Cannavaro', 1973, 'Italy', ['CB'], 87, 89, 2008, 20, t(8, 6, 8, 6, 4, 8), { archetype: 'covering-cb' }),
+  q('juventus', 'zambrotta04', 'Gianluca Zambrotta', 1977, 'Italy', ['RB', 'LB'], 85, 86, 2008, 30, t(8, 4, 7, 6, 3, 8), { archetype: 'full-back-attacking' }),
   q('juventus', 'zebina04', 'Jonathan Zebina', 1978, 'France', ['RB', 'CB'], 76, 77, 2009, 40, t(6, 6, 6, 5, 6, 6)),
   q('juventus', 'pessotto04', 'Gianluca Pessotto', 1970, 'Italy', ['LB', 'DM'], 74, 74, 2006, 30, t(9, 3, 6, 9, 3, 7)),
   q('juventus', 'chiellini04', 'Giorgio Chiellini', 1984, 'Italy', ['CB', 'LB'], 72, 88, 2010, 25, t(9, 4, 8, 9, 4, 7), { loyalty: 90 }),
@@ -336,7 +336,7 @@ export const JUVENTUS_2004: CuratedSeed[] = [
   q('juventus', 'tacchinardi04', 'Alessio Tacchinardi', 1975, 'Italy', ['DM', 'CM'], 78, 78, 2008, 45, t(7, 5, 6, 8, 5, 6)),
   q('juventus', 'appiah04', 'Stephen Appiah', 1980, 'Ghana', ['CM', 'DM'], 78, 80, 2007, 35, t(7, 5, 7, 6, 5, 7)),
   q('juventus', 'delpiero04', 'Alessandro Del Piero', 1974, 'Italy', ['ST', 'AM'], 85, 86, 2009, 35, t(9, 5, 8, 10, 3, 7), { loyalty: 96 }),
-  q('juventus', 'trezeguet04', 'David Trezeguet', 1977, 'France', ['ST'], 86, 87, 2009, 30, t(8, 5, 7, 7, 4, 7), { loyalty: 87 }),
+  q('juventus', 'trezeguet04', 'David Trezeguet', 1977, 'France', ['ST'], 86, 87, 2009, 30, t(8, 5, 7, 7, 4, 7), { loyalty: 87 , archetype: 'poacher' }),
   q('juventus', 'ibrahimovic04', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 82, 90, 2009, 20, t(8, 10, 10, 4, 7, 7)),
 ];
 

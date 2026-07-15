@@ -62,8 +62,17 @@ const ARCHETYPES: Record<string, Attributes> = {
   // Defenders
   'ball-playing-cb': { finishing: 0.5, passing: 1.2, technique: 1.05, defending: 1.35, pace: 0.95, physical: 1.15, vision: 1.0, workrate: 0.95 },
   stopper: { finishing: 0.5, passing: 0.75, technique: 0.7, defending: 1.5, pace: 0.9, physical: 1.4, vision: 0.8, workrate: 1.0 },
+  // A quick, positional centre-half whose game is reading + recovery pace, not
+  // aerial power (Cannavaro, Ferdinand, Puyol) — defending≫physical.
+  'covering-cb': { finishing: 0.45, passing: 1.0, technique: 0.85, defending: 1.45, pace: 1.15, physical: 1.0, vision: 0.95, workrate: 1.05 },
   'full-back-attacking': { finishing: 0.75, passing: 1.1, technique: 1.05, defending: 1.1, pace: 1.3, physical: 1.0, vision: 0.95, workrate: 1.3 },
   'full-back-defensive': { finishing: 0.6, passing: 0.95, technique: 0.9, defending: 1.3, pace: 1.1, physical: 1.2, vision: 0.85, workrate: 1.2 },
+  // A wide man whose game is DELIVERY, not pace — crossing, passing, vision
+  // (Beckham, Figo). Technique/passing/vision high, pace only ordinary.
+  crosser: { finishing: 0.85, passing: 1.35, technique: 1.2, defending: 0.7, pace: 0.95, physical: 0.8, vision: 1.25, workrate: 1.15 },
+  // A goalscoring wide forward who cuts inside (Robben, a young C. Ronaldo, wide
+  // Henry) — pace + finishing + technique.
+  'inside-forward': { finishing: 1.25, passing: 0.95, technique: 1.25, defending: 0.5, pace: 1.35, physical: 0.85, vision: 1.0, workrate: 0.9 },
   keeper: { finishing: 1, passing: 1, technique: 1, defending: 1, pace: 1, physical: 1, vision: 1, workrate: 1 },
 };
 

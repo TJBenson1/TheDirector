@@ -19,7 +19,7 @@ const t = (prof: number, ego: number, amb: number, loy: number, vol: number, ada
 function q(
   club: ClubId, id: string, name: string, birthYear: number, nationality: string, positions: Position[],
   ability: number, potentialCeiling: number, contractUntil: number, injuryProneness: number, personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string } = {},
 ): CuratedSeed {
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
@@ -30,7 +30,7 @@ function q(
 export const BAYERN_2009: CuratedSeed[] = [
   q('bayern', 'butt09', 'Hans-Jörg Butt', 1974, 'Germany', ['GK'], 78, 78, 2012, 25, t(8, 6, 6, 8, 4, 6)),
   q('bayern', 'rensing09', 'Michael Rensing', 1984, 'Germany', ['GK'], 70, 74, 2011, 25, t(7, 5, 6, 6, 5, 6)),
-  q('bayern', 'lahm09', 'Philipp Lahm', 1983, 'Germany', ['RB', 'LB'], 86, 88, 2013, 25, t(10, 4, 9, 10, 3, 8)),
+  q('bayern', 'lahm09', 'Philipp Lahm', 1983, 'Germany', ['RB', 'LB'], 86, 88, 2013, 25, t(10, 4, 9, 10, 3, 8), { archetype: 'full-back-attacking' }),
   q('bayern', 'vanbuyten09', 'Daniel Van Buyten', 1978, 'Belgium', ['CB'], 80, 80, 2012, 35, t(8, 5, 7, 8, 4, 7)),
   q('bayern', 'demichelis09', 'Martín Demichelis', 1980, 'Argentina', ['CB', 'DM'], 79, 80, 2011, 35, t(7, 6, 7, 7, 6, 7)),
   // Badstuber — a van Gaal academy promotion who became a Germany regular before
@@ -39,18 +39,18 @@ export const BAYERN_2009: CuratedSeed[] = [
   q('bayern', 'braafheid09', 'Edson Braafheid', 1983, 'Netherlands', ['LB'], 72, 74, 2012, 30, t(7, 5, 6, 6, 5, 7)),
   q('bayern', 'contento09', 'Diego Contento', 1990, 'Germany', ['LB'], 66, 76, 2013, 30, t(7, 4, 7, 8, 4, 7)),
   q('bayern', 'vanbommel09', 'Mark van Bommel', 1977, 'Netherlands', ['DM'], 82, 82, 2011, 30, t(8, 7, 8, 6, 7, 7)),
-  q('bayern', 'schweinsteiger09', 'Bastian Schweinsteiger', 1984, 'Germany', ['CM', 'DM'], 84, 88, 2013, 40, t(9, 6, 9, 9, 5, 8)),
+  q('bayern', 'schweinsteiger09', 'Bastian Schweinsteiger', 1984, 'Germany', ['CM', 'DM'], 84, 88, 2013, 40, t(9, 6, 9, 9, 5, 8), { archetype: 'deep-playmaker' }),
   q('bayern', 'tymoshchuk09', 'Anatoliy Tymoshchuk', 1979, 'Ukraine', ['DM', 'CM'], 78, 79, 2011, 30, t(8, 5, 7, 7, 4, 7)),
   q('bayern', 'altintop09', 'Hamit Altıntop', 1982, 'Turkey', ['RW', 'CM'], 78, 80, 2011, 35, t(8, 5, 7, 7, 5, 7)),
   q('bayern', 'pranjic09', 'Danijel Pranjić', 1981, 'Croatia', ['LW', 'LB'], 76, 77, 2012, 30, t(7, 5, 6, 6, 5, 7)),
-  q('bayern', 'ribery09', 'Franck Ribéry', 1983, 'France', ['LW', 'AM'], 88, 90, 2013, 45, t(7, 7, 9, 7, 6, 7)),
+  q('bayern', 'ribery09', 'Franck Ribéry', 1983, 'France', ['LW', 'AM'], 88, 90, 2013, 45, t(7, 7, 9, 7, 6, 7), { archetype: 'inside-forward' }),
   // Robben — signed from Real Madrid in Aug 2009; a match-winner when fit, but a
   // famously fragile hamstring. Fragile star (high proneness).
-  q('bayern', 'robben09', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 87, 89, 2013, 65, t(8, 7, 9, 7, 5, 7)),
+  q('bayern', 'robben09', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 87, 89, 2013, 65, t(8, 7, 9, 7, 5, 7), { archetype: 'inside-forward' }),
   // Müller — the academy breakout of the reset; van Gaal handed him the season and
   // he never looked back. A reality-rail star (high ceiling, unlocked by minutes).
   q('bayern', 'muller09', 'Thomas Müller', 1989, 'Germany', ['AM', 'RW', 'ST'], 70, 88, 2013, 20, t(9, 5, 9, 10, 3, 8)),
-  q('bayern', 'gomez09', 'Mario Gómez', 1985, 'Germany', ['ST'], 82, 85, 2013, 35, t(8, 6, 8, 6, 5, 7)),
+  q('bayern', 'gomez09', 'Mario Gómez', 1985, 'Germany', ['ST'], 82, 85, 2013, 35, t(8, 6, 8, 6, 5, 7), { archetype: 'poacher' }),
   q('bayern', 'olic09', 'Ivica Olić', 1979, 'Croatia', ['ST', 'LW'], 79, 80, 2012, 35, t(8, 6, 8, 6, 5, 7)),
   q('bayern', 'klose09', 'Miroslav Klose', 1978, 'Germany', ['ST'], 81, 81, 2011, 35, t(9, 5, 8, 7, 4, 7)),
   // Alaba — a 17-year-old on the fringe in 2009, about to become one of the best
@@ -78,7 +78,7 @@ export const WOLFSBURG_2009: CuratedSeed[] = [
   q('wolfsburg', 'ziani09', 'Karim Ziani', 1982, 'Algeria', ['AM', 'LW'], 76, 80, 2013, 60, t(5, 7, 6, 4, 7, 5)),
   q('wolfsburg', 'dejagah09', 'Ashkan Dejagah', 1986, 'Germany', ['LW', 'RW'], 72, 80, 2013, 30, t(6, 6, 7, 5, 5, 6)),
   q('wolfsburg', 'grafite09', 'Grafite', 1979, 'Brazil', ['ST'], 84, 85, 2012, 30, t(6, 6, 6, 6, 5, 6)),
-  q('wolfsburg', 'dzeko09', 'Edin Džeko', 1986, 'Bosnia and Herzegovina', ['ST'], 82, 90, 2013, 20, t(7, 7, 9, 4, 5, 7)),
+  q('wolfsburg', 'dzeko09', 'Edin Džeko', 1986, 'Bosnia and Herzegovina', ['ST'], 82, 90, 2013, 20, t(7, 7, 9, 4, 5, 7), { archetype: 'target-man' }),
   q('wolfsburg', 'martins09', 'Obafemi Martins', 1984, 'Nigeria', ['ST'], 80, 82, 2013, 35, t(6, 7, 7, 5, 6, 6)),
 ];
 
@@ -94,7 +94,7 @@ export const BREMEN_2009: CuratedSeed[] = [
   q('bremen', 'borowski09', 'Tim Borowski', 1980, 'Germany', ['CM', 'DM'], 76, 77, 2012, 40, t(7, 5, 6, 8, 5, 7)),
   q('bremen', 'hunt09', 'Aaron Hunt', 1986, 'Germany', ['AM', 'ST'], 78, 83, 2013, 45, t(7, 6, 7, 7, 6, 7)),
   // Özil — a reality-rail world-beater in waiting; given minutes he climbs to elite.
-  q('bremen', 'ozil09', 'Mesut Özil', 1988, 'Germany', ['AM', 'LW'], 81, 92, 2011, 30, t(8, 6, 8, 5, 5, 8)),
+  q('bremen', 'ozil09', 'Mesut Özil', 1988, 'Germany', ['AM', 'LW'], 81, 92, 2011, 30, t(8, 6, 8, 5, 5, 8), { archetype: 'playmaker' }),
   // Marin — the hyped "German Messi" whose confidence and body failed him after a
   // big move. A genuine lost talent (latent 86).
   q('bremen', 'marin09', 'Marko Marin', 1989, 'Germany', ['LW', 'AM'], 74, 80, 2012, 55, t(6, 7, 7, 5, 7, 5), { latentCeiling: 86 }),
@@ -217,13 +217,13 @@ export const REAL_MADRID_2009: CuratedSeed[] = [
   q('real_madrid', 'albiol09', 'Raúl Albiol', 1985, 'Spain', ['CB'], 79, 82, 2014, 30, t(8, 5, 6, 8, 4, 7)),
   q('real_madrid', 'arbeloa09', 'Álvaro Arbeloa', 1983, 'Spain', ['RB', 'LB'], 79, 81, 2013, 35, t(8, 6, 7, 9, 6, 8)),
   q('real_madrid', 'marcelo09', 'Marcelo', 1988, 'Brazil', ['LB'], 80, 90, 2013, 30, t(7, 7, 8, 9, 7, 8)),
-  q('real_madrid', 'xabialonso09', 'Xabi Alonso', 1981, 'Spain', ['CM', 'DM'], 87, 89, 2013, 25, t(9, 6, 8, 8, 4, 8)),
+  q('real_madrid', 'xabialonso09', 'Xabi Alonso', 1981, 'Spain', ['CM', 'DM'], 87, 89, 2013, 25, t(9, 6, 8, 8, 4, 8), { archetype: 'deep-playmaker' }),
   q('real_madrid', 'lassdiarra09', 'Lassana Diarra', 1985, 'France', ['DM', 'CM'], 82, 85, 2012, 45, t(7, 7, 7, 6, 7, 6)),
   q('real_madrid', 'guti09', 'Guti', 1976, 'Spain', ['AM', 'CM'], 81, 84, 2011, 40, t(6, 8, 6, 9, 8, 7)),
-  q('real_madrid', 'ronaldo09', 'Cristiano Ronaldo', 1985, 'Portugal', ['LW', 'ST'], 92, 95, 2015, 25, t(10, 10, 10, 7, 7, 8)),
+  q('real_madrid', 'ronaldo09', 'Cristiano Ronaldo', 1985, 'Portugal', ['LW', 'ST'], 92, 95, 2015, 25, t(10, 10, 10, 7, 7, 8), { archetype: 'inside-forward' }),
   // Kaká — arrived as a Ballon d'Or great, then knee and groin injuries wrecked
   // his Madrid years. The era's definitive fragile-and-lost star (latent 90).
-  q('real_madrid', 'kaka09', 'Kaká', 1982, 'Brazil', ['AM'], 86, 88, 2015, 80, t(9, 6, 8, 7, 4, 6), { latentCeiling: 90 }),
+  q('real_madrid', 'kaka09', 'Kaká', 1982, 'Brazil', ['AM'], 86, 88, 2015, 80, t(9, 6, 8, 7, 4, 6), { latentCeiling: 90 , archetype: 'playmaker' }),
   q('real_madrid', 'benzema09', 'Karim Benzema', 1987, 'France', ['ST'], 79, 91, 2015, 30, t(7, 7, 8, 7, 6, 6)),
   q('real_madrid', 'higuain09', 'Gonzalo Higuaín', 1987, 'Argentina', ['ST'], 82, 87, 2013, 40, t(8, 6, 8, 7, 5, 7)),
   q('real_madrid', 'raul09', 'Raúl', 1977, 'Spain', ['ST', 'AM'], 82, 84, 2010, 35, t(9, 8, 8, 10, 5, 8)),

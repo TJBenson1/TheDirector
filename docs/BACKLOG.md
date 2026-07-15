@@ -221,10 +221,11 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
     `docs/DESIGN-player-attributes.md`): an 8-attribute vector derived on demand
     from `ability` + archetype, so it's calibration-inert (14/14 byte-identical).
     Style-fit and player-type development now read real attributes, not position;
-    scouting returns per-attribute ranges. **Still to do: Phase 2** — archetype
-    tags on the notable curated players per era (e.g. Beckham a crosser not a
-    pace-winger, Cannavaro defending≫physical), pure data. **Phase 3** (optional) —
-    make the vector authoritative and derive `ability` from it.
+    scouting returns per-attribute ranges. **Phase 2 started**: ~58 marquee players
+    tagged with real archetypes (Beckham a crosser, Cannavaro/Pirlo re-typed, etc.)
+    + 3 new archetypes; the long tail keeps position defaults until tagged (pure,
+    incremental data). **Phase 3** (optional) — make the vector authoritative and
+    derive `ability` from it.
 
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the

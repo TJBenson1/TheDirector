@@ -146,9 +146,15 @@ it. Deterministic (same RNG), so save/replay is unaffected.
   Scouting now returns fogged per-attribute ranges. **Calibration byte-identical,
   14/14; 234 tests.** (A high-ability standout attribute can hit the 99 cap, so the
   roll-up is exact only pre-clamp — fine while `ability` stays authoritative.)
-- **Phase 2 — fidelity (incremental data).** Archetype tags on the notable
-  curated players per era; hand-tuned overrides for the marquee handful. Pure data,
-  calibration-safe (roll-up preserved), no engine change.
+- ✅ **Phase 2 — fidelity (STARTED).** `archetype` tags on ~58 marquee players
+  across 1999/2001/2004/2009/2013 where the position default was wrong (Beckham/
+  Figo → `crosser`; Cannavaro/Nesta/Puyol → `covering-cb`; Pirlo/Scholes/Xavi/
+  Seedorf → `deep-playmaker`; Owen/Inzaghi/Trézéguet → `poacher`; Robben/Ribéry/
+  Bale/Robinho → `inside-forward`; Roberto Carlos/Cafu/Lahm → `full-back-attacking`;
+  Bergkamp/Zola/Kaká → `playmaker`; Vieri/Ibrahimović → `target-man`). Added three
+  archetypes to cover real gaps (`crosser`, `covering-cb`, `inside-forward`). Pure
+  data, calibration byte-identical. **Still incremental** — the long tail of
+  curated players keeps its position defaults until tagged.
 - **Phase 3 — optional source-of-truth flip.** Make the vector authoritative and
   derive `ability` from it live (so an attribute change *moves* ability). Larger:
   re-point the 85 readers conceptually (they still read `ability`, now computed),

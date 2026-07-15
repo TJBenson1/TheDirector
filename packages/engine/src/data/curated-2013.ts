@@ -36,7 +36,7 @@ function q(
   contractUntil: number,
   injuryProneness: number,
   personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string } = {},
 ): CuratedSeed {
   return {
     id: `cur_${id}`,
@@ -102,7 +102,7 @@ export const MAN_CITY_2013: CuratedSeed[] = [
   q('man_city', 'davidsilva', 'David Silva', 1986, 'Spain', ['AM', 'LW'], 87, 88, 2016, 30, t(9, 5, 8, 8, 3, 7)),
   q('man_city', 'nasri', 'Samir Nasri', 1987, 'France', ['AM', 'LW'], 82, 86, 2016, 35, t(6, 8, 7, 6, 7, 7)),
   q('man_city', 'navas', 'Jesús Navas', 1985, 'Spain', ['RW'], 80, 82, 2017, 30, t(8, 4, 7, 7, 5, 6)),
-  q('man_city', 'aguero', 'Sergio Agüero', 1988, 'Argentina', ['ST'], 89, 91, 2017, 45, t(8, 7, 9, 7, 5, 7)),
+  q('man_city', 'aguero', 'Sergio Agüero', 1988, 'Argentina', ['ST'], 89, 91, 2017, 45, t(8, 7, 9, 7, 5, 7), { archetype: 'poacher' }),
   q('man_city', 'negredo', 'Álvaro Negredo', 1985, 'Spain', ['ST'], 81, 83, 2017, 35, t(7, 6, 7, 6, 5, 7)),
   q('man_city', 'dzeko', 'Edin Džeko', 1986, 'Bosnia', ['ST'], 82, 84, 2016, 30, t(7, 6, 8, 6, 5, 7)),
   q('man_city', 'jovetic', 'Stevan Jovetić', 1989, 'Montenegro', ['ST', 'AM'], 81, 86, 2017, 64, t(6, 7, 7, 6, 6, 6)),
@@ -120,7 +120,7 @@ export const CHELSEA_2013: CuratedSeed[] = [
   q('chelsea', 'lampard', 'Frank Lampard', 1978, 'England', ['CM'], 82, 83, 2014, 25, t(9, 6, 9, 9, 3, 7)),
   q('chelsea', 'mikel', 'John Obi Mikel', 1987, 'Nigeria', ['DM'], 79, 82, 2017, 30, t(8, 4, 7, 7, 4, 7)),
   q('chelsea', 'oscar', 'Oscar', 1991, 'Brazil', ['AM'], 82, 88, 2017, 30, t(8, 6, 8, 7, 4, 7)),
-  q('chelsea', 'hazard', 'Eden Hazard', 1991, 'Belgium', ['LW', 'AM'], 87, 92, 2017, 25, t(7, 7, 8, 6, 4, 7)),
+  q('chelsea', 'hazard', 'Eden Hazard', 1991, 'Belgium', ['LW', 'AM'], 87, 92, 2017, 25, t(7, 7, 8, 6, 4, 7), { archetype: 'inside-forward' }),
   q('chelsea', 'mata', 'Juan Mata', 1988, 'Spain', ['AM', 'RW'], 84, 86, 2016, 20, t(9, 5, 7, 7, 3, 8)),
   q('chelsea', 'willian', 'Willian', 1988, 'Brazil', ['RW', 'AM'], 82, 85, 2018, 30, t(8, 5, 8, 7, 4, 7)),
   q('chelsea', 'schurrle', 'André Schürrle', 1990, 'Germany', ['LW', 'ST'], 80, 85, 2017, 30, t(7, 6, 7, 6, 5, 7)),
@@ -180,7 +180,7 @@ export const SPURS_2013: CuratedSeed[] = [
   q('spurs', 'holtby', 'Lewis Holtby', 1990, 'Germany', ['AM', 'CM'], 76, 82, 2017, 35, t(7, 5, 7, 6, 5, 7)),
   q('spurs', 'defoe', 'Jermain Defoe', 1982, 'England', ['ST'], 79, 80, 2015, 30, t(7, 6, 8, 6, 5, 7)),
   q('spurs', 'adebayor', 'Emmanuel Adebayor', 1984, 'Togo', ['ST'], 80, 84, 2016, 35, t(5, 8, 6, 5, 7, 6)),
-  q('spurs', 'bale', 'Gareth Bale', 1989, 'Wales', ['LW', 'AM'], 88, 92, 2017, 40, t(8, 7, 9, 6, 5, 7)),
+  q('spurs', 'bale', 'Gareth Bale', 1989, 'Wales', ['LW', 'AM'], 88, 92, 2017, 40, t(8, 7, 9, 6, 5, 7), { archetype: 'inside-forward' }),
 ];
 
 /** Everton, 2013–14 — Baines is the target. */
@@ -364,9 +364,9 @@ export const AJAX_2013: CuratedSeed[] = [
 
 /** PSG, 2013–14 — Ibrahimović-era context for cross-European realism/queries. */
 export const PSG_2013: CuratedSeed[] = [
-  q('psg', 'ibrahimovic', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 89, 90, 2016, 25, t(7, 10, 9, 6, 6, 7)),
+  q('psg', 'ibrahimovic', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 89, 90, 2016, 25, t(7, 10, 9, 6, 6, 7), { archetype: 'target-man' }),
   q('psg', 'thiagosilva', 'Thiago Silva', 1984, 'Brazil', ['CB'], 87, 88, 2018, 25, t(9, 6, 9, 8, 4, 7)),
-  q('psg', 'cavani', 'Edinson Cavani', 1987, 'Uruguay', ['ST'], 85, 87, 2018, 30, t(8, 6, 9, 7, 5, 7)),
+  q('psg', 'cavani', 'Edinson Cavani', 1987, 'Uruguay', ['ST'], 85, 87, 2018, 30, t(8, 6, 9, 7, 5, 7), { archetype: 'poacher' }),
   q('psg', 'verratti', 'Marco Verratti', 1992, 'Italy', ['CM', 'DM'], 81, 90, 2018, 30, t(7, 6, 8, 7, 6, 7)),
   q('psg', 'lavezzi', 'Ezequiel Lavezzi', 1985, 'Argentina', ['LW', 'ST'], 81, 83, 2016, 30, t(7, 6, 7, 6, 6, 7)),
   q('psg', 'sirigu13', 'Salvatore Sirigu', 1987, 'Italy', ['GK'], 82, 84, 2018, 20, t(8, 5, 7, 7, 4, 7)),
@@ -415,7 +415,7 @@ export const MILAN_2013: CuratedSeed[] = [
 /** Juventus, 2013–14 — Serie A identity for context. */
 export const JUVENTUS_2013: CuratedSeed[] = [
   q('juventus', 'buffon', 'Gianluigi Buffon', 1978, 'Italy', ['GK'], 86, 87, 2016, 25, t(9, 7, 9, 10, 3, 6)),
-  q('juventus', 'pirlo', 'Andrea Pirlo', 1979, 'Italy', ['DM', 'CM'], 85, 86, 2016, 25, t(9, 6, 8, 8, 3, 7)),
+  q('juventus', 'pirlo', 'Andrea Pirlo', 1979, 'Italy', ['DM', 'CM'], 85, 86, 2016, 25, t(9, 6, 8, 8, 3, 7), { archetype: 'deep-playmaker' }),
   q('juventus', 'vidal', 'Arturo Vidal', 1987, 'Chile', ['CM', 'DM'], 85, 87, 2017, 40, t(7, 7, 9, 7, 7, 7)),
   q('juventus', 'pogba', 'Paul Pogba', 1993, 'France', ['CM'], 82, 92, 2019, 30, t(6, 8, 9, 6, 6, 7)),
   q('juventus', 'tevez', 'Carlos Tévez', 1984, 'Argentina', ['ST'], 84, 85, 2016, 30, t(6, 8, 9, 5, 7, 7)),
