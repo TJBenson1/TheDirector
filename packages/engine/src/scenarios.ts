@@ -175,7 +175,11 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     playerClub: 'man_utd',
     mandate: 'Sustain domestic dominance and win a second European Cup.',
     boardPatience: 80,
-    boardExpectedFinish: 1,
+    // A title CHALLENGE (top two), not a guaranteed win: once the reality strength
+    // arcs make the 2000s Premier League genuinely competitive (Arsenal's
+    // Invincibles, Chelsea's billions, City's takeover), even a Ferguson-era United
+    // finishes second some years — the board expects contention, not perfection.
+    boardExpectedFinish: 2,
     clubs: ELITE_CLUBS,
     contextExtra: [
       { id: 'monaco', name: 'AS Monaco', prestige: 74 },

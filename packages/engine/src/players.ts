@@ -396,6 +396,22 @@ export function recomputeClubStrength(state: GameState, clubId: ClubId): void {
   club.strength = Math.max(20, Math.min(99, club.baseStrength + (raw - club.squadStrengthAnchor)));
 }
 
+/**
+ * Re-baseline a club's strength to `target`, re-anchoring so its currently
+ * available squad reads exactly that. Used by the reality strength arcs
+ * (strengthArcs.ts) to make a rival follow its real historical trajectory — a
+ * Chelsea that surges under Abramovich, a Leeds that collapses — rather than
+ * sitting frozen at its kickoff prestige. A butterfly (starButterfly) still
+ * layers on top in matchStrength/clStrength, so a user raid deviates from the arc.
+ */
+export function reanchorClubStrength(state: GameState, clubId: ClubId, target: number): void {
+  const club = state.clubs[clubId];
+  if (!club) return;
+  club.baseStrength = Math.max(20, Math.min(99, target));
+  club.squadStrengthAnchor = deriveRawStrength(availableSquadPlayers(state, clubId));
+  recomputeClubStrength(state, clubId);
+}
+
 /** Sum of a club's committed wages. */
 export function computeWageBill(state: GameState, clubId: ClubId): number {
   return clubSquadPlayers(state, clubId).reduce((acc, p) => acc + p.wage, 0);

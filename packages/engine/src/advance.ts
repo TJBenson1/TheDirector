@@ -34,6 +34,7 @@ import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
 import { resolveAdaptationSeason } from './adaptation.js';
 import { recomputeClubStrength } from './players.js';
+import { applyStrengthArcs } from './strengthArcs.js';
 
 export interface AdvanceResult {
   state: GameState;
@@ -69,6 +70,11 @@ function runMonth(state: GameState, rng: Rng): void {
     for (const club of Object.values(state.clubs)) {
       if (club.leagueId !== null) recomputeClubStrength(state, club.id);
     }
+    // 5b. Reality strength arcs: bend each non-user club to its real trajectory for
+    //     the new season (Chelsea's Abramovich surge, City's takeover, Leeds' and
+    //     the Italian giants' collapses), so the domestic title race reshuffles as
+    //     history did instead of freezing at the kickoff pecking order (§9a).
+    applyStrengthArcs(state);
     // 6. The Champions League for the season just completed — run BEFORE this
     //    summer's scandals/relegations so a club that played last season is in
     //    the field, and a club relegated for NEXT season is not.
