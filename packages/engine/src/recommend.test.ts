@@ -5,18 +5,35 @@ import { isProcedural } from './ledger.js';
 import { valuePlayer } from './finance.js';
 
 describe('target suggestions (§16 UI)', () => {
-  it('suggests real players for a position, ≥16, not at the user club', () => {
+  it('suggests real stars AND procedural depth for a position, ≥16, not at the user club', () => {
     const state = createNewGame({ seed: 'targets' });
     const list = suggestTargets(state, 'CM', { maxResults: 10 });
     expect(list.length).toBeGreaterThan(3);
     for (const t of list) {
       const p = state.players[t.playerId]!;
-      expect(isProcedural(p)).toBe(false); // real players only
       expect(t.club).not.toBe(state.playerClub);
       expect(t.age).toBeGreaterThanOrEqual(16);
-      // Position-relevant.
       expect(p.positions.some((pos) => ['DM', 'CM', 'AM'].includes(pos))).toBe(true);
+      if (isProcedural(p)) {
+        // Filler surfaces only as honest DEPTH — never a fabricated star.
+        expect(t.tags).toContain('depth');
+        expect(p.ability).toBeLessThanOrEqual(80);
+      }
     }
+  });
+
+  it('recruitment reaches beyond the elite: depth from mid/lower clubs is signable', () => {
+    // Man Utd 1999 shopping for a depth RB should find affordable, willing squad
+    // players at clubs the curated DB doesn't individually name (West Ham, Villa…).
+    const state = createNewGame({ scenarioId: 'man-utd-1999', seed: 'depth-rb' });
+    const list = suggestTargets(state, 'RB', { maxResults: 15, favourAvailable: true });
+    const depth = list.filter((t) => t.tags.includes('depth'));
+    expect(depth.length).toBeGreaterThan(0); // depth exists at all
+    expect(depth.some((t) => t.willing && t.askingPrice <= 5_000_000)).toBe(true); // gettable
+    // A procedural depth signing must resolve as a real, inspectable player.
+    const q = queryPlayer(state, depth[0]!.playerId);
+    expect(q.visible).toBe(true);
+    expect(q.tags).toContain('depth');
   });
 
   it('surfaces fire-sale (distressed-club) options and prices them cheaply', () => {

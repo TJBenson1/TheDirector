@@ -67,7 +67,7 @@ const REGIONS: Record<string, Region> = {
   iberia: {
     nationalities: ['Spain', 'Spain', 'Spain', 'Portugal', 'Argentina', 'Brazil'],
     first: ['Carlos', 'Javier', 'Sergio', 'Pablo', 'Raúl', 'Fernando', 'Diego', 'Álvaro', 'Rubén', 'Iván', 'Jesús', 'Marcos', 'David', 'Antonio', 'Miguel', 'José', 'Luis', 'Andrés', 'Xavi', 'Gonzalo'],
-    last: ['García', 'Martínez', 'López', 'Sánchez', 'Fernández', 'Gómez', 'Ruiz', 'Díaz', 'Moreno', 'Álvarez', 'Romero', 'Torres', 'Navarro', 'Ramos', 'Vidal', 'Castro', 'Silva', 'Costa', 'Reyes', 'Herrera'],
+    last: ['García', 'Martínez', 'López', 'Sánchez', 'Fernández', 'Gómez', 'Ruiz', 'Díaz', 'Moreno', 'Álvarez', 'Romero', 'Navarro', 'Castro', 'Blanco', 'Vega', 'Molina', 'Ortega', 'Serrano', 'Cabrera', 'Herrera'],
   },
   italy: {
     nationalities: ['Italy', 'Italy', 'Italy', 'Italy'],
@@ -80,9 +80,11 @@ const REGIONS: Record<string, Region> = {
     last: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schäfer', 'Koch', 'Bauer', 'Richter', 'Klein', 'Wolf', 'Neumann', 'Braun', 'Krüger', 'Hofmann', 'Vogel'],
   },
   world: {
+    // Procedural filler is now SIGNABLE as depth, so these must read as plausible
+    // UNKNOWNS — common names, not famous players (no "Zlatan Ibrahimović" journeyman).
     nationalities: ['France', 'Brazil', 'Argentina', 'Nigeria', 'Ghana', 'Senegal', 'Croatia', 'Serbia', 'Denmark', 'Sweden', 'Norway', 'Belgium'],
-    first: ['Didier', 'Emmanuel', 'Youssef', 'Kolo', 'Nwankwo', 'Ola', 'Zlatan', 'Dado', 'Sinisa', 'Thomas', 'Marc', 'Olof', 'Henri', 'Bruno', 'Salif', 'Papa', 'Nemanja', 'Ivan', 'Jesper', 'Ole'],
-    last: ['Diarra', 'Traoré', 'Okocha', 'Kanu', 'Ibrahimović', 'Prso', 'Mihajlović', 'Sørensen', 'Larsson', 'Solskjær', 'Diouf', 'Camara', 'Vidić', 'Rakitić', 'Boateng', 'Essien', 'Touré', 'Adebayor', 'Drogba', 'Eto'],
+    first: ['Frédéric', 'Marcel', 'Lucas', 'Bruno', 'Ibrahim', 'Amadou', 'Kwame', 'Nikola', 'Stefan', 'Lars', 'Erik', 'Henrik', 'Jonas', 'Bjørn', 'Vincent', 'Pascal', 'Thiago', 'Rafael', 'Goran', 'Dragan'],
+    last: ['Bernard', 'Moreau', 'Santos', 'Pereira', 'Nascimento', 'Okoye', 'Mensah', 'Diallo', 'Novak', 'Petrović', 'Nielsen', 'Andersson', 'Hansen', 'Lindqvist', 'Kovač', 'Horvat', 'Jensen', 'Bakker', 'Claes', 'Traore'],
   },
 };
 

@@ -28,7 +28,24 @@ function ageOf(state: GameState, p: PlayerState): number {
   return year(state) - p.birthYear;
 }
 
-export type AcquisitionTag = 'bosman' | 'unsettled' | 'fire-sale' | 'relegation-threatened' | 'step-up' | 'one-club-man';
+export type AcquisitionTag = 'bosman' | 'unsettled' | 'fire-sale' | 'relegation-threatened' | 'step-up' | 'one-club-man' | 'depth';
+
+/** Highest ability a procedural (uncurated) player is offered at — above this a
+ *  fabricated player would masquerade as a star, which Principle 2 forbids. Below
+ *  it he is honest squad DEPTH: the countless serviceable pros the database does
+ *  not name individually (a West Ham / Everton / lower-league squad player). */
+const DEPTH_ABILITY_CAP = 80;
+
+/** Is this procedural filler signable as DEPTH? A serviceable squad player at
+ *  another club — never a fabricated star (ability cap) and never a fictional
+ *  wonderkid (young + high ceiling), so prospect DISCOVERY stays real-only. */
+function isSignableDepth(state: GameState, p: PlayerState): boolean {
+  if (!isProcedural(p)) return false;
+  if (p.club === state.playerClub || p.club === null) return false;
+  if (p.ability > DEPTH_ABILITY_CAP) return false; // no fabricated stars
+  if (ageOf(state, p) <= 21 && p.potentialCeiling >= 82) return false; // no fictional gems
+  return true;
+}
 
 function clamp01(x: number): number {
   return Math.max(0, Math.min(1, x));
@@ -64,6 +81,8 @@ export function acquisitionTags(state: GameState, player: PlayerState, buyerClub
   const buyer = buyerClubId ? state.clubs[buyerClubId] : undefined;
   if (buyer && club && buyer.prestige > club.prestige + 8 && !loyalIcon) tags.push('step-up');
   if (loyalIcon && club) tags.push('one-club-man');
+  // A procedural squad player is honest DEPTH (not one of the named stars).
+  if (isProcedural(player) && club) tags.push('depth');
   return tags;
 }
 
@@ -123,8 +142,10 @@ export interface SuggestOptions {
 
 /**
  * Suggest realistic targets for a position, ranked by ability with a boost for
- * acquirability so genuine opportunities surface. Real players only, ≥16,
- * not at the user's club, scout-fogged.
+ * acquirability so genuine opportunities surface. Named real players PLUS
+ * procedural squad DEPTH (a serviceable RB from West Ham / a lower-league club) —
+ * so recruitment isn't limited to the famous few. ≥16, not at the user's club,
+ * scout-fogged. Prospect discovery stays real-only (a depth signing is not a gem).
  */
 export function suggestTargets(
   state: GameState,
@@ -135,9 +156,10 @@ export function suggestTargets(
   const group = GROUP[position];
   const rows: Array<{ s: TargetSuggestion; score: number }> = [];
   for (const p of Object.values(state.players)) {
-    if (isProcedural(p)) continue; // real players only
     if (p.club === state.playerClub || p.club === null) continue;
     if (ageOf(state, p) < 16) continue; // 16+ rule
+    const proc = isProcedural(p);
+    if (proc && !isSignableDepth(state, p)) continue; // filler surfaces only as depth
     const inPosition = p.positions.includes(position) || p.positions.some((pos) => GROUP[pos] === group);
     if (!inPosition) continue;
 
@@ -149,7 +171,9 @@ export function suggestTargets(
     const report = scoutPlayer(state, state.playerClub, p.id, deterministicScoutRng(state, p.id), { observation: 0.5 });
 
     const availability = tags.length * (opts.favourAvailable ? 9 : 5) + (verdict.willing ? 4 : -6);
-    const score = p.ability + availability;
+    // A named real player edges an equally-rated bit of depth (you'd take the
+    // known quantity), but willing/affordable depth still beats an unwilling star.
+    const score = p.ability + availability - (proc ? 2 : 0);
     rows.push({
       score,
       s: {
@@ -188,7 +212,12 @@ export interface PlayerQuery {
 export function queryPlayer(state: GameState, idOrName: string): PlayerQuery {
   const p = resolvePlayer(state, idOrName);
   if (!p) return { visible: false, note: `No player matching "${idOrName}".` };
-  if (isProcedural(p)) return { visible: false, note: `${p.name} is squad filler, not a tracked player.` };
+  // Procedural filler is inspectable as DEPTH only when addressed by its exact id
+  // (i.e. surfaced from suggestTargets) — never discoverable by a coincidental
+  // name search, which stays real-only (resolvePlayer only name-matches curated).
+  if (isProcedural(p) && !isSignableDepth(state, p)) {
+    return { visible: false, note: `${p.name} is squad filler, not a tracked player.` };
+  }
   const age = ageOf(state, p);
   if (age < 16) {
     return { visible: false, note: `${p.name} is only ${age} — not yet on the radar (the 16+ rule).` };
