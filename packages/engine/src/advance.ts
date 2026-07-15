@@ -21,7 +21,7 @@ import { processInjuriesMonth } from './injuries.js';
 import { rollInjuryManagement } from './injuryManagement.js';
 import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
-import { updateClubPressure, runAmbitionOverrides } from './ambition.js';
+import { updateClubPressure, runAmbitionOverrides, applyOwnerFunding } from './ambition.js';
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { reviewManager, reviewDirectorStrategy, applyDirectiveEffects, rollManagerCrossroads } from './manager.js';
@@ -75,6 +75,10 @@ function runMonth(state: GameState, rng: Rng): void {
     // (a dominant user drives the whole field's pressure up) — feeds the summer
     // override step below.
     updateClubPressure(state);
+    // M8: sugar-daddy owner funding (ongoing top-up), curbed by FFP from 2011 —
+    // inert where no club carries that ownership (e.g. man-utd-1999). Before the
+    // summer window so the funding/constraint bites this year's buys.
+    applyOwnerFunding(state);
     // 4b. Conditional takeover butterflies (Abramovich buys Chelsea only if they
     //     take a CL place — resolved before the summer ledger runs).
     resolveAbramovich(state, rng.fork(`takeover:${state.clock.date}`));

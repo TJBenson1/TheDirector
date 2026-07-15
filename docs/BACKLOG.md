@@ -265,10 +265,23 @@ three long-pending harness targets.
   active targets in band. The tuning lesson: a global one-per-window cap was what
   turned a 48% league-wide spree into a realistic ~9% (the most-desperate club's
   story, not everyone's).
-- **Follow-ons (backlog):** pressure/override on the OTHER era worlds (the mechanic
-  is scenario-agnostic but only man-utd-1999 is harness-verified); marquee
-  narrative for overrides (a named "statement signing" beat in the UI); FFP
-  scrutiny on sugar-daddy budgets post-2011 (already flagged in `finance.ts`).
+- ✅ **Follow-ons (shipped).**
+  - **Cross-scenario safety guard.** The mechanic is scenario-agnostic; a
+    per-scenario test (`ambitionScenarios.test.ts`) now locks the two hard
+    invariants — fantasy leaps 0, override share ≤20% — across all seven non-CI
+    era worlds. Verified: leaps 0 everywhere; share ranges 0.2–13.5% (highest
+    where the user dominates, e.g. chelsea-2003), a safe minority throughout.
+  - **Marquee narrative beat.** A statement signing surfaces as a news-desk event
+    (`STATEMENT SIGNING — …`) plus a `rival-ambition` narrative-memory entry, with
+    a `marquee` flag when a wealthy club or a real star (ability ≥82) is involved —
+    so a rival flexing threads across seasons, not a silent ledger row.
+  - **Benefactor funding + FFP.** Sugar-daddy clubs now get an ongoing owner
+    top-up (×2.2) rather than a one-off kitty that decays; from 2011 FFP curbs the
+    funding to ×1.4 and clips any war chest back (`applyOwnerFunding`,
+    `ffp.constrained` event). Inert on man-utd-1999 (no sugar-daddy club) →
+    byte-identical there. City is now sugar-daddy in the 2009/2013 worlds (the
+    2008 Abu Dhabi takeover), so FFP bites the moneyed clubs in 2004/2009/2013
+    exactly as reality did.
 
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the

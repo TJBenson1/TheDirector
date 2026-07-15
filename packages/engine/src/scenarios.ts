@@ -104,6 +104,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'valencia', name: 'Valencia', prestige: 74 },
       { id: 'atletico', name: 'Atlético Madrid', prestige: 74 },
     ],
+    // The Abu Dhabi takeover (2008) makes City a sugar-daddy club; FFP reins the
+    // spending back in from 2011 (ambition.ts::applyFinancialFairPlay).
+    ownership: { man_city: 'sugar-daddy' },
     domesticLeagueId: 'ger-2009',
   },
   'man-utd-2013': {
@@ -122,6 +125,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'ajax', name: 'Ajax', prestige: 70 },
       { id: 'milan', name: 'AC Milan', prestige: 76 },
     ],
+    // Sheikh Mansour's City are a moneyed power by 2013 — but already inside the
+    // FFP era, so their kitty is the constrained (not blank-cheque) sugar-daddy.
+    ownership: { man_city: 'sugar-daddy' },
     domesticLeagueId: 'eng-2013',
   },
   'liverpool-2001': {

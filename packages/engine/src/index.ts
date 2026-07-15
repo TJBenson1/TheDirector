@@ -181,6 +181,7 @@ export {
   exceedsPlausibleCeiling,
   updateClubPressure,
   runAmbitionOverrides,
+  applyOwnerFunding,
   MONEY_PRESTIGE,
   CEILING_MARGIN,
 } from './ambition.js';

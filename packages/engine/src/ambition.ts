@@ -12,7 +12,9 @@
 import type { ClubId, ClubPressure, ClubState, GameState, PlayerState } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
-import { valuePlayer } from './finance.js';
+import { appendMemory } from './memory.js';
+import { valuePlayer, initialFinances } from './finance.js';
+import { computeWageBill } from './players.js';
 import { executeTransfer } from './transfers.js';
 import { evaluateApproach } from './agency.js';
 import { ERA_REALITY, eraForScenario } from './ledger.js';
@@ -53,6 +55,66 @@ export function plausibleCeiling(club: ClubState): number {
  *  user, so its climb is always "caused".) */
 export function exceedsPlausibleCeiling(club: ClubState): boolean {
   return club.strength > plausibleCeiling(club);
+}
+
+// ── Benefactor funding & Financial Fair Play ─────────────────────────────────
+//
+// "Money still talks" — a sugar-daddy owner keeps refilling the war chest, so the
+// advantage is ONGOING, not a one-off kitty that decays as it's spent. Each
+// summer the benefactor tops the transfer budget back up to a rich funded level.
+//
+// Then from ~2011 UEFA's FFP reins the era in: the benefactor can no longer write
+// a blank cheque, so the annual funding drops from a ×2.2 splurge to a ×1.4
+// still-rich-but-accountable level, and any war chest already above that is
+// clipped back (logged once). A sugar-daddy club stays a power; it just can't
+// buy the league outright any more.
+//
+// Inert on any world with no sugar-daddy club — the calibrated man-utd-1999 never
+// gives Chelsea that ownership — so this is calibration byte-identical there. It
+// bites the moneyed clubs in the 2004 (Chelsea) and 2013 (City) worlds, and funds
+// then curbs City in 2009, exactly as reality did.
+
+const FFP_YEAR = 2011;
+/** Post-FFP, the benefactor may only fund up to this multiple of a self-funded
+ *  club's kitty — richer than sustainable, far short of the old ×2.2 splurge. */
+const FFP_SUGAR_HEADROOM = 1.4;
+/** Pre-FFP, the benefactor's blank cheque (mirrors OWNERSHIP_BUDGET_MULT). */
+const PRE_FFP_SUGAR_MULT = 2.2;
+
+/**
+ * Season-rollover funding for sugar-daddy clubs. Pre-2011 the owner tops the
+ * budget up to the ×2.2 funded level (an ongoing advantage). From 2011 FFP caps
+ * the funding at ×1.4 and clips any excess war chest back to it (logged once per
+ * club). Called before the summer window so the constraint bites the same year.
+ */
+export function applyOwnerFunding(state: GameState): void {
+  const year = Number(state.clock.date.slice(0, 4));
+  for (const club of Object.values(state.clubs)) {
+    if (club.finances.ownership !== 'sugar-daddy') continue;
+    const selfFunded = initialFinances(club.prestige, year, 'sustainable', computeWageBill(state, club.id)).transferBudget;
+
+    if (year < FFP_YEAR) {
+      // Benefactor top-up: guarantee the rich funded floor, keep any surplus.
+      club.finances.transferBudget = Math.max(club.finances.transferBudget, Math.round(selfFunded * PRE_FFP_SUGAR_MULT));
+      continue;
+    }
+
+    // FFP era: a hard ceiling, never a top-up (FFP constrains, it doesn't fund).
+    const cap = Math.round(selfFunded * FFP_SUGAR_HEADROOM);
+    club.finances.transferBudget = Math.min(club.finances.transferBudget, cap);
+    // Announce the regime change once per club, the first FFP-era summer it is
+    // governed — deterministic (calendar-driven), unlike a spend-dependent clip.
+    const key = `ffp:${club.id}`;
+    if (!state.meta.firedScripted.includes(key)) {
+      state.meta.firedScripted.push(key);
+      logEvent(state, {
+        category: 'event',
+        code: 'ffp.constrained',
+        message: `Financial Fair Play now governs ${club.name} — the benefactor's blank cheque is gone`,
+        data: { clubId: club.id, cap },
+      });
+    }
+  }
 }
 
 // ── Increment 2: club pressure → ambition overrides ──────────────────────────
@@ -154,6 +216,16 @@ const CAUSE_PHRASE: Record<keyof ClubPressure, string> = {
   unrest: 'board & fan unrest',
   windfall: 'cash to spend',
   jobSecurity: "the manager's job on the line",
+};
+
+/** News-desk framing of WHY a club broke the bank — for the marquee narrative
+ *  beat, so a statement signing reads like a back-page story, not a ledger row. */
+const CAUSE_NEWS: Record<keyof ClubPressure, string> = {
+  trophyDrought: 'years without silverware demanding an answer',
+  rivalDominance: 'unwilling to keep watching a rival run away with it',
+  unrest: 'a restless boardroom demanding a marquee arrival',
+  windfall: 'a sale war-chest burning a hole',
+  jobSecurity: 'a manager gambling big to save his job',
 };
 
 // ── Tunables (calibrated against the harness — the override SHARE target) ──────
@@ -261,12 +333,27 @@ export function runAmbitionOverrides(state: GameState, rng: Rng): void {
     const res = executeTransfer(state, { playerId: target.id, toClub: club.id, fee });
     if (!res.ok) continue;
 
+    // A genuine statement signing — a wealthy club, or a real star — is a
+    // marquee back-page beat the user should feel, not a quiet ledger row.
+    const marquee = isMoneyClub(club) || target.ability >= 82;
+    const feeM = `£${(fee / 1_000_000).toFixed(0)}m`;
     logEvent(state, {
       category: 'transfer',
       code: 'ambition.override',
-      message: `${club.name} break from the script — ${target.name} signs, driven by ${CAUSE_PHRASE[cause]}`,
-      data: { override: true, clubId: club.id, playerId: target.id, from: fromId, fee, cause },
+      message: marquee
+        ? `STATEMENT SIGNING — ${club.name} break the bank for ${target.name} (${feeM}), ${CAUSE_NEWS[cause]}`
+        : `${club.name} go off-script for ${target.name} (${feeM}), driven by ${CAUSE_PHRASE[cause]}`,
+      data: { override: true, marquee, clubId: club.id, playerId: target.id, from: fromId, fee, cause },
     });
+    // Surface it in the narrative feed (§10) — a rival flexing threads across
+    // seasons, so the world's ambition is something the user tracks and answers.
+    appendMemory(
+      state,
+      'rival-ambition',
+      marquee
+        ? `${club.name} made a statement: ${target.name} signed for ${feeM} — ${CAUSE_NEWS[cause]}.`
+        : `${club.name} moved off the script for ${target.name} (${feeM}).`,
+    );
     state.timeline.divergenceLog.push({
       date: state.clock.date,
       kind: 'butterfly',

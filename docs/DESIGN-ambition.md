@@ -9,6 +9,14 @@
 >   Overrides land at **9.4%** of significant AI transfers (band ~10–15%, fail
 >   >20%); every other active band held (fantasy leaps 0, squad-match 97.7%,
 >   ledger fidelity 100%). **All 17 active targets pass; determinism intact.**
+> - **Follow-ons (shipped):** (a) cross-scenario safety guard — a per-scenario
+>   test locks fantasy-leaps-0 and share-≤20% on all seven non-CI era worlds;
+>   (b) a marquee narrative beat — a statement signing surfaces as a news-desk
+>   event + a `rival-ambition` narrative-memory entry, so a rival flexing threads
+>   across seasons; (c) benefactor funding + Financial Fair Play — sugar-daddy
+>   clubs get an ongoing owner top-up (×2.2) that FFP curbs to ×1.4 from 2011
+>   (inert on man-utd-1999 → byte-identical there), and City is now sugar-daddy in
+>   the 2009/2013 worlds (the 2008 takeover).
 
 M8 is the milestone that makes the *rest of the world* an economic actor. Today
 AI clubs only move players two ways: they execute the real transfer ledger, and

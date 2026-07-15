@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { isMoneyClub, plausibleCeiling, exceedsPlausibleCeiling, updateClubPressure, MONEY_PRESTIGE, CEILING_MARGIN } from './ambition.js';
+import { isMoneyClub, plausibleCeiling, exceedsPlausibleCeiling, updateClubPressure, applyOwnerFunding, MONEY_PRESTIGE, CEILING_MARGIN } from './ambition.js';
 import { createNewGame } from './state.js';
 import { advanceWindow } from './advance.js';
+import { initialFinances } from './finance.js';
 import type { ClubState } from './types.js';
 
 function club(over: Partial<ClubState> & { prestige: number; baseStrength: number }): ClubState {
@@ -67,6 +68,43 @@ describe('M8 ambition — pressure builds under a dominant rival', () => {
       .find((c) => c.id !== state.playerClub && c.prestige >= 80);
     expect(rival?.pressure).toBeDefined();
     expect(rival!.pressure!.rivalDominance).toBeGreaterThan(0);
+  });
+});
+
+describe('M8 ambition — Financial Fair Play (post-2011)', () => {
+  it('pre-2011 the benefactor tops a war chest up (never cuts) and FFP is silent', () => {
+    const state = createNewGame({ seed: 'ffp-pre', scenarioId: 'arsenal-2004' });
+    const chelsea = state.clubs['chelsea']!;
+    expect(chelsea.finances.ownership).toBe('sugar-daddy');
+
+    const richKitty = 400_000_000; // above any FFP cap
+    state.clock.date = '2009-07';
+    chelsea.finances.transferBudget = richKitty;
+    applyOwnerFunding(state);
+    expect(chelsea.finances.transferBudget).toBe(richKitty); // kept — a top-up, not a cut
+    expect(state.eventLog.some((e) => e.code === 'ffp.constrained')).toBe(false);
+  });
+
+  it('from 2011 FFP clips the war chest to the constrained ×1.4 ceiling and announces itself once', () => {
+    const state = createNewGame({ seed: 'ffp-post', scenarioId: 'arsenal-2004' });
+    const chelsea = state.clubs['chelsea']!;
+    const richKitty = 400_000_000;
+
+    state.clock.date = '2014-07';
+    chelsea.finances.transferBudget = richKitty;
+    applyOwnerFunding(state);
+
+    // Clipped well below both the war chest and the old ×2.2 blank cheque.
+    const uncapped = initialFinances(chelsea.prestige, 2014, 'sugar-daddy', chelsea.finances.wageBill).transferBudget;
+    expect(chelsea.finances.transferBudget).toBeLessThan(richKitty);
+    expect(chelsea.finances.transferBudget).toBeLessThan(uncapped);
+
+    // The regime-change event fires exactly once, even across repeated summers.
+    state.clock.date = '2015-07';
+    chelsea.finances.transferBudget = richKitty;
+    applyOwnerFunding(state);
+    const events = state.eventLog.filter((e) => e.code === 'ffp.constrained' && e.data?.clubId === 'chelsea');
+    expect(events).toHaveLength(1);
   });
 });
 
