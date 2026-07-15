@@ -25,6 +25,7 @@ import { Rng } from './rng.js';
 import { suggestWage } from './finance.js';
 import { effectiveAbility } from './adaptation.js';
 import { managerStrengthMod, managerStyleStrengthMod } from './manager.js';
+import { buildAttributes, defaultArchetypeFor } from './attributes.js';
 
 /** Marquee clubs a player might carry as a boyhood/dream pull (§6). */
 const DREAM_POOL: ClubId[] = ['real_madrid', 'barcelona', 'man_utd', 'bayern', 'milan'];
@@ -220,6 +221,7 @@ export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
     resistance: buildResistance(personality, nationality, age, ability, rng),
     agitation: 0,
   };
+  player.attributes = buildAttributes(ability, defaultArchetypeFor(position), position);
   player.wage = suggestWage(player, currentYear);
   return player;
 }

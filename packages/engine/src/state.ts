@@ -29,6 +29,7 @@ import {
 } from './players.js';
 import { processAcademyGraduates } from './development.js';
 import { initialManager } from './manager.js';
+import { buildAttributes, defaultArchetypeFor } from './attributes.js';
 import { initialFinances, suggestWage } from './finance.js';
 import { CURATED_SQUADS } from './data/curated-1999.js';
 
@@ -274,6 +275,8 @@ function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, 
       };
       if (loyalty !== undefined) player.resistance.clubLoyalty = loyalty;
       if (hardBlocks) player.resistance.hardBlocks = hardBlocks.map((b) => ({ ...b }));
+      const pos0 = seed.positions[0] ?? 'CM';
+      player.attributes = buildAttributes(seed.ability, seed.archetype ?? defaultArchetypeFor(pos0), pos0);
       player.wage = suggestWage(player, year);
       state.players[player.id] = player;
       club.squad.push(player.id);

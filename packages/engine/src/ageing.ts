@@ -9,6 +9,7 @@
  */
 
 import type { ClubState, GameState, PlayerState, Position } from './types.js';
+import { setPlayerAbility } from './attributes.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { clubSquadPlayers, recomputeClubStrength, generatePlayer } from './players.js';
@@ -267,7 +268,7 @@ export function processSeasonAgeing(state: GameState, rng: Rng): void {
         });
       }
 
-      player.ability = Math.max(28, player.ability - drop);
+      setPlayerAbility(player, Math.max(28, player.ability - drop));
       player.potentialCeiling = Math.max(player.ability, player.potentialCeiling);
       changed = true;
     }

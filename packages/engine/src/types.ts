@@ -142,6 +142,14 @@ export interface LeagueState {
 
 export type Position = 'GK' | 'CB' | 'LB' | 'RB' | 'DM' | 'CM' | 'AM' | 'LW' | 'RW' | 'ST';
 
+/** The eight hidden attributes (docs/DESIGN-player-attributes.md). A player's
+ *  TYPE. From Phase 3 these are stored, evolving state; `ability` is maintained as
+ *  their position-weighted roll-up (attributes.ts). */
+export type AttributeKey =
+  | 'finishing' | 'passing' | 'technique' | 'defending'
+  | 'pace' | 'physical' | 'vision' | 'workrate';
+export type Attributes = Record<AttributeKey, number>;
+
 /** Personality traits, 1–10 each (§4). Hidden from the user; partially
  *  revealed pre-signing via interviews/references (§7). */
 export interface Personality {
@@ -185,12 +193,14 @@ export interface PlayerState {
   injuryProneness: number; // 1–100 baseline, history-modified (M4)
 
   /** PLAYER TYPE (docs/DESIGN-player-attributes.md). An optional archetype tag
-   *  ('poacher', 'ball-playing-cb', 'destroyer'…) from which his hidden attribute
-   *  vector is DERIVED (see attributes.ts `attributesOf`); absent ⇒ a sensible
-   *  default by position. The vector never feeds `ability` in Phase 1, so it is
-   *  calibration-inert — it only shapes style-fit, player-type development and
-   *  scouting. Curated seeds may set it; procedural filler uses the default. */
+   *  ('poacher', 'ball-playing-cb', 'destroyer'…) that seeds his attribute vector;
+   *  absent ⇒ a sensible default by position. Curated seeds may set it. */
   archetype?: string;
+  /** Hidden 8-attribute vector (Phase 3). Stored, evolving state whose
+   *  position-weighted roll-up equals `ability`; the profile skews over a career
+   *  under different coaches. Optional for old saves / bare fixtures, where it is
+   *  derived on demand from `ability` + `archetype` (attributes.ts `attributesOf`). */
+  attributes?: Attributes;
 
   /** True for hand-authored real players; false for procedural filler. */
   curated: boolean;

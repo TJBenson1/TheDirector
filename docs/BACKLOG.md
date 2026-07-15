@@ -231,15 +231,19 @@ The player IS the Director; the head coach is a hired agent (`manager.ts`,
 - **Still to do (deferred by design):**
   - **Manager tenure narrative:** trophies/relationships accruing to a coach's
     reputation; a sacked big name resurfacing at a rival.
-  - ✅ **Richer player attributes — Phase 1 shipped** (`attributes.ts`; see
-    `docs/DESIGN-player-attributes.md`): an 8-attribute vector derived on demand
-    from `ability` + archetype, so it's calibration-inert (14/14 byte-identical).
-    Style-fit and player-type development now read real attributes, not position;
-    scouting returns per-attribute ranges. **Phase 2 started**: ~58 marquee players
-    tagged with real archetypes (Beckham a crosser, Cannavaro/Pirlo re-typed, etc.)
-    + 3 new archetypes; the long tail keeps position defaults until tagged (pure,
-    incremental data). **Phase 3** (optional) — make the vector authoritative and
-    derive `ability` from it.
+  - ✅ **Richer player attributes — Phases 1–3 shipped** (`attributes.ts`; see
+    `docs/DESIGN-player-attributes.md`): an 8-attribute vector for a player's TYPE.
+    **Phase 1**: vector derived on demand from `ability` + archetype; style-fit and
+    player-type development now read real attributes, not position; scouting returns
+    per-attribute ranges. **Phase 2**: ~58 marquee players tagged with real archetypes
+    (Beckham a crosser, Cannavaro/Pirlo re-typed, etc.) + 3 new archetypes; the long
+    tail keeps position defaults until tagged. **Phase 3**: the vector is now STORED
+    and authoritative, `ability` is its maintained roll-up — every ability mutation
+    routes through `setPlayerAbility` (rescales the vector, re-pins ability to the
+    exact same target), so ability trajectories are unchanged and calibration stays
+    byte-identical (14/14). First shape-driven effect: a prospect's TYPE drifts toward
+    his head coach's philosophy (`applyCoachSkew`, par-anchored so a kept coach is
+    inert). Long tail of curated players still keeps position defaults until tagged.
 
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the

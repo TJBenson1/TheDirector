@@ -14,14 +14,9 @@
  * derived attributes roll BACK UP to (approximately) his `ability`.
  */
 
-import type { Position } from './types.js';
+import type { Position, PlayerState, Attributes, AttributeKey } from './types.js';
 
-export type AttributeKey =
-  | 'finishing' | 'passing' | 'technique' | 'defending' // technical
-  | 'pace' | 'physical' // physical
-  | 'vision' | 'workrate'; // mental
-
-export type Attributes = Record<AttributeKey, number>;
+export type { Attributes, AttributeKey } from './types.js';
 
 export const ATTRIBUTE_KEYS: AttributeKey[] = [
   'finishing', 'passing', 'technique', 'defending', 'pace', 'physical', 'vision', 'workrate',
@@ -115,10 +110,66 @@ export function deriveAbility(attrs: Attributes, position: Position): number {
   return Math.round(sum);
 }
 
-/** The (derived) attribute vector of a player — his TYPE at his current level. */
-export function attributesOf(player: { ability: number; positions: Position[]; archetype?: string }): Attributes {
+/** A player's attribute vector — his TYPE. Stored, evolving state from Phase 3;
+ *  falls back to deriving from ability+archetype for old saves / bare fixtures. */
+export function attributesOf(player: { ability: number; positions: Position[]; archetype?: string; attributes?: Attributes }): Attributes {
+  if (player.attributes) return player.attributes;
   const pos = player.positions[0] ?? 'CM';
   return fillVector(player.ability, player.archetype ?? defaultArchetypeFor(pos), pos);
+}
+
+/** Nudge a vector by ±1 (highest-weight attributes first) until it rolls up to
+ *  exactly `target` for the position. Always converges within a few steps. */
+function correctToTarget(v: Attributes, target: number, position: Position): void {
+  const w = POS_WEIGHTS[position];
+  const order = ATTRIBUTE_KEYS.slice().sort((a, b) => w[b] - w[a]);
+  for (let guard = 0; guard < 300 && deriveAbility(v, position) !== target; guard++) {
+    const up = target > deriveAbility(v, position);
+    const k = order.find((key) => (up ? v[key] < 99 : v[key] > 1));
+    if (!k) break;
+    v[k] += up ? 1 : -1;
+  }
+}
+
+/** Build a STORED vector for a player whose roll-up equals `ability` exactly. */
+export function buildAttributes(ability: number, archetype: string, position: Position): Attributes {
+  const v = fillVector(ability, archetype, position);
+  correctToTarget(v, ability, position);
+  return v;
+}
+
+/**
+ * Move a player to a target ability by rescaling his attribute vector to roll up
+ * to it (Phase 3: the vector is authoritative, ability is its roll-up). The
+ * profile's SHAPE is preserved (proportional scale), so a player who has skewed
+ * technical/athletic over his career keeps that identity as he grows or declines.
+ * `ability` is then pinned to the exact target, so this is calibration-identical
+ * to a direct `ability =` assignment. A player with no stored vector (old save /
+ * bare fixture) just gets the ability set.
+ */
+export function setPlayerAbility(player: PlayerState, target: number): void {
+  const t = Math.round(target);
+  if (player.attributes) {
+    const pos = player.positions[0] ?? 'CM';
+    const cur = deriveAbility(player.attributes, pos);
+    if (cur !== t) {
+      const factor = t / Math.max(1, cur);
+      for (const k of ATTRIBUTE_KEYS) player.attributes[k] = clampAttr(player.attributes[k] * factor);
+      correctToTarget(player.attributes, t, pos);
+    }
+  }
+  player.ability = t;
+}
+
+/** Skew a profile toward a coaching philosophy (Phase 3 evolution): a positive
+ *  `lean` (a more possession-minded coach than the club had) grows the technical
+ *  attributes and trims the athletic ones; negative reverses it. `amount` is the
+ *  per-season shift. The overall level is NOT changed here — callers re-pin the
+ *  roll-up to the player's ability afterwards — so this only reshapes his TYPE. */
+export function skewProfile(a: Attributes, lean: number, amount: number): void {
+  const shift = lean * amount;
+  for (const k of ['passing', 'technique', 'vision'] as AttributeKey[]) a[k] = clampAttr(a[k] + shift);
+  for (const k of ['pace', 'physical'] as AttributeKey[]) a[k] = clampAttr(a[k] - shift);
 }
 
 /** Ball-playing index: how much a player is about keeping and using the ball —

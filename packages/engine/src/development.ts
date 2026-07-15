@@ -18,6 +18,7 @@
  */
 
 import type { ClubId, ClubState, GameState, PlayerState, Position } from './types.js';
+import { setPlayerAbility, skewProfile } from './attributes.js';
 import { Rng, clamp01 } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { clubSquadPlayers, recomputeClubStrength, buildResistance } from './players.js';
@@ -122,7 +123,9 @@ export function processSeasonDevelopment(state: GameState, rng: Rng): void {
       const devMax = player.curated ? 27 : DEV_AGE_MAX;
       const hasLatent = player.latentCeiling !== undefined && player.latentCeiling > player.potentialCeiling;
       if (age <= devMax && (player.ability < player.potentialCeiling || hasLatent)) {
-        changed = developYoungster(state, club, player, age, devRng) || changed;
+        const grew = developYoungster(state, club, player, age, devRng);
+        if (grew) applyCoachSkew(state, club, player);
+        changed = grew || changed;
       } else if (age >= 25 && player.ability >= 82) {
         lifestyleDeclineCheck(state, club, player, devRng);
         changed = true;
@@ -137,6 +140,29 @@ export function processSeasonDevelopment(state: GameState, rng: Rng): void {
     }
     if (changed && club.leagueId !== null) recomputeClubStrength(state, club.id);
   }
+}
+
+/** Per-season shift a full-swing coaching philosophy imparts to a developing
+ *  player's TYPE. The lean is on the possession axis ([-1..1] once par-relative),
+ *  so a modest amount compounds into a real reshaping over a spell. */
+const COACH_SKEW_AMOUNT = 3;
+
+/**
+ * A developing player's TYPE drifts toward the head coach's footballing
+ * philosophy (Phase-3 evolution): a more possession-minded coach than the club
+ * had grows his technical attributes and trims the athletic ones; a pragmatist
+ * does the reverse. Only the SHAPE moves — his ability is re-pinned to the exact
+ * value he just developed to — so the match sim (which reads ability) is
+ * unaffected. This is measured against the coach's `parStyle`, so a kept
+ * inherited coach imparts no lean and the harness stays byte-identical.
+ */
+function applyCoachSkew(state: GameState, club: ClubState, player: PlayerState): void {
+  if (club.id !== state.playerClub || !player.attributes) return;
+  const mr = state.managerRelations;
+  const lean = mr.style.possession - mr.parStyle.possession;
+  if (lean === 0) return;
+  skewProfile(player.attributes, lean, COACH_SKEW_AMOUNT);
+  setPlayerAbility(player, player.ability); // re-pin the roll-up: reshape TYPE, keep level
 }
 
 function developYoungster(
@@ -191,7 +217,7 @@ function developYoungster(
     // Rare friction for the unprofessional, never a hard wall.
     if (per.professionalism <= 5 && rng.chance(0.15)) delta = Math.max(0, delta - 1);
     if (delta > 0) {
-      player.ability = Math.min(player.potentialCeiling, player.ability + delta);
+      setPlayerAbility(player, Math.min(player.potentialCeiling, player.ability + delta));
       return true;
     }
     return false;
@@ -220,12 +246,12 @@ function developYoungster(
   if (rng.chance(stallChance)) {
     player.potentialCeiling = Math.max(player.ability, player.potentialCeiling - 2);
     if (player.ability >= 78 && per.professionalism <= 5 && rng.chance(0.35)) {
-      player.ability = Math.max(40, player.ability - rng.int(1, 3));
+      setPlayerAbility(player, Math.max(40, player.ability - rng.int(1, 3)));
     }
     return true;
   }
   if (delta > 0) {
-    player.ability = Math.min(player.potentialCeiling, player.ability + delta);
+    setPlayerAbility(player, Math.min(player.potentialCeiling, player.ability + delta));
     return true;
   }
   return false;
@@ -373,7 +399,7 @@ function lifestyleDeclineCheck(
   const p = 0.02 * (8 - prof) * (0.6 + vol / 20) * success;
   if (rng.chance(p)) {
     const drop = rng.int(3, 7);
-    player.ability = Math.max(40, player.ability - drop);
+    setPlayerAbility(player, Math.max(40, player.ability - drop));
     player.potentialCeiling = Math.max(player.ability, player.potentialCeiling - Math.round(drop / 2));
     logEvent(state, {
       category: 'development',

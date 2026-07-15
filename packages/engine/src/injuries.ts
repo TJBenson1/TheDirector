@@ -14,6 +14,7 @@
  */
 
 import type { GameState, InjuryKind, PlayerState } from './types.js';
+import { setPlayerAbility } from './attributes.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { isRunInMonth } from './clock.js';
@@ -158,7 +159,7 @@ export function processInjuriesMonth(state: GameState, rng: Rng): void {
           player.injury = null;
           player.fitness = RETURN_FITNESS;
           if (wasSerious) {
-            player.ability = Math.max(30, player.ability - injRng.int(...SERIOUS_ABILITY_HIT));
+            setPlayerAbility(player, Math.max(30, player.ability - injRng.int(...SERIOUS_ABILITY_HIT)));
             player.potentialCeiling = Math.max(
               player.ability,
               player.potentialCeiling - injRng.int(...SERIOUS_CEILING_HIT),

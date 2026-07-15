@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createNewGame } from './state.js';
 import { applyDecision } from './events.js';
 import { advanceWindow } from './advance.js';
+import { buildAttributes } from './attributes.js';
 import {
   directorSackManager,
   performSack,
@@ -345,18 +346,15 @@ describe('management style reflects reality (Mourinho is Mourinho, Pep is Pep)',
 
   it('a style is judged by the PLAYER TYPES in the squad, not their positions', () => {
     const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'fit' });
-    // Build a TECHNICAL squad (ball-players everywhere, whatever the position).
-    for (const p of clubSquadPlayers(s, s.playerClub)) {
-      if ((p.positions[0] ?? 'CM') !== 'GK') p.archetype = 'playmaker';
-    }
+    // Re-type the whole squad as TECHNICAL ball-players (Phase 3: set the stored
+    // attribute vector, not just the archetype tag).
+    retype(s, 'playmaker');
     const possession = coachStyle('Pep Guardiola');
     const pragmatic = coachStyle('Sam Allardyce');
     // A possession coach gets more out of a technical squad than a route-one one.
     expect(styleMatchAffinity(s, possession)).toBeGreaterThan(styleMatchAffinity(s, pragmatic));
-    // Now re-type them as physical destroyers — the fit flips to the pragmatist.
-    for (const p of clubSquadPlayers(s, s.playerClub)) {
-      if ((p.positions[0] ?? 'CM') !== 'GK') p.archetype = 'stopper';
-    }
+    // Re-type them as physical destroyers — the fit flips to the pragmatist.
+    retype(s, 'stopper');
     expect(styleMatchAffinity(s, pragmatic)).toBeGreaterThan(styleMatchAffinity(s, possession));
   });
 
@@ -371,9 +369,7 @@ describe('management style reflects reality (Mourinho is Mourinho, Pep is Pep)',
   it('appointing a style that suits your squad adds strength; a mismatch subtracts', () => {
     const base = createNewGame({ scenarioId: 'liverpool-2001', seed: 'stylefit' });
     // A technically-gifted squad (ball-players throughout).
-    for (const p of clubSquadPlayers(base, base.playerClub)) {
-      if ((p.positions[0] ?? 'CM') !== 'GK') p.archetype = 'playmaker';
-    }
+    retype(base, 'playmaker');
     // Appoint Pep (possession) — fits — vs Allardyce (direct) — misfit.
     const withPep = cloneStyle(base, 'Pep Guardiola');
     const withBig = cloneStyle(base, 'Sam Allardyce');
@@ -394,6 +390,17 @@ function advanceToCrossroads(start: GameState, coach: string): { state: GameStat
     if (s.board.dismissed) break;
   }
   return { state: s, decision: undefined };
+}
+
+/** Re-type every outfield player to an archetype (Phase 3: rebuild the stored
+ *  attribute vector, since attributes are authoritative, not the archetype tag). */
+function retype(s: GameState, archetype: string): void {
+  for (const p of clubSquadPlayers(s, s.playerClub)) {
+    const pos = p.positions[0] ?? 'CM';
+    if (pos === 'GK') continue;
+    p.archetype = archetype;
+    p.attributes = buildAttributes(p.ability, archetype, pos);
+  }
 }
 
 /** Clone a state and swap in a coach's style (leaving parStyle as the inherited

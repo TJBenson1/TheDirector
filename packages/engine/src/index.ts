@@ -108,6 +108,8 @@ export {
 } from './scouting.js';
 export {
   attributesOf,
+  buildAttributes,
+  setPlayerAbility,
   fillVector,
   deriveAbility,
   defaultArchetypeFor,

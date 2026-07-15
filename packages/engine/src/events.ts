@@ -22,6 +22,7 @@ import type {
   PlayerState,
 } from './types.js';
 import { Rng } from './rng.js';
+import { setPlayerAbility } from './attributes.js';
 import { logEvent } from './eventLog.js';
 import { cloneState } from './state.js';
 import { eventsSince } from './eventLog.js';
@@ -54,7 +55,7 @@ export function applyConsequence(state: GameState, c: Consequence): void {
     }
     case 'ability': {
       const p = c.playerId ? state.players[c.playerId] : undefined;
-      if (p) p.ability = clamp(p.ability + (c.amount ?? 0), 20, 99);
+      if (p) setPlayerAbility(p, clamp(p.ability + (c.amount ?? 0), 20, 99));
       break;
     }
     case 'boardPatience':
@@ -153,7 +154,7 @@ export function applyConsequence(state: GameState, c: Consequence): void {
         p.injury = { kind: 'serious', monthsRemaining: months, since: state.clock.date };
         p.injuryHistory += 1;
         p.injuryProneness = clamp(p.injuryProneness + 15, 5, 95);
-        p.ability = clamp(p.ability - 2, 20, 99);
+        setPlayerAbility(p, clamp(p.ability - 2, 20, 99));
         if (p.club) recomputeClubStrength(state, p.club);
         logEvent(state, {
           category: 'injury',

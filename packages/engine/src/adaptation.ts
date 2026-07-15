@@ -21,6 +21,7 @@ import type {
   PlayerState,
 } from './types.js';
 import { Rng } from './rng.js';
+import { setPlayerAbility } from './attributes.js';
 import { logEvent } from './eventLog.js';
 import { styleForClub, styleKeyForClub, styleDistance } from './leaguestyle.js';
 
@@ -113,12 +114,12 @@ export function resolveAdaptationSeason(state: GameState, rng: Rng): void {
       // Struggled, then bloomed — full ability retained.
       player.adaptation = { ...a, penalty: 0, settled: true };
     } else if (a.outcome === 'partial') {
-      player.ability = Math.max(30, player.ability - 2);
+      setPlayerAbility(player, Math.max(30, player.ability - 2));
       player.adaptation = { ...a, penalty: 0, settled: true };
     } else {
       // Failure: never realised in this context.
       const cut = r.int(5, 9);
-      player.ability = Math.max(30, player.ability - cut);
+      setPlayerAbility(player, Math.max(30, player.ability - cut));
       player.potentialCeiling = Math.max(player.ability, player.potentialCeiling - cut);
       player.adaptation = { ...a, penalty: 0, settled: true };
       const club = player.club ? state.clubs[player.club] : undefined;

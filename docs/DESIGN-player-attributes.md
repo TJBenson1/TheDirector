@@ -1,6 +1,6 @@
 # DESIGN — Richer player attributes
 
-> **Status: Phase 1 SHIPPED (2026-07); Phases 2–3 queued.** A foundational change
+> **Status: Phases 1–3 SHIPPED (2026-07).** A foundational change
 > to the player model:
 > replace the single hidden `ability` scalar's role as the *only* descriptor of a
 > player with a small **attribute vector** (technical / physical / mental), so
@@ -155,10 +155,20 @@ it. Deterministic (same RNG), so save/replay is unaffected.
   archetypes to cover real gaps (`crosser`, `covering-cb`, `inside-forward`). Pure
   data, calibration byte-identical. **Still incremental** — the long tail of
   curated players keeps its position defaults until tagged.
-- **Phase 3 — optional source-of-truth flip.** Make the vector authoritative and
-  derive `ability` from it live (so an attribute change *moves* ability). Larger:
-  re-point the 85 readers conceptually (they still read `ability`, now computed),
-  re-verify calibration end-to-end. Only worth it if Phase 1/2 prove the model.
+- ✅ **Phase 3 — vector becomes authoritative (SHIPPED).** `attributes` is now a
+  STORED field on `PlayerState`; `ability` is its maintained roll-up. `buildAttributes`
+  populates the vector at squad build (curated + procedural), and every ability
+  mutation across the engine (development, injuries, ageing, adaptation, events)
+  routes through `setPlayerAbility`, which rescales the vector proportionally to the
+  new target and re-pins `ability` to the exact same value the old `ability =`
+  assignment would have set. Because ability trajectories are unchanged by
+  construction, the sim (which still reads `ability`) is **byte-identical** — the
+  vector is now *carried and reshaped* rather than re-derived each read. The first
+  effect that keys off the stored shape: a developing player's TYPE drifts toward
+  his head coach's philosophy (`applyCoachSkew` in development.ts — a possession
+  coach grows a prospect's technical attributes and trims the athletic ones;
+  measured against the coach's `parStyle`, so a kept inherited coach imparts no
+  lean and the harness stays byte-identical). **Calibration 14/14; 235 tests.**
 
 ## 7. Risks & open questions
 
