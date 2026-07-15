@@ -13,9 +13,29 @@ import type { ClubId, GameState, PlayerId } from './types.js';
 import { parseYearMonth } from './clock.js';
 import { styleKeyForClub } from './leaguestyle.js';
 import { poleSuitorFor } from './wooing.js';
+import { clubSquadPlayers } from './players.js';
 
 /** Willingness at/above which a player will consider a move at a fair package. */
 export const WILLINGNESS_THRESHOLD = 50;
+
+// The magnet effect (§ galáctico pull): a club that already holds a genuine
+// superstar is a more alluring destination — players want to play alongside the
+// best, so a Ronaldo (however he got there — reality or a butterfly that diverted
+// him) draws OTHER stars toward his club and helps it win contested moves. Bounded
+// so a super-club forms believably (the real Galácticos) without snowballing into
+// an everyone-signs-here fantasy.
+const MAGNET_ABILITY = 90;
+const MAGNET_WEIGHT = 1.8;
+const MAGNET_MAX = 14;
+
+/** A club's pull from the superstars it already fields (0 if it has none). */
+export function magnetPull(state: GameState, clubId: ClubId): number {
+  let m = 0;
+  for (const p of clubSquadPlayers(state, clubId)) {
+    if (p.ability >= MAGNET_ABILITY) m += p.ability - MAGNET_ABILITY + 1;
+  }
+  return Math.min(MAGNET_MAX, m * MAGNET_WEIGHT);
+}
 
 /** Direct rivalries — sales across these carry near-absolute player resistance. */
 const RIVALRIES: Array<[ClubId, ClubId]> = [
@@ -102,6 +122,7 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
   // 2) Pull — the buyer's appeal.
   let pull = 45;
   if (fromClub) pull += (buyer.prestige - fromClub.prestige) * 0.9; // moving up appeals
+  pull += magnetPull(state, buyer.id); // play alongside a galáctico (§ magnet)
   if (res.dreamClubs.includes(input.toClub)) pull += 35; // boyhood dream
   const wageOffer = input.wageOffer ?? player.wage;
   pull += Math.max(-15, Math.min(20, ((wageOffer - player.wage) / Math.max(player.wage, 1)) * 30));

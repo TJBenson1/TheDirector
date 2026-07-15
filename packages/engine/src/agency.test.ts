@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createNewGame, cloneState } from './state.js';
-import { evaluateApproach, wouldAcceptMove, areRivals, areDirectRivals } from './agency.js';
-import { attemptSigning } from './transfers.js';
+import { evaluateApproach, wouldAcceptMove, areRivals, areDirectRivals, magnetPull } from './agency.js';
+import { attemptSigning, executeTransfer } from './transfers.js';
 import type { GameState } from './types.js';
 
 function find(state: GameState, name: string) {
@@ -119,5 +119,29 @@ describe('player agency & resistance (§6)', () => {
     // Depth behind him is procedural (anonymous).
     const newcastleProcedural = state.clubs.newcastle!.squad.filter((id) => !state.players[id]!.curated);
     expect(newcastleProcedural.length).toBeGreaterThan(15);
+  });
+});
+
+describe('the magnet effect (§ galáctico pull)', () => {
+  it('a club fielding a superstar draws other stars more strongly', () => {
+    const state = cloneState(createNewGame({ scenarioId: 'man-utd-2013', seed: 'magnet' }));
+    state.clubs.man_utd!.finances.transferBudget = 500_000_000;
+    // A quality target at a neutral (non-rival, foreign) club.
+    const target = find(state, 'Iker Casillas');
+    const req = { playerId: target.id, toClub: 'man_utd' as const, wageOffer: target.wage * 2 };
+    const before = evaluateApproach(state, req).willingness;
+    // United land a genuine galáctico (Ronaldo, 93) — however he got there.
+    executeTransfer(state, { playerId: 'cur_ronaldo2', toClub: 'man_utd', fee: 100_000_000 });
+    const after = evaluateApproach(state, req).willingness;
+    expect(after).toBeGreaterThan(before);
+  });
+
+  it('the pull comes only from genuine superstars, and is bounded', () => {
+    const state = cloneState(createNewGame({ scenarioId: 'man-utd-2013', seed: 'nomagnet' }));
+    // Real Madrid (Ronaldo, 93) is a magnet; Spurs, with no 90+ player, is not.
+    expect(magnetPull(state, 'real_madrid')).toBeGreaterThan(0);
+    expect(magnetPull(state, 'spurs')).toBe(0);
+    // It never runs away — even a stacked side stays within the cap.
+    expect(magnetPull(state, 'real_madrid')).toBeLessThanOrEqual(14);
   });
 });
