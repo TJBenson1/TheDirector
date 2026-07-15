@@ -171,7 +171,10 @@ export const ENGLAND_2001: LeagueSeed = {
     { id: 'bolton', name: 'Bolton Wanderers', prestige: 52, strength: 61 },
     { id: 'sunderland', name: 'Sunderland', prestige: 56, strength: 62 },
     { id: 'ipswich', name: 'Ipswich Town', prestige: 50, strength: 60 },
-    { id: 'derby', name: 'Derby County', prestige: 50, strength: 58 },
+    // Man City were a season from the top flight in 2001 (promoted 2002); included
+    // a year early and weak so their takeover-era arc can lift them into the title
+    // race, as it really did, rather than leaving them stranded in the lower leagues.
+    { id: 'man_city', name: 'Manchester City', prestige: 62, strength: 62 },
     { id: 'leicester', name: 'Leicester City', prestige: 52, strength: 59 },
   ],
 };
