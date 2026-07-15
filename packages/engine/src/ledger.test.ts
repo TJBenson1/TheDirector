@@ -108,6 +108,24 @@ describe('more start points (§4 data)', () => {
     expect(s.players.cur_makelele?.club).toBe('real_madrid'); // kept, not sold to Chelsea
   });
 
+  it("a star's real departure INTERRUPTS — a marquee player is never sold to inattention", () => {
+    let s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'star-out' });
+    let starExitInterrupted = false;
+    for (let i = 0; i < 12 && Number(s.clock.date.slice(0, 4)) < 2005; i++) {
+      for (const d of [...s.pendingDecisions]) {
+        // Makélélé (85) leaving is a star exit — it must force a conscious call.
+        if (d.id.startsWith('real-out:') && d.title.includes('Makélélé')) {
+          expect(d.interrupt).toBe(true);
+          starExitInterrupted = true;
+        }
+        s = applyDecision(s, d.id, d.choices[0]!.id).state;
+      }
+      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 30; }
+      s = advanceWindow(s).state;
+    }
+    expect(starExitInterrupted).toBe(true);
+  });
+
   it('the Invincibles Arsenal start builds a real 2004-05 league and squad', () => {
     const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'inv' });
     expect(s.playerClub).toBe('arsenal');

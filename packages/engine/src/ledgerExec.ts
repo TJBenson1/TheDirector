@@ -229,11 +229,16 @@ function offerUserLedgerMove(state: GameState, entry: RealTransferLedgerEntry, k
   if (!player || player.club !== state.playerClub) return; // already gone / not ours
   const buyer = state.clubs[entry.to];
   if (buyer) buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, entry.fee);
+  // A genuine STAR's exit forces a conscious call — you never lose a marquee player
+  // to a window you weren't watching. (Reality-default is preserved: sell is still
+  // there, and it remains the ignore fallout; the interrupt just guarantees you SEE
+  // it.) A squad player's real move stays a soft, ignore-to-reality decision.
+  const isStar = player.ability >= 85;
   state.pendingDecisions.push({
     id: `real-out:${key}`,
     title: `${buyer?.name ?? entry.to} bid £${feeM}m for ${player.name} (his real move)`,
     description: `This is the window ${player.name} really left for ${buyer?.name ?? entry.to}. Sanction the sale, or keep him — he wanted the move, so refusing will unsettle him.`,
-    interrupt: false,
+    interrupt: isStar,
     clubId: state.playerClub,
     category: 'transfer',
     choices: [
