@@ -46,9 +46,8 @@ function clStrength(state: GameState, id: ClubId): number {
 type RealFinal = { w: ClubId; r?: ClubId };
 const REAL_UCL: Record<string, Record<number, RealFinal>> = {
   'era-serie-a-1995': {
-    // With Man Utd and Liverpool now in the pack, only Porto's 2004 win falls
-    // outside it (no Porto here) and defaults to field sim; every other final is
-    // anchored to reality.
+    // With Man Utd, Liverpool and Porto now in the pack, every European Cup of the
+    // scenario's span is anchored to its real winner.
     1995: { w: 'juventus', r: 'ajax' },
     1996: { w: 'dortmund', r: 'juventus' },
     1997: { w: 'real_madrid', r: 'juventus' },
@@ -57,6 +56,7 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2000: { w: 'bayern' },
     2001: { w: 'real_madrid' },
     2002: { w: 'milan', r: 'juventus' },
+    2003: { w: 'porto', r: 'monaco' },
     2004: { w: 'liverpool', r: 'milan' },
     2005: { w: 'barcelona', r: 'arsenal' },
     2006: { w: 'milan', r: 'liverpool' },
@@ -84,10 +84,11 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2014: { w: 'barcelona', r: 'juventus' },
   },
   'era-2001': {
-    // Real finalists 2002–2016 among clubs in the pack (2004 Porto/Monaco and the
-    // 2013 Dortmund runner-up fall outside it, so those years default to field sim).
+    // Real finalists 2002–2016; every winner's club is now in the pack (Porto
+    // included), so only the 2013 Dortmund runner-up falls outside it.
     2001: { w: 'real_madrid' },
     2002: { w: 'milan', r: 'juventus' },
+    2003: { w: 'porto', r: 'monaco' },
     2004: { w: 'liverpool', r: 'milan' },
     2005: { w: 'barcelona', r: 'arsenal' },
     2006: { w: 'milan', r: 'liverpool' },

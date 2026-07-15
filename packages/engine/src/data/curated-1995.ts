@@ -308,6 +308,24 @@ export const KYIV_1995: CuratedSeed[] = [
   q('dynamo_kyiv', 'rebrov', 'Serhiy Rebrov', 1974, 'Ukraine', ['ST'], 80, 84, 1999, 30, t(8, 6, 8, 7, 5, 7)),
 ];
 
+// FC Porto — in the pack so Mourinho's 2004 European Cup (the one final of the run
+// not taken by a giant) can be anchored to reality rather than defaulting to sim.
+// The starting XI is Bobby Robson's 1995-96 champions; the club endures to 2004.
+export const PORTO_1995: CuratedSeed[] = [
+  q('porto', 'baia_po95', 'Vítor Baía', 1969, 'Portugal', ['GK'], 82, 83, 1999, 25, t(8, 6, 7, 9, 5, 6)),
+  q('porto', 'joaopinto_po95', 'João Pinto', 1961, 'Portugal', ['RB'], 76, 76, 1997, 25, t(8, 5, 7, 9, 4, 6)),
+  q('porto', 'jorgecosta_po95', 'Jorge Costa', 1971, 'Portugal', ['CB'], 76, 80, 2000, 30, t(8, 6, 8, 9, 5, 6)),
+  q('porto', 'aloisio_po95', 'Aloísio', 1963, 'Brazil', ['CB'], 76, 76, 1997, 30, t(8, 5, 7, 7, 5, 6)),
+  q('porto', 'ruijorge_po95', 'Rui Jorge', 1973, 'Portugal', ['LB'], 75, 78, 1999, 25, t(8, 4, 7, 7, 4, 7)),
+  q('porto', 'secretario_po95', 'Secretário', 1976, 'Portugal', ['RB'], 74, 78, 2000, 25, t(8, 4, 7, 7, 4, 7)),
+  q('porto', 'emerson_po95', 'Emerson', 1972, 'Brazil', ['DM', 'CM'], 77, 79, 1998, 30, t(7, 5, 7, 6, 5, 7)),
+  q('porto', 'paulinho_po95', 'Paulinho Santos', 1972, 'Portugal', ['CM'], 75, 77, 1998, 25, t(8, 4, 7, 8, 4, 7)),
+  q('porto', 'ruibarros_po95', 'Rui Barros', 1965, 'Portugal', ['AM'], 78, 78, 1997, 30, t(8, 6, 7, 8, 5, 7)),
+  q('porto', 'drulovic_po95', 'Ljubinko Drulović', 1968, 'Serbia', ['LW', 'RW'], 77, 78, 1998, 30, t(7, 5, 7, 6, 5, 7)),
+  q('porto', 'domingos_po95', 'Domingos Paciência', 1969, 'Portugal', ['ST'], 79, 80, 1998, 30, t(8, 6, 8, 8, 5, 6)),
+  q('porto', 'jardel_po95', 'Mário Jardel', 1973, 'Brazil', ['ST'], 80, 85, 2000, 30, t(7, 7, 8, 6, 5, 7)),
+  q('porto', 'folha_po95', 'Rui Filipe', 1970, 'Portugal', ['CM', 'DM'], 72, 74, 1998, 25, t(8, 4, 6, 7, 4, 7)),
+];
 export const BAYERN_1995: CuratedSeed[] = [
   q('bayern', 'kahn_95', 'Oliver Kahn', 1969, 'Germany', ['GK'], 84, 88, 2000, 20, t(9, 7, 9, 9, 5, 6)),
   q('bayern', 'matthaus', 'Lothar Matthäus', 1961, 'Germany', ['DM', 'CB'], 84, 84, 1998, 25, t(8, 8, 9, 7, 5, 7)),
@@ -325,6 +343,7 @@ export const CONTEXT_1995_SQUADS: Record<string, CuratedSeed[]> = {
   bayern: BAYERN_1995,
   man_utd: MANUTD_1995,
   liverpool: LIVERPOOL_1995,
+  porto: PORTO_1995,
   chelsea: CHELSEA_1995,
   newcastle: NEWCASTLE_1995,
   middlesbrough: MIDDLESBROUGH_1995,

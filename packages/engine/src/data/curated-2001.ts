@@ -297,12 +297,49 @@ export const MILAN_2001: CuratedSeed[] = [
   q('milan', 'javimoreno_mi01', 'Javi Moreno', 1974, 'Spain', ['ST'], 76, 78, 2004, 30, t(7, 6, 7, 6, 6, 7)),
 ];
 
+/**
+ * Porto & Monaco — the 2003–04 finalists, so Mourinho's miracle (the one European
+ * Cup of the era not won by a giant) is in the field and can be anchored to reality.
+ */
+export const PORTO_2001: CuratedSeed[] = [
+  q('porto', 'baia_po01', 'Vítor Baía', 1969, 'Portugal', ['GK'], 82, 82, 2005, 25, t(8, 6, 7, 9, 5, 6)),
+  q('porto', 'ferreira_po01', 'Paulo Ferreira', 1979, 'Portugal', ['RB'], 79, 82, 2006, 25, t(8, 4, 7, 7, 4, 7)),
+  q('porto', 'carvalho_po01', 'Ricardo Carvalho', 1978, 'Portugal', ['CB'], 84, 86, 2006, 25, t(8, 5, 8, 6, 5, 7)),
+  q('porto', 'jorgecosta_po01', 'Jorge Costa', 1971, 'Portugal', ['CB'], 78, 79, 2004, 30, t(8, 6, 8, 9, 5, 6), { loyalty: 90 }),
+  q('porto', 'valente_po01', 'Nuno Valente', 1974, 'Portugal', ['LB'], 77, 78, 2005, 25, t(8, 4, 7, 7, 4, 7)),
+  q('porto', 'costinha_po01', 'Costinha', 1974, 'Portugal', ['DM'], 80, 82, 2005, 30, t(8, 5, 7, 6, 5, 7)),
+  q('porto', 'maniche_po01', 'Maniche', 1977, 'Portugal', ['CM', 'DM'], 81, 83, 2006, 30, t(7, 6, 8, 6, 6, 7)),
+  q('porto', 'deco_po01', 'Deco', 1977, 'Portugal', ['AM', 'CM'], 85, 87, 2006, 25, t(8, 6, 8, 6, 5, 7)),
+  q('porto', 'alenichev_po01', 'Dmitri Alenichev', 1972, 'Russia', ['AM', 'LW'], 78, 79, 2005, 30, t(7, 6, 7, 6, 5, 7)),
+  q('porto', 'mendes_po01', 'Pedro Mendes', 1979, 'Portugal', ['CM'], 76, 80, 2005, 25, t(8, 5, 7, 6, 4, 7)),
+  q('porto', 'derlei_po01', 'Derlei', 1975, 'Brazil', ['ST'], 79, 81, 2005, 30, t(7, 6, 8, 6, 5, 7)),
+  q('porto', 'mccarthy_po01', 'Benni McCarthy', 1977, 'South Africa', ['ST'], 80, 82, 2005, 30, t(6, 7, 7, 6, 6, 7)),
+  q('porto', 'carlosalberto_po01', 'Carlos Alberto', 1984, 'Brazil', ['AM', 'ST'], 74, 82, 2007, 30, t(6, 7, 7, 6, 6, 7)),
+];
+export const MONACO_2001: CuratedSeed[] = [
+  q('monaco', 'roma_mo01', 'Flavio Roma', 1974, 'Italy', ['GK'], 77, 78, 2005, 25, t(8, 5, 7, 7, 5, 6)),
+  q('monaco', 'ibarra_mo01', 'Hugo Ibarra', 1974, 'Argentina', ['RB'], 76, 77, 2004, 25, t(8, 4, 7, 6, 5, 7)),
+  q('monaco', 'rodriguez_mo01', 'Julien Rodriguez', 1978, 'France', ['CB'], 77, 79, 2006, 25, t(8, 4, 7, 7, 4, 7)),
+  q('monaco', 'givet_mo01', 'Gaël Givet', 1981, 'France', ['CB', 'LB'], 78, 82, 2006, 25, t(8, 4, 7, 7, 4, 7)),
+  q('monaco', 'evra_mo01', 'Patrice Evra', 1981, 'France', ['LB'], 78, 86, 2006, 25, t(8, 5, 8, 7, 4, 8)),
+  q('monaco', 'rothen_mo01', 'Jérôme Rothen', 1978, 'France', ['LW'], 80, 82, 2005, 30, t(6, 6, 7, 6, 6, 7)),
+  q('monaco', 'giuly_mo01', 'Ludovic Giuly', 1976, 'France', ['RW', 'AM'], 82, 84, 2004, 35, t(8, 6, 8, 6, 5, 7)),
+  q('monaco', 'bernardi_mo01', 'Lucas Bernardi', 1977, 'Argentina', ['DM'], 77, 79, 2006, 30, t(8, 5, 7, 6, 5, 7)),
+  q('monaco', 'cisse_mo01', 'Édouard Cissé', 1978, 'France', ['DM', 'CM'], 76, 78, 2005, 30, t(8, 4, 7, 6, 5, 7)),
+  q('monaco', 'prso_mo01', 'Dado Pršo', 1974, 'Croatia', ['ST'], 79, 80, 2004, 30, t(7, 6, 8, 6, 5, 7)),
+  q('monaco', 'morientes_mo01', 'Fernando Morientes', 1976, 'Spain', ['ST'], 84, 85, 2004, 30, t(8, 6, 8, 7, 4, 7)),
+  q('monaco', 'nonda_mo01', 'Shabani Nonda', 1977, 'DR Congo', ['ST'], 79, 81, 2005, 35, t(6, 7, 7, 6, 6, 7)),
+  q('monaco', 'adebayor_mo01', 'Emmanuel Adebayor', 1984, 'Togo', ['ST'], 72, 84, 2006, 30, t(6, 7, 8, 6, 6, 7)),
+];
+
 /** Curated squads for the liverpool-2001 scenario, keyed by club. */
 export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
   barcelona: BARCELONA_2001,
   bayern: BAYERN_2001,
   juventus: JUVENTUS_2001,
   milan: MILAN_2001,
+  porto: PORTO_2001,
+  monaco: MONACO_2001,
   liverpool: LIVERPOOL_2001,
   man_utd: MAN_UTD_2001,
   arsenal: [...ARSENAL_2001, ...ARSENAL_2001_EXTRA],

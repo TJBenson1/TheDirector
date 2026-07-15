@@ -118,6 +118,10 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'lille', name: 'Lille', prestige: 64 },
       { id: 'parma', name: 'Parma', prestige: 68 },
       { id: 'man_city', name: 'Manchester City', prestige: 62 },
+      // Mourinho's Porto and Deschamps' Monaco — the 2003–04 finalists — so the
+      // one European Cup of the era not won by a giant is anchored, not sim'd.
+      { id: 'porto', name: 'FC Porto', prestige: 78 },
+      { id: 'monaco', name: 'AS Monaco', prestige: 74 },
     ],
     domesticLeagueId: 'eng-2001',
     // O'Leary's Champions-League semi-finalists were living on borrowed money;
@@ -277,6 +281,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       // anchored (Man Utd 1999 & 2008, Liverpool 2005).
       { id: 'man_utd', name: 'Manchester United', prestige: 84 },
       { id: 'liverpool', name: 'Liverpool', prestige: 80 },
+      // Porto — so Mourinho's 2004 European Cup is anchored too (Monaco, its
+      // beaten finalist, is already in this pack above).
+      { id: 'porto', name: 'FC Porto', prestige: 74 },
     ],
     domesticLeagueId: 'ita-1',
   },
