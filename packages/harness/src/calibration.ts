@@ -43,7 +43,7 @@ export const TARGETS: CalibrationTarget[] = [
     label: 'Any club winning >4 consecutive titles',
     band: '<20% of sims',
     ownedBy: 'M2/M9',
-    active: false,
+    active: true,
     evaluate: (c) => {
       const f = fractionOfCareers(c, (x) => x.maxConsecutiveTitlesAnyClub > 4);
       return { value: pct(f), pass: f < 0.2 };

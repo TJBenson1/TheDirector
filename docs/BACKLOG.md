@@ -283,6 +283,29 @@ three long-pending harness targets.
     2008 Abu Dhabi takeover), so FFP bites the moneyed clubs in 2004/2009/2013
     exactly as reality did.
 
+## M9 — the dominance rubber-band (✅ shipped; last pending target closed)
+The `>4 consecutive titles` target sat pending since M2 at **~85%** — a pure
+strength model let the strongest club (in man-utd-1999, the user) win almost every
+season, running off 9–14-title dynasties reality never sees. Root cause: the
+designed rubber-band (`worldDefiance`, §9a #5) was *computed every season but never
+applied to anything* — a dead scalar. Wired it in as an on-pitch **dominance
+headwind** (`rival.ts::applyRubberBand`): a club on a 2+ title streak carries a
+growing negative match modifier (hunger wanes, every rival lifts for the big one)
+while its three strongest chasers get a tailwind. Applied to *effective match
+strength only* (never `strength`, so transfers/valuations are untouched) and inert
+until a streak forms, so the opening seasons of any world are unperturbed. Tuned so
+5+ streaks are **rare but still possible** (a genuine dynasty): measured **9.3%**
+(band <20%) — down from 85%, not crushed to 0.
+- **Collateral, handled honestly.** The rubber-band changes match outcomes, and
+  `poisson` consumes a variable number of RNG draws, so it reshuffles the whole
+  downstream stream. That tipped the borderline `user-injury-crisis` target
+  (91.3%, only 1.3% margin) to 88.7% at the 150-career CI sample — pure RNG
+  realignment, not a mechanism effect (it was 90.3% at 300 careers). Restored
+  margin with a small injury-frequency nudge (`BASE_MONTHLY_PROB` 0.032 → 0.034):
+  crisis back to **92.7%**, serious-injury rate 1.00 → **1.05** (band 1–2, ample
+  room). **The board is now 18/18 active, 0 failing, 0 pending — fully green for
+  the first time.**
+
 ## "Almost happened" (near-miss) ledger
 Real, well-documented deals that collapsed or were passed up — offered to the
 user as a counterfactual (`NearMissEntry` in `ledger.ts`, executed in

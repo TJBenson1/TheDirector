@@ -109,29 +109,35 @@ describe('M8 ambition — Financial Fair Play (post-2011)', () => {
 });
 
 describe('M8 ambition — overrides respect every gate', () => {
-  it('a full career never signs a hard-blocked player, only from foreign/context sellers, and never breaches a ceiling', () => {
-    let state = createNewGame({ seed: 'gate-run', scenarioId: 'man-utd-1999' });
-    for (let i = 0; i < 40 && Number(state.clock.date.slice(0, 4)) < 2014; i++) {
-      state = advanceWindow(state).state;
-    }
+  it('overrides never sign a hard-blocked player, only from foreign/context sellers, and never breach a ceiling', () => {
+    let totalOverrides = 0;
+    // A few careers: with the M9 rubber-band suppressing runaway dominance a
+    // single career may see no override, so accumulate across seeds.
+    for (const seed of ['gate-a', 'gate-b', 'gate-c', 'gate-d']) {
+      let state = createNewGame({ seed, scenarioId: 'man-utd-1999' });
+      for (let i = 0; i < 90 && Number(state.clock.date.slice(0, 4)) < 2014; i++) {
+        state.pendingDecisions = []; // keep windows flowing (no bot in an engine test)
+        state = advanceWindow(state).state;
+      }
 
-    const overrides = state.eventLog.filter((e) => e.code === 'ambition.override');
-    // The mechanic must actually fire over 15 years (else the test is vacuous).
-    expect(overrides.length).toBeGreaterThan(0);
-    for (const o of overrides) {
-      const target = state.players[String(o.data!.playerId)];
-      expect(target).toBeDefined();
-      // Never a hard-blocked player.
-      expect(target!.resistance.hardBlocks.length).toBe(0);
-      // Seller was a foreign/context club (no domestic cascade) — still un-simulated.
-      const from = state.clubs[String(o.data!.from)];
-      expect(from?.leagueId ?? null).toBeNull();
-    }
+      for (const o of state.eventLog.filter((e) => e.code === 'ambition.override')) {
+        totalOverrides += 1;
+        // Foreign/context seller — no domestic cascade (from event data; robust).
+        const from = state.clubs[String(o.data!.from)];
+        expect(from?.leagueId ?? null).toBeNull();
+        // Never a hard-blocked player (checked on survivors; a target signed years
+        // ago may since have retired and left state.players).
+        const target = state.players[String(o.data!.playerId)];
+        if (target) expect(target.resistance.hardBlocks.length).toBe(0);
+      }
 
-    // No simulated rival ever ran above its plausible ceiling (no fantasy leaps).
-    for (const c of Object.values(state.clubs)) {
-      if (c.leagueId === null || c.id === state.playerClub) continue;
-      expect(exceedsPlausibleCeiling(c)).toBe(false);
+      // No simulated rival ever ran above its plausible ceiling (no fantasy leaps).
+      for (const c of Object.values(state.clubs)) {
+        if (c.leagueId === null || c.id === state.playerClub) continue;
+        expect(exceedsPlausibleCeiling(c)).toBe(false);
+      }
     }
-  });
+    // The mechanic must actually fire across the batch (else the gates are vacuous).
+    expect(totalOverrides).toBeGreaterThan(0);
+  }, 20000);
 });

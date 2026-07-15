@@ -165,7 +165,14 @@ function nudgeForm(state: GameState, clubId: ClubId, delta: number): void {
 function playMatch(state: GameState, league: LeagueState, fixture: Fixture, rng: Rng): void {
   const home = state.clubs[fixture.home]!;
   const away = state.clubs[fixture.away]!;
-  const result = simulateMatch(home.strength + home.form, away.strength + away.form, rng);
+  // The M9 rubber-band (rival.ts::applyRubberBand): a club running away with the
+  // title carries a match headwind, its chasers a tailwind — 0 for everyone until
+  // a streak forms, so the general race is unchanged.
+  const result = simulateMatch(
+    home.strength + home.form + (home.dominanceHeadwind ?? 0),
+    away.strength + away.form + (away.dominanceHeadwind ?? 0),
+    rng,
+  );
 
   applyResult(league.standings[fixture.home]!, result.homeGoals, result.awayGoals);
   applyResult(league.standings[fixture.away]!, result.awayGoals, result.homeGoals);

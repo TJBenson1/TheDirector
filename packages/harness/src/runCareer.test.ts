@@ -57,13 +57,13 @@ describe('calibration harness', () => {
       expect(t.pass).toBe(true);
     }
 
-    // Targets owned by later milestones stay pending — no false pass/fail.
-    // M8 activated money-club-trophy-share, no-fantasy-leaps and the
-    // ambition-override share; only the >4-consecutive-titles dynasty row
-    // (M2/M9) remains pending.
+    // Every target is now active: M8 activated the three ambition rows, and the
+    // M9 rubber-band activated the >4-consecutive-titles dynasty row. None remain
+    // pending. (Any newly-active row is asserted in band by the harness at full
+    // sample, not on this 36-career smoke batch.)
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
-    expect(pending.length).toBe(1);
+    expect(pending.length).toBe(0);
     // Higher budget than the early milestones: a mature world now also ages
     // players into retirement and runs promotion/relegation each season, so a
     // 36-career smoke batch does materially more work per career.

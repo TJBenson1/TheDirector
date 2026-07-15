@@ -145,7 +145,7 @@ export {
   resolveIgnoredDecisions,
   type DecisionResult,
 } from './events.js';
-export { runRivalWindow, updateWorldDefiance } from './rival.js';
+export { runRivalWindow, updateWorldDefiance, applyRubberBand } from './rival.js';
 export { reviewBoard, rollInternalCrisis } from './board.js';
 export { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 export { appendMemory, memoriesWithTag } from './memory.js';

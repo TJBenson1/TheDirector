@@ -17,7 +17,7 @@
  *    director turns hostile; a cruising user makes the world fight harder.
  */
 
-import type { ClubId, ClubState, GameState, PlayerState } from './types.js';
+import type { ClubId, ClubState, GameState, LeagueState, PlayerState } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
@@ -126,6 +126,71 @@ export function runRivalWindow(state: GameState, rng: Rng): void {
 }
 
 export { processAgitationDepartures };
+
+// ── Dominance headwind (§9a #5 rubber-band, the on-pitch half) ────────────────
+//
+// A pure strength model lets the strongest club win almost every season, so a
+// dominant side runs off double-digit title streaks that reality never sees
+// (the real treble-era United dropped titles to Arsenal and Chelsea). The
+// rubber-band is the correction: a club running away with the title carries a
+// growing HEADWIND (hunger wanes, every rival raises their game for the big one),
+// while the strongest chasers get a TAILWIND (they invest and target the crown).
+// Applied to effective strength IN MATCHES ONLY (never to `strength`), and only
+// once a real streak has formed — so it corrects dynasties without disturbing the
+// general title race, transfers or valuations.
+
+// Onset is deliberately late and the steps gentle: a club can win three or four
+// on the bounce (as real dominant sides do) before the headwind bites hard enough
+// to usually — not always — hand the crown over. This keeps 5+ streaks RARE but
+// still possible (a genuine dynasty), rather than impossible.
+const HEADWIND_ONSET = 2; // titles in a row before the headwind starts
+const HEADWIND_STEP = 4; // per year beyond onset, the champion's match headwind
+const HEADWIND_CAP = 14;
+const CHALLENGER_TAILWIND_STEP = 3; // per year beyond onset, boost to each top chaser
+const CHALLENGER_TAILWIND_CAP = 9;
+const CHALLENGERS = 3; // how many of the strongest chasers raise their game
+
+/** The current consecutive-title streak in a league: who holds it and how long. */
+function titleStreak(league: LeagueState): { holder: ClubId | null; streak: number } {
+  let holder: ClubId | null = null;
+  let streak = 0;
+  for (const t of league.titleHistory) {
+    streak = t.championId === holder ? streak + 1 : 1;
+    holder = t.championId;
+  }
+  return { holder, streak };
+}
+
+/**
+ * Recompute the dominance headwind for every simulated club at the season
+ * rollover. A club on a 2+ title streak gets a negative match modifier that
+ * grows with the streak; the strongest 3 chasers get a positive one. Inert (all
+ * zero) until someone strings titles together, so the opening seasons of any
+ * world are unperturbed.
+ */
+export function applyRubberBand(state: GameState): void {
+  for (const league of Object.values(state.leagues)) {
+    for (const id of league.clubIds) {
+      const c = state.clubs[id];
+      if (c) c.dominanceHeadwind = 0;
+    }
+    const { holder, streak } = titleStreak(league);
+    if (!holder || streak < HEADWIND_ONSET) continue; // not yet a dynasty → no rubber-band
+
+    const over = streak - HEADWIND_ONSET + 1; // 1 the year the headwind first applies
+    const champ = state.clubs[holder];
+    if (champ) champ.dominanceHeadwind = -Math.min(HEADWIND_CAP, over * HEADWIND_STEP);
+
+    const tailwind = Math.min(CHALLENGER_TAILWIND_CAP, over * CHALLENGER_TAILWIND_STEP);
+    const chasers = league.clubIds
+      .filter((id) => id !== holder)
+      .map((id) => state.clubs[id])
+      .filter((c): c is ClubState => !!c)
+      .sort((a, b) => b.strength - a.strength)
+      .slice(0, CHALLENGERS);
+    for (const c of chasers) c.dominanceHeadwind = tailwind;
+  }
+}
 
 /**
  * Rubber-band (§9a #5): a dominant user raises `worldDefiance` (the world fights

@@ -129,6 +129,12 @@ export interface ClubState {
    *  (docs/DESIGN-ambition.md). Recomputed each season for simulated AI clubs;
    *  absent on the user's club and on old saves. */
   pressure?: ClubPressure;
+  /** M9 rubber-band (§9a #5): a transient effective-strength adjustment applied
+   *  in matches only — a headwind on a club running away with the title (hunger
+   *  wanes, rivals target it) and a tailwind on the chasing pack. Recomputed each
+   *  season from the title streak; 0/absent when no one is dominating. Never
+   *  touches `strength` itself, so transfers/valuations are unaffected. */
+  dominanceHeadwind?: number;
 }
 
 // ── Leagues & season sim (§15) ───────────────────────────────────────────────

@@ -20,7 +20,7 @@ import { stepLeagueMonth } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
 import { rollInjuryManagement } from './injuryManagement.js';
 import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
-import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
+import { runRivalWindow, updateWorldDefiance, applyRubberBand, processAgitationDepartures } from './rival.js';
 import { updateClubPressure, runAmbitionOverrides, applyOwnerFunding } from './ambition.js';
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
@@ -69,8 +69,12 @@ function runMonth(state: GameState, rng: Rng): void {
     // Scheduled distress (Calciopoli, Parmalat…): drops a club into a fire-sale
     // this summer — a cheap, raidable window for the user (before the ledger runs).
     applyFinancialShocks(state);
-    // 4. Rubber-band: update world defiance from last season's finish (§9a #5).
+    // 4. Rubber-band (§9a #5): update world defiance from last season's finish,
+    //    and set the on-pitch dominance headwind so a runaway leader faces a
+    //    hungrier, better-backed chasing pack next season (breaks up dynasties
+    //    the pure strength model would otherwise let run for a decade).
     updateWorldDefiance(state);
+    applyRubberBand(state);
     // M8: recompute each AI club's ambition pressure from the new honours board
     // (a dominant user drives the whole field's pressure up) — feeds the summer
     // override step below.

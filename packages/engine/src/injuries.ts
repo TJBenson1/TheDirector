@@ -22,7 +22,7 @@ import { clubSquadPlayers, recomputeClubStrength } from './players.js';
 import { ERA_REALITY, eraForScenario } from './ledger.js';
 
 // ── Tunables (calibrated in injuries.test.ts + the harness) ──────────────────
-const BASE_MONTHLY_PROB = 0.032;
+const BASE_MONTHLY_PROB = 0.034;
 const SERIOUS_ABILITY_HIT: [min: number, max: number] = [1, 3];
 const SERIOUS_CEILING_HIT: [min: number, max: number] = [0, 2];
 const SERIOUS_PRONENESS_HIT = 12;
