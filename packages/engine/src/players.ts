@@ -394,6 +394,58 @@ export function recomputeClubStrength(state: GameState, clubId: ClubId): void {
   if (!club) return;
   const raw = deriveRawStrength(availableSquadPlayers(state, clubId));
   club.strength = Math.max(20, Math.min(99, club.baseStrength + (raw - club.squadStrengthAnchor)));
+  club.chemistryPenalty = squadChemistryPenalty(state, clubId);
+}
+
+// ── Squad chemistry / balance (§ over-stacking) ──────────────────────────────
+/** A genuine star for chemistry purposes. Below this, players slot in as depth
+ *  and squad-fillers without ego friction. */
+const CHEM_STAR = 86;
+/** Star-quality slots a matchday XI can actually field per zone — beyond these,
+ *  the extra stars are surplus egos, not a stronger team. */
+const CHEM_SLOTS: Record<'GK' | 'DEF' | 'MID' | 'ATT', number> = { GK: 1, DEF: 4, MID: 3, ATT: 3 };
+const CHEM_SURPLUS_WEIGHT = 2.2;
+const CHEM_MAX = 10;
+
+/** Attacking midfielders are forwards for balance — a #10 competes with the front
+ *  line for star roles, not with the holding midfield. */
+function chemGroupOf(pos: Position): 'GK' | 'DEF' | 'MID' | 'ATT' {
+  if (pos === 'GK') return 'GK';
+  if (pos === 'CB' || pos === 'LB' || pos === 'RB') return 'DEF';
+  if (pos === 'DM' || pos === 'CM') return 'MID';
+  return 'ATT'; // AM, LW, RW, ST
+}
+
+/**
+ * Effective-strength drag from an over-stacked, unbalanced squad. Count the genuine
+ * stars in each zone; every star beyond what the XI can field there is a surplus ego
+ * that sours the dressing room and the shape. A balanced elite squad has none and is
+ * untouched — the drag only bites a hoarder (post-2003 Madrid, MSN-era PSG), which
+ * is exactly why buying a fifth galáctico for the same three shirts makes you worse.
+ */
+export function squadChemistryPenalty(state: GameState, clubId: ClubId): number {
+  const counts: Record<'GK' | 'DEF' | 'MID' | 'ATT', number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
+  for (const p of clubSquadPlayers(state, clubId)) {
+    if (p.ability >= CHEM_STAR) counts[chemGroupOf(p.positions[0] ?? 'CM')] += 1;
+  }
+  let surplus = 0;
+  for (const g of ['GK', 'DEF', 'MID', 'ATT'] as const) surplus += Math.max(0, counts[g] - CHEM_SLOTS[g]);
+  return Math.min(CHEM_MAX, surplus * CHEM_SURPLUS_WEIGHT);
+}
+
+/** The stars squeezed out by an over-stack — in each over-filled zone, the lesser
+ *  of the glut (the men who won't start), who chafe at the lack of minutes. */
+export function overstackedStars(state: GameState, clubId: ClubId): PlayerState[] {
+  const byGroup: Record<'GK' | 'DEF' | 'MID' | 'ATT', PlayerState[]> = { GK: [], DEF: [], MID: [], ATT: [] };
+  for (const p of clubSquadPlayers(state, clubId)) {
+    if (p.ability >= CHEM_STAR) byGroup[chemGroupOf(p.positions[0] ?? 'CM')].push(p);
+  }
+  const surplus: PlayerState[] = [];
+  for (const g of ['GK', 'DEF', 'MID', 'ATT'] as const) {
+    const stars = byGroup[g].sort((a, b) => b.ability - a.ability); // best keep the shirts
+    surplus.push(...stars.slice(CHEM_SLOTS[g])); // the rest are surplus to the XI
+  }
+  return surplus;
 }
 
 /**

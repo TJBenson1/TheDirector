@@ -161,7 +161,7 @@ function nudgeForm(state: GameState, clubId: ClubId, delta: number): void {
  *  an aggressive user who guts a rival's spine climbs past them, a raided club
  *  slips. Zero in a passive world, so the calibrated tables are undisturbed. */
 export function matchStrength(club: ClubState): number {
-  return club.strength + club.form + (club.starButterfly ?? 0);
+  return club.strength + club.form + (club.starButterfly ?? 0) - (club.chemistryPenalty ?? 0);
 }
 
 function playMatch(state: GameState, league: LeagueState, fixture: Fixture, rng: Rng): void {

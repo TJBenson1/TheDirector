@@ -92,6 +92,12 @@ export interface ClubState {
    *  Cup winners exactly; a user/rival deviation that guts (or gorges) a spine
    *  moves it, and a different side lifts the trophy. */
   starButterfly: number;
+  /** Effective-strength drag from an UNBALANCED, over-stacked squad (§ chemistry):
+   *  hoard more stars than the XI can field — especially in one zone — and the
+   *  surplus egos rot the dressing room and the shape, so a bloated galáctico side
+   *  plays BELOW its raw talent (the post-2003 Madrid / Messi-Mbappé-Neymar PSG
+   *  effect). Zero for a balanced squad, so real sides are untouched. */
+  chemistryPenalty: number;
   /** Rolling form modifier, roughly -6..+6, drifting toward 0. */
   form: number;
   /** The simulated league this club plays in, or null if not simulated yet. */

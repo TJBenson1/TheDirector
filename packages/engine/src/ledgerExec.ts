@@ -28,8 +28,11 @@ function positionGroupOf(p: PlayerState): string {
   const pos = p.positions[0] ?? 'CM';
   if (pos === 'GK') return 'GK';
   if (['CB', 'LB', 'RB'].includes(pos)) return 'DEF';
-  if (['DM', 'CM', 'AM'].includes(pos)) return 'MID';
-  return 'ATT';
+  // Holding/central midfield only — an ATTACKING midfielder (Ronaldinho, Deco,
+  // Zidane) is a creator, not a Roy Keane. He groups with the forward line, so a
+  // club denied a Ronaldinho reaches for another attacker, never a holding mid.
+  if (['DM', 'CM'].includes(pos)) return 'MID';
+  return 'ATT'; // AM, LW, RW, ST
 }
 
 /** Ceiling on how far above a missed target's ability a frustrated club will

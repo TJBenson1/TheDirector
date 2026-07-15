@@ -29,7 +29,7 @@ import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli } from './italyEvents.js';
 import { restoreRelegatedClubs } from './relegation.js';
 import { decayPursuit } from './wooing.js';
-import { processSeasonAgeing, processSeasonMorale } from './ageing.js';
+import { processSeasonAgeing, processSeasonMorale, processOverstackUnrest } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
 import { resolveAdaptationSeason } from './adaptation.js';
@@ -101,6 +101,8 @@ function runMonth(state: GameState, rng: Rng): void {
     // 7. Board review (job security) + an imposed internal crisis (M9).
     reviewBoard(state, rng.fork(`board:${state.clock.date}`));
     rollInternalCrisis(state, rng.fork(`crisis:${state.clock.date}`), divergenceFactor(state) * 0.3);
+    // A bloated, over-stacked squad unsettles the stars it can't field (§ chemistry).
+    processOverstackUnrest(state);
     // Sustained unrest can force a kept-against-his-wishes player out.
     processAgitationDepartures(state, rng.fork(`agitation:${state.clock.date}`));
   }

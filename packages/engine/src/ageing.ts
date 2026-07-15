@@ -11,7 +11,7 @@
 import type { GameState, Position } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
-import { clubSquadPlayers, recomputeClubStrength } from './players.js';
+import { clubSquadPlayers, recomputeClubStrength, overstackedStars } from './players.js';
 
 /** Age at which decline begins, by position group (keepers last longest). */
 const DECLINE_START: Record<Position, number> = {
@@ -87,5 +87,33 @@ export function processSeasonMorale(state: GameState): void {
         player.morale = Math.max(0, Math.min(100, player.morale + delta));
       }
     }
+  }
+}
+
+/**
+ * Over-stacking's human cost (§ chemistry): the stars a bloated squad can't field
+ * chafe and unsettle. Each season on the bench sours their morale and grows their
+ * agitation — which the existing agitation system may turn into a forced exit, so a
+ * hoarded galáctico glut tends to shed its surplus and rebalance, as the real
+ * Galácticos and MSN-era PSG did. Only over-stacked clubs are touched; a balanced
+ * squad has no surplus and is untroubled.
+ */
+export function processOverstackUnrest(state: GameState): void {
+  for (const club of Object.values(state.clubs)) {
+    if ((club.chemistryPenalty ?? 0) <= 0) continue;
+    const surplus = overstackedStars(state, club.id);
+    if (surplus.length === 0) continue;
+    // Outpace the ordinary agitation decay (a persistent glut is not a one-off
+    // snub), so a star kept surplus season on season builds toward forcing an exit.
+    for (const p of surplus) {
+      p.agitation = Math.max(0, Math.min(100, p.agitation + 32));
+      p.morale = Math.max(0, Math.min(100, p.morale - 8));
+    }
+    logEvent(state, {
+      category: 'development',
+      code: 'squad.overstacked',
+      message: `${club.name}'s squad is bloated — ${surplus.map((p) => p.name).join(', ')} chafe at the lack of minutes.`,
+      data: { clubId: club.id, players: surplus.map((p) => p.id), penalty: Number((club.chemistryPenalty ?? 0).toFixed(1)) },
+    });
   }
 }

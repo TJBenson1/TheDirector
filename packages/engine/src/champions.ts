@@ -32,7 +32,7 @@ import { eraForScenario } from './ledger.js';
 function clStrength(state: GameState, id: ClubId): number {
   const c = state.clubs[id];
   if (!c) return 0;
-  return Math.max(20, Math.min(99, c.strength + (c.starButterfly ?? 0)));
+  return Math.max(20, Math.min(99, c.strength + (c.starButterfly ?? 0) - (c.chemistryPenalty ?? 0)));
 }
 
 /**

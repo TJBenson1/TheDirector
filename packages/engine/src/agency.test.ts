@@ -145,3 +145,31 @@ describe('the magnet effect (§ galáctico pull)', () => {
     expect(magnetPull(state, 'real_madrid')).toBeLessThanOrEqual(14);
   });
 });
+
+describe('squad balance & over-stacking (§ chemistry)', () => {
+  it('hoarding stars into one zone drags effective strength below the raw talent', () => {
+    const state = cloneState(createNewGame({ scenarioId: 'man-utd-2013', seed: 'stack' }));
+    state.clubs.man_utd!.finances.transferBudget = 2_000_000_000;
+    const before = state.clubs.man_utd!.chemistryPenalty;
+    const effBefore = state.clubs.man_utd!.strength - before;
+    // Hoard the era's best forwards onto one club — five galácticos for three shirts.
+    const attackers = Object.values(state.players)
+      .filter((p) => p.ability >= 87 && ['AM', 'LW', 'RW', 'ST'].includes(p.positions[0]!) && p.club && p.club !== 'man_utd' && state.clubs[p.club!])
+      .sort((a, b) => b.ability - a.ability)
+      .slice(0, 6);
+    for (const p of attackers) executeTransfer(state, { playerId: p.id, toClub: 'man_utd', fee: 80_000_000 });
+    const after = state.clubs.man_utd!.chemistryPenalty;
+    const effAfter = state.clubs.man_utd!.strength - after;
+    // The glut incurs a real, bounded chemistry drag...
+    expect(after).toBeGreaterThan(before);
+    expect(after).toBeLessThanOrEqual(10);
+    // ...so effective strength ends up BELOW where it started despite the talent.
+    expect(effAfter).toBeLessThan(effBefore);
+  });
+
+  it('a balanced squad carries no chemistry penalty', () => {
+    const state = cloneState(createNewGame({ scenarioId: 'man-utd-1999', seed: 'balanced' }));
+    // Ferguson's real 1999 side is balanced — no zone is over-stacked with stars.
+    expect(state.clubs.man_utd!.chemistryPenalty).toBe(0);
+  });
+});
