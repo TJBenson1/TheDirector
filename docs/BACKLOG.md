@@ -18,8 +18,9 @@ Jeffers, Dunne…), **Southampton '99** extended (Beattie, Pahars, Lundekvam…)
 Continued into the European worlds: **Leverkusen '04** extended (Schneider, Juan,
 Nowotny, Voronin, a young Gonzalo Castro), **Sevilla '09** (Luís Fabiano, Kanouté,
 Jesús Navas, Fazio, Perotti — a lost talent) and **Villarreal '09** (Cazorla,
-Senna, Godín, Rossi, Capdevila) now real squads. Still to do: more mid clubs in
-the 2013 world + the remaining Bundesliga bottom-4 (the mechanic already makes
+Senna, Godín, Rossi, Capdevila) now real squads. The **Bundesliga 2009 is now
+complete — all 18 clubs curated** (the bottom-4 Freiburg/Hertha/Nürnberg/Bochum
+added). Still to do: more mid clubs in the 2013 world (the mechanic already makes
 their filler signable, so this is real-names polish, not a gap).
 
 **Progress:** user-club leagues are well curated. Host-club pass done for AC Milan
@@ -32,16 +33,20 @@ eras per user: 1999, 2004, 2009, 2013 first; 1995 / late-2010s / 2020s last.
 
 **Known follow-ons (data fidelity):**
 - ✅ **era-2009 established + deepened** — bayern-2009 "Van Gaal reset" on a real
-  18-team Bundesliga (season length now derives from club count). **14 of 18
-  Bundesliga clubs fully curated** (Bayern, Wolfsburg, Schalke, Bremen, Dortmund,
-  Stuttgart, Hamburg, Leverkusen, Hoffenheim, Gladbach, Köln, Hannover, Frankfurt,
-  Mainz) + the CR7/Kaká Real Madrid as context. **era-2009 ledger live**: Özil/
-  Khedira→Madrid, Džeko→City, Şahin/Vidal/Barzagli sold on, Podolski→Arsenal,
-  Reus→Dortmund — and the real Bayern buys (Neuer, Boateng, Kroos, Gustavo, Dante)
-  offered to the user as decisions. + retirements + Götze (Dortmund '10 academy,
-  latent). Still to do for 2009:
-  - the **bottom-4 Bundesliga clubs** (Freiburg, Hertha, Nürnberg, Bochum) —
-    currently procedural.
+  18-team Bundesliga (season length now derives from club count). **ALL 18
+  Bundesliga clubs fully curated** — the top 14 (Bayern, Wolfsburg, Schalke,
+  Bremen, Dortmund, Stuttgart, Hamburg, Leverkusen, Hoffenheim, Gladbach, Köln,
+  Hannover, Frankfurt, Mainz) plus the **bottom-4 now real** (Freiburg, Hertha,
+  Nürnberg, Bochum) + the CR7/Kaká Real Madrid as context. **era-2009 ledger
+  live**: Özil/Khedira→Madrid, Džeko→City, Şahin/Vidal/Barzagli sold on,
+  Podolski→Arsenal, Reus→Dortmund — and the real Bayern buys (Neuer, Boateng,
+  Kroos, Gustavo, Dante) offered to the user as decisions. + retirements + Götze
+  (Dortmund '10 academy, latent). The bottom-4 pass surfaced a batch of reality-
+  rail young talents a Bayern user can pre-empt: **Gündoğan** (Nürnberg→Dortmund
+  '11), **Toprak** (Freiburg→Leverkusen '11), **Piszczek** (Hertha→Dortmund '10),
+  Cissé, Fuchs, Choupo-Moting, O. Baumann, plus wasted talents (Kačar, Azaouagh).
+  Ledger fidelity 100%, fantasy leaps 0; man-utd-1999 untouched (18/18). Still to
+  do for 2009:
   - **more European context**: Barça treble, Mourinho's Inter (2010 treble), Man
     City post-takeover, Chelsea (Ancelotti double), Man Utd post-CR7, Juventus.
   - **era-2009 injuries** (Kaká's knee is flagged via proneness, but real dated

@@ -682,6 +682,11 @@ const LEDGER_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_reus09', from: 'gladbach', to: 'dortmund', window: '2012-07', fee: 17_000_000 },
   { playerId: 'cur_dante09', from: 'gladbach', to: 'bayern', window: '2012-07', fee: 4_500_000 },
   { playerId: 'cur_podolski09', from: 'koln', to: 'arsenal', window: '2012-07', fee: 11_000_000 },
+  // The bottom-four's future stars leaving for the big clubs — the real moves a
+  // Bayern user could pre-empt (sign the kid before Dortmund/Leverkusen do).
+  { playerId: 'cur_piszczek09', from: 'hertha', to: 'dortmund', window: '2010-07', fee: 0 },
+  { playerId: 'cur_gundogan09', from: 'nurnberg', to: 'dortmund', window: '2011-07', fee: 4_000_000 },
+  { playerId: 'cur_toprak09', from: 'freiburg', to: 'leverkusen', window: '2011-07', fee: 2_500_000 },
 ];
 
 const RETIREMENTS_2009: RealRetirement[] = [

@@ -392,8 +392,97 @@ export const SEVILLA_2009: CuratedSeed[] = [
   q('sevilla', 'kanoute09', 'Frédéric Kanouté', 1977, 'Mali', ['ST'], 84, 84, 2010, 35, t(9, 4, 6, 8, 2, 7), { archetype: 'target-man' }),
 ];
 
+/** 1. FC Nürnberg, 2009–10 — promoted, survived 16th via the relegation play-off;
+ *  a teenage İlkay Gündoğan emerging alongside top-scorer Albert Bunjaku. */
+export const NURNBERG_2009: CuratedSeed[] = [
+  q('nurnberg', 'schafer09', 'Raphael Schäfer', 1979, 'Germany', ['GK'], 70, 71, 2012, 30, t(7, 4, 5, 9, 4, 6)),
+  q('nurnberg', 'diekmeier09', 'Dennis Diekmeier', 1989, 'Germany', ['RB'], 67, 74, 2013, 35, t(6, 5, 7, 6, 5, 6)),
+  q('nurnberg', 'pinola09', 'Javier Pinola', 1983, 'Argentina', ['LB', 'CB'], 70, 71, 2012, 35, t(8, 4, 6, 9, 5, 7)),
+  q('nurnberg', 'wolf09', 'Andreas Wolf', 1982, 'Germany', ['CB'], 70, 71, 2011, 40, t(8, 5, 6, 9, 4, 6)),
+  q('nurnberg', 'maroh09', 'Dominic Maroh', 1987, 'Slovenia', ['CB'], 65, 72, 2012, 35, t(6, 4, 6, 7, 5, 6)),
+  q('nurnberg', 'kluge09', 'Peer Kluge', 1980, 'Germany', ['DM', 'CM'], 68, 69, 2011, 40, t(7, 5, 5, 5, 5, 6)),
+  q('nurnberg', 'frantz09', 'Mike Frantz', 1986, 'Germany', ['CM', 'LB'], 68, 73, 2012, 35, t(7, 4, 7, 6, 4, 7)),
+  // Gündoğan — the teenage breakout here; reached the top (Dortmund, Man City,
+  // a Treble). Reality-rail: low current ability, a real elite ceiling.
+  q('nurnberg', 'gundogan09', 'İlkay Gündoğan', 1990, 'Germany', ['CM', 'AM'], 68, 86, 2012, 40, t(8, 5, 9, 5, 4, 8)),
+  q('nurnberg', 'mintal09', 'Marek Mintál', 1977, 'Slovakia', ['AM', 'ST'], 66, 66, 2011, 55, t(7, 3, 4, 9, 3, 6)),
+  q('nurnberg', 'gygax09', 'Daniel Gygax', 1981, 'Switzerland', ['RW', 'AM'], 69, 70, 2010, 35, t(7, 5, 5, 5, 5, 7)),
+  q('nurnberg', 'bunjaku09', 'Albert Bunjaku', 1983, 'Switzerland', ['ST'], 73, 74, 2012, 40, t(7, 6, 7, 6, 5, 6)),
+  q('nurnberg', 'choupomoting09', 'Eric Maxim Choupo-Moting', 1989, 'Germany', ['LW', 'ST'], 69, 80, 2010, 35, t(6, 7, 7, 4, 6, 7)),
+  q('nurnberg', 'eigler09', 'Christian Eigler', 1984, 'Germany', ['ST'], 66, 68, 2012, 40, t(6, 4, 5, 7, 5, 6)),
+];
+
+/** Hertha BSC, 2009–10 — relegated 18th; Favre's collapse, Raffael's flair
+ *  wasted, a pre-Dortmund Piszczek, mid-season loans that failed to stop the drop. */
+export const HERTHA_2009: CuratedSeed[] = [
+  q('hertha', 'drobny09', 'Jaroslav Drobný', 1979, 'Czech Republic', ['GK'], 69, 70, 2010, 32, t(7, 4, 6, 7, 4, 6)),
+  q('hertha', 'friedrich09', 'Arne Friedrich', 1979, 'Germany', ['CB', 'RB'], 71, 72, 2011, 33, t(8, 5, 7, 8, 4, 6)),
+  // Piszczek — a wide man here, remade into a world-class right-back at Dortmund.
+  // Reality-rail: modest now, elite ceiling.
+  q('hertha', 'piszczek09', 'Łukasz Piszczek', 1985, 'Poland', ['RB', 'RW'], 68, 86, 2010, 30, t(8, 5, 8, 6, 4, 8)),
+  q('hertha', 'hubnik09', 'Roman Hubník', 1984, 'Czech Republic', ['CB'], 66, 68, 2010, 34, t(7, 4, 6, 6, 5, 6)),
+  q('hertha', 'lustenberger09', 'Fabian Lustenberger', 1988, 'Switzerland', ['CB', 'DM'], 65, 74, 2013, 40, t(7, 4, 6, 8, 4, 7)),
+  q('hertha', 'kobiashvili09', 'Levan Kobiashvili', 1977, 'Georgia', ['CM', 'LB'], 67, 68, 2011, 38, t(7, 6, 6, 6, 6, 6)),
+  q('hertha', 'dardai09', 'Pál Dárdai', 1976, 'Hungary', ['DM', 'CM'], 64, 64, 2011, 36, t(8, 3, 5, 10, 3, 7)),
+  // Kačar — a much-hyped Serbian midfielder whose career never kicked on. A wasted
+  // talent (latent 79).
+  q('hertha', 'kacar09', 'Gojko Kačar', 1987, 'Serbia', ['DM', 'CM'], 67, 70, 2011, 42, t(6, 7, 7, 5, 7, 5), { latentCeiling: 79 }),
+  q('hertha', 'cicero09', 'Cícero Santos', 1984, 'Brazil', ['DM', 'CM'], 66, 68, 2012, 33, t(7, 5, 6, 6, 5, 6)),
+  q('hertha', 'raffael09', 'Raffael Caetano de Araújo', 1985, 'Brazil', ['AM', 'LW'], 75, 80, 2011, 40, t(7, 5, 7, 7, 5, 7)),
+  q('hertha', 'nicu09', 'Maximilian Nicu', 1982, 'Romania', ['AM', 'LW'], 64, 66, 2011, 38, t(6, 5, 6, 6, 6, 6)),
+  q('hertha', 'gekas09', 'Theofanis Gekas', 1980, 'Greece', ['ST'], 69, 71, 2010, 34, t(7, 7, 7, 5, 5, 6)),
+  q('hertha', 'ramos09', 'Adrián Ramos', 1986, 'Colombia', ['ST'], 66, 78, 2013, 32, t(7, 5, 7, 6, 5, 7)),
+];
+
+/** VfL Bochum, 2009–10 — relegated 16th via the play-off; a modest Ruhr side built
+ *  on Šesták's goals, a young Christian Fuchs at left-back, and Dabrowski's midfield. */
+export const BOCHUM_2009: CuratedSeed[] = [
+  q('bochum', 'heerwagen09', 'Philipp Heerwagen', 1983, 'Germany', ['GK'], 67, 68, 2013, 40, t(7, 4, 5, 7, 4, 6)),
+  q('bochum', 'luthe09', 'Andreas Luthe', 1987, 'Germany', ['GK'], 62, 72, 2012, 35, t(7, 4, 7, 6, 4, 6)),
+  q('bochum', 'maltritz09', 'Marcel Maltritz', 1978, 'Germany', ['CB'], 68, 68, 2011, 45, t(7, 5, 5, 8, 6, 6)),
+  q('bochum', 'fabian09', 'Patrick Fabian', 1987, 'Germany', ['CB'], 63, 70, 2013, 40, t(7, 4, 6, 9, 4, 6)),
+  q('bochum', 'mavraj09', 'Mergim Mavraj', 1986, 'Albania', ['CB'], 64, 70, 2012, 42, t(6, 6, 7, 5, 6, 6)),
+  // Fuchs — the best young talent here, later a Premier League title winner with
+  // Leicester. Reality-rail.
+  q('bochum', 'fuchs09', 'Christian Fuchs', 1986, 'Austria', ['LB'], 72, 78, 2011, 35, t(8, 5, 8, 6, 5, 8)),
+  q('bochum', 'concha09', 'Matias Concha', 1980, 'Sweden', ['RB'], 66, 66, 2011, 45, t(6, 5, 5, 6, 6, 6)),
+  q('bochum', 'dabrowski09', 'Christoph Dabrowski', 1978, 'Germany', ['DM', 'CM'], 67, 67, 2010, 45, t(8, 4, 5, 9, 4, 6)),
+  // Azaouagh — a promising Schalke start collapsed into injury and drift. Wasted
+  // talent (latent 74).
+  q('bochum', 'azaouagh09', 'Mimoun Azaouagh', 1982, 'Germany', ['AM', 'CM'], 64, 66, 2011, 60, t(5, 6, 5, 5, 6, 5), { latentCeiling: 74 }),
+  q('bochum', 'epalle09', 'Joel Epalle', 1978, 'Cameroon', ['RW', 'AM'], 66, 66, 2011, 45, t(6, 6, 6, 5, 6, 6)),
+  q('bochum', 'sestak09', 'Stanislav Šesták', 1982, 'Slovakia', ['ST'], 73, 74, 2010, 40, t(7, 6, 7, 5, 6, 7)),
+  q('bochum', 'dedic09', 'Zlatko Dedič', 1984, 'Slovenia', ['ST'], 67, 69, 2012, 42, t(6, 5, 6, 6, 6, 6)),
+  q('bochum', 'klimowicz09', 'Diego Klimowicz', 1974, 'Argentina', ['ST'], 66, 66, 2010, 50, t(7, 6, 5, 7, 6, 6)),
+];
+
+/** SC Freiburg, 2009–10 — newly promoted, a spirited but thin lower-table side
+ *  (14th) under Robin Dutt; built on cheap finds like Cissé and academy CB Toprak. */
+export const FREIBURG_2009: CuratedSeed[] = [
+  q('freiburg', 'pouplin09', 'Simon Pouplin', 1985, 'France', ['GK'], 68, 69, 2011, 30, t(7, 5, 6, 6, 4, 6)),
+  // Cissé — a bargain here, then a prolific spell at Newcastle. Reality-rail.
+  q('freiburg', 'cisse09', 'Papiss Cissé', 1985, 'Senegal', ['ST'], 74, 83, 2013, 35, t(7, 7, 9, 4, 5, 7)),
+  q('freiburg', 'makiadi09', 'Cédric Makiadi', 1984, 'DR Congo', ['DM', 'CM'], 73, 74, 2012, 34, t(8, 5, 7, 6, 4, 7)),
+  q('freiburg', 'schuster09', 'Julian Schuster', 1985, 'Germany', ['CM', 'DM'], 70, 72, 2013, 32, t(8, 4, 6, 9, 3, 7)),
+  q('freiburg', 'krmas09', 'Pavel Krmaš', 1980, 'Czech Republic', ['CB'], 70, 71, 2012, 33, t(8, 4, 5, 8, 3, 6)),
+  q('freiburg', 'butscher09', 'Heiko Butscher', 1980, 'Germany', ['CB'], 69, 69, 2011, 36, t(9, 5, 6, 9, 3, 6)),
+  q('freiburg', 'mujdza09', 'Mensur Mujdža', 1984, 'Bosnia and Herzegovina', ['RB'], 69, 70, 2013, 34, t(7, 5, 6, 7, 4, 6)),
+  q('freiburg', 'abdessadki09', 'Yacine Abdessadki', 1981, 'Morocco', ['AM', 'RW'], 69, 70, 2011, 38, t(7, 6, 6, 6, 5, 7)),
+  q('freiburg', 'banovic09', 'Ivica Banović', 1980, 'Croatia', ['LW', 'LB'], 68, 69, 2011, 35, t(6, 6, 6, 6, 5, 6)),
+  // Toprak — the academy centre-half who became a Leverkusen/Dortmund regular.
+  q('freiburg', 'toprak09', 'Ömer Toprak', 1989, 'Turkey', ['CB', 'DM'], 66, 80, 2012, 42, t(7, 5, 8, 5, 4, 7)),
+  q('freiburg', 'reisinger09', 'Stefan Reisinger', 1981, 'Germany', ['ST'], 66, 68, 2012, 40, t(7, 5, 6, 6, 4, 6)),
+  q('freiburg', 'jager09', 'Jonathan Jäger', 1978, 'France', ['DM', 'CM'], 66, 67, 2011, 36, t(7, 4, 5, 7, 3, 6)),
+  // Baumann — the teenage keeper who became a long-serving Bundesliga No.1.
+  q('freiburg', 'baumann09', 'Oliver Baumann', 1990, 'Germany', ['GK'], 64, 78, 2013, 28, t(8, 4, 8, 7, 3, 7)),
+];
+
 export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   bayern: BAYERN_2009,
+  freiburg: FREIBURG_2009,
+  hertha: HERTHA_2009,
+  nurnberg: NURNBERG_2009,
+  bochum: BOCHUM_2009,
   wolfsburg: WOLFSBURG_2009,
   bremen: BREMEN_2009,
   dortmund: DORTMUND_2009,
