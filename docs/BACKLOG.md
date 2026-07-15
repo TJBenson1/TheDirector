@@ -15,8 +15,12 @@ from Aston Villa / Sunderland / anywhere. On top of that, real names were curate
 for the English mid clubs the DB had left empty: **West Ham '99** (Di Canio,
 Lampard, Joe Cole, Foé, Berkovic…), **Everton '99** (Materazzi, Dacourt, Ferguson,
 Jeffers, Dunne…), **Southampton '99** extended (Beattie, Pahars, Lundekvam…).
-Still to do: curate **Leverkusen / Sevilla / Villarreal** and more mid clubs in
-the 2004/2009/2013 worlds (the mechanic already makes their filler signable).
+Continued into the European worlds: **Leverkusen '04** extended (Schneider, Juan,
+Nowotny, Voronin, a young Gonzalo Castro), **Sevilla '09** (Luís Fabiano, Kanouté,
+Jesús Navas, Fazio, Perotti — a lost talent) and **Villarreal '09** (Cazorla,
+Senna, Godín, Rossi, Capdevila) now real squads. Still to do: more mid clubs in
+the 2013 world + the remaining Bundesliga bottom-4 (the mechanic already makes
+their filler signable, so this is real-names polish, not a gap).
 
 **Progress:** user-club leagues are well curated. Host-club pass done for AC Milan
 ('04 + '13), Barcelona '04, Real Madrid '04, Real Betis '99. Context-deepening

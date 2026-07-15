@@ -350,6 +350,48 @@ export const MAINZ_2009: CuratedSeed[] = [
 
 /** Curated squads for the bayern-2009 scenario, keyed by club — a fully real
  *  top of the Bundesliga plus the galáctico Real Madrid as European context. */
+/** Villarreal, 2008–09 (5th) — the Yellow Submarine's peak: Senna & Cazorla's
+ *  midfield, a young Godín, Rossi up top, Pirès the veteran craft. */
+export const VILLARREAL_2009: CuratedSeed[] = [
+  q('villarreal', 'lopez09', 'Diego López', 1981, 'Spain', ['GK'], 80, 83, 2012, 25, t(8, 5, 7, 7, 3, 7), { archetype: 'keeper' }),
+  q('villarreal', 'venta09', 'Javi Venta', 1975, 'Spain', ['RB'], 75, 75, 2011, 40, t(8, 4, 5, 9, 3, 6), { archetype: 'full-back-attacking' }),
+  q('villarreal', 'angel09', 'Ángel López', 1981, 'Spain', ['RB', 'LB'], 75, 77, 2013, 35, t(7, 5, 6, 7, 4, 7), { archetype: 'full-back-attacking' }),
+  q('villarreal', 'capdevila09', 'Joan Capdevila', 1978, 'Spain', ['LB'], 82, 82, 2012, 30, t(8, 5, 8, 7, 3, 7), { archetype: 'full-back-attacking' }),
+  q('villarreal', 'godin09', 'Diego Godín', 1986, 'Uruguay', ['CB'], 78, 88, 2012, 25, t(9, 5, 9, 7, 3, 8), { archetype: 'stopper' }),
+  q('villarreal', 'gonzalo09', 'Gonzalo Rodríguez', 1984, 'Argentina', ['CB'], 79, 82, 2013, 30, t(8, 5, 7, 7, 4, 7), { archetype: 'ball-playing-cb' }),
+  q('villarreal', 'senna09', 'Marcos Senna', 1976, 'Spain', ['DM'], 84, 84, 2012, 35, t(9, 5, 8, 8, 3, 7), { archetype: 'deep-playmaker' }),
+  q('villarreal', 'soriano09', 'Bruno Soriano', 1984, 'Spain', ['DM', 'CM'], 74, 84, 2013, 30, t(9, 4, 7, 10, 3, 7), { archetype: 'deep-playmaker' }),
+  q('villarreal', 'cazorla09', 'Santi Cazorla', 1984, 'Spain', ['AM', 'LW'], 81, 90, 2013, 30, t(9, 5, 9, 7, 3, 9), { archetype: 'playmaker' }),
+  q('villarreal', 'pires09', 'Robert Pirès', 1973, 'France', ['AM', 'LW'], 82, 82, 2010, 35, t(8, 6, 7, 7, 4, 8), { archetype: 'inside-forward' }),
+  q('villarreal', 'cani09', 'Cani', 1981, 'Spain', ['RW', 'AM'], 77, 78, 2013, 40, t(6, 6, 6, 7, 6, 7), { archetype: 'winger-pace' }),
+  q('villarreal', 'ibagaza09', 'Ariel Ibagaza', 1976, 'Argentina', ['AM', 'CM'], 76, 76, 2011, 35, t(8, 5, 6, 8, 3, 7), { archetype: 'playmaker' }),
+  q('villarreal', 'rossi09', 'Giuseppe Rossi', 1987, 'Italy', ['ST'], 80, 90, 2013, 35, t(8, 7, 9, 6, 5, 8), { archetype: 'complete-forward' }),
+  q('villarreal', 'nihat09', 'Nihat Kahveci', 1979, 'Turkey', ['ST', 'RW'], 80, 80, 2011, 50, t(6, 7, 6, 6, 6, 7), { archetype: 'poacher' }),
+  q('villarreal', 'llorente09', 'Joseba Llorente', 1979, 'Spain', ['ST'], 76, 76, 2012, 35, t(8, 5, 6, 7, 4, 7), { archetype: 'poacher' }),
+  q('villarreal', 'franco09', 'Guillermo Franco', 1976, 'Mexico', ['ST'], 74, 74, 2010, 55, t(7, 5, 6, 6, 5, 6), { archetype: 'target-man' }),
+];
+
+/** Sevilla, 2008–09 (3rd) — Luís Fabiano & Kanouté up top, Jesús Navas flying
+ *  down the right, an emerging Fazio, Capel and Perotti. */
+export const SEVILLA_2009: CuratedSeed[] = [
+  q('sevilla', 'palop09', 'Andrés Palop', 1973, 'Spain', ['GK'], 79, 79, 2011, 25, t(8, 4, 6, 8, 3, 6), { archetype: 'keeper' }),
+  q('sevilla', 'squillaci09', 'Sébastien Squillaci', 1980, 'France', ['CB'], 79, 80, 2012, 35, t(7, 5, 7, 5, 4, 6), { archetype: 'stopper' }),
+  q('sevilla', 'escude09', 'Julien Escudé', 1979, 'France', ['CB'], 78, 79, 2011, 40, t(7, 4, 6, 6, 3, 7), { archetype: 'ball-playing-cb' }),
+  q('sevilla', 'fazio09', 'Federico Fazio', 1987, 'Argentina', ['CB'], 71, 83, 2012, 30, t(7, 5, 8, 5, 5, 6), { archetype: 'stopper' }),
+  q('sevilla', 'navarro09', 'Fernando Navarro', 1982, 'Spain', ['LB'], 77, 78, 2012, 35, t(7, 4, 6, 7, 4, 7), { archetype: 'full-back-attacking' }),
+  q('sevilla', 'adriano09', 'Adriano Correia', 1984, 'Brazil', ['LB', 'RB'], 77, 80, 2011, 30, t(7, 5, 7, 5, 4, 7), { archetype: 'full-back-attacking' }),
+  q('sevilla', 'konko09', 'Abdoulay Konko', 1984, 'France', ['RB'], 76, 79, 2013, 35, t(6, 5, 6, 5, 5, 6), { archetype: 'full-back-defensive' }),
+  q('sevilla', 'renato09', 'Renato', 1979, 'Brazil', ['DM', 'CM'], 78, 79, 2012, 30, t(8, 4, 6, 8, 3, 7), { archetype: 'deep-playmaker' }),
+  q('sevilla', 'duscher09', 'Aldo Duscher', 1979, 'Argentina', ['DM'], 74, 75, 2011, 45, t(6, 6, 6, 4, 7, 6), { archetype: 'destroyer' }),
+  q('sevilla', 'romaric09', 'Romaric', 1983, 'Ivory Coast', ['CM', 'DM'], 76, 79, 2012, 40, t(6, 6, 7, 4, 6, 5), { archetype: 'box-to-box' }),
+  q('sevilla', 'navas09', 'Jesús Navas', 1985, 'Spain', ['RW'], 82, 88, 2013, 25, t(8, 3, 6, 9, 5, 2), { archetype: 'winger-pace' }),
+  q('sevilla', 'capel09', 'Diego Capel', 1988, 'Spain', ['LW'], 72, 84, 2012, 30, t(6, 5, 7, 6, 5, 6), { archetype: 'winger-pace' }),
+  // Diego Perotti — huge promise a run of knee/hamstring injuries never let bloom.
+  q('sevilla', 'perotti09', 'Diego Perotti', 1988, 'Argentina', ['LW', 'RW'], 68, 84, 2012, 55, t(6, 5, 7, 5, 6, 6), { archetype: 'inside-forward', latentCeiling: 87 }),
+  q('sevilla', 'fabiano09', 'Luís Fabiano', 1980, 'Brazil', ['ST'], 85, 86, 2011, 45, t(6, 7, 8, 5, 6, 6), { archetype: 'complete-forward' }),
+  q('sevilla', 'kanoute09', 'Frédéric Kanouté', 1977, 'Mali', ['ST'], 84, 84, 2010, 35, t(9, 4, 6, 8, 2, 7), { archetype: 'target-man' }),
+];
+
 export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   bayern: BAYERN_2009,
   wolfsburg: WOLFSBURG_2009,
@@ -366,4 +408,6 @@ export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   frankfurt: FRANKFURT_2009,
   mainz: MAINZ_2009,
   real_madrid: REAL_MADRID_2009,
+  villarreal: VILLARREAL_2009,
+  sevilla: SEVILLA_2009,
 };

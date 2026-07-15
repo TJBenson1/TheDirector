@@ -366,8 +366,25 @@ export const DORTMUND_2004: CuratedSeed[] = [
 export const ZENIT_2004: CuratedSeed[] = [
   q('zenit', 'arshavin', 'Andrey Arshavin', 1981, 'Russia', ['AM', 'ST'], 83, 85, 2009, 35, t(6, 7, 8, 6, 6, 7)),
 ];
+/** Bayer Leverkusen, 2004–05 — Schneider's craft, Voronin & Berbatov up top, a
+ *  17-year-old Gonzalo Castro breaking through. */
 export const LEVERKUSEN_2004: CuratedSeed[] = [
   q('leverkusen', 'berbatov', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST'], 82, 87, 2006, 30, t(7, 7, 7, 6, 5, 7)),
+  q('leverkusen', 'butt04lev', 'Hans-Jörg Butt', 1974, 'Germany', ['GK'], 78, 78, 2007, 22, t(8, 5, 6, 7, 3, 7), { archetype: 'keeper' }),
+  q('leverkusen', 'juan04lev', 'Juan', 1979, 'Brazil', ['CB'], 82, 84, 2007, 30, t(8, 5, 8, 6, 4, 7), { archetype: 'ball-playing-cb' }),
+  q('leverkusen', 'nowotny04lev', 'Jens Nowotny', 1974, 'Germany', ['CB'], 79, 79, 2006, 55, t(8, 5, 7, 8, 4, 6), { archetype: 'covering-cb' }),
+  q('leverkusen', 'roquejunior04lev', 'Roque Júnior', 1976, 'Brazil', ['CB'], 75, 76, 2007, 55, t(6, 6, 6, 5, 5, 6), { archetype: 'stopper' }),
+  q('leverkusen', 'placente04lev', 'Diego Placente', 1977, 'Argentina', ['LB'], 77, 78, 2006, 35, t(7, 4, 6, 5, 4, 7), { archetype: 'full-back-attacking' }),
+  q('leverkusen', 'ramelow04lev', 'Carsten Ramelow', 1974, 'Germany', ['DM', 'CB'], 78, 78, 2007, 40, t(8, 4, 6, 8, 3, 6), { archetype: 'destroyer' }),
+  q('leverkusen', 'schneider04lev', 'Bernd Schneider', 1973, 'Germany', ['RW', 'AM'], 83, 84, 2008, 35, t(8, 5, 7, 8, 3, 6), { archetype: 'crosser' }),
+  q('leverkusen', 'krzynowek04lev', 'Jacek Krzynówek', 1976, 'Poland', ['LW', 'AM'], 80, 81, 2006, 30, t(7, 6, 8, 5, 5, 6), { archetype: 'inside-forward' }),
+  q('leverkusen', 'ponte04lev', 'Robson Ponte', 1976, 'Brazil', ['AM'], 77, 78, 2006, 35, t(6, 6, 6, 4, 6, 6), { archetype: 'playmaker' }),
+  q('leverkusen', 'babic04lev', 'Marko Babić', 1981, 'Croatia', ['LW', 'LB'], 74, 77, 2007, 35, t(6, 6, 6, 5, 6, 6), { archetype: 'winger-pace' }),
+  q('leverkusen', 'freier04lev', 'Paul Freier', 1979, 'Germany', ['CM', 'RW'], 74, 76, 2008, 30, t(8, 4, 6, 7, 3, 7), { archetype: 'box-to-box' }),
+  q('leverkusen', 'voronin04lev', 'Andriy Voronin', 1979, 'Ukraine', ['ST', 'AM'], 78, 83, 2007, 30, t(7, 7, 8, 4, 5, 6), { archetype: 'complete-forward' }),
+  q('leverkusen', 'franca04lev', 'França', 1976, 'Brazil', ['ST'], 74, 75, 2006, 50, t(6, 6, 6, 5, 6, 6), { archetype: 'poacher' }),
+  // Gonzalo Castro — a 17-year-old academy debutant in 2004-05 (potential 82).
+  q('leverkusen', 'castro04lev', 'Gonzalo Castro', 1987, 'Germany', ['RB', 'RW'], 63, 82, 2008, 25, t(8, 4, 7, 8, 3, 8), { archetype: 'full-back-attacking' }),
 ];
 /** Essien at his real source club — Chelsea sign him in 2005, so a rival could
  *  legitimately hijack him from Lyon in 2004 (but never FROM Chelsea). */
