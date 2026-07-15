@@ -8,6 +8,16 @@ complete ledgers. How the data layer works (see `state.ts::populateSquads`):
 `CURATED_SQUADS[scenarioId][clubId]` → real seeds; procedural filler tops each
 squad to 23; a foreign context club's strength becomes squad-derived once curated.
 
+**Recruitment depth (✅ mechanic + first mid-clubs).** Procedural filler is now
+SIGNABLE as depth (`recommend.ts`), so recruitment reaches beyond the famous few
+to every club and down the leagues — a Man Utd '99 user can sign a serviceable RB
+from Aston Villa / Sunderland / anywhere. On top of that, real names were curated
+for the English mid clubs the DB had left empty: **West Ham '99** (Di Canio,
+Lampard, Joe Cole, Foé, Berkovic…), **Everton '99** (Materazzi, Dacourt, Ferguson,
+Jeffers, Dunne…), **Southampton '99** extended (Beattie, Pahars, Lundekvam…).
+Still to do: curate **Leverkusen / Sevilla / Villarreal** and more mid clubs in
+the 2004/2009/2013 worlds (the mechanic already makes their filler signable).
+
 **Progress:** user-club leagues are well curated. Host-club pass done for AC Milan
 ('04 + '13), Barcelona '04, Real Madrid '04, Real Betis '99. Context-deepening
 round 1 done: **era-2004** Juventus (new), Bayern, Porto, Valencia, Lyon, Monaco

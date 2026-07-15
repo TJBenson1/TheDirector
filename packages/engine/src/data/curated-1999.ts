@@ -154,6 +154,63 @@ export const SOUTHAMPTON_1999: CuratedSeed[] = [
     loyalty: 98,
     hardBlocks: [{ reason: 'Le Tissier is a Southampton one-club man. He will not move.', untilYear: 2003 }],
   }),
+  q('southampton', 'pauljones99', 'Paul Jones', 1967, 'Wales', ['GK'], 74, 75, 2003, 25, t(8, 5, 6, 8, 4, 6)),
+  q('southampton', 'dodd99', 'Jason Dodd', 1970, 'England', ['RB'], 73, 74, 2003, 30, t(8, 4, 6, 9, 4, 6), { archetype: 'full-back-defensive' }),
+  q('southampton', 'lundekvam99', 'Claus Lundekvam', 1973, 'Norway', ['CB'], 74, 77, 2004, 30, t(8, 4, 6, 8, 3, 7), { archetype: 'stopper' }),
+  q('southampton', 'drichards99', 'Dean Richards', 1974, 'England', ['CB'], 75, 79, 2003, 40, t(7, 5, 7, 7, 4, 6), { archetype: 'stopper' }),
+  q('southampton', 'benali99', 'Francis Benali', 1968, 'England', ['LB'], 70, 71, 2002, 35, t(8, 4, 6, 10, 5, 6), { archetype: 'full-back-defensive' }),
+  q('southampton', 'oakley99', 'Matt Oakley', 1977, 'England', ['CM'], 71, 77, 2004, 30, t(8, 4, 7, 8, 4, 7), { archetype: 'box-to-box' }),
+  q('southampton', 'beattie99', 'James Beattie', 1978, 'England', ['ST'], 72, 82, 2004, 35, t(7, 6, 7, 6, 5, 6), { archetype: 'target-man' }),
+  // Marian Pahars — the pacey Latvian who arrived in early 1999; a cult hero.
+  q('southampton', 'pahars99', 'Marian Pahars', 1976, 'Latvia', ['ST', 'LW'], 74, 79, 2004, 45, t(7, 5, 7, 7, 5, 6), { archetype: 'inside-forward' }),
+  q('southampton', 'ostenstad99', 'Egil Østenstad', 1972, 'Norway', ['ST'], 73, 75, 2003, 35, t(7, 5, 6, 6, 5, 6), { archetype: 'poacher' }),
+];
+
+/** West Ham United, 1998–99 (5th) — Redknapp's side: Di Canio's flair, the young
+ *  Lampard & Joe Cole coming through, Foé anchoring. (Rio Ferdinand is modelled at
+ *  Leeds, where his real 2002 → United move is ledgered.) */
+export const WEST_HAM_1999: CuratedSeed[] = [
+  q('west_ham', 'hislop99', 'Shaka Hislop', 1969, 'Trinidad and Tobago', ['GK'], 77, 78, 2002, 30, t(8, 5, 6, 6, 3, 7), { archetype: 'keeper' }),
+  q('west_ham', 'ruddock99', 'Neil Ruddock', 1968, 'England', ['CB'], 74, 74, 2001, 48, t(5, 7, 5, 6, 6, 6), { archetype: 'stopper' }),
+  q('west_ham', 'ipearce99', 'Ian Pearce', 1974, 'England', ['CB', 'DM'], 73, 75, 2003, 52, t(7, 4, 6, 7, 3, 7), { archetype: 'stopper' }),
+  q('west_ham', 'dicks99', 'Julian Dicks', 1968, 'England', ['LB'], 75, 75, 2001, 60, t(6, 6, 5, 9, 7, 5), { archetype: 'full-back-attacking' }),
+  q('west_ham', 'breacker99', 'Tim Breacker', 1965, 'England', ['RB'], 70, 70, 2001, 40, t(8, 3, 4, 8, 2, 6), { archetype: 'full-back-defensive' }),
+  q('west_ham', 'foe99', 'Marc-Vivien Foé', 1975, 'Cameroon', ['DM', 'CM'], 80, 83, 2003, 35, t(8, 4, 7, 7, 2, 7), { archetype: 'destroyer' }),
+  q('west_ham', 'lomas99', 'Steve Lomas', 1974, 'Northern Ireland', ['CM', 'DM'], 75, 76, 2003, 42, t(8, 5, 6, 8, 4, 6), { archetype: 'box-to-box' }),
+  q('west_ham', 'lampard99', 'Frank Lampard', 1978, 'England', ['CM', 'AM'], 74, 89, 2003, 22, t(9, 5, 9, 6, 3, 8), { archetype: 'box-to-box' }),
+  q('west_ham', 'berkovic99', 'Eyal Berkovic', 1972, 'Israel', ['AM'], 79, 80, 2001, 30, t(6, 8, 7, 4, 7, 6), { archetype: 'playmaker' }),
+  // Joe Cole — a 17-year-old prodigy; a lost talent whose peak the knee injuries clipped.
+  q('west_ham', 'cole99', 'Joe Cole', 1981, 'England', ['AM', 'LW'], 57, 87, 2004, 45, t(7, 5, 8, 6, 4, 7), { archetype: 'inside-forward', latentCeiling: 89 }),
+  q('west_ham', 'sinclair99', 'Trevor Sinclair', 1973, 'England', ['RW', 'LW'], 78, 79, 2003, 30, t(7, 5, 6, 6, 3, 7), { archetype: 'winger-pace' }),
+  q('west_ham', 'wright99', 'Ian Wright', 1963, 'England', ['ST'], 76, 76, 2000, 42, t(7, 8, 7, 5, 7, 6), { archetype: 'poacher' }),
+  q('west_ham', 'hartson99', 'John Hartson', 1975, 'Wales', ['ST'], 76, 78, 2002, 40, t(5, 6, 6, 5, 7, 6), { archetype: 'target-man' }),
+  q('west_ham', 'dicanio99', 'Paolo Di Canio', 1968, 'Italy', ['ST', 'AM'], 82, 83, 2003, 30, t(6, 9, 8, 6, 8, 6), { archetype: 'complete-forward' }),
+];
+
+/** Everton, 1998–99 (14th) — Walter Smith's side: Ferguson's aerial threat, a
+ *  wild young Materazzi, and the emerging Jeffers & Dunne. */
+export const EVERTON_1999: CuratedSeed[] = [
+  q('everton', 'myhre99', 'Thomas Myhre', 1973, 'Norway', ['GK'], 74, 76, 2002, 30, t(7, 5, 6, 6, 5, 6), { archetype: 'keeper' }),
+  q('everton', 'cleland99', 'Alec Cleland', 1970, 'Scotland', ['RB'], 68, 68, 2002, 50, t(7, 4, 5, 8, 3, 6), { archetype: 'full-back-defensive' }),
+  q('everton', 'short99', 'Craig Short', 1968, 'England', ['CB'], 73, 73, 2001, 30, t(7, 5, 5, 7, 4, 6), { archetype: 'stopper' }),
+  q('everton', 'watson99', 'Dave Watson', 1961, 'England', ['CB'], 72, 72, 2000, 35, t(9, 4, 6, 10, 3, 7), { archetype: 'covering-cb' }),
+  // Marco Materazzi — one wild season at Everton (three red cards) before becoming
+  // a World Cup winner at Inter; a genuine improver (potential 82).
+  q('everton', 'materazzi99', 'Marco Materazzi', 1973, 'Italy', ['CB'], 76, 82, 2003, 30, t(6, 8, 8, 4, 8, 5), { archetype: 'stopper' }),
+  q('everton', 'weir99', 'David Weir', 1970, 'Scotland', ['CB'], 74, 77, 2003, 25, t(9, 4, 6, 8, 2, 7), { archetype: 'ball-playing-cb' }),
+  q('everton', 'unsworth99', 'David Unsworth', 1973, 'England', ['LB', 'CB'], 74, 74, 2002, 30, t(7, 5, 5, 8, 4, 6), { archetype: 'full-back-attacking' }),
+  q('everton', 'mball99', 'Michael Ball', 1979, 'England', ['LB'], 70, 80, 2003, 40, t(7, 5, 7, 7, 4, 6), { archetype: 'full-back-attacking' }),
+  // Richard Dunne — a raw 19-year-old who became a Premier League stalwart (pot 82).
+  q('everton', 'dunne99', 'Richard Dunne', 1979, 'Ireland', ['CB'], 66, 82, 2002, 30, t(5, 5, 7, 6, 6, 6), { archetype: 'covering-cb' }),
+  q('everton', 'dacourt99', 'Olivier Dacourt', 1974, 'France', ['DM', 'CM'], 79, 82, 2003, 30, t(7, 7, 8, 4, 6, 6), { archetype: 'destroyer' }),
+  q('everton', 'collins99', 'John Collins', 1968, 'Scotland', ['CM', 'DM'], 75, 75, 2002, 25, t(9, 5, 6, 6, 3, 7), { archetype: 'deep-playmaker' }),
+  q('everton', 'hutchison99', 'Don Hutchison', 1971, 'Scotland', ['CM', 'AM'], 75, 77, 2002, 35, t(5, 6, 6, 6, 7, 6), { archetype: 'box-to-box' }),
+  q('everton', 'barmby99', 'Nick Barmby', 1974, 'England', ['AM'], 77, 78, 2003, 35, t(7, 6, 7, 4, 5, 6), { archetype: 'playmaker' }),
+  q('everton', 'dferguson99', 'Duncan Ferguson', 1971, 'Scotland', ['ST'], 78, 80, 2001, 55, t(5, 7, 5, 8, 8, 5), { archetype: 'target-man' }),
+  q('everton', 'kcampbell99', 'Kevin Campbell', 1970, 'England', ['ST'], 77, 77, 2003, 30, t(8, 5, 6, 8, 3, 8), { archetype: 'poacher' }),
+  // Francis Jeffers — the flagged LOST TALENT: elite teenage promise wrecked by a
+  // mismanaged Arsenal move and injuries (latent 88).
+  q('everton', 'jeffers99', 'Francis Jeffers', 1981, 'England', ['ST'], 62, 86, 2002, 50, t(6, 6, 8, 5, 5, 5), { archetype: 'poacher', latentCeiling: 88 }),
 ];
 
 export const MILAN_1999: CuratedSeed[] = [
@@ -383,6 +440,8 @@ const MAN_UTD_1999_SQUADS: Record<string, CuratedSeed[]> = {
   man_utd: MAN_UTD_1999,
   newcastle: NEWCASTLE_1999,
   southampton: SOUTHAMPTON_1999,
+  west_ham: WEST_HAM_1999,
+  everton: EVERTON_1999,
   milan: [...MILAN_1999],
   arsenal: ARSENAL_1999,
   liverpool: [...LIVERPOOL_1999],
