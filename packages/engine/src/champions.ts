@@ -88,6 +88,23 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2011: { w: 'chelsea', r: 'bayern' },
     2012: { w: 'bayern', r: 'dortmund' },
   },
+  'era-la-liga-2014': {
+    // MSN's Barça, 2014→2025. Real Madrid's modern Champions League dominance
+    // (2016, 2017, 2018, 2022, 2024) is anchored, alongside Barça's 2015 treble,
+    // Liverpool's 2019, Bayern's 2020, Chelsea's 2021 and City's 2023. The 2025
+    // final (PSG) sits at the very edge of the 2025 world-end.
+    2014: { w: 'barcelona', r: 'juventus' },
+    2015: { w: 'real_madrid', r: 'atletico' },
+    2016: { w: 'real_madrid', r: 'juventus' },
+    2017: { w: 'real_madrid', r: 'liverpool' },
+    2018: { w: 'liverpool' },
+    2019: { w: 'bayern', r: 'psg' },
+    2020: { w: 'chelsea', r: 'man_city' },
+    2021: { w: 'real_madrid', r: 'liverpool' },
+    2022: { w: 'man_city', r: 'inter' },
+    2023: { w: 'real_madrid', r: 'dortmund' },
+    2024: { w: 'psg', r: 'inter' },
+  },
   'era-la-liga-2006': {
     // Capello's rebuild, 2006→2021. Real Madrid's real mid-2010s Champions League
     // dynasty (2014, 2016, 2017, 2018) is anchored — the "Madrid win a tonne of

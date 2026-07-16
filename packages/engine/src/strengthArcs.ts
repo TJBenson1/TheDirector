@@ -146,6 +146,17 @@ const LA_LIGA_2006: Record<string, readonly Waypoint[]> = {
   villarreal: [[2006, 80], [2009, 76], [2012, 74]],
 };
 
+// La Liga, 2014–24 (barcelona-2014). MSN's Barça win 2015/2016/2018/2019 at their
+// peak, then trade the title with Real's post-Décima machine and Atlético's 2021.
+// The user's Barça follows its real title arc — dominant early, contested late.
+const LA_LIGA_2014: Record<string, readonly Waypoint[]> = {
+  barcelona: [[2014, 93], [2016, 87], [2017, 93], [2019, 87], [2020, 85], [2022, 92], [2023, 86], [2024, 92]],
+  real_madrid: [[2014, 88], [2016, 92], [2017, 87], [2019, 92], [2020, 87], [2021, 92], [2022, 87], [2023, 92], [2024, 87]],
+  atletico: [[2014, 86], [2016, 85], [2020, 91], [2021, 85]],
+  sevilla: [[2014, 82], [2016, 82], [2020, 82]],
+  valencia: [[2014, 82], [2016, 79], [2019, 76]],
+};
+
 /** Every pack's domestic strength arc. The English packs share one table (same
  *  league, overlapping years); each scenario re-anchors only the clubs it holds. */
 const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
@@ -158,6 +169,7 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-2000': LA_LIGA, // real-madrid-2000
   'era-la-liga-2003': LA_LIGA_2003, // barcelona-2003
   'era-la-liga-2006': LA_LIGA_2006, // real-madrid-2006
+  'era-la-liga-2014': LA_LIGA_2014, // barcelona-2014
   'era-serie-a-1995': ITALIAN, // juventus-1995
   'era-serie-a-1998': ITALIAN, // inter-1998
   'era-serie-a-2004': ITALIAN_2004, // inter-2004

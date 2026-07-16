@@ -509,6 +509,29 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
  * are Barça) — while Real's galácticos age out and the great 2009 churn plays out.
  */
 /**
+ * Real La Liga / European market, 2014→2020 (barcelona-2014 "Peak — Don't Waste
+ * It"). The hinge is Neymar's €222m defection to PSG in 2017 (the user's star, if
+ * they are Barça) and the money famously wasted on Coutinho; keep the front three
+ * together and the decline never comes. Around it, the modern market churns.
+ */
+const LEDGER_LA_LIGA_2014: RealTransferLedgerEntry[] = [
+  // ── The hinge: Neymar out, the wasted-money signing in ──
+  { playerId: 'cur_neymar_b14', from: 'barcelona', to: 'psg', window: '2017-08', fee: 222_000_000, id: 'neymar-psg-2017' },
+  { playerId: 'cur_coutinho_l14', from: 'liverpool', to: 'barcelona', window: '2018-01', fee: 142_000_000, id: 'coutinho-barca-2018', enabledBy: 'neymar-psg-2017' },
+  // ── Barça's other business ──
+  { playerId: 'cur_alves_b14', from: 'barcelona', to: 'juventus', window: '2016-07', fee: 0, id: 'alves-juve-2016' },
+  { playerId: 'cur_pedro_b14', from: 'barcelona', to: 'chelsea', window: '2015-08', fee: 27_000_000, id: 'pedro-chelsea-2015' },
+  { playerId: 'cur_suarez_b14', from: 'barcelona', to: 'atletico', window: '2020-09', fee: 6_000_000, id: 'suarez-atletico-2020' },
+  { playerId: 'cur_griezmann_a14', from: 'atletico', to: 'barcelona', window: '2019-07', fee: 120_000_000, id: 'griezmann-barca-2019' },
+  // ── The modern market around the giants ──
+  { playerId: 'cur_vidal_j14', from: 'juventus', to: 'bayern', window: '2015-07', fee: 37_000_000, id: 'vidal-bayern-2015' },
+  { playerId: 'cur_morata_j14', from: 'juventus', to: 'real_madrid', window: '2016-07', fee: 30_000_000, id: 'morata-real-2016' },
+  { playerId: 'cur_james_r14', from: 'real_madrid', to: 'bayern', window: '2017-07', fee: 0, id: 'james-bayern-2017' },
+  { playerId: 'cur_sterling_l14', from: 'liverpool', to: 'man_city', window: '2015-07', fee: 49_000_000, id: 'sterling-city-2015' },
+  { playerId: 'cur_costa_c14', from: 'chelsea', to: 'atletico', window: '2017-08', fee: 60_000_000, id: 'costa-atletico-2017' },
+];
+
+/**
  * Real La Liga / European market, 2006→2010 (real-madrid-2006 "Post-Galáctico").
  * The old galácticos age out (Ronaldo to Milan) and a NEW wave is bought in the
  * 2009 rebuild — Cristiano, Kaká and Xabi Alonso to Madrid (the user's, if they
@@ -666,6 +689,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: [], realInjuries: INJURIES_1998 },
   'era-la-liga-2003': { realTransferLedger: LEDGER_LA_LIGA_2003, academyIntakes: [], realInjuries: [] },
   'era-la-liga-2006': { realTransferLedger: LEDGER_LA_LIGA_2006, academyIntakes: [], realInjuries: [] },
+  'era-la-liga-2014': { realTransferLedger: LEDGER_LA_LIGA_2014, academyIntakes: [], realInjuries: [] },
   'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
   // Juventus 2006 rejoins the late-2000s Serie A world from 2007, so it draws on
   // the same reality ledger — Pirlo's 2011 free transfer to Juventus included.

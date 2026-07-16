@@ -266,6 +266,36 @@ export const SPAIN_2003: LeagueSeed = {
   ],
 };
 
+/** La Liga, 2014–15 — Luis Enrique's treble-winning MSN Barça, the BBC Real, and
+ *  Simeone's champion Atlético. 20 clubs; ordering follows the real final table. */
+export const SPAIN_2014: LeagueSeed = {
+  id: 'esp-2014',
+  name: 'La Liga',
+  season: '2014-07',
+  clubs: [
+    { id: 'barcelona', name: 'Barcelona', prestige: 92, strength: 91 },
+    { id: 'real_madrid', name: 'Real Madrid', prestige: 92, strength: 90 },
+    { id: 'atletico', name: 'Atlético Madrid', prestige: 82, strength: 86 },
+    { id: 'valencia', name: 'Valencia', prestige: 72, strength: 80 },
+    { id: 'sevilla', name: 'Sevilla', prestige: 72, strength: 82 },
+    { id: 'villarreal', name: 'Villarreal', prestige: 66, strength: 78 },
+    { id: 'athletic', name: 'Athletic Bilbao', prestige: 66, strength: 77 },
+    { id: 'celta', name: 'Celta Vigo', prestige: 58, strength: 74 },
+    { id: 'malaga', name: 'Málaga', prestige: 58, strength: 74 },
+    { id: 'espanyol', name: 'Espanyol', prestige: 58, strength: 73 },
+    { id: 'rayo', name: 'Rayo Vallecano', prestige: 50, strength: 70 },
+    { id: 'real_sociedad', name: 'Real Sociedad', prestige: 62, strength: 75 },
+    { id: 'elche', name: 'Elche', prestige: 44, strength: 67 },
+    { id: 'levante', name: 'Levante', prestige: 48, strength: 69 },
+    { id: 'getafe', name: 'Getafe', prestige: 50, strength: 70 },
+    { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 56, strength: 70 },
+    { id: 'granada', name: 'Granada', prestige: 46, strength: 68 },
+    { id: 'eibar', name: 'Eibar', prestige: 44, strength: 68 },
+    { id: 'almeria', name: 'Almería', prestige: 44, strength: 66 },
+    { id: 'cordoba', name: 'Córdoba', prestige: 42, strength: 64 },
+  ],
+};
+
 /** La Liga, 2006–07 — Capello's rebuilding Real, Rijkaard's fading champions, and
  *  Juande Ramos's Sevilla. 20 clubs; ordering follows the real final table. */
 export const SPAIN_2006: LeagueSeed = {
@@ -455,6 +485,7 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'esp-1': SPAIN_2000,
   'esp-2003': SPAIN_2003,
   'esp-2006': SPAIN_2006,
+  'esp-2014': SPAIN_2014,
   'ita-1': ITALY_1995,
   'ita-1998': ITALY_1998,
   'ita-b-2006': ITALY_B_2006,

@@ -653,6 +653,39 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     domesticLeagueId: 'esp-2006',
   },
+  'barcelona-2014': {
+    id: 'barcelona-2014',
+    name: 'Barcelona — 2014: Peak — Don’t Waste It',
+    startDate: '2014-07',
+    playerClub: 'barcelona',
+    // Luis Enrique has arrived, Suárez signs, and MSN — Messi, Suárez, Neymar — is
+    // about to become the most devastating front three in history. Reality: the
+    // 2015 treble, then a slow squander (Neymar to PSG in 2017, the money wasted).
+    // Keep the golden generation together and do not waste the peak.
+    mandate: 'Win everything with MSN — and don’t waste the greatest team you’ll ever have.',
+    boardPatience: 70,
+    boardExpectedFinish: 1,
+    // La Liga is the simulated league; the modern elite of Europe (full squads)
+    // plus a light context anchor every real European Cup of 2015–2025.
+    clubs: [
+      { id: 'barcelona', name: 'Barcelona', prestige: 92 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 92 },
+      { id: 'man_city', name: 'Manchester City', prestige: 88 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 88 },
+      { id: 'juventus', name: 'Juventus', prestige: 86 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 84 },
+      { id: 'inter', name: 'Internazionale', prestige: 80 },
+    ],
+    contextExtra: [
+      { id: 'atletico', name: 'Atlético Madrid', prestige: 82 },
+      { id: 'sevilla', name: 'Sevilla', prestige: 72 },
+      { id: 'valencia', name: 'Valencia', prestige: 72 },
+      { id: 'psg', name: 'Paris Saint-Germain', prestige: 84 },
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 82 },
+    ],
+    domesticLeagueId: 'esp-2014',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';
