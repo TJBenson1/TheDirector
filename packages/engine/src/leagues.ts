@@ -236,6 +236,36 @@ export const ITALY_1998: LeagueSeed = {
   ],
 };
 
+/** Serie A, 2007–08 — champion Inter, Roma, Juventus back from Serie B, and the
+ *  ageing European-champion Milan. 20 clubs; ordering follows the real table. */
+export const ITALY_2007: LeagueSeed = {
+  id: 'ita-2007',
+  name: 'Serie A',
+  season: '2007-07',
+  clubs: [
+    { id: 'inter', name: 'Internazionale', prestige: 86, strength: 87 },
+    { id: 'roma', name: 'AS Roma', prestige: 82, strength: 84 },
+    { id: 'juventus', name: 'Juventus', prestige: 84, strength: 83 },
+    { id: 'fiorentina', name: 'Fiorentina', prestige: 76, strength: 80 },
+    { id: 'milan', name: 'AC Milan', prestige: 86, strength: 84 },
+    { id: 'sampdoria', name: 'Sampdoria', prestige: 66, strength: 75 },
+    { id: 'udinese', name: 'Udinese', prestige: 64, strength: 75 },
+    { id: 'napoli', name: 'Napoli', prestige: 68, strength: 74 },
+    { id: 'genoa', name: 'Genoa', prestige: 60, strength: 73 },
+    { id: 'atalanta', name: 'Atalanta', prestige: 58, strength: 71 },
+    { id: 'palermo', name: 'Palermo', prestige: 58, strength: 72 },
+    { id: 'lazio', name: 'Lazio', prestige: 74, strength: 76 },
+    { id: 'siena', name: 'Siena', prestige: 48, strength: 68 },
+    { id: 'cagliari', name: 'Cagliari', prestige: 52, strength: 67 },
+    { id: 'torino', name: 'Torino', prestige: 56, strength: 67 },
+    { id: 'reggina', name: 'Reggina', prestige: 46, strength: 65 },
+    { id: 'catania', name: 'Catania', prestige: 46, strength: 65 },
+    { id: 'empoli', name: 'Empoli', prestige: 46, strength: 64 },
+    { id: 'parma', name: 'Parma', prestige: 58, strength: 66 },
+    { id: 'livorno', name: 'Livorno', prestige: 46, strength: 63 },
+  ],
+};
+
 /** England, 2003–04 Premier League — Arsenal's Invincibles, Abramovich's first
  *  Chelsea season, United post-Beckham. Ordering follows the real final table. */
 export const ENGLAND_2003: LeagueSeed = {
@@ -304,6 +334,7 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'esp-1': SPAIN_2000,
   'ita-1': ITALY_1995,
   'ita-1998': ITALY_1998,
+  'ita-2007': ITALY_2007,
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,

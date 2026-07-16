@@ -455,6 +455,42 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     // money — the era's great fire-sales when the crashes come.
     distressedClubs: { lazio: 'strained', parma: 'strained' },
   },
+  'milan-2007': {
+    id: 'milan-2007',
+    name: 'AC Milan — 2007: Last Dance Before the Fall',
+    startDate: '2007-07',
+    playerClub: 'milan',
+    // Champions of Europe, but the oldest side on the continent: Maldini at 39,
+    // Cafu at 37, a broken Ronaldo, and only Kaká and the teenage Pato pointing
+    // forward. Reality was a slow slide into the 2012 austerity fire-sale — the
+    // counterfactual is to rebuild before the fall.
+    mandate: 'Squeeze one more European Cup from the champions — and rebuild before the fall.',
+    boardPatience: 74,
+    boardExpectedFinish: 2,
+    // Serie A is the simulated league; the elite of Europe (full squads) plus a
+    // light continental context anchor every real European Cup of 2008–2022.
+    clubs: [
+      { id: 'milan', name: 'AC Milan', prestige: 88 },
+      { id: 'inter', name: 'Internazionale', prestige: 86 },
+      { id: 'juventus', name: 'Juventus', prestige: 84 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 92 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 90 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 90 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 82 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 88 },
+    ],
+    contextExtra: [
+      { id: 'roma', name: 'AS Roma', prestige: 82 },
+      { id: 'fiorentina', name: 'Fiorentina', prestige: 76 },
+      { id: 'napoli', name: 'Napoli', prestige: 70 },
+      { id: 'lazio', name: 'Lazio', prestige: 74 },
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
+      { id: 'atletico', name: 'Atlético Madrid', prestige: 82 },
+      { id: 'porto', name: 'FC Porto', prestige: 78 },
+    ],
+    domesticLeagueId: 'ita-2007',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

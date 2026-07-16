@@ -537,6 +537,39 @@ const LEDGER_1998_2004: RealTransferLedgerEntry[] = [
   { playerId: 'cur_rui_costa_f', from: 'fiorentina', to: 'milan', window: '2001-07', fee: 42_000_000, id: 'ruicosta-milan-2001' },
 ];
 
+/**
+ * Real Serie A / European market, 2007→2013 (milan-2007 "Last Dance"). The ageing
+ * champions are broken up: Kaká's record move to Madrid (the user's to sanction if
+ * they are Milan), Pirlo's free-transfer exit to Juventus that builds the dynasty,
+ * and the great 2009 galáctico churn (Cristiano to Madrid, Ibra/Eto'o swap, the
+ * Liverpool spine cashed in).
+ */
+const LEDGER_2007_2013: RealTransferLedgerEntry[] = [
+  // ── Milan's business (the user's, if they are Milan) ──
+  { playerId: 'cur_kaka_07', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
+  { playerId: 'cur_pirlo_07', from: 'milan', to: 'juventus', window: '2011-07', fee: 0, id: 'pirlo-juve-2011' },
+  { playerId: 'cur_ibrahimovic_07', from: 'barcelona', to: 'milan', window: '2010-08', fee: 24_000_000, id: 'ibra-milan-2010', enabledBy: 'ibra-barca-2009' },
+  // ── The 2009 galáctico churn ──
+  { playerId: 'cur_cristiano_07', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 94_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_robben_07', from: 'real_madrid', to: 'bayern', window: '2009-08', fee: 25_000_000, id: 'robben-bayern-2009', enabledBy: 'cr7-real-2009' },
+  { playerId: 'cur_sneijder_07', from: 'real_madrid', to: 'inter', window: '2009-08', fee: 15_000_000, id: 'sneijder-inter-2009', enabledBy: 'cr7-real-2009' },
+  { playerId: 'cur_ibrahimovic_07', from: 'inter', to: 'barcelona', window: '2009-07', fee: 46_000_000, id: 'ibra-barca-2009' },
+  { playerId: 'cur_etoo_07', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000, id: 'etoo-inter-2009', enabledBy: 'ibra-barca-2009' },
+  // ── The Liverpool spine cashed in ──
+  { playerId: 'cur_alonso_07', from: 'liverpool', to: 'real_madrid', window: '2009-08', fee: 30_000_000, id: 'alonso-real-2009' },
+  { playerId: 'cur_mascherano_07', from: 'liverpool', to: 'barcelona', window: '2010-08', fee: 24_000_000, id: 'masche-barca-2010' },
+  { playerId: 'cur_torres_07', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
+  // ── Higuaín cashed in as Madrid reload ──
+  { playerId: 'cur_higuain_07', from: 'real_madrid', to: 'napoli', window: '2013-07', fee: 39_000_000, id: 'higuain-napoli-2013' },
+];
+
+/** Pato's knee — the wonderkid whose body betrayed him — and the ageing champions'
+ *  brittleness. Fire only if the player is still at his real club. */
+const INJURIES_2007: RealInjuryEntry[] = [
+  { playerId: 'cur_pato_07', atClub: 'milan', since: '2010-09', months: 5, serious: true, note: 'recurrent thigh injuries that wrecked a golden career' },
+  { playerId: 'cur_nesta_07', atClub: 'milan', since: '2008-02', months: 3, serious: false, note: 'chronic back and knee trouble' },
+];
+
 /** Ronaldo's ruptured knee — the era's defining injury. Fires only if Il Fenomeno
  *  is still at Inter (a user who cashed him in never sees it). */
 const INJURIES_1998: RealInjuryEntry[] = [
@@ -554,6 +587,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: [], realInjuries: INJURIES_2000 },
   'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: [], realInjuries: INJURIES_1995 },
   'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: [], realInjuries: INJURIES_1998 },
+  'era-serie-a-2007': { realTransferLedger: LEDGER_2007_2013, academyIntakes: [], realInjuries: INJURIES_2007 },
   'era-2003': { realTransferLedger: LEDGER_2003_2011, academyIntakes: [], realInjuries: INJURIES_2003, nearMissLedger: NEAR_MISS_2003 },
 };
 

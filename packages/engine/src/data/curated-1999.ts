@@ -16,6 +16,7 @@ import { JUVENTUS_1995_SQUADS } from './curated-1995.js';
 import { MANUTD_2003_SQUADS } from './curated-2003.js';
 import { ARSENAL_1996_SQUADS } from './curated-1996.js';
 import { INTER_1998_SQUADS } from './curated-serie-a-1998.js';
+import { MILAN_2007_SQUADS } from './curated-serie-a-2007.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -470,6 +471,9 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   // Il Fenomeno's Inter has its own Serie A 1998-99 pack (Ronaldo's overstocked
   // front line, Zaccheroni's Milan, the Parmalat jewels, and the elite of Europe).
   'inter-1998': INTER_1998_SQUADS,
+  // Milan's ageing 2007 European champions — Maldini, Kaká, Pirlo, Nesta — with
+  // the late-2000s calcio and the elite of Europe (CL anchored to 2022).
+  'milan-2007': MILAN_2007_SQUADS,
   // The Galácticos-era Madrid start has its own Spanish/European pack (La Liga
   // 2000–01 + the clubs Real bought their galácticos from).
   'real-madrid-2000': REAL_MADRID_2000_SQUADS,

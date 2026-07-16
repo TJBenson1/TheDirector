@@ -73,6 +73,21 @@ const ITALIAN: Record<string, readonly Waypoint[]> = {
   parma: [[1995, 80], [2000, 80], [2003, 68], [2005, 64]],
 };
 
+// Serie A, 2007–22 (milan-2007). Inter carry the immediate post-Calciopoli years,
+// then Juventus's nine-in-a-row dynasty (2012–20) takes over, before Inter and a
+// resurgent Milan close the era. Milan — the user's club, the ageing champions —
+// take one more title (Allegri, 2011) then fall away under austerity, rising again
+// only at the very end (Pioli, 2022). Roma and Napoli are the perennial nearly-men.
+const ITALIAN_2007: Record<string, readonly Waypoint[]> = {
+  inter: [[2007, 87], [2008, 88], [2009, 88], [2011, 82], [2020, 85], [2021, 87]],
+  milan: [[2007, 85], [2009, 83], [2011, 85], [2012, 77], [2021, 83], [2022, 86]],
+  juventus: [[2007, 82], [2011, 86], [2012, 88], [2015, 89], [2017, 90], [2020, 87], [2021, 83]],
+  roma: [[2007, 84], [2010, 82], [2014, 83], [2018, 82], [2020, 80]],
+  napoli: [[2007, 74], [2010, 80], [2013, 83], [2016, 85], [2018, 87], [2020, 84]],
+  lazio: [[2007, 78], [2010, 76], [2015, 79], [2020, 81]],
+  fiorentina: [[2007, 80], [2010, 79], [2013, 80], [2016, 75]],
+};
+
 /** Every pack's domestic strength arc. The English packs share one table (same
  *  league, overlapping years); each scenario re-anchors only the clubs it holds. */
 const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
@@ -85,6 +100,7 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-2000': LA_LIGA, // real-madrid-2000
   'era-serie-a-1995': ITALIAN, // juventus-1995
   'era-serie-a-1998': ITALIAN, // inter-1998
+  'era-serie-a-2007': ITALIAN_2007, // milan-2007
 };
 
 /** The arc's target strength for `year` — the latest waypoint at or before it, or

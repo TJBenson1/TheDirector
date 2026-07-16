@@ -88,6 +88,27 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2011: { w: 'chelsea', r: 'bayern' },
     2012: { w: 'bayern', r: 'dortmund' },
   },
+  'era-serie-a-2007': {
+    // The ageing champions of 2007, 2007→2022. Every real European Cup winner's
+    // club is in the pack (Real Madrid's 2014–2022 dynasty included); runners-up
+    // not in the field (Spurs 2019, PSG 2020, City 2021, Atlético in some years)
+    // simply resolve to the strongest available side.
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern', r: 'dortmund' },
+    2013: { w: 'real_madrid', r: 'atletico' },
+    2014: { w: 'barcelona', r: 'juventus' },
+    2015: { w: 'real_madrid', r: 'atletico' },
+    2016: { w: 'real_madrid', r: 'juventus' },
+    2017: { w: 'real_madrid', r: 'liverpool' },
+    2018: { w: 'liverpool' },
+    2019: { w: 'bayern' },
+    2020: { w: 'chelsea' },
+    2021: { w: 'real_madrid', r: 'liverpool' },
+  },
   'era-2000': {
     // The full 2000–15 board — every real winner's club is in this pack (Porto's
     // 2004 miracle included), so a passive walk reproduces the European Cup exactly.
