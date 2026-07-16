@@ -13,6 +13,7 @@ import { ARSENAL_2004_SQUADS } from './curated-2004.js';
 import { LIVERPOOL_2001_SQUADS } from './curated-2001.js';
 import { INTER_1998_SQUADS } from './curated-1998.js';
 import { BAYERN_2009_SQUADS } from './curated-2009.js';
+import { NEWCASTLE_1995_SQUADS } from './curated-1995.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -498,6 +499,7 @@ const BARCELONA_1999_SQUADS: Record<string, CuratedSeed[]> = {
 // the playerClub differs — so the galáctico-era Madrid start reuses the map.
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'man-utd-1999': MAN_UTD_1999_SQUADS,
+  'newcastle-1995': NEWCASTLE_1995_SQUADS,
   'real-madrid-2000': MAN_UTD_1999_SQUADS,
   'barcelona-1999': BARCELONA_1999_SQUADS,
   'inter-1998': INTER_1998_SQUADS,

@@ -1785,10 +1785,114 @@ const DORTMUND_2009_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── Newcastle, 1995 (Keegan's Entertainers) storyline pack ───────────────────
+const NEWCASTLE_1995_PACK: ScriptedEvent[] = [
+  {
+    // Keegan's creed: attack, attack, attack — the most thrilling side in England,
+    // and the most open. Back the cavalier approach or add a defensive spine.
+    id: 'entertainers-philosophy',
+    date: '1995-08',
+    requires: (s) => s.playerClub === 'newcastle',
+    build: () => ({
+      id: 'scripted:entertainers-philosophy',
+      title: 'Keegan wants to attack, attack, attack',
+      description: 'Your manager\'s creed is simple: outscore everyone and to hell with the defence. It is the most exciting football in the country — and the most dangerous. Back the cavalier approach, or insist on some balance?',
+      interrupt: true,
+      clubId: 'newcastle',
+      category: 'event',
+      choices: [
+        {
+          id: 'cavalier',
+          label: 'Back the all-out-attack philosophy',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'morale', clubId: 'newcastle', amount: 6 }, { kind: 'fanTrust', amount: 6, text: 'The Toon roar for the Entertainers.' }, { kind: 'memory', tag: 'tactics', text: 'Backed Keegan\'s cavalry — thrilling, and perilous.' }],
+          onFailure: [{ kind: 'memory', tag: 'tactics', text: 'The open football will cost points somewhere.' }],
+        },
+        {
+          id: 'balance',
+          label: 'Insist on a defensive spine',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'tactics', text: 'Added steel Keegan never would — a divergence from the real collapse.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'tactics', text: 'Keegan sends them out to attack, come what may.' }],
+      memoryTags: ['tactics', 'keegan'],
+    }),
+  },
+  {
+    // The famous collapse: a 12-point lead surrendered to Ferguson's United, and
+    // Keegan's "I would love it" meltdown. Hold your nerve, or let history repeat.
+    id: 'keegan-title-race',
+    date: '1996-03',
+    requires: (s) => s.playerClub === 'newcastle',
+    build: () => ({
+      id: 'scripted:keegan-title-race',
+      title: 'The 12-point lead is slipping away',
+      description: 'You were streets clear at the top, but United are reeling you in and the manager is rattled — the mind games are getting to him. Steady the ship, or let the title race become a war of nerves?',
+      interrupt: true,
+      clubId: 'newcastle',
+      category: 'event',
+      choices: [
+        {
+          id: 'steady',
+          label: 'Calm the manager and the dressing room',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'morale', clubId: 'newcastle', amount: 8 }, { kind: 'memory', tag: 'title-race', text: 'Held the nerve Keegan couldn\'t — the lead survives.' }],
+          onFailure: [{ kind: 'morale', clubId: 'newcastle', amount: -6 }, { kind: 'memory', tag: 'title-race', text: 'The nerves told — the ghost of the real collapse.' }],
+        },
+        {
+          id: 'fire',
+          label: 'Let Keegan channel the fury ("I would love it")',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'morale', clubId: 'newcastle', amount: 6 }, { kind: 'fanTrust', amount: 5, text: 'The passion galvanises Tyneside.' }],
+          onFailure: [{ kind: 'morale', clubId: 'newcastle', amount: -10 }, { kind: 'fanTrust', amount: -6, text: 'The meltdown becomes the story, as reality.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'newcastle', amount: -8 }, { kind: 'memory', tag: 'title-race', text: 'The lead evaporates — as it did in reality.' }],
+      memoryTags: ['title-race', 'keegan'],
+    }),
+  },
+  {
+    // The record-breaking homecoming: Alan Shearer, the world's most expensive
+    // player, joins his boyhood club in summer 1996. Break the bank, or not?
+    id: 'shearer-homecoming',
+    date: '1996-07',
+    requires: (s) => s.playerClub === 'newcastle',
+    build: () => ({
+      id: 'scripted:shearer-homecoming',
+      title: 'Alan Shearer can be brought home',
+      description: 'The best striker in England — and a Geordie — is available for a world-record fee. Break the bank to bring him home to St James\' Park, or spend the money on a defence that could actually win the title?',
+      interrupt: true,
+      clubId: 'newcastle',
+      category: 'event',
+      choices: [
+        {
+          id: 'break-the-bank',
+          label: 'Sign Shearer — the record homecoming',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'fanTrust', amount: 10, text: 'Shearer coming home sends Tyneside into raptures.' }, { kind: 'money', clubId: 'newcastle', amount: -8_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Brought Shearer home — as reality; the No.9 legend begins.' }],
+          onFailure: [{ kind: 'money', clubId: 'newcastle', amount: -8_000_000 }],
+        },
+        {
+          id: 'fix-defence',
+          label: 'Spend it on a title-winning defence instead',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Passed on Shearer to fix the defence — the road not taken.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -8, text: 'Snubbing the Shearer dream angers the Toon Army.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'The Shearer question is left unanswered.' }],
+      memoryTags: ['transfer', 'shearer'],
+    }),
+  },
+];
+
 /** Scripted historical storylines by scenario. man-utd-1999 is the calibration
  *  pack; the others fire only in their own start point (no calibration impact). */
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
+  'newcastle-1995': NEWCASTLE_1995_PACK,
   'man-utd-2013': MAN_UTD_2013_PACK,
   'man-city-2013': MAN_CITY_2013_PACK,
   'chelsea-2013': CHELSEA_2013_PACK,

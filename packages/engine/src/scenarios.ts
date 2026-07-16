@@ -437,6 +437,23 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ownership: { man_city: 'sugar-daddy' },
     domesticLeagueId: 'ger-2009',
   },
+
+  // ── Newcastle 1995 — Keegan's Entertainers ───────────────────────────────────
+  'newcastle-1995': {
+    id: 'newcastle-1995',
+    name: 'Newcastle United — 1995: The Entertainers',
+    startDate: '1995-07',
+    playerClub: 'newcastle',
+    mandate: 'Make the swagger count — win the title Keegan\'s Entertainers threw away, and don\'t let the 12-point lead slip.',
+    boardPatience: 74,
+    boardExpectedFinish: 3,
+    clubs: ELITE_CLUBS,
+    contextExtra: [
+      { id: 'blackburn', name: 'Blackburn Rovers', prestige: 74 },
+      { id: 'leeds', name: 'Leeds United', prestige: 70 },
+    ],
+    domesticLeagueId: 'eng-1',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

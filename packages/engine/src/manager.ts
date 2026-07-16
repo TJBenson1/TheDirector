@@ -61,6 +61,10 @@ const STYLE_BY_NAME: Record<string, ManagerStyle> = {
   // The two the Director will chase — polar opposites, era-appropriate names.
   'José Mourinho': st('Pragmatic — low block & lethal counter', 0.2, 0.2),
   'Pep Guardiola': st('Positional possession — total control', 0.98, 0.75),
+  'Kevin Keegan': st('Cavalier — all-out attack', 0.6, 0.6),
+  'Jürgen Klopp': st('Heavy-metal pressing, youth', 0.55, 0.8),
+  'Manuel Pellegrini': st('Attacking possession', 0.7, 0.45),
+  'Brendan Rodgers': st('High-tempo possession', 0.75, 0.6),
 };
 const DEFAULT_STYLE = st('Balanced', 0.5, 0.45);
 const CARETAKER_STYLE = st('Caretaker — keep it steady', 0.45, 0.4);
@@ -82,6 +86,13 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
   'chelsea-2003': { name: 'Claudio Ranieri', reputation: 74 },
   'real-madrid-2000': { name: 'Vicente del Bosque', reputation: 82 },
   'inter-1998': { name: 'Gigi Simoni', reputation: 66 },
+  'newcastle-1995': { name: 'Kevin Keegan', reputation: 78 },
+  'man-city-2013': { name: 'Manuel Pellegrini', reputation: 80 },
+  'chelsea-2013': { name: 'José Mourinho', reputation: 88 },
+  'liverpool-2013': { name: 'Brendan Rodgers', reputation: 68 },
+  'arsenal-2013': { name: 'Arsène Wenger', reputation: 84 },
+  'wolfsburg-2009': { name: 'Armin Veh', reputation: 62 },
+  'dortmund-2009': { name: 'Jürgen Klopp', reputation: 74 },
 };
 
 /** A pool of coaches available to hire, each with the YEARS he was a plausible
