@@ -103,6 +103,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'porto', name: 'FC Porto', prestige: 74 },
       { id: 'valencia', name: 'Valencia', prestige: 74 },
       { id: 'atletico', name: 'Atlético Madrid', prestige: 74 },
+      // The era's two European giants: Guardiola's Barça and Mourinho's treble Inter.
+      { id: 'barcelona', name: 'Barcelona', prestige: 90 },
+      { id: 'inter', name: 'Internazionale', prestige: 84 },
     ],
     // The Abu Dhabi takeover (2008) makes City a sugar-daddy club; FFP reins the
     // spending back in from 2011 (ambition.ts::applyFinancialFairPlay).

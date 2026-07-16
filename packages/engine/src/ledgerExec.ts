@@ -462,6 +462,10 @@ function fallbackForLedger(
     if (p.id === entry.playerId || p.club === entry.to) return false;
     if (positionGroupOf(p) !== group) return false;
     if (p.resistance.hardBlocks.length > 0 || p.injury) return false;
+    // A club denied a marquee target buys a replacement with a FUTURE, not a
+    // fading veteran the ageing system is about to phase out for regular football
+    // elsewhere (which would delete him and leave this narrative signing dangling).
+    if (year - p.birthYear >= 31) return false;
     if (p.ability > targetAbility + 2) return false; // not a clear upgrade
     if (targetAbility - p.ability > 6) return false; // like-for-like, not a big drop
     const seller = p.club ? state.clubs[p.club] : undefined;

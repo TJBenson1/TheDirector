@@ -79,10 +79,14 @@ describe('player query + the 16+ rule (§4)', () => {
     expect(q.note).toMatch(/16\+ rule|not yet on the radar/i);
   });
 
-  it('never surfaces procedural filler as a queryable player', () => {
+  it('never surfaces procedural filler via a name search (Principle 2)', () => {
     const state = createNewGame({ seed: 'filler' });
-    const proc = Object.values(state.players).find((p) => isProcedural(p))!;
-    const q = queryPlayer(state, proc.id);
-    expect(q.visible).toBe(false);
+    // Signable depth is inspectable by EXACT id (surfaced from suggestTargets),
+    // but anonymous filler must never be DISCOVERABLE by name — even when its
+    // generated surname coincidentally reuses a real one. A name query resolves
+    // to curated (real) players only, so it can never return the filler itself.
+    for (const proc of Object.values(state.players).filter((p) => isProcedural(p))) {
+      expect(resolvePlayer(state, proc.name)?.id).not.toBe(proc.id);
+    }
   });
 });

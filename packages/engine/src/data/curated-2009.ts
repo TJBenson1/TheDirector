@@ -477,8 +477,49 @@ export const FREIBURG_2009: CuratedSeed[] = [
   q('freiburg', 'baumann09', 'Oliver Baumann', 1990, 'Germany', ['GK'], 64, 78, 2013, 28, t(8, 4, 8, 7, 3, 7)),
 ];
 
+/** Internazionale, 2009–10 — Mourinho's treble winners (Serie A + Coppa + the
+ *  Champions League), the elite Italian pole of the era-2009 world. */
+export const INTER_2009: CuratedSeed[] = [
+  q('inter', 'juliocesar09', 'Júlio César', 1979, 'Brazil', ['GK'], 86, 86, 2014, 30, t(8, 5, 7, 7, 3, 7)),
+  q('inter', 'maicon09', 'Maicon', 1981, 'Brazil', ['RB'], 87, 87, 2012, 35, t(7, 6, 7, 6, 4, 7)),
+  q('inter', 'lucio09', 'Lúcio', 1978, 'Brazil', ['CB'], 85, 85, 2012, 35, t(8, 6, 7, 6, 4, 6)),
+  q('inter', 'samuel09', 'Walter Samuel', 1978, 'Argentina', ['CB'], 84, 84, 2013, 50, t(9, 4, 6, 8, 3, 6)),
+  q('inter', 'chivu09', 'Cristian Chivu', 1980, 'Romania', ['CB', 'LB'], 81, 81, 2012, 45, t(8, 4, 6, 7, 3, 7)),
+  q('inter', 'zanetti09', 'Javier Zanetti', 1973, 'Argentina', ['RB', 'CM'], 85, 85, 2013, 25, t(10, 2, 7, 10, 1, 8)),
+  q('inter', 'cambiasso09', 'Esteban Cambiasso', 1980, 'Argentina', ['DM'], 86, 86, 2014, 30, t(9, 3, 7, 8, 2, 7)),
+  q('inter', 'motta09', 'Thiago Motta', 1982, 'Brazil', ['CM'], 82, 82, 2013, 45, t(7, 4, 7, 6, 4, 7)),
+  q('inter', 'sneijder09', 'Wesley Sneijder', 1984, 'Netherlands', ['AM'], 88, 88, 2014, 40, t(7, 6, 8, 6, 5, 7)),
+  q('inter', 'etoo09', 'Samuel Eto’o', 1981, 'Cameroon', ['ST', 'RW'], 87, 87, 2014, 35, t(8, 8, 9, 5, 5, 7)),
+  q('inter', 'milito09', 'Diego Milito', 1979, 'Argentina', ['ST'], 88, 88, 2014, 35, t(9, 4, 7, 7, 2, 7)),
+  q('inter', 'pandev09', 'Goran Pandev', 1983, 'North Macedonia', ['AM', 'ST'], 82, 82, 2014, 35, t(7, 5, 7, 6, 4, 7)),
+  q('inter', 'stankovic09', 'Dejan Stanković', 1978, 'Serbia', ['CM', 'AM'], 82, 82, 2013, 40, t(9, 4, 7, 9, 3, 7)),
+  // Balotelli — a generational talent here as a teenager, forever a what-might-have-been.
+  q('inter', 'balotelli09', 'Mario Balotelli', 1990, 'Italy', ['ST'], 79, 87, 2013, 30, t(4, 9, 8, 3, 10, 5), { latentCeiling: 90 }),
+];
+
+/** Barcelona, 2009–10 — Guardiola's 99-point champions, a year on from the 2009
+ *  treble; the pinnacle of the tiki-taka era and the world's best side. */
+export const BARCELONA_2009: CuratedSeed[] = [
+  q('barcelona', 'valdes09', 'Víctor Valdés', 1982, 'Spain', ['GK'], 84, 85, 2014, 28, t(8, 4, 7, 9, 4, 7)),
+  q('barcelona', 'alves09', 'Dani Alves', 1983, 'Brazil', ['RB'], 85, 86, 2015, 30, t(8, 7, 8, 7, 5, 8)),
+  q('barcelona', 'pique09', 'Gerard Piqué', 1987, 'Spain', ['CB'], 84, 87, 2015, 30, t(8, 6, 8, 8, 4, 8)),
+  q('barcelona', 'puyol09', 'Carles Puyol', 1978, 'Spain', ['CB'], 85, 85, 2013, 38, t(10, 3, 9, 10, 2, 7)),
+  q('barcelona', 'maxwell09', 'Maxwell', 1981, 'Brazil', ['LB'], 80, 81, 2013, 32, t(9, 3, 7, 8, 2, 8)),
+  q('barcelona', 'busquets09', 'Sergio Busquets', 1988, 'Spain', ['DM', 'CM'], 83, 88, 2015, 28, t(9, 3, 8, 9, 2, 8)),
+  q('barcelona', 'xavi09', 'Xavi Hernández', 1980, 'Spain', ['CM'], 89, 89, 2014, 28, t(10, 3, 8, 10, 2, 8)),
+  q('barcelona', 'iniesta09', 'Andrés Iniesta', 1984, 'Spain', ['CM', 'AM'], 88, 89, 2015, 40, t(10, 2, 8, 10, 2, 8)),
+  q('barcelona', 'yayatoure09', 'Yaya Touré', 1983, 'Ivory Coast', ['DM', 'CM'], 84, 85, 2014, 28, t(8, 6, 8, 6, 4, 7)),
+  q('barcelona', 'keita09', 'Seydou Keita', 1980, 'Mali', ['CM', 'AM'], 81, 81, 2012, 30, t(9, 4, 7, 8, 3, 8)),
+  q('barcelona', 'messi09', 'Lionel Messi', 1987, 'Argentina', ['RW', 'ST'], 92, 95, 2014, 35, t(9, 3, 9, 10, 2, 8)),
+  q('barcelona', 'ibrahimovic09', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 86, 87, 2014, 32, t(8, 10, 9, 5, 6, 6)),
+  q('barcelona', 'pedro09', 'Pedro Rodríguez', 1987, 'Spain', ['RW', 'ST'], 80, 85, 2014, 30, t(9, 3, 8, 9, 2, 8)),
+  q('barcelona', 'henry09', 'Thierry Henry', 1977, 'France', ['LW', 'ST'], 83, 83, 2011, 38, t(9, 6, 8, 6, 3, 7)),
+];
+
 export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   bayern: BAYERN_2009,
+  inter: INTER_2009,
+  barcelona: BARCELONA_2009,
   freiburg: FREIBURG_2009,
   hertha: HERTHA_2009,
   nurnberg: NURNBERG_2009,

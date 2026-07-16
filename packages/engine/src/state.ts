@@ -282,11 +282,23 @@ function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, 
       club.squad.push(player.id);
     }
 
-    // Procedural depth to fill the squad out (anonymous, per Principle 2).
+    // Procedural depth to fill the squad out (anonymous, per Principle 2). For a
+    // curated club the filler is DEPTH — generated a level below the real stars,
+    // so an anonymous nobody can never outrank the club's actual best player (a
+    // procedural "94" must not sit above Messi at Barcelona). Fully-procedural
+    // clubs (no curated seeds) keep the base-strength target unchanged, so the
+    // fully-curated user club — which has no filler at all — is untouched.
     const fillCount = Math.max(0, TARGET_SQUAD - club.squad.length);
     if (fillCount > 0) {
       const generated = generateSquad(club.id, club.leagueId, club.baseStrength, year, clubRng);
-      for (const player of generated.slice(0, fillCount)) {
+      // `generateSquad` produces a full side (its first 14 are first-team quality,
+      // the rest are depth). For a CURATED club the real players ARE the first
+      // team, so filler must be DEPTH — take the weakest generated players, so an
+      // anonymous nobody can never outrank the club's real best man (a procedural
+      // "94" above Messi). A fully-procedural club takes them in template order —
+      // its generated stars genuinely are its stars.
+      const pool = seeds.length ? [...generated].sort((a, b) => a.ability - b.ability) : generated;
+      for (const player of pool.slice(0, fillCount)) {
         state.players[player.id] = player;
         club.squad.push(player.id);
       }
