@@ -48,6 +48,20 @@ describe('the head coach — hire, fire, survive & woo', () => {
     expect(s.managerRelations.appointedByUser).toBe(true); // you own this one now
   });
 
+  it('a just-sacked coach is not offered straight back on the hire shortlist', () => {
+    // bayern-2009's real coach (Van Gaal) IS in the hire pool, so without the
+    // guard the shortlist could re-appoint the man just dismissed.
+    const s = createNewGame({ scenarioId: 'bayern-2009', seed: 'rehire' });
+    expect(s.managerRelations.identity).toBe('Louis van Gaal');
+    expect(directorSackManager(s).ok).toBe(true);
+    expect(managerShortlist(s).some((c) => c.name === 'Louis van Gaal')).toBe(false);
+    // Appointing from the shortlist installs a genuine successor, not the sacked coach.
+    const hire = s.pendingDecisions.find((d) => d.id.startsWith('hire-manager:'))!;
+    const after = applyDecision(s, hire.id, hire.choices[0]!.id).state;
+    expect(after.managerRelations.identity).not.toBe('Louis van Gaal');
+    expect(after.managerRelations.identity).not.toBe('caretaker manager');
+  });
+
   it('sacking a failing coach is a lightning rod — it buys the Director patience', () => {
     const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'rod' });
     s.board.patience = 30;

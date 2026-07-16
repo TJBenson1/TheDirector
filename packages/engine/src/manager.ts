@@ -356,6 +356,8 @@ export function performSack(state: GameState, directorRelief: number, initiatedB
  *  sacking and a retirement. */
 function beginSuccession(state: GameState): void {
   const mgr = state.managerRelations;
+  // Remember the outgoing coach so the shortlist can't offer him straight back.
+  mgr.previousCoach = mgr.identity;
   mgr.identity = 'caretaker manager';
   mgr.reputation = Math.max(40, mgr.reputation - 25);
   mgr.standing = 55;
@@ -378,7 +380,7 @@ export function managerShortlist(state: GameState): Array<{ name: string; reputa
   // Rank the pool by closeness to what the club can plausibly attract, with a
   // deterministic jitter so the same club at different times sees different names.
   const ranked = COACH_POOL
-    .filter((c) => c.name !== state.managerRelations.identity && availableInYear(c, year))
+    .filter((c) => c.name !== state.managerRelations.identity && c.name !== state.managerRelations.previousCoach && availableInYear(c, year))
     .map((c, i) => ({ c, key: Math.abs(c.reputation - (prestige - 2)) + ((seed >> (i % 16)) & 3) }))
     .sort((a, b) => a.key - b.key)
     .map((x) => x.c);
@@ -475,6 +477,7 @@ export function appointManager(state: GameState, name: string, reputation: numbe
   mgr.relationshipWithUser = 62;
   mgr.standing = 60;
   mgr.appointedByUser = true;
+  delete mgr.previousCoach; // the succession is resolved; the old coach is fair game again later
   mgr.seasonsInCharge = 0;
   mgr.style = coachStyle(name); // his real footballing identity
   recomputeClubStrength(state, state.playerClub); // the new man's effect lands now

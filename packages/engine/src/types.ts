@@ -370,6 +370,9 @@ export interface ManagerState {
   /** The style of the coach the club REALLY had at kickoff — the "par" the style
    *  fit is measured against, so keeping the inherited coach is neutral. */
   parStyle: ManagerStyle;
+  /** The coach just dismissed/departed — excluded from the immediate hire
+   *  shortlist so a club can't sack a man and re-appoint him the same window. */
+  previousCoach?: string;
 }
 
 /** A coach's footballing identity. Two axes carry the real archetypes: how he
