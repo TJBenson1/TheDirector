@@ -563,6 +563,38 @@ const LEDGER_2007_2013: RealTransferLedgerEntry[] = [
   { playerId: 'cur_higuain_07', from: 'real_madrid', to: 'napoli', window: '2013-07', fee: 39_000_000, id: 'higuain-napoli-2013' },
 ];
 
+/**
+ * Real Serie A / European market, 2004→2009 (inter-2004 "Pre-Calciopoli"). The
+ * 2006 scandal breaks up Juventus (Cannavaro/Emerson to Madrid, Thuram/Zambrotta
+ * to Barça, and — the hinge — Ibrahimović to Inter), then the great galáctico
+ * churn plays out. Vieri's move across Milan and Ronaldinho's later arrival close
+ * the era.
+ */
+const LEDGER_SERIE_A_2004: RealTransferLedgerEntry[] = [
+  // ── The Calciopoli exodus feeds Inter (the user) and the giants ──
+  { playerId: 'cur_ibrahimovic_04', from: 'juventus', to: 'inter', window: '2006-07', fee: 24_800_000, id: 'ibra-inter-2006' },
+  { playerId: 'cur_cannavaro_f04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },
+  { playerId: 'cur_emerson_04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 13_000_000, id: 'emerson-real-2006' },
+  { playerId: 'cur_thuram_04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 5_000_000, id: 'thuram-barca-2006' },
+  { playerId: 'cur_zambrotta_04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 14_000_000, id: 'zambrotta-barca-2006' },
+  // ── Inter's own business ──
+  { playerId: 'cur_vieri_04', from: 'inter', to: 'milan', window: '2005-01', fee: 0, id: 'vieri-milan-2005' },
+  // ── Milan's business (Sheva out, Ronaldinho in) ──
+  { playerId: 'cur_shevchenko_04', from: 'milan', to: 'chelsea', window: '2006-07', fee: 43_800_000, id: 'sheva-chelsea-2006' },
+  { playerId: 'cur_ronaldinho_04', from: 'barcelona', to: 'milan', window: '2008-07', fee: 21_000_000, id: 'dinho-milan-2008' },
+  // ── Roma cash in on Cassano ──
+  { playerId: 'cur_cassano_04', from: 'roma', to: 'real_madrid', window: '2006-01', fee: 5_000_000, id: 'cassano-real-2006' },
+  // ── The 2009 galáctico churn + the Ibra/Eto'o swap ──
+  { playerId: 'cur_cristiano_04', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 94_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_kaka_04', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
+  { playerId: 'cur_alonso_04', from: 'liverpool', to: 'real_madrid', window: '2009-08', fee: 30_000_000, id: 'alonso-real-2009' },
+  { playerId: 'cur_ibrahimovic_04', from: 'inter', to: 'barcelona', window: '2009-07', fee: 46_000_000, id: 'ibra-barca-2009' },
+  { playerId: 'cur_etoo_04', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000, id: 'etoo-inter-2009', enabledBy: 'ibra-barca-2009' },
+  // ── Torres's move that built Liverpool's spine ──
+  { playerId: 'cur_torres_a04', from: 'atletico', to: 'liverpool', window: '2007-07', fee: 26_500_000, id: 'torres-liverpool-2007' },
+  { playerId: 'cur_robben_04', from: 'chelsea', to: 'real_madrid', window: '2007-08', fee: 35_000_000, id: 'robben-real-2007' },
+];
+
 /** Pato's knee — the wonderkid whose body betrayed him — and the ageing champions'
  *  brittleness. Fire only if the player is still at his real club. */
 const INJURIES_2007: RealInjuryEntry[] = [
@@ -587,6 +619,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: [], realInjuries: INJURIES_2000 },
   'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: [], realInjuries: INJURIES_1995 },
   'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: [], realInjuries: INJURIES_1998 },
+  'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
   'era-serie-a-2007': { realTransferLedger: LEDGER_2007_2013, academyIntakes: [], realInjuries: INJURIES_2007 },
   'era-2003': { realTransferLedger: LEDGER_2003_2011, academyIntakes: [], realInjuries: INJURIES_2003, nearMissLedger: NEAR_MISS_2003 },
 };

@@ -88,6 +88,26 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2011: { w: 'chelsea', r: 'bayern' },
     2012: { w: 'bayern', r: 'dortmund' },
   },
+  'era-serie-a-2004': {
+    // Mancini's nearly-men, 2004→2019. Every real European Cup winner's club is in
+    // the pack (Inter's own 2010 treble, Real Madrid's mid-2010s dynasty); the
+    // Porto/Monaco final of 2004 predates the start, so the board opens at 2005.
+    2004: { w: 'liverpool', r: 'milan' },
+    2005: { w: 'barcelona' },
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern', r: 'dortmund' },
+    2013: { w: 'real_madrid', r: 'atletico' },
+    2014: { w: 'barcelona', r: 'juventus' },
+    2015: { w: 'real_madrid', r: 'atletico' },
+    2016: { w: 'real_madrid', r: 'juventus' },
+    2017: { w: 'real_madrid', r: 'liverpool' },
+    2018: { w: 'liverpool' },
+  },
   'era-serie-a-2007': {
     // The ageing champions of 2007, 2007→2022. Every real European Cup winner's
     // club is in the pack (Real Madrid's 2014–2022 dynasty included); runners-up

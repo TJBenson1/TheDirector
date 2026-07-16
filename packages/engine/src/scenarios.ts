@@ -491,6 +491,41 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     domesticLeagueId: 'ita-2007',
   },
+  'inter-2004': {
+    id: 'inter-2004',
+    name: 'Internazionale — 2004: Pre-Calciopoli Positioning',
+    startDate: '2004-07',
+    playerClub: 'inter',
+    // Mancini's Inter, Adriano at his terrifying peak — but perennial nearly-men,
+    // beaten to the Scudetto by Juventus and Milan. A reckoning is coming: the 2006
+    // Calciopoli scandal will strip and relegate Juventus and tip the balance to
+    // Inter. Be built and ready — or win it on merit before the scandal breaks.
+    mandate: 'End the wait for the Scudetto — position to seize it when the balance tips.',
+    boardPatience: 70,
+    boardExpectedFinish: 2,
+    // Serie A is the simulated league; the elite of Europe (full squads) plus a
+    // light continental context anchor every real European Cup of 2005–2019.
+    clubs: [
+      { id: 'inter', name: 'Internazionale', prestige: 85 },
+      { id: 'juventus', name: 'Juventus', prestige: 86 },
+      { id: 'milan', name: 'AC Milan', prestige: 88 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 93 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 90 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 88 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 89 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 82 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 86 },
+    ],
+    contextExtra: [
+      { id: 'roma', name: 'AS Roma', prestige: 80 },
+      { id: 'fiorentina', name: 'Fiorentina', prestige: 68 },
+      { id: 'lazio', name: 'Lazio', prestige: 72 },
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 78 },
+      { id: 'atletico', name: 'Atlético Madrid', prestige: 78 },
+      { id: 'valencia', name: 'Valencia', prestige: 82 },
+    ],
+    domesticLeagueId: 'ita-2004',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

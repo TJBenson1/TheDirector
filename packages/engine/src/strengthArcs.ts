@@ -88,6 +88,22 @@ const ITALIAN_2007: Record<string, readonly Waypoint[]> = {
   fiorentina: [[2007, 80], [2010, 79], [2013, 80], [2016, 75]],
 };
 
+// Serie A, 2004–19 (inter-2004). Juventus and Milan carry the pre-Calciopoli
+// years; then the 2006 scandal craters Juventus (relegation-level collapse) and
+// docks Milan, tipping the balance to Inter's real five-in-a-row (2006–10). Once
+// Juventus climb back they build the nine-in-a-row dynasty (2012–20). The scandal
+// is modelled here as a strength arc rather than the explicit relegation the
+// juventus-1995 pack fires — the competitive effect, reality-shaped.
+const ITALIAN_2004: Record<string, readonly Waypoint[]> = {
+  juventus: [[2004, 88], [2005, 87], [2006, 73], [2007, 82], [2011, 86], [2012, 88], [2015, 89], [2017, 90], [2020, 87]],
+  milan: [[2004, 87], [2006, 84], [2009, 83], [2011, 85], [2012, 78], [2018, 82]],
+  inter: [[2004, 84], [2005, 85], [2006, 89], [2007, 89], [2010, 88], [2011, 82], [2020, 85], [2021, 87]],
+  roma: [[2004, 83], [2006, 84], [2008, 84], [2014, 83], [2018, 82]],
+  napoli: [[2004, 62], [2007, 74], [2010, 80], [2013, 83], [2016, 85], [2018, 87]],
+  lazio: [[2004, 76], [2007, 76], [2015, 79], [2020, 81]],
+  fiorentina: [[2004, 71], [2006, 80], [2009, 80], [2013, 80], [2016, 75]],
+};
+
 /** Every pack's domestic strength arc. The English packs share one table (same
  *  league, overlapping years); each scenario re-anchors only the clubs it holds. */
 const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
@@ -100,6 +116,7 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-2000': LA_LIGA, // real-madrid-2000
   'era-serie-a-1995': ITALIAN, // juventus-1995
   'era-serie-a-1998': ITALIAN, // inter-1998
+  'era-serie-a-2004': ITALIAN_2004, // inter-2004
   'era-serie-a-2007': ITALIAN_2007, // milan-2007
 };
 
