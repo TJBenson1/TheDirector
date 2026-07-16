@@ -71,6 +71,85 @@ const ELITE_CLUBS_2013: ClubSeed[] = [
   { id: 'juventus', name: 'Juventus', prestige: 84 },
 ];
 
+// Shared per-era context club lists. A club's two sibling scenarios (e.g. the
+// two Arsenal starts) must inhabit an IDENTICAL world — same Champions League
+// field, same era transfer sources — so the reality anchors resolve the same
+// way whichever club you pick. These consts are the single source of that world
+// for each era; both siblings reference them.
+
+// era-1996: the continental giants (and a 2nd-tier Man City) as context for the
+// 1996-97 English packs, with their real 1996 squads.
+const ERA_1996_CONTEXT: ClubSeed[] = [
+  { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
+  { id: 'porto', name: 'FC Porto', prestige: 74 },
+  { id: 'monaco', name: 'AS Monaco', prestige: 74 },
+  { id: 'ajax', name: 'Ajax', prestige: 78 },
+  { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 72 },
+  { id: 'dynamo_kyiv', name: 'Dynamo Kyiv', prestige: 70 },
+];
+
+// era-2001: the whole of Europe contests the Cup, not just the English top four.
+const ERA_2001_CLUBS: ClubSeed[] = [
+  { id: 'liverpool', name: 'Liverpool', prestige: 82 },
+  { id: 'man_utd', name: 'Manchester United', prestige: 88 },
+  { id: 'arsenal', name: 'Arsenal', prestige: 84 },
+  { id: 'chelsea', name: 'Chelsea', prestige: 74 },
+  { id: 'leeds', name: 'Leeds United', prestige: 74 },
+  { id: 'newcastle', name: 'Newcastle United', prestige: 70 },
+  { id: 'real_madrid', name: 'Real Madrid', prestige: 94 },
+  { id: 'inter', name: 'Internazionale', prestige: 82 },
+  { id: 'bayern', name: 'Bayern München', prestige: 86 },
+  { id: 'juventus', name: 'Juventus', prestige: 86 },
+  { id: 'barcelona', name: 'Barcelona', prestige: 84 },
+  { id: 'milan', name: 'AC Milan', prestige: 84 },
+];
+const ERA_2001_CONTEXT: ClubSeed[] = [
+  { id: 'lens', name: 'RC Lens', prestige: 66 },
+  { id: 'lille', name: 'Lille', prestige: 64 },
+  { id: 'parma', name: 'Parma', prestige: 68 },
+  { id: 'man_city', name: 'Manchester City', prestige: 62 },
+  // Mourinho's Porto and Deschamps' Monaco — the 2003–04 finalists.
+  { id: 'porto', name: 'FC Porto', prestige: 78 },
+  { id: 'monaco', name: 'AS Monaco', prestige: 74 },
+];
+
+// era-2013: the continental context sides for the post-Ferguson Premier League.
+const ERA_2013_CONTEXT: ClubSeed[] = [
+  { id: 'benfica', name: 'Benfica', prestige: 76 },
+  { id: 'roma', name: 'AS Roma', prestige: 74 },
+  { id: 'valencia', name: 'Valencia', prestige: 72 },
+  { id: 'ajax', name: 'Ajax', prestige: 70 },
+];
+
+// era-serie-a-1995: Serie A is the simulated league; the elite European clubs
+// (plus the era's real transfer partners and Cup winners) are context.
+const ERA_1995_CLUBS: ClubSeed[] = [
+  { id: 'juventus', name: 'Juventus', prestige: 88 },
+  { id: 'milan', name: 'AC Milan', prestige: 90 },
+  { id: 'inter', name: 'Internazionale', prestige: 84 },
+  { id: 'real_madrid', name: 'Real Madrid', prestige: 90 },
+  { id: 'barcelona', name: 'Barcelona', prestige: 88 },
+  { id: 'ajax', name: 'Ajax', prestige: 82 },
+  { id: 'bayern', name: 'Bayern Munich', prestige: 84 },
+  { id: 'dortmund', name: 'Borussia Dortmund', prestige: 78 },
+];
+const ERA_1995_CONTEXT: ClubSeed[] = [
+  { id: 'bordeaux', name: 'Bordeaux', prestige: 68 },
+  { id: 'monaco', name: 'AS Monaco', prestige: 72 },
+  { id: 'atletico', name: 'Atlético Madrid', prestige: 74 },
+  { id: 'chelsea', name: 'Chelsea', prestige: 70 },
+  { id: 'arsenal', name: 'Arsenal', prestige: 74 },
+  { id: 'newcastle', name: 'Newcastle United', prestige: 68 },
+  { id: 'middlesbrough', name: 'Middlesbrough', prestige: 56 },
+  { id: 'dynamo_kyiv', name: 'Dynamo Kyiv', prestige: 66 },
+  // Ferguson's Double winners and Roy Evans' Liverpool — so the European Cups
+  // they really won can be anchored (Man Utd 1999 & 2008, Liverpool 2005).
+  { id: 'man_utd', name: 'Manchester United', prestige: 84 },
+  { id: 'liverpool', name: 'Liverpool', prestige: 80 },
+  // Porto — so Mourinho's 2004 European Cup is anchored too.
+  { id: 'porto', name: 'FC Porto', prestige: 74 },
+];
+
 export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
   'man-utd-2013': {
     id: 'man-utd-2013',
@@ -81,12 +160,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     boardPatience: 78,
     boardExpectedFinish: 1,
     clubs: ELITE_CLUBS_2013,
-    contextExtra: [
-      { id: 'benfica', name: 'Benfica', prestige: 76 },
-      { id: 'roma', name: 'AS Roma', prestige: 74 },
-      { id: 'valencia', name: 'Valencia', prestige: 72 },
-      { id: 'ajax', name: 'Ajax', prestige: 70 },
-    ],
+    contextExtra: ERA_2013_CONTEXT,
     domesticLeagueId: 'eng-2013',
   },
   'liverpool-2001': {
@@ -97,32 +171,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     mandate: 'Turn the cup treble into a first league title in a decade.',
     boardPatience: 76,
     boardExpectedFinish: 2,
-    clubs: [
-      { id: 'liverpool', name: 'Liverpool', prestige: 82 },
-      { id: 'man_utd', name: 'Manchester United', prestige: 88 },
-      { id: 'arsenal', name: 'Arsenal', prestige: 84 },
-      { id: 'chelsea', name: 'Chelsea', prestige: 74 },
-      { id: 'leeds', name: 'Leeds United', prestige: 74 },
-      { id: 'newcastle', name: 'Newcastle United', prestige: 70 },
-      { id: 'real_madrid', name: 'Real Madrid', prestige: 94 },
-      { id: 'inter', name: 'Internazionale', prestige: 82 },
-      // The continental giants of the era — as real context sides so the European
-      // Cup is contested by the whole of Europe, not just the English top four.
-      { id: 'bayern', name: 'Bayern München', prestige: 86 },
-      { id: 'juventus', name: 'Juventus', prestige: 86 },
-      { id: 'barcelona', name: 'Barcelona', prestige: 84 },
-      { id: 'milan', name: 'AC Milan', prestige: 84 },
-    ],
-    contextExtra: [
-      { id: 'lens', name: 'RC Lens', prestige: 66 },
-      { id: 'lille', name: 'Lille', prestige: 64 },
-      { id: 'parma', name: 'Parma', prestige: 68 },
-      { id: 'man_city', name: 'Manchester City', prestige: 62 },
-      // Mourinho's Porto and Deschamps' Monaco — the 2003–04 finalists — so the
-      // one European Cup of the era not won by a giant is anchored, not sim'd.
-      { id: 'porto', name: 'FC Porto', prestige: 78 },
-      { id: 'monaco', name: 'AS Monaco', prestige: 74 },
-    ],
+    clubs: ERA_2001_CLUBS,
+    contextExtra: ERA_2001_CONTEXT,
     domesticLeagueId: 'eng-2001',
     // O'Leary's Champions-League semi-finalists were living on borrowed money;
     // the 2001 gamble collapsed into the era's great fire-sale (Ferdinand, Woodgate,
@@ -215,14 +265,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     // English clubs join the 1996-97 Premier League; the continental giants (and a
     // 2nd-tier Man City) sit as context, with their real 1996 squads.
     clubs: ELITE_CLUBS,
-    contextExtra: [
-      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
-      { id: 'porto', name: 'FC Porto', prestige: 74 },
-      { id: 'monaco', name: 'AS Monaco', prestige: 74 },
-      { id: 'ajax', name: 'Ajax', prestige: 78 },
-      { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 72 },
-      { id: 'dynamo_kyiv', name: 'Dynamo Kyiv', prestige: 70 },
-    ],
+    contextExtra: ERA_1996_CONTEXT,
     domesticLeagueId: 'eng-1996',
   },
   'manchester-united-2003': {
@@ -271,34 +314,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     // Serie A is the simulated domestic league; the elite European clubs are
     // context, and Juve bought/sold with them (Bordeaux→Zidane, Ajax→Davids,
     // Monaco→Trezeguet; Vialli/Ravanelli/Baggio out to England and Milan).
-    clubs: [
-      { id: 'juventus', name: 'Juventus', prestige: 88 },
-      { id: 'milan', name: 'AC Milan', prestige: 90 },
-      { id: 'inter', name: 'Internazionale', prestige: 84 },
-      { id: 'real_madrid', name: 'Real Madrid', prestige: 90 },
-      { id: 'barcelona', name: 'Barcelona', prestige: 88 },
-      { id: 'ajax', name: 'Ajax', prestige: 82 },
-      { id: 'bayern', name: 'Bayern Munich', prestige: 84 },
-      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 78 },
-    ],
-    contextExtra: [
-      { id: 'bordeaux', name: 'Bordeaux', prestige: 68 },
-      { id: 'monaco', name: 'AS Monaco', prestige: 72 },
-      { id: 'atletico', name: 'Atlético Madrid', prestige: 74 },
-      { id: 'chelsea', name: 'Chelsea', prestige: 70 },
-      { id: 'arsenal', name: 'Arsenal', prestige: 74 },
-      { id: 'newcastle', name: 'Newcastle United', prestige: 68 },
-      { id: 'middlesbrough', name: 'Middlesbrough', prestige: 56 },
-      { id: 'dynamo_kyiv', name: 'Dynamo Kyiv', prestige: 66 },
-      // The English powers of the era — Ferguson's Double winners and Roy Evans'
-      // Liverpool — as context sides so the European Cup they really won can be
-      // anchored (Man Utd 1999 & 2008, Liverpool 2005).
-      { id: 'man_utd', name: 'Manchester United', prestige: 84 },
-      { id: 'liverpool', name: 'Liverpool', prestige: 80 },
-      // Porto — so Mourinho's 2004 European Cup is anchored too (Monaco, its
-      // beaten finalist, is already in this pack above).
-      { id: 'porto', name: 'FC Porto', prestige: 74 },
-    ],
+    clubs: ERA_1995_CLUBS,
+    contextExtra: ERA_1995_CONTEXT,
     domesticLeagueId: 'ita-1',
   },
   'real-madrid-2000': {
@@ -339,6 +356,67 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'man_city', name: 'Manchester City', prestige: 60 },
     ],
     domesticLeagueId: 'esp-1',
+  },
+  // ── Reuse-first sibling starts ──────────────────────────────────────────────
+  // Each shares its era's curated pack, league, CL anchors and strength arcs with
+  // the club's already-built sibling; only the playable club and the board's
+  // expectations change.
+  'chelsea-1996': {
+    id: 'chelsea-1996',
+    name: 'Chelsea — 1996: Pre-Money',
+    startDate: '1996-07',
+    playerClub: 'chelsea',
+    // Gullit's cup side, years before Abramovich. No sugar daddy, no galácticos —
+    // just an FA Cup pedigree and a mandate to gatecrash the establishment.
+    mandate: 'No billions, no shortcuts — build a top-four side the hard way.',
+    boardPatience: 74,
+    // Pre-money Chelsea were a mid-table cup team; breaking the top four is the win.
+    boardExpectedFinish: 6,
+    clubs: ELITE_CLUBS,
+    contextExtra: ERA_1996_CONTEXT,
+    domesticLeagueId: 'eng-1996',
+  },
+  'spurs-2001': {
+    id: 'spurs-2001',
+    name: 'Tottenham Hotspur — 2001: Sleeping Giant',
+    startDate: '2001-07',
+    playerClub: 'spurs',
+    // A grand old name marooned in mid-table while the big four pull away.
+    mandate: 'Wake the sleeping giant and drag Spurs back into Europe.',
+    boardPatience: 76,
+    boardExpectedFinish: 7,
+    clubs: ERA_2001_CLUBS,
+    contextExtra: ERA_2001_CONTEXT,
+    domesticLeagueId: 'eng-2001',
+    distressedClubs: { leeds: 'crisis' },
+  },
+  'spurs-2013': {
+    id: 'spurs-2013',
+    name: 'Tottenham Hotspur — 2013: The Bale Money',
+    startDate: '2013-07',
+    playerClub: 'spurs',
+    // Bale is about to leave for a world-record fee. Reality blew the windfall on
+    // seven signings who mostly flopped; the counterfactual is to spend it well.
+    mandate: 'Reinvest the Bale windfall wisely and crack the top four.',
+    boardPatience: 74,
+    boardExpectedFinish: 5,
+    clubs: ELITE_CLUBS_2013,
+    contextExtra: ERA_2013_CONTEXT,
+    domesticLeagueId: 'eng-2013',
+  },
+  'milan-1995': {
+    id: 'milan-1995',
+    name: 'AC Milan — 1995: End of the Dynasty',
+    startDate: '1995-07',
+    playerClub: 'milan',
+    // Capello's champions, but Baresi and the invincibles of Fabio's back four are
+    // ageing and the great side is fraying at the edges — squeeze one more era out.
+    mandate: 'Hold off the decline and win one more Scudetto for the dynasty.',
+    boardPatience: 74,
+    boardExpectedFinish: 2,
+    clubs: ERA_1995_CLUBS,
+    contextExtra: ERA_1995_CONTEXT,
+    domesticLeagueId: 'ita-1',
   },
 };
 

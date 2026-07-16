@@ -469,4 +469,10 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   // Wenger's 1996 Arsenal now has its own dedicated era-1996 pack (real 1996-97
   // squads, no Man City in the top flight, young Ronaldo at Barça, Zidane year 1).
   'arsenal-1996': ARSENAL_1996_SQUADS,
+  // Reuse-first sibling starts: each shares its era's curated pack with the club's
+  // already-built sibling (same players, different playable club).
+  'chelsea-1996': ARSENAL_1996_SQUADS, // era-1996 (Gullit's pre-money Chelsea)
+  'spurs-2001': LIVERPOOL_2001_SQUADS, // era-2001 (the sleeping giant)
+  'spurs-2013': MAN_UTD_2013_SQUADS, // era-2013 (the Bale windfall)
+  'milan-1995': JUVENTUS_1995_SQUADS, // era-serie-a-1995 (end of the dynasty)
 };
