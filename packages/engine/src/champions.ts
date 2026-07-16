@@ -128,6 +128,51 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2023: { w: 'man_city', r: 'inter' },
     2024: { w: 'real_madrid', r: 'dortmund' },
   },
+  'era-bundesliga-1997': {
+    // Dortmund's Kings of Europe, 1997→2013. Their own 1997 win is the backstory; the
+    // sim opens with Real Madrid's 1998 return, United's 1999 stoppage-time treble
+    // (Bayern beaten — the other side of this cluster), Bayern's own 2001, and on to
+    // the modern era, closing with the all-German 2013 final. Winners/runners-up not
+    // in the pack (Valencia, Porto, Monaco, Atlético) resolve to the field.
+    1997: { w: 'real_madrid', r: 'juventus' },
+    1998: { w: 'man_utd', r: 'bayern' },
+    1999: { w: 'real_madrid' },
+    2000: { w: 'bayern' },
+    2001: { w: 'real_madrid', r: 'leverkusen' },
+    2002: { w: 'milan', r: 'juventus' },
+    2003: { w: 'porto', r: 'monaco' },
+    2004: { w: 'liverpool', r: 'milan' },
+    2005: { w: 'barcelona', r: 'arsenal' },
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern', r: 'dortmund' },
+  },
+  'era-bundesliga-1998': {
+    // Bayern's Treble Denied, 1998→2013. It opens on the wound: United beat Bayern in
+    // the 1999 final. Bayern take their own European Cup in 2001, and the real run
+    // plays out to the all-German 2013 final. Winners/runners-up not in the pack
+    // (Valencia, Porto, Monaco, Atlético) resolve to the field.
+    1998: { w: 'man_utd', r: 'bayern' },
+    1999: { w: 'real_madrid' },
+    2000: { w: 'bayern' },
+    2001: { w: 'real_madrid', r: 'leverkusen' },
+    2002: { w: 'milan', r: 'juventus' },
+    2003: { w: 'porto', r: 'monaco' },
+    2004: { w: 'liverpool', r: 'milan' },
+    2005: { w: 'barcelona', r: 'arsenal' },
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern', r: 'dortmund' },
+    2013: { w: 'real_madrid' },
+  },
   'era-bundesliga-2009': {
     // Van Gaal's Bayern, 2009→2024. Bayern open by LOSING the 2010 final to Inter
     // (the reset's near-miss), Klopp's Dortmund take the next two European runs at

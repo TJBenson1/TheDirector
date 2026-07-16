@@ -861,6 +861,72 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     domesticLeagueId: 'eng-1995',
   },
+  'dortmund-1997': {
+    id: 'dortmund-1997',
+    name: 'Borussia Dortmund — 1997: Kings of Europe',
+    startDate: '1997-07',
+    playerClub: 'dortmund',
+    // Riedle's brace and Ricken's audacious chip beat Juventus in Munich, May 1997 —
+    // Dortmund are champions of Europe. Sammer is the Ballon d'Or libero, Möller the
+    // craft. But the side is ageing, Bayern are reloading, and reality is a slow fade
+    // from the summit. Defend the throne longer than the real Dortmund ever managed.
+    mandate: 'You are champions of Europe. Don’t let the throne slip.',
+    boardPatience: 78,
+    boardExpectedFinish: 2,
+    // The 1997-98 Bundesliga is the simulated league; the continental elite (full
+    // squads reused from the 1996 pack) anchor every real European Cup of 1998-2013.
+    clubs: [
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
+      { id: 'bayern', name: 'Bayern München', prestige: 88 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 88 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 86 },
+      { id: 'juventus', name: 'Juventus', prestige: 90 },
+      { id: 'milan', name: 'AC Milan', prestige: 86 },
+      { id: 'inter', name: 'Internazionale', prestige: 84 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 86 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 78 },
+      { id: 'arsenal', name: 'Arsenal', prestige: 78 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 72 },
+    ],
+    contextExtra: [
+      { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 66 },
+      { id: 'kaiserslautern', name: '1. FC Kaiserslautern', prestige: 58 },
+    ],
+    domesticLeagueId: 'ger-1997',
+  },
+  'bayern-1998': {
+    id: 'bayern-1998',
+    name: 'Bayern München — 1998: The Treble Denied',
+    startDate: '1998-07',
+    playerClub: 'bayern',
+    // Kahn, Matthäus, Effenberg, Élber — Hitzfeld's Bayern were ninety seconds from
+    // the 1999 European Cup before Solskjær and Sheringham turned Camp Nou. The other
+    // bench that night is man-utd-1999. Bayern won it in 2001; the real story is a
+    // decade of German dominance and European near-misses. This time, hold on.
+    mandate: 'Ninety seconds from the European Cup last time. Now finish it.',
+    boardPatience: 80,
+    boardExpectedFinish: 1,
+    // The 1998-99 Bundesliga is the simulated league; the continental elite (full
+    // squads reused from the 1996 pack) anchor every real European Cup of 1999-2013.
+    clubs: [
+      { id: 'bayern', name: 'Bayern München', prestige: 90 },
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 88 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 86 },
+      { id: 'juventus', name: 'Juventus', prestige: 88 },
+      { id: 'milan', name: 'AC Milan', prestige: 84 },
+      { id: 'inter', name: 'Internazionale', prestige: 84 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 88 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 78 },
+      { id: 'arsenal', name: 'Arsenal', prestige: 80 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 74 },
+    ],
+    contextExtra: [
+      { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 68 },
+      { id: 'schalke', name: 'Schalke 04', prestige: 66 },
+    ],
+    domesticLeagueId: 'ger-1998',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

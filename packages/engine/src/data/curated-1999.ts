@@ -27,6 +27,7 @@ import { BAYERN_2009_SQUADS } from './curated-bundesliga-2009.js';
 import { MANCITY_2008_SQUADS } from './curated-eng-2008.js';
 import { LIVERPOOL_2010_SQUADS } from './curated-eng-2010.js';
 import { LIVERPOOL_1995_SQUADS } from './curated-eng-1995.js';
+import { BUNDESLIGA_1997_SQUADS } from './curated-bundesliga-1997.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -515,6 +516,11 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   // (United, Arsenal, Chelsea, Spurs, City + continental elite), Liverpool, Keegan's
   // pre-Shearer Newcastle and champions Blackburn authored fresh (CL 1996–2010).
   'liverpool-1995': LIVERPOOL_1995_SQUADS,
+  // The late-90s German cluster — Dortmund's Kings of Europe (1997) and Bayern's
+  // Treble Denied (1998) share one pack: the two giants + light Bundesliga context
+  // authored fresh, the continental elite reused from the 1996 pack (CL 1998–2013).
+  'dortmund-1997': BUNDESLIGA_1997_SQUADS,
+  'bayern-1998': BUNDESLIGA_1997_SQUADS,
   // The Galácticos-era Madrid start has its own Spanish/European pack (La Liga
   // 2000–01 + the clubs Real bought their galácticos from).
   'real-madrid-2000': REAL_MADRID_2000_SQUADS,

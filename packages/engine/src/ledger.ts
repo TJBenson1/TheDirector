@@ -580,6 +580,27 @@ const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
 ];
 
 /**
+ * Real Bundesliga / European market, 1997→2001 (dortmund-1997 + bayern-1998). The
+ * European champions are picked apart — Riedle to Liverpool the summer after Munich,
+ * Möller to Schalke — while a teenage Ballack leaves Kaiserslautern for Leverkusen
+ * and Babbel makes his Bosman move to Anfield. On the continent Ronaldo, Anelka,
+ * Figo and Zidane make their real transfers, the last three to Madrid.
+ */
+const LEDGER_BUNDESLIGA_1997: RealTransferLedgerEntry[] = [
+  // ── Dortmund's champions dispersed (the user's stars, if they are Dortmund) ──
+  { playerId: 'cur_riedle_97', from: 'dortmund', to: 'liverpool', window: '1997-07', fee: 2_000_000, id: 'riedle-liverpool-1997' },
+  { playerId: 'cur_moller_97', from: 'dortmund', to: 'schalke', window: '2000-07', fee: 0, id: 'moller-schalke-2000' },
+  // ── Bayern's Bosman departure + a teenage Ballack on the rise ──
+  { playerId: 'cur_babbel_98', from: 'bayern', to: 'liverpool', window: '2000-07', fee: 0, id: 'babbel-liverpool-2000' },
+  { playerId: 'cur_ballack_97', from: 'kaiserslautern', to: 'leverkusen', window: '1999-07', fee: 4_000_000, id: 'ballack-leverkusen-1999' },
+  // ── The continental market moves as reality ──
+  { playerId: 'cur_ronaldo_b96', from: 'barcelona', to: 'inter', window: '1997-07', fee: 27_000_000, id: 'ronaldo-inter-1997' },
+  { playerId: 'cur_anelka_a96', from: 'arsenal', to: 'real_madrid', window: '1999-07', fee: 22_500_000, id: 'anelka-real-1999' },
+  { playerId: 'cur_figo_b96', from: 'barcelona', to: 'real_madrid', window: '2000-07', fee: 37_000_000, id: 'figo-real-2000' },
+  { playerId: 'cur_zidane_j96', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 46_000_000, id: 'zidane-real-2001' },
+];
+
+/**
  * Real Bundesliga / European market, 2009→2016 (bayern-2009). Şahin leaves Dortmund
  * for Madrid, then Götze crosses to Bayern (the user's signing, if they are Bayern)
  * and Kroos leaves for Madrid — the reset's stars arriving and departing — while the
@@ -804,6 +825,8 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-eng-2008': { realTransferLedger: LEDGER_ENG_2008, academyIntakes: [], realInjuries: [] },
   'era-eng-2010': { realTransferLedger: LEDGER_ENG_2010, academyIntakes: [], realInjuries: [] },
   'era-eng-1995': { realTransferLedger: LEDGER_ENG_1995, academyIntakes: [], realInjuries: [] },
+  'era-bundesliga-1997': { realTransferLedger: LEDGER_BUNDESLIGA_1997, academyIntakes: [], realInjuries: [] },
+  'era-bundesliga-1998': { realTransferLedger: LEDGER_BUNDESLIGA_1997, academyIntakes: [], realInjuries: [] },
   'era-bundesliga-2009': { realTransferLedger: LEDGER_BUNDESLIGA_2009, academyIntakes: [], realInjuries: [] },
   'era-bundesliga-2012': { realTransferLedger: LEDGER_BUNDESLIGA_2012, academyIntakes: [], realInjuries: [] },
   'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
@@ -822,6 +845,8 @@ export function eraForScenario(scenarioId: string): string {
   if (scenarioId === 'liverpool-2010') return 'era-eng-2010';
   // liverpool-1995 must precede the '-1995' suffix check (which is Serie A / milan).
   if (scenarioId === 'liverpool-1995') return 'era-eng-1995';
+  if (scenarioId === 'dortmund-1997') return 'era-bundesliga-1997';
+  if (scenarioId === 'bayern-1998') return 'era-bundesliga-1998';
   if (scenarioId === 'dortmund-2012') return 'era-bundesliga-2012';
   if (scenarioId === 'bayern-2009') return 'era-bundesliga-2009';
   if (scenarioId === 'barcelona-2003') return 'era-la-liga-2003';

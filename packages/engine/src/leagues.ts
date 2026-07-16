@@ -322,6 +322,64 @@ export const GERMANY_2012: LeagueSeed = {
   ],
 };
 
+/** Bundesliga, 1997–98 — the reigning European champions Dortmund (a fading, ageing
+ *  side domestically), Bayern, and the fairytale champions Kaiserslautern, promoted
+ *  and crowned in one season. 18 clubs; ordering approximates the real final table. */
+export const GERMANY_1997: LeagueSeed = {
+  id: 'ger-1997',
+  name: 'Bundesliga',
+  season: '1997-07',
+  clubs: [
+    { id: 'kaiserslautern', name: '1. FC Kaiserslautern', prestige: 58, strength: 82 },
+    { id: 'bayern', name: 'Bayern München', prestige: 88, strength: 85 },
+    { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 66, strength: 82 },
+    { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80, strength: 83 },
+    { id: 'stuttgart', name: 'VfB Stuttgart', prestige: 62, strength: 80 },
+    { id: 'schalke', name: 'Schalke 04', prestige: 64, strength: 79 },
+    { id: 'werder', name: 'Werder Bremen', prestige: 62, strength: 76 },
+    { id: 'hamburg', name: 'Hamburger SV', prestige: 62, strength: 76 },
+    { id: 'munich_1860', name: '1860 München', prestige: 52, strength: 74 },
+    { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 52, strength: 72 },
+    { id: 'gladbach', name: 'Borussia Mönchengladbach', prestige: 60, strength: 73 },
+    { id: 'koln', name: '1. FC Köln', prestige: 58, strength: 72 },
+    { id: 'hertha', name: 'Hertha BSC', prestige: 56, strength: 71 },
+    { id: 'bochum', name: 'VfL Bochum', prestige: 48, strength: 70 },
+    { id: 'duisburg', name: 'MSV Duisburg', prestige: 46, strength: 70 },
+    { id: 'karlsruhe', name: 'Karlsruher SC', prestige: 50, strength: 70 },
+    { id: 'bielefeld', name: 'Arminia Bielefeld', prestige: 44, strength: 68 },
+    { id: 'hansa', name: 'Hansa Rostock', prestige: 48, strength: 69 },
+  ],
+};
+
+/** Bundesliga, 1998–99 — Hitzfeld's Bayern march to the title (and the 1999 European
+ *  Cup final), Leverkusen and Dortmund chasing. 18 clubs; ordering approximates the
+ *  real final table. */
+export const GERMANY_1998: LeagueSeed = {
+  id: 'ger-1998',
+  name: 'Bundesliga',
+  season: '1998-07',
+  clubs: [
+    { id: 'bayern', name: 'Bayern München', prestige: 90, strength: 88 },
+    { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 68, strength: 82 },
+    { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80, strength: 82 },
+    { id: 'hertha', name: 'Hertha BSC', prestige: 58, strength: 79 },
+    { id: 'werder', name: 'Werder Bremen', prestige: 62, strength: 78 },
+    { id: 'stuttgart', name: 'VfB Stuttgart', prestige: 62, strength: 78 },
+    { id: 'schalke', name: 'Schalke 04', prestige: 66, strength: 80 },
+    { id: 'kaiserslautern', name: '1. FC Kaiserslautern', prestige: 58, strength: 78 },
+    { id: 'munich_1860', name: '1860 München', prestige: 52, strength: 75 },
+    { id: 'hamburg', name: 'Hamburger SV', prestige: 62, strength: 77 },
+    { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 54, strength: 73 },
+    { id: 'gladbach', name: 'Borussia Mönchengladbach', prestige: 58, strength: 72 },
+    { id: 'freiburg', name: 'SC Freiburg', prestige: 50, strength: 72 },
+    { id: 'frankfurt', name: 'Eintracht Frankfurt', prestige: 56, strength: 72 },
+    { id: 'hansa', name: 'Hansa Rostock', prestige: 48, strength: 71 },
+    { id: 'bochum', name: 'VfL Bochum', prestige: 48, strength: 70 },
+    { id: 'nurnberg', name: '1. FC Nürnberg', prestige: 52, strength: 70 },
+    { id: 'duisburg', name: 'MSV Duisburg', prestige: 46, strength: 68 },
+  ],
+};
+
 /** La Liga, 2014–15 — Luis Enrique's treble-winning MSN Barça, the BBC Real, and
  *  Simeone's champion Atlético. 20 clubs; ordering follows the real final table. */
 export const SPAIN_2014: LeagueSeed = {
@@ -647,6 +705,8 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2001': ENGLAND_2001,
   'eng-2008': ENGLAND_2008,
   'eng-2010': ENGLAND_2010,
+  'ger-1997': GERMANY_1997,
+  'ger-1998': GERMANY_1998,
   'ger-2009': GERMANY_2009,
   'ger-2012': GERMANY_2012,
 };

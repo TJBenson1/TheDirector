@@ -160,6 +160,24 @@ const LA_LIGA_2014: Record<string, readonly Waypoint[]> = {
 // Bundesliga, 2009–24 (bayern-2009). Van Gaal's Bayern win 2009-10, then Klopp's
 // Dortmund take the next two titles (the insurgency the user must fend off) before
 // Bayern's dynasty reasserts through the 2010s, closing with Leverkusen's 2023-24.
+// Bundesliga, 1997–2013 (dortmund-1997 + bayern-1998). Bayern are the near-constant
+// force; Dortmund fade from their 1997 European peak, then re-emerge for the 2011/12
+// double and the 2013 final. The one-off champions spike in their real years —
+// Kaiserslautern's 1998 fairytale, Werder 2004, Stuttgart 2007, Wolfsburg 2009.
+const BUNDESLIGA_1997: Record<string, readonly Waypoint[]> = {
+  // Bayern sit clearly on top in every real title year (>=88) and dip only in the
+  // six seasons they lost — where the actual champion spikes above them. Leverkusen
+  // and Schalke are capped as the perennial nearly-men who never quite win it.
+  bayern: [[1997, 84], [1998, 89], [1999, 90], [2000, 90], [2001, 86], [2002, 89], [2003, 86], [2004, 90], [2005, 90], [2006, 85], [2007, 90], [2008, 86], [2009, 90], [2010, 87], [2011, 87], [2012, 92], [2013, 92]],
+  dortmund: [[1997, 84], [1998, 82], [2000, 83], [2001, 88], [2002, 83], [2004, 79], [2008, 77], [2010, 89], [2011, 90], [2012, 86], [2013, 84]],
+  leverkusen: [[1997, 79], [2001, 81], [2002, 81], [2004, 79], [2009, 79], [2012, 79]],
+  werder: [[1997, 78], [2002, 82], [2003, 88], [2004, 83], [2007, 80], [2009, 78]],
+  stuttgart: [[1997, 80], [2003, 80], [2006, 88], [2007, 80], [2010, 74]],
+  kaiserslautern: [[1997, 87], [1998, 80], [2000, 74], [2003, 66]],
+  schalke: [[1997, 78], [2001, 81], [2005, 81], [2007, 81], [2010, 79]],
+  wolfsburg: [[1997, 71], [2005, 75], [2008, 88], [2009, 76], [2011, 74]],
+};
+
 const BUNDESLIGA_2009: Record<string, readonly Waypoint[]> = {
   bayern: [[2009, 89], [2010, 85], [2012, 91], [2013, 92], [2020, 91], [2023, 86], [2024, 90]],
   dortmund: [[2009, 80], [2010, 89], [2012, 84], [2019, 84], [2023, 85]],
@@ -198,6 +216,8 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-la-liga-2003': LA_LIGA_2003, // barcelona-2003
   'era-la-liga-2006': LA_LIGA_2006, // real-madrid-2006
   'era-la-liga-2014': LA_LIGA_2014, // barcelona-2014
+  'era-bundesliga-1997': BUNDESLIGA_1997, // dortmund-1997
+  'era-bundesliga-1998': BUNDESLIGA_1997, // bayern-1998
   'era-bundesliga-2009': BUNDESLIGA_2009, // bayern-2009
   'era-bundesliga-2012': BUNDESLIGA_2012, // dortmund-2012
   'era-serie-a-1995': ITALIAN, // juventus-1995
