@@ -408,6 +408,32 @@ export const LYON_2004: CuratedSeed[] = [
   q('lyon', 'frau04', 'Pierre-Alain Frau', 1980, 'France', ['ST'], 71, 76, 2008, 40, t(7, 6, 7, 5, 6, 6)),
 ];
 
+/** Real Zaragoza, 2004–05 — Supercopa winners, and the season a young David Villa
+ *  announced himself before his 2005 move to Valencia. Gabriel Milito anchors the
+ *  defence (his brother Diego arrives only in 2005). */
+export const ZARAGOZA_2004: CuratedSeed[] = [
+  q('zaragoza', 'garciaconde04', 'Luis García Conde', 1979, 'Spain', ['GK'], 75, 76, 2008, 30, t(7, 4, 6, 6, 4, 7)),
+  q('zaragoza', 'falcon04', 'Rubén Falcón Mínguez', 1977, 'Spain', ['GK'], 63, 65, 2007, 30, t(7, 3, 5, 9, 4, 6)),
+  q('zaragoza', 'milito04', 'Gabriel Milito', 1980, 'Argentina', ['CB'], 81, 86, 2007, 35, t(8, 5, 8, 6, 4, 7), { archetype: 'covering-cb' }),
+  q('zaragoza', 'toledo04', 'Delio Toledo', 1976, 'Paraguay', ['CB', 'LB'], 74, 75, 2007, 35, t(7, 5, 6, 6, 5, 6)),
+  q('zaragoza', 'alvarozar04', 'Álvaro Luiz Maior de Aquino', 1977, 'Brazil', ['CB'], 73, 74, 2006, 35, t(6, 5, 6, 6, 5, 6)),
+  q('zaragoza', 'cuartero04', 'Luis Carlos Cuartero', 1975, 'Spain', ['RB', 'CB'], 74, 75, 2008, 40, t(8, 3, 6, 10, 3, 7)),
+  q('zaragoza', 'aranzabal04', 'Agustín Aranzábal', 1973, 'Spain', ['LB'], 74, 74, 2007, 42, t(8, 5, 6, 6, 4, 6)),
+  q('zaragoza', 'movilla04', 'José Movilla', 1975, 'Spain', ['DM', 'CM'], 74, 75, 2006, 40, t(7, 5, 6, 6, 5, 6)),
+  q('zaragoza', 'ponzio04', 'Leonardo Ponzio', 1982, 'Argentina', ['DM', 'CM'], 78, 80, 2009, 35, t(8, 5, 7, 7, 5, 7)),
+  q('zaragoza', 'zapater04', 'Alberto Zapater', 1985, 'Spain', ['DM', 'CM'], 69, 84, 2009, 30, t(7, 5, 8, 9, 5, 7), { latentCeiling: 85 }),
+  q('zaragoza', 'soriano04', 'Fernando Soriano', 1979, 'Spain', ['CM'], 72, 74, 2006, 38, t(7, 4, 6, 7, 5, 6)),
+  q('zaragoza', 'oscargonzalez04', 'Óscar González', 1982, 'Spain', ['AM', 'CM'], 72, 76, 2008, 35, t(6, 6, 7, 5, 6, 6)),
+  q('zaragoza', 'cani04', 'Rubén Gracia Calmache', 1981, 'Spain', ['RW', 'AM'], 78, 82, 2008, 40, t(6, 7, 7, 7, 7, 6)),
+  q('zaragoza', 'savio04', 'Sávio Bortolini Pimentel', 1974, 'Brazil', ['LW', 'AM'], 78, 78, 2006, 40, t(6, 7, 6, 5, 6, 7)),
+  q('zaragoza', 'galletti04', 'Luciano Galletti', 1980, 'Argentina', ['RW', 'LW'], 78, 80, 2007, 35, t(7, 6, 8, 5, 6, 7)),
+  // David Villa — Zaragoza's young star, a Valencia move (2005) away from becoming
+  // Spain's great modern striker. A reality-rail talent (latent 90).
+  q('zaragoza', 'villa04', 'David Villa', 1981, 'Spain', ['ST'], 80, 89, 2008, 30, t(7, 6, 9, 6, 5, 7), { latentCeiling: 90, archetype: 'poacher' }),
+  q('zaragoza', 'javimoreno04', 'Javi Moreno', 1974, 'Spain', ['ST'], 74, 74, 2006, 45, t(6, 6, 6, 5, 6, 6), { archetype: 'poacher' }),
+  q('zaragoza', 'drulic04', 'Goran Drulić', 1977, 'Serbia and Montenegro', ['ST'], 68, 70, 2006, 55, t(5, 5, 5, 5, 6, 5)),
+];
+
 /** Curated squads for the arsenal-2004 scenario, keyed by club. */
 export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   arsenal: ARSENAL_2004,
@@ -436,4 +462,5 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   zenit: ZENIT_2004,
   leverkusen: LEVERKUSEN_2004,
   lyon: LYON_2004,
+  zaragoza: ZARAGOZA_2004,
 };

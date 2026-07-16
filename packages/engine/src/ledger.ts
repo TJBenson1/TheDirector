@@ -459,6 +459,12 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   // Barça sign Eto'o (2004): a settled, happy star — so he is NOT a soft
   // fallback for an English club later; Villa is the more available option.
   { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 24_000_000, id: 'etoo-barca-2004' },
+  // Villa's breakout move: Zaragoza → Valencia (2005), the step up that launched
+  // him. Prise him from Zaragoza first (food-chain discount) and reality diverges.
+  { playerId: 'cur_villa04', from: 'zaragoza', to: 'valencia', window: '2005-07', fee: 12_000_000, id: 'villa-valencia-2005' },
+  // Gabriel Milito's real 2007 move to Barcelona — another Zaragoza sale a big
+  // club can beat them to.
+  { playerId: 'cur_milito04', from: 'zaragoza', to: 'barcelona', window: '2007-07', fee: 17_000_000, id: 'gmilito-barca-2007' },
   // Arsenal's real replacements — OFFERED to the user (their club), declinable.
   { playerId: 'cur_adebayor', from: 'monaco', to: 'arsenal', window: '2006-01', fee: 7_000_000, id: 'adebayor-arsenal-2006' },
   { playerId: 'cur_rosicky', from: 'dortmund', to: 'arsenal', window: '2006-07', fee: 6_800_000, id: 'rosicky-arsenal-2006' },
@@ -518,6 +524,32 @@ const INJURIES_2009: RealInjuryEntry[] = [
   { playerId: 'cur_kaka09', atClub: 'real_madrid', since: '2010-08', months: 4, serious: true, note: 'knee/patellar-tendon surgery' },
   { playerId: 'cur_robben09', atClub: 'bayern', since: '2010-04', months: 2, serious: false, note: 'hamstring trouble around the Champions League final' },
   { playerId: 'cur_ibisevic09', atClub: 'hoffenheim', since: '2009-11', months: 2, serious: false, note: 'lingering effects of his cruciate rupture' },
+  // Van Persie — a Nov 2009 ankle-ligament injury (a challenge on international
+  // duty) cost him half the season; the fragile Arsenal spine of the era.
+  { playerId: 'cur_vanpersie09', atClub: 'arsenal', since: '2009-11', months: 6, serious: true, note: 'ankle ligament damage on international duty' },
+  // Ramsey — the horror double leg-break at Stoke (Feb 2010) that took him out
+  // for the best part of a year. The era's defining young-talent setback.
+  { playerId: 'cur_ramsey09', atClub: 'arsenal', since: '2010-02', months: 9, serious: true, note: 'double leg fracture at Stoke' },
+  // Vermaelen — a persistent Achilles problem wrecked almost all of his second
+  // season after a brilliant first.
+  { playerId: 'cur_vermaelen09', atClub: 'arsenal', since: '2010-09', months: 9, serious: true, note: 'recurring Achilles tendon trouble' },
+  // Torres — knee and groin problems through 2009-10 (surgery in April 2010)
+  // blunted the striker who nearly fired Liverpool to the title a year earlier.
+  { playerId: 'cur_torres09', atClub: 'liverpool', since: '2010-01', months: 3, serious: true, note: 'knee trouble, surgery in April 2010' },
+  // Aquilani — the £20m Alonso replacement arrived carrying an ankle injury and
+  // did not make his league debut until late autumn; a signing that never landed.
+  { playerId: 'cur_aquilani09', atClub: 'liverpool', since: '2009-08', months: 4, serious: false, note: 'arrived injured — ankle surgery delays his debut' },
+  // Hargreaves — chronic patellar tendinitis (multiple knee surgeries) meant he
+  // barely played for United across these years. A career effectively lost to it.
+  { playerId: 'cur_hargreaves09', atClub: 'man_utd', since: '2009-09', months: 11, serious: true, note: 'chronic knee tendinitis — barely plays for two years' },
+  // Owen — a hamstring tear at Wembley (League Cup final, Feb 2010) ruled him out
+  // for the rest of the season and the World Cup.
+  { playerId: 'cur_owen09', atClub: 'man_utd', since: '2010-02', months: 3, serious: false, note: 'hamstring tear in the League Cup final' },
+  // Pato — the recurring thigh/muscle injuries that slowly wrecked a generational
+  // talent at Milan.
+  { playerId: 'cur_pato09', atClub: 'milan', since: '2010-11', months: 2, serious: false, note: 'recurring thigh-muscle injuries' },
+  // Nesta — the chronic back trouble that dogged the great defender's final years.
+  { playerId: 'cur_nesta09', atClub: 'milan', since: '2010-01', months: 2, serious: false, note: 'chronic lower-back trouble' },
 ];
 
 /**

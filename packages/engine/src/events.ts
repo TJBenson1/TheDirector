@@ -466,6 +466,181 @@ const MAN_UTD_1999_PACK: ScriptedEvent[] = [
       memoryTags: ['manager', 'cur_beckham'],
     }),
   },
+  {
+    // Yorke's off-field lifestyle (2001) blunted his form; Ferguson froze him out
+    // and sold him to Blackburn in 2002. Context: he must still be at the club.
+    id: 'yorke-lifestyle',
+    date: '2001-08',
+    requires: (s) => playerAt(s, 'cur_yorke', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:yorke-lifestyle',
+      title: "Dwight Yorke's off-field lifestyle is a problem",
+      description: 'The tabloids are full of your striker\'s nightlife and his sharpness has dipped. The manager wants him reined in — or moved on.',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'quiet-word',
+          label: 'A quiet word — keep it in-house',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_yorke', amount: 5 }, { kind: 'memory', tag: 'discipline', text: 'Kept the Yorke situation in-house.' }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_yorke', amount: -4 }, { kind: 'memory', tag: 'discipline', text: 'The Yorke talk did not take.' }],
+        },
+        {
+          id: 'freeze-out',
+          label: 'Freeze him out and force a sale',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'agitation', playerId: 'cur_yorke', amount: 20 }],
+          onFailure: [{ kind: 'morale', clubId: 'man_utd', amount: -3 }, { kind: 'managerRelationship', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_yorke', amount: -6 }, { kind: 'memory', tag: 'discipline', text: 'The Yorke story is left to fester.' }],
+      memoryTags: ['discipline', 'cur_yorke'],
+    }),
+  },
+  {
+    // The missed drugs test (Sep 2003) that brought an eight-month FA ban from Jan
+    // 2004 — a real, unavoidable blow to United's best defender. The ban lands on
+    // every path; the choice is how you carry the club through it.
+    id: 'rio-drug-test',
+    date: '2003-09',
+    requires: (s) => playerAt(s, 'cur_ferdinand', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:rio-drug-test',
+      title: 'Rio Ferdinand has missed a drugs test',
+      description: 'Your best defender failed to attend a scheduled test. A lengthy FA ban now looks certain — the dressing room and the press are watching how you respond.',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'support',
+          label: 'Back him publicly and take the ban on the chin',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'restPlayer', playerId: 'cur_ferdinand', months: 8, amount: 0 }, { kind: 'morale', playerId: 'cur_ferdinand', amount: 6 }, { kind: 'memory', tag: 'ban', text: 'Stood by Ferdinand through his ban.' }],
+          onFailure: [{ kind: 'restPlayer', playerId: 'cur_ferdinand', months: 8, amount: 0 }, { kind: 'fanTrust', amount: -4, text: 'The Ferdinand affair drags on.' }],
+        },
+        {
+          id: 'distance',
+          label: 'Distance the club from him',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'restPlayer', playerId: 'cur_ferdinand', months: 8, amount: 0 }, { kind: 'boardPatience', amount: 3 }, { kind: 'agitation', playerId: 'cur_ferdinand', amount: 15 }],
+          onFailure: [{ kind: 'restPlayer', playerId: 'cur_ferdinand', months: 8, amount: 0 }, { kind: 'morale', playerId: 'cur_ferdinand', amount: -10 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'restPlayer', playerId: 'cur_ferdinand', months: 8, amount: 0 }, { kind: 'morale', playerId: 'cur_ferdinand', amount: -6 }, { kind: 'memory', tag: 'ban', text: 'You stayed silent through the Ferdinand ban.' }],
+      memoryTags: ['ban', 'cur_ferdinand'],
+    }),
+  },
+  {
+    // The Glazers' leveraged buyout (2005) loaded the club with debt amid open fan
+    // revolt. A club-level ownership beat — no player precondition.
+    id: 'glazer-takeover',
+    date: '2005-05',
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:glazer-takeover',
+      title: 'The Glazers launch a leveraged takeover',
+      description: 'An American family is buying the club with borrowed money, loading United with debt as the supporters revolt. How do you position yourself?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'stay-out',
+          label: 'Stay above it — focus on the football',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'memory', tag: 'ownership', text: 'Kept out of the Glazer politics.' }, { kind: 'money', clubId: 'man_utd', amount: -5_000_000 }],
+          onFailure: [{ kind: 'fanTrust', amount: -4, text: 'Silence on the takeover reads as complicity.' }],
+        },
+        {
+          id: 'side-with-fans',
+          label: 'Side with the supporters',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'fanTrust', amount: 8, text: 'You stood with the fans against the debt.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -8 }, { kind: 'memory', tag: 'ownership', text: 'The new owners note your opposition.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'ownership', text: 'The takeover completes; the debt arrives.' }, { kind: 'money', clubId: 'man_utd', amount: -5_000_000 }],
+      memoryTags: ['ownership', 'glazers'],
+    }),
+  },
+  {
+    // Keane's MUTV interview (Nov 2005) savaging his team-mates ended his United
+    // career — he left for Celtic that December. The exit itself is handled by the
+    // veteran/ageing system; this is the dressing-room beat around it.
+    id: 'keane-mutv',
+    date: '2005-11',
+    requires: (s) => playerAt(s, 'cur_keane', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:keane-mutv',
+      title: 'Roy Keane savages the squad on MUTV',
+      description: 'Your captain has recorded a blistering attack on his team-mates for the club channel. The manager wants it buried — and may want Keane gone.',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'part-ways',
+          label: 'Agree it is time to part ways',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'captain', text: 'Sanctioned Keane\'s exit — as reality did.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -5, text: 'Fans mourn the captain\'s abrupt exit.' }],
+        },
+        {
+          id: 'keep-captain',
+          label: 'Stand by your captain',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_keane', amount: 8 }, { kind: 'agitation', playerId: 'cur_keane', amount: -10 }],
+          onFailure: [{ kind: 'managerRelationship', amount: -8 }, { kind: 'morale', clubId: 'man_utd', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_keane', amount: -8 }, { kind: 'managerRelationship', amount: -4 }, { kind: 'memory', tag: 'captain', text: 'The Keane situation is left to combust.' }],
+      memoryTags: ['captain', 'cur_keane'],
+    }),
+  },
+  {
+    // Real Madrid's public courting of Ronaldo (2008). Reality: Ferguson kept him
+    // one more year, then sanctioned the world-record sale in 2009 (the ledger move
+    // cr7-real-2009). This is the saga you manage; the sale itself stays scripted.
+    id: 'ronaldo-real-interest',
+    date: '2008-06',
+    requires: (s) => playerAt(s, 'cur_cristiano', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:ronaldo-real-interest',
+      title: 'Real Madrid are turning Cristiano Ronaldo\'s head',
+      description: 'After his best season yet, Real Madrid are courting your talisman in public. He has not asked to leave — but the noise is growing louder by the week.',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'one-more-year',
+          label: 'Convince him to give you one more year',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_cristiano', amount: 6 }, { kind: 'memory', tag: 'transfer-saga', text: 'CR7 agrees to stay one more year — as reality.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_cristiano', amount: 12 }],
+        },
+        {
+          id: 'promise-sale',
+          label: 'Promise him the move next summer',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_cristiano', amount: 8 }, { kind: 'agitation', playerId: 'cur_cristiano', amount: -8 }, { kind: 'memory', tag: 'transfer-saga', text: 'Promised CR7 the Madrid move — the exit is only deferred.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_cristiano', amount: 10 }],
+        },
+        {
+          id: 'cash-in',
+          label: 'Cash in now while his value peaks',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'agitation', playerId: 'cur_cristiano', amount: 20 }, { kind: 'memory', tag: 'transfer-saga', text: 'Signalled you would sell CR7 early — divergence from history.' }],
+          onFailure: [{ kind: 'morale', clubId: 'man_utd', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_cristiano', amount: 8 }, { kind: 'memory', tag: 'transfer-saga', text: 'CR7 is left to stew on Madrid\'s interest.' }],
+      memoryTags: ['transfer-saga', 'cur_cristiano'],
+    }),
+  },
 ];
 
 function fireScriptedEvents(state: GameState): void {

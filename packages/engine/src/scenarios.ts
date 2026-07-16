@@ -204,6 +204,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'inter', name: 'Internazionale', prestige: 82 },
       // Parma — Parmalat has just collapsed; a crisis club to pick apart (Gilardino).
       { id: 'parma', name: 'Parma', prestige: 68 },
+      // Zaragoza — Supercopa winners with a young David Villa to prise away before
+      // his real 2005 move to Valencia.
+      { id: 'zaragoza', name: 'Real Zaragoza', prestige: 66 },
     ],
     // Abramovich bankrolls Chelsea; Arsenal are servicing the Emirates debt.
     ownership: { chelsea: 'sugar-daddy', arsenal: 'debt' },
