@@ -1518,12 +1518,124 @@ const SPURS_2013_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── AC Milan, 2007 (last dance before the fall) storyline pack ───────────────
+const MILAN_2007_PACK: ScriptedEvent[] = [
+  {
+    id: 'milan-last-dance',
+    date: '2006-08',
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:milan-last-dance',
+      title: 'One last dance, or start the rebuild?',
+      description: 'Your champions are the best team in Europe — and the oldest. Maldini, Cafu, Costacurta, an ageing spine that could win one more European Cup or fall off a cliff. Chase one more, or blood the next generation now?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'one-more', label: 'Go all-in for one more European Cup', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 6 }, { kind: 'memory', tag: 'board', text: 'Backed the old guard for one last charge — as reality (Athens 2007).' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'rebuild', label: 'Start the rebuild before the fall', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'board', text: 'Began the rebuild early — the divergence from the real slow decline.' }], onFailure: [{ kind: 'morale', clubId: 'milan', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'board', text: 'The ageing side rolls on without a plan.' }],
+      memoryTags: ['board', 'rebuild'],
+    }),
+  },
+  {
+    id: 'milan-defence-age',
+    date: '2006-11',
+    requires: (s) => playerAt(s, 'cur_nesta07', 'milan') && s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:milan-defence-age',
+      title: 'How long can Maldini and Nesta hold the line?',
+      description: 'Your legendary defence is magnificent and fragile — every knock to Maldini or Nesta is a scare. Wrap them in cotton wool for the big nights, or lean on their brilliance while it lasts?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'manage', label: 'Rotate and protect the veterans', successProbability: 0.6, onSuccess: [{ kind: 'restPlayer', playerId: 'cur_nesta07', months: 1, amount: -6 }, { kind: 'memory', tag: 'load', text: 'Nursed the old guard through the season.' }], onFailure: [{ kind: 'morale', clubId: 'milan', amount: -3 }] },
+        { id: 'ride', label: 'Play your best men every week', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 5 }], onFailure: [{ kind: 'reinjure', playerId: 'cur_nesta07', months: 2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'injuryProneness', playerId: 'cur_maldini07', amount: 6 }],
+      memoryTags: ['load', 'cur_maldini07'],
+    }),
+  },
+  {
+    id: 'kaka-suitors',
+    date: '2008-06',
+    requires: (s) => playerAt(s, 'cur_kaka07', 'milan') && s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:kaka-suitors',
+      title: 'The world wants Kaká',
+      description: 'Your Ballon d\'Or winner is the most coveted player on earth — Real Madrid and a newly-rich Manchester City are readying nine-figure bids. Build the club around him, or take a world-record fee that would fund a whole rebuild?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'keep', label: 'He is not for sale at any price', successProbability: 0.55, onSuccess: [{ kind: 'morale', playerId: 'cur_kaka07', amount: 8 }, { kind: 'fanTrust', amount: 8, text: 'Keeping Kaká is a statement of intent.' }, { kind: 'memory', tag: 'transfer-saga', text: 'Turned down the world for Kaká — as reality did, in 2008.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_kaka07', amount: 10 }] },
+        { id: 'cash-in', label: 'Take the world-record fee', successProbability: 0.85, onSuccess: [{ kind: 'transferOut', playerId: 'cur_kaka07', clubId: 'real_madrid', amount: 65_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Cashed in Kaká early — the rebuild is funded, the icon gone.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_kaka07', amount: 12 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_kaka07', amount: 10 }],
+      memoryTags: ['transfer-saga', 'cur_kaka07'],
+    }),
+  },
+];
+
+// ── Juventus, 2006 (Calciopoli / Serie B) storyline pack ─────────────────────
+const JUVENTUS_2006_PACK: ScriptedEvent[] = [
+  {
+    id: 'calciopoli-loyalty',
+    date: '2006-08',
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:calciopoli-loyalty',
+      title: 'The icons who stayed',
+      description: 'Cannavaro, Emerson, Thuram, Zambrotta, Ibrahimović and Vieira have all jumped ship. But Del Piero, Buffon, Nedvěd, Trézéguet and a young Chiellini stayed to fight in Serie B. Reward that loyalty and build around them, or use the wreckage to start completely fresh?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'reward', label: 'Build around the loyal icons', successProbability: 0.65, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 8 }, { kind: 'fanTrust', amount: 8, text: 'Backing the stayers galvanises a wounded Turin.' }, { kind: 'memory', tag: 'identity', text: 'Built the Serie B fightback on the loyal core — as reality.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'fresh', label: 'Tear it up and rebuild from scratch', successProbability: 0.45, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'identity', text: 'Cleared out even the icons — a ruthless divergence.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -6 }, { kind: 'fanTrust', amount: -6, text: 'Discarding the loyal icons appals the fans.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'identity', text: 'The loyal core carry the club without a clear plan.' }],
+      memoryTags: ['identity', 'calciopoli'],
+    }),
+  },
+  {
+    id: 'buffon-temptation',
+    date: '2006-09',
+    requires: (s) => playerAt(s, 'cur_buffon07', 'juventus') && s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:buffon-temptation',
+      title: 'A Champions League club wants Buffon',
+      description: 'The best goalkeeper in the world does not belong in Serie B, and the giants know it — a huge offer is on the table. He is torn. Persuade him the fightback needs him, or let your prize asset go?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Convince him to lead the fightback', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_buffon07', amount: 10 }, { kind: 'agitation', playerId: 'cur_buffon07', amount: -20 }, { kind: 'memory', tag: 'transfer-saga', text: 'Buffon stays in Serie B — the loyalty that defined the era.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_buffon07', amount: 12 }] },
+        { id: 'sell', label: 'Cash in on your world-class keeper', successProbability: 0.8, onSuccess: [{ kind: 'money', clubId: 'juventus', amount: 20_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Buffon — the war chest grows, the symbol gone.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_buffon07', amount: 10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_buffon07', amount: 12 }],
+      memoryTags: ['transfer-saga', 'cur_buffon07'],
+    }),
+  },
+  {
+    id: 'serie-b-grind',
+    date: '2007-03',
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:serie-b-grind',
+      title: 'Every Serie B side treats you like their cup final',
+      description: 'The unglamorous grind is real — muddy pitches, hostile little grounds, and every opponent playing the game of their lives against the fallen giant. The title is yours to lose. How do you keep the stars switched on?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'professional', label: 'Demand ruthless professionalism', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 6 }, { kind: 'memory', tag: 'title-race', text: 'Ground out the promotion the professional way — as reality.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'inspire', label: 'Make it a mission of redemption', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 8 }, { kind: 'fanTrust', amount: 5, text: 'The redemption narrative fires the club.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'juventus', amount: -4 }],
+      memoryTags: ['title-race', 'serie-b'],
+    }),
+  },
+];
+
 /** Scripted historical storylines by scenario. man-utd-1999 is the calibration
  *  pack; the others fire only in their own start point (no calibration impact). */
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
   'newcastle-1995': NEWCASTLE_1995_PACK,
   'spurs-2013': SPURS_2013_PACK,
+  'milan-2007': MILAN_2007_PACK,
+  'juventus-2006': JUVENTUS_2006_PACK,
   'man-utd-2013': MAN_UTD_2013_PACK,
   'real-madrid-2000': REAL_MADRID_2000_PACK,
   'arsenal-2004': ARSENAL_2004_PACK,

@@ -290,6 +290,30 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     domesticLeagueId: 'ita-1',
   },
 
+  // ── Serie A 2006-07 cluster (shared curated pack) ────────────────────────────
+  'milan-2007': {
+    id: 'milan-2007',
+    name: 'AC Milan — 2007: Last Dance Before the Fall',
+    startDate: '2006-07',
+    playerClub: 'milan',
+    mandate: 'Squeeze one more European Cup from the champions — and rebuild the ageing side before the fall.',
+    boardPatience: 74,
+    boardExpectedFinish: 2,
+    clubs: ELITE_CLUBS,
+    domesticLeagueId: 'ita-2007',
+  },
+  'juventus-2006': {
+    id: 'juventus-2006',
+    name: 'Juventus — 2006: Calciopoli — Serie B',
+    startDate: '2006-07',
+    playerClub: 'juventus',
+    mandate: 'Dumped to Serie B and stripped of your stars — win the division at a canter behind the icons who stayed, and rebuild the dynasty.',
+    boardPatience: 78,
+    boardExpectedFinish: 1,
+    clubs: ELITE_CLUBS,
+    domesticLeagueId: 'ita-b-2006',
+  },
+
   'spurs-2013': {
     id: 'spurs-2013',
     name: 'Tottenham — 2013: The Bale Money',

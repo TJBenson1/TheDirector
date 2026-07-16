@@ -236,10 +236,74 @@ export const BUNDESLIGA_2009: LeagueSeed = {
   ],
 };
 
+/** Serie A, 2006–07 — Inter's record-points Scudetto, Milan's Champions League;
+ *  Juventus are ABSENT (relegated to Serie B in Calciopoli). Ordering informed by
+ *  the real final table. */
+export const SERIE_A_2007: LeagueSeed = {
+  id: 'ita-2007',
+  name: 'Serie A',
+  season: '2006-07',
+  clubs: [
+    { id: 'inter', name: 'Internazionale', prestige: 86, strength: 87 },
+    { id: 'milan', name: 'AC Milan', prestige: 86, strength: 85 },
+    { id: 'roma', name: 'AS Roma', prestige: 80, strength: 83 },
+    { id: 'lazio', name: 'Lazio', prestige: 76, strength: 80 },
+    { id: 'fiorentina', name: 'Fiorentina', prestige: 74, strength: 80 },
+    { id: 'palermo', name: 'Palermo', prestige: 62, strength: 77 },
+    { id: 'sampdoria', name: 'Sampdoria', prestige: 62, strength: 75 },
+    { id: 'udinese', name: 'Udinese', prestige: 60, strength: 74 },
+    { id: 'empoli', name: 'Empoli', prestige: 50, strength: 72 },
+    { id: 'atalanta', name: 'Atalanta', prestige: 58, strength: 72 },
+    { id: 'parma', name: 'Parma', prestige: 62, strength: 71 },
+    { id: 'livorno', name: 'Livorno', prestige: 50, strength: 70 },
+    { id: 'catania', name: 'Catania', prestige: 48, strength: 68 },
+    { id: 'siena', name: 'Siena', prestige: 48, strength: 68 },
+    { id: 'torino', name: 'Torino', prestige: 56, strength: 67 },
+    { id: 'cagliari', name: 'Cagliari', prestige: 50, strength: 67 },
+    { id: 'reggina', name: 'Reggina', prestige: 46, strength: 66 },
+    { id: 'chievo', name: 'Chievo', prestige: 48, strength: 65 },
+    { id: 'ascoli', name: 'Ascoli', prestige: 44, strength: 63 },
+    { id: 'messina', name: 'Messina', prestige: 44, strength: 62 },
+  ],
+};
+
+/** Serie B, 2006–07 — the division Juventus were dumped into after Calciopoli and
+ *  won at the first attempt. Juve are far and away the strongest; Napoli and Genoa
+ *  went up with them. */
+export const SERIE_B_2006: LeagueSeed = {
+  id: 'ita-b-2006',
+  name: 'Serie B',
+  season: '2006-07',
+  clubs: [
+    { id: 'juventus', name: 'Juventus', prestige: 82, strength: 82 },
+    { id: 'napoli', name: 'Napoli', prestige: 66, strength: 74 },
+    { id: 'genoa', name: 'Genoa', prestige: 58, strength: 73 },
+    { id: 'lecce', name: 'Lecce', prestige: 50, strength: 71 },
+    { id: 'bologna', name: 'Bologna', prestige: 56, strength: 71 },
+    { id: 'brescia', name: 'Brescia', prestige: 50, strength: 70 },
+    { id: 'verona', name: 'Hellas Verona', prestige: 52, strength: 68 },
+    { id: 'cesena', name: 'Cesena', prestige: 44, strength: 67 },
+    { id: 'bari', name: 'Bari', prestige: 48, strength: 67 },
+    { id: 'piacenza', name: 'Piacenza', prestige: 44, strength: 66 },
+    { id: 'triestina', name: 'Triestina', prestige: 42, strength: 65 },
+    { id: 'modena', name: 'Modena', prestige: 44, strength: 65 },
+    { id: 'mantova', name: 'Mantova', prestige: 40, strength: 64 },
+    { id: 'frosinone', name: 'Frosinone', prestige: 40, strength: 63 },
+    { id: 'vicenza', name: 'Vicenza', prestige: 44, strength: 63 },
+    { id: 'rimini', name: 'Rimini', prestige: 40, strength: 62 },
+    { id: 'crotone', name: 'Crotone', prestige: 40, strength: 61 },
+    { id: 'spezia', name: 'Spezia', prestige: 40, strength: 61 },
+    { id: 'arezzo', name: 'Arezzo', prestige: 40, strength: 60 },
+    { id: 'albinoleffe', name: 'AlbinoLeffe', prestige: 38, strength: 59 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'esp-1': SPAIN_2000,
   'ita-1': SERIE_A_1998,
+  'ita-2007': SERIE_A_2007,
+  'ita-b-2006': SERIE_B_2006,
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,
