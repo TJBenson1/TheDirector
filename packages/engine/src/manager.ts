@@ -550,6 +550,10 @@ const MANAGER_CROSSROADS: Record<string, ManagerCrossroads[]> = {
   'man-utd-1999': [{ year: 2001, name: 'Alex Ferguson', reason: 'retirement', realOutcome: 'stays' }],
   'arsenal-2004': [{ year: 2007, name: 'Arsène Wenger', reason: 'courted', realOutcome: 'stays' }],
   'man-utd-2013': [{ year: 2014, name: 'David Moyes', reason: 'pressure', realOutcome: 'leaves' }],
+  // Ranieri won a title race but not the title; Abramovich replaced him with
+  // Mourinho in 2004. Reality: he LEFT (a passive career reproduces the change,
+  // and the era hire-shortlist offers the Special One).
+  'chelsea-2003': [{ year: 2004, name: 'Claudio Ranieri', reason: 'pressure', realOutcome: 'leaves' }],
 };
 
 /** Fire each scripted crossroads once, when its year arrives and the real coach

@@ -962,6 +962,533 @@ const ARSENAL_2004_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── Liverpool, 2001 (Houllier's treble side) storyline pack ──────────────────
+const LIVERPOOL_2001_PACK: ScriptedEvent[] = [
+  {
+    // Houllier's aortic dissection during the Leeds match (Oct 2001) — emergency
+    // surgery, five months away from the touchline. A manager-health beat.
+    id: 'houllier-health',
+    date: '2001-10',
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:houllier-health',
+      title: 'Gérard Houllier is rushed to hospital',
+      description: 'Your manager was taken ill at half-time with a life-threatening heart problem and faces major surgery and months away. How do you steady the club?',
+      interrupt: true,
+      clubId: 'liverpool',
+      category: 'event',
+      choices: [
+        {
+          id: 'rally',
+          label: 'Rally the squad and hold the fort until he returns',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 5 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Held Liverpool together through Houllier\'s illness.' }],
+          onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -4 }],
+        },
+        {
+          id: 'caretaker',
+          label: 'Hand full control to a trusted caretaker',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'managerStanding', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'A steady caretaker kept the season on track.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'liverpool', amount: -4 }, { kind: 'memory', tag: 'manager', text: 'The club drifted while Houllier recovered.' }],
+      memoryTags: ['manager', 'houllier'],
+    }),
+  },
+  {
+    // Gerrard's Chelsea saga (2005) — after Istanbul he handed in a request, then
+    // performed a dramatic u-turn and stayed. requires him still at the club.
+    id: 'gerrard-chelsea',
+    date: '2005-06',
+    requires: (s) => playerAt(s, 'cur_gerrard01', 'liverpool') && s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:gerrard-chelsea',
+      title: 'Chelsea are turning Steven Gerrard\'s head',
+      description: 'Your captain and local hero has a huge offer from Chelsea on the table. He is wavering. Convince him he is Liverpool to the core, cash in, or let it drift?',
+      interrupt: true,
+      clubId: 'liverpool',
+      category: 'event',
+      choices: [
+        {
+          id: 'talisman',
+          label: 'Make him captain for life — he stays',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_gerrard01', amount: 10 }, { kind: 'agitation', playerId: 'cur_gerrard01', amount: -20 }, { kind: 'fanTrust', amount: 6, text: 'Keeping Gerrard electrifies the Kop.' }, { kind: 'memory', tag: 'transfer-saga', text: 'Gerrard stays — the u-turn, as reality.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_gerrard01', amount: 10 }],
+        },
+        {
+          id: 'sell',
+          label: 'Take Chelsea\'s money',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'transferOut', playerId: 'cur_gerrard01', clubId: 'chelsea', amount: 32_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Gerrard to Chelsea — a divergence Anfield never forgave.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_gerrard01', amount: 15 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_gerrard01', amount: 15 }, { kind: 'morale', clubId: 'liverpool', amount: -3 }],
+      memoryTags: ['transfer-saga', 'cur_gerrard01'],
+    }),
+  },
+  {
+    // Real Madrid come for Michael Owen (2004) — reality: he left for the Bernabéu.
+    id: 'owen-madrid',
+    date: '2004-06',
+    requires: (s) => playerAt(s, 'cur_owen01', 'liverpool') && s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:owen-madrid',
+      title: 'Real Madrid want Michael Owen',
+      description: 'A Ballon d\'Or striker with a year left on his deal, and Real Madrid are calling. Cash in before he can leave for nothing, or build the attack around him?',
+      interrupt: true,
+      clubId: 'liverpool',
+      category: 'event',
+      choices: [
+        {
+          id: 'sell',
+          label: 'Sell to Madrid while you still can',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'money', clubId: 'liverpool', amount: 8_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Owen to Madrid — as reality.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_owen01', amount: 10 }],
+        },
+        {
+          id: 'keep',
+          label: 'Keep your striker and build around him',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_owen01', amount: 8 }, { kind: 'memory', tag: 'transfer-saga', text: 'Kept Owen — a divergence from his Bernabéu move.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_owen01', amount: 14 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_owen01', amount: 12 }],
+      memoryTags: ['transfer-saga', 'cur_owen01'],
+    }),
+  },
+];
+
+// ── Bayern Munich, 2009 (Van Gaal reset) storyline pack ──────────────────────
+const BAYERN_2009_PACK: ScriptedEvent[] = [
+  {
+    // Van Gaal's ruthless reset: blood Müller, Badstuber and a teenage Alaba over
+    // the established names. Reality: the kids delivered a domestic double.
+    id: 'vangaal-youth',
+    date: '2009-09',
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:vangaal-youth',
+      title: 'Van Gaal wants to tear up the old guard',
+      description: 'Your manager is convinced the future is the academy kids — Müller, Badstuber, a teenage Alaba — even at the cost of dropping proven internationals. Back the revolution, or protect the experienced core?',
+      interrupt: true,
+      clubId: 'bayern',
+      category: 'event',
+      choices: [
+        {
+          id: 'back-youth',
+          label: 'Back the youth revolution',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_muller09', amount: 12 }, { kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'development', text: 'Backed Van Gaal\'s kids — Müller breaks through, as reality.' }],
+          onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -3 }],
+        },
+        {
+          id: 'protect-core',
+          label: 'Protect the experienced core',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'development', text: 'Reined in the reset — the kids wait their turn.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: -4 }, { kind: 'memory', tag: 'development', text: 'Left Van Gaal to run the reset his own way.' }],
+      memoryTags: ['development', 'vangaal'],
+    }),
+  },
+  {
+    // The Zahia affair (April 2010) — Ribéry named in an underage-prostitution
+    // legal case that dominated the headlines. A scandal to navigate.
+    id: 'ribery-scandal',
+    date: '2010-04',
+    requires: (s) => playerAt(s, 'cur_ribery09', 'bayern') && s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:ribery-scandal',
+      title: 'Franck Ribéry is engulfed by a legal scandal',
+      description: 'Your best player is named in a criminal investigation that has become a media circus on the eve of the biggest games of the season. Back him, or distance the club?',
+      interrupt: true,
+      clubId: 'bayern',
+      category: 'scandal',
+      choices: [
+        {
+          id: 'back',
+          label: 'Back him and shield him from the noise',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_ribery09', amount: 8 }, { kind: 'memory', tag: 'scandal', text: 'Stood by Ribéry through the storm.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -5, text: 'Shielding Ribéry draws criticism.' }],
+        },
+        {
+          id: 'distance',
+          label: 'Distance the club from the affair',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'morale', playerId: 'cur_ribery09', amount: -6 }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_ribery09', amount: 12 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_ribery09', amount: -6 }, { kind: 'fanTrust', amount: -4, text: 'The Ribéry circus is left to swirl.' }],
+      memoryTags: ['scandal', 'cur_ribery09'],
+    }),
+  },
+  {
+    // Robben — a match-winner when fit, but a famously fragile hamstring on the run
+    // to the 2010 Champions League final. Manage his load or ride him.
+    id: 'robben-fitness',
+    date: '2010-03',
+    requires: (s) => playerAt(s, 'cur_robben09', 'bayern') && s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:robben-fitness',
+      title: 'Arjen Robben\'s hamstring is a constant worry',
+      description: 'Your match-winner is carrying a hamstring into the business end of the season. Wrap him up for the knockout games, or lean on him now with the title in the balance?',
+      interrupt: true,
+      clubId: 'bayern',
+      category: 'event',
+      choices: [
+        {
+          id: 'manage',
+          label: 'Manage his load for the run-in',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'restPlayer', playerId: 'cur_robben09', months: 1, amount: -6 }, { kind: 'memory', tag: 'load', text: 'Protected Robben for the knockouts.' }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_robben09', amount: -4 }],
+        },
+        {
+          id: 'ride',
+          label: 'Play him — you need him now',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_robben09', amount: 6 }],
+          onFailure: [{ kind: 'reinjure', playerId: 'cur_robben09', months: 2 }, { kind: 'memory', tag: 'load', text: 'Rode Robben and his hamstring went.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'injuryProneness', playerId: 'cur_robben09', amount: 6 }],
+      memoryTags: ['load', 'cur_robben09'],
+    }),
+  },
+];
+
+// ── Barcelona, 1999 (Van Gaal's Catalans) storyline pack ─────────────────────
+const BARCELONA_1999_PACK: ScriptedEvent[] = [
+  {
+    // Figo's 2000 defection to Real Madrid — the most controversial transfer of
+    // the era, the founding act of the galácticos, and the deepest betrayal in the
+    // Clásico's history. Fires before his real summer-2000 move.
+    id: 'figo-betrayal',
+    date: '2000-06',
+    requires: (s) => playerAt(s, 'cur_figo', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:figo-betrayal',
+      title: 'Real Madrid trigger a move for Luís Figo',
+      description: 'Florentino Pérez has built a presidency around prising your talisman across the divide. The unthinkable is on the table. Match anything to keep him, let him defect, or sell him elsewhere to deny Madrid?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'keep',
+          label: 'Match any terms — he cannot join Madrid',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_figo', amount: 10 }, { kind: 'money', clubId: 'barcelona', amount: -6_000_000 }, { kind: 'fanTrust', amount: 8, text: 'Keeping Figo from Madrid is a statement.' }, { kind: 'memory', tag: 'transfer-saga', text: 'Kept Figo — the betrayal that never was.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_figo', amount: 12 }],
+        },
+        {
+          id: 'let-go',
+          label: 'Let him go to Madrid (as reality)',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'money', clubId: 'barcelona', amount: 30_000_000 }, { kind: 'fanTrust', amount: -8, text: 'Figo\'s defection to Madrid poisons the fanbase.' }, { kind: 'memory', tag: 'transfer-saga', text: 'Figo defects to Madrid — the great betrayal.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -10, text: 'The Figo sale is a catastrophe with the fans.' }],
+        },
+        {
+          id: 'spite-sale',
+          label: 'Sell him anywhere but Madrid',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'transferOut', playerId: 'cur_figo', clubId: 'juventus', amount: 28_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Figo to Italy to deny Madrid — history rewritten.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_figo', amount: 15 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -6, text: 'Dithering over Figo lets Madrid dictate terms.' }, { kind: 'agitation', playerId: 'cur_figo', amount: 12 }],
+      memoryTags: ['transfer-saga', 'cur_figo'],
+    }),
+  },
+  {
+    // Rivaldo's running battle with Van Gaal — the reigning Ballon d'Or refused to
+    // be played wide on the left, wanting the free central role; he was dropped for
+    // it. A context-dependent star-role dispute.
+    id: 'rivaldo-role',
+    date: '2001-01',
+    requires: (s) => playerAt(s, 'cur_rivaldo', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:rivaldo-role',
+      title: 'Rivaldo refuses to play on the wing',
+      description: 'Your Ballon d\'Or winner and the manager are at war: Van Gaal wants him wide on the left, Rivaldo insists he is a free number ten and will not do it. Whose side are you on?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'free-role',
+          label: 'Give Rivaldo his free central role',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_rivaldo', amount: 10 }, { kind: 'managerRelationship', amount: -5 }, { kind: 'memory', tag: 'tactics', text: 'Freed Rivaldo — the manager is overruled.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -10 }],
+        },
+        {
+          id: 'back-manager',
+          label: 'Back Van Gaal\'s system',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'agitation', playerId: 'cur_rivaldo', amount: 15 }, { kind: 'memory', tag: 'tactics', text: 'Backed the system over the star — Rivaldo seethes.' }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_rivaldo', amount: -10 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_rivaldo', amount: 12 }, { kind: 'managerRelationship', amount: -4 }],
+      memoryTags: ['tactics', 'cur_rivaldo'],
+    }),
+  },
+  {
+    // The Núñez era ends — his 1978–2000 presidency collapsed amid the Figo fallout
+    // and Joan Gaspart took over into a chaotic, trophyless spell. A boardroom beat.
+    id: 'barca-presidency',
+    date: '2000-08',
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:barca-presidency',
+      title: 'A new president takes charge at the Camp Nou',
+      description: 'The old regime has fallen and a new president arrives promising to answer Madrid\'s galácticos spend-for-spend. Align with his vision, or protect the sporting project from boardroom politics?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'align',
+          label: 'Align with the president\'s galáctico answer',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'board', text: 'Backed the new president\'s marquee push.' }],
+          onFailure: [{ kind: 'memory', tag: 'board', text: 'The president expected more ambition.' }],
+        },
+        {
+          id: 'protect-project',
+          label: 'Protect the sporting project',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'board', text: 'Won room to build on football, not headlines.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'board', text: 'The boardroom sets the direction without you.' }],
+      memoryTags: ['board', 'president'],
+    }),
+  },
+];
+
+// ── Internazionale, 1998 (Ronaldo's Inter) storyline pack ────────────────────
+const INTER_1998_PACK: ScriptedEvent[] = [
+  {
+    // Moratti's revolving door — Simoni was sacked only months after winning the
+    // UEFA Cup, the start of a decade of managerial churn. A board-pressure beat.
+    id: 'moratti-impatience',
+    date: '1998-11',
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:moratti-impatience',
+      title: 'The president is already losing patience',
+      description: 'Months after winning the UEFA Cup, an inconsistent start has the president openly musing about a change — the impatience that would define his ownership. Steady his nerve, or accept a reckoning is coming?',
+      interrupt: true,
+      clubId: 'inter',
+      category: 'event',
+      choices: [
+        {
+          id: 'steady',
+          label: 'Talk the president down and buy time',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'boardPatience', amount: 8 }, { kind: 'managerStanding', amount: 6 }, { kind: 'memory', tag: 'board', text: 'Bought the manager time against Moratti\'s instincts.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -6 }],
+        },
+        {
+          id: 'accept',
+          label: 'Accept the pressure and demand results now',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'managerStanding', amount: -8 }, { kind: 'memory', tag: 'board', text: 'Sided with the president — the manager is on notice.' }],
+          onFailure: [{ kind: 'morale', clubId: 'inter', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'managerStanding', amount: -6 }, { kind: 'memory', tag: 'board', text: 'The manager twists in the wind.' }],
+      memoryTags: ['board', 'moratti'],
+    }),
+  },
+  {
+    // Ronaldo's knee — the trouble that would explode into the catastrophic 2000
+    // rupture and re-rupture. The comeback dilemma: caution, or rush the phenomenon
+    // back? Reality rushed him, and it broke him.
+    id: 'ronaldo-knee',
+    date: '1999-01',
+    requires: (s) => playerAt(s, 'cur_r9', 'inter') && s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:ronaldo-knee',
+      title: 'Ronaldo\'s knee is a growing concern',
+      description: 'Il Fenomeno is carrying a knee problem, and the medical staff are split on how hard to push him. The whole club leans on his goals — but rushing him could be catastrophic.',
+      interrupt: true,
+      clubId: 'inter',
+      category: 'injury',
+      choices: [
+        {
+          id: 'caution',
+          label: 'Protect him — manage the knee carefully',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'restPlayer', playerId: 'cur_r9', months: 2, amount: -12 }, { kind: 'memory', tag: 'injury', text: 'Protected Ronaldo\'s knee — the caution reality never showed.' }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_r9', amount: -4 }],
+        },
+        {
+          id: 'rush',
+          label: 'Rush him back — you need his goals',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_r9', amount: 6 }],
+          onFailure: [{ kind: 'reinjure', playerId: 'cur_r9', months: 7 }, { kind: 'memory', tag: 'injury', text: 'Rushed Ronaldo back and the knee gave way — the nightmare, as reality.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'injuryProneness', playerId: 'cur_r9', amount: 10 }, { kind: 'memory', tag: 'injury', text: 'Left the Ronaldo knee question to the medics alone.' }],
+      memoryTags: ['injury', 'cur_r9'],
+    }),
+  },
+  {
+    // Roberto Baggio — a divine talent frozen out and underused, forever fighting
+    // for minutes at the clubs of his later career. Build around him, or not?
+    id: 'baggio-role',
+    date: '1998-12',
+    requires: (s) => playerAt(s, 'cur_baggio_r', 'inter') && s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:baggio-role',
+      title: 'Roberto Baggio is stuck on the bench',
+      description: 'Il Divin Codino — a World Cup icon — is being frozen out, and the tifosi want to see him play. Build the side around his genius, or leave the selection to the coach?',
+      interrupt: true,
+      clubId: 'inter',
+      category: 'event',
+      choices: [
+        {
+          id: 'build-around',
+          label: 'Build the attack around Baggio',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_baggio_r', amount: 10 }, { kind: 'fanTrust', amount: 5, text: 'The Curva roars for Baggio.' }, { kind: 'managerRelationship', amount: -4 }],
+          onFailure: [{ kind: 'managerRelationship', amount: -8 }],
+        },
+        {
+          id: 'coach-call',
+          label: 'Leave the selection to the coach',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'managerRelationship', amount: 5 }, { kind: 'memory', tag: 'selection', text: 'Baggio stays on the margins — as reality.' }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_baggio_r', amount: -8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_baggio_r', amount: -6 }, { kind: 'agitation', playerId: 'cur_baggio_r', amount: 10 }],
+      memoryTags: ['selection', 'cur_baggio_r'],
+    }),
+  },
+];
+
+// ── Chelsea, 2003 (the Roman revolution) storyline pack ──────────────────────
+// The 2003 squad is procedural here (no curated roster), so these are club-level
+// beats with no player precondition; Ranieri's real 2004 exit is the manager
+// crossroads (see manager.ts::MANAGER_CROSSROADS).
+const CHELSEA_2003_PACK: ScriptedEvent[] = [
+  {
+    id: 'abramovich-mandate',
+    date: '2003-08',
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:abramovich-mandate',
+      title: 'Roman Abramovich demands the title — now',
+      description: 'The new owner\'s fortune is bottomless and his patience is not. He wants a blank-cheque assault on the very top, this season. Embrace the spend, or argue to build something that lasts?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'spend',
+          label: 'Embrace the blank cheque — win now',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 8 }, { kind: 'money', clubId: 'chelsea', amount: 20_000_000 }, { kind: 'memory', tag: 'board', text: 'Signed up to Abramovich\'s win-now project.' }],
+          onFailure: [{ kind: 'memory', tag: 'board', text: 'The owner wants more, faster.' }],
+        },
+        {
+          id: 'build',
+          label: 'Argue for a lasting project',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'board', text: 'Won a little room to build sustainably.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'board', text: 'The owner sets the pace without you.' }],
+      memoryTags: ['board', 'abramovich'],
+    }),
+  },
+];
+
+// ── Arsenal, 1996 (the Wenger revolution) storyline pack ─────────────────────
+// The 1996 squad is procedural here (no curated roster), so these are club-level
+// beats about the incoming manager's methods, with no player precondition.
+const ARSENAL_1996_PACK: ScriptedEvent[] = [
+  {
+    id: 'wenger-revolution',
+    date: '1996-10',
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:wenger-revolution',
+      title: 'The new manager wants to change everything',
+      description: '"Arsène who?" is overhauling the diet, the training and the drinking culture, and some senior pros are bristling at the Frenchman\'s methods. Back the revolution in full, or temper it to keep the dressing room?',
+      interrupt: true,
+      clubId: 'arsenal',
+      category: 'event',
+      choices: [
+        {
+          id: 'back-fully',
+          label: 'Back his methods in full',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Backed Wenger\'s revolution — the making of a dynasty.' }],
+          onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -3 }],
+        },
+        {
+          id: 'temper',
+          label: 'Temper the changes to keep the senior pros',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 4 }],
+          onFailure: [{ kind: 'managerRelationship', amount: -8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: -4 }, { kind: 'memory', tag: 'manager', text: 'Left Wenger to win the dressing room alone.' }],
+      memoryTags: ['manager', 'wenger'],
+    }),
+  },
+  {
+    id: 'wenger-foreign-gamble',
+    date: '1997-01',
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:wenger-foreign-gamble',
+      title: 'Wenger wants to sign unknown Frenchmen',
+      description: 'The manager\'s scouting network has flagged a clutch of unheralded young imports — the kind of gambles that could reshape the club, or flop badly on the English stage. Trust his eye, or insist on proven names?',
+      interrupt: true,
+      clubId: 'arsenal',
+      category: 'event',
+      choices: [
+        {
+          id: 'trust',
+          label: 'Trust his eye for a bargain',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'transfer', text: 'Trusted Wenger\'s scouting — the unknowns become legends.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -4 }],
+        },
+        {
+          id: 'proven',
+          label: 'Insist on proven Premier League names',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Played it safe in the market.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -6 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Wenger backs his own judgement in the market.' }],
+      memoryTags: ['transfer', 'wenger'],
+    }),
+  },
+];
+
 /** Scripted historical storylines by scenario. man-utd-1999 is the calibration
  *  pack; the others fire only in their own start point (no calibration impact). */
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
@@ -969,6 +1496,12 @@ const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-2013': MAN_UTD_2013_PACK,
   'real-madrid-2000': REAL_MADRID_2000_PACK,
   'arsenal-2004': ARSENAL_2004_PACK,
+  'liverpool-2001': LIVERPOOL_2001_PACK,
+  'bayern-2009': BAYERN_2009_PACK,
+  'barcelona-1999': BARCELONA_1999_PACK,
+  'inter-1998': INTER_1998_PACK,
+  'chelsea-2003': CHELSEA_2003_PACK,
+  'arsenal-1996': ARSENAL_1996_PACK,
 };
 
 function fireScriptedEvents(state: GameState): void {
