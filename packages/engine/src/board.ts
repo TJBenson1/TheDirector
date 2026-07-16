@@ -23,6 +23,25 @@ import { appendMemory } from './memory.js';
  * escalate to a warning and ultimately dismissal on sustained failure. Called
  * at the rollover once a champion has been crowned.
  */
+/**
+ * Board temperament (§11): how ruthless the owner is, in [0.7, 1.7]. A rebuild /
+ * project board (a modest mandate) rides out lean years; a title-or-bust superclub
+ * board and — most of all — a sugar-daddy owner (Abramovich's Chelsea, a takeover)
+ * won't. It scales how hard a missed season bites, how early a warning lands, and
+ * how readily the axe falls, so the SAME 3rd-place finish is a shrug at one club and
+ * a firing offence at another.
+ */
+export function boardRuthlessness(state: GameState): number {
+  let r = 1.0;
+  const ownership = state.clubs[state.playerClub]?.finances.ownership;
+  if (ownership === 'sugar-daddy') r += 0.45; // trophies-now money (Abramovich, takeovers)
+  else if (ownership === 'debt') r -= 0.1; // a club living within a squeeze is more forgiving
+  const expected = state.board.expectedFinish;
+  if (expected <= 1) r += 0.25; // title-or-bust (Pérez's Real, Ferguson's United)
+  else if (expected >= 5) r -= 0.25; // a rebuild / overachiever mandate is patient
+  return Math.max(0.7, Math.min(1.7, r));
+}
+
 export function reviewBoard(state: GameState, rng: Rng): void {
   if (state.board.dismissed) return;
   const league = state.leagues[state.clubs[state.playerClub]?.leagueId ?? ''];
@@ -34,15 +53,41 @@ export function reviewBoard(state: GameState, rng: Rng): void {
   const finish = pos + 1;
   const wonTitle = league.titleHistory[league.titleHistory.length - 1]!.championId === state.playerClub;
   const expected = state.board.expectedFinish;
+  const r = boardRuthlessness(state);
 
   let delta: number;
-  if (wonTitle) delta = 10;
-  else if (finish <= expected) delta = 4;
-  else delta = -(finish - expected) * 9;
+  if (wonTitle) {
+    delta = 10;
+    state.board.consecutiveMisses = 0;
+  } else if (finish <= expected) {
+    delta = 4;
+    state.board.consecutiveMisses = 0;
+  } else {
+    // Softened, CAPPED base penalty: one realistic off-season (a strong club
+    // finishing behind the era's superpower) can no longer wipe the meter. 1 place
+    // short ≈ −4, 2 ≈ −9, 3 ≈ −14, capped at −16 before temperament.
+    const miss = finish - expected;
+    const base = Math.min(16, 4 + (miss - 1) * 5);
+    delta = -Math.round(base * r);
+    state.board.consecutiveMisses += 1;
+    // The Pérez rule: an impatient board escalates hard on a RUN of near-misses —
+    // it won't sit through 2nd-to-Barça (or 3rd-behind-Bayern under Abramovich money)
+    // season after season. A patient project board (low r) is exempt.
+    if (state.board.consecutiveMisses >= 2 && r >= 1.15) {
+      delta -= Math.round(8 * r * (state.board.consecutiveMisses - 1));
+    }
+  }
 
   state.board.patience = Math.max(0, Math.min(100, state.board.patience + delta));
 
-  if (delta < 0 && state.board.patience < 35) {
+  // Ruthless owners warn earlier and swing the axe from a higher perch (and can do
+  // it after a single warning); a patient board needs the meter nearly empty twice.
+  const warnAt = 35 + Math.round(18 * (r - 1));
+  const dismissPatience = 22 + Math.round(16 * (r - 1));
+  const dismissWarnings = r >= 1.35 ? 1 : 2;
+  const dismissChance = Math.min(0.92, 0.5 + 0.28 * r);
+
+  if (delta < 0 && state.board.patience < warnAt) {
     state.board.warnings += 1;
     logEvent(state, {
       category: 'system',
@@ -54,7 +99,7 @@ export function reviewBoard(state: GameState, rng: Rng): void {
 
     // Dismissal: sustained failure. A little variance keeps it from being a
     // deterministic cliff, but the job is genuinely at risk.
-    if (state.board.warnings >= 2 && state.board.patience < 22 && rng.chance(0.85)) {
+    if (state.board.warnings >= dismissWarnings && state.board.patience < dismissPatience && rng.chance(dismissChance)) {
       state.board.dismissed = true;
       logEvent(state, {
         category: 'system',

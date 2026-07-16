@@ -192,6 +192,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
       patience: scenario.boardPatience,
       expectedFinish: scenario.boardExpectedFinish,
       warnings: 0,
+      consecutiveMisses: 0,
       dismissed: false,
     },
     worldDefiance: 0,

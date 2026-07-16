@@ -381,6 +381,11 @@ export interface BoardState {
   expectedFinish: number;
   /** Formal warnings issued after poor seasons. */
   warnings: number;
+  /** Consecutive seasons finishing below the expected position (reset on a
+   *  meet-or-win). Drives the impatient-board escalation — a title-or-bust or
+   *  sugar-daddy board (Pérez's Real, Abramovich's Chelsea) won't sit through a
+   *  run of near-misses the way a rebuild/project board will. */
+  consecutiveMisses: number;
   /** True once the player has been dismissed — the career is over. */
   dismissed: boolean;
 }
