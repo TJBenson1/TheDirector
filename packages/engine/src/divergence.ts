@@ -8,12 +8,20 @@
  * has ~0 divergence no matter how many years pass, so reality — and scripted
  * history — holds for them. This is what keeps "knowledge is an edge" true early
  * and appropriately unreliable once you've reshaped the world.
+ *
+ * As divergence rises the world writes its OWN history: net-new, concrete stories
+ * about real players at their CURRENT clubs — a giant coming for the star you
+ * signed (Real Madrid for a Bale you took to United), a contract standoff, a
+ * teenager breaking through early. Every such story names real actors and is
+ * traceable in the divergence log; the ones that touch your club become decisions.
  */
 
-import type { GameState } from './types.js';
+import type { GameState, PlayerState, ClubState, Decision } from './types.js';
 import type { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { appendMemory } from './memory.js';
+import { clubSquadPlayers } from './players.js';
+import { valuePlayer } from './finance.js';
 
 /**
  * Divergence factor in [0, 1]. Zero while the user stays passive; otherwise it
@@ -42,42 +50,227 @@ const STORYLINE_TEMPLATES: Array<(club: string) => string> = [
   (c) => `a teenager forces his way into ${c}'s side ahead of his real timeline`,
 ];
 
-/**
- * Roll for a non-real storyline this window. The more the user has diverged from
- * reality, the more the world writes its own history. Logged to the divergence
- * log (§9f) so every butterfly is traceable. Each storyline attaches to a
- * concrete simulated rival and never repeats the immediately-previous line.
- */
-export function rollDivergentStoryline(state: GameState, rng: Rng): void {
-  const f = divergenceFactor(state);
-  if (f <= 0) return;
-  // Up to ~35% per window at full divergence; ~0 for a lightly-active user.
-  if (!rng.chance(0.35 * f)) return;
+function ageOf(state: GameState, p: PlayerState): number {
+  return Number(state.clock.date.slice(0, 4)) - p.birthYear;
+}
 
-  // A concrete rival in a simulated league — never the user's own club.
-  const rivals = Object.values(state.clubs).filter(
-    (c) => c.leagueId !== null && c.id !== state.playerClub,
+/** Real (curated), fit, first-team players at a simulated club — the pool the
+ *  world writes its new stories around (Principle 2: never anonymous filler). */
+function realStars(state: GameState, minAbility: number): PlayerState[] {
+  return Object.values(state.players).filter(
+    (p) => p.curated && p.club != null && !p.injury && p.ability >= minAbility && state.clubs[p.club]?.leagueId != null,
   );
-  if (rivals.length === 0) return;
-  const club = rng.pick(rivals);
+}
 
-  // Avoid a verbatim repeat of the last storyline (a repeating stock phrase
-  // reads as a loop, not history).
-  const lastDetail = [...state.timeline.divergenceLog]
-    .reverse()
-    .find((d) => d.kind === 'storyline')?.detail;
+/** Raw deliberate-aggression a user must reach before the world starts writing
+ *  INTERACTIVE stories about his squad. Reality-default ledger signings into the
+ *  user's club also nudge `userAggression`, so a passive (calibration) user sits
+ *  at ~2–3; this threshold clears that baseline, keeping the calibration run inert
+ *  (its only divergence output stays pure, mutation-free flavour). */
+const RESHAPED_AGGRESSION = 8;
+
+/** A plausible glamour suitor for `target`: a comparable-or-bigger club (a giant,
+ *  prestige ≥ 82), never the player's own club. Foreign context giants COUNT — the
+ *  canonical deviation is "Real Madrid come for your star", and in an English-league
+ *  world Real Madrid sits outside the simulated league (leagueId null). Comparable-
+ *  or-bigger (not strictly higher) so the elite can poach each other. */
+function pickSuitor(state: GameState, target: PlayerState, rng: Rng): ClubState | undefined {
+  const targetPrestige = target.club ? state.clubs[target.club]?.prestige ?? 0 : 0;
+  const suitors = Object.values(state.clubs).filter(
+    (c) => c.id !== target.club && c.prestige >= 82 && c.prestige >= targetPrestige - 3,
+  );
+  if (suitors.length === 0) return undefined;
+  return rng.pick(suitors);
+}
+
+/**
+ * A GIANT comes for one of YOUR stars — the archetypal deviation decision ("Real
+ * Madrid open talks for the Bale you took to United"). Interactive and mutating,
+ * so it is reserved for a user who has genuinely reshaped his squad (gated on raw
+ * aggression, above the reality-default baseline — the calibration run never sees
+ * it). Fees are premium (a marquee, unsolicited bid).
+ */
+function emitSuitorSagaUser(state: GameState, rng: Rng, f: number): boolean {
+  const userStars = clubSquadPlayers(state, state.playerClub).filter(
+    (p) => p.curated && !p.injury && p.ability >= 80,
+  );
+  if (userStars.length === 0) return false;
+  const target = rng.pick(userStars);
+  const suitor = pickSuitor(state, target, rng);
+  if (!suitor) return false;
+  // Don't stack two suitor sagas for the same man.
+  const pendingId = `divergence:suitor:${target.id}`;
+  if (state.pendingDecisions.some((d) => d.id.startsWith(pendingId))) return false;
+  const year = Number(state.clock.date.slice(0, 4));
+  const fee = Math.round(valuePlayer(target, year) * (1.3 + 0.3 * f));
+  const decision: Decision = {
+    id: `${pendingId}:${state.clock.date}`,
+    title: `${suitor.name} come calling for ${target.name}`,
+    description: `${suitor.name} have made an unsolicited, club-record approach for ${target.name}. It is a story the real world never wrote — and now it is yours to settle.`,
+    interrupt: true,
+    clubId: state.playerClub,
+    category: 'transfer',
+    choices: [
+      {
+        id: 'reject',
+        label: `Reject it — he is not for sale`,
+        successProbability: 0.6,
+        onSuccess: [
+          { kind: 'morale', playerId: target.id, amount: 6 },
+          { kind: 'memory', tag: 'transfer-saga', text: `Rebuffed ${suitor.name}'s move for ${target.name}.` },
+        ],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 12 }],
+      },
+      {
+        id: 'cash-in',
+        label: `Cash in at a record fee (£${Math.round(fee / 1_000_000)}m)`,
+        successProbability: 0.85,
+        onSuccess: [
+          { kind: 'transferOut', playerId: target.id, clubId: suitor.id, amount: fee },
+          { kind: 'memory', tag: 'transfer-saga', text: `Sold ${target.name} to ${suitor.name} — the world turns again.` },
+        ],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 10 }],
+      },
+      {
+        id: 'stall',
+        label: `Stall and keep him hungry`,
+        successProbability: 0.5,
+        onSuccess: [{ kind: 'boardPatience', amount: 3 }],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 8 }, { kind: 'morale', playerId: target.id, amount: -4 }],
+      },
+    ],
+    falloutIfIgnored: [
+      { kind: 'agitation', playerId: target.id, amount: 14 },
+      { kind: 'memory', tag: 'transfer-saga', text: `Left ${suitor.name}'s interest in ${target.name} to fester.` },
+    ],
+    memoryTags: ['transfer-saga', target.id],
+  };
+  state.pendingDecisions.push(decision);
+  logEvent(state, {
+    category: 'transfer',
+    code: 'divergence.suitor',
+    message: `${suitor.name} open talks for your ${target.name} — a story reality never told`,
+    data: { divergence: Number(f.toFixed(2)), playerId: target.id, suitor: suitor.id, clubId: state.playerClub },
+  });
+  return true;
+}
+
+/**
+ * A giant comes for a RIVAL's star — the world moving without you. Pure, logged
+ * colour (no state mutation), so it is safe at any divergence level, including the
+ * near-zero baseline a passive user carries.
+ */
+function emitSuitorSagaWorld(state: GameState, rng: Rng, f: number): boolean {
+  const pool = realStars(state, 82).filter((p) => p.club !== state.playerClub);
+  if (pool.length === 0) return false;
+  const target = rng.pick(pool);
+  const suitor = pickSuitor(state, target, rng);
+  if (!suitor || !target.club) return false;
+  const holder = state.clubs[target.club];
+  if (!holder) return false;
+  const detail = `${suitor.name} open talks to prise ${target.name} away from ${holder.name}`;
+  state.timeline.divergenceLog.push({ date: state.clock.date, kind: 'storyline', detail });
+  appendMemory(state, 'divergence', detail);
+  logEvent(state, {
+    category: 'transfer',
+    code: 'divergence.storyline',
+    message: `The world diverges: ${detail}`,
+    data: { divergence: Number(f.toFixed(2)), playerId: target.id, suitor: suitor.id, clubId: holder.id },
+  });
+  return true;
+}
+
+/**
+ * A star at your club enters the final phase of his deal and stalls on renewing —
+ * a contract standoff you must break. A your-club-only decision (rivals resolve
+ * these off-screen).
+ */
+function emitContractStandoff(state: GameState, rng: Rng, f: number): boolean {
+  const candidates = clubSquadPlayers(state, state.playerClub).filter(
+    (p) => p.curated && !p.injury && p.ability >= 80 && ageOf(state, p) <= 31,
+  );
+  if (candidates.length === 0) return false;
+  const target = rng.pick(candidates);
+  const pendingId = `divergence:contract:${target.id}`;
+  if (state.pendingDecisions.some((d) => d.id.startsWith(pendingId))) return false;
+
+  const decision: Decision = {
+    id: `${pendingId}:${state.clock.date}`,
+    title: `${target.name} is stalling on a new contract`,
+    description: `With his deal running down, ${target.name} and his agent are holding out for terms that would reset your wage structure. Meet them, hold firm, or move him on before he leaves for nothing?`,
+    interrupt: true,
+    clubId: state.playerClub,
+    category: 'event',
+    choices: [
+      {
+        id: 'meet-terms',
+        label: 'Break the structure to keep him',
+        successProbability: 0.75,
+        onSuccess: [
+          { kind: 'morale', playerId: target.id, amount: 8 },
+          { kind: 'agitation', playerId: target.id, amount: -15 },
+          { kind: 'money', clubId: state.playerClub, amount: -4_000_000 },
+        ],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 6 }],
+      },
+      {
+        id: 'hold-firm',
+        label: 'Hold firm on the wage structure',
+        successProbability: 0.45,
+        onSuccess: [{ kind: 'boardPatience', amount: 4 }],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 14 }, { kind: 'morale', playerId: target.id, amount: -6 }],
+      },
+    ],
+    falloutIfIgnored: [{ kind: 'agitation', playerId: target.id, amount: 12 }, { kind: 'memory', tag: 'contract', text: `Let ${target.name}'s contract situation drift.` }],
+    memoryTags: ['contract', target.id],
+  };
+  state.pendingDecisions.push(decision);
+  logEvent(state, {
+    category: 'event',
+    code: 'divergence.contract',
+    message: `${target.name} stalls on a new deal — the standoff is yours to break`,
+    data: { divergence: Number(f.toFixed(2)), playerId: target.id, clubId: state.playerClub },
+  });
+  return true;
+}
+
+/** A teenager forces his way up ahead of his real timeline — colour, logged at a
+ *  concrete club (never the fabricated-star trap: only real, young, high-ceiling
+ *  curated players). */
+function emitYouthBreakout(state: GameState, rng: Rng, f: number): boolean {
+  const kids = Object.values(state.players).filter(
+    (p) => p.curated && p.club != null && state.clubs[p.club]?.leagueId != null && ageOf(state, p) <= 20 && p.potentialCeiling >= 82 && p.ability < p.potentialCeiling - 6,
+  );
+  if (kids.length === 0) return false;
+  const kid = rng.pick(kids);
+  const club = state.clubs[kid.club!]!;
+  const detail = `${kid.name} forces his way into ${club.name}'s side ahead of his real timeline`;
+  state.timeline.divergenceLog.push({ date: state.clock.date, kind: 'storyline', detail });
+  appendMemory(state, 'divergence', detail);
+  logEvent(state, {
+    category: 'event',
+    code: 'divergence.storyline',
+    message: `The world diverges: ${detail}`,
+    data: { divergence: Number(f.toFixed(2)), playerId: kid.id, clubId: club.id },
+  });
+  return true;
+}
+
+/** Generic world colour (manager change, boardroom struggle) at a concrete rival,
+ *  never repeating the immediately-previous line. The fallback when no richer,
+ *  player-anchored story is available this window. */
+function emitWorldFlavour(state: GameState, rng: Rng, f: number): boolean {
+  const rivals = Object.values(state.clubs).filter((c) => c.leagueId !== null && c.id !== state.playerClub);
+  if (rivals.length === 0) return false;
+  const club = rng.pick(rivals);
+  const lastDetail = [...state.timeline.divergenceLog].reverse().find((d) => d.kind === 'storyline')?.detail;
   let idx = rng.int(0, STORYLINE_TEMPLATES.length - 1);
   let storyline = STORYLINE_TEMPLATES[idx]!(club.name);
   if (storyline === lastDetail) {
     idx = (idx + 1) % STORYLINE_TEMPLATES.length;
     storyline = STORYLINE_TEMPLATES[idx]!(club.name);
   }
-
-  state.timeline.divergenceLog.push({
-    date: state.clock.date,
-    kind: 'storyline',
-    detail: storyline,
-  });
+  state.timeline.divergenceLog.push({ date: state.clock.date, kind: 'storyline', detail: storyline });
   appendMemory(state, 'divergence', storyline);
   logEvent(state, {
     category: 'event',
@@ -85,4 +278,45 @@ export function rollDivergentStoryline(state: GameState, rng: Rng): void {
     message: `The world diverges: ${storyline}`,
     data: { divergence: Number(f.toFixed(2)), clubId: club.id },
   });
+  return true;
+}
+
+/**
+ * Roll for a non-real storyline this window. The more the user has diverged from
+ * reality, the more the world writes its own history — concrete, player-anchored
+ * stories at their current clubs, with the ones touching your club surfacing as
+ * decisions. Gated on `divergenceFactor`, so a passive (calibration) user sees
+ * nothing and reality holds. Logged to the divergence log (§9f): every butterfly
+ * is traceable.
+ */
+export function rollDivergentStoryline(state: GameState, rng: Rng): void {
+  const f = divergenceFactor(state);
+  if (f <= 0) return;
+  // Up to ~40% per window at full divergence; ~0 for a lightly-active user.
+  if (!rng.chance(0.4 * f)) return;
+
+  // Pure-flavour generators mutate nothing and are safe at any divergence — they
+  // run even at the near-zero baseline a passive user carries.
+  const flavour: Array<(s: GameState, r: Rng, ff: number) => boolean> = [
+    emitSuitorSagaWorld,
+    emitYouthBreakout,
+    emitWorldFlavour,
+  ];
+  // Interactive, MUTATING stories about your own squad appear only once you have
+  // genuinely reshaped it (raw aggression clears the reality-default baseline),
+  // so the calibration run — which never reshapes — never triggers them. The two
+  // interactive beats alternate first slot so neither crowds the other out.
+  const interactive: Array<(s: GameState, r: Rng, ff: number) => boolean> =
+    state.userAggression >= RESHAPED_AGGRESSION
+      ? rng.chance(0.5)
+        ? [emitSuitorSagaUser, emitContractStandoff]
+        : [emitContractStandoff, emitSuitorSagaUser]
+      : [];
+
+  // Prefer an interactive beat (the ones that matter most) when eligible, then
+  // fall through to flavour if none can build this window.
+  const order = rng.chance(0.6) ? [...interactive, ...flavour] : [...flavour, ...interactive];
+  for (const gen of order) {
+    if (gen(state, rng, f)) return;
+  }
 }
