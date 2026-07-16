@@ -191,6 +191,7 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-2003': ENGLISH, // chelsea-2003
   'era-2004': ENGLISH, // arsenal-2004
   'era-2013': ENGLISH, // man-utd-2013
+  'era-eng-2008': ENGLISH, // man-city-2008
   'era-2000': LA_LIGA, // real-madrid-2000
   'era-la-liga-2003': LA_LIGA_2003, // barcelona-2003
   'era-la-liga-2006': LA_LIGA_2006, // real-madrid-2006

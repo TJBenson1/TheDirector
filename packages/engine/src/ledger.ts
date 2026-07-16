@@ -509,6 +509,34 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
  * are Barça) — while Real's galácticos age out and the great 2009 churn plays out.
  */
 /**
+ * Real Premier League / European market, 2008→2014 (man-city-2008 "The Takeover").
+ * The reality is City spending their new billions — Tévez, Barry, Lescott,
+ * Adebayor, then Milner and Nasri (all consumed silently, so a passive City never
+ * makes the signings; the user chooses whom to buy) — while the rest of the game's
+ * stars move as they really did.
+ */
+const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
+  // ── City's takeover spending (the user's, if they are City) ──
+  { playerId: 'cur_tevez_u8', from: 'man_utd', to: 'man_city', window: '2009-07', fee: 25_500_000, id: 'tevez-city-2009' },
+  { playerId: 'cur_barry_av', from: 'aston_villa', to: 'man_city', window: '2009-07', fee: 12_000_000, id: 'barry-city-2009' },
+  { playerId: 'cur_lescott_ev', from: 'everton', to: 'man_city', window: '2009-08', fee: 22_000_000, id: 'lescott-city-2009' },
+  { playerId: 'cur_adebayor_a8', from: 'arsenal', to: 'man_city', window: '2009-07', fee: 25_000_000, id: 'adebayor-city-2009' },
+  { playerId: 'cur_milner_av', from: 'aston_villa', to: 'man_city', window: '2010-08', fee: 26_000_000, id: 'milner-city-2010' },
+  { playerId: 'cur_nasri_a8', from: 'arsenal', to: 'man_city', window: '2011-08', fee: 24_000_000, id: 'nasri-city-2011' },
+  // ── The rest of the market moves as reality ──
+  { playerId: 'cur_cristiano_u8', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 94_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_alonso_l8', from: 'liverpool', to: 'real_madrid', window: '2009-08', fee: 30_000_000, id: 'alonso-real-2009' },
+  { playerId: 'cur_mascherano_l8', from: 'liverpool', to: 'barcelona', window: '2010-08', fee: 24_000_000, id: 'masche-barca-2010' },
+  { playerId: 'cur_modric_sp', from: 'spurs', to: 'real_madrid', window: '2012-08', fee: 33_000_000, id: 'modric-real-2012' },
+  { playerId: 'cur_bale_sp', from: 'spurs', to: 'real_madrid', window: '2013-09', fee: 85_000_000, id: 'bale-real-2013' },
+  { playerId: 'cur_van_persie_a8', from: 'arsenal', to: 'man_utd', window: '2012-08', fee: 24_000_000, id: 'rvp-utd-2012' },
+  { playerId: 'cur_fabregas_a8', from: 'arsenal', to: 'barcelona', window: '2011-08', fee: 29_000_000, id: 'cesc-barca-2011' },
+  { playerId: 'cur_arteta_ev', from: 'everton', to: 'arsenal', window: '2011-08', fee: 10_000_000, id: 'arteta-arsenal-2011' },
+  { playerId: 'cur_sneijder_e8', from: 'real_madrid', to: 'inter', window: '2009-08', fee: 15_000_000, id: 'sneijder-inter-2009' },
+  { playerId: 'cur_etoo_e8', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000, id: 'etoo-inter-2009' },
+];
+
+/**
  * Real Bundesliga / European market, 2009→2016 (bayern-2009). Şahin leaves Dortmund
  * for Madrid, then Götze crosses to Bayern (the user's signing, if they are Bayern)
  * and Kroos leaves for Madrid — the reset's stars arriving and departing — while the
@@ -730,6 +758,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-la-liga-2003': { realTransferLedger: LEDGER_LA_LIGA_2003, academyIntakes: [], realInjuries: [] },
   'era-la-liga-2006': { realTransferLedger: LEDGER_LA_LIGA_2006, academyIntakes: [], realInjuries: [] },
   'era-la-liga-2014': { realTransferLedger: LEDGER_LA_LIGA_2014, academyIntakes: [], realInjuries: [] },
+  'era-eng-2008': { realTransferLedger: LEDGER_ENG_2008, academyIntakes: [], realInjuries: [] },
   'era-bundesliga-2009': { realTransferLedger: LEDGER_BUNDESLIGA_2009, academyIntakes: [], realInjuries: [] },
   'era-bundesliga-2012': { realTransferLedger: LEDGER_BUNDESLIGA_2012, academyIntakes: [], realInjuries: [] },
   'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
@@ -744,6 +773,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
 export function eraForScenario(scenarioId: string): string {
   // The Serie A cluster is routed explicitly: its year suffixes (‑2004, ‑2006,
   // ‑2007) would otherwise collide with the English/other era packs.
+  if (scenarioId === 'man-city-2008') return 'era-eng-2008';
   if (scenarioId === 'dortmund-2012') return 'era-bundesliga-2012';
   if (scenarioId === 'bayern-2009') return 'era-bundesliga-2009';
   if (scenarioId === 'barcelona-2003') return 'era-la-liga-2003';

@@ -757,6 +757,41 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     domesticLeagueId: 'ger-2009',
   },
+  'man-city-2008': {
+    id: 'man-city-2008',
+    name: 'Manchester City — 2008: The Takeover',
+    startDate: '2008-07',
+    playerClub: 'man_city',
+    // In September 2008 the Abu Dhabi money lands, and a mid-table club with Richard
+    // Dunne and Stephen Ireland is suddenly the richest in the world. Robinho arrives
+    // as a statement. Reality: years of waste, then Tévez, Silva, Yaya and the 2012
+    // title. Build the superclub faster — and don't squander the billions.
+    mandate: 'Turn the billions into titles — build a superclub without wasting a decade.',
+    boardPatience: 78,
+    boardExpectedFinish: 5,
+    // The Premier League is the simulated league; the continental elite (full
+    // squads) anchor every real European Cup of 2009–2025. City are bankrolled by
+    // the takeover — the money is there; the challenge is spending it well.
+    ownership: { man_city: 'sugar-daddy' },
+    clubs: [
+      { id: 'man_city', name: 'Manchester City', prestige: 62 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 90 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 82 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 86 },
+      { id: 'arsenal', name: 'Arsenal', prestige: 80 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 90 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 88 },
+      { id: 'inter', name: 'Internazionale', prestige: 86 },
+      { id: 'juventus', name: 'Juventus', prestige: 82 },
+    ],
+    contextExtra: [
+      { id: 'spurs', name: 'Tottenham Hotspur', prestige: 70 },
+      { id: 'everton', name: 'Everton', prestige: 64 },
+      { id: 'aston_villa', name: 'Aston Villa', prestige: 62 },
+    ],
+    domesticLeagueId: 'eng-2008',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

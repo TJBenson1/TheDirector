@@ -24,6 +24,7 @@ import { REAL_MADRID_2006_SQUADS } from './curated-la-liga-2006.js';
 import { BARCELONA_2014_SQUADS } from './curated-la-liga-2014.js';
 import { DORTMUND_2012_SQUADS } from './curated-bundesliga-2012.js';
 import { BAYERN_2009_SQUADS } from './curated-bundesliga-2009.js';
+import { MANCITY_2008_SQUADS } from './curated-eng-2008.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -502,6 +503,9 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   // Van Gaal's reset Bayern (2009-10) — Robben in, Müller emerging — reusing the
   // 2010 elite/context pack; CL anchored to 2025 (they lose the 2010 final to Inter).
   'bayern-2009': BAYERN_2009_SQUADS,
+  // The Abu Dhabi takeover — a mid-table City made rich overnight, with the
+  // 2008-09 Premier League and the continental elite (CL anchored to 2025).
+  'man-city-2008': MANCITY_2008_SQUADS,
   // The Galácticos-era Madrid start has its own Spanish/European pack (La Liga
   // 2000–01 + the clubs Real bought their galácticos from).
   'real-madrid-2000': REAL_MADRID_2000_SQUADS,
