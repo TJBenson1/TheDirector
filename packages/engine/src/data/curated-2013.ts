@@ -563,8 +563,115 @@ export const WEST_BROM_2013: CuratedSeed[] = [
   q('west_brom', 'long13', 'Shane Long', 1987, 'Republic of Ireland', ['ST'], 71, 72, 2016, 46, t(7, 5, 7, 6, 5, 7)),
 ];
 
+/** Sunderland, 2013–14 — Gus Poyet's 14th-place relegation-survival side. */
+export const SUNDERLAND_2013: CuratedSeed[] = [
+  q('sunderland', 'mannone13', 'Vito Mannone', 1988, 'Italy', ['GK'], 74, 75, 2015, 30, t(7, 5, 6, 6, 5, 7)),
+  q('sunderland', 'bardsley13', 'Phil Bardsley', 1985, 'Scotland', ['RB', 'CB'], 67, 68, 2014, 35, t(6, 6, 5, 5, 7, 6)),
+  q('sunderland', 'oshea13', 'John O’Shea', 1981, 'Republic of Ireland', ['CB', 'RB'], 69, 69, 2015, 35, t(8, 4, 5, 8, 3, 7)),
+  q('sunderland', 'brown13', 'Wes Brown', 1979, 'England', ['CB'], 66, 67, 2015, 55, t(7, 4, 4, 7, 3, 6)),
+  q('sunderland', 'cattermole13', 'Lee Cattermole', 1988, 'England', ['DM', 'CM'], 69, 71, 2016, 45, t(6, 6, 6, 7, 8, 6)),
+  q('sunderland', 'gardner13', 'Craig Gardner', 1986, 'England', ['CM', 'DM'], 68, 69, 2015, 35, t(7, 5, 5, 6, 5, 6)),
+  q('sunderland', 'larsson13', 'Sebastian Larsson', 1985, 'Sweden', ['CM', 'RW'], 69, 70, 2015, 30, t(7, 5, 5, 6, 4, 7)),
+  q('sunderland', 'colback13', 'Jack Colback', 1989, 'England', ['CM', 'LB'], 68, 71, 2014, 30, t(6, 6, 6, 4, 6, 7)),
+  // Adam Johnson — a real talent whose career (and life) collapsed. Wasted (latent 80).
+  q('sunderland', 'ajohnson13', 'Adam Johnson', 1987, 'England', ['LW', 'RW'], 75, 78, 2017, 30, t(5, 8, 6, 5, 6, 6), { latentCeiling: 80 }),
+  q('sunderland', 'giaccherini13', 'Emanuele Giaccherini', 1985, 'Italy', ['AM', 'LW'], 67, 70, 2017, 35, t(6, 5, 6, 5, 5, 5)),
+  q('sunderland', 'fletcher13', 'Steven Fletcher', 1987, 'Scotland', ['ST'], 71, 72, 2016, 45, t(7, 5, 6, 6, 4, 6)),
+  q('sunderland', 'altidore13', 'Jozy Altidore', 1989, 'United States', ['ST'], 65, 72, 2017, 30, t(7, 6, 7, 5, 5, 5), { latentCeiling: 74 }),
+];
+
+/** Hull City, 2013–14 — 16th and FA Cup finalists under Steve Bruce. */
+export const HULL_2013: CuratedSeed[] = [
+  q('hull', 'mcgregor13', 'Allan McGregor', 1982, 'Scotland', ['GK'], 72, 72, 2016, 30, t(8, 6, 6, 7, 5, 6)),
+  q('hull', 'cdavies13', 'Curtis Davies', 1985, 'England', ['CB'], 73, 73, 2016, 40, t(8, 5, 7, 8, 4, 7)),
+  q('hull', 'chester13', 'James Chester', 1989, 'Wales', ['CB', 'RB'], 68, 72, 2016, 30, t(8, 4, 7, 7, 3, 7)),
+  q('hull', 'rosenior13', 'Liam Rosenior', 1984, 'England', ['RB', 'LB'], 67, 67, 2015, 35, t(8, 5, 6, 7, 4, 7)),
+  q('hull', 'elmohamady13', 'Ahmed Elmohamady', 1987, 'Egypt', ['RB', 'RW'], 68, 68, 2016, 30, t(7, 5, 6, 7, 5, 6)),
+  q('hull', 'huddlestone13', 'Tom Huddlestone', 1986, 'England', ['DM', 'CM'], 72, 72, 2017, 45, t(6, 6, 5, 6, 4, 6)),
+  q('hull', 'meyler13', 'David Meyler', 1989, 'Republic of Ireland', ['CM', 'DM'], 66, 70, 2016, 45, t(7, 6, 7, 8, 7, 6)),
+  q('hull', 'koren13', 'Robert Koren', 1980, 'Slovenia', ['AM', 'CM'], 65, 65, 2014, 35, t(8, 5, 5, 7, 4, 7)),
+  q('hull', 'boyd13', 'George Boyd', 1985, 'Scotland', ['AM', 'RW'], 67, 67, 2016, 30, t(7, 5, 6, 6, 5, 6)),
+  q('hull', 'brady13', 'Robbie Brady', 1992, 'Republic of Ireland', ['LW', 'LB'], 66, 75, 2017, 35, t(7, 6, 8, 6, 6, 6)),
+  q('hull', 'jelavic13', 'Nikica Jelavić', 1985, 'Croatia', ['ST'], 69, 70, 2017, 40, t(7, 6, 6, 5, 5, 6)),
+  q('hull', 'sagbo13', 'Yannick Sagbo', 1988, 'Ivory Coast', ['ST'], 63, 66, 2017, 35, t(5, 7, 6, 5, 7, 5)),
+];
+
+/** Crystal Palace, 2013–14 — promoted survivors, 11th under Tony Pulis. */
+export const CRYSTAL_PALACE_2013: CuratedSeed[] = [
+  q('crystal_palace', 'speroni13', 'Julián Speroni', 1979, 'Argentina', ['GK'], 68, 68, 2015, 30, t(9, 3, 5, 10, 3, 7)),
+  q('crystal_palace', 'mariappa13', 'Adrian Mariappa', 1986, 'Jamaica', ['CB', 'RB'], 65, 67, 2016, 35, t(7, 4, 5, 7, 4, 7)),
+  q('crystal_palace', 'delaney13', 'Damien Delaney', 1981, 'Republic of Ireland', ['CB', 'LB'], 67, 68, 2015, 35, t(8, 4, 5, 8, 4, 6)),
+  q('crystal_palace', 'dann13', 'Scott Dann', 1987, 'England', ['CB'], 68, 71, 2018, 40, t(7, 5, 6, 7, 4, 6)),
+  q('crystal_palace', 'ward13', 'Joel Ward', 1989, 'England', ['RB', 'LB'], 66, 70, 2017, 30, t(8, 4, 6, 9, 3, 7)),
+  q('crystal_palace', 'jedinak13', 'Mile Jedinak', 1984, 'Australia', ['DM', 'CM'], 72, 73, 2017, 35, t(9, 6, 7, 8, 5, 7)),
+  q('crystal_palace', 'dikgacoi13', 'Kagisho Dikgacoi', 1984, 'South Africa', ['DM', 'CM'], 65, 66, 2015, 40, t(7, 4, 5, 7, 5, 6)),
+  q('crystal_palace', 'puncheon13', 'Jason Puncheon', 1986, 'England', ['AM', 'LW'], 68, 71, 2017, 35, t(6, 6, 6, 6, 6, 6)),
+  // Bolasie — a raw, exciting winger here who kicked on to a big move. Reality-rail.
+  q('crystal_palace', 'bolasie13', 'Yannick Bolasie', 1989, 'DR Congo', ['RW', 'LW'], 70, 82, 2017, 35, t(5, 6, 7, 6, 6, 6)),
+  q('crystal_palace', 'chamakh13', 'Marouane Chamakh', 1984, 'Morocco', ['ST', 'AM'], 65, 67, 2015, 40, t(6, 6, 5, 6, 5, 6)),
+  q('crystal_palace', 'jerome13', 'Cameron Jerome', 1986, 'England', ['ST'], 66, 68, 2016, 35, t(6, 5, 6, 6, 5, 6)),
+  q('crystal_palace', 'gayle13', 'Dwight Gayle', 1990, 'England', ['ST'], 63, 78, 2017, 35, t(6, 5, 7, 6, 5, 6)),
+];
+
+/** Norwich City, 2013–14 — relegated 18th (Hughton → Adams). */
+export const NORWICH_2013: CuratedSeed[] = [
+  q('norwich', 'ruddy13', 'John Ruddy', 1986, 'England', ['GK'], 72, 74, 2017, 35, t(8, 4, 5, 7, 3, 6)),
+  q('norwich', 'rmartin13', 'Russell Martin', 1986, 'Scotland', ['CB', 'RB'], 68, 70, 2017, 30, t(8, 4, 6, 8, 3, 7)),
+  q('norwich', 'bassong13', 'Sébastien Bassong', 1986, 'Cameroon', ['CB'], 69, 72, 2016, 40, t(6, 6, 5, 5, 6, 6)),
+  q('norwich', 'mturner13', 'Michael Turner', 1983, 'England', ['CB'], 66, 67, 2015, 38, t(7, 4, 4, 6, 3, 6)),
+  q('norwich', 'whittaker13', 'Steven Whittaker', 1984, 'Scotland', ['RB', 'LB'], 65, 67, 2016, 35, t(7, 4, 5, 6, 4, 6)),
+  q('norwich', 'molsson13', 'Martin Olsson', 1988, 'Sweden', ['LB'], 68, 71, 2016, 33, t(7, 5, 6, 6, 4, 7)),
+  q('norwich', 'fer13', 'Leroy Fer', 1990, 'Netherlands', ['CM', 'AM'], 71, 78, 2017, 40, t(6, 7, 8, 3, 5, 6)),
+  q('norwich', 'bjohnson13', 'Bradley Johnson', 1987, 'England', ['CM', 'DM'], 67, 70, 2015, 30, t(7, 5, 6, 6, 5, 6)),
+  q('norwich', 'snodgrass13', 'Robert Snodgrass', 1987, 'Scotland', ['RW', 'AM'], 73, 75, 2016, 32, t(8, 6, 7, 6, 5, 7)),
+  q('norwich', 'hoolahan13', 'Wes Hoolahan', 1982, 'Republic of Ireland', ['AM'], 69, 71, 2016, 34, t(7, 5, 5, 8, 6, 7)),
+  // Redmond — a teenage flyer here, later a Southampton/Beşiktaş regular. Reality-rail.
+  q('norwich', 'redmond13', 'Nathan Redmond', 1994, 'England', ['LW', 'RW'], 63, 74, 2018, 30, t(6, 6, 8, 4, 5, 7), { latentCeiling: 80 }),
+  q('norwich', 'hooper13', 'Gary Hooper', 1988, 'England', ['ST'], 71, 73, 2017, 33, t(7, 5, 6, 5, 4, 6)),
+];
+
+/** Fulham, 2013–14 — relegated 19th (Jol → Meulensteen → Magath). */
+export const FULHAM_2013: CuratedSeed[] = [
+  q('fulham', 'stekelenburg13', 'Maarten Stekelenburg', 1982, 'Netherlands', ['GK'], 67, 70, 2016, 42, t(7, 6, 6, 6, 4, 6)),
+  q('fulham', 'hangeland13', 'Brede Hangeland', 1981, 'Norway', ['CB'], 67, 68, 2014, 30, t(9, 4, 6, 9, 2, 7)),
+  q('fulham', 'senderos13', 'Philippe Senderos', 1985, 'Switzerland', ['CB'], 65, 67, 2014, 48, t(7, 5, 6, 6, 4, 6)),
+  q('fulham', 'riether13', 'Sascha Riether', 1983, 'Germany', ['RB'], 66, 68, 2015, 30, t(8, 5, 6, 7, 3, 7)),
+  q('fulham', 'riise13', 'John Arne Riise', 1980, 'Norway', ['LB'], 65, 66, 2014, 30, t(8, 5, 6, 7, 3, 7)),
+  q('fulham', 'parker13', 'Scott Parker', 1980, 'England', ['DM', 'CM'], 68, 69, 2016, 40, t(9, 5, 7, 8, 3, 7)),
+  q('fulham', 'sidwell13', 'Steve Sidwell', 1982, 'England', ['CM'], 65, 66, 2014, 40, t(8, 5, 6, 7, 4, 6)),
+  q('fulham', 'kasami13', 'Pajtim Kasami', 1992, 'Switzerland', ['CM', 'AM'], 64, 74, 2015, 30, t(5, 7, 8, 5, 6, 6)),
+  q('fulham', 'dejagah13', 'Ashkan Dejagah', 1986, 'Iran', ['RW', 'LW'], 65, 68, 2015, 42, t(6, 6, 7, 6, 5, 6)),
+  // Taarabt — outrageous talent, no application: the archetypal wasted gift (latent 80).
+  q('fulham', 'taarabt13', 'Adel Taarabt', 1989, 'Morocco', ['AM'], 64, 72, 2014, 32, t(3, 9, 6, 3, 9, 4), { latentCeiling: 80 }),
+  q('fulham', 'berbatov13', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST'], 72, 72, 2014, 35, t(6, 8, 5, 5, 5, 6)),
+  q('fulham', 'rodallega13', 'Hugo Rodallega', 1985, 'Colombia', ['ST'], 64, 66, 2015, 30, t(7, 6, 6, 6, 4, 6)),
+];
+
+/** Cardiff City, 2013–14 — 20th and relegated (Mackay → Solskjær); the weakest top-flight side. */
+export const CARDIFF_2013: CuratedSeed[] = [
+  q('cardiff', 'marshall13', 'David Marshall', 1985, 'Scotland', ['GK'], 66, 67, 2016, 30, t(8, 4, 6, 8, 3, 6)),
+  q('cardiff', 'caulker13', 'Steven Caulker', 1991, 'England', ['CB'], 71, 78, 2018, 30, t(6, 6, 8, 5, 5, 6)),
+  q('cardiff', 'bturner13', 'Ben Turner', 1988, 'England', ['CB'], 64, 65, 2015, 45, t(7, 4, 5, 7, 4, 6)),
+  q('cardiff', 'theophilecatherine13', 'Kévin Théophile-Catherine', 1989, 'France', ['RB', 'CB'], 64, 68, 2017, 35, t(6, 5, 6, 5, 4, 5)),
+  q('cardiff', 'ataylor13', 'Andrew Taylor', 1986, 'England', ['LB'], 63, 64, 2015, 35, t(7, 4, 5, 7, 3, 6)),
+  // Medel — "the Pitbull": a snarling, top-class holding player at a doomed club.
+  q('cardiff', 'medel13', 'Gary Medel', 1987, 'Chile', ['DM', 'CB'], 72, 78, 2017, 30, t(7, 7, 8, 5, 9, 6)),
+  q('cardiff', 'gunnarsson13', 'Aron Gunnarsson', 1989, 'Iceland', ['CM', 'DM'], 65, 68, 2016, 40, t(8, 5, 6, 8, 6, 7)),
+  q('cardiff', 'whittingham13', 'Peter Whittingham', 1984, 'England', ['CM', 'AM', 'LW'], 66, 66, 2016, 25, t(8, 3, 5, 9, 2, 6)),
+  q('cardiff', 'mutch13', 'Jordon Mutch', 1991, 'England', ['CM', 'AM'], 64, 72, 2016, 35, t(7, 6, 8, 5, 4, 6)),
+  q('cardiff', 'kimbokyung13', 'Kim Bo-kyung', 1989, 'South Korea', ['AM'], 62, 66, 2015, 30, t(7, 4, 6, 6, 4, 5)),
+  q('cardiff', 'bellamy13', 'Craig Bellamy', 1979, 'Wales', ['LW', 'ST'], 66, 66, 2014, 50, t(8, 8, 7, 7, 8, 6)),
+  q('cardiff', 'fcampbell13', 'Fraizer Campbell', 1987, 'England', ['ST'], 63, 64, 2016, 50, t(7, 5, 6, 6, 4, 6)),
+];
+
 export const MAN_UTD_2013_SQUADS: Record<string, CuratedSeed[]> = {
   west_ham: WESTHAM_2013,
+  sunderland: SUNDERLAND_2013,
+  hull: HULL_2013,
+  crystal_palace: CRYSTAL_PALACE_2013,
+  norwich: NORWICH_2013,
+  fulham: FULHAM_2013,
+  cardiff: CARDIFF_2013,
   newcastle: NEWCASTLE_2013,
   swansea: SWANSEA_2013,
   stoke: STOKE_2013,

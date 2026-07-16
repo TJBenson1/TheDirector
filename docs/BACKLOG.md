@@ -20,13 +20,14 @@ Nowotny, Voronin, a young Gonzalo Castro), **Sevilla '09** (Luís Fabiano, Kanou
 Jesús Navas, Fazio, Perotti — a lost talent) and **Villarreal '09** (Cazorla,
 Senna, Godín, Rossi, Capdevila) now real squads. The **Bundesliga 2009 is now
 complete — all 18 clubs curated** (the bottom-4 Freiburg/Hertha/Nürnberg/Bochum
-added). The **2013 Premier League mid-block is now curated** too — Newcastle,
-Swansea, Stoke, Aston Villa, West Brom added (14 of 20 eng-2013 clubs real),
-surfacing recruitment targets and reality-rail talents (a teenage **Grealish**
-62/86, Bony, Benteke, Arnautović, Shelvey/Davies) plus their real onward sales
-(Cabaye→PSG, Bony→City, Benteke→Liverpool). Still to do: the eng-2013 tail
-(Sunderland, Hull, Palace, Norwich, Fulham, Cardiff — the mechanic already makes
-their filler signable, so this is real-names polish, not a gap).
+added). The **2013 Premier League is now COMPLETE — all 20 clubs real.** The mid-block
+(Newcastle, Swansea, Stoke, Aston Villa, West Brom) plus the tail (Sunderland,
+Hull, Crystal Palace, Norwich, Fulham, Cardiff) surface recruitment targets and
+reality-rail talents across the whole division: a teenage **Grealish** 62/86,
+Bony, Benteke, Arnautović, **Bolasie** 70/82, **Redmond** 63/74, Medel, Berbatov,
+plus wasted talents (Taarabt, Adam Johnson) and real onward sales (Cabaye→PSG,
+Bony→City, Benteke→Liverpool). A `collisions.test.ts` guard now fails CI on any
+id reuse (it caught the Olsson/Johnson/Turner/Davies clashes during this pass).
 
 **Progress:** user-club leagues are well curated. Host-club pass done for AC Milan
 ('04 + '13), Barcelona '04, Real Madrid '04, Real Betis '99. Context-deepening
