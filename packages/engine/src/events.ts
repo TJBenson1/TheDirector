@@ -1888,11 +1888,50 @@ const NEWCASTLE_1995_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── Tottenham, 2013 (the Bale money) storyline pack ──────────────────────────
+const SPURS_2013_PACK: ScriptedEvent[] = [
+  {
+    id: 'bale-windfall',
+    date: '2013-08',
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:bale-windfall',
+      title: 'A world-record windfall to reinvest',
+      description: 'Gareth Bale has gone to Madrid for a record fee, and you have a war chest to replace the irreplaceable. Spread it across a whole new spine (as reality did — and mostly regretted), or gamble it all on one marquee talent?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'spread', label: 'Sign a whole new team', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Spread the Bale money across seven signings — as reality; a gamble on volume.' }], onFailure: [{ kind: 'memory', tag: 'transfer', text: 'Too many new faces, no cohesion — the real trap.' }] },
+        { id: 'marquee', label: 'Gamble it all on one superstar', successProbability: 0.55, onSuccess: [{ kind: 'fanTrust', amount: 8, text: 'A single galáctico signing electrifies the Lane.' }, { kind: 'memory', tag: 'transfer', text: 'Bet the windfall on one star — the road not taken.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'The Bale money is spent piecemeal without a plan.' }],
+      memoryTags: ['transfer', 'bale-money'],
+    }),
+  },
+  {
+    id: 'life-after-bale',
+    date: '2013-12',
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:life-after-bale',
+      title: 'The new-look side is struggling to gel',
+      description: 'The expensive rebuild is misfiring, the goals have dried up without Bale, and the pressure is mounting on everyone. Hold your nerve with the project, or shake it up now?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'patience', label: 'Give the new signings time to settle', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'spurs', amount: 6 }, { kind: 'memory', tag: 'board', text: 'Held faith with the rebuild.' }], onFailure: [{ kind: 'boardPatience', amount: -5 }] },
+        { id: 'shake-up', label: 'Shake up the side and demand results', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 4 }], onFailure: [{ kind: 'morale', clubId: 'spurs', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'spurs', amount: -4 }],
+      memoryTags: ['board', 'rebuild'],
+    }),
+  },
+];
+
 /** Scripted historical storylines by scenario. man-utd-1999 is the calibration
  *  pack; the others fire only in their own start point (no calibration impact). */
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
   'newcastle-1995': NEWCASTLE_1995_PACK,
+  'spurs-2013': SPURS_2013_PACK,
   'man-utd-2013': MAN_UTD_2013_PACK,
   'man-city-2013': MAN_CITY_2013_PACK,
   'chelsea-2013': CHELSEA_2013_PACK,

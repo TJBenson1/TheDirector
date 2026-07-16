@@ -438,6 +438,26 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     domesticLeagueId: 'ger-2009',
   },
 
+  'spurs-2013': {
+    id: 'spurs-2013',
+    name: 'Tottenham — 2013: The Bale Money',
+    startDate: '2013-07',
+    playerClub: 'spurs',
+    mandate: 'Reinvest the world-record Bale windfall wisely — and crack the top four at last.',
+    boardPatience: 74,
+    boardExpectedFinish: 5,
+    clubs: ELITE_CLUBS_2013,
+    contextExtra: [
+      { id: 'benfica', name: 'Benfica', prestige: 76 },
+      { id: 'roma', name: 'AS Roma', prestige: 74 },
+      { id: 'valencia', name: 'Valencia', prestige: 72 },
+      { id: 'ajax', name: 'Ajax', prestige: 70 },
+      { id: 'milan', name: 'AC Milan', prestige: 76 },
+    ],
+    ownership: { man_city: 'sugar-daddy' },
+    domesticLeagueId: 'eng-2013',
+  },
+
   // ── Newcastle 1995 — Keegan's Entertainers ───────────────────────────────────
   'newcastle-1995': {
     id: 'newcastle-1995',

@@ -508,6 +508,7 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'chelsea-2013': MAN_UTD_2013_SQUADS,
   'liverpool-2013': MAN_UTD_2013_SQUADS,
   'arsenal-2013': MAN_UTD_2013_SQUADS,
+  'spurs-2013': MAN_UTD_2013_SQUADS,
   'arsenal-2004': ARSENAL_2004_SQUADS,
   'liverpool-2001': LIVERPOOL_2001_SQUADS,
   'bayern-2009': BAYERN_2009_SQUADS,

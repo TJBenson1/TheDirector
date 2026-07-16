@@ -91,6 +91,7 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
   'chelsea-2013': { name: 'José Mourinho', reputation: 88 },
   'liverpool-2013': { name: 'Brendan Rodgers', reputation: 68 },
   'arsenal-2013': { name: 'Arsène Wenger', reputation: 84 },
+  'spurs-2013': { name: 'André Villas-Boas', reputation: 70 },
   'wolfsburg-2009': { name: 'Armin Veh', reputation: 62 },
   'dortmund-2009': { name: 'Jürgen Klopp', reputation: 74 },
 };
@@ -565,6 +566,8 @@ const MANAGER_CROSSROADS: Record<string, ManagerCrossroads[]> = {
   // Mourinho in 2004. Reality: he LEFT (a passive career reproduces the change,
   // and the era hire-shortlist offers the Special One).
   'chelsea-2003': [{ year: 2004, name: 'Claudio Ranieri', reason: 'pressure', realOutcome: 'leaves' }],
+  // AVB was sacked in December 2013 after heavy defeats; Sherwood took over.
+  'spurs-2013': [{ year: 2013, name: 'André Villas-Boas', reason: 'pressure', realOutcome: 'leaves' }],
 };
 
 /** Fire each scripted crossroads once, when its year arrives and the real coach
