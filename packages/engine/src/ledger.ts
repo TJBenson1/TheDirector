@@ -485,8 +485,23 @@ const INJURIES_1995: RealInjuryEntry[] = [
   { playerId: 'cur_ronaldo_r', atClub: 'inter', since: '2000-04', months: 5, serious: true, note: 'catastrophic knee injury' },
 ];
 
+/**
+ * Real 1996–2001 transfers for the "Arrival of Wenger" pack — the era's iconic
+ * moves among clubs the pack models: Ronaldo's world-record leap to Inter, Figo's
+ * Barça-to-Madrid betrayal, Zidane's record move to Madrid, Sheringham to United,
+ * and Anelka's cash-out (Arsenal is the user, so his sale is theirs to sanction).
+ */
+const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
+  { playerId: 'cur_sheringham_s96', from: 'spurs', to: 'man_utd', window: '1997-07', fee: 3_500_000, id: 'sheringham-utd-1997' },
+  { playerId: 'cur_ronaldo_b96', from: 'barcelona', to: 'inter', window: '1997-07', fee: 27_000_000, id: 'ronaldo-inter-1997' },
+  { playerId: 'cur_anelka_a96', from: 'arsenal', to: 'real_madrid', window: '1999-07', fee: 22_500_000, id: 'anelka-real-1999' },
+  { playerId: 'cur_figo_b96', from: 'barcelona', to: 'real_madrid', window: '2000-07', fee: 37_000_000, id: 'figo-real-2000' },
+  { playerId: 'cur_zidane_j96', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 46_000_000, id: 'zidane-real-2001' },
+];
+
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
+  'era-1996': { realTransferLedger: LEDGER_1996_2001, academyIntakes: [], realInjuries: [] },
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, nearMissLedger: NEAR_MISS_2004 },
@@ -503,6 +518,7 @@ export function eraForScenario(scenarioId: string): string {
   if (scenarioId.endsWith('-2003')) return 'era-2003';
   if (scenarioId.endsWith('-2001')) return 'era-2001';
   if (scenarioId.endsWith('-2000')) return 'era-2000';
+  if (scenarioId.endsWith('-1996')) return 'era-1996';
   if (scenarioId.endsWith('-1995')) return 'era-serie-a-1995';
   return 'era-1995-2005';
 }

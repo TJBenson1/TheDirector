@@ -41,14 +41,14 @@ type Waypoint = readonly [year: number, strength: number];
 // scenario arcs only the clubs it actually contains. The 1999–2013 values are the
 // calibrated originals, unchanged; only 2014+ is new.
 const ENGLISH: Record<string, readonly Waypoint[]> = {
-  man_utd: [[1999, 89], [2001, 86], [2002, 89], [2003, 86], [2004, 85], [2006, 89], [2009, 86], [2010, 89], [2011, 86], [2012, 89], [2013, 80], [2016, 79]],
-  arsenal: [[1999, 83], [2001, 88], [2002, 83], [2003, 88], [2004, 83], [2008, 80], [2013, 78], [2022, 82]],
-  chelsea: [[1999, 74], [2003, 80], [2004, 89], [2006, 86], [2009, 90], [2010, 86], [2013, 85], [2014, 89], [2015, 85], [2016, 90], [2017, 85]],
+  man_utd: [[1996, 88], [1997, 86], [1998, 89], [1999, 89], [2001, 86], [2002, 89], [2003, 86], [2004, 85], [2006, 89], [2009, 86], [2010, 89], [2011, 86], [2012, 89], [2013, 80], [2016, 79]],
+  arsenal: [[1996, 83], [1997, 88], [1998, 83], [1999, 83], [2001, 88], [2002, 83], [2003, 88], [2004, 83], [2008, 80], [2013, 78], [2022, 82]],
+  chelsea: [[1996, 78], [1999, 74], [2003, 80], [2004, 89], [2006, 86], [2009, 90], [2010, 86], [2013, 85], [2014, 89], [2015, 85], [2016, 90], [2017, 85]],
   man_city: [[1999, 64], [2008, 74], [2010, 84], [2011, 90], [2012, 86], [2013, 91], [2014, 88], [2016, 89], [2017, 92], [2019, 89], [2020, 93], [2023, 92]],
-  liverpool: [[1999, 81], [2008, 85], [2013, 84], [2018, 88], [2019, 91], [2020, 86], [2022, 88]],
+  liverpool: [[1996, 82], [1999, 81], [2008, 85], [2013, 84], [2018, 88], [2019, 91], [2020, 86], [2022, 88]],
+  newcastle: [[1996, 82], [1998, 79], [1999, 76], [2003, 77], [2009, 62], [2010, 58], [2021, 78]],
   leeds: [[1999, 76], [2001, 78], [2004, 62], [2007, 55], [2010, 52]],
-  newcastle: [[1999, 76], [2003, 77], [2009, 62], [2010, 58], [2021, 78]],
-  spurs: [[1999, 72], [2009, 79], [2012, 80], [2016, 82]],
+  spurs: [[1996, 76], [1999, 72], [2009, 79], [2012, 80], [2016, 82]],
 };
 
 // La Liga, 2000–14 (real-madrid-2000). Real Madrid, Barça and Valencia trade the
@@ -76,7 +76,8 @@ const ITALIAN: Record<string, readonly Waypoint[]> = {
 /** Every pack's domestic strength arc. The English packs share one table (same
  *  league, overlapping years); each scenario re-anchors only the clubs it holds. */
 const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
-  'era-1995-2005': ENGLISH, // man-utd-1999, arsenal-1996
+  'era-1996': ENGLISH, // arsenal-1996
+  'era-1995-2005': ENGLISH, // man-utd-1999
   'era-2001': ENGLISH, // liverpool-2001
   'era-2003': ENGLISH, // manchester-united-2003, chelsea-2003
   'era-2004': ENGLISH, // arsenal-2004

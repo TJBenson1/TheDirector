@@ -212,8 +212,18 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     mandate: 'Back the new manager’s revolution and challenge for the title.',
     boardPatience: 75,
     boardExpectedFinish: 3,
+    // English clubs join the 1996-97 Premier League; the continental giants (and a
+    // 2nd-tier Man City) sit as context, with their real 1996 squads.
     clubs: ELITE_CLUBS,
-    domesticLeagueId: 'eng-1',
+    contextExtra: [
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
+      { id: 'porto', name: 'FC Porto', prestige: 74 },
+      { id: 'monaco', name: 'AS Monaco', prestige: 74 },
+      { id: 'ajax', name: 'Ajax', prestige: 78 },
+      { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 72 },
+      { id: 'dynamo_kyiv', name: 'Dynamo Kyiv', prestige: 70 },
+    ],
+    domesticLeagueId: 'eng-1996',
   },
   'manchester-united-2003': {
     id: 'manchester-united-2003',

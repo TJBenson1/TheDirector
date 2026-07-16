@@ -238,8 +238,40 @@ export const ENGLAND_2003: LeagueSeed = {
   ],
 };
 
+/** England, 1996–97 Premier League — United's title machine, Keegan/Dalglish
+ *  Newcastle 2nd, Wenger's first Arsenal. Man City are in Division One (2nd tier),
+ *  so they are NOT here. Ordering follows the real final table. */
+export const ENGLAND_1996: LeagueSeed = {
+  id: 'eng-1996',
+  name: 'English Premier League',
+  season: '1996-07',
+  clubs: [
+    { id: 'man_utd', name: 'Manchester United', prestige: 90, strength: 88 },
+    { id: 'newcastle', name: 'Newcastle United', prestige: 78, strength: 83 },
+    { id: 'arsenal', name: 'Arsenal', prestige: 80, strength: 83 },
+    { id: 'liverpool', name: 'Liverpool', prestige: 82, strength: 82 },
+    { id: 'chelsea', name: 'Chelsea', prestige: 74, strength: 79 },
+    { id: 'aston_villa', name: 'Aston Villa', prestige: 66, strength: 74 },
+    { id: 'spurs', name: 'Tottenham Hotspur', prestige: 70, strength: 72 },
+    { id: 'sheffield_wednesday', name: 'Sheffield Wednesday', prestige: 58, strength: 71 },
+    { id: 'wimbledon', name: 'Wimbledon', prestige: 54, strength: 70 },
+    { id: 'leicester', name: 'Leicester City', prestige: 54, strength: 69 },
+    { id: 'leeds', name: 'Leeds United', prestige: 66, strength: 68 },
+    { id: 'blackburn', name: 'Blackburn Rovers', prestige: 62, strength: 68 },
+    { id: 'west_ham', name: 'West Ham United', prestige: 60, strength: 67 },
+    { id: 'everton', name: 'Everton', prestige: 64, strength: 66 },
+    { id: 'derby', name: 'Derby County', prestige: 52, strength: 65 },
+    { id: 'southampton', name: 'Southampton', prestige: 52, strength: 64 },
+    { id: 'coventry', name: 'Coventry City', prestige: 50, strength: 63 },
+    { id: 'sunderland', name: 'Sunderland', prestige: 54, strength: 61 },
+    { id: 'middlesbrough', name: 'Middlesbrough', prestige: 58, strength: 61 },
+    { id: 'nottm_forest', name: 'Nottingham Forest', prestige: 56, strength: 59 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
+  'eng-1996': ENGLAND_1996,
   'eng-2003': ENGLAND_2003,
   'esp-1': SPAIN_2000,
   'ita-1': ITALY_1995,
