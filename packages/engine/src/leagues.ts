@@ -208,6 +208,34 @@ export const ITALY_1995: LeagueSeed = {
   ],
 };
 
+/** Serie A, 1998–99 — Il Fenomeno's Inter, Zaccheroni's champion Milan, Eriksson's
+ *  Lazio and the Parmalat-funded Parma. Ordering follows the real final table. */
+export const ITALY_1998: LeagueSeed = {
+  id: 'ita-1998',
+  name: 'Serie A',
+  season: '1998-07',
+  clubs: [
+    { id: 'milan', name: 'AC Milan', prestige: 88, strength: 85 },
+    { id: 'lazio', name: 'Lazio', prestige: 82, strength: 84 },
+    { id: 'fiorentina', name: 'Fiorentina', prestige: 76, strength: 82 },
+    { id: 'parma', name: 'Parma', prestige: 80, strength: 83 },
+    { id: 'juventus', name: 'Juventus', prestige: 86, strength: 84 },
+    { id: 'inter', name: 'Internazionale', prestige: 85, strength: 84 },
+    { id: 'roma', name: 'AS Roma', prestige: 78, strength: 80 },
+    { id: 'bologna', name: 'Bologna', prestige: 62, strength: 74 },
+    { id: 'udinese', name: 'Udinese', prestige: 60, strength: 73 },
+    { id: 'sampdoria', name: 'Sampdoria', prestige: 66, strength: 70 },
+    { id: 'piacenza', name: 'Piacenza', prestige: 48, strength: 66 },
+    { id: 'perugia', name: 'Perugia', prestige: 52, strength: 67 },
+    { id: 'bari', name: 'Bari', prestige: 50, strength: 66 },
+    { id: 'cagliari', name: 'Cagliari', prestige: 54, strength: 66 },
+    { id: 'venezia', name: 'Venezia', prestige: 46, strength: 63 },
+    { id: 'vicenza', name: 'Vicenza', prestige: 54, strength: 65 },
+    { id: 'salernitana', name: 'Salernitana', prestige: 44, strength: 61 },
+    { id: 'empoli', name: 'Empoli', prestige: 44, strength: 61 },
+  ],
+};
+
 /** England, 2003–04 Premier League — Arsenal's Invincibles, Abramovich's first
  *  Chelsea season, United post-Beckham. Ordering follows the real final table. */
 export const ENGLAND_2003: LeagueSeed = {
@@ -275,6 +303,7 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2003': ENGLAND_2003,
   'esp-1': SPAIN_2000,
   'ita-1': ITALY_1995,
+  'ita-1998': ITALY_1998,
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,

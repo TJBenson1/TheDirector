@@ -84,6 +84,7 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-2013': ENGLISH, // man-utd-2013
   'era-2000': LA_LIGA, // real-madrid-2000
   'era-serie-a-1995': ITALIAN, // juventus-1995
+  'era-serie-a-1998': ITALIAN, // inter-1998
 };
 
 /** The arc's target strength for `year` — the latest waypoint at or before it, or

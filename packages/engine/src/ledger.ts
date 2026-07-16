@@ -503,6 +503,47 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
   { playerId: 'cur_zidane_j96', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 46_000_000, id: 'zidane-real-2001' },
 ];
 
+/**
+ * Real Serie A market, 1998→2004 (inter-1998 "Il Fenomeno"). The calcio golden
+ * age plays out: Ronaldo's record cash-out to Madrid (the user's to sanction if
+ * they are Inter), Vieri's arrival, Zidane and Figo's galáctico moves, the
+ * Parmalat fire-sale that fed the giants (Buffon/Thuram to Juve, Cannavaro to
+ * Inter, Crespo/Verón to Lazio), and Sheva's leap from Kyiv to Milan.
+ */
+const LEDGER_1998_2004: RealTransferLedgerEntry[] = [
+  // ── Inter's business (the user's, if they are Inter) ──
+  { playerId: 'cur_vieri_l', from: 'lazio', to: 'inter', window: '1999-07', fee: 46_000_000, id: 'vieri-inter-1999' },
+  { playerId: 'cur_cannavaro_p8', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000, id: 'cannavaro-inter-2002' },
+  { playerId: 'cur_ronaldo_r9', from: 'inter', to: 'real_madrid', window: '2002-08', fee: 45_000_000, id: 'ronaldo-real-2002' },
+  // ── The galáctico moves ──
+  { playerId: 'cur_figo_b', from: 'barcelona', to: 'real_madrid', window: '2000-07', fee: 60_000_000, id: 'figo-real-2000' },
+  { playerId: 'cur_zidane_j8', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 75_000_000, id: 'zidane-real-2001' },
+  // ── Seedorf's real path: Real → Inter → Milan ──
+  { playerId: 'cur_seedorf_r', from: 'real_madrid', to: 'inter', window: '2000-07', fee: 20_000_000, id: 'seedorf-inter-2000' },
+  { playerId: 'cur_seedorf_r', from: 'inter', to: 'milan', window: '2002-07', fee: 18_000_000, id: 'seedorf-milan-2002' },
+  // ── The Parmalat fire-sale feeds the giants ──
+  { playerId: 'cur_buffon_p8', from: 'parma', to: 'juventus', window: '2001-07', fee: 52_000_000, id: 'buffon-juve-2001' },
+  { playerId: 'cur_thuram_p8', from: 'parma', to: 'juventus', window: '2001-07', fee: 32_500_000, id: 'thuram-juve-2001' },
+  { playerId: 'cur_veron_p', from: 'parma', to: 'lazio', window: '1999-07', fee: 18_000_000, id: 'veron-lazio-1999' },
+  { playerId: 'cur_veron_p', from: 'lazio', to: 'man_utd', window: '2001-07', fee: 42_600_000, id: 'veron-utd-2001' },
+  { playerId: 'cur_crespo_p', from: 'parma', to: 'lazio', window: '2000-07', fee: 56_000_000, id: 'crespo-lazio-2000' },
+  // ── Lazio's title-winning recruitment then Cragnotti's crash ──
+  { playerId: 'cur_nedved_l', from: 'lazio', to: 'juventus', window: '2001-07', fee: 41_000_000, id: 'nedved-juve-2001' },
+  { playerId: 'cur_salas', from: 'lazio', to: 'juventus', window: '2001-07', fee: 22_000_000, id: 'salas-juve-2001' },
+  // ── Milan and Roma rebuild around the Fiorentina fire-sale ──
+  { playerId: 'cur_shevchenko_k8', from: 'dynamo_kyiv', to: 'milan', window: '1999-07', fee: 24_000_000, id: 'sheva-milan-1999' },
+  { playerId: 'cur_inzaghi_j', from: 'juventus', to: 'milan', window: '2001-07', fee: 36_000_000, id: 'inzaghi-milan-2001' },
+  { playerId: 'cur_batistuta', from: 'fiorentina', to: 'roma', window: '2000-07', fee: 32_500_000, id: 'bati-roma-2000' },
+  { playerId: 'cur_rui_costa_f', from: 'fiorentina', to: 'milan', window: '2001-07', fee: 42_000_000, id: 'ruicosta-milan-2001' },
+];
+
+/** Ronaldo's ruptured knee — the era's defining injury. Fires only if Il Fenomeno
+ *  is still at Inter (a user who cashed him in never sees it). */
+const INJURIES_1998: RealInjuryEntry[] = [
+  { playerId: 'cur_ronaldo_r9', atClub: 'inter', since: '1999-11', months: 15, serious: true, note: 'ruptured knee tendon, then a relapse in his comeback match — the injury that stole his peak' },
+  { playerId: 'cur_delpiero_j8', atClub: 'juventus', since: '1998-11', months: 6, serious: true, note: 'cruciate ligament rupture at Udinese' },
+];
+
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1996': { realTransferLedger: LEDGER_1996_2001, academyIntakes: [], realInjuries: [] },
@@ -512,11 +553,18 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [] },
   'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: [], realInjuries: INJURIES_2000 },
   'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: [], realInjuries: INJURIES_1995 },
+  'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: [], realInjuries: INJURIES_1998 },
   'era-2003': { realTransferLedger: LEDGER_2003_2011, academyIntakes: [], realInjuries: INJURIES_2003, nearMissLedger: NEAR_MISS_2003 },
 };
 
 /** The era pack a scenario draws its reality data from. */
 export function eraForScenario(scenarioId: string): string {
+  // The Serie A cluster is routed explicitly: its year suffixes (‑2004, ‑2006,
+  // ‑2007) would otherwise collide with the English/other era packs.
+  if (scenarioId === 'inter-1998') return 'era-serie-a-1998';
+  if (scenarioId === 'inter-2004') return 'era-serie-a-2004';
+  if (scenarioId === 'milan-2007') return 'era-serie-a-2007';
+  if (scenarioId === 'juventus-2006') return 'era-serie-a-2006';
   if (scenarioId.endsWith('-2013')) return 'era-2013';
   if (scenarioId.endsWith('-2004')) return 'era-2004';
   if (scenarioId.endsWith('-2003')) return 'era-2003';

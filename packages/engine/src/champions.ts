@@ -68,6 +68,26 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2008: { w: 'barcelona', r: 'man_utd' },
     2009: { w: 'inter', r: 'bayern' },
   },
+  'era-serie-a-1998': {
+    // Il Fenomeno's Inter, 1998→2013. Every real European Cup winner's club is in
+    // the pack — including Inter's own 2010 win — so a passive walk reproduces the
+    // whole board (Mourinho's 2010 Inter treble included).
+    1998: { w: 'man_utd', r: 'bayern' },
+    1999: { w: 'real_madrid', r: 'valencia' },
+    2000: { w: 'bayern', r: 'valencia' },
+    2001: { w: 'real_madrid' },
+    2002: { w: 'milan', r: 'juventus' },
+    2003: { w: 'porto', r: 'monaco' },
+    2004: { w: 'liverpool', r: 'milan' },
+    2005: { w: 'barcelona' },
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern', r: 'dortmund' },
+  },
   'era-2000': {
     // The full 2000–15 board — every real winner's club is in this pack (Porto's
     // 2004 miracle included), so a passive walk reproduces the European Cup exactly.

@@ -413,6 +413,48 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     contextExtra: ERA_1995_CONTEXT,
     domesticLeagueId: 'ita-1',
   },
+  'inter-1998': {
+    id: 'inter-1998',
+    name: 'Internazionale — 1998: Il Fenomeno',
+    startDate: '1998-07',
+    playerClub: 'inter',
+    // Ronaldo at his supernatural peak, flanked by Baggio, Zamorano and Djorkaeff —
+    // a forward line so overstocked it strangled its own balance. Moratti's millions
+    // have bought everything except a Scudetto (Inter's last was 1989). The clock is
+    // ticking on Ronaldo's knee.
+    mandate: 'Win the Scudetto that Moratti’s millions keep missing — before the knee goes.',
+    boardPatience: 70,
+    boardExpectedFinish: 2,
+    // Serie A is the simulated league; the elite of Europe (full squads) plus a
+    // light continental context anchor every real European Cup of 1999–2013.
+    clubs: [
+      { id: 'inter', name: 'Internazionale', prestige: 85 },
+      { id: 'juventus', name: 'Juventus', prestige: 86 },
+      { id: 'milan', name: 'AC Milan', prestige: 88 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 94 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 88 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 87 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 88 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 80 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 76 },
+    ],
+    contextExtra: [
+      { id: 'lazio', name: 'Lazio', prestige: 82 },
+      { id: 'roma', name: 'AS Roma', prestige: 78 },
+      { id: 'parma', name: 'Parma', prestige: 80 },
+      { id: 'fiorentina', name: 'Fiorentina', prestige: 76 },
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 78 },
+      { id: 'porto', name: 'FC Porto', prestige: 76 },
+      { id: 'valencia', name: 'Valencia', prestige: 78 },
+      { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 72 },
+      { id: 'monaco', name: 'AS Monaco', prestige: 74 },
+      { id: 'dynamo_kyiv', name: 'Dynamo Kyiv', prestige: 72 },
+    ],
+    domesticLeagueId: 'ita-1998',
+    // Lazio's Cragnotti empire and Parma's Parmalat funding are living on borrowed
+    // money — the era's great fire-sales when the crashes come.
+    distressedClubs: { lazio: 'strained', parma: 'strained' },
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';
