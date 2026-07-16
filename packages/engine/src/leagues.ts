@@ -266,6 +266,36 @@ export const SPAIN_2003: LeagueSeed = {
   ],
 };
 
+/** La Liga, 2006–07 — Capello's rebuilding Real, Rijkaard's fading champions, and
+ *  Juande Ramos's Sevilla. 20 clubs; ordering follows the real final table. */
+export const SPAIN_2006: LeagueSeed = {
+  id: 'esp-2006',
+  name: 'La Liga',
+  season: '2006-07',
+  clubs: [
+    { id: 'real_madrid', name: 'Real Madrid', prestige: 90, strength: 87 },
+    { id: 'barcelona', name: 'Barcelona', prestige: 90, strength: 87 },
+    { id: 'sevilla', name: 'Sevilla', prestige: 74, strength: 84 },
+    { id: 'valencia', name: 'Valencia', prestige: 78, strength: 83 },
+    { id: 'villarreal', name: 'Villarreal', prestige: 68, strength: 80 },
+    { id: 'zaragoza', name: 'Real Zaragoza', prestige: 62, strength: 77 },
+    { id: 'atletico', name: 'Atlético Madrid', prestige: 74, strength: 80 },
+    { id: 'recreativo', name: 'Recreativo Huelva', prestige: 46, strength: 70 },
+    { id: 'getafe', name: 'Getafe', prestige: 52, strength: 72 },
+    { id: 'racing', name: 'Racing Santander', prestige: 52, strength: 71 },
+    { id: 'espanyol', name: 'Espanyol', prestige: 60, strength: 74 },
+    { id: 'mallorca', name: 'RCD Mallorca', prestige: 56, strength: 72 },
+    { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 66, strength: 74 },
+    { id: 'betis', name: 'Real Betis', prestige: 62, strength: 72 },
+    { id: 'levante', name: 'Levante', prestige: 46, strength: 67 },
+    { id: 'osasuna', name: 'Osasuna', prestige: 56, strength: 74 },
+    { id: 'athletic', name: 'Athletic Bilbao', prestige: 64, strength: 72 },
+    { id: 'nastic', name: 'Gimnàstic', prestige: 42, strength: 65 },
+    { id: 'celta', name: 'Celta Vigo', prestige: 56, strength: 70 },
+    { id: 'real_sociedad', name: 'Real Sociedad', prestige: 60, strength: 69 },
+  ],
+};
+
 /** Serie B, 2006–07 — Juventus's one season in the wilderness after Calciopoli.
  *  Juve tower over a procedural second tier; the promotion mechanic swaps them into
  *  the Serie A world (ITALY_2007's roster) the moment they go up (see italyEvents). */
@@ -424,6 +454,7 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2003': ENGLAND_2003,
   'esp-1': SPAIN_2000,
   'esp-2003': SPAIN_2003,
+  'esp-2006': SPAIN_2006,
   'ita-1': ITALY_1995,
   'ita-1998': ITALY_1998,
   'ita-b-2006': ITALY_B_2006,

@@ -88,6 +88,26 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2011: { w: 'chelsea', r: 'bayern' },
     2012: { w: 'bayern', r: 'dortmund' },
   },
+  'era-la-liga-2006': {
+    // Capello's rebuild, 2006→2021. Real Madrid's real mid-2010s Champions League
+    // dynasty (2014, 2016, 2017, 2018) is anchored — the "Madrid win a tonne of
+    // European Cups" reality — alongside every other real winner in the pack.
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern', r: 'dortmund' },
+    2013: { w: 'real_madrid', r: 'atletico' },
+    2014: { w: 'barcelona', r: 'juventus' },
+    2015: { w: 'real_madrid', r: 'atletico' },
+    2016: { w: 'real_madrid', r: 'juventus' },
+    2017: { w: 'real_madrid', r: 'liverpool' },
+    2018: { w: 'liverpool' },
+    2019: { w: 'bayern' },
+    2020: { w: 'chelsea' },
+  },
   'era-la-liga-2003': {
     // Rijkaard's Barça, 2003→2018. Every real European Cup winner's club is in the
     // pack (Porto's 2004 miracle, Barça's 2006/2009/2011, Real's mid-2010s

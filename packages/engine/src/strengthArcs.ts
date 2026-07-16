@@ -133,6 +133,19 @@ const ITALIAN_2006: Record<string, readonly Waypoint[]> = {
   fiorentina: [[2006, 79], [2010, 79], [2013, 80], [2016, 75]],
 };
 
+// La Liga, 2006–20 (real-madrid-2006). Capello's Real win 2007, Schuster 2008,
+// then the great Clásico duopoly: Pep's Barça (2009–11), Mourinho's Real (2012),
+// Atlético's 2014 and 2021 breaks, and the Barça/Real trade through the 2010s. The
+// user's Real follows its real title arc (2007/08, 2012, 2017, 2020).
+const LA_LIGA_2006: Record<string, readonly Waypoint[]> = {
+  real_madrid: [[2006, 91], [2008, 85], [2011, 93], [2012, 87], [2016, 93], [2017, 87], [2019, 92], [2020, 86]],
+  barcelona: [[2006, 86], [2008, 93], [2011, 86], [2012, 93], [2013, 84], [2014, 93], [2016, 87], [2017, 93], [2019, 87]],
+  atletico: [[2006, 80], [2011, 86], [2013, 91], [2014, 86], [2019, 88], [2020, 90]],
+  valencia: [[2006, 84], [2009, 80], [2012, 76]],
+  sevilla: [[2006, 83], [2010, 81], [2016, 82]],
+  villarreal: [[2006, 80], [2009, 76], [2012, 74]],
+};
+
 /** Every pack's domestic strength arc. The English packs share one table (same
  *  league, overlapping years); each scenario re-anchors only the clubs it holds. */
 const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
@@ -144,6 +157,7 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-2013': ENGLISH, // man-utd-2013
   'era-2000': LA_LIGA, // real-madrid-2000
   'era-la-liga-2003': LA_LIGA_2003, // barcelona-2003
+  'era-la-liga-2006': LA_LIGA_2006, // real-madrid-2006
   'era-serie-a-1995': ITALIAN, // juventus-1995
   'era-serie-a-1998': ITALIAN, // inter-1998
   'era-serie-a-2004': ITALIAN_2004, // inter-2004

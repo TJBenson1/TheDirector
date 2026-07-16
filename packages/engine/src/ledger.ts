@@ -508,6 +508,30 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
  * Barça build the golden age — Eto'o and Deco arrive in 2004 (the user's, if they
  * are Barça) — while Real's galácticos age out and the great 2009 churn plays out.
  */
+/**
+ * Real La Liga / European market, 2006→2010 (real-madrid-2006 "Post-Galáctico").
+ * The old galácticos age out (Ronaldo to Milan) and a NEW wave is bought in the
+ * 2009 rebuild — Cristiano, Kaká and Xabi Alonso to Madrid (the user's, if they
+ * are Real) — while Barça build their own dynasty around Villa and Alves.
+ */
+const LEDGER_LA_LIGA_2006: RealTransferLedgerEntry[] = [
+  // ── Real's business: the old guard out, the 2009 galácticos in ──
+  { playerId: 'cur_ronaldo_r6', from: 'real_madrid', to: 'milan', window: '2007-01', fee: 7_500_000, id: 'ronaldo-milan-2007' },
+  { playerId: 'cur_cannavaro_r6', from: 'real_madrid', to: 'juventus', window: '2009-07', fee: 0, id: 'cannavaro-juve-2009' },
+  { playerId: 'cur_cristiano_07', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 94_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_kaka_07', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
+  { playerId: 'cur_alonso_l6', from: 'liverpool', to: 'real_madrid', window: '2009-08', fee: 30_000_000, id: 'alonso-real-2009' },
+  // ── Barça's dynasty recruitment ──
+  { playerId: 'cur_daniel_alves_s6', from: 'sevilla', to: 'barcelona', window: '2008-07', fee: 32_500_000, id: 'alves-barca-2008' },
+  { playerId: 'cur_villa_v6', from: 'valencia', to: 'barcelona', window: '2010-07', fee: 40_000_000, id: 'villa-barca-2010' },
+  { playerId: 'cur_ronaldinho_b6', from: 'barcelona', to: 'milan', window: '2008-07', fee: 21_000_000, id: 'dinho-milan-2008' },
+  { playerId: 'cur_etoo_b6', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000, id: 'etoo-inter-2009', enabledBy: 'ibra-barca-2009' },
+  { playerId: 'cur_ibrahimovic_07', from: 'inter', to: 'barcelona', window: '2009-07', fee: 46_000_000, id: 'ibra-barca-2009' },
+  // ── Fernando Torres's move that built Liverpool's spine ──
+  { playerId: 'cur_torres_a6', from: 'atletico', to: 'liverpool', window: '2007-07', fee: 26_500_000, id: 'torres-liverpool-2007' },
+  { playerId: 'cur_mascherano_l6', from: 'liverpool', to: 'barcelona', window: '2010-08', fee: 24_000_000, id: 'masche-barca-2010' },
+];
+
 const LEDGER_LA_LIGA_2003: RealTransferLedgerEntry[] = [
   // ── Barça's title-winning recruitment (the user's, if they are Barça) ──
   { playerId: 'cur_etoo_m3', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 24_000_000, id: 'etoo-barca-2004' },
@@ -641,6 +665,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: [], realInjuries: INJURIES_1995 },
   'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: [], realInjuries: INJURIES_1998 },
   'era-la-liga-2003': { realTransferLedger: LEDGER_LA_LIGA_2003, academyIntakes: [], realInjuries: [] },
+  'era-la-liga-2006': { realTransferLedger: LEDGER_LA_LIGA_2006, academyIntakes: [], realInjuries: [] },
   'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
   // Juventus 2006 rejoins the late-2000s Serie A world from 2007, so it draws on
   // the same reality ledger — Pirlo's 2011 free transfer to Juventus included.

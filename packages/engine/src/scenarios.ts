@@ -616,6 +616,43 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ownership: { chelsea: 'sugar-daddy' },
     domesticLeagueId: 'esp-2003',
   },
+  'real-madrid-2006': {
+    id: 'real-madrid-2006',
+    name: 'Real Madrid — 2006: Post-Galáctico Rebuild',
+    startDate: '2006-07',
+    playerClub: 'real_madrid',
+    // Florentino has resigned, the galáctico project is over, Capello is back.
+    // Cannavaro and Van Nistelrooy arrive, Zidane has retired, Ronaldo is bound for
+    // Milan, Beckham for LA. Reality: the title returns in 2007, then a new
+    // galáctico wave (Cristiano, Kaká) in 2009. Rebuild cleaner, without waste.
+    mandate: 'End the galáctico circus — rebuild a team that wins Spain and the Décima.',
+    boardPatience: 66,
+    boardExpectedFinish: 1,
+    // La Liga is the simulated league; the elite of Europe (full squads) plus a
+    // light continental context anchor every real European Cup of 2007–2022 —
+    // including Real's own mid-2010s dynasty.
+    clubs: [
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 90 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 90 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 90 },
+      { id: 'milan', name: 'AC Milan', prestige: 88 },
+      { id: 'inter', name: 'Internazionale', prestige: 86 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 90 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 84 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 88 },
+      { id: 'juventus', name: 'Juventus', prestige: 84 },
+    ],
+    contextExtra: [
+      { id: 'sevilla', name: 'Sevilla', prestige: 74 },
+      { id: 'valencia', name: 'Valencia', prestige: 78 },
+      { id: 'atletico', name: 'Atlético Madrid', prestige: 74 },
+      { id: 'villarreal', name: 'Villarreal', prestige: 68 },
+      { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 66 },
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
+      { id: 'porto', name: 'FC Porto', prestige: 78 },
+    ],
+    domesticLeagueId: 'esp-2006',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';
