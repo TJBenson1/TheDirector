@@ -355,6 +355,29 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
   // "Arrival of Wenger", 1996–2011 (arsenal-1996). Dortmund's 1997 upset over Juve
   // and United's 1999 treble anchor the early years; only Porto's 2004 win (no Porto
   // in this pack) defaults to field sim.
+  'era-eng-1995': {
+    // The Spice Boys' Liverpool, 1995→2010. Opens with Juventus beating Ajax in the
+    // 1996 final (Ajax not in the pack → resolves to the field), then the same real
+    // European Cup run as the 1996 pack: Dortmund '97, the Real dynasty, United '99
+    // and '08, Liverpool's own 2005 miracle among them. Runners-up not in the pack
+    // resolve to the strongest available side.
+    1995: { w: 'juventus' },
+    1996: { w: 'dortmund', r: 'juventus' },
+    1997: { w: 'real_madrid', r: 'juventus' },
+    1998: { w: 'man_utd', r: 'bayern' },
+    1999: { w: 'real_madrid' },
+    2000: { w: 'bayern' },
+    2001: { w: 'real_madrid' },
+    2002: { w: 'milan', r: 'juventus' },
+    2003: { w: 'porto', r: 'monaco' },
+    2004: { w: 'liverpool', r: 'milan' },
+    2005: { w: 'barcelona', r: 'arsenal' },
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+  },
   'era-1996': {
     1996: { w: 'dortmund', r: 'juventus' },
     1997: { w: 'real_madrid', r: 'juventus' },

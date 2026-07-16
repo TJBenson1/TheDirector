@@ -26,6 +26,7 @@ import { DORTMUND_2012_SQUADS } from './curated-bundesliga-2012.js';
 import { BAYERN_2009_SQUADS } from './curated-bundesliga-2009.js';
 import { MANCITY_2008_SQUADS } from './curated-eng-2008.js';
 import { LIVERPOOL_2010_SQUADS } from './curated-eng-2010.js';
+import { LIVERPOOL_1995_SQUADS } from './curated-eng-1995.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -510,6 +511,10 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   // FSG's Liverpool — the 2010-11 Premier League and continental elite reused from
   // the Bundesliga-2010 pack, with Arsenal and Spurs authored fresh (CL to 2025).
   'liverpool-2010': LIVERPOOL_2010_SQUADS,
+  // The Spice Boys — the 1995-96 Premier League with the 1996 pack's rivals reused
+  // (United, Arsenal, Chelsea, Spurs, City + continental elite), Liverpool, Keegan's
+  // pre-Shearer Newcastle and champions Blackburn authored fresh (CL 1996–2010).
+  'liverpool-1995': LIVERPOOL_1995_SQUADS,
   // The Galácticos-era Madrid start has its own Spanish/European pack (La Liga
   // 2000–01 + the clubs Real bought their galácticos from).
   'real-madrid-2000': REAL_MADRID_2000_SQUADS,

@@ -537,6 +537,26 @@ const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
 ];
 
 /**
+ * Real Premier League / European market, 1995→2001 (liverpool-1995). Shearer's
+ * world-record move from Blackburn to Newcastle opens it (correcting the timeline —
+ * he was a champion at Ewood in 1995-96), then the Spice Boys are picked apart:
+ * Collymore to Villa, McManaman a Bosman to Madrid. On the continent Ronaldo,
+ * Figo and Zidane make their real moves — the last two to Real.
+ */
+const LEDGER_ENG_1995: RealTransferLedgerEntry[] = [
+  // ── Shearer's £15m record move home (and the correct home for him from 1996) ──
+  { playerId: 'cur_shearer_95', from: 'blackburn', to: 'newcastle', window: '1996-07', fee: 15_000_000, id: 'shearer-newcastle-1996' },
+  // ── The Spice Boys picked apart (the user's stars leaving, if they are Liverpool) ──
+  { playerId: 'cur_collymore_95', from: 'liverpool', to: 'aston_villa', window: '1997-07', fee: 7_000_000, id: 'collymore-villa-1997' },
+  { playerId: 'cur_mcmanaman_95', from: 'liverpool', to: 'real_madrid', window: '1999-07', fee: 0, id: 'mcmanaman-real-1999' },
+  // ── The continental market moves as reality ──
+  { playerId: 'cur_ronaldo_b96', from: 'barcelona', to: 'inter', window: '1997-07', fee: 27_000_000, id: 'ronaldo-inter-1997' },
+  { playerId: 'cur_anelka_a96', from: 'arsenal', to: 'real_madrid', window: '1999-07', fee: 22_500_000, id: 'anelka-real-1999' },
+  { playerId: 'cur_figo_b96', from: 'barcelona', to: 'real_madrid', window: '2000-07', fee: 37_000_000, id: 'figo-real-2000' },
+  { playerId: 'cur_zidane_j96', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 46_000_000, id: 'zidane-real-2001' },
+];
+
+/**
  * Real Premier League / European market, 2010→2016 (liverpool-2010). The hinge is
  * Torres forcing his way to Chelsea in January 2011 (the user's captain-in-waiting
  * sold, if they are Liverpool), with Suárez and Meireles moving on too, while the
@@ -783,6 +803,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-la-liga-2014': { realTransferLedger: LEDGER_LA_LIGA_2014, academyIntakes: [], realInjuries: [] },
   'era-eng-2008': { realTransferLedger: LEDGER_ENG_2008, academyIntakes: [], realInjuries: [] },
   'era-eng-2010': { realTransferLedger: LEDGER_ENG_2010, academyIntakes: [], realInjuries: [] },
+  'era-eng-1995': { realTransferLedger: LEDGER_ENG_1995, academyIntakes: [], realInjuries: [] },
   'era-bundesliga-2009': { realTransferLedger: LEDGER_BUNDESLIGA_2009, academyIntakes: [], realInjuries: [] },
   'era-bundesliga-2012': { realTransferLedger: LEDGER_BUNDESLIGA_2012, academyIntakes: [], realInjuries: [] },
   'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
@@ -799,6 +820,8 @@ export function eraForScenario(scenarioId: string): string {
   // ‑2007) would otherwise collide with the English/other era packs.
   if (scenarioId === 'man-city-2008') return 'era-eng-2008';
   if (scenarioId === 'liverpool-2010') return 'era-eng-2010';
+  // liverpool-1995 must precede the '-1995' suffix check (which is Serie A / milan).
+  if (scenarioId === 'liverpool-1995') return 'era-eng-1995';
   if (scenarioId === 'dortmund-2012') return 'era-bundesliga-2012';
   if (scenarioId === 'bayern-2009') return 'era-bundesliga-2009';
   if (scenarioId === 'barcelona-2003') return 'era-la-liga-2003';

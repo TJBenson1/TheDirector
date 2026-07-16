@@ -565,6 +565,38 @@ export const ENGLAND_2003: LeagueSeed = {
   ],
 };
 
+/** England, 1995–96 Premier League — Ferguson's kids win the double, Keegan's
+ *  Newcastle blow a twelve-point lead, and the Spice Boys' Liverpool finish 3rd.
+ *  Reigning champions Blackburn (SAS) fade to 7th. Ordering follows the real
+ *  final table; the relegated three (City, QPR, Bolton) are included. */
+export const ENGLAND_1995: LeagueSeed = {
+  id: 'eng-1995',
+  name: 'English Premier League',
+  season: '1995-07',
+  clubs: [
+    { id: 'man_utd', name: 'Manchester United', prestige: 88, strength: 86 },
+    { id: 'newcastle', name: 'Newcastle United', prestige: 76, strength: 85 },
+    { id: 'liverpool', name: 'Liverpool', prestige: 82, strength: 84 },
+    { id: 'aston_villa', name: 'Aston Villa', prestige: 66, strength: 79 },
+    { id: 'arsenal', name: 'Arsenal', prestige: 78, strength: 79 },
+    { id: 'everton', name: 'Everton', prestige: 64, strength: 77 },
+    { id: 'blackburn', name: 'Blackburn Rovers', prestige: 68, strength: 79 },
+    { id: 'spurs', name: 'Tottenham Hotspur', prestige: 70, strength: 76 },
+    { id: 'nottm_forest', name: 'Nottingham Forest', prestige: 58, strength: 74 },
+    { id: 'west_ham', name: 'West Ham United', prestige: 60, strength: 71 },
+    { id: 'chelsea', name: 'Chelsea', prestige: 72, strength: 73 },
+    { id: 'middlesbrough', name: 'Middlesbrough', prestige: 56, strength: 69 },
+    { id: 'leeds', name: 'Leeds United', prestige: 66, strength: 70 },
+    { id: 'wimbledon', name: 'Wimbledon', prestige: 52, strength: 68 },
+    { id: 'sheffield_wednesday', name: 'Sheffield Wednesday', prestige: 56, strength: 68 },
+    { id: 'coventry', name: 'Coventry City', prestige: 50, strength: 66 },
+    { id: 'southampton', name: 'Southampton', prestige: 52, strength: 66 },
+    { id: 'man_city', name: 'Manchester City', prestige: 60, strength: 66 },
+    { id: 'qpr', name: 'Queens Park Rangers', prestige: 52, strength: 64 },
+    { id: 'bolton', name: 'Bolton Wanderers', prestige: 48, strength: 62 },
+  ],
+};
+
 /** England, 1996–97 Premier League — United's title machine, Keegan/Dalglish
  *  Newcastle 2nd, Wenger's first Arsenal. Man City are in Division One (2nd tier),
  *  so they are NOT here. Ordering follows the real final table. */
@@ -598,6 +630,7 @@ export const ENGLAND_1996: LeagueSeed = {
 
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
+  'eng-1995': ENGLAND_1995,
   'eng-1996': ENGLAND_1996,
   'eng-2003': ENGLAND_2003,
   'esp-1': SPAIN_2000,

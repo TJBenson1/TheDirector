@@ -826,6 +826,41 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     domesticLeagueId: 'eng-2010',
   },
+  'liverpool-1995': {
+    id: 'liverpool-1995',
+    name: 'Liverpool — 1995: Spice Boys',
+    startDate: '1995-07',
+    playerClub: 'liverpool',
+    // Roy Evans's Liverpool are the most gifted side in England — Fowler and
+    // Collymore up front, McManaman and a young Redknapp behind — and the most
+    // frustrating: brilliant one week, beaten in white Wembley suits the next. The
+    // 1995-96 title goes to Ferguson's kids as Keegan's Newcastle collapse. Reality:
+    // near misses, then a slow fade and a 30-year wait. Make the talent count.
+    mandate: 'Make the swagger count — win the title the real Spice Boys never did.',
+    boardPatience: 76,
+    boardExpectedFinish: 3,
+    // The 1995-96 Premier League is the simulated league; the continental elite
+    // (full squads) anchor every real European Cup of 1996–2010.
+    clubs: [
+      { id: 'liverpool', name: 'Liverpool', prestige: 82 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 88 },
+      { id: 'newcastle', name: 'Newcastle United', prestige: 76 },
+      { id: 'arsenal', name: 'Arsenal', prestige: 78 },
+      { id: 'blackburn', name: 'Blackburn Rovers', prestige: 68 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 88 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 90 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 86 },
+      { id: 'juventus', name: 'Juventus', prestige: 90 },
+      { id: 'milan', name: 'AC Milan', prestige: 90 },
+      { id: 'inter', name: 'Internazionale', prestige: 84 },
+    ],
+    contextExtra: [
+      { id: 'chelsea', name: 'Chelsea', prestige: 72 },
+      { id: 'spurs', name: 'Tottenham Hotspur', prestige: 70 },
+      { id: 'man_city', name: 'Manchester City', prestige: 60 },
+    ],
+    domesticLeagueId: 'eng-1995',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

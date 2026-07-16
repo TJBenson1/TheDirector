@@ -185,6 +185,7 @@ const BUNDESLIGA_2012: Record<string, readonly Waypoint[]> = {
 /** Every pack's domestic strength arc. The English packs share one table (same
  *  league, overlapping years); each scenario re-anchors only the clubs it holds. */
 const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
+  'era-eng-1995': ENGLISH, // liverpool-1995
   'era-1996': ENGLISH, // arsenal-1996
   'era-1995-2005': ENGLISH, // man-utd-1999
   'era-2001': ENGLISH, // liverpool-2001
