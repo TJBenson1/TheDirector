@@ -54,9 +54,10 @@ eras per user: 1999, 2004, 2009, 2013 first; 1995 / late-2010s / 2020s last.
   Ledger fidelity 100%, fantasy leaps 0; man-utd-1999 untouched (18/18). Still to
   do for 2009:
   - ✅ **European context done:** Guardiola's Barça and Mourinho's treble Inter,
-    plus the 2009-10 English giants now deep real squads — Chelsea (Ancelotti
-    double), Man Utd (post-CR7), Man City (post-takeover: Tévez/Adebayor/Barry),
-    Arsenal (Fàbregas), Liverpool (Torres/Gerrard). Still open: Juventus, Milan.
+    the 2009-10 English giants (Chelsea/Ancelotti, Man Utd/post-CR7, Man City/
+    post-takeover, Arsenal/Fàbregas, Liverpool/Torres-Gerrard) AND the Italian
+    pair (Juventus and Leonardo's Milan — Pirlo/Nesta/Pato/a fading Ronaldinho +
+    Beckham's loan) now all deep real squads. The entire 2009 elite tier is real.
   - **era-2009 injuries** (Kaká's knee is flagged via proneness, but real dated
     injuries aren't in the pack yet).
 - ✅ **2006 Calciopoli Juventus exodus ledgered** (Cannavaro/Emerson→Madrid,

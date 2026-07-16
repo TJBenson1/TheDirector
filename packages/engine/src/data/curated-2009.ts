@@ -639,6 +639,55 @@ export const LIVERPOOL_2009: CuratedSeed[] = [
   q('liverpool', 'riera09', 'Albert Riera', 1982, 'Spain', ['LW'], 75, 75, 2012, 40, t(6, 6, 5, 4, 7, 6)),
 ];
 
+/** Juventus, 2009–10 — a flat post-Calciopoli-recovery season (7th) under Ferrara
+ *  then Zaccheroni; Diego and Felipe Melo the costly summer bets, Del Piero fading. */
+export const JUVENTUS_2009: CuratedSeed[] = [
+  q('juventus', 'buffon09', 'Gianluigi Buffon', 1978, 'Italy', ['GK'], 89, 89, 2012, 25, t(10, 5, 8, 10, 4, 8)),
+  q('juventus', 'delpiero09', 'Alessandro Del Piero', 1974, 'Italy', ['ST', 'AM'], 83, 83, 2012, 40, t(10, 6, 7, 10, 4, 8), { archetype: 'inside-forward' }),
+  q('juventus', 'trezeguet09', 'David Trézéguet', 1977, 'France', ['ST'], 82, 82, 2011, 40, t(8, 6, 7, 7, 5, 7), { archetype: 'poacher' }),
+  q('juventus', 'chiellini09', 'Giorgio Chiellini', 1984, 'Italy', ['CB', 'LB'], 84, 88, 2013, 25, t(10, 5, 8, 10, 4, 8), { archetype: 'covering-cb' }),
+  q('juventus', 'fabiocannavaro09', 'Fabio Cannavaro', 1973, 'Italy', ['CB'], 82, 82, 2011, 30, t(8, 7, 8, 6, 5, 7), { archetype: 'covering-cb' }),
+  q('juventus', 'diego09', 'Diego Ribas da Cunha', 1985, 'Brazil', ['AM'], 83, 85, 2014, 30, t(6, 8, 8, 4, 7, 5), { archetype: 'playmaker', latentCeiling: 87 }),
+  q('juventus', 'felipemelo09', 'Felipe Melo', 1983, 'Brazil', ['DM', 'CM', 'CB'], 80, 82, 2014, 30, t(5, 8, 7, 4, 9, 4), { latentCeiling: 84 }),
+  q('juventus', 'marchisio09', 'Claudio Marchisio', 1986, 'Italy', ['CM', 'DM'], 79, 86, 2013, 25, t(9, 5, 8, 9, 4, 8)),
+  q('juventus', 'sissoko09', 'Mohamed Sissoko', 1985, 'Mali', ['DM', 'CM'], 78, 80, 2012, 35, t(7, 5, 6, 6, 6, 6)),
+  q('juventus', 'camoranesi09', 'Mauro Camoranesi', 1976, 'Italy', ['RW', 'AM'], 79, 79, 2011, 35, t(8, 6, 6, 7, 5, 7)),
+  q('juventus', 'grosso09', 'Fabio Grosso', 1977, 'Italy', ['LB'], 78, 78, 2012, 30, t(8, 5, 6, 7, 4, 7), { archetype: 'full-back-attacking' }),
+  q('juventus', 'grygera09', 'Zdeněk Grygera', 1980, 'Czech Republic', ['RB', 'CB'], 75, 75, 2011, 40, t(7, 4, 5, 6, 4, 6)),
+  q('juventus', 'zebina09', 'Jonathan Zebina', 1978, 'France', ['RB', 'CB'], 73, 73, 2011, 40, t(5, 6, 5, 5, 7, 6)),
+  q('juventus', 'legrottaglie09', 'Nicola Legrottaglie', 1976, 'Italy', ['CB'], 76, 76, 2011, 30, t(8, 5, 5, 7, 4, 7)),
+  q('juventus', 'deceglie09', 'Paolo De Ceglie', 1986, 'Italy', ['LB'], 72, 78, 2013, 40, t(7, 5, 6, 8, 5, 7), { archetype: 'full-back-attacking' }),
+  q('juventus', 'amauri09', 'Amauri Carvalho de Oliveira', 1980, 'Brazil', ['ST'], 78, 78, 2013, 35, t(6, 6, 6, 5, 6, 6), { archetype: 'poacher' }),
+  q('juventus', 'iaquinta09', 'Vincenzo Iaquinta', 1979, 'Italy', ['ST', 'RW'], 78, 78, 2013, 40, t(7, 6, 6, 7, 6, 7)),
+  q('juventus', 'salihamidzic09', 'Hasan Salihamidžić', 1977, 'Bosnia and Herzegovina', ['RW', 'CM', 'RB'], 74, 74, 2011, 35, t(8, 5, 6, 7, 4, 8)),
+  q('juventus', 'giovinco09', 'Sebastian Giovinco', 1987, 'Italy', ['AM', 'ST', 'RW'], 74, 85, 2013, 45, t(7, 6, 8, 8, 5, 6), { archetype: 'inside-forward', latentCeiling: 86 }),
+];
+
+/** AC Milan, 2009–10 — Leonardo's side (3rd); the last of the old guard (Nesta,
+ *  Pirlo, Seedorf, Inzaghi, a fading Ronaldinho) around a young Pato and Thiago
+ *  Silva, with Beckham's ill-fated loan (an Achilles rupture ended it). */
+export const MILAN_2009: CuratedSeed[] = [
+  q('milan', 'dida09', 'Dida', 1973, 'Brazil', ['GK'], 79, 79, 2011, 25, t(8, 5, 7, 8, 3, 7)),
+  q('milan', 'abbiati09', 'Christian Abbiati', 1977, 'Italy', ['GK'], 80, 80, 2012, 25, t(8, 6, 7, 9, 4, 7)),
+  q('milan', 'abate09', 'Ignazio Abate', 1986, 'Italy', ['RB'], 74, 82, 2014, 25, t(8, 5, 7, 8, 4, 7), { archetype: 'full-back-attacking' }),
+  q('milan', 'thiagosilva09', 'Thiago Silva', 1984, 'Brazil', ['CB'], 80, 90, 2013, 30, t(9, 5, 8, 7, 4, 7), { archetype: 'covering-cb' }),
+  q('milan', 'nesta09', 'Alessandro Nesta', 1976, 'Italy', ['CB'], 85, 85, 2012, 60, t(9, 4, 7, 9, 3, 7), { archetype: 'covering-cb' }),
+  q('milan', 'bonera09', 'Daniele Bonera', 1981, 'Italy', ['CB', 'RB'], 76, 77, 2013, 30, t(7, 4, 6, 8, 4, 7)),
+  q('milan', 'zambrotta09', 'Gianluca Zambrotta', 1977, 'Italy', ['RB', 'LB'], 80, 80, 2012, 35, t(8, 5, 7, 7, 4, 7), { archetype: 'full-back-attacking' }),
+  q('milan', 'jankulovski09', 'Marek Jankulovski', 1977, 'Czech Republic', ['LB'], 76, 76, 2011, 45, t(7, 5, 6, 7, 4, 7)),
+  q('milan', 'gattuso09', 'Gennaro Gattuso', 1978, 'Italy', ['DM'], 80, 80, 2012, 35, t(8, 6, 8, 9, 7, 7)),
+  q('milan', 'pirlo09', 'Andrea Pirlo', 1979, 'Italy', ['CM', 'DM'], 87, 87, 2013, 40, t(9, 5, 8, 8, 3, 7), { archetype: 'deep-playmaker' }),
+  q('milan', 'ambrosini09', 'Massimo Ambrosini', 1977, 'Italy', ['CM', 'DM'], 80, 80, 2013, 40, t(9, 4, 7, 10, 4, 7)),
+  q('milan', 'seedorf09', 'Clarence Seedorf', 1976, 'Netherlands', ['AM', 'CM'], 83, 83, 2012, 30, t(8, 6, 8, 7, 4, 8), { archetype: 'playmaker' }),
+  q('milan', 'flamini09', 'Mathieu Flamini', 1984, 'France', ['CM', 'DM'], 77, 79, 2013, 30, t(7, 6, 7, 6, 5, 7)),
+  q('milan', 'beckhammilan09', 'David Beckham', 1975, 'England', ['CM', 'RW', 'AM'], 79, 79, 2010, 40, t(9, 7, 7, 6, 4, 7)),
+  q('milan', 'ronaldinho09', 'Ronaldinho', 1980, 'Brazil', ['AM', 'LW'], 84, 84, 2011, 45, t(4, 7, 6, 4, 7, 7), { archetype: 'inside-forward', latentCeiling: 92 }),
+  q('milan', 'pato09', 'Alexandre Pato', 1989, 'Brazil', ['ST'], 82, 90, 2013, 55, t(6, 6, 8, 6, 6, 6), { archetype: 'poacher', latentCeiling: 92 }),
+  q('milan', 'borriello09', 'Marco Borriello', 1982, 'Italy', ['ST'], 79, 80, 2013, 35, t(6, 6, 7, 6, 6, 6), { archetype: 'poacher' }),
+  q('milan', 'huntelaar09', 'Klaas-Jan Huntelaar', 1983, 'Netherlands', ['ST'], 78, 82, 2013, 25, t(7, 6, 7, 5, 5, 6), { archetype: 'poacher' }),
+  q('milan', 'inzaghi09', 'Filippo Inzaghi', 1973, 'Italy', ['ST'], 78, 78, 2011, 55, t(8, 6, 7, 9, 5, 7), { archetype: 'poacher' }),
+];
+
 export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   bayern: BAYERN_2009,
   inter: INTER_2009,
@@ -668,4 +717,6 @@ export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   man_city: MAN_CITY_2009,
   arsenal: ARSENAL_2009,
   liverpool: LIVERPOOL_2009,
+  juventus: JUVENTUS_2009,
+  milan: MILAN_2009,
 };
