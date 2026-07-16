@@ -858,12 +858,117 @@ const REAL_MADRID_2000_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── Arsenal, 2004 (The Invincibles) storyline pack ───────────────────────────
+const ARSENAL_2004_PACK: ScriptedEvent[] = [
+  {
+    // "Cashley": Ashley Cole's secret hotel meeting with Chelsea (Jan 2005) — a
+    // tapping-up scandal that drew fines all round and soured him on the club he
+    // left in 2006. Fires while he is still yours.
+    id: 'cole-tapping-up',
+    date: '2005-01',
+    requires: (s) => playerAt(s, 'cur_acole', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:cole-tapping-up',
+      title: 'Ashley Cole has been tapped up by Chelsea',
+      description: 'Your left-back was caught at a secret hotel meeting with a rival. The Premier League is investigating, fines are coming, and his head has been turned.',
+      interrupt: true,
+      clubId: 'arsenal',
+      category: 'scandal',
+      choices: [
+        {
+          id: 'discipline',
+          label: 'Fine him and read him the riot act',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'agitation', playerId: 'cur_acole', amount: 12 }, { kind: 'memory', tag: 'scandal', text: 'Came down hard on Cole — the rift with reality-echo widens.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_acole', amount: 20 }, { kind: 'fanTrust', amount: -4, text: 'The Cole saga drags on messily.' }],
+        },
+        {
+          id: 'smooth-over',
+          label: 'Smooth it over and offer him improved terms',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_acole', amount: 8 }, { kind: 'agitation', playerId: 'cur_acole', amount: -20 }, { kind: 'money', clubId: 'arsenal', amount: -4_000_000 }, { kind: 'memory', tag: 'scandal', text: 'Kept Cole onside — a divergence from his real Chelsea exit.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_acole', amount: 10 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_acole', amount: 18 }, { kind: 'fanTrust', amount: -4, text: 'You let the Cole affair fester.' }],
+      memoryTags: ['scandal', 'cur_acole'],
+    }),
+  },
+  {
+    // Vieira — the totemic captain — pushed for Juventus in 2005, the symbolic end
+    // of the Invincibles. Fires before his real summer exit.
+    id: 'vieira-captain-exit',
+    date: '2005-05',
+    requires: (s) => playerAt(s, 'cur_vieira2', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:vieira-captain-exit',
+      title: 'Patrick Vieira wants to leave for Juventus',
+      description: 'Your captain and midfield heartbeat feels his time is up and Juventus are calling. Cash in and start the rebuild, or fight to keep the soul of the side?',
+      interrupt: true,
+      clubId: 'arsenal',
+      category: 'event',
+      choices: [
+        {
+          id: 'sell',
+          label: 'Let the captain go and rebuild',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'money', clubId: 'arsenal', amount: 14_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Vieira — as reality; the Invincibles era ends.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -5, text: 'Fans mourn the captain\'s departure.' }],
+        },
+        {
+          id: 'keep',
+          label: 'Fight to keep him one more year',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_vieira2', amount: 8 }, { kind: 'memory', tag: 'transfer-saga', text: 'Kept Vieira — a divergence from history.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_vieira2', amount: 15 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_vieira2', amount: 12 }, { kind: 'memory', tag: 'transfer-saga', text: 'The Vieira question is left hanging.' }],
+      memoryTags: ['transfer-saga', 'cur_vieira2'],
+    }),
+  },
+  {
+    // Barcelona's long courtship of Henry (2006-07). Reality: he stayed a year,
+    // then joined Barça in 2007. Fires while he is still your talisman.
+    id: 'henry-barca',
+    date: '2006-08',
+    requires: (s) => playerAt(s, 'cur_henry', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:henry-barca',
+      title: 'Barcelona are courting Thierry Henry',
+      description: 'Your greatest-ever player is being courted by Barcelona, and the new stadium\'s debt makes the money tempting. Build the new Arsenal around him, or take the fee?',
+      interrupt: true,
+      clubId: 'arsenal',
+      category: 'event',
+      choices: [
+        {
+          id: 'keep-talisman',
+          label: 'Keep him — build the new era around him',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_henry', amount: 8 }, { kind: 'fanTrust', amount: 6, text: 'Keeping Henry lifts a nervous fanbase.' }, { kind: 'memory', tag: 'transfer-saga', text: 'Kept Henry at the Emirates.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_henry', amount: 10 }],
+        },
+        {
+          id: 'take-the-fee',
+          label: 'Take the fee for the stadium debt',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'transferOut', playerId: 'cur_henry', clubId: 'barcelona', amount: 24_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Henry to Barcelona — reality, a year early.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_henry', amount: 8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_henry', amount: 10 }, { kind: 'memory', tag: 'transfer-saga', text: 'Barcelona\'s interest in Henry is left unanswered.' }],
+      memoryTags: ['transfer-saga', 'cur_henry'],
+    }),
+  },
+];
+
 /** Scripted historical storylines by scenario. man-utd-1999 is the calibration
  *  pack; the others fire only in their own start point (no calibration impact). */
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
   'man-utd-2013': MAN_UTD_2013_PACK,
   'real-madrid-2000': REAL_MADRID_2000_PACK,
+  'arsenal-2004': ARSENAL_2004_PACK,
 };
 
 function fireScriptedEvents(state: GameState): void {
