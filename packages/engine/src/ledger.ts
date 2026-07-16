@@ -537,6 +537,29 @@ const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
 ];
 
 /**
+ * Real Premier League / European market, 2010→2016 (liverpool-2010). The hinge is
+ * Torres forcing his way to Chelsea in January 2011 (the user's captain-in-waiting
+ * sold, if they are Liverpool), with Suárez and Meireles moving on too, while the
+ * elite churn — CR7 already at Madrid, Fàbregas home to Barça, Bale and Modrić to
+ * Madrid, RVP to United — plays out as it really did.
+ */
+const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
+  // ── Liverpool's departures (the user's stars leaving, if they are Liverpool) ──
+  { playerId: 'cur_torres_lv10', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
+  { playerId: 'cur_meireles_lv10', from: 'liverpool', to: 'chelsea', window: '2011-08', fee: 12_000_000, id: 'meireles-chelsea-2011' },
+  { playerId: 'cur_suarez_lv10', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 75_000_000, id: 'suarez-barca-2014' },
+  // ── The elite market moves as reality ──
+  { playerId: 'cur_fabregas_10', from: 'arsenal', to: 'barcelona', window: '2011-08', fee: 29_000_000, id: 'cesc-barca-2011' },
+  { playerId: 'cur_nasri_10', from: 'arsenal', to: 'man_city', window: '2011-08', fee: 24_000_000, id: 'nasri-city-2011' },
+  { playerId: 'cur_van_persie_10', from: 'arsenal', to: 'man_utd', window: '2012-08', fee: 24_000_000, id: 'rvp-utd-2012' },
+  { playerId: 'cur_ozil_rm10', from: 'real_madrid', to: 'arsenal', window: '2013-09', fee: 42_500_000, id: 'ozil-arsenal-2013' },
+  { playerId: 'cur_modric_10', from: 'spurs', to: 'real_madrid', window: '2012-08', fee: 33_000_000, id: 'modric-real-2012' },
+  { playerId: 'cur_bale_10', from: 'spurs', to: 'real_madrid', window: '2013-09', fee: 85_000_000, id: 'bale-real-2013' },
+  { playerId: 'cur_kroos_2010', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
+  { playerId: 'cur_di_maria_rm10', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000, id: 'dimaria-utd-2014' },
+];
+
+/**
  * Real Bundesliga / European market, 2009→2016 (bayern-2009). Şahin leaves Dortmund
  * for Madrid, then Götze crosses to Bayern (the user's signing, if they are Bayern)
  * and Kroos leaves for Madrid — the reset's stars arriving and departing — while the
@@ -759,6 +782,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-la-liga-2006': { realTransferLedger: LEDGER_LA_LIGA_2006, academyIntakes: [], realInjuries: [] },
   'era-la-liga-2014': { realTransferLedger: LEDGER_LA_LIGA_2014, academyIntakes: [], realInjuries: [] },
   'era-eng-2008': { realTransferLedger: LEDGER_ENG_2008, academyIntakes: [], realInjuries: [] },
+  'era-eng-2010': { realTransferLedger: LEDGER_ENG_2010, academyIntakes: [], realInjuries: [] },
   'era-bundesliga-2009': { realTransferLedger: LEDGER_BUNDESLIGA_2009, academyIntakes: [], realInjuries: [] },
   'era-bundesliga-2012': { realTransferLedger: LEDGER_BUNDESLIGA_2012, academyIntakes: [], realInjuries: [] },
   'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
@@ -774,6 +798,7 @@ export function eraForScenario(scenarioId: string): string {
   // The Serie A cluster is routed explicitly: its year suffixes (‑2004, ‑2006,
   // ‑2007) would otherwise collide with the English/other era packs.
   if (scenarioId === 'man-city-2008') return 'era-eng-2008';
+  if (scenarioId === 'liverpool-2010') return 'era-eng-2010';
   if (scenarioId === 'dortmund-2012') return 'era-bundesliga-2012';
   if (scenarioId === 'bayern-2009') return 'era-bundesliga-2009';
   if (scenarioId === 'barcelona-2003') return 'era-la-liga-2003';

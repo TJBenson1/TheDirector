@@ -25,6 +25,7 @@ import { BARCELONA_2014_SQUADS } from './curated-la-liga-2014.js';
 import { DORTMUND_2012_SQUADS } from './curated-bundesliga-2012.js';
 import { BAYERN_2009_SQUADS } from './curated-bundesliga-2009.js';
 import { MANCITY_2008_SQUADS } from './curated-eng-2008.js';
+import { LIVERPOOL_2010_SQUADS } from './curated-eng-2010.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -506,6 +507,9 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   // The Abu Dhabi takeover — a mid-table City made rich overnight, with the
   // 2008-09 Premier League and the continental elite (CL anchored to 2025).
   'man-city-2008': MANCITY_2008_SQUADS,
+  // FSG's Liverpool — the 2010-11 Premier League and continental elite reused from
+  // the Bundesliga-2010 pack, with Arsenal and Spurs authored fresh (CL to 2025).
+  'liverpool-2010': LIVERPOOL_2010_SQUADS,
   // The Galácticos-era Madrid start has its own Spanish/European pack (La Liga
   // 2000–01 + the clubs Real bought their galácticos from).
   'real-madrid-2000': REAL_MADRID_2000_SQUADS,

@@ -792,6 +792,40 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     domesticLeagueId: 'eng-2008',
   },
+  'liverpool-2010': {
+    id: 'liverpool-2010',
+    name: 'Liverpool — 2010: FSG Reset',
+    startDate: '2010-07',
+    playerClub: 'liverpool',
+    // The Hicks & Gillett era ends in a fire sale and a High Court battle; in
+    // October 2010 Fenway Sports Group take over a club on the brink. Torres forces
+    // his way to Chelsea in January, Suárez and Carroll arrive, and the long climb
+    // begins — Dalglish, Rodgers, the 2014 near-miss, then Klopp, 2019 and 2020.
+    // Reality: nine years to a European Cup, ten to the title. Do it faster.
+    mandate: 'Turn the reset into a return to the summit — faster, and without the false dawns.',
+    boardPatience: 74,
+    boardExpectedFinish: 5,
+    // The 2010-11 Premier League is the simulated league; the continental elite
+    // (full squads) anchor every real European Cup of 2011–2025.
+    clubs: [
+      { id: 'liverpool', name: 'Liverpool', prestige: 80 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 90 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 86 },
+      { id: 'man_city', name: 'Manchester City', prestige: 74 },
+      { id: 'arsenal', name: 'Arsenal', prestige: 80 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 92 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 88 },
+      { id: 'inter', name: 'Internazionale', prestige: 84 },
+      { id: 'juventus', name: 'Juventus', prestige: 82 },
+    ],
+    contextExtra: [
+      { id: 'spurs', name: 'Tottenham Hotspur', prestige: 72 },
+      { id: 'everton', name: 'Everton', prestige: 64 },
+      { id: 'fulham', name: 'Fulham', prestige: 54 },
+    ],
+    domesticLeagueId: 'eng-2010',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

@@ -444,6 +444,37 @@ export const ENGLAND_2008: LeagueSeed = {
   ],
 };
 
+/** England, 2010–11 Premier League — Ferguson's record 19th title, Ancelotti's
+ *  holders Chelsea, the rising takeover City, and the FSG-rescued Liverpool in 6th.
+ *  20 clubs; ordering follows the real final table. */
+export const ENGLAND_2010: LeagueSeed = {
+  id: 'eng-2010',
+  name: 'Premier League',
+  season: '2010-07',
+  clubs: [
+    { id: 'man_utd', name: 'Manchester United', prestige: 90, strength: 89 },
+    { id: 'chelsea', name: 'Chelsea', prestige: 86, strength: 87 },
+    { id: 'man_city', name: 'Manchester City', prestige: 74, strength: 85 },
+    { id: 'arsenal', name: 'Arsenal', prestige: 80, strength: 84 },
+    { id: 'spurs', name: 'Tottenham Hotspur', prestige: 72, strength: 81 },
+    { id: 'liverpool', name: 'Liverpool', prestige: 80, strength: 82 },
+    { id: 'everton', name: 'Everton', prestige: 64, strength: 77 },
+    { id: 'fulham', name: 'Fulham', prestige: 54, strength: 73 },
+    { id: 'aston_villa', name: 'Aston Villa', prestige: 62, strength: 75 },
+    { id: 'sunderland', name: 'Sunderland', prestige: 54, strength: 72 },
+    { id: 'west_brom', name: 'West Bromwich Albion', prestige: 48, strength: 70 },
+    { id: 'newcastle', name: 'Newcastle United', prestige: 62, strength: 72 },
+    { id: 'stoke', name: 'Stoke City', prestige: 50, strength: 71 },
+    { id: 'bolton', name: 'Bolton Wanderers', prestige: 52, strength: 71 },
+    { id: 'blackburn', name: 'Blackburn Rovers', prestige: 52, strength: 70 },
+    { id: 'wigan', name: 'Wigan Athletic', prestige: 46, strength: 68 },
+    { id: 'wolves', name: 'Wolverhampton', prestige: 48, strength: 68 },
+    { id: 'birmingham', name: 'Birmingham City', prestige: 50, strength: 68 },
+    { id: 'blackpool', name: 'Blackpool', prestige: 40, strength: 66 },
+    { id: 'west_ham', name: 'West Ham United', prestige: 56, strength: 68 },
+  ],
+};
+
 /** Serie A, 2004–05 — Capello's (later stripped) Juventus, the Milan of Istanbul,
  *  and Mancini's nearly-men Inter, on the eve of Calciopoli. 20 clubs. */
 export const ITALY_2004: LeagueSeed = {
@@ -582,6 +613,7 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,
   'eng-2008': ENGLAND_2008,
+  'eng-2010': ENGLAND_2010,
   'ger-2009': GERMANY_2009,
   'ger-2012': GERMANY_2012,
 };

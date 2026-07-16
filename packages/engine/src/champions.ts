@@ -108,6 +108,26 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2021: { w: 'real_madrid', r: 'liverpool' },
     2022: { w: 'man_city', r: 'inter' },
   },
+  'era-eng-2010': {
+    // FSG's Liverpool, 2010→2025. The 2011 final (Barça beat United at Wembley)
+    // opens it; Real Madrid's mid-2010s dynasty, Liverpool's own 2019, City's 2023
+    // and every other real winner's club is in the pack. Runners-up not in the pack
+    // (Dortmund 2013, Atlético) and PSG's 2025 win resolve to the field.
+    2011: { w: 'barcelona', r: 'man_utd' },
+    2012: { w: 'chelsea', r: 'bayern' },
+    2013: { w: 'bayern' },
+    2014: { w: 'real_madrid' },
+    2015: { w: 'barcelona', r: 'juventus' },
+    2016: { w: 'real_madrid' },
+    2017: { w: 'real_madrid', r: 'juventus' },
+    2018: { w: 'real_madrid', r: 'liverpool' },
+    2019: { w: 'liverpool', r: 'spurs' },
+    2020: { w: 'bayern' },
+    2021: { w: 'chelsea', r: 'man_city' },
+    2022: { w: 'real_madrid', r: 'liverpool' },
+    2023: { w: 'man_city', r: 'inter' },
+    2024: { w: 'real_madrid', r: 'dortmund' },
+  },
   'era-bundesliga-2009': {
     // Van Gaal's Bayern, 2009→2024. Bayern open by LOSING the 2010 final to Inter
     // (the reset's near-miss), Klopp's Dortmund take the next two European runs at
