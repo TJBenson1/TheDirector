@@ -266,6 +266,34 @@ export const SPAIN_2003: LeagueSeed = {
   ],
 };
 
+/** Bundesliga, 2010–11 — Klopp's champion Dortmund breaking van Gaal's Bayern.
+ *  18 clubs; ordering follows the real final table. */
+export const GERMANY_2010: LeagueSeed = {
+  id: 'ger-2010',
+  name: 'Bundesliga',
+  season: '2010-07',
+  clubs: [
+    { id: 'dortmund', name: 'Borussia Dortmund', prestige: 82, strength: 85 },
+    { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 72, strength: 80 },
+    { id: 'bayern', name: 'Bayern München', prestige: 90, strength: 87 },
+    { id: 'hannover', name: 'Hannover 96', prestige: 54, strength: 73 },
+    { id: 'mainz', name: 'Mainz 05', prestige: 52, strength: 74 },
+    { id: 'nurnberg', name: '1. FC Nürnberg', prestige: 54, strength: 71 },
+    { id: 'kaiserslautern', name: 'Kaiserslautern', prestige: 56, strength: 71 },
+    { id: 'hamburg', name: 'Hamburger SV', prestige: 66, strength: 76 },
+    { id: 'freiburg', name: 'SC Freiburg', prestige: 50, strength: 70 },
+    { id: 'koln', name: '1. FC Köln', prestige: 58, strength: 72 },
+    { id: 'schalke', name: 'Schalke 04', prestige: 72, strength: 79 },
+    { id: 'werder', name: 'Werder Bremen', prestige: 66, strength: 78 },
+    { id: 'hoffenheim', name: 'Hoffenheim', prestige: 52, strength: 73 },
+    { id: 'stuttgart', name: 'VfB Stuttgart', prestige: 64, strength: 76 },
+    { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 62, strength: 77 },
+    { id: 'frankfurt', name: 'Eintracht Frankfurt', prestige: 58, strength: 72 },
+    { id: 'gladbach', name: 'Borussia Mönchengladbach', prestige: 60, strength: 71 },
+    { id: 'st_pauli', name: 'St. Pauli', prestige: 46, strength: 67 },
+  ],
+};
+
 /** La Liga, 2014–15 — Luis Enrique's treble-winning MSN Barça, the BBC Real, and
  *  Simeone's champion Atlético. 20 clubs; ordering follows the real final table. */
 export const SPAIN_2014: LeagueSeed = {
@@ -494,4 +522,5 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,
+  'ger-2010': GERMANY_2010,
 };

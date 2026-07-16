@@ -88,6 +88,25 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2011: { w: 'chelsea', r: 'bayern' },
     2012: { w: 'bayern', r: 'dortmund' },
   },
+  'era-bundesliga-2010': {
+    // Klopp's Dortmund and van Gaal's Bayern, 2010→2025. The all-German 2013 final
+    // (Bayern beat Dortmund) is anchored, alongside Real Madrid's dynasty and every
+    // other real winner; runners-up not in the pack (Atlético) resolve to the field.
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern', r: 'dortmund' },
+    2013: { w: 'real_madrid' },
+    2014: { w: 'barcelona', r: 'juventus' },
+    2015: { w: 'real_madrid' },
+    2016: { w: 'real_madrid', r: 'juventus' },
+    2017: { w: 'real_madrid', r: 'liverpool' },
+    2018: { w: 'liverpool' },
+    2019: { w: 'bayern' },
+    2020: { w: 'chelsea', r: 'man_city' },
+    2021: { w: 'real_madrid', r: 'liverpool' },
+    2022: { w: 'man_city', r: 'inter' },
+    2023: { w: 'real_madrid', r: 'dortmund' },
+  },
   'era-la-liga-2014': {
     // MSN's Barça, 2014→2025. Real Madrid's modern Champions League dominance
     // (2016, 2017, 2018, 2022, 2024) is anchored, alongside Barça's 2015 treble,
