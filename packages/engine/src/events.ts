@@ -643,8 +643,233 @@ const MAN_UTD_1999_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── Manchester United, 2013 (post-Ferguson) storyline pack ───────────────────
+const MAN_UTD_2013_PACK: ScriptedEvent[] = [
+  {
+    // Chelsea (and Mourinho) chased Rooney all summer 2013; he handed in a
+    // transfer request under Moyes, then stayed and signed a new deal in 2014.
+    // The user's ask: "Rooney wanting to leave" — the 2013 leg of the saga.
+    id: 'rooney-wants-out-2013',
+    date: '2013-08',
+    requires: (s) => playerAt(s, 'cur_rooney', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:rooney-wants-out-2013',
+      title: 'Wayne Rooney hands in a transfer request',
+      description: 'Unsettled under the new manager and courted openly by Chelsea, your talisman wants out. Rebuild around him, cash in, or let it fester?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'commit',
+          label: 'Rebuild around him and offer a new deal',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_rooney', amount: 10 }, { kind: 'agitation', playerId: 'cur_rooney', amount: -25 }, { kind: 'memory', tag: 'transfer-saga', text: 'Rooney recommits — as reality: he stayed and signed a new deal.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_rooney', amount: 10 }, { kind: 'money', clubId: 'man_utd', amount: -8_000_000 }],
+        },
+        {
+          id: 'sell',
+          label: 'Cash in and sell to Chelsea',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'transferOut', playerId: 'cur_rooney', clubId: 'chelsea', amount: 30_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Rooney to a title rival — a divergence from history.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_rooney', amount: 20 }],
+        },
+        {
+          id: 'hold-firm',
+          label: 'Refuse to sell and make him stay',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'agitation', playerId: 'cur_rooney', amount: -5 }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_rooney', amount: -10 }, { kind: 'agitation', playerId: 'cur_rooney', amount: 8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_rooney', amount: 15 }, { kind: 'morale', clubId: 'man_utd', amount: -3 }, { kind: 'memory', tag: 'transfer-saga', text: 'The Rooney saga is left to drag on.' }],
+      memoryTags: ['transfer-saga', 'cur_rooney'],
+    }),
+  },
+  {
+    // Kagawa — a Dortmund gem played out of position and frozen out under Moyes,
+    // a talent wasted. Context: he must still be at the club.
+    id: 'kagawa-misused',
+    date: '2013-12',
+    requires: (s) => playerAt(s, 'cur_kagawa', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:kagawa-misused',
+      title: 'Shinji Kagawa is being played out of position',
+      description: 'Your Japanese playmaker — a jewel at Dortmund — is stuck on the wing or on the bench, and his form has drained away. Reintegrate him centrally, or accept the manager\'s call?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'central',
+          label: 'Insist he plays in the middle',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_kagawa', amount: 10 }, { kind: 'managerRelationship', amount: -4 }],
+          onFailure: [{ kind: 'managerRelationship', amount: -8 }],
+        },
+        {
+          id: 'defer',
+          label: "Back the manager's selection",
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'managerRelationship', amount: 5 }, { kind: 'memory', tag: 'development', text: 'Kagawa left to fade on the wing — as reality.' }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_kagawa', amount: -8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_kagawa', amount: -8 }, { kind: 'agitation', playerId: 'cur_kagawa', amount: 12 }],
+      memoryTags: ['development', 'cur_kagawa'],
+    }),
+  },
+  {
+    // Van Persie — the 2013 title's top scorer, but his body was breaking down;
+    // his United decline set in fast. Manage his fitness or run him into the ground.
+    id: 'vanpersie-body',
+    date: '2014-10',
+    requires: (s) => playerAt(s, 'cur_vanpersie', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:vanpersie-body',
+      title: "Robin van Persie's body is breaking down",
+      description: 'Your title-winning striker is 31 and increasingly fragile. Wrap him in cotton wool to keep him for the big games, or lean on him now while he can still deliver?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'manage-load',
+          label: 'Manage his minutes carefully',
+          successProbability: 0.65,
+          onSuccess: [{ kind: 'restPlayer', playerId: 'cur_vanpersie', months: 2, amount: -8 }, { kind: 'memory', tag: 'load', text: 'Managed RvP\'s load to protect the run-in.' }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_vanpersie', amount: -4 }],
+        },
+        {
+          id: 'lean-on-him',
+          label: 'Play him every game while you can',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_vanpersie', amount: 6 }],
+          onFailure: [{ kind: 'injuryProneness', playerId: 'cur_vanpersie', amount: 12 }, { kind: 'memory', tag: 'load', text: 'Ran RvP into the ground — his decline accelerates.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'injuryProneness', playerId: 'cur_vanpersie', amount: 8 }],
+      memoryTags: ['load', 'cur_vanpersie'],
+    }),
+  },
+];
+
+// ── Real Madrid, 2000 (Galácticos) storyline pack ────────────────────────────
+const REAL_MADRID_2000_PACK: ScriptedEvent[] = [
+  {
+    // Florentino Pérez won the 2000 presidency on a promise to sign Figo from
+    // Barcelona — the founding act of the galáctico project. A board mandate beat.
+    id: 'galactico-mandate',
+    date: '2000-08',
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:galactico-mandate',
+      title: 'The president demands a Galáctico every summer',
+      description: 'Florentino Pérez was elected on the Figo promise and now expects a marquee signing every year — box office over balance. Embrace the doctrine, or argue for a real team?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'embrace',
+          label: 'Embrace the Galáctico doctrine',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 8 }, { kind: 'memory', tag: 'board', text: 'Signed up to the Galáctico project — as reality.' }],
+          onFailure: [{ kind: 'memory', tag: 'board', text: 'The president expects more glamour.' }],
+        },
+        {
+          id: 'argue-balance',
+          label: 'Argue for balance over box office',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'board', text: 'Won room to build a balanced side — a divergence from the galáctico path.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -10 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'board', text: 'The president sets the transfer policy without you.' }],
+      memoryTags: ['board', 'president'],
+    }),
+  },
+  {
+    // Figo's poisonous returns to the Camp Nou (the pig's head, 2002) after the
+    // most controversial transfer of the era. Fires once he is at Madrid.
+    id: 'figo-clasico-hostility',
+    date: '2002-11',
+    requires: (s) => playerAt(s, 'cur_figo', 'real_madrid') && s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:figo-clasico-hostility',
+      title: 'Figo faces the Camp Nou\'s fury',
+      description: 'The Clásico returns to Barcelona, where Figo — the man who crossed the divide — will be met with open hatred. Shield him from it, or send him out to face the storm?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'shield',
+          label: 'Rest him — spare him the cauldron',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_figo', amount: 6 }],
+          onFailure: [{ kind: 'memory', tag: 'clasico', text: 'Fans wanted him to front up.' }],
+        },
+        {
+          id: 'send-out',
+          label: 'Send him out to silence them',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_figo', amount: 10 }, { kind: 'fanTrust', amount: 5, text: 'Figo faced the storm and stood tall.' }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_figo', amount: -8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_figo', amount: -4 }],
+      memoryTags: ['clasico', 'cur_figo'],
+    }),
+  },
+  {
+    // Makélélé wanted parity with the galácticos; the board refused and sold the
+    // balance of the side to Chelsea in 2003 — the "Makélélé role" lesson. Fires
+    // while he is still at Madrid (the sim moves him to Chelsea in 2004).
+    id: 'makelele-dispute',
+    date: '2003-08',
+    requires: (s) => playerAt(s, 'cur_makelele', 'real_madrid') && s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:makelele-dispute',
+      title: 'Makélélé wants to be paid like a Galáctico',
+      description: 'The midfield engine that makes the whole thing balance wants his wages to reflect it. The president would rather sell him and sign another star. What do you do?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'pay-him',
+          label: 'Break the pay structure to keep the engine',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_makelele', amount: 10 }, { kind: 'agitation', playerId: 'cur_makelele', amount: -20 }, { kind: 'memory', tag: 'board', text: 'Kept Makélélé — the divergence Madrid never made.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -8 }],
+        },
+        {
+          id: 'let-go',
+          label: 'Side with the president — cash in',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'agitation', playerId: 'cur_makelele', amount: 15 }, { kind: 'memory', tag: 'board', text: 'Sanctioned the Makélélé sale — as reality; the balance goes with him.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -5, text: 'Selling the engine looks a grave mistake.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_makelele', amount: 12 }, { kind: 'memory', tag: 'board', text: 'The Makélélé dispute is left unresolved.' }],
+      memoryTags: ['board', 'cur_makelele'],
+    }),
+  },
+];
+
+/** Scripted historical storylines by scenario. man-utd-1999 is the calibration
+ *  pack; the others fire only in their own start point (no calibration impact). */
+const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
+  'man-utd-1999': MAN_UTD_1999_PACK,
+  'man-utd-2013': MAN_UTD_2013_PACK,
+  'real-madrid-2000': REAL_MADRID_2000_PACK,
+};
+
 function fireScriptedEvents(state: GameState): void {
-  for (const ev of MAN_UTD_1999_PACK) {
+  const pack = SCRIPTED_PACKS[state.meta.scenarioId];
+  if (!pack) return;
+  for (const ev of pack) {
     if (ev.date !== state.clock.date) continue;
     if (state.meta.firedScripted.includes(ev.id)) continue;
     state.meta.firedScripted.push(ev.id);
