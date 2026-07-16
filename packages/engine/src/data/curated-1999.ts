@@ -19,6 +19,7 @@ import { INTER_1998_SQUADS } from './curated-serie-a-1998.js';
 import { MILAN_2007_SQUADS } from './curated-serie-a-2007.js';
 import { INTER_2004_SQUADS } from './curated-serie-a-2004.js';
 import { JUVENTUS_2006_SQUADS } from './curated-serie-a-2006.js';
+import { BARCELONA_2003_SQUADS } from './curated-la-liga-2003.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -482,6 +483,9 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   // Post-Calciopoli Juventus in Serie B — the legends who stayed to rebuild — on a
   // reused late-2000s Serie A / European pack for after their promotion.
   'juventus-2006': JUVENTUS_2006_SQUADS,
+  // Rijkaard's reborn Barça — Ronaldinho arrived, a teenage Messi in the academy —
+  // with the galáctico Real, Benítez's Valencia and the elite of Europe (CL to 2018).
+  'barcelona-2003': BARCELONA_2003_SQUADS,
   // The Galácticos-era Madrid start has its own Spanish/European pack (La Liga
   // 2000–01 + the clubs Real bought their galácticos from).
   'real-madrid-2000': REAL_MADRID_2000_SQUADS,

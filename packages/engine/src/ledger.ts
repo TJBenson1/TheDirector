@@ -504,6 +504,27 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
 ];
 
 /**
+ * Real La Liga / European market, 2003→2009 (barcelona-2003 "Pre-Messi Dawn").
+ * Barça build the golden age — Eto'o and Deco arrive in 2004 (the user's, if they
+ * are Barça) — while Real's galácticos age out and the great 2009 churn plays out.
+ */
+const LEDGER_LA_LIGA_2003: RealTransferLedgerEntry[] = [
+  // ── Barça's title-winning recruitment (the user's, if they are Barça) ──
+  { playerId: 'cur_etoo_m3', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 24_000_000, id: 'etoo-barca-2004' },
+  { playerId: 'cur_deco_p3', from: 'porto', to: 'barcelona', window: '2004-07', fee: 21_000_000, id: 'deco-barca-2004' },
+  { playerId: 'cur_daniel_alves', from: 'sevilla', to: 'barcelona', window: '2008-07', fee: 32_500_000, id: 'alves-barca-2008' },
+  // ── Real's galáctico churn: Morientes loaned out, then Owen and the 2009 marquees ──
+  { playerId: 'cur_morientes_r3', from: 'real_madrid', to: 'monaco', window: '2003-08', fee: 0, id: 'morientes-monaco-2003' },
+  { playerId: 'cur_owen_l3', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 12_000_000, id: 'owen-real-2004' },
+  { playerId: 'cur_cristiano_u3', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 94_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_kaka_m3', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
+  // ── Chelsea's spine, and Fernando Torres's move that built Liverpool's ──
+  { playerId: 'cur_shevchenko_m3', from: 'milan', to: 'chelsea', window: '2006-07', fee: 43_800_000, id: 'sheva-chelsea-2006' },
+  { playerId: 'cur_carvalho_p3', from: 'porto', to: 'chelsea', window: '2004-07', fee: 30_000_000, id: 'carvalho-chelsea-2004' },
+  { playerId: 'cur_fernando_torres_a3', from: 'atletico', to: 'liverpool', window: '2007-07', fee: 26_500_000, id: 'torres-liverpool-2007' },
+];
+
+/**
  * Real Serie A market, 1998→2004 (inter-1998 "Il Fenomeno"). The calcio golden
  * age plays out: Ronaldo's record cash-out to Madrid (the user's to sanction if
  * they are Inter), Vieri's arrival, Zidane and Figo's galáctico moves, the
@@ -619,6 +640,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: [], realInjuries: INJURIES_2000 },
   'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: [], realInjuries: INJURIES_1995 },
   'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: [], realInjuries: INJURIES_1998 },
+  'era-la-liga-2003': { realTransferLedger: LEDGER_LA_LIGA_2003, academyIntakes: [], realInjuries: [] },
   'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
   // Juventus 2006 rejoins the late-2000s Serie A world from 2007, so it draws on
   // the same reality ledger — Pirlo's 2011 free transfer to Juventus included.
@@ -631,6 +653,9 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
 export function eraForScenario(scenarioId: string): string {
   // The Serie A cluster is routed explicitly: its year suffixes (‑2004, ‑2006,
   // ‑2007) would otherwise collide with the English/other era packs.
+  if (scenarioId === 'barcelona-2003') return 'era-la-liga-2003';
+  if (scenarioId === 'real-madrid-2006') return 'era-la-liga-2006';
+  if (scenarioId === 'barcelona-2014') return 'era-la-liga-2014';
   if (scenarioId === 'inter-1998') return 'era-serie-a-1998';
   if (scenarioId === 'inter-2004') return 'era-serie-a-2004';
   if (scenarioId === 'milan-2007') return 'era-serie-a-2007';

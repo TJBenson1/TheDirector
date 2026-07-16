@@ -578,6 +578,44 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     domesticLeagueId: 'ita-b-2006',
   },
+  'barcelona-2003': {
+    id: 'barcelona-2003',
+    name: 'Barcelona — 2003: Pre-Messi Dawn',
+    startDate: '2003-07',
+    playerClub: 'barcelona',
+    // Rijkaard and Ronaldinho have just arrived; the home-grown spine (Xavi, Puyol,
+    // a teenage Iniesta) is in place, and a sixteen-year-old Messi is in the academy.
+    // Reality: Eto'o and Deco arrive in 2004, the 2006 European Cup and the Pep
+    // dynasty follow. Build the golden age — or waste the dawn.
+    mandate: 'Turn the dawn into a dynasty — win Spain and Europe with the golden generation.',
+    boardPatience: 72,
+    boardExpectedFinish: 1,
+    // La Liga is the simulated league; the elite of Europe (full squads) plus a
+    // light continental context anchor every real European Cup of 2004–2018.
+    clubs: [
+      { id: 'barcelona', name: 'Barcelona', prestige: 88 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 89 },
+      { id: 'milan', name: 'AC Milan', prestige: 90 },
+      { id: 'inter', name: 'Internazionale', prestige: 85 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 88 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 82 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 84 },
+      { id: 'juventus', name: 'Juventus', prestige: 88 },
+    ],
+    contextExtra: [
+      { id: 'valencia', name: 'Valencia', prestige: 82 },
+      { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 78 },
+      { id: 'atletico', name: 'Atlético Madrid', prestige: 72 },
+      { id: 'sevilla', name: 'Sevilla', prestige: 66 },
+      { id: 'mallorca', name: 'RCD Mallorca', prestige: 58 },
+      { id: 'porto', name: 'FC Porto', prestige: 78 },
+      { id: 'monaco', name: 'AS Monaco', prestige: 74 },
+    ],
+    // Abramovich has just arrived at Chelsea.
+    ownership: { chelsea: 'sugar-daddy' },
+    domesticLeagueId: 'esp-2003',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

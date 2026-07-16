@@ -236,6 +236,36 @@ export const ITALY_1998: LeagueSeed = {
   ],
 };
 
+/** La Liga, 2003–04 — Benítez's champion Valencia, Rijkaard's reborn Barça, the
+ *  galáctico Real. 20 clubs; ordering follows the real final table. */
+export const SPAIN_2003: LeagueSeed = {
+  id: 'esp-2003',
+  name: 'La Liga',
+  season: '2003-07',
+  clubs: [
+    { id: 'valencia', name: 'Valencia', prestige: 82, strength: 86 },
+    { id: 'barcelona', name: 'Barcelona', prestige: 88, strength: 85 },
+    { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 78, strength: 83 },
+    { id: 'real_madrid', name: 'Real Madrid', prestige: 92, strength: 88 },
+    { id: 'athletic', name: 'Athletic Bilbao', prestige: 66, strength: 74 },
+    { id: 'sevilla', name: 'Sevilla', prestige: 66, strength: 76 },
+    { id: 'atletico', name: 'Atlético Madrid', prestige: 72, strength: 76 },
+    { id: 'villarreal', name: 'Villarreal', prestige: 62, strength: 75 },
+    { id: 'malaga', name: 'Málaga', prestige: 58, strength: 72 },
+    { id: 'betis', name: 'Real Betis', prestige: 64, strength: 73 },
+    { id: 'osasuna', name: 'Osasuna', prestige: 54, strength: 70 },
+    { id: 'zaragoza', name: 'Real Zaragoza', prestige: 60, strength: 72 },
+    { id: 'mallorca', name: 'RCD Mallorca', prestige: 58, strength: 71 },
+    { id: 'real_sociedad', name: 'Real Sociedad', prestige: 66, strength: 78 },
+    { id: 'racing', name: 'Racing Santander', prestige: 50, strength: 68 },
+    { id: 'espanyol', name: 'Espanyol', prestige: 58, strength: 70 },
+    { id: 'albacete', name: 'Albacete', prestige: 44, strength: 65 },
+    { id: 'valladolid', name: 'Real Valladolid', prestige: 50, strength: 67 },
+    { id: 'celta', name: 'Celta Vigo', prestige: 60, strength: 71 },
+    { id: 'murcia', name: 'Real Murcia', prestige: 44, strength: 64 },
+  ],
+};
+
 /** Serie B, 2006–07 — Juventus's one season in the wilderness after Calciopoli.
  *  Juve tower over a procedural second tier; the promotion mechanic swaps them into
  *  the Serie A world (ITALY_2007's roster) the moment they go up (see italyEvents). */
@@ -393,6 +423,7 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1996': ENGLAND_1996,
   'eng-2003': ENGLAND_2003,
   'esp-1': SPAIN_2000,
+  'esp-2003': SPAIN_2003,
   'ita-1': ITALY_1995,
   'ita-1998': ITALY_1998,
   'ita-b-2006': ITALY_B_2006,

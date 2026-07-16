@@ -61,6 +61,20 @@ const LA_LIGA: Record<string, readonly Waypoint[]> = {
   deportivo: [[2000, 86], [2002, 83], [2005, 79], [2009, 73], [2012, 68]],
 };
 
+// La Liga, 2003–18 (barcelona-2003). Rijkaard's Barça reborn under Ronaldinho, the
+// Pep dynasty and MSN; Real Madrid slump through the late galáctico years then
+// return under the BBC; Benítez's Valencia win 2004 and fade; Deportivo collapse;
+// Atlético rise to their 2014 title. The user's Barça follows its real title arc.
+const LA_LIGA_2003: Record<string, readonly Waypoint[]> = {
+  barcelona: [[2003, 84], [2004, 92], [2006, 85], [2008, 93], [2011, 86], [2012, 93], [2013, 84], [2014, 93], [2016, 86], [2017, 92]],
+  real_madrid: [[2003, 86], [2006, 92], [2008, 86], [2011, 93], [2012, 87], [2016, 93], [2017, 86]],
+  valencia: [[2003, 89], [2004, 83], [2008, 79], [2012, 75]],
+  atletico: [[2003, 76], [2011, 83], [2013, 90], [2014, 85], [2016, 84]],
+  deportivo: [[2003, 83], [2005, 78], [2008, 73], [2011, 66]],
+  sevilla: [[2003, 76], [2006, 82], [2010, 80]],
+  real_sociedad: [[2003, 79], [2005, 71], [2010, 70]],
+};
+
 // Serie A, 1995–2009 (juventus-1995). Milan and (post-Calciopoli) Inter carry the
 // era; Lazio, Parma and Fiorentina collapse under the real financial crises
 // (Cragnotti, Parmalat, bankruptcy) instead of enduring as fantasy contenders.
@@ -129,6 +143,7 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-2004': ENGLISH, // arsenal-2004
   'era-2013': ENGLISH, // man-utd-2013
   'era-2000': LA_LIGA, // real-madrid-2000
+  'era-la-liga-2003': LA_LIGA_2003, // barcelona-2003
   'era-serie-a-1995': ITALIAN, // juventus-1995
   'era-serie-a-1998': ITALIAN, // inter-1998
   'era-serie-a-2004': ITALIAN_2004, // inter-2004
