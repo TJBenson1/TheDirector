@@ -516,6 +516,129 @@ export const BARCELONA_2009: CuratedSeed[] = [
   q('barcelona', 'henry09', 'Thierry Henry', 1977, 'France', ['LW', 'ST'], 83, 83, 2011, 38, t(9, 6, 8, 6, 3, 7)),
 ];
 
+/** Chelsea, 2009–10 — Ancelotti's first season, the Double: PL champions (a record
+ *  103 goals) and FA Cup. A veteran, physically dominant spine. */
+export const CHELSEA_2009: CuratedSeed[] = [
+  q('chelsea', 'cech09', 'Petr Čech', 1982, 'Czech Republic', ['GK'], 87, 87, 2013, 25, t(9, 5, 8, 9, 3, 7)),
+  q('chelsea', 'ivanovic09', 'Branislav Ivanović', 1984, 'Serbia', ['RB', 'CB'], 82, 85, 2013, 25, t(9, 5, 8, 8, 3, 7)),
+  q('chelsea', 'terry09', 'John Terry', 1980, 'England', ['CB'], 87, 87, 2013, 30, t(8, 7, 8, 10, 5, 7), { archetype: 'covering-cb' }),
+  q('chelsea', 'carvalho09', 'Ricardo Carvalho', 1978, 'Portugal', ['CB'], 84, 84, 2011, 40, t(7, 6, 7, 7, 5, 7), { archetype: 'covering-cb' }),
+  q('chelsea', 'ashleycole09', 'Ashley Cole', 1980, 'England', ['LB'], 86, 86, 2013, 35, t(8, 7, 8, 7, 6, 7), { archetype: 'full-back-attacking' }),
+  q('chelsea', 'essien09', 'Michael Essien', 1982, 'Ghana', ['CM', 'DM'], 85, 86, 2013, 45, t(8, 6, 8, 8, 4, 7)),
+  q('chelsea', 'mikel09', 'John Obi Mikel', 1987, 'Nigeria', ['DM'], 78, 83, 2013, 25, t(8, 5, 7, 8, 5, 7), { archetype: 'deep-playmaker', latentCeiling: 84 }),
+  q('chelsea', 'lampard09', 'Frank Lampard', 1978, 'England', ['CM', 'AM'], 89, 89, 2013, 25, t(10, 6, 9, 9, 3, 7)),
+  q('chelsea', 'malouda09', 'Florent Malouda', 1980, 'France', ['LW', 'AM'], 83, 83, 2012, 30, t(8, 5, 7, 7, 5, 7), { archetype: 'inside-forward' }),
+  q('chelsea', 'anelka09', 'Nicolas Anelka', 1979, 'France', ['ST', 'RW'], 84, 84, 2012, 30, t(7, 6, 7, 5, 6, 7), { archetype: 'poacher' }),
+  q('chelsea', 'drogba09', 'Didier Drogba', 1978, 'Ivory Coast', ['ST'], 89, 89, 2012, 35, t(8, 8, 9, 7, 7, 7), { archetype: 'poacher' }),
+  q('chelsea', 'ballack09', 'Michael Ballack', 1976, 'Germany', ['CM', 'AM'], 83, 83, 2011, 35, t(8, 7, 8, 6, 5, 7)),
+  q('chelsea', 'deco09', 'Deco', 1977, 'Portugal', ['AM'], 81, 81, 2011, 45, t(6, 7, 7, 5, 6, 7), { archetype: 'playmaker' }),
+  q('chelsea', 'joecole09', 'Joe Cole', 1981, 'England', ['AM', 'LW'], 80, 82, 2011, 50, t(7, 6, 7, 7, 6, 7), { archetype: 'inside-forward', latentCeiling: 86 }),
+  q('chelsea', 'kalou09', 'Salomon Kalou', 1985, 'Ivory Coast', ['RW', 'ST'], 78, 81, 2012, 25, t(7, 6, 7, 7, 5, 7)),
+  q('chelsea', 'belletti09', 'Juliano Belletti', 1976, 'Brazil', ['RB'], 77, 77, 2011, 30, t(8, 5, 7, 7, 4, 7), { archetype: 'full-back-attacking' }),
+  q('chelsea', 'zhirkov09', 'Yuri Zhirkov', 1983, 'Russia', ['LB', 'LW'], 78, 80, 2013, 35, t(7, 5, 7, 6, 5, 7), { archetype: 'full-back-attacking', latentCeiling: 82 }),
+  q('chelsea', 'ferreira09', 'Paulo Ferreira', 1979, 'Portugal', ['RB', 'LB'], 76, 76, 2011, 30, t(9, 4, 6, 9, 3, 7)),
+  q('chelsea', 'hilario09', 'Hilário', 1975, 'Portugal', ['GK'], 70, 70, 2011, 25, t(8, 4, 6, 9, 3, 7)),
+];
+
+/** Manchester United, 2009–10 — the post-Ronaldo season (he and Tévez had gone).
+ *  Rooney carried the goals; the ageing Giggs/Scholes/Neville core still turned. */
+export const MAN_UTD_2009: CuratedSeed[] = [
+  q('man_utd', 'vandersar09', 'Edwin van der Sar', 1970, 'Netherlands', ['GK'], 85, 85, 2011, 25, t(9, 4, 7, 8, 3, 8)),
+  q('man_utd', 'foster09', 'Ben Foster', 1983, 'England', ['GK'], 74, 80, 2012, 35, t(7, 5, 6, 6, 5, 6)),
+  q('man_utd', 'gneville09', 'Gary Neville', 1975, 'England', ['RB'], 76, 76, 2011, 45, t(9, 5, 8, 10, 6, 6)),
+  q('man_utd', 'rafael09', 'Rafael da Silva', 1990, 'Brazil', ['RB'], 74, 84, 2014, 45, t(6, 6, 7, 7, 8, 6), { archetype: 'full-back-attacking', latentCeiling: 82 }),
+  q('man_utd', 'ferdinand09', 'Rio Ferdinand', 1978, 'England', ['CB'], 87, 87, 2013, 45, t(7, 6, 8, 8, 5, 7), { archetype: 'covering-cb' }),
+  q('man_utd', 'vidic09', 'Nemanja Vidić', 1981, 'Serbia', ['CB'], 87, 87, 2014, 30, t(9, 5, 8, 8, 5, 7)),
+  q('man_utd', 'evra09', 'Patrice Evra', 1981, 'France', ['LB'], 84, 84, 2013, 25, t(8, 6, 8, 8, 6, 8), { archetype: 'full-back-attacking' }),
+  q('man_utd', 'oshea09', 'John O\'Shea', 1981, 'Ireland', ['CB', 'RB', 'DM'], 78, 78, 2012, 35, t(8, 3, 6, 9, 3, 8)),
+  q('man_utd', 'wbrown09', 'Wes Brown', 1979, 'England', ['CB', 'RB'], 76, 76, 2011, 50, t(7, 4, 6, 9, 4, 6)),
+  q('man_utd', 'valencia09', 'Antonio Valencia', 1985, 'Ecuador', ['RW', 'RB'], 81, 84, 2013, 30, t(9, 3, 7, 8, 3, 7)),
+  q('man_utd', 'carrick09', 'Michael Carrick', 1981, 'England', ['CM', 'DM'], 83, 83, 2013, 30, t(9, 3, 7, 9, 3, 7), { archetype: 'deep-playmaker' }),
+  q('man_utd', 'fletcher09', 'Darren Fletcher', 1984, 'Scotland', ['CM'], 81, 82, 2013, 35, t(9, 4, 8, 9, 4, 7)),
+  q('man_utd', 'scholes09', 'Paul Scholes', 1974, 'England', ['CM', 'AM'], 84, 84, 2011, 35, t(10, 2, 7, 10, 3, 6), { archetype: 'deep-playmaker' }),
+  q('man_utd', 'giggs09', 'Ryan Giggs', 1973, 'Wales', ['LW', 'CM', 'AM'], 83, 83, 2011, 30, t(10, 3, 8, 10, 3, 8), { archetype: 'playmaker' }),
+  q('man_utd', 'nani09', 'Nani', 1986, 'Portugal', ['LW', 'RW'], 80, 86, 2014, 30, t(6, 8, 8, 6, 7, 6), { archetype: 'inside-forward' }),
+  q('man_utd', 'anderson09', 'Anderson', 1988, 'Brazil', ['CM', 'AM'], 77, 84, 2013, 50, t(4, 6, 6, 6, 6, 5), { latentCeiling: 84 }),
+  q('man_utd', 'park09', 'Park Ji-sung', 1981, 'South Korea', ['LW', 'RW', 'AM'], 79, 80, 2012, 35, t(10, 2, 7, 9, 2, 9)),
+  q('man_utd', 'rooney09', 'Wayne Rooney', 1985, 'England', ['ST', 'AM'], 90, 90, 2013, 35, t(7, 7, 9, 7, 8, 7)),
+  q('man_utd', 'berbatov09', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST'], 84, 84, 2012, 25, t(6, 8, 6, 6, 4, 6), { archetype: 'poacher' }),
+  q('man_utd', 'owen09', 'Michael Owen', 1979, 'England', ['ST'], 78, 80, 2011, 68, t(8, 7, 7, 5, 4, 6), { archetype: 'poacher', latentCeiling: 85 }),
+  q('man_utd', 'hargreaves09', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 78, 82, 2011, 70, t(8, 5, 6, 6, 5, 6), { latentCeiling: 84 }),
+];
+
+/** Manchester City, 2009–10 — the first full post-takeover season: Tévez, Adebayor,
+ *  Barry and the Touré–Lescott spend, Robinho on the way out. 5th, Hughes→Mancini. */
+export const MAN_CITY_2009: CuratedSeed[] = [
+  q('man_city', 'given09', 'Shay Given', 1976, 'Ireland', ['GK'], 82, 82, 2013, 30, t(9, 4, 7, 7, 3, 7)),
+  q('man_city', 'richards09', 'Micah Richards', 1988, 'England', ['RB', 'CB'], 78, 85, 2013, 40, t(6, 6, 7, 7, 5, 6), { archetype: 'full-back-attacking' }),
+  q('man_city', 'zabaleta09', 'Pablo Zabaleta', 1985, 'Argentina', ['RB', 'LB'], 78, 83, 2012, 35, t(9, 4, 8, 8, 5, 8), { archetype: 'full-back-attacking' }),
+  q('man_city', 'kompany09', 'Vincent Kompany', 1986, 'Belgium', ['CB', 'DM'], 80, 88, 2013, 30, t(10, 4, 9, 8, 2, 8), { archetype: 'covering-cb' }),
+  q('man_city', 'kolotoure09', 'Kolo Touré', 1981, 'Ivory Coast', ['CB'], 81, 82, 2013, 30, t(8, 5, 7, 6, 4, 7), { archetype: 'covering-cb' }),
+  q('man_city', 'lescott09', 'Joleon Lescott', 1982, 'England', ['CB'], 80, 82, 2014, 35, t(7, 5, 6, 5, 4, 6)),
+  q('man_city', 'onuoha09', 'Nedum Onuoha', 1986, 'England', ['CB', 'RB'], 73, 78, 2012, 40, t(7, 4, 6, 7, 4, 6)),
+  q('man_city', 'bridge09', 'Wayne Bridge', 1980, 'England', ['LB'], 76, 78, 2013, 45, t(6, 5, 5, 5, 4, 5)),
+  q('man_city', 'garrido09', 'Javier Garrido', 1985, 'Spain', ['LB'], 73, 76, 2011, 30, t(6, 4, 5, 5, 3, 5)),
+  q('man_city', 'dejong09', 'Nigel de Jong', 1984, 'Netherlands', ['DM', 'CM'], 80, 82, 2013, 35, t(8, 5, 7, 6, 6, 7)),
+  q('man_city', 'barry09', 'Gareth Barry', 1981, 'England', ['CM', 'DM'], 83, 84, 2014, 25, t(8, 4, 7, 6, 3, 7), { archetype: 'deep-playmaker' }),
+  q('man_city', 'ireland09', 'Stephen Ireland', 1986, 'Ireland', ['AM', 'CM'], 79, 84, 2013, 40, t(5, 7, 6, 4, 7, 4), { archetype: 'playmaker', latentCeiling: 87 }),
+  q('man_city', 'swp09', 'Shaun Wright-Phillips', 1981, 'England', ['RW'], 78, 80, 2012, 35, t(7, 4, 6, 6, 3, 6)),
+  q('man_city', 'petrov09', 'Martin Petrov', 1979, 'Bulgaria', ['LW'], 78, 78, 2011, 40, t(7, 4, 5, 5, 3, 6)),
+  q('man_city', 'weiss09', 'Vladimír Weiss', 1989, 'Slovakia', ['RW', 'LW'], 68, 80, 2013, 30, t(5, 6, 7, 5, 6, 5)),
+  q('man_city', 'tevez09', 'Carlos Tévez', 1984, 'Argentina', ['ST', 'AM'], 86, 87, 2014, 35, t(9, 8, 10, 3, 9, 6)),
+  q('man_city', 'adebayor09', 'Emmanuel Adebayor', 1984, 'Togo', ['ST'], 84, 85, 2014, 35, t(6, 9, 8, 3, 8, 6), { archetype: 'poacher' }),
+  q('man_city', 'robinho09', 'Robinho', 1984, 'Brazil', ['RW', 'LW', 'AM'], 84, 86, 2012, 40, t(5, 8, 7, 3, 8, 4), { archetype: 'inside-forward', latentCeiling: 90 }),
+  q('man_city', 'bellamy09', 'Craig Bellamy', 1979, 'Wales', ['LW', 'ST'], 80, 80, 2012, 55, t(7, 7, 8, 5, 9, 6)),
+  q('man_city', 'santacruz09', 'Roque Santa Cruz', 1981, 'Paraguay', ['ST'], 76, 79, 2012, 60, t(6, 5, 5, 5, 4, 5), { archetype: 'poacher' }),
+];
+
+/** Arsenal, 2009–10 — Wenger's young side around captain Fàbregas; Vermaelen in,
+ *  Adebayor and Touré gone to City. 3rd, undone by a fragile spine (RvP, Eduardo). */
+export const ARSENAL_2009: CuratedSeed[] = [
+  q('arsenal', 'almunia09', 'Manuel Almunia', 1977, 'Spain', ['GK'], 76, 76, 2012, 30, t(7, 4, 6, 7, 4, 7)),
+  q('arsenal', 'fabianski09', 'Łukasz Fabiański', 1985, 'Poland', ['GK'], 71, 78, 2012, 35, t(7, 5, 7, 6, 6, 6)),
+  q('arsenal', 'sagna09', 'Bacary Sagna', 1983, 'France', ['RB'], 82, 83, 2014, 30, t(9, 4, 7, 8, 3, 8), { archetype: 'full-back-attacking' }),
+  q('arsenal', 'clichy09', 'Gaël Clichy', 1985, 'France', ['LB'], 80, 82, 2013, 40, t(8, 4, 7, 7, 4, 8), { archetype: 'full-back-attacking' }),
+  q('arsenal', 'vermaelen09', 'Thomas Vermaelen', 1985, 'Belgium', ['CB', 'LB'], 81, 85, 2014, 35, t(9, 5, 8, 7, 4, 8)),
+  q('arsenal', 'gallas09', 'William Gallas', 1977, 'France', ['CB'], 82, 82, 2011, 45, t(7, 8, 7, 5, 7, 6), { archetype: 'covering-cb' }),
+  q('arsenal', 'eboue09', 'Emmanuel Eboué', 1983, 'Ivory Coast', ['RB', 'RW'], 75, 76, 2012, 35, t(6, 6, 6, 7, 6, 7)),
+  q('arsenal', 'song09', 'Alex Song', 1987, 'Cameroon', ['DM', 'CM'], 79, 84, 2013, 30, t(7, 6, 8, 6, 5, 7)),
+  q('arsenal', 'fabregas09', 'Cesc Fàbregas', 1987, 'Spain', ['CM', 'AM'], 89, 90, 2014, 45, t(9, 6, 9, 6, 4, 8), { archetype: 'playmaker' }),
+  q('arsenal', 'diaby09', 'Abou Diaby', 1986, 'France', ['CM', 'AM'], 78, 82, 2013, 60, t(6, 5, 6, 6, 5, 6)),
+  q('arsenal', 'denilson09', 'Denílson', 1988, 'Brazil', ['CM', 'DM'], 76, 80, 2014, 35, t(6, 6, 6, 6, 5, 6), { archetype: 'deep-playmaker', latentCeiling: 80 }),
+  q('arsenal', 'nasri09', 'Samir Nasri', 1987, 'France', ['AM', 'LW', 'RW'], 80, 86, 2012, 40, t(6, 8, 8, 5, 7, 7), { archetype: 'inside-forward' }),
+  q('arsenal', 'rosicky09', 'Tomáš Rosický', 1980, 'Czech Republic', ['AM', 'CM'], 79, 80, 2012, 55, t(9, 4, 7, 8, 3, 8), { archetype: 'playmaker' }),
+  q('arsenal', 'wilshere09', 'Jack Wilshere', 1992, 'England', ['AM', 'CM'], 62, 87, 2013, 45, t(6, 7, 9, 8, 7, 7)),
+  q('arsenal', 'ramsey09', 'Aaron Ramsey', 1990, 'Wales', ['CM', 'AM'], 72, 85, 2014, 40, t(8, 5, 8, 8, 4, 7), { archetype: 'playmaker', latentCeiling: 85 }),
+  q('arsenal', 'walcott09', 'Theo Walcott', 1989, 'England', ['RW', 'ST'], 78, 85, 2013, 55, t(8, 5, 7, 8, 4, 8)),
+  q('arsenal', 'arshavin09', 'Andrey Arshavin', 1981, 'Russia', ['LW', 'AM', 'ST'], 85, 85, 2013, 40, t(6, 7, 6, 5, 7, 5), { archetype: 'inside-forward' }),
+  q('arsenal', 'vanpersie09', 'Robin van Persie', 1983, 'Netherlands', ['ST', 'LW'], 86, 87, 2013, 65, t(7, 7, 8, 6, 6, 7), { archetype: 'inside-forward' }),
+  q('arsenal', 'eduardo09', 'Eduardo', 1983, 'Croatia', ['ST'], 78, 82, 2011, 68, t(8, 4, 6, 7, 4, 6), { archetype: 'poacher' }),
+];
+
+/** Liverpool, 2009–10 — Benítez's last season; the Torres–Gerrard axis, Alonso sold
+ *  and (unhappily) replaced by Aquilani. A flat 7th after the near-miss title tilt. */
+export const LIVERPOOL_2009: CuratedSeed[] = [
+  q('liverpool', 'reina09', 'José Manuel Reina', 1982, 'Spain', ['GK'], 86, 86, 2013, 25, t(8, 5, 7, 7, 5, 7)),
+  q('liverpool', 'johnson09', 'Glen Johnson', 1984, 'England', ['RB'], 80, 81, 2013, 40, t(6, 6, 6, 5, 5, 6), { archetype: 'full-back-attacking' }),
+  q('liverpool', 'carragher09', 'Jamie Carragher', 1978, 'England', ['CB', 'RB'], 80, 80, 2012, 30, t(9, 4, 7, 10, 6, 6)),
+  q('liverpool', 'agger09', 'Daniel Agger', 1985, 'Denmark', ['CB'], 80, 83, 2014, 55, t(8, 4, 6, 8, 4, 7), { archetype: 'covering-cb' }),
+  q('liverpool', 'skrtel09', 'Martin Škrtel', 1984, 'Slovakia', ['CB'], 79, 82, 2013, 35, t(8, 5, 6, 7, 6, 6)),
+  q('liverpool', 'insua09', 'Emiliano Insúa', 1989, 'Argentina', ['LB'], 74, 82, 2012, 30, t(6, 6, 7, 5, 5, 6), { archetype: 'full-back-attacking', latentCeiling: 82 }),
+  q('liverpool', 'aurelio09', 'Fábio Aurélio', 1979, 'Brazil', ['LB'], 76, 76, 2011, 55, t(7, 4, 5, 7, 4, 7)),
+  q('liverpool', 'kyrgiakos09', 'Sotirios Kyrgiakos', 1979, 'Greece', ['CB'], 72, 72, 2011, 40, t(7, 5, 5, 6, 7, 6)),
+  q('liverpool', 'degen09', 'Philipp Degen', 1983, 'Switzerland', ['RB'], 70, 72, 2011, 45, t(6, 5, 5, 5, 5, 5)),
+  q('liverpool', 'mascherano09', 'Javier Mascherano', 1984, 'Argentina', ['DM', 'CM'], 85, 86, 2012, 30, t(9, 5, 8, 6, 6, 7)),
+  q('liverpool', 'lucas09', 'Lucas Leiva', 1987, 'Brazil', ['DM', 'CM'], 76, 83, 2013, 30, t(8, 4, 7, 8, 4, 8)),
+  q('liverpool', 'aquilani09', 'Alberto Aquilani', 1984, 'Italy', ['CM', 'AM', 'DM'], 78, 82, 2014, 65, t(7, 6, 6, 5, 5, 4), { archetype: 'deep-playmaker', latentCeiling: 85 }),
+  q('liverpool', 'gerrard09', 'Steven Gerrard', 1980, 'England', ['CM', 'AM'], 89, 89, 2013, 40, t(9, 6, 9, 10, 7, 7), { archetype: 'playmaker' }),
+  q('liverpool', 'kuyt09', 'Dirk Kuyt', 1980, 'Netherlands', ['RW', 'ST'], 81, 81, 2012, 25, t(10, 3, 7, 8, 3, 8)),
+  q('liverpool', 'torres09', 'Fernando Torres', 1984, 'Spain', ['ST'], 90, 92, 2013, 60, t(7, 7, 8, 5, 6, 6), { archetype: 'poacher' }),
+  q('liverpool', 'benayoun09', 'Yossi Benayoun', 1980, 'Israel', ['AM', 'RW'], 79, 79, 2011, 35, t(8, 5, 6, 6, 5, 8), { archetype: 'playmaker' }),
+  q('liverpool', 'babel09', 'Ryan Babel', 1986, 'Netherlands', ['LW', 'ST'], 74, 82, 2012, 35, t(5, 7, 6, 4, 6, 6), { archetype: 'inside-forward', latentCeiling: 82 }),
+  q('liverpool', 'ngog09', 'David Ngog', 1989, 'France', ['ST'], 70, 80, 2013, 35, t(6, 5, 6, 5, 5, 6), { latentCeiling: 80 }),
+  q('liverpool', 'riera09', 'Albert Riera', 1982, 'Spain', ['LW'], 75, 75, 2012, 40, t(6, 6, 5, 4, 7, 6)),
+];
+
 export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   bayern: BAYERN_2009,
   inter: INTER_2009,
@@ -540,4 +663,9 @@ export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   real_madrid: REAL_MADRID_2009,
   villarreal: VILLARREAL_2009,
   sevilla: SEVILLA_2009,
+  chelsea: CHELSEA_2009,
+  man_utd: MAN_UTD_2009,
+  man_city: MAN_CITY_2009,
+  arsenal: ARSENAL_2009,
+  liverpool: LIVERPOOL_2009,
 };

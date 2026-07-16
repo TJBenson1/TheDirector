@@ -53,16 +53,17 @@ eras per user: 1999, 2004, 2009, 2013 first; 1995 / late-2010s / 2020s last.
   Cissé, Fuchs, Choupo-Moting, O. Baumann, plus wasted talents (Kačar, Azaouagh).
   Ledger fidelity 100%, fantasy leaps 0; man-utd-1999 untouched (18/18). Still to
   do for 2009:
-  - **more European context**: Barça treble, Mourinho's Inter (2010 treble), Man
-    City post-takeover, Chelsea (Ancelotti double), Man Utd post-CR7, Juventus.
+  - ✅ **European context done:** Guardiola's Barça and Mourinho's treble Inter,
+    plus the 2009-10 English giants now deep real squads — Chelsea (Ancelotti
+    double), Man Utd (post-CR7), Man City (post-takeover: Tévez/Adebayor/Barry),
+    Arsenal (Fàbregas), Liverpool (Torres/Gerrard). Still open: Juventus, Milan.
   - **era-2009 injuries** (Kaká's knee is flagged via proneness, but real dated
     injuries aren't in the pack yet).
-- Add the real transfer ledgers for the newly-curated clubs so a passive career
-  reproduces their history: the **2006 Calciopoli Juventus exodus** (Cannavaro/
-  Emerson→Madrid, Thuram/Zambrotta→Barça, Ibrahimović→Inter), Porto's onward
-  sales (Pepe→Madrid '07, Diego→Bremen '06, Maniche/Costinha→Dynamo Moscow), the
-  2000-01 Valencia/Depor breakups, Makaay→Bayern '03. Without these they sit as
-  frozen squads.
+- ✅ **2006 Calciopoli Juventus exodus ledgered** (Cannavaro/Emerson→Madrid,
+  Thuram/Zambrotta→Barça, Ibrahimović→Inter), gated on the `SHOCKS_2004`
+  fire-sale — a passive arsenal-2004 career reproduces it. Still open: Porto's
+  onward sales (Pepe→Madrid '07, Diego→Bremen '06, Maniche/Costinha→Dynamo
+  Moscow), the 2000-01 Valencia/Depor breakups, Makaay→Bayern '03.
 - David Villa isn't placed in era-2004 (he was at Zaragoza in '04-05; Zaragoza
   isn't curated). Add Zaragoza, or seed Villa on his 2005 move.
 
