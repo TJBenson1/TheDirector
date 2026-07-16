@@ -24,10 +24,10 @@ import { parseYearMonth } from './clock.js';
 // ── Tunable match-model constants (calibrated in season.test.ts) ─────────────
 const HOME_ADVANTAGE = 6; // strength points
 const BASE_GOALS = 1.35; // expected goals for an evenly-matched neutral game
-const BETA = 0.014; // sensitivity of xG to effective-strength difference
+const BETA = 0.024; // sensitivity of xG to effective-strength difference
 const MAX_LAMBDA = 6; // safety cap on the Poisson mean
 const FORM_STEP = 1; // form nudge per win/loss
-const FORM_CAP = 5;
+const FORM_CAP = 3; // momentum swings the table, but doesn't swamp squad strength
 const FORM_DECAY = 0.7; // per round, form drifts toward 0
 const PLAYING_MONTHS = 10; // Aug (idx 1) … May (idx 10)
 
