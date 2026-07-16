@@ -161,12 +161,18 @@ function retirePlayer(state: GameState, club: ClubState, player: PlayerState, ye
   const age = year - player.birthYear;
   club.squad = club.squad.filter((id) => id !== player.id);
   delete state.players[player.id];
-  logEvent(state, {
-    category: 'development',
-    code: 'career.retired',
-    message: `${player.name} (${club.name}, ${age}) hangs up his boots`,
-    data: { playerId: player.id, clubId: club.id, age, curated: player.curated },
-  });
+  // Principle 2: procedural filler is ANONYMOUS depth and never enters the
+  // narrative — so only a real (curated) player's retirement is announced. This
+  // is what stops a cohort of low-ability filler hitting the age cliff from
+  // spamming dozens of "hangs up his boots" lines in a single summer.
+  if (player.curated) {
+    logEvent(state, {
+      category: 'development',
+      code: 'career.retired',
+      message: `${player.name} (${club.name}, ${age}) hangs up his boots`,
+      data: { playerId: player.id, clubId: club.id, age, curated: true },
+    });
+  }
   backfillDepth(state, club, player, year, rng);
 }
 
