@@ -81,19 +81,12 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
   'arsenal-2004': { name: 'Arsène Wenger', reputation: 90 },
   'arsenal-1996': { name: 'Arsène Wenger', reputation: 80 },
   'bayern-2009': { name: 'Louis van Gaal', reputation: 85 },
-  'barcelona-1999': { name: 'Louis van Gaal', reputation: 82 },
   'man-utd-2013': { name: 'David Moyes', reputation: 68 },
   'chelsea-2003': { name: 'Claudio Ranieri', reputation: 74 },
   'real-madrid-2000': { name: 'Vicente del Bosque', reputation: 82 },
   'inter-1998': { name: 'Gigi Simoni', reputation: 66 },
   'newcastle-1995': { name: 'Kevin Keegan', reputation: 78 },
-  'man-city-2013': { name: 'Manuel Pellegrini', reputation: 80 },
-  'chelsea-2013': { name: 'José Mourinho', reputation: 88 },
-  'liverpool-2013': { name: 'Brendan Rodgers', reputation: 68 },
-  'arsenal-2013': { name: 'Arsène Wenger', reputation: 84 },
   'spurs-2013': { name: 'André Villas-Boas', reputation: 70 },
-  'wolfsburg-2009': { name: 'Armin Veh', reputation: 62 },
-  'dortmund-2009': { name: 'Jürgen Klopp', reputation: 74 },
 };
 
 /** A pool of coaches available to hire, each with the YEARS he was a plausible
