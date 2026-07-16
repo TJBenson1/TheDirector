@@ -152,7 +152,7 @@ describe('butterflies follow the grain of what almost happened (§ butterfly sho
   it("the near-miss follows the grain even across a title race: Barça, denied their forward, reach for Beckham", () => {
     // era-2003: United hijack Eto'o. Barça, denied, turn to the man Laporta really
     // courted — Beckham — pulling him off his real path to Real Madrid.
-    let s = createNewGame({ scenarioId: 'manchester-united-2003', seed: 'bk' });
+    let s = createNewGame({ scenarioId: 'chelsea-2003', seed: 'bk' });
     for (let i = 0; i < 8 && Number(s.clock.date.slice(0, 4)) < 2005; i++) {
       for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
       if (s.clock.window) {
@@ -239,7 +239,7 @@ describe('a near-miss consumes cleanly — no double-processing (§ butterfly sh
     // reaches Barça, the STATE must stay coherent: he is at one club only, his old
     // clubs no longer list him, and his real ledger move is recorded once — never a
     // loop or a phantom double-move at the bookkeeping level.
-    let s = createNewGame({ scenarioId: 'manchester-united-2003', seed: 'consume' });
+    let s = createNewGame({ scenarioId: 'chelsea-2003', seed: 'consume' });
     for (let i = 0; i < 10 && Number(s.clock.date.slice(0, 4)) < 2005; i++) {
       for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
       if (s.clock.window) {

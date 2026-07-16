@@ -94,8 +94,8 @@ describe('passive-fidelity — reality holds when the user does nothing (§9f)',
     expect(fallbacks(s)).toBe(0);
   });
 
-  it('era-2003 (manchester-united-2003): the Barça-counterfactual world holds to reality', () => {
-    const s = runPassive('manchester-united-2003', 'fidelity', 2011);
+  it('era-2003 (chelsea-2003): the Barça-counterfactual world holds to reality', () => {
+    const s = runPassive('chelsea-2003', 'fidelity', 2011);
     expectAt(s, {
       // The live 2003 window resolves as reality.
       cur_ronaldinho: 'barcelona',

@@ -210,6 +210,16 @@ export const SPORTING_1999: CuratedSeed[] = [
 export const WIGAN_1999: CuratedSeed[] = [
   q('wigan', 'valencia_w', 'Antonio Valencia', 1985, 'Ecuador', ['RW'], 52, 82, 2009, 25, t(8, 4, 8, 6, 3, 7)),
 ];
+// The Ronaldinho gambit as a 1999 play: the young Brazilian sits at PSG on a
+// contract that runs to his real 2003 Barça move (see LEDGER_1999_2004). A United
+// side playing forward can hijack him that summer — the counterfactual that used
+// to be its own 2003 start point. His decline-prone lifestyle profile mirrors the
+// era-2003 pack; the ceiling is high enough that four years of development make
+// him the world-class playmaker Barça really signed.
+export const PSG_1999: CuratedSeed[] = [
+  q('psg', 'ronaldinho', 'Ronaldinho', 1980, 'Brazil', ['AM', 'LW'], 83, 93, 2003, 30, t(6, 7, 9, 6, 6, 8)),
+  q('psg', 'ronaldinho_foil', 'Jérôme Leroy', 1974, 'France', ['AM'], 74, 75, 2005, 25, t(7, 5, 6, 6, 5, 7)),
+];
 export const REAL_MADRID_CASCADE_1999: CuratedSeed[] = [
   q('real_madrid', 'robben', 'Arjen Robben', 1984, 'Netherlands', ['RW', 'LW'], 60, 89, 2010, 55, t(8, 7, 9, 6, 5, 7)),
   q('real_madrid', 'sneijder', 'Wesley Sneijder', 1984, 'Netherlands', ['AM', 'CM'], 60, 88, 2010, 35, t(7, 6, 8, 6, 5, 7)),
@@ -434,6 +444,7 @@ const MAN_UTD_1999_SQUADS: Record<string, CuratedSeed[]> = {
   psv: PSV_1999,
   marseille: MARSEILLE_1999,
   sporting: SPORTING_1999,
+  psg: PSG_1999,
   wigan: WIGAN_1999,
   barcelona: [...BARCELONA_1999_EXTRA],
   bayern: [...BAYERN_1999],
@@ -455,16 +466,15 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'man-utd-1999': MAN_UTD_1999_SQUADS,
   // The Lippi-era Juventus start has its own Serie A "Golden Age" pack.
   'juventus-1995': JUVENTUS_1995_SQUADS,
-  // The 2003 United start — home of the Barça counterfactual.
-  'manchester-united-2003': MANUTD_2003_SQUADS,
   // The Galácticos-era Madrid start has its own Spanish/European pack (La Liga
   // 2000–01 + the clubs Real bought their galácticos from).
   'real-madrid-2000': REAL_MADRID_2000_SQUADS,
   'man-utd-2013': MAN_UTD_2013_SQUADS,
   'arsenal-2004': ARSENAL_2004_SQUADS,
   'liverpool-2001': LIVERPOOL_2001_SQUADS,
-  // Legacy secondary starts reuse their era's curated pack rather than duplicate
-  // it: Chelsea 2003 shares the 2003 (Roman-empire) squads.
+  // Chelsea 2003 is the home of the era-2003 pack (the Roman-empire squads plus
+  // the Barça counterfactual's source clubs). The Ronaldinho gambit itself now
+  // lives at the man-utd-1999 start, where United can hijack him playing forward.
   'chelsea-2003': MANUTD_2003_SQUADS,
   // Wenger's 1996 Arsenal now has its own dedicated era-1996 pack (real 1996-97
   // squads, no Man City in the top flight, young Ronaldo at Barça, Zidane year 1).

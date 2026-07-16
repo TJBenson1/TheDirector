@@ -76,7 +76,7 @@ describe('the continental star lens is reality-anchored (§ butterfly showcase)'
     // cracks a strong-but-not-stacked forward line, so it is genuine STRENGTH — a
     // positive continental butterfly. Flagged reality it banks nothing.
     const united = (reality: boolean) => {
-      const s = createNewGame({ scenarioId: 'manchester-united-2003', seed: 'buy' });
+      const s = createNewGame({ scenarioId: 'chelsea-2003', seed: 'buy' });
       s.clubs['man_utd']!.finances.transferBudget = 200_000_000;
       const before = s.clubs['man_utd']!.starButterfly;
       executeTransfer(s, { playerId: 'cur_ronaldinho', toClub: 'man_utd', fee: 50_000_000 }, { reality });
@@ -97,43 +97,39 @@ describe('the continental star lens is reality-anchored (§ butterfly showcase)'
   });
 });
 
-describe('the Ronaldinho gambit (playable counterfactual)', () => {
-  it("courting is required to prise Barça's spine away, and it moves the European board", () => {
-    // Passive: reality — Barça win the 2006 European Cup.
-    const base = play('manchester-united-2003', 'cf', 2010);
+describe('the Ronaldinho gambit (a man-utd-1999 counterfactual)', () => {
+  it('United, playing forward from 1999, can hijack Ronaldinho at his real 2003 move — and it bends the European board', () => {
+    // Passive: reality — Barça win the 2006 European Cup (Ronaldinho's Barça).
+    const base = play('man-utd-1999', 'cf', 2010);
     expect(clWinner(base, 2006)).toBe('barcelona');
 
-    // Counterfactual: United court and hijack Ronaldinho/Eto'o/Deco (a cold bid
-    // is refused — Barça are in pole), keep Piqué, and load up.
-    let s = createNewGame({ scenarioId: 'manchester-united-2003', seed: 'cf' });
-    const targets = ['cur_ronaldinho', 'cur_etoo', 'cur_deco'];
-    let signed = 0;
-    for (let i = 0; i < 60 && Number(s.clock.date.slice(0, 4)) < 2010; i++) {
-      for (const d of [...s.pendingDecisions]) {
-        const keep = d.id.includes('pique-barca') ? (d.choices.find((c) => c.id === 'keep')?.id ?? d.choices[0]!.id) : d.choices[0]!.id;
-        s = applyDecision(s, d.id, keep).state;
-      }
+    // Counterfactual: playing United forward, court and hijack the young Ronaldinho
+    // from PSG in the summer his real Barça move comes live (a cold bid is refused —
+    // Barça are in pole), and load up.
+    let s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'cf' });
+    let signed = false;
+    for (let i = 0; i < 120 && Number(s.clock.date.slice(0, 4)) < 2010; i++) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
       if (s.clock.window) {
         s.clubs['man_utd']!.finances.transferBudget = 900_000_000;
-        for (const pid of targets) {
-          const p = s.players[pid];
-          if (!p || p.club === 'man_utd' || p.club === 'barcelona') continue;
-          courtPlayer(s, pid);
-          courtPlayer(s, pid);
-          courtPlayer(s, pid);
-          if (evaluateApproach(s, { playerId: pid, toClub: 'man_utd' }).willing) {
-            if (attemptSigning(s, { playerId: pid, toClub: 'man_utd', fee: 45_000_000 }).ok) signed++;
+        const p = s.players['cur_ronaldinho'];
+        if (p && p.club !== 'man_utd' && p.club !== 'barcelona') {
+          courtPlayer(s, 'cur_ronaldinho');
+          courtPlayer(s, 'cur_ronaldinho');
+          courtPlayer(s, 'cur_ronaldinho');
+          if (evaluateApproach(s, { playerId: 'cur_ronaldinho', toClub: 'man_utd' }).willing) {
+            if (attemptSigning(s, { playerId: 'cur_ronaldinho', toClub: 'man_utd', fee: 45_000_000 }).ok) signed = true;
           }
         }
       }
       if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 40; s.board.warnings = 0; }
       s = advanceWindow(s).state;
     }
-    // The gambit landed the spine United really failed to sign.
-    expect(signed).toBeGreaterThanOrEqual(2);
+    // The gambit landed the man United really failed to sign.
+    expect(signed).toBe(true);
     expect(s.players.cur_ronaldinho?.club).toBe('man_utd');
-    // The European board is not identical to reality — United's super-team takes
-    // a final Barça won in the real world.
+    // The European board is no longer identical to reality — a Ronaldinho-powered
+    // United sends a butterfly through the knockout draws.
     const changed = [2006, 2007, 2008, 2009].some((y) => clWinner(s, y) !== clWinner(base, y));
     expect(changed).toBe(true);
   });
@@ -178,7 +174,7 @@ describe('continental butterfly accounting (§ butterfly showcase)', () => {
     // United land Ronaldinho (the buy lifts them); then he moves on to Barcelona
     // where reality had him. The two swings must cancel — a butterfly must not
     // leave a permanent scar from churn that reality would have shrugged off.
-    const s = createNewGame({ scenarioId: 'manchester-united-2003', seed: 'roundtrip' });
+    const s = createNewGame({ scenarioId: 'chelsea-2003', seed: 'roundtrip' });
     const before = s.clubs['man_utd']!.starButterfly;
     s.clubs['man_utd']!.finances.transferBudget = 300_000_000;
     executeTransfer(s, { playerId: 'cur_ronaldinho', toClub: 'man_utd', fee: 50_000_000 });

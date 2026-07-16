@@ -113,6 +113,28 @@ const ERA_2001_CONTEXT: ClubSeed[] = [
   { id: 'monaco', name: 'AS Monaco', prestige: 74 },
 ];
 
+// era-2003: the continental powers plus the Barça-counterfactual source clubs.
+const ERA_2003_CLUBS: ClubSeed[] = [
+  { id: 'man_utd', name: 'Manchester United', prestige: 88 },
+  { id: 'arsenal', name: 'Arsenal', prestige: 84 },
+  { id: 'chelsea', name: 'Chelsea', prestige: 78 },
+  { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
+  { id: 'barcelona', name: 'Barcelona', prestige: 84 },
+  { id: 'milan', name: 'AC Milan', prestige: 88 },
+  { id: 'juventus', name: 'Juventus', prestige: 86 },
+  { id: 'inter', name: 'Internazionale', prestige: 82 },
+  { id: 'bayern', name: 'Bayern Munich', prestige: 86 },
+];
+const ERA_2003_CONTEXT: ClubSeed[] = [
+  { id: 'valencia', name: 'Valencia', prestige: 78 },
+  { id: 'porto', name: 'FC Porto', prestige: 78 },
+  { id: 'psg', name: 'Paris Saint-Germain', prestige: 68 },
+  { id: 'sporting', name: 'Sporting CP', prestige: 70 },
+  { id: 'mallorca', name: 'RCD Mallorca', prestige: 62 },
+  { id: 'sevilla', name: 'Sevilla', prestige: 72 },
+  { id: 'monaco', name: 'AS Monaco', prestige: 72 },
+];
+
 // era-2013: the continental context sides for the post-Ferguson Premier League.
 const ERA_2013_CONTEXT: ClubSeed[] = [
   { id: 'benfica', name: 'Benfica', prestige: 76 },
@@ -237,6 +259,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'psv', name: 'PSV Eindhoven', prestige: 72 },
       { id: 'marseille', name: 'Olympique de Marseille', prestige: 72 },
       { id: 'sporting', name: 'Sporting CP', prestige: 68 },
+      // PSG holds the young Ronaldinho — the gambit source club (see PSG_1999).
+      { id: 'psg', name: 'Paris Saint-Germain', prestige: 70 },
       { id: 'wigan', name: 'Wigan Athletic', prestige: 52 },
     ],
     domesticLeagueId: 'eng-1',
@@ -251,8 +275,14 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     mandate: 'Turn Abramovich’s billions into the Premier League title — fast.',
     boardPatience: 70,
     boardExpectedFinish: 2,
-    clubs: ELITE_CLUBS,
-    domesticLeagueId: 'eng-1',
+    // The full era-2003 world (the Roman Empire is now the era's home start): the
+    // continental powers plus the Barça counterfactual's source clubs (PSG→
+    // Ronaldinho, Sporting→Cristiano, Mallorca→Eto'o, Porto→Deco) so those real
+    // moves — and any diversion of them — can execute.
+    clubs: ERA_2003_CLUBS,
+    contextExtra: ERA_2003_CONTEXT,
+    ownership: { chelsea: 'sugar-daddy' },
+    domesticLeagueId: 'eng-2003',
   },
   'arsenal-1996': {
     id: 'arsenal-1996',
@@ -267,41 +297,6 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     clubs: ELITE_CLUBS,
     contextExtra: ERA_1996_CONTEXT,
     domesticLeagueId: 'eng-1996',
-  },
-  'manchester-united-2003': {
-    id: 'manchester-united-2003',
-    name: 'Manchester United — 2003: The Ronaldinho Gambit',
-    startDate: '2003-07',
-    playerClub: 'man_utd',
-    mandate: 'Rebuild after Beckham — and beat Barcelona to Ronaldinho.',
-    boardPatience: 78,
-    boardExpectedFinish: 1,
-    // The Premier League is simulated; the continental powers are context, and
-    // the counterfactual's source clubs (PSG→Ronaldinho, Sporting→Cristiano,
-    // Mallorca→Eto'o, Porto→Deco) must exist for those moves — and their diversions.
-    clubs: [
-      { id: 'man_utd', name: 'Manchester United', prestige: 88 },
-      { id: 'arsenal', name: 'Arsenal', prestige: 84 },
-      { id: 'chelsea', name: 'Chelsea', prestige: 78 },
-      { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
-      { id: 'barcelona', name: 'Barcelona', prestige: 84 },
-      { id: 'milan', name: 'AC Milan', prestige: 88 },
-      { id: 'juventus', name: 'Juventus', prestige: 86 },
-      { id: 'inter', name: 'Internazionale', prestige: 82 },
-      { id: 'bayern', name: 'Bayern Munich', prestige: 86 },
-    ],
-    contextExtra: [
-      { id: 'valencia', name: 'Valencia', prestige: 78 },
-      { id: 'porto', name: 'FC Porto', prestige: 78 },
-      { id: 'psg', name: 'Paris Saint-Germain', prestige: 68 },
-      { id: 'sporting', name: 'Sporting CP', prestige: 70 },
-      { id: 'mallorca', name: 'RCD Mallorca', prestige: 62 },
-      { id: 'sevilla', name: 'Sevilla', prestige: 72 },
-      { id: 'monaco', name: 'AS Monaco', prestige: 72 },
-    ],
-    // Abramovich has just arrived at Chelsea; United carry no special debt.
-    ownership: { chelsea: 'sugar-daddy' },
-    domesticLeagueId: 'eng-2003',
   },
   'juventus-1995': {
     id: 'juventus-1995',
