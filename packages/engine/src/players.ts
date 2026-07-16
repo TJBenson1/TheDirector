@@ -226,6 +226,67 @@ export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
   return player;
 }
 
+/**
+ * Instantiate a curated real player from a seed into `clubId` (near-miss
+ * completions, §16). Mirrors the academy-graduate build. The caller passes a
+ * FORKED rng so the spawn is deterministic without perturbing the main stream.
+ */
+export function instantiateCuratedPlayer(
+  state: GameState,
+  seed: {
+    id: PlayerId; name: string; birthYear: number; nationality: string; positions: string[];
+    ability: number; potentialCeiling: number; contractUntil: number; injuryProneness: number;
+    personality: PlayerState['personality']; latentCeiling?: number; archetype?: string;
+  },
+  clubId: ClubId,
+  rng: Rng,
+): PlayerState {
+  const club = state.clubs[clubId];
+  const year = Number(state.clock.date.slice(0, 4));
+  const age = year - seed.birthYear;
+  const positions = seed.positions as Position[];
+  const pos0 = positions[0] ?? 'CM';
+  const ceiling = seed.potentialCeiling;
+  const player: PlayerState = {
+    id: seed.id,
+    name: seed.name,
+    birthYear: seed.birthYear,
+    nationality: seed.nationality,
+    positions: [...positions],
+    club: clubId,
+    contractUntil: seed.contractUntil,
+    wage: 0,
+    ability: seed.ability,
+    potentialCeiling: ceiling,
+    birthCeiling: ceiling,
+    ...(seed.latentCeiling !== undefined ? { latentCeiling: seed.latentCeiling } : {}),
+    personality: { ...seed.personality },
+    injuryProneness: seed.injuryProneness,
+    curated: true,
+    fitness: 100,
+    morale: 80,
+    form: 0,
+    injury: null,
+    injuryHistory: 0,
+    wonderkid: ceiling >= 85 && age <= 21,
+    benchedDevSeasons: 0,
+    reachedPotential: false,
+    lastSeason: null,
+    seasonMonthsInjured: 0,
+    adaptation: null,
+    resistance: buildResistance(seed.personality, seed.nationality, age, seed.ability, rng),
+    agitation: 0,
+  };
+  player.attributes = buildAttributes(seed.ability, seed.archetype ?? defaultArchetypeFor(pos0), pos0);
+  player.wage = suggestWage(player, year);
+  state.players[player.id] = player;
+  if (club) {
+    club.squad.push(player.id);
+    if (club.leagueId !== null) recomputeClubStrength(state, club.id);
+  }
+  return player;
+}
+
 /** Generate a full procedural squad for a club, targeting its base strength. */
 export function generateSquad(
   clubId: ClubId,

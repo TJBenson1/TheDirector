@@ -321,21 +321,33 @@ Real, well-documented deals that collapsed or were passed up — offered to the
 user as a counterfactual (`NearMissEntry` in `ledger.ts`, executed in
 `ledgerExec.ts::executeNearMisses`). Doing nothing reproduces history.
 
-- ✅ **Done (mechanism + first entries):** the type + decision flow (near-miss-in
-  / near-miss-out, `realTo` sends him to his real club on a pass, AI-only resolves
-  to reality silently). Seeded: **Batistuta** (Inter chased him; Roma really got
-  him, 2000), **Fàbregas** & **Baines** (the Moyes-2013 bids United bottled; both
-  stayed put). Verified end-to-end (`harness/src/moyesNearMiss.ts`).
+- ✅ **Mechanism + a 60+ database (shipped).** Two kinds of `NearMissEntry`:
+  *legacy* (references an already-curated player, `realTo` sends him to his real
+  club on a pass) and **seed-based** (`nm()` in `ledger.ts`) — a self-contained
+  player seed so the subject need NOT be pre-curated; he is spawned at the user's
+  club (via `instantiateCuratedPlayer`, forked rng) ONLY if the deal is completed.
+  Each entry now carries a **`reason`** (hijack / other-target / manager / fee /
+  wages / player-choice / board / medical) — the documented cause it collapsed,
+  shown in the offer and (for a hijack) encoded by `realTo`. Completing one is a
+  **guaranteed signing in the real window** — more likely than an ordinary target
+  (reality had it all but done). **60+ web-verified deals** across every playable
+  club/era: United (Ronaldinho, Robben, Sneijder, Fàbregas, van Nistelrooy,
+  Hazard, Thiago, Kroos, Bale…), Arsenal (a 17-yr-old Ronaldo, Suárez £40m+£1,
+  Mata, Alonso), Chelsea (Gerrard, Ribéry, Modrić, Robinho), Liverpool (Dani Alves,
+  Barry, Simão-at-the-airport), Real/Barça (Cristiano '08, Kaká, Beckham's Barça
+  refusal, the Ronaldinho three-way), Inter (Batistuta, the Ronaldinho saga),
+  Bayern (Lewandowski, Reus, De Bruyne). **Calibration-safe:** the offer's FIRST
+  option is "let history stand", so the harness's passive/first-choice bots
+  reproduce reality → man-utd-1999 stays byte-identical (18/18). Guarded by
+  `nearmiss.test.ts`.
 - **Still to do:**
-  - **Bale (→ Madrid) and Thiago (→ Bayern)** as Moyes near-misses. Both already
-    have a real ledger move, so a near-miss would double-process them. Needs the
-    near-miss to CLAIM a player who also has a ledger entry: suppress/defer his
-    ledger move while the near-miss is pending, and on a pass reproduce it
-    (including realising the funder id for `enabledBy` chains, e.g. Özil).
-  - **Gerrard → Chelsea (2005)** for a Liverpool save; **Alonso → Arsenal (2004)**;
-    Real Madrid galáctico near-misses (real-madrid-2000).
-  - An **AI-club butterfly** option: let a deprived rival occasionally COMPLETE a
-    near-miss it really bottled (currently AI near-misses always hold reality).
+  - An **AI-club butterfly**: let a deprived rival occasionally COMPLETE a
+    near-miss it really bottled (currently non-user near-misses hold reality). The
+    calibration-safe path is a forked-rng completion that spawns into a *context*
+    club only (a simulated squad would reshuffle the development stream).
+  - **Legacy↔ledger de-dup** for subjects who ALSO have a real ledger move (defer
+    the ledger move while the near-miss is pending), so a curated subject can be a
+    near-miss without double-processing.
 
 ## Hand-played Reyes career (arsenal-2004)
 Run an interactive `pnpm play arsenal-2004` career that deliberately centres

@@ -142,15 +142,47 @@ export interface RealInjuryEntry {
  *   - When the user is not involved, reality holds automatically (see `realTo`).
  * Doing nothing always reproduces history — that is the whole point.
  */
+/** Why an almost-deal collapsed in reality — the documented cause, linked to the
+ *  narrative and (for a hijack) to `realTo`. */
+export type NearMissReason =
+  | 'hijack' // a rival swooped in and signed him (realTo = that rival)
+  | 'other-target' // the club signed someone else instead
+  | 'manager' // a manager/board declined, or a manager elsewhere blocked it
+  | 'fee' // clubs couldn't agree a fee
+  | 'wages' // wages / personal terms collapsed
+  | 'player-choice' // the player chose to go elsewhere / stay
+  | 'board' // the SELLING club refused (he stayed)
+  | 'medical'; // failed a medical
+
+/** A self-contained player seed carried by a near-miss so the subject need not be
+ *  pre-curated: the player is spawned (at the user's club) only if the deal is
+ *  actually completed. Mirrors the academy-graduate seed shape. */
+export interface NearMissSeed {
+  id: PlayerId;
+  name: string;
+  birthYear: number;
+  nationality: string;
+  positions: string[];
+  ability: number;
+  potentialCeiling: number;
+  contractUntil: number;
+  injuryProneness: number;
+  personality: ReturnType<typeof per>;
+  latentCeiling?: number;
+  archetype?: string;
+}
+
 export interface NearMissEntry {
-  /** Curated player who must still be at `from` for the near-miss to be live. */
+  /** The player. For a seed-based entry this is `seed.id` (a virtual player,
+   *  spawned only on completion); for a legacy entry it is an already-curated id
+   *  who must still be at `from` for the near-miss to be live. */
   playerId: PlayerId;
   from: ClubId | null;
   /** The club that ALMOST signed him (the counterfactual buyer). */
   almostTo: ClubId;
   /** Where he ACTUALLY ended up if the deal collapsed. Omit/null = he stayed at
    *  `from` (Cesc, Baines). Set it (Batistuta → Roma) and reality moves him there
-   *  when the user passes or isn't involved. */
+   *  when the user passes (legacy/curated entries only). */
   realTo?: ClubId | null;
   window: YearMonth;
   /** The fee the `almostTo` club would have paid (the counterfactual deal). */
@@ -159,6 +191,65 @@ export interface NearMissEntry {
   realFee?: number;
   /** One-line narrative of what really happened (shown in the decision). */
   note: string;
+  /** Why it collapsed in reality (M-nearmiss). */
+  reason?: NearMissReason;
+  /** Self-contained seed for a not-otherwise-curated subject (spawn on sign). */
+  seed?: NearMissSeed;
+}
+
+/**
+ * Concise builder for a seed-based near-miss from the flat research format. The
+ * counterfactual is offered to the user in the real `window`, and (unlike a
+ * speculative transfer) completing it is a GUARANTEED signing — reality had the
+ * deal all but done, so it is more likely to happen than an ordinary target.
+ */
+export function nm(o: {
+  reason: NearMissReason;
+  window: YearMonth;
+  from: ClubId | null;
+  almostTo: ClubId;
+  realTo?: ClubId | null;
+  fee: number;
+  realFee?: number;
+  id: string;
+  name: string;
+  birthYear: number;
+  nationality: string;
+  positions: string[];
+  ability: number;
+  ceiling: number;
+  proneness: number;
+  per: [number, number, number, number, number, number];
+  note: string;
+  latentCeiling?: number;
+  archetype?: string;
+}): NearMissEntry {
+  const id = o.id.startsWith('nm_') ? o.id : `nm_${o.id}`;
+  return {
+    playerId: id,
+    from: o.from,
+    almostTo: o.almostTo,
+    realTo: o.realTo ?? null,
+    window: o.window,
+    fee: o.fee,
+    realFee: o.realFee ?? o.fee,
+    note: o.note,
+    reason: o.reason,
+    seed: {
+      id,
+      name: o.name,
+      birthYear: o.birthYear,
+      nationality: o.nationality,
+      positions: o.positions,
+      ability: o.ability,
+      potentialCeiling: o.ceiling,
+      contractUntil: Number(o.window.slice(0, 4)) + 4,
+      injuryProneness: o.proneness,
+      personality: per(...o.per),
+      ...(o.latentCeiling !== undefined ? { latentCeiling: o.latentCeiling } : {}),
+      ...(o.archetype ? { archetype: o.archetype } : {}),
+    },
+  };
 }
 
 /** The key a near-miss is tracked by (one presentation per player per window). */
@@ -637,6 +728,98 @@ const NEARMISS_1998: NearMissEntry[] = [
     realFee: 23_000_000,
     note: 'Inter courted Batistuta for years; Roma won the race in 2000.',
   },
+  // Inter's other almost-deals (seed-based). Offered in the inter-1998 world.
+  nm({ reason: 'player-choice', window: '2001-07', from: 'gremio', almostTo: 'inter', realTo: 'psg', fee: 5_000_000, realFee: 5_000_000, id: 'ronaldinho_psg', name: 'Ronaldinho', birthYear: 1980, nationality: 'Brazil', positions: ['AM', 'LW'], ability: 76, ceiling: 91, proneness: 40, per: [5, 6, 7, 4, 6, 8], note: 'Moratti met his brother in Mexico, but Ronaldinho feared being overshadowed by Ronaldo and chose PSG instead.' }),
+  nm({ reason: 'hijack', window: '2007-01', from: 'real_madrid', almostTo: 'inter', realTo: 'milan', fee: 8_000_000, realFee: 8_000_000, id: 'ronaldo_return', name: 'Ronaldo', birthYear: 1976, nationality: 'Brazil', positions: ['ST'], ability: 79, ceiling: 90, proneness: 55, per: [4, 7, 6, 5, 6, 7], note: 'Ronaldo phoned Moratti asking to return, but Inter turned him down and rivals Milan swooped for the out-of-favour striker.' }),
+  nm({ reason: 'hijack', window: '2002-07', from: 'barcelona', almostTo: 'inter', realTo: 'milan', fee: 0, realFee: 0, id: 'rivaldo', name: 'Rivaldo', birthYear: 1972, nationality: 'Brazil', positions: ['AM', 'LW'], ability: 83, ceiling: 88, proneness: 38, per: [6, 7, 6, 5, 5, 6], note: 'Inter were among the suitors for the free-agent Ballon d’Or winner, but Berlusconi’s Milan signed him on a free.' }),
+  nm({ reason: 'player-choice', window: '2006-08', from: 'corinthians', almostTo: 'inter', realTo: 'west_ham', fee: 0, realFee: 0, id: 'tevez', name: 'Carlos Tévez', birthYear: 1984, nationality: 'Argentina', positions: ['ST', 'AM'], ability: 79, ceiling: 86, proneness: 42, per: [6, 7, 8, 4, 7, 6], note: 'His agent shopped him to Inter but couldn’t agree a deal, so the third-party-owned striker landed at West Ham.' }),
+  nm({ reason: 'hijack', window: '2008-07', from: 'barcelona', almostTo: 'inter', realTo: 'milan', fee: 22_000_000, realFee: 22_000_000, id: 'ronaldinho_milan', name: 'Ronaldinho', birthYear: 1980, nationality: 'Brazil', positions: ['AM', 'LW'], ability: 81, ceiling: 91, proneness: 45, per: [4, 7, 6, 5, 6, 7], note: 'Moratti vowed Inter would "fight" for the Barça outcast, but Milan won the derby tug-of-war for €22m.' }),
+];
+
+// ── "Almost happened" near-misses, seed-based (nm()) — one set per era pack ───
+// Doing nothing reproduces reality; the user can rewrite it in the real window.
+
+/** era-1995-2005 world (man-utd-1999, chelsea-2003, real-madrid-2000,
+ *  barcelona-1999): each entry offers only to the scenario whose club it targets. */
+const NEARMISS_1999_2014: NearMissEntry[] = [
+  // Manchester United — the ones that got away (1999–2014).
+  nm({ reason: 'medical', window: '2000-07', from: 'psv', almostTo: 'man_utd', realTo: null, fee: 18_500_000, realFee: 18_500_000, id: 'van_nistelrooy', name: 'Ruud van Nistelrooy', birthYear: 1976, nationality: 'Netherlands', positions: ['ST'], ability: 82, ceiling: 88, proneness: 50, per: [9, 5, 8, 6, 3, 7], note: 'United agreed an £18.5m deal but he failed the medical on a knee ligament, then ruptured his ACL — the move slipped to 2001.' }),
+  nm({ reason: 'hijack', window: '2003-07', from: 'psg', almostTo: 'man_utd', realTo: 'barcelona', fee: 19_000_000, realFee: 21_000_000, id: 'ronaldinho', name: 'Ronaldinho', birthYear: 1980, nationality: 'Brazil', positions: ['AM', 'LW'], ability: 84, ceiling: 89, proneness: 35, per: [6, 6, 8, 4, 5, 8], note: 'United were hours from announcing him as the Beckham replacement, but he changed his mind and chose Barcelona.' }),
+  nm({ reason: 'hijack', window: '2004-07', from: 'psv', almostTo: 'man_utd', realTo: 'chelsea', fee: 5_000_000, realFee: 12_000_000, id: 'robben', name: 'Arjen Robben', birthYear: 1984, nationality: 'Netherlands', positions: ['RW', 'LW'], ability: 80, ceiling: 88, proneness: 50, per: [7, 6, 8, 5, 5, 7], note: 'Ferguson met him but United never followed up their low PSV bid, so Chelsea swooped with £12m.' }),
+  nm({ reason: 'player-choice', window: '2006-07', from: 'bayern', almostTo: 'man_utd', realTo: 'chelsea', fee: 0, realFee: 0, id: 'ballack', name: 'Michael Ballack', birthYear: 1976, nationality: 'Germany', positions: ['CM', 'AM'], ability: 85, ceiling: 86, proneness: 40, per: [8, 7, 8, 5, 4, 6], note: 'A free agent courted by United, he opted for Chelsea’s terms instead.' }),
+  nm({ reason: 'player-choice', window: '2007-07', from: 'atletico', almostTo: 'man_utd', realTo: 'liverpool', fee: 20_000_000, realFee: 20_000_000, id: 'torres', name: 'Fernando Torres', birthYear: 1984, nationality: 'Spain', positions: ['ST'], ability: 83, ceiling: 88, proneness: 40, per: [7, 5, 8, 7, 4, 7], note: 'Ferguson chased him for years, but Atlético were reluctant and Torres had his heart set on Liverpool.' }),
+  nm({ reason: 'player-choice', window: '2009-07', from: 'lyon', almostTo: 'man_utd', realTo: 'real_madrid', fee: 30_000_000, realFee: 30_000_000, id: 'benzema', name: 'Karim Benzema', birthYear: 1987, nationality: 'France', positions: ['ST'], ability: 81, ceiling: 88, proneness: 30, per: [6, 6, 8, 5, 4, 6], note: 'United tabled a superior offer, but he chose his dream move to the Bernabéu.' }),
+  nm({ reason: 'manager', window: '2010-08', from: 'bremen', almostTo: 'man_utd', realTo: 'real_madrid', fee: 15_000_000, realFee: 15_000_000, id: 'ozil', name: 'Mesut Özil', birthYear: 1988, nationality: 'Germany', positions: ['AM'], ability: 80, ceiling: 87, proneness: 30, per: [7, 5, 7, 5, 4, 6], note: 'Rooney urged Ferguson to sign him after the World Cup, but the manager declined and he joined Real Madrid.' }),
+  nm({ reason: 'hijack', window: '2010-07', from: 'valencia', almostTo: 'man_utd', realTo: 'barcelona', fee: 30_000_000, realFee: 34_000_000, id: 'villa', name: 'David Villa', birthYear: 1981, nationality: 'Spain', positions: ['ST', 'LW'], ability: 85, ceiling: 86, proneness: 35, per: [8, 6, 8, 6, 4, 6], note: 'Ferguson long admired him and the player was keen, but Barcelona won the race.' }),
+  nm({ reason: 'wages', window: '2011-08', from: 'inter', almostTo: 'man_utd', realTo: null, fee: 28_000_000, realFee: 28_000_000, id: 'sneijder', name: 'Wesley Sneijder', birthYear: 1984, nationality: 'Netherlands', positions: ['AM', 'CM'], ability: 85, ceiling: 87, proneness: 40, per: [6, 7, 7, 5, 5, 6], note: 'Months of talks collapsed over his €200k-a-week wages and Inter’s fee, and he stayed in Milan.' }),
+  nm({ reason: 'hijack', window: '2012-06', from: 'lille', almostTo: 'man_utd', realTo: 'chelsea', fee: 32_000_000, realFee: 32_000_000, id: 'hazard', name: 'Eden Hazard', birthYear: 1991, nationality: 'Belgium', positions: ['LW', 'AM'], ability: 82, ceiling: 90, proneness: 30, per: [7, 6, 8, 5, 4, 7], note: 'United had agreed fee and terms but baulked at his agent’s demands, so Chelsea signed him.' }),
+  nm({ reason: 'manager', window: '2013-07', from: 'barcelona', almostTo: 'man_utd', realTo: 'bayern', fee: 17_000_000, realFee: 22_000_000, id: 'thiago', name: 'Thiago Alcántara', birthYear: 1991, nationality: 'Spain', positions: ['CM', 'AM'], ability: 79, ceiling: 87, proneness: 40, per: [8, 5, 7, 5, 4, 7], note: 'He wanted the move on a 24-hour ultimatum, but Moyes prioritised Fellaini and Guardiola took him to Bayern.' }),
+  nm({ reason: 'board', window: '2013-08', from: 'everton', almostTo: 'man_utd', realTo: null, fee: 15_000_000, realFee: 15_000_000, id: 'baines', name: 'Leighton Baines', birthYear: 1984, nationality: 'England', positions: ['LB'], ability: 82, ceiling: 83, proneness: 30, per: [8, 3, 6, 8, 2, 7], note: 'United made multiple bids but Everton rejected them all and he stayed at Goodison.' }),
+  nm({ reason: 'fee', window: '2013-08', from: 'athletic', almostTo: 'man_utd', realTo: null, fee: 30_000_000, realFee: 30_000_000, id: 'herrera', name: 'Ander Herrera', birthYear: 1989, nationality: 'Spain', positions: ['CM', 'AM'], ability: 78, ceiling: 83, proneness: 35, per: [8, 4, 7, 6, 3, 6], note: 'The move collapsed an hour before deadline day over his buyout clause; United signed him a year later.' }),
+  nm({ reason: 'board', window: '2013-08', from: 'barcelona', almostTo: 'man_utd', realTo: null, fee: 30_000_000, realFee: 30_000_000, id: 'fabregas', name: 'Cesc Fàbregas', birthYear: 1987, nationality: 'Spain', positions: ['CM', 'AM'], ability: 84, ceiling: 86, proneness: 30, per: [8, 6, 7, 6, 4, 7], note: 'Moyes made repeated bids but Barcelona refused to sell and he stayed at the Camp Nou.' }),
+  // Chelsea — offered in the chelsea-2003 world.
+  nm({ reason: 'player-choice', window: '2003-07', from: 'psg', almostTo: 'chelsea', realTo: 'barcelona', fee: 21_000_000, realFee: 21_000_000, id: 'ronaldinho_che', name: 'Ronaldinho', birthYear: 1980, nationality: 'Brazil', positions: ['AM', 'LW'], ability: 83, ceiling: 90, proneness: 40, per: [5, 6, 8, 4, 6, 8], note: 'Chelsea and United both chased him in Abramovich’s first summer, but he honoured a promise to Rosell and picked Barcelona.' }),
+  nm({ reason: 'player-choice', window: '2005-07', from: 'liverpool', almostTo: 'chelsea', realTo: null, fee: 32_000_000, realFee: 32_000_000, id: 'gerrard', name: 'Steven Gerrard', birthYear: 1980, nationality: 'England', positions: ['CM', 'AM'], ability: 86, ceiling: 88, proneness: 35, per: [9, 5, 8, 9, 4, 7], note: 'Mourinho "did everything" to sign him, but Gerrard rejected the move a day after handing in a transfer request.' }),
+  nm({ reason: 'board', window: '2008-08', from: 'bayern', almostTo: 'chelsea', realTo: null, fee: 52_000_000, realFee: 52_000_000, id: 'ribery', name: 'Franck Ribéry', birthYear: 1983, nationality: 'France', positions: ['LW', 'RW'], ability: 84, ceiling: 88, proneness: 40, per: [7, 6, 7, 7, 5, 6], note: 'Chelsea tabled a huge offer but Bayern flatly refused to sell their newly-signed winger.' }),
+  nm({ reason: 'hijack', window: '2008-08', from: 'real_madrid', almostTo: 'chelsea', realTo: 'man_city', fee: 30_000_000, realFee: 32_000_000, id: 'robinho', name: 'Robinho', birthYear: 1984, nationality: 'Brazil', positions: ['LW', 'ST'], ability: 82, ceiling: 86, proneness: 45, per: [4, 7, 6, 3, 7, 5], note: 'Chelsea led the chase and Robinho wanted it, but a freshly-rich Manchester City gazumped them on deadline day.' }),
+  nm({ reason: 'board', window: '2011-08', from: 'spurs', almostTo: 'chelsea', realTo: null, fee: 27_000_000, realFee: 27_000_000, id: 'modric', name: 'Luka Modrić', birthYear: 1985, nationality: 'Croatia', positions: ['CM', 'AM'], ability: 83, ceiling: 88, proneness: 30, per: [9, 4, 8, 6, 3, 8], note: 'Modrić wanted the switch but Levy refused to sell to a London rival, rejecting three Chelsea bids.' }),
+  nm({ reason: 'player-choice', window: '2010-08', from: 'santos', almostTo: 'chelsea', realTo: null, fee: 20_000_000, realFee: 20_000_000, id: 'neymar_che', name: 'Neymar', birthYear: 1992, nationality: 'Brazil', positions: ['LW', 'ST'], ability: 74, ceiling: 90, proneness: 45, per: [5, 7, 8, 5, 6, 7], note: 'Chelsea bid ~£20m for the teenager, but he chose to stay at Santos before joining Barcelona in 2013.' }),
+  nm({ reason: 'fee', window: '2013-07', from: 'napoli', almostTo: 'chelsea', realTo: 'psg', fee: 45_000_000, realFee: 55_000_000, id: 'cavani', name: 'Edinson Cavani', birthYear: 1987, nationality: 'Uruguay', positions: ['ST'], ability: 84, ceiling: 86, proneness: 30, per: [8, 5, 7, 6, 3, 6], note: 'Chelsea pursued him but baulked at Napoli’s buyout clause, letting PSG meet the price.' }),
+  // Real Madrid — offered in the real-madrid-2000 world.
+  nm({ reason: 'board', window: '2008-07', from: 'man_utd', almostTo: 'real_madrid', realTo: null, fee: 75_000_000, realFee: 75_000_000, id: 'cristiano_2008', name: 'Cristiano Ronaldo', birthYear: 1985, nationality: 'Portugal', positions: ['RW', 'LW'], ability: 89, ceiling: 92, proneness: 30, per: [8, 9, 10, 4, 5, 8], note: 'Ronaldo agreed terms with Madrid but Ferguson refused to sell, keeping him a year before the 2009 world record.' }),
+  nm({ reason: 'board', window: '2008-07', from: 'milan', almostTo: 'real_madrid', realTo: null, fee: 65_000_000, realFee: 65_000_000, id: 'kaka_2008', name: 'Kaká', birthYear: 1982, nationality: 'Brazil', positions: ['AM'], ability: 87, ceiling: 88, proneness: 45, per: [9, 4, 7, 8, 3, 7], note: 'Madrid courted Kaká for years, but Milan refused to sell until finances forced their hand in 2009.' }),
+  nm({ reason: 'hijack', window: '2003-07', from: 'psg', almostTo: 'real_madrid', realTo: 'barcelona', fee: 30_000_000, realFee: 30_000_000, id: 'ronaldinho_2003', name: 'Ronaldinho', birthYear: 1980, nationality: 'Brazil', positions: ['AM', 'LW'], ability: 82, ceiling: 90, proneness: 35, per: [5, 7, 7, 5, 6, 8], note: 'Florentino prioritised Beckham over Ronaldinho, so Laporta’s Barcelona swooped instead.' }),
+  nm({ reason: 'player-choice', window: '2009-07', from: 'bayern', almostTo: 'real_madrid', realTo: null, fee: 65_000_000, realFee: 65_000_000, id: 'ribery_2009', name: 'Franck Ribéry', birthYear: 1983, nationality: 'France', positions: ['LW', 'AM'], ability: 88, ceiling: 90, proneness: 45, per: [7, 7, 9, 7, 6, 7], note: 'Madrid tabled a near-record fee but Bayern convinced Ribéry he was their Messi and he stayed.' }),
+  nm({ reason: 'medical', window: '2003-07', from: 'independiente', almostTo: 'real_madrid', realTo: 'zaragoza', fee: 15_000_000, realFee: 4_000_000, id: 'milito_2003', name: 'Gabriel Milito', birthYear: 1980, nationality: 'Argentina', positions: ['CB'], ability: 76, ceiling: 82, proneness: 55, per: [7, 5, 7, 6, 5, 6], note: 'Madrid agreed the deal but cancelled after a scan flagged his knee, and he joined Zaragoza.' }),
+  nm({ reason: 'player-choice', window: '2004-08', from: 'arsenal', almostTo: 'real_madrid', realTo: null, fee: 20_000_000, realFee: 20_000_000, id: 'vieira_2004', name: 'Patrick Vieira', birthYear: 1976, nationality: 'France', positions: ['DM', 'CM'], ability: 86, ceiling: 87, proneness: 40, per: [8, 7, 8, 6, 5, 7], note: 'With Arsenal’s acceptance and terms agreed, Vieira had a late change of heart and stayed at Highbury.' }),
+  nm({ reason: 'hijack', window: '2008-07', from: 'sevilla', almostTo: 'real_madrid', realTo: 'barcelona', fee: 30_000_000, realFee: 30_000_000, id: 'alves_2008', name: 'Dani Alves', birthYear: 1983, nationality: 'Brazil', positions: ['RB'], ability: 82, ceiling: 85, proneness: 35, per: [7, 7, 8, 6, 6, 8], note: 'Alves said he was 95% set for Madrid before Guardiola’s Barcelona gazumped the deal.' }),
+  // Barcelona — offered in the barcelona-1999 world.
+  nm({ reason: 'hijack', window: '2003-07', from: 'man_utd', almostTo: 'barcelona', realTo: 'real_madrid', fee: 25_000_000, realFee: 25_000_000, id: 'beckham_2003', name: 'David Beckham', birthYear: 1975, nationality: 'England', positions: ['RW', 'CM'], ability: 84, ceiling: 85, proneness: 25, per: [8, 8, 7, 5, 4, 7], note: 'United publicly agreed to sell Beckham to Barcelona, but he refused, insisting he would only join Real Madrid.' }),
+  nm({ reason: 'board', window: '2010-07', from: 'arsenal', almostTo: 'barcelona', realTo: null, fee: 35_000_000, realFee: 35_000_000, id: 'fabregas_2010', name: 'Cesc Fàbregas', birthYear: 1987, nationality: 'Spain', positions: ['CM', 'AM'], ability: 85, ceiling: 88, proneness: 35, per: [8, 6, 8, 6, 5, 8], note: 'Barcelona’s €35m bid was rejected by Arsenal and he stayed a year before the 2011 homecoming.' }),
+  nm({ reason: 'board', window: '2009-07', from: 'valencia', almostTo: 'barcelona', realTo: null, fee: 35_000_000, realFee: 35_000_000, id: 'villa_2009', name: 'David Villa', birthYear: 1981, nationality: 'Spain', positions: ['ST', 'LW'], ability: 85, ceiling: 86, proneness: 40, per: [8, 6, 8, 6, 5, 7], note: 'Barça and Madrid both pushed, but a cash-strapped Valencia refused to sanction any sale until 2010.' }),
+  nm({ reason: 'player-choice', window: '2011-08', from: 'santos', almostTo: 'barcelona', realTo: null, fee: 25_000_000, realFee: 25_000_000, id: 'neymar_2011', name: 'Neymar', birthYear: 1992, nationality: 'Brazil', positions: ['LW', 'ST'], ability: 80, ceiling: 89, proneness: 40, per: [6, 8, 9, 5, 6, 8], note: 'Barcelona secured a pre-agreement but Neymar signed a Santos extension to delay the switch to 2013.' }),
+  nm({ reason: 'player-choice', window: '2006-07', from: 'arsenal', almostTo: 'barcelona', realTo: null, fee: 24_000_000, realFee: 24_000_000, id: 'henry_2006', name: 'Thierry Henry', birthYear: 1977, nationality: 'France', positions: ['ST', 'LW'], ability: 88, ceiling: 89, proneness: 35, per: [7, 7, 8, 6, 5, 7], note: 'Chased by Barcelona after the 2006 final, Henry pledged loyalty and signed a new Arsenal deal before moving in 2007.' }),
+  nm({ reason: 'hijack', window: '2012-08', from: 'athletic', almostTo: 'barcelona', realTo: 'bayern', fee: 30_000_000, realFee: 40_000_000, id: 'javimartinez_2012', name: 'Javi Martínez', birthYear: 1988, nationality: 'Spain', positions: ['DM', 'CB'], ability: 82, ceiling: 84, proneness: 30, per: [8, 5, 7, 7, 4, 7], note: 'Barcelona held talks but baulked at his €40m clause, and Bayern paid it in full.' }),
+];
+
+/** era-2004 world (arsenal-2004) — Arsenal's ones that got away. */
+const NEARMISS_2004_NM: NearMissEntry[] = [
+  nm({ reason: 'hijack', window: '2003-07', from: 'sporting', almostTo: 'arsenal', realTo: 'man_utd', fee: 4_500_000, realFee: 12_240_000, id: 'ronaldo_arsenal', name: 'Cristiano Ronaldo', birthYear: 1985, nationality: 'Portugal', positions: ['RW', 'LW'], ability: 72, ceiling: 94, proneness: 25, per: [9, 8, 10, 5, 5, 8], note: 'Wenger met Ronaldo three times with a deal all but agreed, but Arsenal dithered and Ferguson swooped after Sporting beat United in a friendly.' }),
+  nm({ reason: 'hijack', window: '2013-07', from: 'real_madrid', almostTo: 'arsenal', realTo: 'napoli', fee: 23_000_000, realFee: 34_500_000, id: 'higuain_arsenal', name: 'Gonzalo Higuaín', birthYear: 1987, nationality: 'Argentina', positions: ['ST'], ability: 84, ceiling: 86, proneness: 30, per: [7, 6, 7, 6, 5, 7], note: 'Arsenal had terms agreed and Madrid cleared talks, but the Gunners hesitated on the fee and Napoli moved in.' }),
+  nm({ reason: 'board', window: '2013-07', from: 'liverpool', almostTo: 'arsenal', realTo: null, fee: 40_000_001, realFee: 40_000_001, id: 'suarez_arsenal', name: 'Luis Suárez', birthYear: 1987, nationality: 'Uruguay', positions: ['ST', 'LW'], ability: 88, ceiling: 90, proneness: 30, per: [7, 8, 9, 5, 9, 8], note: 'Arsenal’s famous £40,000,001 bid was rejected out of hand by Liverpool’s owners, who kept him a further season.' }),
+  nm({ reason: 'hijack', window: '2011-08', from: 'valencia', almostTo: 'arsenal', realTo: 'chelsea', fee: 20_000_000, realFee: 23_500_000, id: 'mata_arsenal', name: 'Juan Mata', birthYear: 1988, nationality: 'Spain', positions: ['AM', 'RW'], ability: 82, ceiling: 85, proneness: 25, per: [8, 5, 8, 6, 3, 8], note: 'Mata had agreed personal terms with Arsenal, but Wenger’s dithering let Chelsea gazump the deal.' }),
+  nm({ reason: 'board', window: '2012-07', from: 'rennes', almostTo: 'arsenal', realTo: null, fee: 17_000_000, realFee: 17_000_000, id: 'mvila_arsenal', name: 'Yann M’Vila', birthYear: 1990, nationality: 'France', positions: ['DM', 'CM'], ability: 78, ceiling: 84, proneness: 35, per: [5, 7, 7, 5, 7, 5], note: 'Arsenal chased him all summer but Rennes simply refused to sell and he stayed put.' }),
+  nm({ reason: 'fee', window: '2008-08', from: 'liverpool', almostTo: 'arsenal', realTo: 'real_madrid', fee: 15_000_000, realFee: 30_000_000, id: 'alonso_arsenal', name: 'Xabi Alonso', birthYear: 1981, nationality: 'Spain', positions: ['CM', 'DM'], ability: 85, ceiling: 87, proneness: 30, per: [9, 5, 8, 6, 3, 8], note: 'Alonso had an agreement to join Arsenal and Fàbregas lobbied all summer, but the Gunners fell ~£3m short.' }),
+  nm({ reason: 'board', window: '2014-01', from: 'schalke', almostTo: 'arsenal', realTo: null, fee: 25_000_000, realFee: 25_000_000, id: 'draxler_arsenal', name: 'Julian Draxler', birthYear: 1993, nationality: 'Germany', positions: ['LW', 'AM'], ability: 77, ceiling: 87, proneness: 35, per: [7, 6, 7, 6, 5, 6], note: 'Arsenal bid around £25m, but Schalke rejected it and Draxler was never given the option to move.' }),
+];
+
+/** era-2001 world (liverpool-2001) — Liverpool's ones that got away. */
+const NEARMISS_2001_NM: NearMissEntry[] = [
+  nm({ reason: 'manager', window: '2002-05', from: 'psg', almostTo: 'liverpool', realTo: 'man_city', fee: 10_000_000, realFee: 13_000_000, id: 'anelka_liverpool', name: 'Nicolas Anelka', birthYear: 1979, nationality: 'France', positions: ['ST'], ability: 82, ceiling: 87, proneness: 30, per: [6, 8, 8, 4, 7, 6], note: 'Anelka impressed on loan and wanted to stay, but Houllier chose Diouf instead and he joined Man City.' }),
+  nm({ reason: 'board', window: '2006-01', from: 'benfica', almostTo: 'liverpool', realTo: null, fee: 8_000_000, realFee: 8_000_000, id: 'simao_liverpool', name: 'Simão Sabrosa', birthYear: 1979, nationality: 'Portugal', positions: ['LW', 'RW'], ability: 83, ceiling: 85, proneness: 35, per: [8, 6, 7, 6, 5, 6], note: 'Simão was at the airport to fly to Liverpool when Benfica’s president phoned to say he had no authorisation to leave.' }),
+  nm({ reason: 'fee', window: '2006-07', from: 'sevilla', almostTo: 'liverpool', realTo: 'barcelona', fee: 8_000_000, realFee: 23_000_000, id: 'alves_liverpool', name: 'Dani Alves', birthYear: 1983, nationality: 'Brazil', positions: ['RB'], ability: 82, ceiling: 88, proneness: 25, per: [8, 7, 9, 5, 6, 8], note: 'Benítez all but agreed a deal, but Liverpool couldn’t meet Sevilla’s price and spent the money on Kuyt; Alves later joined Barcelona.' }),
+  nm({ reason: 'fee', window: '2008-07', from: 'aston_villa', almostTo: 'liverpool', realTo: null, fee: 8_000_000, realFee: 8_000_000, id: 'barry_liverpool', name: 'Gareth Barry', birthYear: 1981, nationality: 'England', positions: ['CM', 'DM'], ability: 81, ceiling: 83, proneness: 25, per: [8, 5, 7, 6, 4, 7], note: 'Liverpool chased Barry all summer but refused the extra £2m Villa wanted; he joined Man City a year later.' }),
+  nm({ reason: 'hijack', window: '2012-08', from: 'fulham', almostTo: 'liverpool', realTo: 'spurs', fee: 6_000_000, realFee: 6_000_000, id: 'dempsey_liverpool', name: 'Clint Dempsey', birthYear: 1983, nationality: 'United States', positions: ['AM', 'ST'], ability: 80, ceiling: 82, proneness: 30, per: [8, 6, 8, 6, 5, 7], note: 'A deadline-day deal fell apart when Henderson refused to move to Fulham as a makeweight, and Tottenham swooped.' }),
+  nm({ reason: 'player-choice', window: '2013-08', from: 'anzhi', almostTo: 'liverpool', realTo: 'chelsea', fee: 30_000_000, realFee: 32_000_000, id: 'willian_liverpool', name: 'Willian', birthYear: 1988, nationality: 'Brazil', positions: ['AM', 'RW'], ability: 82, ceiling: 84, proneness: 25, per: [8, 6, 8, 5, 4, 7], note: 'Willian turned down Liverpool because he wanted London, then Chelsea hijacked his near-complete Spurs medical.' }),
+];
+
+/** era-2009 world (bayern-2009) — Bayern's ones that got away. */
+const NEARMISS_2009_NM: NearMissEntry[] = [
+  nm({ reason: 'hijack', window: '2011-07', from: 'leverkusen', almostTo: 'bayern', realTo: 'juventus', fee: 11_000_000, realFee: 11_000_000, id: 'vidal_2011', name: 'Arturo Vidal', birthYear: 1987, nationality: 'Chile', positions: ['CM', 'DM'], ability: 81, ceiling: 86, proneness: 40, per: [7, 6, 8, 5, 7, 8], note: 'Heynckes wanted him but Leverkusen refused to strengthen a rival, and Juventus swooped (Bayern finally got him in 2015).' }),
+  nm({ reason: 'hijack', window: '2012-01', from: 'gladbach', almostTo: 'bayern', realTo: 'dortmund', fee: 17_000_000, realFee: 17_000_000, id: 'reus', name: 'Marco Reus', birthYear: 1989, nationality: 'Germany', positions: ['AM', 'LW'], ability: 82, ceiling: 87, proneness: 55, per: [7, 5, 7, 8, 3, 7], note: 'Bayern courted him, but Dortmund triggered his €17.1m clause and the boyhood BVB fan went home.' }),
+  nm({ reason: 'board', window: '2013-07', from: 'dortmund', almostTo: 'bayern', realTo: null, fee: 25_000_000, realFee: 25_000_000, id: 'lewandowski', name: 'Robert Lewandowski', birthYear: 1988, nationality: 'Poland', positions: ['ST'], ability: 85, ceiling: 89, proneness: 28, per: [9, 6, 9, 5, 3, 8], note: 'Bayern agreed personal terms in 2013 but Dortmund refused to sell to a rival after the Götze row, so he stayed a year and left on a free.' }),
+  nm({ reason: 'other-target', window: '2013-07', from: 'santos', almostTo: 'bayern', realTo: 'barcelona', fee: 40_000_000, realFee: 57_000_000, id: 'neymar', name: 'Neymar', birthYear: 1992, nationality: 'Brazil', positions: ['LW', 'AM'], ability: 82, ceiling: 92, proneness: 45, per: [5, 8, 8, 4, 7, 6], note: 'Bayern held advanced talks but Rummenigge feared he’d struggle to adapt and prioritised Götze, so Neymar joined Messi at Barça.' }),
+  nm({ reason: 'player-choice', window: '2015-08', from: 'wolfsburg', almostTo: 'bayern', realTo: 'man_city', fee: 50_000_000, realFee: 55_000_000, id: 'debruyne', name: 'Kevin De Bruyne', birthYear: 1991, nationality: 'Belgium', positions: ['AM', 'CM'], ability: 83, ceiling: 90, proneness: 30, per: [8, 5, 8, 5, 3, 7], note: 'Guardiola raved "after Messi comes Kevin," but De Bruyne wanted Premier League business and City landed him.' }),
+  nm({ reason: 'player-choice', window: '2017-07', from: 'psg', almostTo: 'bayern', realTo: null, fee: 40_000_000, realFee: 40_000_000, id: 'verratti', name: 'Marco Verratti', birthYear: 1992, nationality: 'Italy', positions: ['CM', 'DM'], ability: 82, ceiling: 87, proneness: 40, per: [6, 6, 6, 7, 6, 6], note: 'Ancelotti personally tried to bring him to Munich, but Verratti refused and stayed at PSG.' }),
+];
+
+/** era-2013 world (man-utd-2013) — United's later ones that got away. */
+const NEARMISS_2013_NM: NearMissEntry[] = [
+  nm({ reason: 'manager', window: '2013-07', from: 'barcelona', almostTo: 'man_utd', realTo: 'bayern', fee: 18_000_000, realFee: 21_000_000, id: 'thiago', name: 'Thiago Alcántara', birthYear: 1991, nationality: 'Spain', positions: ['CM', 'AM'], ability: 79, ceiling: 87, proneness: 45, per: [8, 5, 7, 5, 3, 7], note: 'United could have triggered his release clause but Moyes prioritised Fellaini, so Guardiola took him to Bayern.' }),
+  nm({ reason: 'player-choice', window: '2013-08', from: 'spurs', almostTo: 'man_utd', realTo: 'real_madrid', fee: 85_000_000, realFee: 85_000_000, id: 'bale', name: 'Gareth Bale', birthYear: 1989, nationality: 'Wales', positions: ['LW', 'RW'], ability: 85, ceiling: 88, proneness: 40, per: [8, 6, 8, 5, 4, 6], note: 'Moyes came close and United reportedly offered more money, but Bale’s heart was set on Real Madrid.' }),
+  nm({ reason: 'fee', window: '2013-08', from: 'athletic', almostTo: 'man_utd', realTo: null, fee: 29_000_000, realFee: 29_000_000, id: 'herrera_2013', name: 'Ander Herrera', birthYear: 1989, nationality: 'Spain', positions: ['CM', 'AM'], ability: 77, ceiling: 82, proneness: 30, per: [8, 4, 7, 6, 4, 7], note: 'The deadline-day deal descended into farce with imposter lawyers over his clause; United signed him a year later.' }),
+  nm({ reason: 'manager', window: '2014-07', from: 'bayern', almostTo: 'man_utd', realTo: 'real_madrid', fee: 20_000_000, realFee: 24_000_000, id: 'kroos', name: 'Toni Kroos', birthYear: 1990, nationality: 'Germany', positions: ['CM', 'AM'], ability: 85, ceiling: 88, proneness: 25, per: [9, 5, 7, 5, 2, 8], note: 'Kroos had verbally agreed with Moyes, but when Van Gaal replaced him the pair cooled and Real Madrid swooped.' }),
+  nm({ reason: 'board', window: '2015-07', from: 'real_madrid', almostTo: 'man_utd', realTo: null, fee: 40_000_000, realFee: 40_000_000, id: 'ramos', name: 'Sergio Ramos', birthYear: 1986, nationality: 'Spain', positions: ['CB', 'RB'], ability: 86, ceiling: 88, proneness: 30, per: [7, 7, 8, 6, 6, 6], note: 'United chased him with cash-plus-De Gea, but Real refused any swap and tied him to a new contract.' }),
 ];
 
 const ACADEMY_1998: AcademyGraduate[] = [
@@ -713,12 +896,12 @@ const ACADEMY_2009: AcademyGraduate[] = [
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1998': { realTransferLedger: LEDGER_1998, academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998, academyGraduates: ACADEMY_1998, nearMisses: NEARMISS_1998 },
-  'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999 },
-  'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013, nearMisses: NEARMISS_2013 },
-  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004, financialShocks: SHOCKS_2004 },
-  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2001, academyGraduates: ACADEMY_2001, financialShocks: SHOCKS_2001 },
+  'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999, nearMisses: NEARMISS_1999_2014 },
+  'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013, nearMisses: [...NEARMISS_2013, ...NEARMISS_2013_NM] },
+  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004, financialShocks: SHOCKS_2004, nearMisses: NEARMISS_2004_NM },
+  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2001, academyGraduates: ACADEMY_2001, financialShocks: SHOCKS_2001, nearMisses: NEARMISS_2001_NM },
   // era-2009 (Bayern / Van Gaal reset). Ledger + injuries + retirements are the
-  'era-2009': { realTransferLedger: LEDGER_2009, academyIntakes: [], realInjuries: INJURIES_2009, retirements: RETIREMENTS_2009, academyGraduates: ACADEMY_2009 },
+  'era-2009': { realTransferLedger: LEDGER_2009, academyIntakes: [], realInjuries: INJURIES_2009, retirements: RETIREMENTS_2009, academyGraduates: ACADEMY_2009, nearMisses: NEARMISS_2009_NM },
 };
 
 /** The era pack a scenario draws its reality data from. */

@@ -73,6 +73,7 @@ export { computeSeasonStats, computePlayerSeason } from './stats.js';
 export {
   generatePlayer,
   generateSquad,
+  instantiateCuratedPlayer,
   deriveRawStrength,
   recomputeClubStrength,
   clubSquadPlayers,
@@ -161,6 +162,9 @@ export {
   type InvalidationCause,
   type ClubPressure,
   type AmbitionOverride,
+  type NearMissEntry,
+  type NearMissReason,
+  type NearMissSeed,
 } from './ledger.js';
 export { executeLedgerWindow, stepForEntry, ledgerSquadMatch, ledgerClubs } from './ledgerExec.js';
 export {

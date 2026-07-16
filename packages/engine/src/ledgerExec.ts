@@ -282,16 +282,25 @@ export function executeNearMisses(state: GameState): void {
     processed.push(key);
 
     const player = state.players[entry.playerId];
-    // An earlier butterfly already moved him, or he's gone — the near-miss lapses.
-    if (!player || player.club !== entry.from) continue;
+    if (entry.seed) {
+      // Seed-based (virtual) near-miss: the subject isn't in the world and is
+      // spawned only on completion. If he happens to already exist and has moved
+      // on, the near-miss lapses.
+      if (player && player.club !== entry.from) continue;
+    } else {
+      // Legacy curated entry: an earlier butterfly already moved him, or he's
+      // gone — the near-miss lapses.
+      if (!player || player.club !== entry.from) continue;
+    }
 
     if (entry.almostTo === state.playerClub) {
       offerNearMissIn(state, entry, player);
-    } else if (entry.from === state.playerClub) {
+    } else if (entry.from === state.playerClub && player) {
       offerNearMissOut(state, entry, player);
     } else {
-      // Not the user's business: reality holds. If the deal really moved him on
-      // to a third club, complete that move; otherwise he simply stays.
+      // Not the user's business: reality holds. For a legacy entry with a real
+      // destination, complete that move; a seed-based subject simply lapses (he
+      // was never modelled in this world).
       resolveNearMissAsReality(state, entry, player);
     }
   }
@@ -299,7 +308,9 @@ export function executeNearMisses(state: GameState): void {
 
 /** Reality holds for a near-miss the user isn't part of: he ends up where he
  *  really did (`realTo`), or stays if the deal collapsed entirely. */
-function resolveNearMissAsReality(state: GameState, entry: NearMissEntry, player: PlayerState): void {
+function resolveNearMissAsReality(state: GameState, entry: NearMissEntry, player: PlayerState | undefined): void {
+  // Seed-based subject not in this world → nothing to move (he simply lapses).
+  if (!player) return;
   if (!entry.realTo || entry.realTo === entry.from || !state.clubs[entry.realTo]) return;
   const dest = state.clubs[entry.realTo]!;
   dest.finances.transferBudget = Math.max(dest.finances.transferBudget, entry.realFee ?? entry.fee);
@@ -326,32 +337,68 @@ function nearMissRealityFallout(state: GameState, entry: NearMissEntry, player: 
 }
 
 /** The user's club nearly signed him — offer the deal reality bottled. */
-function offerNearMissIn(state: GameState, entry: NearMissEntry, player: PlayerState): void {
+function offerNearMissIn(state: GameState, entry: NearMissEntry, player: PlayerState | undefined): void {
   const feeM = (entry.fee / 1_000_000).toFixed(1);
-  // Fund his REAL destination up front, so the reality fallout (pass / ignore)
-  // can complete that move — the buyer paid it in reality (Roma for Batistuta).
-  if (entry.realTo && entry.realTo !== entry.from) {
-    const realDestClub = state.clubs[entry.realTo];
-    if (realDestClub) realDestClub.finances.transferBudget = Math.max(realDestClub.finances.transferBudget, entry.realFee ?? entry.fee);
-  }
+  const name = player?.name ?? entry.seed?.name ?? entry.playerId;
+  const seedBased = !!entry.seed && !player;
   const fromName = entry.from ? state.clubs[entry.from]?.name ?? entry.from : 'a free transfer';
-  const realDest = entry.realTo && entry.realTo !== entry.from ? state.clubs[entry.realTo]?.name ?? entry.realTo : null;
-  const passLabel = realDest ? `Pass — he joins ${realDest}, as in reality` : `Pass — he stays at ${fromName}, as in reality`;
+
+  // Completing the deal: a seed-based subject is spawned at the user's club; a
+  // legacy curated subject is moved. Either way this is a GUARANTEED signing (the
+  // deal was all but done in reality) — more likely than an ordinary target.
+  const signCons: Consequence[] = seedBased
+    ? [{ kind: 'signNearMiss', tag: nearMissKey(entry), amount: entry.fee }]
+    : [{ kind: 'signReal', playerId: entry.playerId, amount: entry.fee }];
+
+  // Passing: a seed-based subject simply lapses (he was never in this world); a
+  // legacy subject follows reality (moves to `realTo` or stays). For the legacy
+  // path, fund the real destination up front so the fallout can complete it.
+  let fallout: Consequence[];
+  let passLabel: string;
+  if (seedBased) {
+    fallout = [{ kind: 'memory', tag: 'reality', text: `Passed on ${name} — ${entry.note}` }];
+    passLabel = 'Pass — let history stand';
+  } else {
+    if (entry.realTo && entry.realTo !== entry.from) {
+      const realDestClub = state.clubs[entry.realTo];
+      if (realDestClub) realDestClub.finances.transferBudget = Math.max(realDestClub.finances.transferBudget, entry.realFee ?? entry.fee);
+    }
+    const realDest = entry.realTo && entry.realTo !== entry.from ? state.clubs[entry.realTo]?.name ?? entry.realTo : null;
+    fallout = nearMissRealityFallout(state, entry, player!);
+    passLabel = realDest ? `Pass — he joins ${realDest}, as in reality` : `Pass — he stays at ${fromName}, as in reality`;
+  }
+
+  const reasonNote = entry.reason ? ` (it fell through in reality: ${REASON_PHRASE[entry.reason]})` : '';
   state.pendingDecisions.push({
     id: `near-miss-in:${nearMissKey(entry)}`,
-    title: `The one that got away: ${player.name} (${fromName}, £${feeM}m)`,
-    description: `${entry.note} You can complete the deal reality never did — or let history stand.`,
+    title: `The one that got away: ${name} (${fromName}, £${feeM}m)`,
+    description: `${entry.note} You can complete the deal reality never did — this window only${reasonNote}.`,
     interrupt: false,
     clubId: state.playerClub,
     category: 'transfer',
+    // Reality-default: "letting history stand" is the FIRST option, so a passive
+    // / first-choice policy reproduces reality (and the harness stays inert) —
+    // rewriting history is the active, deliberate choice.
     choices: [
-      { id: 'sign', label: `Complete the signing (£${feeM}m)`, onSuccess: [{ kind: 'signReal', playerId: entry.playerId, amount: entry.fee }] },
-      { id: 'pass', label: passLabel, onSuccess: nearMissRealityFallout(state, entry, player) },
+      { id: 'pass', label: passLabel, onSuccess: fallout },
+      { id: 'sign', label: `Complete the signing (£${feeM}m)`, onSuccess: signCons },
     ],
-    falloutIfIgnored: nearMissRealityFallout(state, entry, player),
+    falloutIfIgnored: fallout,
     memoryTags: ['near-miss', entry.playerId],
   });
 }
+
+/** How each collapse reason reads in the offer. */
+const REASON_PHRASE: Record<string, string> = {
+  hijack: 'a rival hijacked it',
+  'other-target': 'the club signed someone else',
+  manager: 'the manager blocked it',
+  fee: 'the clubs never agreed a fee',
+  wages: 'wages/personal terms collapsed',
+  'player-choice': 'the player chose elsewhere',
+  board: 'the selling club refused',
+  medical: 'he failed the medical',
+};
 
 /** The user owns him and a club that nearly bought him comes back. Default =
  *  keep (reality: the near-miss failed and he stayed). */
@@ -367,8 +414,8 @@ function offerNearMissOut(state: GameState, entry: NearMissEntry, player: Player
     clubId: state.playerClub,
     category: 'transfer',
     choices: [
-      { id: 'sell', label: `Sanction the £${feeM}m sale to ${buyer?.name ?? entry.almostTo}`, onSuccess: [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.almostTo, amount: entry.fee }] },
       { id: 'keep', label: `Keep ${player.name} (reality — he stayed)`, onSuccess: [{ kind: 'memory', tag: 'reality', text: `Kept ${player.name}, as in reality.` }] },
+      { id: 'sell', label: `Sanction the £${feeM}m sale to ${buyer?.name ?? entry.almostTo}`, onSuccess: [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.almostTo, amount: entry.fee }] },
     ],
     falloutIfIgnored: [{ kind: 'memory', tag: 'reality', text: `Kept ${player.name}, as in reality.` }],
     memoryTags: ['near-miss', entry.playerId],

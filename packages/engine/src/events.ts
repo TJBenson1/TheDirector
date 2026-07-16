@@ -29,8 +29,9 @@ import { eventsSince } from './eventLog.js';
 import { appendMemory } from './memory.js';
 import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 import { executeTransfer } from './transfers.js';
-import { recomputeClubStrength } from './players.js';
+import { recomputeClubStrength, instantiateCuratedPlayer } from './players.js';
 import { performSack, appointManager, imposeDirective, retireManager } from './manager.js';
+import { ERA_REALITY, eraForScenario, nearMissKey } from './ledger.js';
 
 // ── Consequence application ──────────────────────────────────────────────────
 
@@ -115,6 +116,31 @@ export function applyConsequence(state: GameState, c: Consequence): void {
         if (user) user.finances.transferBudget = Math.max(user.finances.transferBudget, c.amount ?? 0);
         const res = executeTransfer(state, { playerId: c.playerId, toClub: state.playerClub, fee: c.amount ?? 0 });
         if (res.ok) markLedgerRealized(state, c.tag);
+      }
+      break;
+    }
+    case 'signNearMiss': {
+      // Complete a seed-based near-miss: spawn the (previously virtual) subject at
+      // the user's club. Forked rng so the spawn is deterministic and does NOT
+      // perturb the main stream (calibration-safe). The user's active choice, so
+      // divergence here is expected.
+      const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+      const entry = pack?.nearMisses?.find((e) => e.seed && nearMissKey(e) === c.tag);
+      if (entry?.seed && !state.players[entry.seed.id]) {
+        const user = state.clubs[state.playerClub];
+        if (user) {
+          const fee = c.amount ?? entry.fee;
+          user.finances.transferBudget = Math.max(user.finances.transferBudget, fee);
+          const rng = new Rng(state.meta.rngState).fork(`nearmiss:${entry.seed.id}:${state.clock.date}`);
+          const p = instantiateCuratedPlayer(state, entry.seed, state.playerClub, rng);
+          user.finances.transferBudget -= fee;
+          logEvent(state, {
+            category: 'transfer',
+            code: 'nearmiss.signed',
+            message: `The one that got away: ${p.name} finally signs for ${user.name} — reality rewritten`,
+            data: { playerId: p.id, fee, reason: entry.reason ?? null },
+          });
+        }
       }
       break;
     }
