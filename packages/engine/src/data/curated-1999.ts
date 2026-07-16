@@ -22,7 +22,7 @@ import { JUVENTUS_2006_SQUADS } from './curated-serie-a-2006.js';
 import { BARCELONA_2003_SQUADS } from './curated-la-liga-2003.js';
 import { REAL_MADRID_2006_SQUADS } from './curated-la-liga-2006.js';
 import { BARCELONA_2014_SQUADS } from './curated-la-liga-2014.js';
-import { BUNDESLIGA_2010_SQUADS } from './curated-bundesliga-2010.js';
+import { DORTMUND_2012_SQUADS } from './curated-bundesliga-2012.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -495,10 +495,9 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   // Luis Enrique's MSN Barça at its peak — Messi, Suárez, Neymar — with the modern
   // elite (BBC Real, Pep's Bayern, City, PSG); CL anchored to the 2025 world-end.
   'barcelona-2014': BARCELONA_2014_SQUADS,
-  // The Bundesliga 2010-11 world, shared by both German starts: Klopp's Dortmund
-  // and van Gaal's Bayern as direct rivals, with the elite of Europe (CL to 2025).
-  'dortmund-2010': BUNDESLIGA_2010_SQUADS,
-  'bayern-2010': BUNDESLIGA_2010_SQUADS,
+  // Klopp's peak Dortmund (2012-13), defending the Wembley-final side as Bayern
+  // picks it apart, with the elite of Europe (CL anchored to the 2025 world-end).
+  'dortmund-2012': DORTMUND_2012_SQUADS,
   // The Galácticos-era Madrid start has its own Spanish/European pack (La Liga
   // 2000–01 + the clubs Real bought their galácticos from).
   'real-madrid-2000': REAL_MADRID_2000_SQUADS,

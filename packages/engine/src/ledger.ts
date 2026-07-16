@@ -509,24 +509,28 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
  * are Barça) — while Real's galácticos age out and the great 2009 churn plays out.
  */
 /**
- * Real Bundesliga / European market, 2010→2016 (dortmund-2010, bayern-2010). The
- * heart of it is the raiding of Klopp's golden generation — Şahin to Madrid, Kagawa
- * to United, and the defections to Bayern (Götze, Lewandowski, Hummels). If the
- * user IS Dortmund those are their stars leaving; if Bayern, their arrivals.
+ * Real Bundesliga / European market, 2012→2016 (dortmund-2012). The heart of it is
+ * the picking-apart of Klopp's peak side — Götze, Lewandowski and Hummels to
+ * Bayern, Gündoğan to City — while Kagawa comes home. If the user IS Dortmund those
+ * are their stars being prised away one by one.
  */
-const LEDGER_BUNDESLIGA_2010: RealTransferLedgerEntry[] = [
-  // ── The raiding of Dortmund's golden generation ──
-  { playerId: 'cur_sahin_2010', from: 'dortmund', to: 'real_madrid', window: '2011-07', fee: 10_000_000, id: 'sahin-real-2011' },
-  { playerId: 'cur_kagawa_2010', from: 'dortmund', to: 'man_utd', window: '2012-07', fee: 16_000_000, id: 'kagawa-utd-2012' },
-  { playerId: 'cur_gotze_2010', from: 'dortmund', to: 'bayern', window: '2013-07', fee: 37_000_000, id: 'gotze-bayern-2013' },
-  { playerId: 'cur_lewandowski_2010', from: 'dortmund', to: 'bayern', window: '2014-07', fee: 0, id: 'lewa-bayern-2014' },
-  { playerId: 'cur_hummels_2010', from: 'dortmund', to: 'bayern', window: '2016-07', fee: 35_000_000, id: 'hummels-bayern-2016' },
+const LEDGER_BUNDESLIGA_2012: RealTransferLedgerEntry[] = [
+  // ── The picking-apart of Dortmund's golden generation ──
+  { playerId: 'cur_gotze_12', from: 'dortmund', to: 'bayern', window: '2013-07', fee: 37_000_000, id: 'gotze-bayern-2013' },
+  { playerId: 'cur_lewandowski_12', from: 'dortmund', to: 'bayern', window: '2014-07', fee: 0, id: 'lewa-bayern-2014' },
+  { playerId: 'cur_hummels_12', from: 'dortmund', to: 'bayern', window: '2016-07', fee: 35_000_000, id: 'hummels-bayern-2016' },
+  { playerId: 'cur_gundogan_12', from: 'dortmund', to: 'man_city', window: '2016-07', fee: 22_000_000, id: 'gundogan-city-2016' },
+  // ── Kagawa comes home from United ──
+  { playerId: 'cur_kagawa_u12', from: 'man_utd', to: 'dortmund', window: '2014-08', fee: 8_000_000, id: 'kagawa-home-2014' },
+  // ── Bayern reload; Vidal joins the dynasty ──
+  { playerId: 'cur_vidal_ju12', from: 'juventus', to: 'bayern', window: '2015-07', fee: 37_000_000, id: 'vidal-bayern-2015' },
+  { playerId: 'cur_gomez_12', from: 'bayern', to: 'juventus', window: '2013-07', fee: 15_500_000, id: 'gomez-fiorentina-2013' },
   // ── The elite market around them ──
-  { playerId: 'cur_torres_lv10', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
-  { playerId: 'cur_di_maria_rm10', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000, id: 'dimaria-utd-2014' },
-  { playerId: 'cur_kroos_2010', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
-  { playerId: 'cur_villa_bc10', from: 'barcelona', to: 'atletico', window: '2013-07', fee: 5_100_000, id: 'villa-atletico-2013' },
-  { playerId: 'cur_gomez_2010', from: 'bayern', to: 'juventus', window: '2013-07', fee: 15_500_000, id: 'gomez-out-2013' },
+  { playerId: 'cur_di_maria_rm12', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000, id: 'dimaria-utd-2014' },
+  { playerId: 'cur_suarez_lv12', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 75_000_000, id: 'suarez-barca-2014' },
+  { playerId: 'cur_villa_bc12', from: 'barcelona', to: 'atletico', window: '2013-07', fee: 5_100_000, id: 'villa-atletico-2013' },
+  { playerId: 'cur_pogba_ju12', from: 'juventus', to: 'man_utd', window: '2016-08', fee: 105_000_000, id: 'pogba-utd-2016' },
+  { playerId: 'cur_ibrahimovic_pg12', from: 'psg', to: 'man_utd', window: '2016-07', fee: 0, id: 'ibra-utd-2016' },
 ];
 
 /**
@@ -711,7 +715,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-la-liga-2003': { realTransferLedger: LEDGER_LA_LIGA_2003, academyIntakes: [], realInjuries: [] },
   'era-la-liga-2006': { realTransferLedger: LEDGER_LA_LIGA_2006, academyIntakes: [], realInjuries: [] },
   'era-la-liga-2014': { realTransferLedger: LEDGER_LA_LIGA_2014, academyIntakes: [], realInjuries: [] },
-  'era-bundesliga-2010': { realTransferLedger: LEDGER_BUNDESLIGA_2010, academyIntakes: [], realInjuries: [] },
+  'era-bundesliga-2012': { realTransferLedger: LEDGER_BUNDESLIGA_2012, academyIntakes: [], realInjuries: [] },
   'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
   // Juventus 2006 rejoins the late-2000s Serie A world from 2007, so it draws on
   // the same reality ledger — Pirlo's 2011 free transfer to Juventus included.
@@ -724,7 +728,8 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
 export function eraForScenario(scenarioId: string): string {
   // The Serie A cluster is routed explicitly: its year suffixes (‑2004, ‑2006,
   // ‑2007) would otherwise collide with the English/other era packs.
-  if (scenarioId === 'dortmund-2010' || scenarioId === 'bayern-2010') return 'era-bundesliga-2010';
+  if (scenarioId === 'dortmund-2012') return 'era-bundesliga-2012';
+  if (scenarioId === 'bayern-2009') return 'era-bundesliga-2009';
   if (scenarioId === 'barcelona-2003') return 'era-la-liga-2003';
   if (scenarioId === 'real-madrid-2006') return 'era-la-liga-2006';
   if (scenarioId === 'barcelona-2014') return 'era-la-liga-2014';

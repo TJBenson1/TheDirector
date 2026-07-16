@@ -686,73 +686,41 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     domesticLeagueId: 'esp-2014',
   },
-  'dortmund-2010': {
-    id: 'dortmund-2010',
-    name: 'Borussia Dortmund — 2010: Klopp’s Rising',
-    startDate: '2010-07',
+  'dortmund-2012': {
+    id: 'dortmund-2012',
+    name: 'Borussia Dortmund — 2012: Defend the Peak',
+    startDate: '2012-07',
     playerClub: 'dortmund',
-    // A brilliant young side — Hummels, Götze, Kagawa, Şahin, a new Lewandowski —
-    // about to win back-to-back titles and reach the 2013 final. Then the real
-    // test: hold the golden generation as Bayern, Barça and the Premier League come
-    // raiding (Götze and Lewandowski to Bayern, Kagawa to United, Şahin to Madrid).
-    mandate: 'Break Bayern’s grip — then hold the golden generation together against the raiders.',
+    // Back-to-back champions, about to reach the 2013 Wembley final — the best young
+    // side in Europe (Hummels, Götze, Reus, Gündoğan, Lewandowski). But the vultures
+    // circle: Götze's Bayern move is agreed mid-season, and Lewandowski, Hummels and
+    // Gündoğan will follow. Hold the golden generation together before it is
+    // dismantled.
+    mandate: 'Hold the golden generation together — and turn the Wembley run into a European Cup.',
     boardPatience: 74,
     boardExpectedFinish: 2,
     // The Bundesliga is the simulated league; the elite of Europe (full squads)
-    // plus a light context anchor every real European Cup of 2011–2025.
+    // plus a light context anchor every real European Cup of 2013–2025.
     clubs: [
-      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 82 },
-      { id: 'bayern', name: 'Bayern Munich', prestige: 90 },
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 84 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 92 },
       { id: 'barcelona', name: 'Barcelona', prestige: 92 },
       { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
-      { id: 'man_utd', name: 'Manchester United', prestige: 90 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 88 },
       { id: 'chelsea', name: 'Chelsea', prestige: 88 },
-      { id: 'man_city', name: 'Manchester City', prestige: 84 },
+      { id: 'man_city', name: 'Manchester City', prestige: 88 },
       { id: 'liverpool', name: 'Liverpool', prestige: 82 },
-      { id: 'inter', name: 'Internazionale', prestige: 84 },
-      { id: 'juventus', name: 'Juventus', prestige: 82 },
+      { id: 'inter', name: 'Internazionale', prestige: 80 },
+      { id: 'juventus', name: 'Juventus', prestige: 86 },
     ],
     contextExtra: [
+      { id: 'atletico', name: 'Atlético Madrid', prestige: 84 },
+      { id: 'psg', name: 'Paris Saint-Germain', prestige: 84 },
       { id: 'schalke', name: 'Schalke 04', prestige: 72 },
-      { id: 'werder', name: 'Werder Bremen', prestige: 66 },
       { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 72 },
       { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 62 },
-      { id: 'hamburg', name: 'Hamburger SV', prestige: 66 },
     ],
-    domesticLeagueId: 'ger-2010',
-  },
-  'bayern-2010': {
-    id: 'bayern-2010',
-    name: 'Bayern München — 2010: Defend the Throne',
-    startDate: '2010-07',
-    playerClub: 'bayern',
-    // Van Gaal's double winners and beaten Champions League finalists — Robben,
-    // Ribéry, Schweinsteiger, a young Müller and Kroos. But an insurgency is coming
-    // from the yellow wall: Klopp's Dortmund are about to take the next two titles.
-    // Fight off the pretender, then reclaim Europe.
-    mandate: 'Fend off Klopp’s Dortmund, reclaim the Bundesliga, and win the Champions League.',
-    boardPatience: 72,
-    boardExpectedFinish: 1,
-    clubs: [
-      { id: 'bayern', name: 'Bayern Munich', prestige: 90 },
-      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 82 },
-      { id: 'barcelona', name: 'Barcelona', prestige: 92 },
-      { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
-      { id: 'man_utd', name: 'Manchester United', prestige: 90 },
-      { id: 'chelsea', name: 'Chelsea', prestige: 88 },
-      { id: 'man_city', name: 'Manchester City', prestige: 84 },
-      { id: 'liverpool', name: 'Liverpool', prestige: 82 },
-      { id: 'inter', name: 'Internazionale', prestige: 84 },
-      { id: 'juventus', name: 'Juventus', prestige: 82 },
-    ],
-    contextExtra: [
-      { id: 'schalke', name: 'Schalke 04', prestige: 72 },
-      { id: 'werder', name: 'Werder Bremen', prestige: 66 },
-      { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 72 },
-      { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 62 },
-      { id: 'hamburg', name: 'Hamburger SV', prestige: 66 },
-    ],
-    domesticLeagueId: 'ger-2010',
+    domesticLeagueId: 'ger-2012',
   },
 };
 

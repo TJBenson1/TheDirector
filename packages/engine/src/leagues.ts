@@ -266,31 +266,31 @@ export const SPAIN_2003: LeagueSeed = {
   ],
 };
 
-/** Bundesliga, 2010–11 — Klopp's champion Dortmund breaking van Gaal's Bayern.
- *  18 clubs; ordering follows the real final table. */
-export const GERMANY_2010: LeagueSeed = {
-  id: 'ger-2010',
+/** Bundesliga, 2012–13 — Heynckes's treble Bayern and Klopp's Wembley-final
+ *  Dortmund at their shared peak. 18 clubs; ordering follows the real table. */
+export const GERMANY_2012: LeagueSeed = {
+  id: 'ger-2012',
   name: 'Bundesliga',
-  season: '2010-07',
+  season: '2012-07',
   clubs: [
-    { id: 'dortmund', name: 'Borussia Dortmund', prestige: 82, strength: 85 },
-    { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 72, strength: 80 },
-    { id: 'bayern', name: 'Bayern München', prestige: 90, strength: 87 },
-    { id: 'hannover', name: 'Hannover 96', prestige: 54, strength: 73 },
-    { id: 'mainz', name: 'Mainz 05', prestige: 52, strength: 74 },
-    { id: 'nurnberg', name: '1. FC Nürnberg', prestige: 54, strength: 71 },
-    { id: 'kaiserslautern', name: 'Kaiserslautern', prestige: 56, strength: 71 },
-    { id: 'hamburg', name: 'Hamburger SV', prestige: 66, strength: 76 },
-    { id: 'freiburg', name: 'SC Freiburg', prestige: 50, strength: 70 },
-    { id: 'koln', name: '1. FC Köln', prestige: 58, strength: 72 },
-    { id: 'schalke', name: 'Schalke 04', prestige: 72, strength: 79 },
-    { id: 'werder', name: 'Werder Bremen', prestige: 66, strength: 78 },
-    { id: 'hoffenheim', name: 'Hoffenheim', prestige: 52, strength: 73 },
-    { id: 'stuttgart', name: 'VfB Stuttgart', prestige: 64, strength: 76 },
-    { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 62, strength: 77 },
-    { id: 'frankfurt', name: 'Eintracht Frankfurt', prestige: 58, strength: 72 },
-    { id: 'gladbach', name: 'Borussia Mönchengladbach', prestige: 60, strength: 71 },
-    { id: 'st_pauli', name: 'St. Pauli', prestige: 46, strength: 67 },
+    { id: 'bayern', name: 'Bayern München', prestige: 92, strength: 91 },
+    { id: 'dortmund', name: 'Borussia Dortmund', prestige: 84, strength: 86 },
+    { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 72, strength: 81 },
+    { id: 'schalke', name: 'Schalke 04', prestige: 72, strength: 80 },
+    { id: 'frankfurt', name: 'Eintracht Frankfurt', prestige: 58, strength: 74 },
+    { id: 'freiburg', name: 'SC Freiburg', prestige: 52, strength: 73 },
+    { id: 'hamburg', name: 'Hamburger SV', prestige: 62, strength: 74 },
+    { id: 'hannover', name: 'Hannover 96', prestige: 54, strength: 74 },
+    { id: 'nurnberg', name: '1. FC Nürnberg', prestige: 54, strength: 73 },
+    { id: 'mainz', name: 'Mainz 05', prestige: 54, strength: 73 },
+    { id: 'gladbach', name: 'Borussia Mönchengladbach', prestige: 62, strength: 76 },
+    { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 62, strength: 75 },
+    { id: 'stuttgart', name: 'VfB Stuttgart', prestige: 62, strength: 74 },
+    { id: 'werder', name: 'Werder Bremen', prestige: 62, strength: 73 },
+    { id: 'augsburg', name: 'FC Augsburg', prestige: 48, strength: 70 },
+    { id: 'hoffenheim', name: 'Hoffenheim', prestige: 52, strength: 71 },
+    { id: 'furth', name: 'Greuther Fürth', prestige: 44, strength: 67 },
+    { id: 'dusseldorf', name: 'Fortuna Düsseldorf', prestige: 46, strength: 68 },
   ],
 };
 
@@ -522,5 +522,5 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,
-  'ger-2010': GERMANY_2010,
+  'ger-2012': GERMANY_2012,
 };

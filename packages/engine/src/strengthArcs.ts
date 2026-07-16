@@ -157,18 +157,17 @@ const LA_LIGA_2014: Record<string, readonly Waypoint[]> = {
   valencia: [[2014, 82], [2016, 79], [2019, 76]],
 };
 
-// Bundesliga, 2010–24 (dortmund-2010, bayern-2010). Klopp's Dortmund win the first
-// two titles (2010-11, 2011-12), then Bayern's dynasty takes over (their real
-// eleven-in-a-row) until Leverkusen's unbeaten 2023-24. The user's club — Dortmund
-// or Bayern — follows its real arc; a Dortmund player must ACT to hold the throne
-// past 2012, a Bayern player to win it back before then.
-const BUNDESLIGA_2010: Record<string, readonly Waypoint[]> = {
-  dortmund: [[2010, 89], [2012, 85], [2013, 84], [2019, 84], [2023, 85]],
-  bayern: [[2010, 85], [2012, 90], [2013, 91], [2020, 91], [2023, 86], [2024, 90]],
-  leverkusen: [[2010, 80], [2015, 82], [2023, 90], [2024, 84]],
-  schalke: [[2010, 81], [2012, 79], [2018, 78]],
-  werder: [[2010, 80], [2012, 75]],
-  wolfsburg: [[2010, 80], [2015, 84], [2016, 77]],
+// Bundesliga, 2012–24 (dortmund-2012). Bayern's dynasty is already in full swing —
+// the user's Dortmund start at their 2013-final peak and must ACT to stop the
+// throne (and their own stars) sliding to Munich; passively Bayern win almost
+// everything until Leverkusen's unbeaten 2023-24.
+const BUNDESLIGA_2012: Record<string, readonly Waypoint[]> = {
+  dortmund: [[2012, 86], [2013, 84], [2019, 84], [2023, 85]],
+  bayern: [[2012, 91], [2013, 92], [2020, 91], [2023, 86], [2024, 90]],
+  leverkusen: [[2012, 81], [2015, 82], [2023, 90], [2024, 84]],
+  schalke: [[2012, 80], [2018, 78]],
+  gladbach: [[2012, 78], [2015, 80], [2017, 76]],
+  wolfsburg: [[2012, 78], [2015, 84], [2016, 77]],
 };
 
 /** Every pack's domestic strength arc. The English packs share one table (same
@@ -184,7 +183,7 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-la-liga-2003': LA_LIGA_2003, // barcelona-2003
   'era-la-liga-2006': LA_LIGA_2006, // real-madrid-2006
   'era-la-liga-2014': LA_LIGA_2014, // barcelona-2014
-  'era-bundesliga-2010': BUNDESLIGA_2010, // dortmund-2010, bayern-2010
+  'era-bundesliga-2012': BUNDESLIGA_2012, // dortmund-2012
   'era-serie-a-1995': ITALIAN, // juventus-1995
   'era-serie-a-1998': ITALIAN, // inter-1998
   'era-serie-a-2004': ITALIAN_2004, // inter-2004
