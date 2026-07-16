@@ -395,7 +395,7 @@ export const SEVILLA_2009: CuratedSeed[] = [
 /** 1. FC Nürnberg, 2009–10 — promoted, survived 16th via the relegation play-off;
  *  a teenage İlkay Gündoğan emerging alongside top-scorer Albert Bunjaku. */
 export const NURNBERG_2009: CuratedSeed[] = [
-  q('nurnberg', 'schafer09', 'Raphael Schäfer', 1979, 'Germany', ['GK'], 70, 71, 2012, 30, t(7, 4, 5, 9, 4, 6)),
+  q('nurnberg', 'rschafer09', 'Raphael Schäfer', 1979, 'Germany', ['GK'], 70, 71, 2012, 30, t(7, 4, 5, 9, 4, 6)),
   q('nurnberg', 'diekmeier09', 'Dennis Diekmeier', 1989, 'Germany', ['RB'], 67, 74, 2013, 35, t(6, 5, 7, 6, 5, 6)),
   q('nurnberg', 'pinola09', 'Javier Pinola', 1983, 'Argentina', ['LB', 'CB'], 70, 71, 2012, 35, t(8, 4, 6, 9, 5, 7)),
   q('nurnberg', 'wolf09', 'Andreas Wolf', 1982, 'Germany', ['CB'], 70, 71, 2011, 40, t(8, 5, 6, 9, 4, 6)),
@@ -416,7 +416,7 @@ export const NURNBERG_2009: CuratedSeed[] = [
  *  wasted, a pre-Dortmund Piszczek, mid-season loans that failed to stop the drop. */
 export const HERTHA_2009: CuratedSeed[] = [
   q('hertha', 'drobny09', 'Jaroslav Drobný', 1979, 'Czech Republic', ['GK'], 69, 70, 2010, 32, t(7, 4, 6, 7, 4, 6)),
-  q('hertha', 'friedrich09', 'Arne Friedrich', 1979, 'Germany', ['CB', 'RB'], 71, 72, 2011, 33, t(8, 5, 7, 8, 4, 6)),
+  q('hertha', 'afriedrich09', 'Arne Friedrich', 1979, 'Germany', ['CB', 'RB'], 71, 72, 2011, 33, t(8, 5, 7, 8, 4, 6)),
   // Piszczek — a wide man here, remade into a world-class right-back at Dortmund.
   // Reality-rail: modest now, elite ceiling.
   q('hertha', 'piszczek09', 'Łukasz Piszczek', 1985, 'Poland', ['RB', 'RW'], 68, 86, 2010, 30, t(8, 5, 8, 6, 4, 8)),
@@ -431,7 +431,7 @@ export const HERTHA_2009: CuratedSeed[] = [
   q('hertha', 'raffael09', 'Raffael Caetano de Araújo', 1985, 'Brazil', ['AM', 'LW'], 75, 80, 2011, 40, t(7, 5, 7, 7, 5, 7)),
   q('hertha', 'nicu09', 'Maximilian Nicu', 1982, 'Romania', ['AM', 'LW'], 64, 66, 2011, 38, t(6, 5, 6, 6, 6, 6)),
   q('hertha', 'gekas09', 'Theofanis Gekas', 1980, 'Greece', ['ST'], 69, 71, 2010, 34, t(7, 7, 7, 5, 5, 6)),
-  q('hertha', 'ramos09', 'Adrián Ramos', 1986, 'Colombia', ['ST'], 66, 78, 2013, 32, t(7, 5, 7, 6, 5, 7)),
+  q('hertha', 'aramos09', 'Adrián Ramos', 1986, 'Colombia', ['ST'], 66, 78, 2013, 32, t(7, 5, 7, 6, 5, 7)),
 ];
 
 /** VfL Bochum, 2009–10 — relegated 16th via the play-off; a modest Ruhr side built

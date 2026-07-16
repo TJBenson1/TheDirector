@@ -382,7 +382,8 @@ export const PSG_2013: CuratedSeed[] = [
   // Ménez — dazzling flair undone by attitude. A lost talent (latent 86).
   q('psg', 'menez13', 'Jérémy Ménez', 1987, 'France', ['AM', 'RW', 'ST'], 80, 83, 2015, 40, t(5, 8, 7, 5, 7, 6), { latentCeiling: 86 }),
   q('psg', 'lucasmoura13', 'Lucas Moura', 1992, 'Brazil', ['RW', 'LW'], 81, 88, 2018, 25, t(8, 6, 8, 6, 4, 8)),
-  q('psg', 'cabaye13', 'Yohan Cabaye', 1986, 'France', ['CM', 'DM'], 82, 84, 2017, 25, t(8, 5, 8, 6, 5, 7)),
+  // Cabaye starts at Newcastle (his 2013 club); the ledger moves him here in Jan
+  // 2014, so he is NOT double-curated at PSG (was a cur_cabaye13 id collision).
   q('psg', 'digne13', 'Lucas Digne', 1993, 'France', ['LB'], 76, 85, 2018, 30, t(8, 5, 7, 6, 4, 7)),
 ];
 
