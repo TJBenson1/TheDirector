@@ -284,6 +284,12 @@ const LEDGER_2013_2016: RealTransferLedgerEntry[] = [
   { playerId: 'cur_menez13', from: 'psg', to: 'milan', window: '2014-07', fee: 0 },
   { playerId: 'cur_markovic13', from: 'benfica', to: 'liverpool', window: '2014-07', fee: 20_000_000 },
   { playerId: 'cur_pjanic13', from: 'roma', to: 'juventus', window: '2016-07', fee: 32_000_000 },
+  // Mid-club stars moving up the food chain — the real deals a Man Utd '13 user
+  // could gazump (sign the man before the big club does).
+  { playerId: 'cur_cabaye13', from: 'newcastle', to: 'psg', window: '2014-01', fee: 19_000_000 },
+  { playerId: 'cur_bony13', from: 'swansea', to: 'man_city', window: '2015-01', fee: 28_000_000 },
+  { playerId: 'cur_benteke13', from: 'aston_villa', to: 'liverpool', window: '2015-07', fee: 32_500_000 },
+  { playerId: 'cur_delph13', from: 'aston_villa', to: 'man_city', window: '2015-07', fee: 8_000_000 },
 ];
 
 /**

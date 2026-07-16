@@ -464,8 +464,111 @@ export const WESTHAM_2013: CuratedSeed[] = [
 ];
 
 /** Curated squads for the man-utd-2013 scenario, keyed by club. */
+/** Newcastle United, 2013–14 — Pardew's solid 10th-place side built on French and
+ *  African flair, undone by selling Cabaye to PSG mid-season. */
+export const NEWCASTLE_2013: CuratedSeed[] = [
+  q('newcastle', 'krul13', 'Tim Krul', 1988, 'Netherlands', ['GK'], 78, 80, 2016, 45, t(8, 5, 7, 7, 4, 7)),
+  q('newcastle', 'debuchy13', 'Mathieu Debuchy', 1985, 'France', ['RB'], 78, 79, 2015, 40, t(8, 6, 7, 4, 5, 7)),
+  q('newcastle', 'coloccini13', 'Fabricio Coloccini', 1982, 'Argentina', ['CB'], 75, 76, 2016, 45, t(8, 6, 7, 8, 5, 7)),
+  q('newcastle', 'yangambiwa13', 'Mapou Yanga-Mbiwa', 1989, 'France', ['CB'], 73, 78, 2017, 40, t(7, 6, 7, 5, 5, 6)),
+  q('newcastle', 'santon13', 'Davide Santon', 1991, 'Italy', ['LB', 'RB'], 72, 78, 2017, 45, t(7, 6, 7, 6, 5, 6)),
+  q('newcastle', 'cabaye13', 'Yohan Cabaye', 1986, 'France', ['CM', 'DM'], 79, 80, 2015, 35, t(9, 6, 8, 5, 4, 7)),
+  q('newcastle', 'sissoko13', 'Moussa Sissoko', 1989, 'France', ['CM', 'DM'], 75, 80, 2016, 40, t(7, 7, 7, 6, 5, 7)),
+  q('newcastle', 'tiote13', 'Cheick Tioté', 1986, 'Ivory Coast', ['DM'], 74, 76, 2016, 45, t(7, 6, 6, 7, 7, 6)),
+  q('newcastle', 'anita13', 'Vurnon Anita', 1989, 'Netherlands', ['DM', 'RB'], 71, 74, 2016, 30, t(7, 5, 6, 7, 4, 7)),
+  // Ben Arfa — mercurial, hugely gifted, never sustained it. A wasted talent (latent 84).
+  q('newcastle', 'benarfa13', 'Hatem Ben Arfa', 1987, 'France', ['AM', 'RW'], 72, 74, 2015, 55, t(5, 8, 5, 4, 8, 4), { latentCeiling: 84 }),
+  q('newcastle', 'gouffran13', 'Yoan Gouffran', 1986, 'France', ['LW', 'ST'], 72, 73, 2016, 35, t(7, 5, 6, 7, 5, 7)),
+  q('newcastle', 'remy13', 'Loïc Rémy', 1987, 'France', ['ST'], 78, 80, 2014, 50, t(7, 7, 7, 4, 5, 6)),
+  q('newcastle', 'cisse13', 'Papiss Cissé', 1985, 'Senegal', ['ST'], 74, 76, 2016, 45, t(6, 7, 6, 6, 6, 6)),
+];
+
+/** Swansea City, 2013–14 — Laudrup's tidy Welsh possession side; a Bony-led attack,
+ *  a Europa League run after the 2013 League Cup win, finished 12th. */
+export const SWANSEA_2013: CuratedSeed[] = [
+  q('swansea', 'vorm13', 'Michel Vorm', 1983, 'Netherlands', ['GK'], 77, 77, 2016, 30, t(8, 4, 6, 7, 3, 7)),
+  q('swansea', 'williams13', 'Ashley Williams', 1984, 'Wales', ['CB'], 78, 78, 2016, 25, t(9, 4, 6, 9, 3, 7)),
+  q('swansea', 'chico13', 'Chico Flores', 1987, 'Spain', ['CB'], 71, 71, 2015, 45, t(6, 6, 5, 6, 8, 6)),
+  // Ben Davies — a tidy young full-back here, a long Spurs career ahead.
+  q('swansea', 'davies13', 'Ben Davies', 1993, 'Wales', ['LB'], 71, 80, 2017, 30, t(8, 3, 8, 8, 2, 7)),
+  q('swansea', 'rangel13', 'Àngel Rangel', 1982, 'Spain', ['RB'], 72, 72, 2015, 35, t(8, 3, 5, 9, 2, 7)),
+  q('swansea', 'britton13', 'Leon Britton', 1982, 'England', ['CM', 'DM'], 73, 73, 2015, 30, t(8, 3, 5, 9, 2, 7)),
+  q('swansea', 'shelvey13', 'Jonjo Shelvey', 1992, 'England', ['CM'], 73, 80, 2018, 40, t(6, 7, 8, 5, 7, 6)),
+  q('swansea', 'deguzman13', 'Jonathan de Guzmán', 1987, 'Netherlands', ['AM', 'CM'], 74, 76, 2016, 45, t(7, 6, 7, 5, 5, 6)),
+  q('swansea', 'routledge13', 'Wayne Routledge', 1985, 'England', ['LW', 'RW'], 72, 72, 2016, 45, t(7, 4, 5, 7, 3, 7)),
+  q('swansea', 'dyer13', 'Nathan Dyer', 1987, 'England', ['RW', 'LW'], 73, 73, 2018, 45, t(7, 5, 6, 7, 4, 7)),
+  q('swansea', 'hernandez13', 'Pablo Hernández', 1985, 'Spain', ['RW', 'AM'], 73, 74, 2016, 40, t(7, 6, 6, 5, 5, 6)),
+  q('swansea', 'bony13', 'Wilfried Bony', 1988, 'Ivory Coast', ['ST'], 78, 80, 2017, 35, t(8, 7, 9, 4, 4, 6)),
+  q('swansea', 'michu13', 'Michu', 1986, 'Spain', ['AM', 'ST'], 77, 78, 2016, 60, t(7, 6, 7, 6, 4, 6)),
+];
+
+/** Stoke City, 2013–14 — Mark Hughes' first season; a physical, set-piece side
+ *  (9th) beginning its shift toward possession football. */
+export const STOKE_2013: CuratedSeed[] = [
+  q('stoke', 'begovic13', 'Asmir Begović', 1987, 'Bosnia and Herzegovina', ['GK'], 77, 79, 2016, 30, t(8, 6, 7, 6, 4, 7)),
+  q('stoke', 'shawcross13', 'Ryan Shawcross', 1987, 'England', ['CB'], 76, 77, 2018, 40, t(8, 6, 7, 9, 5, 6)),
+  q('stoke', 'huth13', 'Robert Huth', 1984, 'Germany', ['CB'], 73, 73, 2016, 55, t(7, 6, 5, 7, 5, 6)),
+  q('stoke', 'wilson13', 'Marc Wilson', 1987, 'Republic of Ireland', ['CB', 'LB'], 68, 69, 2016, 50, t(6, 5, 5, 7, 5, 6)),
+  q('stoke', 'pieters13', 'Erik Pieters', 1988, 'Netherlands', ['LB'], 71, 74, 2018, 35, t(7, 6, 7, 6, 5, 7)),
+  q('stoke', 'cameron13', 'Geoff Cameron', 1985, 'United States', ['RB', 'DM'], 71, 73, 2017, 40, t(7, 6, 6, 7, 4, 8)),
+  q('stoke', 'whelan13', 'Glenn Whelan', 1984, 'Republic of Ireland', ['DM', 'CM'], 71, 71, 2015, 40, t(7, 5, 5, 8, 5, 6)),
+  q('stoke', 'nzonzi13', 'Steven Nzonzi', 1988, 'France', ['DM', 'CM'], 72, 78, 2017, 30, t(7, 6, 7, 5, 5, 7)),
+  q('stoke', 'adam13', 'Charlie Adam', 1985, 'Scotland', ['CM', 'AM'], 76, 76, 2017, 45, t(7, 7, 6, 6, 7, 6)),
+  // Arnautović — mercurial talent here, remade into a genuinely good top-flight player.
+  q('stoke', 'arnautovic13', 'Marko Arnautović', 1989, 'Austria', ['LW', 'ST'], 74, 82, 2017, 35, t(6, 8, 7, 5, 8, 6)),
+  q('stoke', 'walters13', 'Jonathan Walters', 1983, 'Republic of Ireland', ['ST', 'RW'], 72, 72, 2016, 35, t(8, 5, 7, 9, 4, 7)),
+  q('stoke', 'crouch13', 'Peter Crouch', 1981, 'England', ['ST'], 71, 71, 2015, 45, t(7, 5, 5, 7, 4, 7)),
+  // Stephen Ireland — a huge talent at City who drifted; never rebuilt it. Wasted (latent 80).
+  q('stoke', 'ireland13', 'Stephen Ireland', 1986, 'Republic of Ireland', ['AM', 'CM'], 69, 74, 2016, 55, t(6, 7, 5, 5, 7, 6), { latentCeiling: 80 }),
+];
+
+/** Aston Villa, 2013–14 — Paul Lambert's young, struggling side (15th), carried by
+ *  Benteke's goals and Vlaar's leadership; a teenage Grealish on the fringe. */
+export const ASTON_VILLA_2013: CuratedSeed[] = [
+  q('aston_villa', 'guzan13', 'Brad Guzan', 1984, 'United States', ['GK'], 76, 76, 2016, 30, t(8, 5, 6, 7, 4, 7)),
+  q('aston_villa', 'vlaar13', 'Ron Vlaar', 1985, 'Netherlands', ['CB'], 77, 77, 2015, 55, t(8, 5, 7, 7, 4, 7)),
+  q('aston_villa', 'baker13', 'Nathan Baker', 1991, 'England', ['CB'], 69, 74, 2016, 50, t(7, 4, 6, 7, 4, 6)),
+  q('aston_villa', 'clark13', 'Ciaran Clark', 1989, 'Republic of Ireland', ['CB'], 68, 72, 2016, 40, t(6, 4, 6, 7, 5, 6)),
+  q('aston_villa', 'lowton13', 'Matthew Lowton', 1989, 'England', ['RB'], 70, 73, 2016, 30, t(7, 4, 6, 7, 4, 6)),
+  q('aston_villa', 'bacuna13', 'Leandro Bacuna', 1991, 'Netherlands', ['RB', 'CM'], 70, 76, 2016, 30, t(6, 6, 7, 6, 6, 7)),
+  q('aston_villa', 'delph13', 'Fabian Delph', 1989, 'England', ['CM', 'DM'], 70, 80, 2016, 55, t(7, 6, 8, 7, 5, 7)),
+  q('aston_villa', 'elahmadi13', 'Karim El Ahmadi', 1985, 'Morocco', ['DM', 'CM'], 71, 73, 2015, 35, t(7, 4, 6, 6, 4, 6)),
+  q('aston_villa', 'westwood13', 'Ashley Westwood', 1990, 'England', ['CM', 'DM'], 70, 74, 2017, 30, t(7, 4, 7, 7, 4, 6)),
+  q('aston_villa', 'weimann13', 'Andreas Weimann', 1991, 'Austria', ['ST', 'RW'], 72, 76, 2016, 35, t(7, 6, 7, 6, 5, 7)),
+  q('aston_villa', 'agbonlahor13', 'Gabriel Agbonlahor', 1986, 'England', ['ST', 'LW'], 72, 72, 2016, 45, t(6, 6, 6, 8, 6, 6)),
+  q('aston_villa', 'benteke13', 'Christian Benteke', 1990, 'Belgium', ['ST'], 78, 82, 2017, 45, t(7, 7, 9, 5, 6, 7)),
+  // Grealish — a teenage academy talent (senior debut May 2014), later a £100m player.
+  // Reality-rail: minimal now, an elite ceiling.
+  q('aston_villa', 'grealish13', 'Jack Grealish', 1995, 'England', ['AM', 'LW'], 62, 86, 2016, 40, t(6, 7, 8, 6, 6, 7)),
+];
+
+/** West Bromwich Albion, 2013–14 — a 17th-place survival side (Clarke then Mel);
+ *  Foster in goal, Mulumbu and Sessègnon the standouts, young Berahino top scorer. */
+export const WEST_BROM_2013: CuratedSeed[] = [
+  q('west_brom', 'foster13', 'Ben Foster', 1983, 'England', ['GK'], 75, 75, 2016, 45, t(8, 4, 6, 7, 4, 6)),
+  q('west_brom', 'olsson13', 'Jonas Olsson', 1983, 'Sweden', ['CB'], 70, 70, 2016, 40, t(7, 5, 6, 7, 5, 6)),
+  q('west_brom', 'mcauley13', 'Gareth McAuley', 1979, 'Northern Ireland', ['CB'], 70, 70, 2015, 42, t(8, 4, 6, 8, 4, 6)),
+  q('west_brom', 'ridgewell13', 'Liam Ridgewell', 1984, 'England', ['LB', 'CB'], 67, 67, 2015, 44, t(6, 5, 5, 6, 6, 6)),
+  q('west_brom', 'jones13', 'Billy Jones', 1987, 'England', ['RB'], 65, 66, 2015, 38, t(6, 4, 5, 7, 4, 6)),
+  q('west_brom', 'mulumbu13', 'Youssouf Mulumbu', 1987, 'DR Congo', ['DM', 'CM'], 74, 74, 2015, 40, t(7, 6, 7, 6, 6, 7)),
+  q('west_brom', 'yacob13', 'Claudio Yacob', 1987, 'Argentina', ['DM', 'CM'], 69, 70, 2016, 42, t(7, 4, 6, 7, 5, 6)),
+  q('west_brom', 'brunt13', 'Chris Brunt', 1984, 'Northern Ireland', ['LB', 'LW'], 70, 70, 2016, 45, t(7, 6, 7, 8, 6, 6)),
+  q('west_brom', 'morrison13', 'James Morrison', 1986, 'Scotland', ['CM', 'AM'], 70, 71, 2017, 48, t(7, 5, 6, 8, 5, 7)),
+  q('west_brom', 'amalfitano13', 'Morgan Amalfitano', 1985, 'France', ['RW', 'AM'], 71, 71, 2014, 40, t(6, 6, 6, 5, 6, 6)),
+  q('west_brom', 'sessegnon13', 'Stéphane Sessègnon', 1984, 'Benin', ['AM', 'ST'], 74, 74, 2017, 43, t(6, 7, 6, 5, 7, 6)),
+  // Berahino — the top-scoring young striker whose attitude and form then collapsed.
+  // Wasted talent (latent 80).
+  q('west_brom', 'berahino13', 'Saido Berahino', 1993, 'England', ['ST'], 70, 74, 2017, 45, t(4, 8, 6, 4, 7, 5), { latentCeiling: 80 }),
+  q('west_brom', 'long13', 'Shane Long', 1987, 'Republic of Ireland', ['ST'], 71, 72, 2016, 46, t(7, 5, 7, 6, 5, 7)),
+];
+
 export const MAN_UTD_2013_SQUADS: Record<string, CuratedSeed[]> = {
   west_ham: WESTHAM_2013,
+  newcastle: NEWCASTLE_2013,
+  swansea: SWANSEA_2013,
+  stoke: STOKE_2013,
+  aston_villa: ASTON_VILLA_2013,
+  west_brom: WEST_BROM_2013,
   man_utd: MAN_UTD_2013,
   man_city: MAN_CITY_2013,
   chelsea: CHELSEA_2013,

@@ -20,7 +20,12 @@ Nowotny, Voronin, a young Gonzalo Castro), **Sevilla '09** (Luís Fabiano, Kanou
 Jesús Navas, Fazio, Perotti — a lost talent) and **Villarreal '09** (Cazorla,
 Senna, Godín, Rossi, Capdevila) now real squads. The **Bundesliga 2009 is now
 complete — all 18 clubs curated** (the bottom-4 Freiburg/Hertha/Nürnberg/Bochum
-added). Still to do: more mid clubs in the 2013 world (the mechanic already makes
+added). The **2013 Premier League mid-block is now curated** too — Newcastle,
+Swansea, Stoke, Aston Villa, West Brom added (14 of 20 eng-2013 clubs real),
+surfacing recruitment targets and reality-rail talents (a teenage **Grealish**
+62/86, Bony, Benteke, Arnautović, Shelvey/Davies) plus their real onward sales
+(Cabaye→PSG, Bony→City, Benteke→Liverpool). Still to do: the eng-2013 tail
+(Sunderland, Hull, Palace, Norwich, Fulham, Cardiff — the mechanic already makes
 their filler signable, so this is real-names polish, not a gap).
 
 **Progress:** user-club leagues are well curated. Host-club pass done for AC Milan
