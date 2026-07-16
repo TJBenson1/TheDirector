@@ -502,7 +502,13 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'barcelona-1999': BARCELONA_1999_SQUADS,
   'inter-1998': INTER_1998_SQUADS,
   'man-utd-2013': MAN_UTD_2013_SQUADS,
+  'man-city-2013': MAN_UTD_2013_SQUADS,
+  'chelsea-2013': MAN_UTD_2013_SQUADS,
+  'liverpool-2013': MAN_UTD_2013_SQUADS,
+  'arsenal-2013': MAN_UTD_2013_SQUADS,
   'arsenal-2004': ARSENAL_2004_SQUADS,
   'liverpool-2001': LIVERPOOL_2001_SQUADS,
   'bayern-2009': BAYERN_2009_SQUADS,
+  'wolfsburg-2009': BAYERN_2009_SQUADS,
+  'dortmund-2009': BAYERN_2009_SQUADS,
 };

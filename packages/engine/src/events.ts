@@ -1489,15 +1489,317 @@ const ARSENAL_1996_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── Manchester City, 2013 (the moneyed champions) storyline pack ─────────────
+const MAN_CITY_2013_PACK: ScriptedEvent[] = [
+  {
+    id: 'aguero-fitness',
+    date: '2014-02',
+    requires: (s) => playerAt(s, 'cur_aguero', 'man_city') && s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:aguero-fitness',
+      title: 'Sergio Agüero\'s hamstrings are a worry in the run-in',
+      description: 'Your talisman is your title, but his hamstrings keep tightening. Wrap him up for the decisive games, or lean on his goals now?',
+      interrupt: true, clubId: 'man_city', category: 'event',
+      choices: [
+        { id: 'manage', label: 'Manage his minutes to keep him fit', successProbability: 0.6, onSuccess: [{ kind: 'restPlayer', playerId: 'cur_aguero', months: 1, amount: -8 }, { kind: 'memory', tag: 'load', text: 'Protected Agüero for the title run-in.' }], onFailure: [{ kind: 'morale', playerId: 'cur_aguero', amount: -4 }] },
+        { id: 'ride', label: 'Play him — you need the goals', successProbability: 0.45, onSuccess: [{ kind: 'morale', playerId: 'cur_aguero', amount: 6 }], onFailure: [{ kind: 'reinjure', playerId: 'cur_aguero', months: 2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'injuryProneness', playerId: 'cur_aguero', amount: 6 }],
+      memoryTags: ['load', 'cur_aguero'],
+    }),
+  },
+  {
+    id: 'yaya-unrest',
+    date: '2014-06',
+    requires: (s) => playerAt(s, 'cur_yayatoure', 'man_city') && s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:yaya-unrest',
+      title: 'Yaya Touré\'s agent is stirring up trouble',
+      description: 'Your midfield engine feels unloved — his agent is airing bizarre grievances in public and hinting at a move. Placate him, or hold the line?',
+      interrupt: true, clubId: 'man_city', category: 'event',
+      choices: [
+        { id: 'placate', label: 'Give him the respect (and wages) he wants', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_yayatoure', amount: 8 }, { kind: 'agitation', playerId: 'cur_yayatoure', amount: -18 }, { kind: 'money', clubId: 'man_city', amount: -5_000_000 }], onFailure: [{ kind: 'agitation', playerId: 'cur_yayatoure', amount: 10 }] },
+        { id: 'hold', label: 'Refuse to indulge the agent', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 4 }], onFailure: [{ kind: 'agitation', playerId: 'cur_yayatoure', amount: 16 }, { kind: 'morale', playerId: 'cur_yayatoure', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_yayatoure', amount: 14 }],
+      memoryTags: ['transfer-saga', 'cur_yayatoure'],
+    }),
+  },
+  {
+    id: 'city-ffp',
+    date: '2014-05',
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:city-ffp',
+      title: 'UEFA hit the club with Financial Fair Play sanctions',
+      description: 'Your spending has drawn a fine and a squad-size restriction for Europe. Trim the wage bill to comply, or fight the ruling and spend on regardless?',
+      interrupt: true, clubId: 'man_city', category: 'event',
+      choices: [
+        { id: 'comply', label: 'Comply — trim and build smarter', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'board', text: 'Reined the spending in to satisfy FFP.' }], onFailure: [{ kind: 'memory', tag: 'board', text: 'Compliance costs you squad depth.' }] },
+        { id: 'defy', label: 'Fight it and keep spending', successProbability: 0.4, onSuccess: [{ kind: 'money', clubId: 'man_city', amount: 15_000_000 }, { kind: 'memory', tag: 'board', text: 'Backed the owners against UEFA.' }], onFailure: [{ kind: 'boardPatience', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'board', text: 'The FFP sanctions bite unmanaged.' }],
+      memoryTags: ['board', 'ffp'],
+    }),
+  },
+];
+
+// ── Chelsea, 2013 (Mourinho's return) storyline pack ─────────────────────────
+const CHELSEA_2013_PACK: ScriptedEvent[] = [
+  {
+    id: 'mourinho-return',
+    date: '2013-08',
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:mourinho-return',
+      title: 'The Special One is back — and wants control',
+      description: 'Mourinho has returned as "the Happy One", but he wants the squad built his way — physical, pragmatic, win-first. Give him full control of the rebuild, or keep the club\'s technical project?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'his-way', label: 'Hand him full control', successProbability: 0.7, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Backed Mourinho\'s rebuild fully.' }], onFailure: [{ kind: 'memory', tag: 'manager', text: 'The manager wants more say still.' }] },
+        { id: 'balance', label: 'Keep the possession project', successProbability: 0.4, onSuccess: [{ kind: 'boardPatience', amount: 3 }], onFailure: [{ kind: 'managerRelationship', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: -4 }],
+      memoryTags: ['manager', 'mourinho'],
+    }),
+  },
+  {
+    id: 'mata-frozen',
+    date: '2013-12',
+    requires: (s) => playerAt(s, 'cur_mata', 'chelsea') && s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:mata-frozen',
+      title: 'Mourinho has frozen out Juan Mata',
+      description: 'Your two-time Player of the Year does not fit the manager\'s system and has barely played. United are circling with a club-record bid. Sell the fans\' favourite, or overrule the manager and keep him?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Cash in — sell him to United', successProbability: 0.85, onSuccess: [{ kind: 'transferOut', playerId: 'cur_mata', clubId: 'man_utd', amount: 37_000_000 }, { kind: 'managerRelationship', amount: 5 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Mata to United — as reality, at a record fee.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_mata', amount: 12 }] },
+        { id: 'keep', label: 'Overrule Mourinho and keep him', successProbability: 0.45, onSuccess: [{ kind: 'morale', playerId: 'cur_mata', amount: 10 }, { kind: 'managerRelationship', amount: -8 }, { kind: 'memory', tag: 'transfer-saga', text: 'Kept Mata against the manager\'s wishes — a divergence.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_mata', amount: 14 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_mata', amount: 14 }, { kind: 'morale', playerId: 'cur_mata', amount: -6 }],
+      memoryTags: ['transfer-saga', 'cur_mata'],
+    }),
+  },
+  {
+    id: 'torres-problem',
+    date: '2013-11',
+    requires: (s) => playerAt(s, 'cur_torres', 'chelsea') && s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:torres-problem',
+      title: 'The £50m striker still is not firing',
+      description: 'Fernando Torres has never rediscovered his Anfield form, and the manager does not trust him. Persist with the investment, or accept you need a new number nine?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'persist', label: 'Back him to come good', successProbability: 0.4, onSuccess: [{ kind: 'morale', playerId: 'cur_torres', amount: 10 }, { kind: 'memory', tag: 'selection', text: 'Kept faith with Torres.' }], onFailure: [{ kind: 'morale', playerId: 'cur_torres', amount: -6 }] },
+        { id: 'move-on', label: 'Move him on and buy a striker', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'agitation', playerId: 'cur_torres', amount: 12 }, { kind: 'memory', tag: 'selection', text: 'Accepted the Torres gamble had failed.' }], onFailure: [{ kind: 'money', clubId: 'chelsea', amount: -3_000_000 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_torres', amount: -5 }],
+      memoryTags: ['selection', 'cur_torres'],
+    }),
+  },
+];
+
+// ── Liverpool, 2013 (the Suárez near-miss) storyline pack ────────────────────
+const LIVERPOOL_2013_PACK: ScriptedEvent[] = [
+  {
+    id: 'suarez-suitors',
+    date: '2013-08',
+    requires: (s) => playerAt(s, 'cur_suarez', 'liverpool') && s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:suarez-suitors',
+      title: 'Arsenal are testing Luis Suárez\'s release clause',
+      description: 'Your brilliant, volatile striker wants Champions League football and Arsenal have lodged a cheeky bid. Convince him the project is here, or cash in on a player who keeps courting controversy?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Refuse to sell and build around him', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_suarez', amount: 10 }, { kind: 'agitation', playerId: 'cur_suarez', amount: -20 }, { kind: 'memory', tag: 'transfer-saga', text: 'Kept Suárez — the near-miss title charge is on, as reality.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_suarez', amount: 12 }] },
+        { id: 'sell', label: 'Cash in while his stock is high', successProbability: 0.8, onSuccess: [{ kind: 'transferOut', playerId: 'cur_suarez', clubId: 'arsenal', amount: 40_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Suárez to a rival — a divergence from the title tilt.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_suarez', amount: 15 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_suarez', amount: 14 }],
+      memoryTags: ['transfer-saga', 'cur_suarez'],
+    }),
+  },
+  {
+    id: 'title-run-in-2014',
+    date: '2014-04',
+    requires: (s) => playerAt(s, 'cur_gerrard2', 'liverpool') && s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:title-run-in-2014',
+      title: 'The title is in your hands with weeks to go',
+      description: 'Anfield is dreaming of a first title in 24 years. The nerves are jangling and one slip could undo it all. How do you steady the run-in?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'calm', label: 'Take the pressure off the players', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 6 }, { kind: 'memory', tag: 'title-race', text: 'Kept the players calm — the dream stays alive.' }], onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -5 }, { kind: 'memory', tag: 'title-race', text: 'The nerves told — echoes of the slip.' }] },
+        { id: 'attack', label: 'Tell them to go for the jugular', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 8 }], onFailure: [{ kind: 'fanTrust', amount: -5, text: 'The gung-ho approach backfires.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'liverpool', amount: -4 }],
+      memoryTags: ['title-race', 'cur_gerrard2'],
+    }),
+  },
+  {
+    id: 'sturridge-fitness',
+    date: '2013-12',
+    requires: (s) => playerAt(s, 'cur_sturridge', 'liverpool') && s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:sturridge-fitness',
+      title: 'Daniel Sturridge keeps breaking down',
+      description: 'The other half of your SAS strike force is a goal machine — when his body allows it. Manage him carefully, or ride the hot streak while it lasts?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'manage', label: 'Protect him for the long run', successProbability: 0.6, onSuccess: [{ kind: 'restPlayer', playerId: 'cur_sturridge', months: 1, amount: -8 }], onFailure: [{ kind: 'morale', playerId: 'cur_sturridge', amount: -4 }] },
+        { id: 'ride', label: 'Ride the goals while they flow', successProbability: 0.45, onSuccess: [{ kind: 'morale', playerId: 'cur_sturridge', amount: 6 }], onFailure: [{ kind: 'reinjure', playerId: 'cur_sturridge', months: 2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'injuryProneness', playerId: 'cur_sturridge', amount: 8 }],
+      memoryTags: ['load', 'cur_sturridge'],
+    }),
+  },
+];
+
+// ── Arsenal, 2013 (ending the drought) storyline pack ────────────────────────
+const ARSENAL_2013_PACK: ScriptedEvent[] = [
+  {
+    id: 'ozil-statement',
+    date: '2013-09',
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:ozil-statement',
+      title: 'A club-record signing is there for the taking',
+      description: 'Deadline day, and a world-class playmaker (Özil) is suddenly available. Break the club\'s transfer record to make a statement of ambition, or bank the new-stadium money as usual?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'splash', label: 'Break the record — end the frugality', successProbability: 0.75, onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'fanTrust', amount: 8, text: 'A marquee signing electrifies the Emirates.' }, { kind: 'memory', tag: 'transfer', text: 'Made the statement signing — as reality.' }], onFailure: [{ kind: 'money', clubId: 'arsenal', amount: -5_000_000 }] },
+        { id: 'thrifty', label: 'Bank the money, as ever', successProbability: 0.5, onSuccess: [{ kind: 'money', clubId: 'arsenal', amount: 10_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Played it safe again — the fans grumble.' }], onFailure: [{ kind: 'fanTrust', amount: -8, text: 'Another quiet window tests the fans\' patience.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -5, text: 'Dithering costs you the marquee target.' }],
+      memoryTags: ['transfer', 'ozil'],
+    }),
+  },
+  {
+    id: 'arsenal-injury-crisis',
+    date: '2014-01',
+    requires: (s) => playerAt(s, 'cur_walcott', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:arsenal-injury-crisis',
+      title: 'The injuries are piling up again',
+      description: 'The perennial Arsenal problem: the treatment room is full and Walcott has just gone down with a serious knee injury. Push the fit players through, or rotate and protect them?',
+      interrupt: true, clubId: 'arsenal', category: 'injury',
+      choices: [
+        { id: 'rotate', label: 'Rotate to protect the survivors', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'load', text: 'Managed the squad through the injury crisis.' }, { kind: 'boardPatience', amount: 2 }], onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -3 }] },
+        { id: 'push', label: 'Push the fit men through it', successProbability: 0.4, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 5 }], onFailure: [{ kind: 'memory', tag: 'load', text: 'Flogging the fit few deepens the crisis.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'arsenal', amount: -4 }],
+      memoryTags: ['load', 'cur_walcott'],
+    }),
+  },
+  {
+    id: 'fa-cup-drought',
+    date: '2014-04',
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:fa-cup-drought',
+      title: 'A cup run could end nine years without a trophy',
+      description: 'The club has not won a thing since 2005 and a cup final is in sight. Throw everything at ending the drought, or protect the top-four finish that pays the bills?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'go-for-it', label: 'Go all-in on the trophy', successProbability: 0.55, onSuccess: [{ kind: 'fanTrust', amount: 10, text: 'Ending the drought would change the mood entirely.' }, { kind: 'morale', clubId: 'arsenal', amount: 6 }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'top-four', label: 'Prioritise the top-four money', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'board', text: 'Chose the safe top-four over the trophy gamble.' }], onFailure: [{ kind: 'fanTrust', amount: -6, text: '"Same old Arsenal", say the fans.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -4, text: 'The drought grinds on.' }],
+      memoryTags: ['board', 'trophy'],
+    }),
+  },
+];
+
+// ── VfL Wolfsburg, 2009 (defending the miracle) storyline pack ───────────────
+const WOLFSBURG_2009_PACK: ScriptedEvent[] = [
+  {
+    id: 'wolfsburg-title-defence',
+    date: '2009-09',
+    requires: (s) => s.playerClub === 'wolfsburg',
+    build: () => ({
+      id: 'scripted:wolfsburg-title-defence',
+      title: 'Can the champions do it again?',
+      description: 'You are the surprise champions of Germany, but the doubters call it a fluke and a title hangover is setting in. Demand the same all-out attacking football, or shore things up to defend what you have?',
+      interrupt: true, clubId: 'wolfsburg', category: 'event',
+      choices: [
+        { id: 'attack', label: 'Keep the handbrake off — attack again', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'wolfsburg', amount: 6 }, { kind: 'memory', tag: 'tactics', text: 'Backed the cavalier approach that won the title.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'solidify', label: 'Add steel and control', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }], onFailure: [{ kind: 'morale', clubId: 'wolfsburg', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'wolfsburg', amount: -4 }],
+      memoryTags: ['tactics', 'title-defence'],
+    }),
+  },
+  {
+    id: 'dzeko-suitors',
+    date: '2010-06',
+    requires: (s) => playerAt(s, 'cur_dzeko09', 'wolfsburg') && s.playerClub === 'wolfsburg',
+    build: () => ({
+      id: 'scripted:dzeko-suitors',
+      title: 'The giants have come for Edin Džeko',
+      description: 'Your title-winning striker\'s goals have Europe\'s richest clubs calling with life-changing money. Cash in on a huge fee for a smaller club, or build on and keep your star?',
+      interrupt: true, clubId: 'wolfsburg', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Take the money — it is too good to refuse', successProbability: 0.85, onSuccess: [{ kind: 'transferOut', playerId: 'cur_dzeko09', clubId: 'man_city', amount: 27_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Džeko to the money — as reality.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_dzeko09', amount: 12 }] },
+        { id: 'keep', label: 'Keep him and stay a force', successProbability: 0.45, onSuccess: [{ kind: 'morale', playerId: 'cur_dzeko09', amount: 8 }, { kind: 'memory', tag: 'transfer-saga', text: 'Kept Džeko — a divergence a small club rarely manages.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_dzeko09', amount: 15 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_dzeko09', amount: 14 }],
+      memoryTags: ['transfer-saga', 'cur_dzeko09'],
+    }),
+  },
+];
+
+// ── Borussia Dortmund, 2009 (Klopp's young guns) storyline pack ──────────────
+const DORTMUND_2009_PACK: ScriptedEvent[] = [
+  {
+    id: 'klopp-project',
+    date: '2009-09',
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:klopp-project',
+      title: 'Trust the young project, or spend to compete now?',
+      description: 'The manager wants to build a high-energy side from the cheapest young talent in Europe — but the board and fans are impatient for results. Commit to the long game, or demand signings now?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'long-game', label: 'Commit to the youth project', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'development', text: 'Backed Klopp\'s young project — the making of a champion.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'spend', label: 'Demand experienced signings now', successProbability: 0.45, onSuccess: [{ kind: 'boardPatience', amount: 4 }], onFailure: [{ kind: 'managerRelationship', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: -4 }],
+      memoryTags: ['development', 'klopp'],
+    }),
+  },
+  {
+    id: 'sahin-madrid',
+    date: '2011-06',
+    requires: (s) => playerAt(s, 'cur_sahin09', 'dortmund') && s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:sahin-madrid',
+      title: 'Real Madrid want your young playmaker',
+      description: 'Nuri Şahin has been the brain of your title-winning side, and now Real Madrid are calling. The fee would fund a rebuild, but losing him hurts. Cash in, or fight to keep the project together?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Sell to Madrid and reinvest', successProbability: 0.85, onSuccess: [{ kind: 'transferOut', playerId: 'cur_sahin09', clubId: 'real_madrid', amount: 10_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold Şahin to Madrid — as reality.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_sahin09', amount: 12 }] },
+        { id: 'keep', label: 'Keep the heartbeat of the side', successProbability: 0.45, onSuccess: [{ kind: 'morale', playerId: 'cur_sahin09', amount: 8 }, { kind: 'memory', tag: 'transfer-saga', text: 'Kept Şahin — the project stays whole, a divergence.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_sahin09', amount: 14 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_sahin09', amount: 12 }],
+      memoryTags: ['transfer-saga', 'cur_sahin09'],
+    }),
+  },
+];
+
 /** Scripted historical storylines by scenario. man-utd-1999 is the calibration
  *  pack; the others fire only in their own start point (no calibration impact). */
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
   'man-utd-2013': MAN_UTD_2013_PACK,
+  'man-city-2013': MAN_CITY_2013_PACK,
+  'chelsea-2013': CHELSEA_2013_PACK,
+  'liverpool-2013': LIVERPOOL_2013_PACK,
+  'arsenal-2013': ARSENAL_2013_PACK,
   'real-madrid-2000': REAL_MADRID_2000_PACK,
   'arsenal-2004': ARSENAL_2004_PACK,
   'liverpool-2001': LIVERPOOL_2001_PACK,
   'bayern-2009': BAYERN_2009_PACK,
+  'wolfsburg-2009': WOLFSBURG_2009_PACK,
+  'dortmund-2009': DORTMUND_2009_PACK,
   'barcelona-1999': BARCELONA_1999_PACK,
   'inter-1998': INTER_1998_PACK,
   'chelsea-2003': CHELSEA_2003_PACK,
