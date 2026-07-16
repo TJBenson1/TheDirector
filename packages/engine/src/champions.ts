@@ -88,6 +88,27 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2011: { w: 'chelsea', r: 'bayern' },
     2012: { w: 'bayern', r: 'dortmund' },
   },
+  'era-bundesliga-2009': {
+    // Van Gaal's Bayern, 2009→2024. Bayern open by LOSING the 2010 final to Inter
+    // (the reset's near-miss), Klopp's Dortmund take the next two European runs at
+    // home, and Real Madrid's dynasty follows. Atlético/PSG runners-up (not in the
+    // reused pack) resolve to the field.
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern', r: 'dortmund' },
+    2013: { w: 'real_madrid' },
+    2014: { w: 'barcelona', r: 'juventus' },
+    2015: { w: 'real_madrid' },
+    2016: { w: 'real_madrid', r: 'juventus' },
+    2017: { w: 'real_madrid', r: 'liverpool' },
+    2018: { w: 'liverpool' },
+    2019: { w: 'bayern' },
+    2020: { w: 'chelsea', r: 'man_city' },
+    2021: { w: 'real_madrid', r: 'liverpool' },
+    2022: { w: 'man_city', r: 'inter' },
+    2023: { w: 'real_madrid', r: 'dortmund' },
+  },
   'era-bundesliga-2012': {
     // Klopp's peak Dortmund and Heynckes's treble Bayern, 2012→2025. The all-German
     // 2013 final (Bayern beat Dortmund) opens it, then Real Madrid's dynasty; every

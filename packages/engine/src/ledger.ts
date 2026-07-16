@@ -509,6 +509,21 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
  * are Barça) — while Real's galácticos age out and the great 2009 churn plays out.
  */
 /**
+ * Real Bundesliga / European market, 2009→2016 (bayern-2009). Şahin leaves Dortmund
+ * for Madrid, then Götze crosses to Bayern (the user's signing, if they are Bayern)
+ * and Kroos leaves for Madrid — the reset's stars arriving and departing — while the
+ * elite market churns around them.
+ */
+const LEDGER_BUNDESLIGA_2009: RealTransferLedgerEntry[] = [
+  { playerId: 'cur_sahin_09', from: 'dortmund', to: 'real_madrid', window: '2011-07', fee: 10_000_000, id: 'sahin-real-2011' },
+  { playerId: 'cur_gotze_09', from: 'dortmund', to: 'bayern', window: '2013-07', fee: 37_000_000, id: 'gotze-bayern-2013' },
+  { playerId: 'cur_kroos_09', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
+  { playerId: 'cur_torres_lv10', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
+  { playerId: 'cur_di_maria_rm10', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000, id: 'dimaria-utd-2014' },
+  { playerId: 'cur_suarez_lv10', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 75_000_000, id: 'suarez-barca-2014' },
+];
+
+/**
  * Real Bundesliga / European market, 2012→2016 (dortmund-2012). The heart of it is
  * the picking-apart of Klopp's peak side — Götze, Lewandowski and Hummels to
  * Bayern, Gündoğan to City — while Kagawa comes home. If the user IS Dortmund those
@@ -715,6 +730,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-la-liga-2003': { realTransferLedger: LEDGER_LA_LIGA_2003, academyIntakes: [], realInjuries: [] },
   'era-la-liga-2006': { realTransferLedger: LEDGER_LA_LIGA_2006, academyIntakes: [], realInjuries: [] },
   'era-la-liga-2014': { realTransferLedger: LEDGER_LA_LIGA_2014, academyIntakes: [], realInjuries: [] },
+  'era-bundesliga-2009': { realTransferLedger: LEDGER_BUNDESLIGA_2009, academyIntakes: [], realInjuries: [] },
   'era-bundesliga-2012': { realTransferLedger: LEDGER_BUNDESLIGA_2012, academyIntakes: [], realInjuries: [] },
   'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
   // Juventus 2006 rejoins the late-2000s Serie A world from 2007, so it draws on

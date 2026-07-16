@@ -722,6 +722,41 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     domesticLeagueId: 'ger-2012',
   },
+  'bayern-2009': {
+    id: 'bayern-2009',
+    name: 'Bayern München — 2009: Van Gaal Reset',
+    startDate: '2009-07',
+    playerClub: 'bayern',
+    // Van Gaal has arrived to rebuild: Robben and Gómez signed, a teenage Müller
+    // and Badstuber breaking through, Schweinsteiger remade in midfield. Reality:
+    // the double, a lost 2010 final to Inter, and the dynasty's foundation — but
+    // Klopp's Dortmund are about to take the next two titles.
+    mandate: 'Complete the reset — fend off Klopp’s Dortmund and finish the job in Europe.',
+    boardPatience: 72,
+    boardExpectedFinish: 1,
+    // The Bundesliga is the simulated league; the elite of Europe (full squads,
+    // reused from the 2010 pack) anchor every real European Cup of 2010–2025.
+    clubs: [
+      { id: 'bayern', name: 'Bayern Munich', prestige: 90 },
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 74 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 92 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 90 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 88 },
+      { id: 'man_city', name: 'Manchester City', prestige: 82 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 82 },
+      { id: 'inter', name: 'Internazionale', prestige: 86 },
+      { id: 'juventus', name: 'Juventus', prestige: 82 },
+    ],
+    contextExtra: [
+      { id: 'schalke', name: 'Schalke 04', prestige: 70 },
+      { id: 'werder', name: 'Werder Bremen', prestige: 68 },
+      { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 70 },
+      { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 64 },
+      { id: 'hamburg', name: 'Hamburger SV', prestige: 66 },
+    ],
+    domesticLeagueId: 'ger-2009',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

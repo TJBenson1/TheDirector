@@ -23,6 +23,7 @@ import { BARCELONA_2003_SQUADS } from './curated-la-liga-2003.js';
 import { REAL_MADRID_2006_SQUADS } from './curated-la-liga-2006.js';
 import { BARCELONA_2014_SQUADS } from './curated-la-liga-2014.js';
 import { DORTMUND_2012_SQUADS } from './curated-bundesliga-2012.js';
+import { BAYERN_2009_SQUADS } from './curated-bundesliga-2009.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -498,6 +499,9 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   // Klopp's peak Dortmund (2012-13), defending the Wembley-final side as Bayern
   // picks it apart, with the elite of Europe (CL anchored to the 2025 world-end).
   'dortmund-2012': DORTMUND_2012_SQUADS,
+  // Van Gaal's reset Bayern (2009-10) — Robben in, Müller emerging — reusing the
+  // 2010 elite/context pack; CL anchored to 2025 (they lose the 2010 final to Inter).
+  'bayern-2009': BAYERN_2009_SQUADS,
   // The Galácticos-era Madrid start has its own Spanish/European pack (La Liga
   // 2000–01 + the clubs Real bought their galácticos from).
   'real-madrid-2000': REAL_MADRID_2000_SQUADS,

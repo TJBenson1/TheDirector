@@ -266,6 +266,34 @@ export const SPAIN_2003: LeagueSeed = {
   ],
 };
 
+/** Bundesliga, 2009–10 — van Gaal's double-winning Bayern, before Klopp's Dortmund
+ *  rose. 18 clubs; ordering follows the real final table. */
+export const GERMANY_2009: LeagueSeed = {
+  id: 'ger-2009',
+  name: 'Bundesliga',
+  season: '2009-07',
+  clubs: [
+    { id: 'bayern', name: 'Bayern München', prestige: 90, strength: 87 },
+    { id: 'schalke', name: 'Schalke 04', prestige: 70, strength: 80 },
+    { id: 'werder', name: 'Werder Bremen', prestige: 68, strength: 80 },
+    { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 70, strength: 80 },
+    { id: 'dortmund', name: 'Borussia Dortmund', prestige: 74, strength: 79 },
+    { id: 'stuttgart', name: 'VfB Stuttgart', prestige: 64, strength: 77 },
+    { id: 'hamburg', name: 'Hamburger SV', prestige: 66, strength: 78 },
+    { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 64, strength: 79 },
+    { id: 'mainz', name: 'Mainz 05', prestige: 50, strength: 71 },
+    { id: 'frankfurt', name: 'Eintracht Frankfurt', prestige: 56, strength: 72 },
+    { id: 'hoffenheim', name: 'Hoffenheim', prestige: 54, strength: 74 },
+    { id: 'freiburg', name: 'SC Freiburg', prestige: 50, strength: 70 },
+    { id: 'koln', name: '1. FC Köln', prestige: 58, strength: 72 },
+    { id: 'gladbach', name: 'Borussia Mönchengladbach', prestige: 60, strength: 71 },
+    { id: 'bochum', name: 'VfL Bochum', prestige: 48, strength: 68 },
+    { id: 'hannover', name: 'Hannover 96', prestige: 54, strength: 70 },
+    { id: 'nurnberg', name: '1. FC Nürnberg', prestige: 54, strength: 70 },
+    { id: 'hertha', name: 'Hertha BSC', prestige: 58, strength: 69 },
+  ],
+};
+
 /** Bundesliga, 2012–13 — Heynckes's treble Bayern and Klopp's Wembley-final
  *  Dortmund at their shared peak. 18 clubs; ordering follows the real table. */
 export const GERMANY_2012: LeagueSeed = {
@@ -522,5 +550,6 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,
+  'ger-2009': GERMANY_2009,
   'ger-2012': GERMANY_2012,
 };

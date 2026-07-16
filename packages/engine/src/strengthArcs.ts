@@ -157,6 +157,18 @@ const LA_LIGA_2014: Record<string, readonly Waypoint[]> = {
   valencia: [[2014, 82], [2016, 79], [2019, 76]],
 };
 
+// Bundesliga, 2009–24 (bayern-2009). Van Gaal's Bayern win 2009-10, then Klopp's
+// Dortmund take the next two titles (the insurgency the user must fend off) before
+// Bayern's dynasty reasserts through the 2010s, closing with Leverkusen's 2023-24.
+const BUNDESLIGA_2009: Record<string, readonly Waypoint[]> = {
+  bayern: [[2009, 89], [2010, 85], [2012, 91], [2013, 92], [2020, 91], [2023, 86], [2024, 90]],
+  dortmund: [[2009, 80], [2010, 89], [2012, 84], [2019, 84], [2023, 85]],
+  leverkusen: [[2009, 80], [2015, 82], [2023, 90], [2024, 84]],
+  schalke: [[2009, 81], [2012, 79], [2018, 78]],
+  werder: [[2009, 81], [2012, 75]],
+  wolfsburg: [[2009, 81], [2012, 77], [2015, 84], [2016, 77]],
+};
+
 // Bundesliga, 2012–24 (dortmund-2012). Bayern's dynasty is already in full swing —
 // the user's Dortmund start at their 2013-final peak and must ACT to stop the
 // throne (and their own stars) sliding to Munich; passively Bayern win almost
@@ -183,6 +195,7 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-la-liga-2003': LA_LIGA_2003, // barcelona-2003
   'era-la-liga-2006': LA_LIGA_2006, // real-madrid-2006
   'era-la-liga-2014': LA_LIGA_2014, // barcelona-2014
+  'era-bundesliga-2009': BUNDESLIGA_2009, // bayern-2009
   'era-bundesliga-2012': BUNDESLIGA_2012, // dortmund-2012
   'era-serie-a-1995': ITALIAN, // juventus-1995
   'era-serie-a-1998': ITALIAN, // inter-1998
