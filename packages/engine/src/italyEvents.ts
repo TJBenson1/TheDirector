@@ -14,15 +14,79 @@
  * Both resolve at the July rollover, era-gated to the Serie A 1995 pack.
  */
 
-import type { GameState } from './types.js';
+import type { ClubId, GameState } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { eraForScenario } from './ledger.js';
 import { recomputeClubStrength } from './players.js';
 import { relegateClub } from './relegation.js';
+import { standingsOrder } from './season.js';
 
 function isSerieA1995(state: GameState): boolean {
   return eraForScenario(state.meta.scenarioId) === 'era-serie-a-1995';
+}
+
+/** The Serie A 2007-08 roster Juventus rejoin on promotion (matches ITALY_2007). */
+const SERIE_A_2007_ROSTER: ClubId[] = [
+  'juventus', 'inter', 'milan', 'roma', 'fiorentina', 'napoli', 'lazio',
+  'sampdoria', 'udinese', 'genoa', 'atalanta', 'palermo', 'siena', 'cagliari',
+  'torino', 'reggina', 'catania', 'empoli', 'parma', 'livorno',
+];
+
+/**
+ * Juventus 2006: after their season in the wilderness, promote the Old Lady back
+ * to the top flight. The engine simulates a single division, so promotion is
+ * modelled by transforming Juve's one league from Serie B into Serie A — the
+ * procedural second-tier minnows drop out, and the late-2000s Serie A clubs (which
+ * exist as context) are swapped into the table. Fires at the July rollover once
+ * Juventus have finished a Serie B season in a promotion place (top three): almost
+ * every career goes straight back up, the odd mismanaged one takes another year.
+ */
+export function promoteJuventus(state: GameState, _rng: Rng): void {
+  if (eraForScenario(state.meta.scenarioId) !== 'era-serie-a-2006') return;
+  // Fire in August (the new season's first playing month), BEFORE the season
+  // inits from the league's membership — so the completed Serie B final table
+  // stays intact through the July summer window, then the top flight opens with
+  // Juventus and the Serie A field swapped in.
+  if (state.clock.monthIndex !== 1) return;
+  if (state.meta.firedScripted.includes('juve-promoted')) return;
+  const juve = state.clubs['juventus'];
+  const league = juve?.leagueId ? state.leagues[juve.leagueId] : undefined;
+  if (!juve || !league || league.id !== 'ita-b-2006') return;
+  // Only after a completed Serie B season (a champion crowned) in which Juventus
+  // finished in a promotion place — otherwise they serve another year below.
+  if (league.titleHistory.length < 1) return;
+  const pos = standingsOrder(league).indexOf('juventus');
+  if (pos < 0 || pos > 2) return;
+  state.meta.firedScripted.push('juve-promoted');
+
+  // The second-tier minnows drop back out of the simulated world.
+  for (const id of league.clubIds) {
+    if (id === 'juventus') continue;
+    const c = state.clubs[id];
+    if (c) c.leagueId = null;
+  }
+  // Rebuild the league as Serie A: Juventus + the late-2000s top flight (context
+  // clubs promoted into the table). Any club not present is simply skipped.
+  league.name = 'Serie A';
+  const roster = SERIE_A_2007_ROSTER.filter((id) => state.clubs[id]);
+  league.clubIds = [...roster];
+  for (const id of roster) {
+    state.clubs[id]!.leagueId = league.id;
+    recomputeClubStrength(state, id);
+  }
+
+  logEvent(state, {
+    category: 'match',
+    code: 'club.promoted',
+    message: 'Juventus win promotion and return to Serie A — the Old Lady is back in the top flight',
+    data: { clubId: 'juventus' },
+  });
+  state.timeline.divergenceLog.push({
+    date: state.clock.date,
+    kind: 'reality',
+    detail: 'Juventus bounce straight back from Serie B, promoted at the first attempt — the rebuild begins in the top flight.',
+  });
 }
 
 /** Parmalat's collapse tips Parma into crisis — the summer-2004 fire-sale. */

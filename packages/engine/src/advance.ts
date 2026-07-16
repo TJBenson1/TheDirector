@@ -26,7 +26,7 @@ import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
-import { resolveParmalat, resolveCalciopoli } from './italyEvents.js';
+import { resolveParmalat, resolveCalciopoli, promoteJuventus } from './italyEvents.js';
 import { restoreRelegatedClubs } from './relegation.js';
 import { decayPursuit } from './wooing.js';
 import { processSeasonAgeing, processSeasonMorale, processOverstackUnrest } from './ageing.js';
@@ -106,6 +106,11 @@ function runMonth(state: GameState, rng: Rng): void {
     // Sustained unrest can force a kept-against-his-wishes player out.
     processAgitationDepartures(state, rng.fork(`agitation:${state.clock.date}`));
   }
+  // Juventus 2006: promote the Old Lady back to Serie A once she wins her way out
+  // of the second tier — transforms her single simulated league in place. Runs in
+  // August, BEFORE stepLeagueMonth inits the new season from the league membership,
+  // so the top flight opens with the Serie A field swapped in for the minnows.
+  promoteJuventus(state, rng.fork(`promote:${state.clock.date}`));
   // M2: monthly league results, tables, form, season boundaries (§15).
   stepLeagueMonth(state, rng);
   // M4: injuries/recoveries (§9c) — after matches, so a new injury bites the

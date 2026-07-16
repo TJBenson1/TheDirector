@@ -88,6 +88,26 @@ const REAL_UCL: Record<string, Record<number, RealFinal>> = {
     2011: { w: 'chelsea', r: 'bayern' },
     2012: { w: 'bayern', r: 'dortmund' },
   },
+  'era-serie-a-2006': {
+    // Juventus's climb back, 2006→2021. Juve are in Serie B for 2006-07 (no Europe
+    // that season); from 2007 they rebuild into the side that reaches the 2015 and
+    // 2017 finals. Every real winner's club is in the (reused era-2007) pack.
+    2006: { w: 'milan', r: 'liverpool' },
+    2007: { w: 'man_utd', r: 'chelsea' },
+    2008: { w: 'barcelona', r: 'man_utd' },
+    2009: { w: 'inter', r: 'bayern' },
+    2010: { w: 'barcelona', r: 'man_utd' },
+    2011: { w: 'chelsea', r: 'bayern' },
+    2012: { w: 'bayern', r: 'dortmund' },
+    2013: { w: 'real_madrid', r: 'atletico' },
+    2014: { w: 'barcelona', r: 'juventus' },
+    2015: { w: 'real_madrid', r: 'atletico' },
+    2016: { w: 'real_madrid', r: 'juventus' },
+    2017: { w: 'real_madrid', r: 'liverpool' },
+    2018: { w: 'liverpool' },
+    2019: { w: 'bayern' },
+    2020: { w: 'chelsea' },
+  },
   'era-serie-a-2004': {
     // Mancini's nearly-men, 2004→2019. Every real European Cup winner's club is in
     // the pack (Inter's own 2010 treble, Real Madrid's mid-2010s dynasty); the

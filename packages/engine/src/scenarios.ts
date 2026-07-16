@@ -526,6 +526,58 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     domesticLeagueId: 'ita-2004',
   },
+  'juventus-2006': {
+    id: 'juventus-2006',
+    name: 'Juventus — 2006: Calciopoli — Serie B',
+    startDate: '2006-07',
+    playerClub: 'juventus',
+    // Stripped of two Scudetti and relegated in disgrace. The mercenaries fled, but
+    // the legends stayed — Buffon, Del Piero, Nedvěd, Trezeguet — to drag the Old
+    // Lady out of Serie B. Reality: promotion at the first attempt, then a dynasty.
+    mandate: 'Win Serie B, return to the top flight, and rebuild the Old Lady into a dynasty.',
+    boardPatience: 80,
+    boardExpectedFinish: 2,
+    // Year one is Serie B (procedural minnows); on promotion the league becomes the
+    // late-2000s Serie A. The elite of Europe (full squads, reused from the 2007
+    // pack) anchor every real European Cup of 2007–2021; the Serie A clubs sit as
+    // context until Juventus's promotion swaps them into the top flight.
+    clubs: [
+      { id: 'juventus', name: 'Juventus', prestige: 80 },
+      { id: 'inter', name: 'Internazionale', prestige: 86 },
+      { id: 'milan', name: 'AC Milan', prestige: 86 },
+      { id: 'real_madrid', name: 'Real Madrid', prestige: 92 },
+      { id: 'barcelona', name: 'Barcelona', prestige: 92 },
+      { id: 'bayern', name: 'Bayern Munich', prestige: 90 },
+      { id: 'man_utd', name: 'Manchester United', prestige: 90 },
+      { id: 'liverpool', name: 'Liverpool', prestige: 82 },
+      { id: 'chelsea', name: 'Chelsea', prestige: 88 },
+    ],
+    contextExtra: [
+      // Serie A clubs (curated + procedural) that Juventus rejoin on promotion.
+      { id: 'roma', name: 'AS Roma', prestige: 82 },
+      { id: 'napoli', name: 'Napoli', prestige: 70 },
+      { id: 'lazio', name: 'Lazio', prestige: 74 },
+      { id: 'fiorentina', name: 'Fiorentina', prestige: 76 },
+      { id: 'sampdoria', name: 'Sampdoria', prestige: 64 },
+      { id: 'udinese', name: 'Udinese', prestige: 64 },
+      { id: 'genoa', name: 'Genoa', prestige: 60 },
+      { id: 'atalanta', name: 'Atalanta', prestige: 58 },
+      { id: 'palermo', name: 'Palermo', prestige: 58 },
+      { id: 'siena', name: 'Siena', prestige: 48 },
+      { id: 'cagliari', name: 'Cagliari', prestige: 52 },
+      { id: 'torino', name: 'Torino', prestige: 56 },
+      { id: 'reggina', name: 'Reggina', prestige: 46 },
+      { id: 'catania', name: 'Catania', prestige: 46 },
+      { id: 'empoli', name: 'Empoli', prestige: 46 },
+      { id: 'parma', name: 'Parma', prestige: 58 },
+      { id: 'livorno', name: 'Livorno', prestige: 46 },
+      // Continental context for the reality-anchored Champions League.
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
+      { id: 'atletico', name: 'Atlético Madrid', prestige: 82 },
+      { id: 'porto', name: 'FC Porto', prestige: 78 },
+    ],
+    domesticLeagueId: 'ita-b-2006',
+  },
 };
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';

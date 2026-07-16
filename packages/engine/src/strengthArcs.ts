@@ -104,6 +104,21 @@ const ITALIAN_2004: Record<string, readonly Waypoint[]> = {
   fiorentina: [[2004, 71], [2006, 80], [2009, 80], [2013, 80], [2016, 75]],
 };
 
+// Serie A, 2006–21 (juventus-2006). Juventus tower over Serie B in 2006-07, then
+// climb back and build the nine-in-a-row dynasty (2012–20); Inter carry the years
+// they are away (the real five-in-a-row), before Napoli's rise and Milan/Inter's
+// late resurgence. The same reality shape as the 2007 arc, with Juventus starting
+// a division down.
+const ITALIAN_2006: Record<string, readonly Waypoint[]> = {
+  juventus: [[2006, 76], [2007, 80], [2011, 86], [2012, 88], [2015, 89], [2017, 90], [2020, 87]],
+  inter: [[2006, 88], [2008, 88], [2009, 88], [2011, 82], [2020, 85], [2021, 87]],
+  milan: [[2006, 85], [2009, 83], [2011, 85], [2012, 77], [2021, 83], [2022, 86]],
+  roma: [[2006, 84], [2010, 82], [2014, 83], [2018, 82]],
+  napoli: [[2006, 72], [2010, 80], [2013, 83], [2016, 85], [2018, 87]],
+  lazio: [[2006, 77], [2010, 76], [2015, 79], [2020, 81]],
+  fiorentina: [[2006, 79], [2010, 79], [2013, 80], [2016, 75]],
+};
+
 /** Every pack's domestic strength arc. The English packs share one table (same
  *  league, overlapping years); each scenario re-anchors only the clubs it holds. */
 const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
@@ -117,6 +132,7 @@ const ARCS: Record<string, Record<string, readonly Waypoint[]>> = {
   'era-serie-a-1995': ITALIAN, // juventus-1995
   'era-serie-a-1998': ITALIAN, // inter-1998
   'era-serie-a-2004': ITALIAN_2004, // inter-2004
+  'era-serie-a-2006': ITALIAN_2006, // juventus-2006
   'era-serie-a-2007': ITALIAN_2007, // milan-2007
 };
 

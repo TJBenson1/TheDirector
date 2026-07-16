@@ -236,6 +236,37 @@ export const ITALY_1998: LeagueSeed = {
   ],
 };
 
+/** Serie B, 2006–07 — Juventus's one season in the wilderness after Calciopoli.
+ *  Juve tower over a procedural second tier; the promotion mechanic swaps them into
+ *  the Serie A world (ITALY_2007's roster) the moment they go up (see italyEvents). */
+export const ITALY_B_2006: LeagueSeed = {
+  id: 'ita-b-2006',
+  name: 'Serie B',
+  season: '2006-07',
+  clubs: [
+    { id: 'juventus', name: 'Juventus', prestige: 78, strength: 77 },
+    { id: 'bari', name: 'Bari', prestige: 48, strength: 66 },
+    { id: 'rimini', name: 'Rimini', prestige: 40, strength: 62 },
+    { id: 'crotone', name: 'Crotone', prestige: 38, strength: 61 },
+    { id: 'mantova', name: 'Mantova', prestige: 38, strength: 62 },
+    { id: 'albinoleffe', name: 'AlbinoLeffe', prestige: 36, strength: 60 },
+    { id: 'vicenza_b', name: 'Vicenza', prestige: 42, strength: 63 },
+    { id: 'frosinone', name: 'Frosinone', prestige: 38, strength: 61 },
+    { id: 'spezia', name: 'Spezia', prestige: 38, strength: 61 },
+    { id: 'arezzo', name: 'Arezzo', prestige: 36, strength: 60 },
+    { id: 'verona_b', name: 'Hellas Verona', prestige: 46, strength: 63 },
+    { id: 'pescara_b', name: 'Pescara', prestige: 42, strength: 62 },
+    { id: 'cesena_b', name: 'Cesena', prestige: 42, strength: 63 },
+    { id: 'brescia_b', name: 'Brescia', prestige: 48, strength: 65 },
+    { id: 'piacenza_b', name: 'Piacenza', prestige: 42, strength: 63 },
+    { id: 'modena', name: 'Modena', prestige: 42, strength: 63 },
+    { id: 'triestina', name: 'Triestina', prestige: 40, strength: 62 },
+    { id: 'cremonese_b', name: 'Cremonese', prestige: 40, strength: 61 },
+    { id: 'ascoli', name: 'Ascoli', prestige: 42, strength: 63 },
+    { id: 'lecce_b', name: 'Lecce', prestige: 46, strength: 64 },
+  ],
+};
+
 /** Serie A, 2004–05 — Capello's (later stripped) Juventus, the Milan of Istanbul,
  *  and Mancini's nearly-men Inter, on the eve of Calciopoli. 20 clubs. */
 export const ITALY_2004: LeagueSeed = {
@@ -364,6 +395,7 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'esp-1': SPAIN_2000,
   'ita-1': ITALY_1995,
   'ita-1998': ITALY_1998,
+  'ita-b-2006': ITALY_B_2006,
   'ita-2004': ITALY_2004,
   'ita-2007': ITALY_2007,
   'eng-2013': ENGLAND_2013,

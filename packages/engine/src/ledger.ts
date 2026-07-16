@@ -620,6 +620,9 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: [], realInjuries: INJURIES_1995 },
   'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: [], realInjuries: INJURIES_1998 },
   'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
+  // Juventus 2006 rejoins the late-2000s Serie A world from 2007, so it draws on
+  // the same reality ledger — Pirlo's 2011 free transfer to Juventus included.
+  'era-serie-a-2006': { realTransferLedger: LEDGER_2007_2013, academyIntakes: [], realInjuries: INJURIES_2007 },
   'era-serie-a-2007': { realTransferLedger: LEDGER_2007_2013, academyIntakes: [], realInjuries: INJURIES_2007 },
   'era-2003': { realTransferLedger: LEDGER_2003_2011, academyIntakes: [], realInjuries: INJURIES_2003, nearMissLedger: NEAR_MISS_2003 },
 };
