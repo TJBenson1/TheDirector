@@ -180,6 +180,162 @@ function emitSuitorSagaWorld(state: GameState, rng: Rng, f: number): boolean {
   return true;
 }
 
+/** Is `p` a curated star who has ended up somewhere reality never put him — i.e.
+ *  now at a different club from his seed origin? The raw material for the
+ *  counterfactual-reaction story. */
+function isDisplaced(p: PlayerState): boolean {
+  return p.curated && p.club != null && p.originClub != null && p.club !== p.originClub;
+}
+
+/**
+ * The canonical deviation: a giant comes for a star YOU have relocated — the "Real
+ * Madrid open talks for the Bale you took to United" beat. Distinct from the plain
+ * suitor saga because it names the counterfactual (a club reality never had him at)
+ * and the suitor is often his ORIGIN club trying to reclaim him. Interactive and
+ * mutating, so gated on raw aggression (the calibration run never reshapes, so it
+ * never fires this).
+ */
+function emitDisplacedStarSagaUser(state: GameState, rng: Rng, f: number): boolean {
+  const stars = clubSquadPlayers(state, state.playerClub).filter(
+    (p) => !p.injury && p.ability >= 80 && isDisplaced(p) && p.originClub !== state.playerClub,
+  );
+  if (stars.length === 0) return false;
+  const target = rng.pick(stars);
+  const pendingId = `divergence:displaced:${target.id}`;
+  if (state.pendingDecisions.some((d) => d.id.startsWith(pendingId))) return false;
+  const origin = target.originClub ? state.clubs[target.originClub] : undefined;
+  const giant = pickSuitor(state, target, rng);
+  // Half the time the club reality gave him tries to take him back; otherwise a
+  // fresh glamour suitor circles.
+  const suitor = origin && origin.prestige >= 80 && rng.chance(0.5) ? origin : giant;
+  if (!suitor || suitor.id === state.playerClub) return false;
+  const reclaim = suitor.id === target.originClub;
+  const year = Number(state.clock.date.slice(0, 4));
+  const fee = Math.round(valuePlayer(target, year) * (1.35 + 0.3 * f));
+  const you = state.clubs[state.playerClub]?.name ?? 'your club';
+  const decision: Decision = {
+    id: `${pendingId}:${state.clock.date}`,
+    title: `${suitor.name} move for ${target.name}`,
+    description: reclaim
+      ? `${suitor.name} want ${target.name} back — the club reality had him at is trying to undo your work and reclaim him from ${you}.`
+      : `${suitor.name} have opened talks for ${target.name}, thriving at ${you} — a home reality never gave him. It is a story the real world never wrote, and it is yours to settle.`,
+    interrupt: true,
+    clubId: state.playerClub,
+    category: 'transfer',
+    choices: [
+      {
+        id: 'reject',
+        label: `Reject it — he is staying`,
+        successProbability: 0.6,
+        onSuccess: [
+          { kind: 'morale', playerId: target.id, amount: 6 },
+          { kind: 'memory', tag: 'transfer-saga', text: `Rebuffed ${suitor.name}'s move for ${target.name}.` },
+        ],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 12 }],
+      },
+      {
+        id: 'cash-in',
+        label: `Cash in at a record fee (£${Math.round(fee / 1_000_000)}m)`,
+        successProbability: 0.85,
+        onSuccess: [
+          { kind: 'transferOut', playerId: target.id, clubId: suitor.id, amount: fee },
+          { kind: 'memory', tag: 'transfer-saga', text: `Sold ${target.name} to ${suitor.name} — the counterfactual unwinds.` },
+        ],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 10 }],
+      },
+    ],
+    falloutIfIgnored: [
+      { kind: 'agitation', playerId: target.id, amount: 14 },
+      { kind: 'memory', tag: 'transfer-saga', text: `Let ${suitor.name}'s interest in ${target.name} fester.` },
+    ],
+    memoryTags: ['transfer-saga', target.id],
+  };
+  state.pendingDecisions.push(decision);
+  logEvent(state, {
+    category: 'transfer',
+    code: 'divergence.displaced',
+    message: `${suitor.name} come for the displaced ${target.name} — reality reasserting itself`,
+    data: { divergence: Number(f.toFixed(2)), playerId: target.id, suitor: suitor.id, reclaim, clubId: state.playerClub },
+  });
+  return true;
+}
+
+/**
+ * The same counterfactual pull, but for a star YOU do not own — pure logged colour
+ * (mutation-free, safe at any divergence). His origin club or a giant angles to
+ * bring a displaced player back towards where reality had him.
+ */
+function emitDisplacedStarSagaWorld(state: GameState, rng: Rng, f: number): boolean {
+  const pool = Object.values(state.players).filter(
+    (p) => !p.injury && p.ability >= 80 && isDisplaced(p) && p.club !== state.playerClub && state.clubs[p.club!]?.leagueId != null,
+  );
+  if (pool.length === 0) return false;
+  const target = rng.pick(pool);
+  const holder = state.clubs[target.club!];
+  const origin = target.originClub ? state.clubs[target.originClub] : undefined;
+  const suitor = origin && origin.prestige >= 80 && rng.chance(0.5) ? origin : pickSuitor(state, target, rng);
+  if (!holder || !suitor || suitor.id === target.club) return false;
+  const detail = suitor.id === target.originClub
+    ? `${suitor.name} move to reclaim ${target.name} from ${holder.name}`
+    : `${suitor.name} circle ${target.name}, now out of place at ${holder.name}`;
+  state.timeline.divergenceLog.push({ date: state.clock.date, kind: 'storyline', detail });
+  appendMemory(state, 'divergence', detail);
+  logEvent(state, {
+    category: 'transfer',
+    code: 'divergence.storyline',
+    message: `The world diverges: ${detail}`,
+    data: { divergence: Number(f.toFixed(2)), playerId: target.id, suitor: suitor.id, clubId: holder.id },
+  });
+  return true;
+}
+
+/** Two named giants fight over a real wonderkid at a smaller club — net-new colour,
+ *  anchored on concrete, era-correct actors (never fabricated filler). */
+function emitWonderkidBiddingWar(state: GameState, rng: Rng, f: number): boolean {
+  const kids = Object.values(state.players).filter(
+    (p) => p.curated && p.club != null && state.clubs[p.club]?.leagueId != null && ageOf(state, p) <= 21 && p.potentialCeiling >= 84 && p.ability >= 72,
+  );
+  if (kids.length === 0) return false;
+  const kid = rng.pick(kids);
+  const giants = Object.values(state.clubs).filter((c) => c.prestige >= 84 && c.id !== kid.club);
+  if (giants.length < 2) return false;
+  const a = rng.pick(giants);
+  const b = rng.pick(giants.filter((c) => c.id !== a.id));
+  if (!b) return false;
+  const holder = state.clubs[kid.club!]!;
+  const detail = `${a.name} and ${b.name} are locked in a bidding war for ${holder.name}'s ${kid.name}`;
+  state.timeline.divergenceLog.push({ date: state.clock.date, kind: 'storyline', detail });
+  appendMemory(state, 'divergence', detail);
+  logEvent(state, {
+    category: 'transfer',
+    code: 'divergence.storyline',
+    message: `The world diverges: ${detail}`,
+    data: { divergence: Number(f.toFixed(2)), playerId: kid.id, clubId: holder.id },
+  });
+  return true;
+}
+
+/** An ageing curated great announces a farewell — the world marking the passage of
+ *  an era it wrote its own way. Concrete, mutation-free colour. */
+function emitVeteranFarewell(state: GameState, rng: Rng, f: number): boolean {
+  const vets = Object.values(state.players).filter(
+    (p) => p.curated && p.club != null && state.clubs[p.club]?.leagueId != null && ageOf(state, p) >= 34 && p.ability >= 78,
+  );
+  if (vets.length === 0) return false;
+  const vet = rng.pick(vets);
+  const club = state.clubs[vet.club!]!;
+  const detail = `${vet.name} announces this will be his final season at ${club.name}`;
+  state.timeline.divergenceLog.push({ date: state.clock.date, kind: 'storyline', detail });
+  appendMemory(state, 'divergence', detail);
+  logEvent(state, {
+    category: 'event',
+    code: 'divergence.storyline',
+    message: `The world diverges: ${detail}`,
+    data: { divergence: Number(f.toFixed(2)), playerId: vet.id, clubId: club.id },
+  });
+  return true;
+}
+
 /**
  * A star at your club enters the final phase of his deal and stalls on renewing —
  * a contract standoff you must break. A your-club-only decision (rivals resolve
@@ -296,27 +452,39 @@ export function rollDivergentStoryline(state: GameState, rng: Rng): void {
   if (!rng.chance(0.4 * f)) return;
 
   // Pure-flavour generators mutate nothing and are safe at any divergence — they
-  // run even at the near-zero baseline a passive user carries.
-  const flavour: Array<(s: GameState, r: Rng, ff: number) => boolean> = [
+  // run even at the near-zero baseline a passive user carries. Shuffled so no one
+  // archetype dominates the log over a long career.
+  const flavour = rng.shuffle([
+    emitDisplacedStarSagaWorld,
     emitSuitorSagaWorld,
+    emitWonderkidBiddingWar,
+    emitVeteranFarewell,
     emitYouthBreakout,
     emitWorldFlavour,
-  ];
+  ] as Array<(s: GameState, r: Rng, ff: number) => boolean>);
   // Interactive, MUTATING stories about your own squad appear only once you have
   // genuinely reshaped it (raw aggression clears the reality-default baseline),
-  // so the calibration run — which never reshapes — never triggers them. The two
-  // interactive beats alternate first slot so neither crowds the other out.
+  // so the calibration run — which never reshapes — never triggers them. The
+  // interactive beats are shuffled so none crowds the others out; the displaced-
+  // star saga (the signature deviation) leads when it can build.
   const interactive: Array<(s: GameState, r: Rng, ff: number) => boolean> =
     state.userAggression >= RESHAPED_AGGRESSION
-      ? rng.chance(0.5)
-        ? [emitSuitorSagaUser, emitContractStandoff]
-        : [emitContractStandoff, emitSuitorSagaUser]
+      ? [emitDisplacedStarSagaUser, ...rng.shuffle([emitSuitorSagaUser, emitContractStandoff])]
       : [];
 
   // Prefer an interactive beat (the ones that matter most) when eligible, then
   // fall through to flavour if none can build this window.
   const order = rng.chance(0.6) ? [...interactive, ...flavour] : [...flavour, ...interactive];
+  let fired = false;
   for (const gen of order) {
-    if (gen(state, rng, f)) return;
+    if (gen(state, rng, f)) { fired = true; break; }
+  }
+  // A heavily-reshaped, late-career world is busy: at high divergence, sometimes a
+  // second, purely-flavour beat fires the same window so history feels alive rather
+  // than following reality one tidy event at a time.
+  if (fired && f >= 0.5 && rng.chance(0.35 * f)) {
+    for (const gen of flavour) {
+      if (gen(state, rng, f)) break;
+    }
   }
 }

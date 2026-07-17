@@ -273,6 +273,7 @@ function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, 
         resistance: buildResistance(seed.personality, seed.nationality, age, seed.ability, clubRng),
         agitation: 0,
       };
+      if (player.club != null) player.originClub = player.club; // reality's starting point
       if (loyalty !== undefined) player.resistance.clubLoyalty = loyalty;
       if (hardBlocks) player.resistance.hardBlocks = hardBlocks.map((b) => ({ ...b }));
       const pos0 = seed.positions[0] ?? 'CM';

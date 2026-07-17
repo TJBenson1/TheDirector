@@ -211,6 +211,11 @@ export interface PlayerState {
   nationality: string;
   positions: Position[];
   club: ClubId | null;
+  /** The club the curated seed placed him at — reality's starting point. Immutable
+   *  once set; lets the world react when he ends up somewhere reality never put him
+   *  (the counterfactual "Real Madrid come for the Bale you took to United" story).
+   *  Absent for procedural filler. */
+  originClub?: ClubId;
   contractUntil: number; // calendar year the contract expires
   wage: number; // annual
 

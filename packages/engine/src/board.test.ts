@@ -90,6 +90,64 @@ describe('divergence drift (§9f)', () => {
     logged = state.timeline.divergenceLog.filter((d) => d.kind === 'storyline').length;
     expect(logged).toBeGreaterThan(0);
   });
+
+  it('reacts to a star displaced from where reality put him (the world flavour)', () => {
+    const state = cloneState(createNewGame({ seed: 'displaced-world' }));
+    state.userAggression = 20;
+    state.clock = { ...state.clock, date: '2010-07' };
+    // A curated rival star reality never had at his current club.
+    const star = Object.values(state.players).find(
+      (p) => p.curated && p.club != null && p.club !== state.playerClub && p.ability >= 80 && state.clubs[p.club]?.leagueId != null,
+    )!;
+    star.originClub = star.club === 'real_madrid' ? 'barcelona' : 'real_madrid';
+    let found = false;
+    for (let i = 0; i < 300 && !found; i++) {
+      rollDivergentStoryline(state, Rng.fromSeed(`dw:${i}`));
+      found = state.timeline.divergenceLog.some((d) => d.detail.includes(star.name));
+    }
+    expect(found).toBe(true);
+  });
+
+  it('the interactive displaced-star decision is gated on a reshaped world', () => {
+    const displaceAtUserClub = (state: GameState) => {
+      const star = Object.values(state.players).find(
+        (p) => p.club === state.playerClub && p.curated && p.ability >= 80,
+      )!;
+      star.originClub = state.playerClub === 'arsenal' ? 'liverpool' : 'arsenal';
+      return star;
+    };
+    const hasDisplacedDecision = (state: GameState) =>
+      state.pendingDecisions.some((d) => d.id.startsWith('divergence:displaced:'));
+
+    // A lightly-active user (below the reshaped threshold) never triggers it, even
+    // with a displaced star in his own squad.
+    const low = cloneState(createNewGame({ seed: 'displaced-gate-low' }));
+    low.userAggression = 2;
+    low.clock = { ...low.clock, date: '2010-07' };
+    displaceAtUserClub(low);
+    for (let i = 0; i < 150; i++) rollDivergentStoryline(low, Rng.fromSeed(`gl:${i}`));
+    expect(hasDisplacedDecision(low)).toBe(false);
+
+    // A user who has genuinely reshaped his squad gets the counterfactual decision.
+    const high = cloneState(createNewGame({ seed: 'displaced-gate-high' }));
+    high.userAggression = 20;
+    high.clock = { ...high.clock, date: '2010-07' };
+    displaceAtUserClub(high);
+    let pushed = false;
+    for (let i = 0; i < 400 && !pushed; i++) {
+      rollDivergentStoryline(high, Rng.fromSeed(`gh:${i}`));
+      pushed = hasDisplacedDecision(high);
+    }
+    expect(pushed).toBe(true);
+  });
+
+  it('curated players record their origin club at kickoff', () => {
+    const state = createNewGame({ seed: 'origin' });
+    const curated = Object.values(state.players).filter((p) => p.curated && p.club != null);
+    expect(curated.length).toBeGreaterThan(0);
+    // At kickoff nobody is displaced: origin equals current club.
+    expect(curated.every((p) => p.originClub === p.club)).toBe(true);
+  });
 });
 
 describe('M9 determinism', () => {
