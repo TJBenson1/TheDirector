@@ -17,6 +17,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { EUROPE_2012_SQUADS } from './curated-europe-2012.js';
 import { SCHALKE_2010, WERDER_2010, LEVERKUSEN_2010, WOLFSBURG_2010 } from './curated-bundesliga-2010.js';
 
 type Trait = PlayerState['personality'];
@@ -261,3 +262,9 @@ export const DORTMUND_2012_SQUADS: Record<string, CuratedSeed[]> = {
   leverkusen: LEVERKUSEN_2010.filter((p) => p.name !== 'Arturo Vidal'),
   wolfsburg: WOLFSBURG_2010.filter((p) => p.name !== 'Edin Džeko'),
 };
+
+// European selling clubs (M12A rollout) — the early-2010s foreign talent pipeline.
+// All whole new clubs merged into the dortmund-2012 universe.
+for (const [club, seeds] of Object.entries(EUROPE_2012_SQUADS)) {
+  DORTMUND_2012_SQUADS[club] = [...(DORTMUND_2012_SQUADS[club] ?? []), ...seeds];
+}
