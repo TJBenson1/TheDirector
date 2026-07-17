@@ -17,6 +17,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { GER_DOMESTIC_2009_SQUADS } from './curated-ger-domestic-2009.js';
 import {
   BARCELONA_B10, REAL_MADRID_B10, MANUTD_B10, CHELSEA_B10, MANCITY_B10,
   LIVERPOOL_B10, INTER_B10, JUVENTUS_B10,
@@ -101,3 +102,10 @@ export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   wolfsburg: WOLFSBURG_2010,
   hamburg: HAMBURG_2010,
 };
+
+// Domestic mid-tier of the 2009-10 Bundesliga (M12 shortlist supply) — real
+// squad players at the non-elite clubs so options lists read like a real
+// shortlist.
+for (const [club, seeds] of Object.entries(GER_DOMESTIC_2009_SQUADS)) {
+  BAYERN_2009_SQUADS[club] = [...(BAYERN_2009_SQUADS[club] ?? []), ...seeds];
+}
