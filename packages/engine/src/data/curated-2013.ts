@@ -11,6 +11,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { EUROPE_2013_SQUADS } from './curated-europe-2013.js';
 
 type Trait = PlayerState['personality'];
 
@@ -337,3 +338,10 @@ export const MAN_UTD_2013_SQUADS: Record<string, CuratedSeed[]> = {
   psg: PSG_2013,
   juventus: JUVENTUS_2013,
 };
+
+// European selling clubs (M12A rollout) — the mid-2010s talent pipeline. Merged
+// by CONCATENATION so new clubs are added and the pack's existing thin sellers
+// (Ajax, Benfica, Roma, Valencia) are augmented rather than overwritten.
+for (const [club, seeds] of Object.entries(EUROPE_2013_SQUADS)) {
+  MAN_UTD_2013_SQUADS[club] = [...(MAN_UTD_2013_SQUADS[club] ?? []), ...seeds];
+}

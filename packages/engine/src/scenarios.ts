@@ -138,9 +138,19 @@ const ERA_2003_CONTEXT: ClubSeed[] = [
 // era-2013: the continental context sides for the post-Ferguson Premier League.
 const ERA_2013_CONTEXT: ClubSeed[] = [
   { id: 'benfica', name: 'Benfica', prestige: 76 },
-  { id: 'roma', name: 'AS Roma', prestige: 74 },
+  { id: 'roma', name: 'AS Roma', prestige: 76 },
   { id: 'valencia', name: 'Valencia', prestige: 72 },
-  { id: 'ajax', name: 'Ajax', prestige: 70 },
+  { id: 'ajax', name: 'Ajax', prestige: 72 },
+  // European selling clubs (M12A rollout) — the mid-2010s talent pipeline.
+  { id: 'atletico', name: 'Atlético Madrid', prestige: 84 },
+  { id: 'dortmund', name: 'Borussia Dortmund', prestige: 82 },
+  { id: 'napoli', name: 'Napoli', prestige: 78 },
+  { id: 'porto', name: 'FC Porto', prestige: 78 },
+  { id: 'monaco', name: 'AS Monaco', prestige: 76 },
+  { id: 'sevilla', name: 'Sevilla', prestige: 76 },
+  { id: 'lyon', name: 'Olympique Lyonnais', prestige: 74 },
+  { id: 'schalke', name: 'Schalke 04', prestige: 74 },
+  { id: 'fiorentina', name: 'Fiorentina', prestige: 74 },
 ];
 
 // era-serie-a-1995: Serie A is the simulated league; the elite European clubs
