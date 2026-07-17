@@ -18,6 +18,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
 import { EUROPE_2004_SQUADS } from './curated-europe-2004.js';
+import { ESP_DOMESTIC_2003_SQUADS } from './curated-esp-domestic-2003.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -289,5 +290,11 @@ export const BARCELONA_2003_SQUADS: Record<string, CuratedSeed[]> = {
 // 2003 (their own squads), so only the clubs this pack lacks are added.
 for (const [club, seeds] of Object.entries(EUROPE_2004_SQUADS)) {
   if (club === 'porto' || club === 'monaco') continue;
+  BARCELONA_2003_SQUADS[club] = [...(BARCELONA_2003_SQUADS[club] ?? []), ...seeds];
+}
+
+// Domestic mid-tier of the 2003-04 La Liga (M12 shortlist supply) — real squad
+// players at the non-elite clubs so options lists read like a real shortlist.
+for (const [club, seeds] of Object.entries(ESP_DOMESTIC_2003_SQUADS)) {
   BARCELONA_2003_SQUADS[club] = [...(BARCELONA_2003_SQUADS[club] ?? []), ...seeds];
 }
