@@ -343,19 +343,30 @@ function rollScandals(state: GameState, rng: Rng): void {
       if (!rng.chance(scandalProbability(player, scandalFrequency))) continue;
 
       const isUser = club.id === state.playerClub;
-      logEvent(state, {
-        category: 'scandal',
-        code: 'scandal.fired',
-        message: `Scandal involving ${player.name} (${club.name})`,
-        data: { clubId: club.id, playerId: player.id, significant: true, user: isUser },
-      });
-
       if (isUser) {
-        // Surface as an interrupt for the player to navigate.
+        // The user's own club: always a logged, navigable interrupt (calibrated).
+        logEvent(state, {
+          category: 'scandal',
+          code: 'scandal.fired',
+          message: `Scandal involving ${player.name} (${club.name})`,
+          data: { clubId: club.id, playerId: player.id, significant: true, user: true },
+        });
         state.pendingDecisions.push(scandalDecision(state, player));
       } else {
-        // AI clubs navigate it themselves — a morale hit and occasional board fallout.
+        // AI clubs navigate it themselves — a morale hit either way. The roll (and
+        // this draw) is unchanged so the user-club stream stays byte-identical; only
+        // the LOG is gated. A scandal reads as world colour only when it names a real,
+        // recognisable player — a fabricated filler name is noise (Principle 2:
+        // never anonymous filler), so those pass silently.
         player.morale = clamp(player.morale - rng.int(3, 9), 0, 100);
+        if (player.curated) {
+          logEvent(state, {
+            category: 'scandal',
+            code: 'scandal.fired',
+            message: `Scandal involving ${player.name} (${club.name})`,
+            data: { clubId: club.id, playerId: player.id, significant: true, user: false },
+          });
+        }
       }
     }
   }

@@ -54,6 +54,25 @@ function ageOf(state: GameState, p: PlayerState): number {
   return Number(state.clock.date.slice(0, 4)) - p.birthYear;
 }
 
+function ymIndex(date: string): number {
+  return Number(date.slice(0, 4)) * 12 + (Number(date.slice(5, 7)) - 1);
+}
+
+/** Was this player the subject of a divergence storyline in the last `months`?
+ *  A cooldown so the same displaced star is not "come for" every other window —
+ *  the sagas rotate through the squad instead of fixating on one man. */
+function recentlyFeatured(state: GameState, playerId: string, months: number): boolean {
+  const cutoff = ymIndex(state.clock.date) - months;
+  for (let i = state.eventLog.length - 1; i >= 0; i--) {
+    const e = state.eventLog[i]!;
+    if (ymIndex(e.date) < cutoff) break; // eventLog is chronological
+    if (e.code.startsWith('divergence.') && e.data?.playerId === playerId) return true;
+  }
+  return false;
+}
+
+const FEATURE_COOLDOWN = 18; // months before a player can headline another saga
+
 /** Real (curated), fit, first-team players at a simulated club — the pool the
  *  world writes its new stories around (Principle 2: never anonymous filler). */
 function realStars(state: GameState, minAbility: number): PlayerState[] {
@@ -92,7 +111,7 @@ function pickSuitor(state: GameState, target: PlayerState, rng: Rng): ClubState 
  */
 function emitSuitorSagaUser(state: GameState, rng: Rng, f: number): boolean {
   const userStars = clubSquadPlayers(state, state.playerClub).filter(
-    (p) => p.curated && !p.injury && p.ability >= 80,
+    (p) => p.curated && !p.injury && p.ability >= 80 && !recentlyFeatured(state, p.id, FEATURE_COOLDOWN),
   );
   if (userStars.length === 0) return false;
   const target = rng.pick(userStars);
@@ -161,7 +180,7 @@ function emitSuitorSagaUser(state: GameState, rng: Rng, f: number): boolean {
  * near-zero baseline a passive user carries.
  */
 function emitSuitorSagaWorld(state: GameState, rng: Rng, f: number): boolean {
-  const pool = realStars(state, 82).filter((p) => p.club !== state.playerClub);
+  const pool = realStars(state, 82).filter((p) => p.club !== state.playerClub && !recentlyFeatured(state, p.id, FEATURE_COOLDOWN));
   if (pool.length === 0) return false;
   const target = rng.pick(pool);
   const suitor = pickSuitor(state, target, rng);
@@ -197,7 +216,7 @@ function isDisplaced(p: PlayerState): boolean {
  */
 function emitDisplacedStarSagaUser(state: GameState, rng: Rng, f: number): boolean {
   const stars = clubSquadPlayers(state, state.playerClub).filter(
-    (p) => !p.injury && p.ability >= 80 && isDisplaced(p) && p.originClub !== state.playerClub,
+    (p) => !p.injury && p.ability >= 80 && isDisplaced(p) && p.originClub !== state.playerClub && !recentlyFeatured(state, p.id, FEATURE_COOLDOWN),
   );
   if (stars.length === 0) return false;
   const target = rng.pick(stars);
@@ -267,7 +286,7 @@ function emitDisplacedStarSagaUser(state: GameState, rng: Rng, f: number): boole
  */
 function emitDisplacedStarSagaWorld(state: GameState, rng: Rng, f: number): boolean {
   const pool = Object.values(state.players).filter(
-    (p) => !p.injury && p.ability >= 80 && isDisplaced(p) && p.club !== state.playerClub && state.clubs[p.club!]?.leagueId != null,
+    (p) => !p.injury && p.ability >= 80 && isDisplaced(p) && p.club !== state.playerClub && state.clubs[p.club!]?.leagueId != null && !recentlyFeatured(state, p.id, FEATURE_COOLDOWN),
   );
   if (pool.length === 0) return false;
   const target = rng.pick(pool);
@@ -343,7 +362,7 @@ function emitVeteranFarewell(state: GameState, rng: Rng, f: number): boolean {
  */
 function emitContractStandoff(state: GameState, rng: Rng, f: number): boolean {
   const candidates = clubSquadPlayers(state, state.playerClub).filter(
-    (p) => p.curated && !p.injury && p.ability >= 80 && ageOf(state, p) <= 31,
+    (p) => p.curated && !p.injury && p.ability >= 80 && ageOf(state, p) <= 31 && !recentlyFeatured(state, p.id, FEATURE_COOLDOWN),
   );
   if (candidates.length === 0) return false;
   const target = rng.pick(candidates);
