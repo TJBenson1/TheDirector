@@ -17,7 +17,7 @@ import { valuePlayer, initialFinances } from './finance.js';
 import { computeWageBill } from './players.js';
 import { executeTransfer } from './transfers.js';
 import { evaluateApproach } from './agency.js';
-import { ERA_REALITY, eraForScenario } from './ledger.js';
+import { ERA_REALITY, eraForScenario, entryKey } from './ledger.js';
 
 /** Prestige at or above which a club is treated as a wealth power (a "money
  *  club"), independent of ownership. The moneyed-era signal is already carried
@@ -188,6 +188,74 @@ export function updateClubPressure(state: GameState): void {
 
       club.pressure = { trophyDrought, jobSecurity, unrest, rivalDominance, windfall };
     }
+  }
+}
+
+// How hard reality pushes back when the user takes something that was a rival's:
+// a grudge boost that feeds `windfall`/`unrest` pressure, priming a statement buy to
+// claw the club's real trajectory back.
+const TROPHY_THWART = 22; // the user lifted a title reality would have favoured a rival
+const SIGNING_THWART = 30; // the user hijacked/blocked a signing that was a rival's in reality
+
+/**
+ * Reality reasserts itself at the rival-ambition level. When the user takes
+ * something that reality gave another club — a title a strong rival would have
+ * contended for, or a real signing the user hijacked or blocked — that club is
+ * STUNG (its grudge rises), so next summer it is far likelier to make an off-ledger
+ * statement move to restore the balance. Called each season before the pressure
+ * recompute so the sting feeds straight into the override step. Deterministic and
+ * dated only where the user has actually disrupted reality, so a passive run (and
+ * the calibration harness's zero-divergence baseline) never triggers it.
+ */
+export function applyRealityThwarts(state: GameState): void {
+  const seen = (state.meta.thwartedLedger ??= []);
+
+  // Thwarted signings: a real ledger move offered as reality that did NOT happen as
+  // reality (the user blocked the sale or hijacked the target) → the intended,
+  // simulated buyer is stung into the market.
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (pack) {
+    for (const entry of pack.realTransferLedger) {
+      const key = entryKey(entry);
+      if (seen.includes(key)) continue;
+      if (!state.meta.executedLedger.includes(key)) continue; // not yet reached
+      if (state.meta.realizedLedger.includes(key)) continue; // happened as in reality
+      const buyer = entry.to ? state.clubs[entry.to] : undefined;
+      if (!buyer || buyer.leagueId === null || entry.to === state.playerClub) continue;
+      seen.push(key);
+      buyer.grudge = Math.min(100, buyer.grudge + SIGNING_THWART);
+      const player = state.players[entry.playerId];
+      logEvent(state, {
+        category: 'transfer', code: 'reality.thwarted-signing',
+        message: `${buyer.name}, denied ${player?.name ?? 'their target'} by your hand, turn to the market to answer it`,
+        data: { clubId: buyer.id, playerId: entry.playerId },
+      });
+    }
+  }
+
+  // Thwarted trophies: a title the user has just taken that reality would have
+  // favoured the division's strongest rival → that rival is stung.
+  for (const league of Object.values(state.leagues)) {
+    if (league.titleHistory.length === 0) continue;
+    const last = league.titleHistory[league.titleHistory.length - 1]!;
+    if (last.championId !== state.playerClub) continue; // only when the USER took it
+    const key = `trophy:${league.id}:${last.seasonYear}`;
+    if (seen.includes(key)) continue;
+    let rival: ClubState | undefined;
+    for (const id of league.clubIds) {
+      if (id === state.playerClub) continue;
+      const c = state.clubs[id];
+      if (!c || c.leagueId === null) continue;
+      if (!rival || c.prestige > rival.prestige) rival = c;
+    }
+    if (!rival) continue;
+    seen.push(key);
+    rival.grudge = Math.min(100, rival.grudge + TROPHY_THWART);
+    logEvent(state, {
+      category: 'match', code: 'reality.thwarted-trophy',
+      message: `${rival.name}, watching you lift a title reality might have handed them, are stung into the market`,
+      data: { clubId: rival.id, seasonYear: last.seasonYear },
+    });
   }
 }
 

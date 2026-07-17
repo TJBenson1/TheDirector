@@ -538,6 +538,10 @@ export interface GameStateMeta {
    *  here — so a purchase the user pre-empts cancels the sale it would have
    *  funded (e.g. no Bale at Madrid → Özil is never sold). */
   realizedLedger: string[];
+  /** Reality-thwart events already applied (a real signing the user hijacked/blocked,
+   *  or a title the user took from a rival), so each stings the affected club's
+   *  ambition exactly once. Keys: ledger `entryKey`s and `trophy:<league>:<year>`. */
+  thwartedLedger?: string[];
   /** Real historical injuries already fired (by subject playerId), so each
    *  scheduled real injury triggers at most once (reality-default). */
   firedRealInjuries: string[];

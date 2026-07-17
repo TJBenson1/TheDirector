@@ -21,7 +21,7 @@ import { processInjuriesMonth } from './injuries.js';
 import { rollInjuryManagement } from './injuryManagement.js';
 import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance, applyRubberBand, processAgitationDepartures } from './rival.js';
-import { updateClubPressure, runAmbitionOverrides, applyOwnerFunding } from './ambition.js';
+import { updateClubPressure, runAmbitionOverrides, applyOwnerFunding, applyRealityThwarts } from './ambition.js';
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { reviewManager, reviewDirectorStrategy, applyDirectiveEffects, rollManagerCrossroads } from './manager.js';
@@ -75,6 +75,9 @@ function runMonth(state: GameState, rng: Rng): void {
     //    the pure strength model would otherwise let run for a decade).
     updateWorldDefiance(state);
     applyRubberBand(state);
+    // Reality reasserts: a rival the user has thwarted (a title taken, a signing
+    // hijacked/blocked) is stung into the market — grudge feeds the pressure recompute.
+    applyRealityThwarts(state);
     // M8: recompute each AI club's ambition pressure from the new honours board
     // (a dominant user drives the whole field's pressure up) — feeds the summer
     // override step below.

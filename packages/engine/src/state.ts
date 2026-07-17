@@ -175,6 +175,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
       startYear: parseYearMonth(scenario.startDate).year,
       executedLedger: [],
       realizedLedger: [],
+      thwartedLedger: [],
       firedRealInjuries: [],
       retiredLedgerSubjects: [],
     },
