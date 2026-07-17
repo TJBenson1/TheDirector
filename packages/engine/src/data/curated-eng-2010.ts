@@ -21,6 +21,7 @@ import {
   BARCELONA_B10, REAL_MADRID_B10, INTER_B10, JUVENTUS_B10,
 } from './curated-bundesliga-2010.js';
 import { EUROPE_2010_SQUADS } from './curated-europe-2010.js';
+import { ENG_DOMESTIC_2010_SQUADS } from './curated-eng-domestic-2010.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -92,3 +93,9 @@ export const LIVERPOOL_2010_SQUADS: Record<string, CuratedSeed[]> = {
   // European selling clubs (M12A rollout) — the 2010s talent pipeline.
   ...EUROPE_2010_SQUADS,
 };
+
+// Domestic mid-tier (M12 shortlist supply): real 2010-11 squad players at the
+// non-elite PL clubs, so options lists read like a real shortlist.
+for (const [club, seeds] of Object.entries(ENG_DOMESTIC_2010_SQUADS)) {
+  LIVERPOOL_2010_SQUADS[club] = [...(LIVERPOOL_2010_SQUADS[club] ?? []), ...seeds];
+}
