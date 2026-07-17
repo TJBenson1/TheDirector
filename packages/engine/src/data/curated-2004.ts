@@ -9,6 +9,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { ENG_DOMESTIC_2004_SQUADS } from './curated-eng-domestic-2004.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -369,3 +370,9 @@ export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   leverkusen: LEVERKUSEN_2004,
   lyon: LYON_2004,
 };
+
+// Domestic mid-tier (M12 shortlist supply): real 2004-05 squad players at the
+// non-elite PL clubs, so options lists read like a real shortlist.
+for (const [club, seeds] of Object.entries(ENG_DOMESTIC_2004_SQUADS)) {
+  ARSENAL_2004_SQUADS[club] = [...(ARSENAL_2004_SQUADS[club] ?? []), ...seeds];
+}
