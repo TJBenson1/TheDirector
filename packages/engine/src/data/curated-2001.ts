@@ -195,6 +195,39 @@ export const CHELSEA_TARGETS_2003: CuratedSeed[] = [
 ];
 
 /** Curated squads for the liverpool-2001 scenario, keyed by club. */
+/** Tottenham Hotspur, 2001–02 — Hoddle's side; Sol Campbell still here at kickoff
+ *  (his free-transfer defection to Arsenal is the counterfactual to prevent),
+ *  Sheringham back home, a teenage Ledley King emerging. */
+export const SPURS_2001: CuratedSeed[] = [
+  q('spurs', 'sullivan01s', 'Neil Sullivan', 1970, 'Scotland', ['GK'], 76, 77, 2004, 25, t(7, 5, 7, 7, 5, 6)),
+  q('spurs', 'keller01s', 'Kasey Keller', 1969, 'United States', ['GK'], 77, 78, 2005, 25, t(8, 5, 7, 7, 4, 7)),
+  // Campbell — England's best defender, agitating for a free move across north
+  // London to Arsenal; the betrayal you can fight to stop.
+  q('spurs', 'campbell01s', 'Sol Campbell', 1974, 'England', ['CB'], 85, 87, 2002, 25, t(8, 6, 8, 5, 5, 6), { archetype: 'covering-cb' }),
+  q('spurs', 'king01s', 'Ledley King', 1980, 'England', ['CB', 'DM'], 79, 88, 2006, 40, t(9, 4, 8, 10, 3, 7), { archetype: 'ball-playing-cb' }),
+  q('spurs', 'perry01s', 'Chris Perry', 1973, 'England', ['CB'], 74, 75, 2004, 30, t(8, 4, 7, 8, 4, 6)),
+  q('spurs', 'taricco01s', 'Mauricio Taricco', 1973, 'Argentina', ['LB', 'RB'], 75, 77, 2005, 35, t(7, 5, 7, 7, 6, 7)),
+  q('spurs', 'carr01s', 'Stephen Carr', 1976, 'Ireland', ['RB'], 78, 81, 2005, 35, t(8, 5, 7, 8, 5, 7), { archetype: 'full-back-attacking' }),
+  q('spurs', 'ziege01s', 'Christian Ziege', 1972, 'Germany', ['LB', 'LW'], 78, 80, 2005, 40, t(7, 6, 7, 6, 5, 7), { archetype: 'full-back-attacking' }),
+  q('spurs', 'freund01s', 'Steffen Freund', 1970, 'Germany', ['DM', 'CM'], 74, 75, 2004, 35, t(8, 5, 7, 8, 6, 7), { archetype: 'deep-playmaker' }),
+  q('spurs', 'anderton01s', 'Darren Anderton', 1972, 'England', ['RW', 'AM'], 79, 82, 2004, 55, t(7, 6, 7, 8, 4, 7), { archetype: 'inside-forward' }),
+  q('spurs', 'poyet01s', 'Gustavo Poyet', 1967, 'Uruguay', ['AM', 'CM'], 80, 81, 2004, 30, t(8, 6, 8, 7, 5, 7), { archetype: 'playmaker' }),
+  q('spurs', 'clemence01s', 'Stephen Clemence', 1977, 'England', ['CM', 'DM'], 72, 75, 2005, 30, t(8, 4, 7, 7, 5, 6)),
+  q('spurs', 'davies01s', 'Simon Davies', 1979, 'Wales', ['RW', 'CM'], 74, 80, 2006, 30, t(7, 5, 7, 7, 5, 7), { archetype: 'inside-forward' }),
+  q('spurs', 'rebrov01s', 'Serhiy Rebrov', 1974, 'Ukraine', ['AM', 'ST'], 78, 82, 2005, 30, t(7, 6, 7, 6, 6, 6), { archetype: 'playmaker' }),
+  // Sheringham — back at the Lane at 35, the returning talisman and Player of the
+  // Year in waiting.
+  q('spurs', 'sheringham01s', 'Teddy Sheringham', 1966, 'England', ['ST', 'AM'], 82, 82, 2003, 30, t(9, 7, 8, 8, 4, 7), { archetype: 'poacher' }),
+  q('spurs', 'ferdinand01s', 'Les Ferdinand', 1966, 'England', ['ST'], 78, 79, 2003, 35, t(8, 6, 7, 8, 5, 7), { archetype: 'poacher' }),
+  q('spurs', 'iversen01s', 'Steffen Iversen', 1976, 'Norway', ['ST', 'RW'], 76, 80, 2005, 40, t(7, 5, 7, 7, 5, 7), { archetype: 'poacher' }),
+  q('spurs', 'leonhardsen01s', 'Øyvind Leonhardsen', 1970, 'Norway', ['CM'], 73, 75, 2004, 35, t(8, 4, 7, 7, 5, 7)),
+];
+
+/** Curated squads for the spurs-2001 start — a sleeping giant to reawaken. */
+export const SPURS_2001_SQUADS: Record<string, CuratedSeed[]> = {
+  spurs: SPURS_2001,
+};
+
 export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
   liverpool: LIVERPOOL_2001,
   man_utd: MAN_UTD_2001,

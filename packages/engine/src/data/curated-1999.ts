@@ -9,8 +9,11 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import { MAN_UTD_2013_SQUADS } from './curated-2013.js';
-import { ARSENAL_2004_SQUADS } from './curated-2004.js';
-import { LIVERPOOL_2001_SQUADS } from './curated-2001.js';
+import { ARSENAL_2004_SQUADS, INTER_2004_SQUADS } from './curated-2004.js';
+import { LIVERPOOL_2001_SQUADS, SPURS_2001_SQUADS } from './curated-2001.js';
+import { MAN_CITY_2008_SQUADS } from './curated-2008.js';
+import { LIVERPOOL_2010_SQUADS } from './curated-2010.js';
+import { DORTMUND_2012_SQUADS } from './curated-2012.js';
 import { INTER_1998_SQUADS } from './curated-1998.js';
 import { BAYERN_2009_SQUADS } from './curated-2009.js';
 import { NEWCASTLE_1995_SQUADS, SERIE_A_1995_SQUADS } from './curated-1995.js';
@@ -497,4 +500,9 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'barcelona-2014': BARCELONA_2014_SQUADS,
   'barcelona-2003': BARCELONA_2003_SQUADS,
   'real-madrid-2006': REAL_MADRID_2006_SQUADS,
+  'spurs-2001': SPURS_2001_SQUADS,
+  'man-city-2008': MAN_CITY_2008_SQUADS,
+  'liverpool-2010': LIVERPOOL_2010_SQUADS,
+  'inter-2004': INTER_2004_SQUADS,
+  'dortmund-2012': DORTMUND_2012_SQUADS,
 };

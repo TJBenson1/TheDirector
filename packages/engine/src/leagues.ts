@@ -476,6 +476,125 @@ export const SPAIN_2006: LeagueSeed = {
   ],
 };
 
+/** Premier League, 2008–09 — the season the Abu Dhabi money landed at City
+ *  (still a mid-table side at kickoff). United are champions; Liverpool run them
+ *  close. */
+export const ENGLAND_2008: LeagueSeed = {
+  id: 'eng-2008',
+  name: 'English Premier League',
+  season: '2008-07',
+  clubs: [
+    { id: 'man_utd', name: 'Manchester United', prestige: 90, strength: 88 },
+    { id: 'liverpool', name: 'Liverpool', prestige: 82, strength: 85 },
+    { id: 'chelsea', name: 'Chelsea', prestige: 86, strength: 86 },
+    { id: 'arsenal', name: 'Arsenal', prestige: 82, strength: 82 },
+    { id: 'everton', name: 'Everton', prestige: 66, strength: 76 },
+    { id: 'aston_villa', name: 'Aston Villa', prestige: 64, strength: 75 },
+    { id: 'man_city', name: 'Manchester City', prestige: 66, strength: 73 },
+    { id: 'spurs', name: 'Tottenham Hotspur', prestige: 72, strength: 74 },
+    { id: 'west_ham', name: 'West Ham United', prestige: 60, strength: 70 },
+    { id: 'newcastle', name: 'Newcastle United', prestige: 66, strength: 69 },
+    { id: 'fulham', name: 'Fulham', prestige: 56, strength: 68 },
+    { id: 'wigan', name: 'Wigan Athletic', prestige: 50, strength: 66 },
+    { id: 'stoke', name: 'Stoke City', prestige: 50, strength: 65 },
+    { id: 'bolton', name: 'Bolton Wanderers', prestige: 52, strength: 65 },
+    { id: 'portsmouth', name: 'Portsmouth', prestige: 56, strength: 68 },
+    { id: 'blackburn', name: 'Blackburn Rovers', prestige: 54, strength: 66 },
+    { id: 'sunderland', name: 'Sunderland', prestige: 56, strength: 64 },
+    { id: 'hull', name: 'Hull City', prestige: 48, strength: 62 },
+    { id: 'middlesbrough', name: 'Middlesbrough', prestige: 56, strength: 64 },
+    { id: 'west_brom', name: 'West Bromwich Albion', prestige: 48, strength: 60 },
+  ],
+};
+
+/** Premier League, 2010–11 — the season of the NESV takeover at Anfield and
+ *  Torres's January exit; United march to a 19th title, City rising fast. */
+export const ENGLAND_2010: LeagueSeed = {
+  id: 'eng-2010',
+  name: 'English Premier League',
+  season: '2010-07',
+  clubs: [
+    { id: 'man_utd', name: 'Manchester United', prestige: 90, strength: 87 },
+    { id: 'chelsea', name: 'Chelsea', prestige: 86, strength: 87 },
+    { id: 'man_city', name: 'Manchester City', prestige: 78, strength: 84 },
+    { id: 'arsenal', name: 'Arsenal', prestige: 82, strength: 83 },
+    { id: 'liverpool', name: 'Liverpool', prestige: 80, strength: 79 },
+    { id: 'spurs', name: 'Tottenham Hotspur', prestige: 74, strength: 80 },
+    { id: 'everton', name: 'Everton', prestige: 66, strength: 75 },
+    { id: 'aston_villa', name: 'Aston Villa', prestige: 64, strength: 73 },
+    { id: 'newcastle', name: 'Newcastle United', prestige: 66, strength: 71 },
+    { id: 'sunderland', name: 'Sunderland', prestige: 58, strength: 70 },
+    { id: 'fulham', name: 'Fulham', prestige: 58, strength: 70 },
+    { id: 'stoke', name: 'Stoke City', prestige: 52, strength: 69 },
+    { id: 'bolton', name: 'Bolton Wanderers', prestige: 52, strength: 68 },
+    { id: 'blackburn', name: 'Blackburn Rovers', prestige: 54, strength: 66 },
+    { id: 'wigan', name: 'Wigan Athletic', prestige: 50, strength: 64 },
+    { id: 'west_brom', name: 'West Bromwich Albion', prestige: 50, strength: 63 },
+    { id: 'wolves', name: 'Wolverhampton Wanderers', prestige: 50, strength: 63 },
+    { id: 'birmingham', name: 'Birmingham City', prestige: 52, strength: 64 },
+    { id: 'blackpool', name: 'Blackpool', prestige: 44, strength: 60 },
+    { id: 'west_ham', name: 'West Ham United', prestige: 60, strength: 66 },
+  ],
+};
+
+/** Serie A, 2004–05 — Mancini's Inter chase Juventus and Milan; the title race
+ *  later erased by Calciopoli. Ordering informed by the real (pre-scandal) table. */
+export const SERIE_A_2004: LeagueSeed = {
+  id: 'ita-2004',
+  name: 'Serie A',
+  season: '2004-07',
+  clubs: [
+    { id: 'juventus', name: 'Juventus', prestige: 88, strength: 88 },
+    { id: 'milan', name: 'AC Milan', prestige: 88, strength: 87 },
+    { id: 'inter', name: 'Internazionale', prestige: 84, strength: 85 },
+    { id: 'roma', name: 'AS Roma', prestige: 78, strength: 80 },
+    { id: 'lazio', name: 'Lazio', prestige: 74, strength: 78 },
+    { id: 'sampdoria', name: 'Sampdoria', prestige: 62, strength: 75 },
+    { id: 'udinese', name: 'Udinese', prestige: 62, strength: 76 },
+    { id: 'palermo', name: 'Palermo', prestige: 56, strength: 73 },
+    { id: 'parma', name: 'Parma', prestige: 64, strength: 74 },
+    { id: 'bologna', name: 'Bologna', prestige: 54, strength: 71 },
+    { id: 'fiorentina', name: 'Fiorentina', prestige: 68, strength: 72 },
+    { id: 'reggina', name: 'Reggina', prestige: 48, strength: 68 },
+    { id: 'lecce', name: 'Lecce', prestige: 46, strength: 68 },
+    { id: 'messina', name: 'Messina', prestige: 44, strength: 66 },
+    { id: 'cagliari', name: 'Cagliari', prestige: 50, strength: 68 },
+    { id: 'chievo', name: 'Chievo', prestige: 50, strength: 67 },
+    { id: 'siena', name: 'Siena', prestige: 46, strength: 66 },
+    { id: 'livorno', name: 'Livorno', prestige: 48, strength: 67 },
+    { id: 'atalanta', name: 'Atalanta', prestige: 54, strength: 66 },
+    { id: 'brescia', name: 'Brescia', prestige: 46, strength: 65 },
+  ],
+};
+
+/** Bundesliga, 2012–13 — Klopp's back-to-back champions vs the Bayern juggernaut
+ *  that would win the treble; the season Götze's move to Bayern was announced. */
+export const BUNDESLIGA_2012: LeagueSeed = {
+  id: 'ger-2012',
+  name: 'Bundesliga',
+  season: '2012-07',
+  clubs: [
+    { id: 'bayern', name: 'Bayern Munich', prestige: 92, strength: 92 },
+    { id: 'dortmund', name: 'Borussia Dortmund', prestige: 82, strength: 86 },
+    { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 72, strength: 79 },
+    { id: 'schalke', name: 'Schalke 04', prestige: 74, strength: 80 },
+    { id: 'gladbach', name: 'Borussia Mönchengladbach', prestige: 66, strength: 77 },
+    { id: 'frankfurt', name: 'Eintracht Frankfurt', prestige: 62, strength: 73 },
+    { id: 'hamburg', name: 'Hamburger SV', prestige: 68, strength: 72 },
+    { id: 'stuttgart', name: 'VfB Stuttgart', prestige: 68, strength: 74 },
+    { id: 'bremen', name: 'Werder Bremen', prestige: 68, strength: 73 },
+    { id: 'hannover', name: 'Hannover 96', prestige: 56, strength: 71 },
+    { id: 'freiburg', name: 'SC Freiburg', prestige: 54, strength: 70 },
+    { id: 'mainz', name: 'Mainz 05', prestige: 56, strength: 70 },
+    { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 64, strength: 72 },
+    { id: 'nurnberg', name: '1. FC Nürnberg', prestige: 54, strength: 69 },
+    { id: 'hoffenheim', name: '1899 Hoffenheim', prestige: 56, strength: 68 },
+    { id: 'augsburg', name: 'FC Augsburg', prestige: 48, strength: 65 },
+    { id: 'dusseldorf', name: 'Fortuna Düsseldorf', prestige: 48, strength: 64 },
+    { id: 'greuther_furth', name: 'Greuther Fürth', prestige: 44, strength: 61 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'eng-1996': ENGLAND_1996,
@@ -492,6 +611,10 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2001': ENGLAND_2001,
   'ger-1997': BUNDESLIGA_1997,
   'ger-2009': BUNDESLIGA_2009,
+  'ger-2012': BUNDESLIGA_2012,
+  'eng-2008': ENGLAND_2008,
+  'eng-2010': ENGLAND_2010,
+  'ita-2004': SERIE_A_2004,
 };
 
 /**
@@ -564,6 +687,8 @@ export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
   'eng-1996': ENGLISH_POOL,
   'eng-2001': ENGLISH_POOL,
   'eng-2004': ENGLISH_POOL,
+  'eng-2008': ENGLISH_POOL,
+  'eng-2010': ENGLISH_POOL,
   'eng-2013': ENGLISH_POOL,
   'esp-1': SPANISH_POOL,
   'esp-2003': SPANISH_POOL,
@@ -571,9 +696,11 @@ export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
   'esp-2014': SPANISH_POOL,
   'ita-1': ITALIAN_POOL,
   'ita-1995': ITALIAN_POOL,
+  'ita-2004': ITALIAN_POOL,
   'ita-2007': ITALIAN_POOL,
   'ger-1997': GERMAN_POOL,
   'ger-2009': GERMAN_POOL,
+  'ger-2012': GERMAN_POOL,
 };
 
 /** Flat lookup for instantiating a promoted club not yet in the world. */

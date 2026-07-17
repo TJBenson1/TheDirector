@@ -435,6 +435,39 @@ export const ZARAGOZA_2004: CuratedSeed[] = [
 ];
 
 /** Curated squads for the arsenal-2004 scenario, keyed by club. */
+/** Internazionale, 2004–05 — Mancini's first season; Adriano at his terrifying
+ *  peak, the eternal Zanetti, and a drought that had run since 1989. */
+export const INTER_2004: CuratedSeed[] = [
+  q('inter', 'toldo04i', 'Francesco Toldo', 1971, 'Italy', ['GK'], 82, 82, 2008, 25, t(8, 6, 8, 8, 5, 7)),
+  q('inter', 'jzanetti04i', 'Javier Zanetti', 1973, 'Argentina', ['RB', 'CM'], 85, 85, 2009, 15, t(10, 5, 9, 10, 3, 8), { archetype: 'full-back-attacking' }),
+  q('inter', 'cordoba04i', 'Iván Córdoba', 1976, 'Colombia', ['CB'], 82, 83, 2008, 30, t(9, 5, 8, 8, 4, 7), { archetype: 'covering-cb' }),
+  q('inter', 'materazzi04i', 'Marco Materazzi', 1973, 'Italy', ['CB'], 81, 82, 2008, 30, t(7, 7, 8, 8, 8, 6), { archetype: 'covering-cb' }),
+  q('inter', 'favalli04i', 'Giuseppe Favalli', 1972, 'Italy', ['LB', 'CB'], 79, 80, 2007, 30, t(8, 5, 7, 8, 4, 7)),
+  q('inter', 'burdisso04i', 'Nicolás Burdisso', 1981, 'Argentina', ['CB', 'RB'], 78, 83, 2009, 30, t(8, 5, 7, 7, 6, 7), { archetype: 'covering-cb' }),
+  q('inter', 'mihajlovic04i', 'Siniša Mihajlović', 1969, 'Serbia', ['CB', 'LB'], 78, 79, 2006, 30, t(7, 7, 8, 7, 8, 6)),
+  q('inter', 'cambiasso04i', 'Esteban Cambiasso', 1980, 'Argentina', ['DM', 'CM'], 82, 86, 2009, 25, t(9, 5, 9, 8, 4, 8), { archetype: 'deep-playmaker' }),
+  q('inter', 'czanetti04i', 'Cristiano Zanetti', 1977, 'Italy', ['DM', 'CM'], 79, 81, 2008, 40, t(8, 5, 7, 7, 5, 7), { archetype: 'deep-playmaker' }),
+  q('inter', 'veron04i', 'Juan Sebastián Verón', 1975, 'Argentina', ['CM', 'AM'], 82, 88, 2007, 40, t(7, 7, 8, 6, 6, 6), { archetype: 'playmaker' }),
+  q('inter', 'stankovic04i', 'Dejan Stanković', 1978, 'Serbia', ['AM', 'CM'], 82, 84, 2009, 30, t(8, 6, 8, 7, 6, 7), { archetype: 'playmaker' }),
+  q('inter', 'emre04i', 'Emre Belözoğlu', 1980, 'Turkey', ['CM', 'AM'], 79, 83, 2008, 35, t(6, 7, 7, 6, 8, 6), { archetype: 'playmaker' }),
+  q('inter', 'vandermeyde04i', 'Andy van der Meyde', 1979, 'Netherlands', ['RW', 'AM'], 76, 80, 2008, 40, t(5, 6, 6, 5, 7, 6), { archetype: 'inside-forward' }),
+  // Adriano — the Emperor at his peak; a physical phenomenon whose gift the world
+  // watched burn out after his father's death. A latent 92 lost to volatility.
+  q('inter', 'adriano04i', 'Adriano', 1982, 'Brazil', ['ST'], 86, 88, 2009, 30, t(5, 7, 7, 6, 8, 6), { archetype: 'poacher', latentCeiling: 92 }),
+  q('inter', 'vieri04i', 'Christian Vieri', 1973, 'Italy', ['ST'], 85, 85, 2005, 45, t(7, 8, 8, 5, 7, 6), { archetype: 'poacher' }),
+  q('inter', 'recoba04i', 'Álvaro Recoba', 1976, 'Uruguay', ['AM', 'ST'], 80, 84, 2008, 35, t(5, 8, 6, 6, 7, 6), { archetype: 'playmaker' }),
+  q('inter', 'cruz04i', 'Julio Cruz', 1974, 'Argentina', ['ST'], 78, 80, 2008, 30, t(8, 5, 7, 7, 5, 7), { archetype: 'poacher' }),
+  // Martins — an 18-year-old rocket, raw and electric.
+  q('inter', 'martins04i', 'Obafemi Martins', 1984, 'Nigeria', ['ST'], 76, 85, 2009, 35, t(6, 7, 8, 6, 7, 6), { archetype: 'poacher', latentCeiling: 85 }),
+];
+
+/** Curated squads for the inter-2004 start — Inter and their two title rivals. */
+export const INTER_2004_SQUADS: Record<string, CuratedSeed[]> = {
+  inter: INTER_2004,
+  juventus: JUVENTUS_2004,
+  milan: MILAN_2004,
+};
+
 export const ARSENAL_2004_SQUADS: Record<string, CuratedSeed[]> = {
   arsenal: ARSENAL_2004,
   chelsea: CHELSEA_2004,

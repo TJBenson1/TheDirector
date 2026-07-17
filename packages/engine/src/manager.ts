@@ -71,6 +71,9 @@ const STYLE_BY_NAME: Record<string, ManagerStyle> = {
   'Jürgen Klopp': st('Heavy-metal pressing, youth', 0.55, 0.8),
   'Manuel Pellegrini': st('Attacking possession', 0.7, 0.45),
   'Brendan Rodgers': st('High-tempo possession', 0.75, 0.6),
+  'Glenn Hoddle': st('Cultured, technical possession', 0.65, 0.55),
+  'Mark Hughes': st('Physical, direct, front-foot', 0.4, 0.4),
+  'Roberto Mancini': st('Pragmatic, defensively drilled', 0.5, 0.4),
 };
 const DEFAULT_STYLE = st('Balanced', 0.5, 0.45);
 const CARETAKER_STYLE = st('Caretaker — keep it steady', 0.45, 0.4);
@@ -104,6 +107,11 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
   'barcelona-2014': { name: 'Luis Enrique', reputation: 80 },
   'barcelona-2003': { name: 'Frank Rijkaard', reputation: 74 },
   'real-madrid-2006': { name: 'Fabio Capello', reputation: 84 },
+  'spurs-2001': { name: 'Glenn Hoddle', reputation: 66 },
+  'man-city-2008': { name: 'Mark Hughes', reputation: 64 },
+  'liverpool-2010': { name: 'Roy Hodgson', reputation: 68 },
+  'inter-2004': { name: 'Roberto Mancini', reputation: 70 },
+  'dortmund-2012': { name: 'Jürgen Klopp', reputation: 84 },
 };
 
 /** A pool of coaches available to hire, each with the YEARS he was a plausible
