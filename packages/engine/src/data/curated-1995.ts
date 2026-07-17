@@ -17,6 +17,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { EUROPE_1995_SQUADS } from './curated-europe-1995.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -483,4 +484,10 @@ for (const [club, seed] of DEPTH_1995) {
 // Full-squad completion for the playable giants abroad (§4, §14).
 for (const extra of [REAL_1995_EXTRA, BARCA_1995_EXTRA, BAYERN_1995_EXTRA, CHELSEA_1995_EXTRA]) {
   for (const seed of extra) (JUVENTUS_1995_SQUADS[seed.club as ClubId] ??= []).push(seed);
+}
+
+// European selling clubs (M12A rollout) — the 1995-96 foreign talent pipeline
+// (shared with milan-1995). All whole new clubs merged into the 1995 universe.
+for (const [club, seeds] of Object.entries(EUROPE_1995_SQUADS)) {
+  JUVENTUS_1995_SQUADS[club] = [...(JUVENTUS_1995_SQUADS[club] ?? []), ...seeds];
 }

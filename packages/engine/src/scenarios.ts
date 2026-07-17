@@ -196,6 +196,13 @@ const ERA_1995_CONTEXT: ClubSeed[] = [
   { id: 'liverpool', name: 'Liverpool', prestige: 80 },
   // Porto — so Mourinho's 2004 European Cup is anchored too.
   { id: 'porto', name: 'FC Porto', prestige: 74 },
+  // European selling clubs (M12A rollout) — the 1995-96 foreign pipeline.
+  { id: 'psv', name: 'PSV Eindhoven', prestige: 76 },
+  { id: 'feyenoord', name: 'Feyenoord', prestige: 70 },
+  { id: 'benfica', name: 'Benfica', prestige: 70 },
+  { id: 'celtic', name: 'Celtic', prestige: 70 },
+  { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 76 },
+  { id: 'valencia', name: 'Valencia', prestige: 76 },
 ];
 
 export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
