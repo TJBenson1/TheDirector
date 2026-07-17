@@ -25,6 +25,7 @@ import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow, executeAcademyIntakes } from './ledgerExec.js';
+import { runReviewPhase } from './review.js';
 import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli, promoteJuventus } from './italyEvents.js';
 import { restoreRelegatedClubs } from './relegation.js';
@@ -138,6 +139,14 @@ function runMonth(state: GameState, rng: Rng): void {
  * to the pre-multi-step single pass).
  */
 function runWindowStep(state: GameState, rng: Rng, step: number): void {
+  // Phase 1 REVIEW: before the summer market opens, take stock of the club's
+  // looming issues (expiries, retirements, decline, injuries) and offer the
+  // pressing renewals. Fires ONCE per window — at the first sub-step in per-step
+  // play, or the single deadline sweep in batch — so both paths see it.
+  if (state.clock.window === 'summer' && !state.meta.reviewedWindows.includes(state.clock.date)) {
+    state.meta.reviewedWindows.push(state.clock.date);
+    runReviewPhase(state);
+  }
   // M10: proactive AI transfers follow the REAL ledger by default (§9f) — this
   // step's slice of it (or the whole window, on a final-step sweep).
   executeLedgerWindow(state, rng, step);

@@ -22,6 +22,7 @@ import type {
   PlayerState,
 } from './types.js';
 import { Rng } from './rng.js';
+import { parseYearMonth } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { cloneState } from './state.js';
 import { eventsSince } from './eventLog.js';
@@ -101,6 +102,19 @@ export function applyConsequence(state: GameState, c: Consequence): void {
         if (user) user.finances.transferBudget = Math.max(user.finances.transferBudget, c.amount ?? 0);
         const res = executeTransfer(state, { playerId: c.playerId, toClub: state.playerClub, fee: c.amount ?? 0 }, { reality: true });
         if (res.ok) markLedgerRealized(state, c.tag);
+      }
+      break;
+    }
+    case 'renewContract': {
+      // Extend a player's deal by `amount` years from the current season, keeping
+      // him off a free transfer. Priced into the wage bill via a modest rise.
+      if (c.playerId) {
+        const p = state.players[c.playerId];
+        if (p) {
+          const year = parseYearMonth(state.clock.date).year;
+          p.contractUntil = Math.max(p.contractUntil, year + Math.max(1, c.amount ?? 3));
+          p.wage = Math.round(p.wage * 1.1);
+        }
       }
       break;
     }

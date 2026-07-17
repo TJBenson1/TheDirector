@@ -167,6 +167,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
       executedLedger: [],
       realizedLedger: [],
       firedRealInjuries: [],
+      reviewedWindows: [],
     },
     clock: {
       date: scenario.startDate,

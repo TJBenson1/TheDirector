@@ -367,6 +367,7 @@ export interface Consequence {
     | 'agitation' // raise a player's unrest
     | 'transferOut' // sell a player to `clubId` for `amount`
     | 'signReal' // sign an incoming real target to the user club (funds + moves)
+    | 'renewContract' // extend a player's contract by `amount` years
     | 'memory' // append a narrative-memory entry (§10)
     | 'log'; // purely informational log line
   playerId?: PlayerId;
@@ -448,6 +449,9 @@ export interface GameStateMeta {
   /** Real historical injuries already fired (by subject playerId), so each
    *  scheduled real injury triggers at most once (reality-default). */
   firedRealInjuries: string[];
+  /** Window dates whose pre-window REVIEW briefing has already run, so the
+   *  club's looming-issues review fires once per window (§3 phase 1). */
+  reviewedWindows: string[];
 }
 
 export interface GameClock {

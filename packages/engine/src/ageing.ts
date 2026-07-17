@@ -79,7 +79,7 @@ export function processSeasonAgeing(state: GameState, rng: Rng): void {
 const BASE_RETIRE_AGE = 37;
 
 /** Position group's retirement bonus (keepers last far longer). */
-function retireAgeFor(positions: Position[], professionalism: number): number {
+export function retireAgeFor(positions: Position[], professionalism: number): number {
   const gk = positions.includes('GK') ? 3 : 0;
   const defender = positions.some((p) => p === 'CB') ? 1 : 0;
   const pro = Math.round((professionalism - 6) * 0.3);
