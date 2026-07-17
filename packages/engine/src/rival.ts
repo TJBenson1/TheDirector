@@ -77,6 +77,7 @@ function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean 
   let bestDepth: PlayerState | undefined;
   let bestHijack: PlayerState | undefined;
   for (const p of Object.values(state.players)) {
+    if (p.retired) continue; // hung up his boots
     const seller = p.club ? state.clubs[p.club] : undefined;
     if (!seller || seller.leagueId !== null) continue; // foreign/context only
     if (p.ability < target - 10 || p.ability > target + 5) continue;

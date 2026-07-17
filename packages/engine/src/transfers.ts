@@ -177,7 +177,7 @@ export function affordableTargets(state: GameState, clubId: ClubId): PlayerId[] 
   const budget = club.finances.transferBudget;
   const targets: PlayerId[] = [];
   for (const player of Object.values(state.players)) {
-    if (player.club === clubId) continue;
+    if (player.club === clubId || player.retired) continue;
     if (valuePlayer(player, year) <= budget) targets.push(player.id);
   }
   return targets;

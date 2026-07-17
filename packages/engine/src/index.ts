@@ -80,7 +80,7 @@ export {
   injuredCount,
   significantInjuredCount,
 } from './injuries.js';
-export { processSeasonAgeing, processSeasonMorale } from './ageing.js';
+export { processSeasonAgeing, processSeasonMorale, processRetirementsAndYouth } from './ageing.js';
 export {
   processSeasonDevelopment,
   estimateMinutesShare,

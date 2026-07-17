@@ -243,6 +243,10 @@ export interface PlayerState {
   /** Unrest, 0–100. Rises when the user rejects a bid to keep him; sustained
    *  agitation can force a discounted exit (the "kept him but he left anyway"). */
   agitation: number;
+  /** Hung up his boots (long-horizon retirement, §5). Removed from his club's
+   *  squad, but `club` is preserved as his final destination — his last real move
+   *  still reads true — and he is filtered out of the live market and selection. */
+  retired?: boolean;
 }
 
 export type CareerStagePull = 'prove' | 'peak' | 'legacy' | 'payday';

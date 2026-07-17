@@ -92,6 +92,7 @@ export function suggestTargets(
   const rows: Array<{ s: TargetSuggestion; score: number }> = [];
   for (const p of Object.values(state.players)) {
     if (isProcedural(p)) continue; // real players only
+    if (p.retired) continue; // hung up his boots
     if (p.club === state.playerClub || p.club === null) continue;
     if (ageOf(state, p) < 16) continue; // 16+ rule
     const inPosition = p.positions.includes(position) || p.positions.some((pos) => GROUP[pos] === group);

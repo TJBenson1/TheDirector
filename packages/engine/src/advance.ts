@@ -29,7 +29,7 @@ import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli, promoteJuventus } from './italyEvents.js';
 import { restoreRelegatedClubs } from './relegation.js';
 import { decayPursuit } from './wooing.js';
-import { processSeasonAgeing, processSeasonMorale, processOverstackUnrest } from './ageing.js';
+import { processSeasonAgeing, processSeasonMorale, processOverstackUnrest, processRetirementsAndYouth } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
 import { resolveAdaptationSeason } from './adaptation.js';
@@ -68,6 +68,9 @@ function runMonth(state: GameState, rng: Rng): void {
     // 3. Develop the young, decline the old, drift morale (§5).
     processSeasonDevelopment(state, rng);
     processSeasonAgeing(state, rng);
+    // Retire the aged and refresh with home-grown youth, so a 25-year save doesn't
+    // ossify into a squad of fifty-year-olds (long-horizon world coherence, §5).
+    processRetirementsAndYouth(state, rng);
     processSeasonMorale(state);
     // 4. Rubber-band: update world defiance from last season's finish (§9a #5).
     updateWorldDefiance(state);

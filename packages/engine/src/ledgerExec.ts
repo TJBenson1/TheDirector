@@ -346,6 +346,7 @@ function fallbackForLedger(
   // go for Leeds' Ferdinand). Picking (b) consumes his onward move: he joins the
   // new club and his later real transfer never happens.
   const eligible = (p: PlayerState): boolean => {
+    if (p.retired) return false; // hung up his boots
     if (!p.curated) return false; // a named narrative signing must be a real player (Principle 2)
     if (p.id === entry.playerId || p.club === entry.to) return false;
     if (positionGroupOf(p) !== group) return false;
