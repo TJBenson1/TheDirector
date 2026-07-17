@@ -93,6 +93,8 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
   'juventus-2006': { name: 'Didier Deschamps', reputation: 68 },
   'dortmund-1997': { name: 'Nevio Scala', reputation: 72 },
   'bayern-1998': { name: 'Ottmar Hitzfeld', reputation: 82 },
+  'milan-1995': { name: 'Fabio Capello', reputation: 84 },
+  'juventus-1995': { name: 'Marcello Lippi', reputation: 82 },
 };
 
 /** A pool of coaches available to hire, each with the YEARS he was a plausible

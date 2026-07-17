@@ -1740,8 +1740,120 @@ const BAYERN_1998_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── AC Milan, 1995 (end of the dynasty) storyline pack ───────────────────────
+const MILAN_1995_PACK: ScriptedEvent[] = [
+  {
+    id: 'milan-baggio-role',
+    date: '1995-09',
+    requires: (s) => playerAt(s, 'cur_baggio95', 'milan') && s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:milan-baggio-role',
+      title: 'Roberto Baggio does not fit the system',
+      description: 'You have signed the Divine Ponytail, a free-roaming number ten — but the manager\'s rigid 4-4-2 has no place for him, and reality wasted him on the bench. Build the team around his genius, or make him conform to the system?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'build-around', label: 'Build the side around Baggio', successProbability: 0.5, onSuccess: [{ kind: 'morale', playerId: 'cur_baggio95', amount: 10 }, { kind: 'managerRelationship', amount: -4 }, { kind: 'memory', tag: 'tactics', text: 'Freed Baggio — the divergence from Capello\'s system.' }], onFailure: [{ kind: 'managerRelationship', amount: -8 }] },
+        { id: 'conform', label: 'Make him fit the system', successProbability: 0.55, onSuccess: [{ kind: 'managerRelationship', amount: 5 }, { kind: 'agitation', playerId: 'cur_baggio95', amount: 14 }, { kind: 'memory', tag: 'tactics', text: 'Kept the system — Baggio chafes, as reality.' }], onFailure: [{ kind: 'morale', playerId: 'cur_baggio95', amount: -10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_baggio95', amount: 12 }],
+      memoryTags: ['tactics', 'cur_baggio95'],
+    }),
+  },
+  {
+    id: 'milan-dynasty-twilight',
+    date: '1995-08',
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:milan-dynasty-twilight',
+      title: 'The immortals are growing old',
+      description: 'Baresi is 35, Tassotti 35, Galli 32 — the greatest defence football has seen is in its twilight. Ride the legends for one more title, or begin blooding the next generation behind them?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'ride', label: 'One more title with the immortals', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 6 }, { kind: 'memory', tag: 'board', text: 'Rode the great defence one last time — as reality (the 1996 Scudetto).' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'renew', label: 'Blood the next generation now', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'board', text: 'Started the renewal early.' }], onFailure: [{ kind: 'morale', clubId: 'milan', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'board', text: 'The great side ages another year, unrenewed.' }],
+      memoryTags: ['board', 'dynasty'],
+    }),
+  },
+  {
+    id: 'weah-ballon-dor',
+    date: '1996-01',
+    requires: (s) => playerAt(s, 'cur_weah95', 'milan') && s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:weah-ballon-dor',
+      title: 'George Weah is the best player in the world',
+      description: 'Your striker has just won the Ballon d\'Or — the first African ever to do so. He is at his imperious peak. Make him the undisputed focal point of everything you do, or keep the balance of your star-laden attack?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'focal', label: 'Build everything around Weah', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_weah95', amount: 8 }, { kind: 'memory', tag: 'tactics', text: 'Made Weah the focal point at his peak.' }], onFailure: [{ kind: 'morale', clubId: 'milan', amount: -3 }] },
+        { id: 'balance', label: 'Keep the attacking balance', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }], onFailure: [{ kind: 'agitation', playerId: 'cur_weah95', amount: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'tactics', text: 'Weah\'s peak goes unharnessed.' }],
+      memoryTags: ['tactics', 'cur_weah95'],
+    }),
+  },
+];
+
+// ── Juventus, 1995 (the Lippi era) storyline pack ────────────────────────────
+const JUVENTUS_1995_PACK: ScriptedEvent[] = [
+  {
+    id: 'delpiero-heir',
+    date: '1995-09',
+    requires: (s) => playerAt(s, 'cur_delpiero95', 'juventus') && s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:delpiero-heir',
+      title: 'A 20-year-old is ready to take over',
+      description: 'Alessandro Del Piero is bursting with talent, but Vialli and Ravanelli are the established stars leading the line. Throw the kid straight in and build the future around him, or bring him along slowly behind the veterans?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'throw-in', label: 'Hand Del Piero the keys now', successProbability: 0.55, onSuccess: [{ kind: 'morale', playerId: 'cur_delpiero95', amount: 12 }, { kind: 'memory', tag: 'development', text: 'Made Del Piero the centre of the project — the heir crowned early.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -3 }] },
+        { id: 'slowly', label: 'Bring him along behind the veterans', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'development', text: 'Eased Del Piero in — the measured path, as reality.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_delpiero95', amount: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'development', text: 'Del Piero waits his turn.' }],
+      memoryTags: ['development', 'cur_delpiero95'],
+    }),
+  },
+  {
+    id: 'juve-european-cup',
+    date: '1996-05',
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:juve-european-cup',
+      title: 'The European Cup final — Ajax await',
+      description: 'You have reached the final against the young champions of Ajax. It will likely come down to the finest margins, perhaps a shootout. How do you set up for the biggest night?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'front-foot', label: 'Take the game to them', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 10 }, { kind: 'fanTrust', amount: 8, text: 'A bold final performance seizes the Cup.' }, { kind: 'memory', tag: 'europe', text: 'Won Europe on the front foot — the 1996 crown.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -6 }] },
+        { id: 'contain', label: 'Contain them and trust the shootout', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 8 }, { kind: 'memory', tag: 'europe', text: 'Held firm and won the shootout — as reality.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'europe', text: 'The final is left to chance.' }],
+      memoryTags: ['europe', 'final'],
+    }),
+  },
+  {
+    id: 'juve-exodus',
+    date: '1996-06',
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:juve-exodus',
+      title: 'The stars are being tempted away',
+      description: 'Vialli is wanted by Chelsea, Ravanelli by the new English money — the champions of Europe are about to be picked apart for huge fees. Cash in and reinvest around Del Piero, or fight to keep the winning team together?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'cash-in', label: 'Cash in and rebuild around Del Piero', successProbability: 0.65, onSuccess: [{ kind: 'money', clubId: 'juventus', amount: 20_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold the veterans and reinvested — as reality, the Zidane-era rebuild.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -4 }] },
+        { id: 'keep', label: 'Keep the European champions together', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 8 }, { kind: 'memory', tag: 'transfer-saga', text: 'Held the winning side together — a divergence.' }], onFailure: [{ kind: 'boardPatience', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer-saga', text: 'The stars drift away for nothing decided.' }],
+      memoryTags: ['transfer-saga', 'exodus'],
+    }),
+  },
+];
+
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
+  'milan-1995': MILAN_1995_PACK,
+  'juventus-1995': JUVENTUS_1995_PACK,
   'dortmund-1997': DORTMUND_1997_PACK,
   'bayern-1998': BAYERN_1998_PACK,
   'newcastle-1995': NEWCASTLE_1995_PACK,

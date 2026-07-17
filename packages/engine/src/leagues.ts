@@ -327,10 +327,39 @@ export const BUNDESLIGA_1997: LeagueSeed = {
   ],
 };
 
+/** Serie A, 1995–96 — Capello's Milan champions, Lippi's Juventus European Cup
+ *  winners; the golden age of Serie A. Shared by milan-1995 and juventus-1995. */
+export const SERIE_A_1995: LeagueSeed = {
+  id: 'ita-1995',
+  name: 'Serie A',
+  season: '1995-07',
+  clubs: [
+    { id: 'juventus', name: 'Juventus', prestige: 84, strength: 86 },
+    { id: 'milan', name: 'AC Milan', prestige: 86, strength: 85 },
+    { id: 'parma', name: 'Parma', prestige: 72, strength: 81 },
+    { id: 'lazio', name: 'Lazio', prestige: 74, strength: 80 },
+    { id: 'fiorentina', name: 'Fiorentina', prestige: 72, strength: 80 },
+    { id: 'inter', name: 'Internazionale', prestige: 82, strength: 79 },
+    { id: 'roma', name: 'AS Roma', prestige: 76, strength: 78 },
+    { id: 'sampdoria', name: 'Sampdoria', prestige: 66, strength: 76 },
+    { id: 'napoli', name: 'Napoli', prestige: 64, strength: 74 },
+    { id: 'udinese', name: 'Udinese', prestige: 56, strength: 72 },
+    { id: 'atalanta', name: 'Atalanta', prestige: 56, strength: 70 },
+    { id: 'torino', name: 'Torino', prestige: 58, strength: 70 },
+    { id: 'vicenza', name: 'Vicenza', prestige: 48, strength: 68 },
+    { id: 'cagliari', name: 'Cagliari', prestige: 50, strength: 68 },
+    { id: 'bari', name: 'Bari', prestige: 46, strength: 66 },
+    { id: 'piacenza', name: 'Piacenza', prestige: 44, strength: 64 },
+    { id: 'cremonese', name: 'Cremonese', prestige: 42, strength: 63 },
+    { id: 'padova', name: 'Padova', prestige: 42, strength: 62 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'esp-1': SPAIN_2000,
   'ita-1': SERIE_A_1998,
+  'ita-1995': SERIE_A_1995,
   'ita-2007': SERIE_A_2007,
   'ita-b-2006': SERIE_B_2006,
   'eng-2013': ENGLAND_2013,
@@ -412,6 +441,7 @@ export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
   'eng-2013': ENGLISH_POOL,
   'esp-1': SPANISH_POOL,
   'ita-1': ITALIAN_POOL,
+  'ita-1995': ITALIAN_POOL,
   'ita-2007': ITALIAN_POOL,
   'ger-1997': GERMAN_POOL,
   'ger-2009': GERMAN_POOL,

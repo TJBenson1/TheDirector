@@ -314,6 +314,30 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     domesticLeagueId: 'ita-b-2006',
   },
 
+  // ── Serie A 1995-96 cluster (shared curated pack) ────────────────────────────
+  'milan-1995': {
+    id: 'milan-1995',
+    name: 'AC Milan — 1995: End of the Dynasty',
+    startDate: '1995-07',
+    playerClub: 'milan',
+    mandate: 'Hold off the decline of the great side and win one more Scudetto — with Weah and Baggio now aboard.',
+    boardPatience: 74,
+    boardExpectedFinish: 2,
+    clubs: ELITE_CLUBS,
+    domesticLeagueId: 'ita-1995',
+  },
+  'juventus-1995': {
+    id: 'juventus-1995',
+    name: 'Juventus — 1995: The Lippi Era',
+    startDate: '1995-07',
+    playerClub: 'juventus',
+    mandate: 'Defend the Scudetto and conquer Europe — turn the young Del Piero into the heir to the throne.',
+    boardPatience: 72,
+    boardExpectedFinish: 1,
+    clubs: ELITE_CLUBS,
+    domesticLeagueId: 'ita-1995',
+  },
+
   // ── Bundesliga 1997/98 cluster (shared curated pack) ─────────────────────────
   'dortmund-1997': {
     id: 'dortmund-1997',

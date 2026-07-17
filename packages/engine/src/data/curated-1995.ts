@@ -58,3 +58,58 @@ export const NEWCASTLE_1995: CuratedSeed[] = [
 export const NEWCASTLE_1995_SQUADS: Record<string, CuratedSeed[]> = {
   newcastle: NEWCASTLE_1995,
 };
+
+/** AC Milan, 1995–96 — Capello's champions at the tail of the dynasty, with Weah
+ *  and Baggio just aboard around the immortal Baresi–Maldini spine. */
+export const MILAN_1995: CuratedSeed[] = [
+  q('milan', 'weah95', 'George Weah', 1966, 'Liberia', ['ST'], 88, 90, 1999, 30, t(8, 6, 9, 6, 5, 8), { archetype: 'poacher' }),
+  // Baggio — the Divine Ponytail, arrived from Juventus but destined to chafe under
+  // Capello's rigid system; a genius asked to fit a shape that wasn't his.
+  q('milan', 'baggio95', 'Roberto Baggio', 1967, 'Italy', ['AM', 'ST', 'RW'], 87, 91, 1998, 40, t(8, 8, 8, 5, 6, 6), { archetype: 'playmaker' }),
+  q('milan', 'maldini95', 'Paolo Maldini', 1968, 'Italy', ['LB', 'CB'], 87, 90, 2000, 28, t(10, 5, 9, 10, 3, 8), { archetype: 'covering-cb', loyalty: 99 }),
+  q('milan', 'baresi95', 'Franco Baresi', 1960, 'Italy', ['CB', 'DM'], 86, 86, 1997, 30, t(10, 4, 8, 10, 3, 7), { archetype: 'covering-cb', loyalty: 97 }),
+  q('milan', 'savicevic95', 'Dejan Savićević', 1966, 'Serbia and Montenegro', ['AM', 'RW'], 85, 86, 1998, 42, t(6, 9, 7, 6, 8, 6), { archetype: 'playmaker' }),
+  q('milan', 'desailly95', 'Marcel Desailly', 1968, 'France', ['DM', 'CB'], 85, 88, 1999, 30, t(9, 5, 9, 7, 4, 8), { archetype: 'deep-playmaker' }),
+  q('milan', 'boban95', 'Zvonimir Boban', 1968, 'Croatia', ['CM', 'AM'], 84, 86, 1999, 35, t(8, 6, 8, 8, 6, 7)),
+  q('milan', 'albertini95', 'Demetrio Albertini', 1971, 'Italy', ['CM', 'DM'], 83, 86, 2000, 28, t(9, 5, 8, 9, 4, 7), { archetype: 'deep-playmaker' }),
+  q('milan', 'costacurta95', 'Alessandro Costacurta', 1966, 'Italy', ['CB'], 82, 84, 1999, 30, t(9, 4, 8, 9, 3, 7), { archetype: 'covering-cb' }),
+  q('milan', 'donadoni95', 'Roberto Donadoni', 1963, 'Italy', ['RW', 'AM', 'CM'], 81, 81, 1997, 32, t(9, 5, 8, 9, 4, 7)),
+  q('milan', 'panucci95', 'Christian Panucci', 1973, 'Italy', ['RB', 'CB'], 80, 85, 1999, 30, t(7, 6, 8, 6, 6, 7), { archetype: 'full-back-attacking' }),
+  q('milan', 'rossi95', 'Sebastiano Rossi', 1964, 'Italy', ['GK'], 80, 81, 1999, 30, t(8, 6, 7, 8, 5, 6)),
+  q('milan', 'simone95', 'Marco Simone', 1969, 'Italy', ['ST', 'RW'], 79, 80, 1998, 32, t(7, 6, 8, 7, 6, 7), { archetype: 'poacher' }),
+  q('milan', 'eranio95', 'Stefano Eranio', 1966, 'Italy', ['RW', 'CM', 'RB'], 78, 78, 1998, 34, t(8, 5, 7, 8, 5, 7)),
+  q('milan', 'dicanio95', 'Paolo Di Canio', 1968, 'Italy', ['AM', 'RW', 'ST'], 77, 82, 1997, 38, t(5, 9, 8, 4, 9, 5)),
+  q('milan', 'galli95', 'Filippo Galli', 1963, 'Italy', ['CB'], 76, 76, 1997, 32, t(8, 4, 6, 9, 3, 6), { archetype: 'covering-cb' }),
+  q('milan', 'tassotti95', 'Mauro Tassotti', 1960, 'Italy', ['RB', 'CB'], 76, 76, 1997, 34, t(9, 4, 6, 10, 3, 6), { loyalty: 95 }),
+];
+
+/** Juventus, 1995–96 — Lippi's Champions League winners, the young Del Piero
+ *  rising as Vialli and Ravanelli lead the line one last season. */
+export const JUVENTUS_1995: CuratedSeed[] = [
+  q('juventus', 'peruzzi95', 'Angelo Peruzzi', 1970, 'Italy', ['GK'], 83, 84, 2000, 30, t(8, 5, 7, 8, 5, 6)),
+  q('juventus', 'torricelli95', 'Moreno Torricelli', 1970, 'Italy', ['RB', 'CB'], 78, 79, 1999, 30, t(8, 4, 7, 8, 5, 7), { archetype: 'full-back-attacking' }),
+  q('juventus', 'ferrara95', 'Ciro Ferrara', 1967, 'Italy', ['CB'], 82, 82, 2000, 32, t(8, 4, 7, 9, 4, 7), { archetype: 'covering-cb' }),
+  q('juventus', 'vierchowod95', 'Pietro Vierchowod', 1959, 'Italy', ['CB'], 80, 80, 1997, 38, t(9, 4, 6, 8, 4, 6), { archetype: 'covering-cb' }),
+  q('juventus', 'pessotto95', 'Gianluca Pessotto', 1970, 'Italy', ['LB', 'RB'], 78, 80, 2000, 30, t(8, 3, 7, 8, 4, 7), { archetype: 'full-back-attacking' }),
+  q('juventus', 'iuliano95', 'Mark Iuliano', 1973, 'Italy', ['CB'], 75, 80, 2000, 30, t(7, 4, 7, 8, 5, 6)),
+  q('juventus', 'porrini95', 'Sergio Porrini', 1968, 'Italy', ['RB', 'CB'], 75, 76, 1998, 30, t(7, 4, 6, 7, 5, 6)),
+  q('juventus', 'deschamps95', 'Didier Deschamps', 1968, 'France', ['DM', 'CM'], 82, 83, 2000, 28, t(9, 5, 8, 8, 4, 8), { archetype: 'deep-playmaker' }),
+  q('juventus', 'sousa95', 'Paulo Sousa', 1970, 'Portugal', ['DM', 'CM'], 82, 83, 1997, 30, t(9, 5, 8, 6, 4, 7), { archetype: 'deep-playmaker' }),
+  q('juventus', 'conte95', 'Antonio Conte', 1969, 'Italy', ['CM', 'DM'], 80, 81, 2001, 32, t(9, 6, 9, 9, 7, 6), { archetype: 'playmaker' }),
+  q('juventus', 'jugovic95', 'Vladimir Jugović', 1969, 'Serbia', ['CM', 'AM'], 80, 81, 1999, 30, t(8, 6, 8, 6, 6, 7)),
+  q('juventus', 'dilivio95', 'Angelo Di Livio', 1966, 'Italy', ['CM', 'RW'], 78, 78, 1999, 28, t(9, 3, 7, 9, 4, 7)),
+  q('juventus', 'tacchinardi95', 'Alessio Tacchinardi', 1975, 'Italy', ['DM', 'CM'], 74, 82, 2001, 30, t(8, 4, 7, 8, 5, 6)),
+  // Del Piero — the 20-year-old heir, about to become a Juventus immortal. A
+  // reality-rail talent (huge ceiling, unlocked by minutes).
+  q('juventus', 'delpiero95', 'Alessandro Del Piero', 1974, 'Italy', ['AM', 'ST', 'LW'], 82, 90, 2001, 35, t(9, 4, 9, 10, 3, 7), { archetype: 'inside-forward' }),
+  q('juventus', 'vialli95', 'Gianluca Vialli', 1964, 'Italy', ['ST'], 84, 84, 1997, 40, t(8, 6, 8, 9, 5, 7), { archetype: 'poacher' }),
+  q('juventus', 'ravanelli95', 'Fabrizio Ravanelli', 1968, 'Italy', ['ST'], 83, 83, 1998, 32, t(7, 7, 8, 5, 7, 6), { archetype: 'poacher' }),
+  q('juventus', 'padovano95', 'Michele Padovano', 1966, 'Italy', ['ST'], 76, 76, 1998, 30, t(7, 5, 6, 7, 5, 6), { archetype: 'poacher' }),
+];
+
+/** Shared curated squads for the Serie A 1995-96 cluster — both Milan and Juventus
+ *  are real, so each is the other's title rival in either start point. */
+export const SERIE_A_1995_SQUADS: Record<string, CuratedSeed[]> = {
+  milan: MILAN_1995,
+  juventus: JUVENTUS_1995,
+};
