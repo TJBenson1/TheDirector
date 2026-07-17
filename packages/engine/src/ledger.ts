@@ -601,7 +601,7 @@ const RETIREMENTS_1999: RealRetirement[] = [
   { playerId: 'cur_gneville', year: 2011 }, { playerId: 'cur_pneville', year: 2013 },
   { playerId: 'cur_irwin', year: 2004 }, { playerId: 'cur_silvestre', year: 2014 },
   { playerId: 'cur_stam', year: 2007 }, { playerId: 'cur_rjohnsen', year: 2008 },
-  { playerId: 'cur_wbrown', year: 2016 }, { playerId: 'cur_berg', year: 2004 },
+  { playerId: 'cur_wbrown', year: 2018 }, { playerId: 'cur_berg', year: 2004 },
   { playerId: 'cur_may', year: 2003 }, { playerId: 'cur_keane', year: 2006 },
   { playerId: 'cur_scholes', year: 2013 }, { playerId: 'cur_giggs', year: 2014 },
   { playerId: 'cur_butt', year: 2011 }, { playerId: 'cur_blomqvist', year: 2005 },
@@ -630,7 +630,7 @@ const RETIREMENTS_2013: RealRetirement[] = [
   { playerId: 'cur_xavi', year: 2019 }, { playerId: 'cur_pirlo', year: 2017 },
   { playerId: 'cur_gerrard2', year: 2016 }, { playerId: 'cur_lampard', year: 2017 },
   { playerId: 'cur_terry', year: 2018 }, { playerId: 'cur_buffon', year: 2023 },
-  { playerId: 'cur_totti', year: 2017 }, { playerId: 'cur_pepe2', year: 2021 },
+  { playerId: 'cur_totti', year: 2017 }, { playerId: 'cur_pepe2', year: 2024 },
 ];
 
 // ── Real academy graduates (real players only — the youth pipeline) ───────────
@@ -662,7 +662,7 @@ const ACADEMY_2013: AcademyGraduate[] = [
 // ── era-2004 (Arsenal Invincibles) retirements + academy ─────────────────────
 const RETIREMENTS_2004: RealRetirement[] = [
   { playerId: 'cur_lehmann', year: 2011 }, { playerId: 'cur_lauren', year: 2012 },
-  { playerId: 'cur_toure', year: 2015 }, { playerId: 'cur_campbell2', year: 2012 },
+  { playerId: 'cur_toure', year: 2017 }, { playerId: 'cur_campbell2', year: 2012 },
   { playerId: 'cur_gilberto', year: 2013 }, { playerId: 'cur_vieira2', year: 2011 },
   { playerId: 'cur_pires2', year: 2015 }, { playerId: 'cur_ljungberg', year: 2012 },
   { playerId: 'cur_bergkamp2', year: 2006 }, { playerId: 'cur_henry', year: 2014 },
@@ -914,7 +914,7 @@ const RETIREMENTS_2009: RealRetirement[] = [
   { playerId: 'cur_hyypia09', year: 2011 }, { playerId: 'cur_lehmann09', year: 2011 },
   { playerId: 'cur_guti09', year: 2011 }, { playerId: 'cur_butt09', year: 2012 },
   { playerId: 'cur_vannistelrooy09', year: 2012 }, { playerId: 'cur_frings09', year: 2013 },
-  { playerId: 'cur_klose09', year: 2014 }, { playerId: 'cur_raul09', year: 2015 },
+  { playerId: 'cur_klose09', year: 2016 }, { playerId: 'cur_raul09', year: 2015 },
   { playerId: 'cur_casillas09', year: 2020 }, { playerId: 'cur_pizarro09', year: 2020 },
 ];
 
