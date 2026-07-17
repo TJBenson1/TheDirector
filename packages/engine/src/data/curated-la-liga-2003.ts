@@ -17,6 +17,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { EUROPE_2004_SQUADS } from './curated-europe-2004.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -282,3 +283,11 @@ export const BARCELONA_2003_SQUADS: Record<string, CuratedSeed[]> = {
   sevilla: SEVILLA_2003D,
   mallorca: MALLORCA_2003D,
 };
+
+// European selling clubs (M12A rollout) — the non-Spanish talent pipeline of the
+// Mourinho-Porto era. Porto and Monaco are already fully curated in this pack for
+// 2003 (their own squads), so only the clubs this pack lacks are added.
+for (const [club, seeds] of Object.entries(EUROPE_2004_SQUADS)) {
+  if (club === 'porto' || club === 'monaco') continue;
+  BARCELONA_2003_SQUADS[club] = [...(BARCELONA_2003_SQUADS[club] ?? []), ...seeds];
+}

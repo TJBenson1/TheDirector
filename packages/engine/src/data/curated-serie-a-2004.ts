@@ -18,6 +18,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { EUROPE_2004_SQUADS } from './curated-europe-2004.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -274,3 +275,9 @@ export const INTER_2004_SQUADS: Record<string, CuratedSeed[]> = {
   atletico: ATLETICO_2004,
   valencia: VALENCIA_2004,
 };
+
+// European selling clubs (M12A rollout) — the non-Italian talent pipeline of the
+// Mourinho-Porto era. Merged by CONCATENATION onto any club already present.
+for (const [club, seeds] of Object.entries(EUROPE_2004_SQUADS)) {
+  INTER_2004_SQUADS[club] = [...(INTER_2004_SQUADS[club] ?? []), ...seeds];
+}
