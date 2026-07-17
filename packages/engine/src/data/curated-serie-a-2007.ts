@@ -19,6 +19,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
 import { EUROPE_2007_SQUADS } from './curated-europe-2007.js';
+import { ITA_DOMESTIC_2007_SQUADS } from './curated-ita-domestic-2007.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -299,5 +300,11 @@ export const MILAN_2007_SQUADS: Record<string, CuratedSeed[]> = {
 // (shared with juventus-2006, which spreads this record). Merged by CONCATENATION.
 for (const [club, seeds] of Object.entries(EUROPE_2007_SQUADS)) {
   if (club === 'porto') continue; // this pack already curates the full 2006-07 Porto
+  MILAN_2007_SQUADS[club] = [...(MILAN_2007_SQUADS[club] ?? []), ...seeds];
+}
+
+// Domestic mid-tier of the 2007-08 Serie A (M12 shortlist supply) — real squad
+// players at the non-elite clubs so options lists read like a real shortlist.
+for (const [club, seeds] of Object.entries(ITA_DOMESTIC_2007_SQUADS)) {
   MILAN_2007_SQUADS[club] = [...(MILAN_2007_SQUADS[club] ?? []), ...seeds];
 }

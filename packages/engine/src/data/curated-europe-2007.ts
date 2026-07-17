@@ -83,7 +83,7 @@ const BENFICA_2007: CuratedSeed[] = [
 const AJAX_2007: CuratedSeed[] = [
   q('ajax', 'huntelaar_07', 'Klaas-Jan Huntelaar', 1983, 'Netherlands', ['ST'], 81, 85, 2010, 20, t(8, 6, 9, 7, 5, 8)),
   q('ajax', 'heitinga_07', 'John Heitinga', 1983, 'Netherlands', ['CB', 'DM'], 80, 84, 2009, 20, t(8, 5, 8, 8, 5, 8)),
-  q('ajax', 'maxwell_07', 'Maxwell', 1981, 'Brazil', ['LB'], 79, 83, 2009, 20, t(8, 5, 8, 7, 5, 8)),
+  q('ajax', 'stekelenburg_07', 'Maarten Stekelenburg', 1982, 'Netherlands', ['GK'], 79, 84, 2010, 20, t(9, 5, 8, 8, 4, 8)),
   q('ajax', 'emanuelson_07', 'Urby Emanuelson', 1986, 'Netherlands', ['LB', 'LW'], 77, 82, 2010, 20, t(7, 6, 8, 7, 6, 8)),
   q('ajax', 'vertonghen_a07', 'Jan Vertonghen', 1987, 'Belgium', ['CB', 'LB'], 72, 87, 2011, 15, t(9, 5, 8, 8, 5, 8)),
   q('ajax', 'vermaelen_a07', 'Thomas Vermaelen', 1985, 'Belgium', ['CB', 'LB'], 76, 85, 2010, 20, t(9, 5, 8, 8, 5, 8)),
