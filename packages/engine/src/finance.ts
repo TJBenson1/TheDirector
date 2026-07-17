@@ -7,7 +7,7 @@
  * quality in 1995. Anchored to 1995 = ×1.0 and interpolated between waypoints.
  */
 
-import type { ClubFinances, OwnershipModel, PlayerState } from './types.js';
+import type { ClubFinances, OwnershipModel, PlayerState, Position } from './types.js';
 
 /** Inflation multiplier vs. a 1995 baseline, at real-shaped waypoints. */
 const INFLATION_WAYPOINTS: Array<[year: number, factor: number]> = [
@@ -44,12 +44,30 @@ export function inflationFactor(year: number): number {
  * season a premium. Youth upside, age curve, contract length and inflation all
  * apply. Never a static number independent of the season played.
  */
+/**
+ * Position premium on transfer fees (§ market realism). The market never priced
+ * positions equally: a goalkeeper of a given ability sold for a fraction of an
+ * attacker of the same rating (Van der Sar ~£5m, Barthez ~£7m, while strikers of
+ * the same era went for £20–30m). Defenders and holders sit in between. Applied to
+ * the ability value below so the market spread matches history.
+ */
+const POSITION_VALUE_MULT: Record<Position, number> = {
+  GK: 0.42,
+  CB: 0.75, RB: 0.72, LB: 0.72,
+  DM: 0.85, CM: 0.95,
+  AM: 1.05, LW: 1.05, RW: 1.05, ST: 1.12,
+};
+function positionValueMult(positions: Position[]): number {
+  // A versatile player is priced at his most valuable role.
+  return Math.max(...positions.map((p) => POSITION_VALUE_MULT[p] ?? 1));
+}
+
 export function valuePlayer(player: PlayerState, year: number): number {
   const age = year - player.birthYear;
 
   // Exponential in ability: ~£0.3m at 50, ~£2m at 70, ~£5m at 80, ~£13m at 90
-  // (all at the 1995 baseline).
-  const abilityValue = 300_000 * Math.exp(0.094 * (player.ability - 50));
+  // (all at the 1995 baseline), scaled by the position premium.
+  const abilityValue = 300_000 * Math.exp(0.094 * (player.ability - 50)) * positionValueMult(player.positions);
 
   // Youngsters below their ceiling carry a premium for the upside.
   const gap = Math.max(0, player.potentialCeiling - player.ability);
