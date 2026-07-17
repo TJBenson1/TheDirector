@@ -15,7 +15,9 @@
     "typecheck": "pnpm -r typecheck",
     "harness": "pnpm --filter @director/harness run harness",
     "historian": "pnpm --filter @director/harness run historian",
-    "check": "pnpm typecheck && pnpm test && pnpm harness"
+    "check": "pnpm typecheck && pnpm test && pnpm harness",
+    "pack:engine": "pnpm --filter @director/engine run build && pnpm --filter @director/engine exec pnpm pack --pack-destination \"$INIT_CWD/dist-pack\"",
+    "publish:engine": "pnpm --filter @director/engine publish --access public"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

@@ -152,6 +152,30 @@ don't invent them:
 `pendingDecisions` is the *now* (interrupts to resolve); the codes above are the
 *record* of what happened (the feed). Both come off the same `GameState`.
 
+## Getting the engine into the front end
+
+The front end depends on `@director/engine` by its package name — that never changes.
+There are two ways to satisfy that dependency; the imports are identical either way, so
+you can start with the tarball today and move to npm later with **zero code changes**.
+
+- **Vendored tarball (unblocks immediately, no npm account).** From this repo run
+  `pnpm pack:engine` — it builds the engine and drops `director-engine-<version>.tgz` in
+  `dist-pack/`. Hand that file to the front end; it commits it (e.g. `vendor/`) and installs
+  it under its real name:
+
+  ```bash
+  bun add ./vendor/director-engine-1.0.0.tgz   # installs as @director/engine
+  ```
+
+  Every `import { … } from '@director/engine'` resolves unchanged. To ship an engine update,
+  re-run `pnpm pack:engine`, replace the vendored file, and `bun install`.
+
+- **Published npm package (clean long-term).** Own the `@director` scope on npm (create the
+  free org, or rename the package to a scope you own), then `pnpm publish:engine`
+  (`pnpm --filter @director/engine publish --access public` — pnpm rewrites the entry points
+  to `dist/` on publish). The front end swaps the vendored file for `bun add @director/engine`;
+  because the name matches, nothing else changes.
+
 ## Keeping the front-end and the engine in sync
 
 The engine **is** the contract — `@director/engine` exports `GameState`, every type,
