@@ -1960,8 +1960,64 @@ const CHELSEA_1996_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── Barcelona, 2014 (the MSN peak) storyline pack ────────────────────────────
+const BARCELONA_2014_PACK: ScriptedEvent[] = [
+  {
+    id: 'msn-balance',
+    date: '2014-09',
+    requires: (s) => playerAt(s, 'cur_neymar14', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:msn-balance',
+      title: 'Three superstars, one attack',
+      description: 'Messi, Suárez and Neymar are each capable of carrying a team alone — and now they must share one front line. The egos and the goalscoring pecking order could tear it apart, or become the greatest attack ever assembled. How do you build it?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'messi-central', label: 'Move Messi wide and let all three flourish', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_neymar14', amount: 8 }, { kind: 'morale', playerId: 'cur_suarez14', amount: 8 }, { kind: 'memory', tag: 'tactics', text: 'Struck the MSN balance — the greatest trident, as reality (Berlin 2015).' }], onFailure: [{ kind: 'agitation', playerId: 'cur_neymar14', amount: 8 }] },
+        { id: 'messi-first', label: 'Build it all around Messi', successProbability: 0.55, onSuccess: [{ kind: 'morale', playerId: 'cur_messi14', amount: 8 }], onFailure: [{ kind: 'agitation', playerId: 'cur_neymar14', amount: 10 }, { kind: 'agitation', playerId: 'cur_suarez14', amount: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'tactics', text: 'The three stars are left to find their own balance.' }],
+      memoryTags: ['tactics', 'msn'],
+    }),
+  },
+  {
+    id: 'xavi-succession',
+    date: '2015-01',
+    requires: (s) => playerAt(s, 'cur_xavi14', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:xavi-succession',
+      title: 'Xavi is playing his final season',
+      description: 'The metronome of an era is 34 and winding down. The identity of the whole club runs through the midfield he defined. Pass the baton fully to Busquets and Rakitić now, or lean on Xavi\'s genius for one last title charge?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'transition', label: 'Pass the baton to the new midfield', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_busquets14', amount: 6 }, { kind: 'memory', tag: 'development', text: 'Managed the midfield succession smoothly.' }], onFailure: [{ kind: 'morale', clubId: 'barcelona', amount: -3 }] },
+        { id: 'lean-on-xavi', label: 'Lean on Xavi one last time', successProbability: 0.55, onSuccess: [{ kind: 'morale', playerId: 'cur_xavi14', amount: 10 }, { kind: 'memory', tag: 'development', text: 'Rode Xavi\'s brilliance to a fitting farewell treble.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'development', text: 'The generational handover drifts.' }],
+      memoryTags: ['development', 'cur_xavi14'],
+    }),
+  },
+  {
+    id: 'suarez-integration',
+    date: '2014-10',
+    requires: (s) => playerAt(s, 'cur_suarez14', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:suarez-integration',
+      title: 'Suárez arrives under a cloud',
+      description: 'Your new number nine has arrived from a World Cup biting ban that kept him out for the first months, and the world is watching how the reformed talisman settles. Manage his reintegration carefully, or throw him straight into the fire?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'careful', label: 'Ease him in and rebuild his image', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_suarez14', amount: 8 }, { kind: 'agitation', playerId: 'cur_suarez14', amount: -12 }, { kind: 'memory', tag: 'man-management', text: 'Reintegrated Suárez perfectly — the redemption, as reality.' }], onFailure: [{ kind: 'morale', playerId: 'cur_suarez14', amount: -4 }] },
+        { id: 'straight-in', label: 'Throw him straight into the fire', successProbability: 0.5, onSuccess: [{ kind: 'morale', playerId: 'cur_suarez14', amount: 6 }], onFailure: [{ kind: 'agitation', playerId: 'cur_suarez14', amount: 10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'man-management', text: 'Suárez settles at his own pace.' }],
+      memoryTags: ['man-management', 'cur_suarez14'],
+    }),
+  },
+];
+
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
+  'barcelona-2014': BARCELONA_2014_PACK,
   'liverpool-1995': LIVERPOOL_1995_PACK,
   'chelsea-1996': CHELSEA_1996_PACK,
   'milan-1995': MILAN_1995_PACK,

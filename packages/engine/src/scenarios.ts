@@ -337,6 +337,19 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     domesticLeagueId: 'ita-b-2006',
   },
 
+  // ── La Liga 2014-15 ──────────────────────────────────────────────────────────
+  'barcelona-2014': {
+    id: 'barcelona-2014',
+    name: 'Barcelona — 2014: Peak — Don\'t Waste It',
+    startDate: '2014-07',
+    playerClub: 'barcelona',
+    mandate: 'Win everything with the MSN — don\'t waste the greatest team you will ever have.',
+    boardPatience: 72,
+    boardExpectedFinish: 1,
+    clubs: ELITE_CLUBS_2013,
+    domesticLeagueId: 'esp-2014',
+  },
+
   // ── Serie A 1995-96 cluster (shared curated pack) ────────────────────────────
   'milan-1995': {
     id: 'milan-1995',

@@ -386,10 +386,41 @@ export const ENGLAND_1996: LeagueSeed = {
   ],
 };
 
+/** La Liga, 2014–15 — Barcelona's MSN treble, Real Madrid's BBC, Simeone's
+ *  reigning champions Atlético. Used by barcelona-2014. */
+export const SPAIN_2014: LeagueSeed = {
+  id: 'esp-2014',
+  name: 'La Liga',
+  season: '2014-07',
+  clubs: [
+    { id: 'barcelona', name: 'Barcelona', prestige: 90, strength: 90 },
+    { id: 'real_madrid', name: 'Real Madrid', prestige: 90, strength: 90 },
+    { id: 'atletico', name: 'Atlético Madrid', prestige: 80, strength: 84 },
+    { id: 'valencia', name: 'Valencia', prestige: 74, strength: 78 },
+    { id: 'sevilla', name: 'Sevilla', prestige: 72, strength: 78 },
+    { id: 'villarreal', name: 'Villarreal', prestige: 68, strength: 76 },
+    { id: 'athletic_bilbao', name: 'Athletic Bilbao', prestige: 66, strength: 74 },
+    { id: 'malaga', name: 'Málaga', prestige: 60, strength: 72 },
+    { id: 'celta', name: 'Celta Vigo', prestige: 56, strength: 72 },
+    { id: 'real_sociedad', name: 'Real Sociedad', prestige: 62, strength: 71 },
+    { id: 'espanyol', name: 'Espanyol', prestige: 58, strength: 70 },
+    { id: 'rayo', name: 'Rayo Vallecano', prestige: 50, strength: 68 },
+    { id: 'getafe', name: 'Getafe', prestige: 50, strength: 67 },
+    { id: 'levante', name: 'Levante', prestige: 48, strength: 66 },
+    { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 56, strength: 66 },
+    { id: 'elche', name: 'Elche', prestige: 44, strength: 64 },
+    { id: 'granada', name: 'Granada', prestige: 46, strength: 64 },
+    { id: 'eibar', name: 'Eibar', prestige: 42, strength: 63 },
+    { id: 'almeria', name: 'Almería', prestige: 44, strength: 62 },
+    { id: 'cordoba', name: 'Córdoba', prestige: 42, strength: 60 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'eng-1996': ENGLAND_1996,
   'esp-1': SPAIN_2000,
+  'esp-2014': SPAIN_2014,
   'ita-1': SERIE_A_1998,
   'ita-1995': SERIE_A_1995,
   'ita-2007': SERIE_A_2007,
@@ -473,6 +504,7 @@ export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
   'eng-2004': ENGLISH_POOL,
   'eng-2013': ENGLISH_POOL,
   'esp-1': SPANISH_POOL,
+  'esp-2014': SPANISH_POOL,
   'ita-1': ITALIAN_POOL,
   'ita-1995': ITALIAN_POOL,
   'ita-2007': ITALIAN_POOL,

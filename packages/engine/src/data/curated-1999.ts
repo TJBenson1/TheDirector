@@ -15,6 +15,7 @@ import { INTER_1998_SQUADS } from './curated-1998.js';
 import { BAYERN_2009_SQUADS } from './curated-2009.js';
 import { NEWCASTLE_1995_SQUADS, SERIE_A_1995_SQUADS } from './curated-1995.js';
 import { ENGLAND_1996_SQUADS } from './curated-1996.js';
+import { BARCELONA_2014_SQUADS } from './curated-2014.js';
 import { MILAN_2007_SQUADS, JUVENTUS_2006_SQUADS } from './curated-2007.js';
 import { BUNDESLIGA_1997_SQUADS } from './curated-1997.js';
 
@@ -491,4 +492,5 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'arsenal-1996': ENGLAND_1996_SQUADS,
   'liverpool-1995': ENGLAND_1996_SQUADS,
   'chelsea-1996': ENGLAND_1996_SQUADS,
+  'barcelona-2014': BARCELONA_2014_SQUADS,
 };
