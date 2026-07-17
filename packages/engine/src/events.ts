@@ -147,6 +147,27 @@ export function resolveIgnoredDecisions(state: GameState): void {
   state.pendingDecisions = [];
 }
 
+/**
+ * Resolve any still-open real-transfer decisions involving the user's club to
+ * their reality-default (the sale sanctioned / the signing completed), WITHOUT
+ * touching other pending decisions. Called at the window deadline so a real move
+ * the user left open realises in-window — which lets its dependent transfer
+ * chain (a sale that FUNDS an onward sale) settle the same window instead of
+ * deferring to the next. A move the user actively DECLINED earlier in the window
+ * is already gone from the queue, so its chain stays broken.
+ */
+export function resolvePendingLedgerDecisions(state: GameState): void {
+  const kept: typeof state.pendingDecisions = [];
+  for (const d of state.pendingDecisions) {
+    if (d.id.startsWith('real-in:') || d.id.startsWith('real-out:')) {
+      applyConsequences(state, d.falloutIfIgnored);
+    } else {
+      kept.push(d);
+    }
+  }
+  state.pendingDecisions = kept;
+}
+
 export interface DecisionResult {
   state: GameState;
   events: LoggedEvent[];

@@ -14,7 +14,7 @@
 
 import type { ClubId, Decision, GameState, PlayerState } from './types.js';
 import { Rng, hashStringToU32 } from './rng.js';
-import { WINDOW_STEPS, transferWindowOrdinal } from './clock.js';
+import { WINDOW_STEPS, WINDOW_PHASE_REVIEW, transferWindowOrdinal } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
@@ -145,7 +145,14 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
   // Effective step, raised by dependency propagation so a dependent/departure is
   // never scheduled before its enabler/arrival. Base = the drama-spread step.
   const effStep = new Map<string, number>();
-  for (const d of due) effStep.set(d.key, stepForEntry(d.entry));
+  for (const d of due) {
+    // A real move involving the user's club is surfaced in the REVIEW phase (up
+    // front), so the user has the rest of the window to sanction or divert it —
+    // and any chain it funds can settle at the deadline instead of deferring to
+    // the next window. Non-user reality business keeps its fee-driven drama step.
+    const isUserMove = d.entry.from === state.playerClub || d.entry.to === state.playerClub;
+    effStep.set(d.key, isUserMove ? WINDOW_PHASE_REVIEW : stepForEntry(d.entry));
+  }
   const byKey = new Map(due.map((d) => [d.key, d]));
   // A same-player, same-window later move (his departure) depends on the earlier
   // one (his arrival); an enabledBy dependent depends on its enabler.

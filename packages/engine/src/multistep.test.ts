@@ -43,21 +43,24 @@ function cleanWindowStart(seed: string): GameState {
 describe('multi-step transfer windows (§3)', () => {
   it('unfolds a window over WINDOW_STEPS sub-steps at a fixed date', () => {
     const start = cleanWindowStart('unfold');
-    const s1 = advanceWindow(start, { pausePerStep: true }).state;
-    const s2 = advanceWindow(s1, { pausePerStep: true }).state;
-    const s3 = advanceWindow(s2, { pausePerStep: true }).state;
+    // Unfold all WINDOW_STEPS phases, capturing the step reached at each call.
+    const states = [start];
+    for (let i = 0; i < WINDOW_STEPS; i++) {
+      states.push(advanceWindow(states[states.length - 1]!, { pausePerStep: true }).state);
+    }
+    const steps = states.slice(1).map((s) => s.clock.windowStep);
+    const firstDate = states[1]!.clock.date;
 
-    // Steps 1..N all land on the SAME date and window — the calendar does not
-    // move while a window is unfolding.
-    expect([s1.clock.windowStep, s2.clock.windowStep, s3.clock.windowStep]).toEqual([1, 2, WINDOW_STEPS]);
-    expect(s2.clock.date).toBe(s1.clock.date);
-    expect(s3.clock.date).toBe(s1.clock.date);
-    expect(s1.clock.window).not.toBeNull();
-    expect(s3.clock.window).toBe(s1.clock.window);
+    // Phases 1..N all land on the SAME date and window — the calendar does not
+    // move while a window is unfolding, and the last phase is WINDOW_STEPS.
+    expect(steps).toEqual(Array.from({ length: WINDOW_STEPS }, (_, i) => i + 1));
+    for (let i = 1; i <= WINDOW_STEPS; i++) expect(states[i]!.clock.date).toBe(firstDate);
+    expect(states[1]!.clock.window).not.toBeNull();
+    expect(states[WINDOW_STEPS]!.clock.window).toBe(states[1]!.clock.window);
 
     // One more advance closes the window and moves the calendar on.
-    const s4 = advanceWindow(resolveAll(s3), { pausePerStep: true }).state;
-    expect(s4.clock.date).not.toBe(s3.clock.date);
+    const sEnd = advanceWindow(resolveAll(states[WINDOW_STEPS]!), { pausePerStep: true }).state;
+    expect(sEnd.clock.date).not.toBe(firstDate);
   });
 
   it('per-step unfolding reaches a byte-identical outcome to a single batch call', () => {

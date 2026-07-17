@@ -27,11 +27,26 @@ export const WINTER_WINDOW_MONTH_INDEX = 6;
  * business lands at different points (early → mid → deadline day). Three keeps
  * the loop light while giving a genuine "deadline day" beat.
  */
-export const WINDOW_STEPS = 3;
+/**
+ * A transfer window unfolds over four phases (§3), not an instant:
+ *  1 REVIEW   — pre-window: the club's looming issues (expiries, retirements,
+ *               decline, injuries) and the user's own real ins/outs are surfaced.
+ *  2 MARKET   — the market opens; reality moves the user would never touch
+ *               execute; the relevant shortlist becomes visible.
+ *  3 DECISIONS— narrow the shortlist, woo long-term targets, defer or act.
+ *  4 DEADLINE — reality-default holds on anything left open, and every remaining
+ *               transfer CHAIN settles in-window; rivals react. Nothing defers.
+ */
+export const WINDOW_STEPS = 4;
+export const WINDOW_PHASE_REVIEW = 1;
+export const WINDOW_PHASE_MARKET = 2;
+export const WINDOW_PHASE_DECISIONS = 3;
+export const WINDOW_PHASE_DEADLINE = 4;
 
-/** Human-readable name for a window sub-step (1..WINDOW_STEPS). */
+/** Human-readable name for a window phase (1..WINDOW_STEPS). */
 export function windowStepLabel(step: number): string {
-  if (step <= 1) return 'early window';
+  if (step <= WINDOW_PHASE_REVIEW) return 'pre-window review';
+  if (step === WINDOW_PHASE_MARKET) return 'window opens';
   if (step >= WINDOW_STEPS) return 'deadline day';
   return 'mid-window';
 }

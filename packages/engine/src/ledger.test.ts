@@ -16,6 +16,27 @@ function play(state: GameState, windows: number): GameState {
   return s;
 }
 
+/**
+ * Play PER-STEP to a target year, resolving decisions each sub-step via `choose`
+ * (default: reality). The window-phase model (§3) surfaces the user's own real
+ * ins/outs in the REVIEW phase, so a divergence (keep a player) must be acted on
+ * DURING the window — this helper hands the player a turn at every sub-step.
+ */
+function playPerStepTo(
+  state: GameState,
+  endYear: number,
+  choose: (d: GameState['pendingDecisions'][number]) => string = (d) => d.choices[0]!.id,
+): GameState {
+  let s = state;
+  let guard = 0;
+  while (Number(s.clock.date.slice(0, 4)) < endYear && guard++ < 600) {
+    for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, choose(d)).state;
+    if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 30; s.board.warnings = 0; }
+    s = advanceWindow(s, { pausePerStep: true }).state;
+  }
+  return s;
+}
+
 describe('reality-ledger execution (§9f)', () => {
   it('a passive user preserves real history — ledger subjects reach real clubs', () => {
     let s = createNewGame({ seed: 'ledger-passive' });
@@ -69,17 +90,13 @@ describe('reality-ledger execution (§9f)', () => {
     // fallback/poach bid against the user's squad. Here the user PASSES.
     let s = createNewGame({ scenarioId: 'man-utd-2013', seed: 'ledger-userclub' });
     let sawOffer = false;
-    for (let i = 0; i < 8; i++) {
-      for (const d of [...s.pendingDecisions]) {
-        if (d.id.startsWith('real-in:') && d.title.includes('Fellaini')) {
-          sawOffer = true;
-          s = applyDecision(s, d.id, 'pass').state; // decline — "no Fellaini"
-        } else {
-          s = applyDecision(s, d.id, d.choices[0]!.id).state;
-        }
+    s = playPerStepTo(s, 2015, (d) => {
+      if (d.id.startsWith('real-in:') && d.title.includes('Fellaini')) {
+        sawOffer = true;
+        return 'pass'; // decline — "no Fellaini"
       }
-      s = advanceWindow(s).state;
-    }
+      return d.choices[0]!.id;
+    });
     expect(sawOffer).toBe(true);
     expect(s.players.cur_fellaini?.club).toBe('everton'); // declined → he stays
     expect(s.eventLog.some((e) => e.code === 'poach.bid' && e.data?.from === 'man_utd')).toBe(false);
@@ -96,33 +113,23 @@ describe('more start points (§4 data)', () => {
     expect(s.players.cur_zidane?.club).toBe('juventus');
     expect(s.players.cur_makelele?.club).toBe('real_madrid');
     // Keep Makélélé when his 2003 sale is offered; he stays, unsettled.
-    for (let i = 0; i < 12; i++) {
-      for (const d of [...s.pendingDecisions]) {
-        const keep = d.id.startsWith('real-out:') && d.title.includes('Makélélé');
-        s = applyDecision(s, d.id, keep ? 'keep' : d.choices[0]!.id).state;
-      }
-      s = advanceWindow(s).state;
-      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 30; }
-      if (Number(s.clock.date.slice(0, 4)) >= 2004) break;
-    }
+    s = playPerStepTo(s, 2004, (d) =>
+      d.id.startsWith('real-out:') && d.title.includes('Makélélé') ? 'keep' : d.choices[0]!.id,
+    );
     expect(s.players.cur_makelele?.club).toBe('real_madrid'); // kept, not sold to Chelsea
   });
 
   it("a star's real departure INTERRUPTS — a marquee player is never sold to inattention", () => {
     let s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'star-out' });
     let starExitInterrupted = false;
-    for (let i = 0; i < 12 && Number(s.clock.date.slice(0, 4)) < 2005; i++) {
-      for (const d of [...s.pendingDecisions]) {
-        // Makélélé (85) leaving is a star exit — it must force a conscious call.
-        if (d.id.startsWith('real-out:') && d.title.includes('Makélélé')) {
-          expect(d.interrupt).toBe(true);
-          starExitInterrupted = true;
-        }
-        s = applyDecision(s, d.id, d.choices[0]!.id).state;
+    s = playPerStepTo(s, 2005, (d) => {
+      // Makélélé (85) leaving is a star exit — it must force a conscious call.
+      if (d.id.startsWith('real-out:') && d.title.includes('Makélélé')) {
+        expect(d.interrupt).toBe(true);
+        starExitInterrupted = true;
       }
-      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 30; }
-      s = advanceWindow(s).state;
-    }
+      return d.choices[0]!.id;
+    });
     expect(starExitInterrupted).toBe(true);
   });
 
@@ -182,15 +189,9 @@ describe('2013 post-Ferguson era pack (§4 data)', () => {
   it('keeping Ronaldo cancels the sales it funded — Madrid keep Robben & Sneijder', () => {
     // A 1999 playthrough that signs Ronaldo (2003) and REFUSES his 2009 sale.
     let s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'keep-cr7' });
-    for (let i = 0; i < 40; i++) {
-      for (const d of [...s.pendingDecisions]) {
-        const keep = d.id.startsWith('real-out:') && d.title.includes('Ronaldo');
-        s = applyDecision(s, d.id, keep ? 'keep' : d.choices[0]!.id).state;
-      }
-      s = advanceWindow(s).state;
-      if (s.board.dismissed) { s.board.dismissed = false; s.board.patience = 30; }
-      if (Number(s.clock.date.slice(0, 4)) >= 2010) break;
-    }
+    s = playPerStepTo(s, 2010, (d) =>
+      d.id.startsWith('real-out:') && d.title.includes('Ronaldo') ? 'keep' : d.choices[0]!.id,
+    );
     expect(s.players.cur_cristiano?.club).toBe('man_utd'); // kept
     expect(s.players.cur_cristiano!.agitation).toBeGreaterThan(0); // he wanted the move
     // Madrid never funded a Ronaldo window, so they never offloaded these two.

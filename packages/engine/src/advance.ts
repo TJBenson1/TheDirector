@@ -19,7 +19,7 @@ import { simulateChampionsLeague } from './champions.js';
 import { eventsSince } from './eventLog.js';
 import { stepLeagueMonth } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
-import { rollEventsMonth, resolveIgnoredDecisions } from './events.js';
+import { rollEventsMonth, resolveIgnoredDecisions, resolvePendingLedgerDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
@@ -142,6 +142,13 @@ function runWindowStep(state: GameState, rng: Rng, step: number): void {
   // step's slice of it (or the whole window, on a final-step sweep).
   executeLedgerWindow(state, rng, step);
   if (step >= WINDOW_STEPS) {
+    // Deadline (§3): reality-default holds on any real move involving the user's
+    // club left open, so it realises NOW — then re-run the ledger so a dependent
+    // chain freed by that resolution (a funded onward sale) settles in-window
+    // instead of deferring to the next window. The user's chance to divert these
+    // moves was the earlier phases; a move actively declined is already gone.
+    resolvePendingLedgerDecisions(state);
+    executeLedgerWindow(state, rng, step);
     // M8: the rival-AI reactive response layer, at the deadline.
     runRivalWindow(state, rng);
     decayPursuit(state); // courtship fades if you stop working a target
