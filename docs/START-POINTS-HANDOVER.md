@@ -65,6 +65,32 @@ Format: `scenario-id` · Club — Year: Title — *mandate* — board temperamen
 - **Serie A 2007** pack → `milan-2007`, reused by `juventus-2006`.
 - **La Liga 2007-era elite** reused into `real-madrid-2006`.
 
+## Market depth & the gazump (M12)
+
+The transfer market is now **liquid and reality-anchored across all 26 starts**:
+
+- **European selling clubs everywhere.** Every era carries its real talent pipeline —
+  the Dutch, Portuguese, French, Scottish, Spanish, German and Italian clubs that fed
+  the modelled leagues (Ajax, PSV, Feyenoord, Porto, Benfica, Sporting, Lyon,
+  Marseille, Monaco, Sevilla, Villarreal, Atlético, Napoli, Roma, Dortmund, Werder,
+  Leverkusen, Hamburg, Celtic, Rangers, Deportivo, Valencia…), each with era-correct
+  real squads. Measured attainability of the **top 30% of world talent** for the
+  playable club now runs ~53–81% at the giants and ~35–48% at mid clubs (Spurs, a
+  newly-rich City) — the mid-club ceiling is deliberate: a smaller side genuinely
+  can't attract the world's elite.
+- **Sugar-daddy money talks.** A newly-moneyed club (2008 City, Abramovich's Chelsea)
+  gets a bounded destination-pull bonus, so the billions attract players its bare
+  prestige would not (man-city-2008 rose 23%→53% attainable, chelsea-2003 40%→62%).
+- **The gazump (buy a player before his real move).** A "ledger subject" — someone
+  with a real transfer still ahead (VDS→Juventus in 1999) — can be prised away by
+  **out-bidding the selling club beyond the pole suitor's real fee** (the greater of
+  £2m or +30% collapses their advantage), and/or courting + wages. The deprived club
+  then signs a real fallback (Juventus turn to another keeper), logged as a butterfly.
+  A cold approach leaves reality's deal untouched, so the passive world still holds.
+
+Per-era selling-club data lives in `data/curated-europe-<era>.ts`, merged into each
+scenario's `*_SQUADS` record and listed in the scenario's `contextExtra`.
+
 ## Known residual tuning notes (not blockers)
 - `milan-2007` and `dortmund-1997` still sack a passive manager when the club's real
   decline arrives / against an aspirational top-2 mandate. Faithful, but softening
