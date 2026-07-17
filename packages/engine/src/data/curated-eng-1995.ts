@@ -24,6 +24,7 @@ import {
   REAL_1996, BARCA_1996, BAYERN_1996, JUVENTUS_1996, MILAN_1996, INTER_1996,
 } from './curated-1996.js';
 import { EUROPE_MID90S_SQUADS } from './curated-europe-mid90s.js';
+import { ENG_DOMESTIC_1995_SQUADS } from './curated-eng-domestic-1995.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -112,5 +113,10 @@ export const LIVERPOOL_1995_SQUADS: Record<string, CuratedSeed[]> = {
 // European selling clubs (M12A rollout) — the mid-90s talent pipeline (shared with
 // the 1996 English world). Merged by CONCATENATION onto any club already present.
 for (const [club, seeds] of Object.entries(EUROPE_MID90S_SQUADS)) {
+  LIVERPOOL_1995_SQUADS[club] = [...(LIVERPOOL_1995_SQUADS[club] ?? []), ...seeds];
+}
+// Domestic mid-tier (M12 shortlist supply): real squad players at the modelled PL's
+// non-elite clubs, so options lists read like a real 1995-96 shortlist.
+for (const [club, seeds] of Object.entries(ENG_DOMESTIC_1995_SQUADS)) {
   LIVERPOOL_1995_SQUADS[club] = [...(LIVERPOOL_1995_SQUADS[club] ?? []), ...seeds];
 }
