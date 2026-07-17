@@ -12,7 +12,7 @@
 import type { ClubId, GameState, PlayerId } from './types.js';
 import { parseYearMonth } from './clock.js';
 import { styleKeyForClub } from './leaguestyle.js';
-import { poleSuitorFor } from './wooing.js';
+import { poleMoveFor } from './wooing.js';
 import { clubSquadPlayers } from './players.js';
 
 /** Willingness at/above which a player will consider a move at a fair package. */
@@ -74,6 +74,11 @@ export interface ApproachInput {
   toClub: ClubId;
   /** Annual wage offered; defaults to the player's current wage. */
   wageOffer?: number;
+  /** Transfer fee offered to the selling club. Out-bidding a pole suitor's real
+   *  fee buys the club's agreement first, so the player never gets to negotiate
+   *  with them ("he isn't allowed to speak to Juve"). Defaults to 0 (a bare
+   *  approach with no fee tabled leaves reality's pole deal untouched). */
+  feeOffer?: number;
 }
 
 export interface ApproachVerdict {
@@ -145,14 +150,28 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
   // "Spoken for": if reality already has him lined up for another top club, that
   // club is in pole position. A cold bid won't shift him; you must out-court them
   // and/or be the bigger draw. Being clearly bigger than the pole suitor helps.
-  const pole = poleSuitorFor(state, input.playerId);
-  if (pole && pole !== input.toClub) {
-    const poleClub = state.clubs[pole];
+  const pole = poleMoveFor(state, input.playerId);
+  if (pole && pole.to !== input.toClub) {
+    const poleClub = state.clubs[pole.to];
     const poleLead = (poleClub?.prestige ?? 72) - buyer.prestige;
     // Strong by default (a cold late bid loses out to the club in pole), eased by
     // pursuit and by being a bigger draw than that suitor. Pursuit is already in
     // `pull`, so a fully-courted (100) target claws back ~40.
-    resistance += Math.max(10, 44 + poleLead * 1.3);
+    let poleResistance = Math.max(10, 44 + poleLead * 1.3);
+    // Fee lever ("he isn't allowed to speak to them"): out-bidding the SELLING
+    // club beyond the pole suitor's real fee buys their agreement first, so the
+    // player never gets to the negotiating table with the pole. Beating the real
+    // fee by the greater of £2m or 30% collapses the pole's advantage entirely;
+    // a token pound over barely dents it. A do-nothing/cold approach (feeOffer 0)
+    // leaves reality's deal fully in pole, so the passive world holds.
+    const feeOffer = input.feeOffer ?? 0;
+    if (pole.fee > 0 && feeOffer > pole.fee) {
+      const beatBy = feeOffer - pole.fee;
+      const needed = Math.max(2_000_000, pole.fee * 0.3);
+      const collapse = Math.min(1, beatBy / needed);
+      poleResistance *= 1 - collapse;
+    }
+    resistance += poleResistance;
   }
 
   const willingness = Math.max(0, Math.min(100, Math.round(pull - resistance + 30)));
@@ -167,6 +186,11 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
     reason = `${player.name} will not cross to a direct rival in ${buyer.name}.`;
   } else if (res.clubLoyalty >= 80 && fromClub) {
     reason = `${player.name} will not leave ${fromClub.name}. This is not about money.`;
+  } else if (pole && pole.to !== input.toClub && (input.feeOffer ?? 0) <= pole.fee) {
+    // The blocker is a rival already in pole for his real move — tell the user the
+    // lever (out-bid the selling club) rather than a flat "not convinced".
+    const poleName = state.clubs[pole.to]?.name ?? pole.to;
+    reason = `${player.name} is set to join ${poleName} — out-bid them at ${fromClub?.name ?? 'his club'} (beat £${(pole.fee / 1_000_000).toFixed(1)}m) to prise him away.`;
   } else {
     reason = `${player.name} is not convinced by the move to ${buyer.name}.`;
   }

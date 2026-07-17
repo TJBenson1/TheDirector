@@ -44,19 +44,27 @@ export function decayPursuit(state: GameState): void {
 }
 
 /**
- * The club reality has lined up to sign this player next — his "pole" suitor. If
- * he has a real move still ahead (to a club other than the one asking), that club
- * is in pole position, and prising him away means beating them to it.
+ * The move reality has lined up for this player next — his "pole" deal. If he has
+ * a real move still ahead (to a club other than the one asking), that club is in
+ * pole position, and prising him away means beating them to it. Returns the club
+ * AND the real fee, so a rival bidder can be out-bid at the SELLING club (paying
+ * more than the pole suitor buys the club's agreement, so the player never gets
+ * to negotiate with them — "he isn't allowed to speak to Juve").
  */
-export function poleSuitorFor(state: GameState, playerId: PlayerId): ClubId | null {
+export function poleMoveFor(state: GameState, playerId: PlayerId): { to: ClubId; fee: number; window: string } | null {
   const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   if (!pack) return null;
-  let best: { window: string; to: ClubId } | null = null;
+  let best: { window: string; to: ClubId; fee: number } | null = null;
   for (const e of pack.realTransferLedger) {
     if (e.playerId !== playerId) continue;
     if (e.to === state.playerClub) continue; // the user's own real signing, not a rival suitor
     if (state.meta.executedLedger.includes(entryKey(e))) continue; // his move already resolved
-    if (!best || e.window < best.window) best = { window: e.window, to: e.to };
+    if (!best || e.window < best.window) best = { window: e.window, to: e.to, fee: e.fee };
   }
-  return best?.to ?? null;
+  return best ? { to: best.to, fee: best.fee, window: best.window } : null;
+}
+
+/** The club reality has lined up to sign this player next — his "pole" suitor. */
+export function poleSuitorFor(state: GameState, playerId: PlayerId): ClubId | null {
+  return poleMoveFor(state, playerId)?.to ?? null;
 }

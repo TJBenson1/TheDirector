@@ -1,8 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { createNewGame, cloneState } from './state.js';
 import { evaluateApproach } from './agency.js';
+import { attemptSigning } from './transfers.js';
+import { advanceWindow } from './advance.js';
+import { applyDecision } from './events.js';
 import { courtPlayer, decayPursuit, poleSuitorFor } from './wooing.js';
 import { ERA_REALITY, eraForScenario } from './ledger.js';
+import type { GameState } from './types.js';
 
 /**
  * The wooing mechanic (§6, §16 — "speak to his people"). Arsenal-2004: Eto'o is
@@ -64,5 +68,61 @@ describe('wooing / pursuit (§16)', () => {
     const r = courtPlayer(s, own.id);
     expect(r.ok).toBe(false);
     expect(s.pursuit[own.id]).toBeUndefined();
+  });
+});
+
+/**
+ * The fee lever / gazump (§16, M12C — "he isn't allowed to speak to Juve").
+ * VDS starts at Ajax in the 1999 world with a real move to Juventus lined up
+ * (£5m). A cold United bid loses out to the pole — but out-bidding Ajax beyond
+ * Juve's fee buys the club's agreement first, prising him away before the deal.
+ */
+describe('fee lever / gazump (§16, M12C)', () => {
+  const VDS = 'cur_vandersar';
+
+  it('out-bidding the pole suitor at the selling club prises a spoken-for target', () => {
+    const s = createNewGame({ seed: 'gazump' });
+    expect(poleSuitorFor(s, VDS)).toBe('juventus'); // his real move is still ahead
+    const wage = s.players[VDS]!.wage;
+
+    // Matching Juve's £5m does nothing — you must beat the selling club's agreed fee.
+    expect(evaluateApproach(s, { playerId: VDS, toClub: 'man_utd', feeOffer: 5_000_000 }).willing).toBe(false);
+    // A token £1m over still isn't enough (a real gazump costs real money).
+    expect(evaluateApproach(s, { playerId: VDS, toClub: 'man_utd', feeOffer: 6_000_000 }).willing).toBe(false);
+    // Beating it by ~£2m collapses the pole's advantage — he's now attainable.
+    expect(
+      evaluateApproach(s, { playerId: VDS, toClub: 'man_utd', feeOffer: 7_000_000, wageOffer: wage * 1.3 }).willing,
+    ).toBe(true);
+  });
+
+  it('a cold approach leaves reality untouched (the passive world holds)', () => {
+    const s = createNewGame({ seed: 'gazump' });
+    // No fee tabled = reality's pole deal is fully in place, so he refuses.
+    const cold = evaluateApproach(s, { playerId: VDS, toClub: 'man_utd' });
+    expect(cold.willing).toBe(false);
+    expect(cold.reason).toContain('Juventus'); // guides the user to the lever
+  });
+
+  it('the gazump completes end-to-end: he joins the user, the pole club falls back', () => {
+    let s = createNewGame({ seed: 'gazump-e2e' });
+    s.clubs.man_utd!.finances.transferBudget = 20_000_000;
+    const wage = s.players[VDS]!.wage;
+    const res = attemptSigning(s, { playerId: VDS, toClub: 'man_utd', fee: 7_000_000, wage: wage * 1.3 });
+    expect(res.ok).toBe(true);
+    expect(s.players[VDS]!.club).toBe('man_utd');
+
+    // Advance past the winter window, where his real Ajax→Juventus move was due.
+    const drain = (g: GameState): GameState => {
+      let x = g;
+      for (const d of [...x.pendingDecisions]) x = applyDecision(x, d.id, d.choices[0]!.id).state;
+      return x;
+    };
+    for (let i = 0; i < 24 && s.clock.date < '2000-03'; i++) s = advanceWindow(drain(s)).state;
+
+    // He stays at United — the real move is invalidated, and Juventus is deprived
+    // of him and signs an alternative (a traceable butterfly).
+    expect(s.players[VDS]!.club).toBe('man_utd');
+    const div = s.timeline.divergenceLog.find((d) => /cur_vandersar.*juventus.*invalidated/i.test(d.detail));
+    expect(div).toBeDefined();
   });
 });

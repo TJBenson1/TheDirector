@@ -161,6 +161,7 @@ export function attemptSigning(
     playerId: req.playerId,
     toClub: req.toClub,
     wageOffer: req.wageOffer,
+    feeOffer: req.fee,
   });
   if (!verdict.willing) {
     return { ok: false, reason: verdict.reason, refusedByPlayer: true };
