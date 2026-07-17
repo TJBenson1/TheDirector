@@ -18,6 +18,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { EUROPE_2007_SQUADS } from './curated-europe-2007.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -293,3 +294,10 @@ export const MILAN_2007_SQUADS: Record<string, CuratedSeed[]> = {
   atletico: ATLETICO_2007,
   porto: PORTO_2007,
 };
+
+// European selling clubs (M12A rollout) — the mid-2000s foreign talent pipeline
+// (shared with juventus-2006, which spreads this record). Merged by CONCATENATION.
+for (const [club, seeds] of Object.entries(EUROPE_2007_SQUADS)) {
+  if (club === 'porto') continue; // this pack already curates the full 2006-07 Porto
+  MILAN_2007_SQUADS[club] = [...(MILAN_2007_SQUADS[club] ?? []), ...seeds];
+}
