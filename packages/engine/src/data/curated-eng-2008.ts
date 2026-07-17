@@ -18,6 +18,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { EUROPE_2008_SQUADS } from './curated-europe-2008.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -259,4 +260,6 @@ export const MANCITY_2008_SQUADS: Record<string, CuratedSeed[]> = {
   aston_villa: ASTON_VILLA_2008,
   everton: EVERTON_2008,
   spurs: TOTTENHAM_2008,
+  // European selling clubs (M12A rollout) — the takeover-era talent pipeline.
+  ...EUROPE_2008_SQUADS,
 };

@@ -128,6 +128,11 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
   let pull = 45;
   if (fromClub) pull += (buyer.prestige - fromClub.prestige) * 0.9; // moving up appeals
   pull += magnetPull(state, buyer.id); // play alongside a galáctico (§ magnet)
+  // Sugar-daddy money talks (§9a): a newly-moneyed project (2008 City, Abramovich's
+  // Chelsea) can attract players its bare prestige would not — the wages, the
+  // ambition and the statement of intent. Bounded so it lifts a mid club into the
+  // market without turning it into an instant galáctico magnet on its own.
+  if (buyer.finances.ownership === 'sugar-daddy') pull += 12;
   if (res.dreamClubs.includes(input.toClub)) pull += 35; // boyhood dream
   const wageOffer = input.wageOffer ?? player.wage;
   pull += Math.max(-15, Math.min(20, ((wageOffer - player.wage) / Math.max(player.wage, 1)) * 30));
