@@ -6,7 +6,7 @@
  * invariants (no negative budgets, one club per player).
  */
 
-import type { ClubId, GameState, PlayerId } from './types.js';
+import type { ClubId, GameState, PlayerId, PlayerState } from './types.js';
 import { parseYearMonth } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer, suggestWage } from './finance.js';
@@ -14,6 +14,7 @@ import { recomputeClubStrength, computeWageBill, clubSquadPlayers, clubStarPremi
 import { rollAdaptation } from './adaptation.js';
 import { Rng } from './rng.js';
 import { evaluateApproach, type ApproachVerdict } from './agency.js';
+import { coachFit } from './coaches.js';
 
 export interface TransferRequest {
   playerId: PlayerId;
@@ -127,6 +128,15 @@ export function executeTransfer(
     }
   }
 
+  // The head coach's verdict on a signing the Director makes (M13b). A player he
+  // wanted lands settled and warms the working relationship; a poor fit he was
+  // overruled on costs relationship capital AND struggles to settle — a misfit
+  // adaptation on top of whatever the move itself rolled. Reality moves are the
+  // world as it was; the coach passes no judgement on them.
+  if (!opts.reality && req.toClub === state.playerClub && fromClubId !== state.playerClub) {
+    applyCoachSigningReaction(state, player);
+  }
+
   logEvent(state, {
     category: 'transfer',
     code: 'transfer.completed',
@@ -161,6 +171,51 @@ export function executeTransfer(
   }
 
   return { ok: true, playerId: player.id, from: fromClubId, to: req.toClub, fee };
+}
+
+/** The coach's reaction to a Director signing: relationship swing + a misfit
+ *  adaptation drag on a player he didn't want. */
+function applyCoachSigningReaction(state: GameState, player: PlayerState): void {
+  const coach = state.managerRelations;
+  const fit = coachFit(coach, player);
+  const clampRel = (v: number) => Math.max(0, Math.min(100, v));
+  if (fit.verdict === 'wants') {
+    coach.relationshipWithUser = clampRel(coach.relationshipWithUser + 3);
+    player.morale = Math.min(100, player.morale + 4); // a coach who wanted you settles you
+    logEvent(state, {
+      category: 'transfer',
+      code: 'coach.signing.approved',
+      message: `${coach.identity} welcomes ${player.name} — ${fit.reason}`,
+      data: { playerId: player.id, fit: fit.score },
+    });
+    return;
+  }
+  if (fit.verdict === 'fine') return; // no friction, no bonus
+
+  // Reluctant or vetoed: the Director signed over the coach's objection.
+  const relHit = fit.verdict === 'veto' ? 7 : 2;
+  coach.relationshipWithUser = clampRel(coach.relationshipWithUser - relHit);
+  // A player the coach won't build around is left to sink or swim: deepen (or
+  // create) an adaptation penalty so the misfit shows on the pitch.
+  const extra = fit.verdict === 'veto' ? 0.12 : 0.06;
+  const a = player.adaptation;
+  if (a && !a.settled) {
+    a.penalty = Math.min(0.4, a.penalty + extra);
+    a.seasonsRemaining = Math.max(a.seasonsRemaining, fit.verdict === 'veto' ? 2 : 1);
+  } else {
+    player.adaptation = {
+      outcome: fit.verdict === 'veto' ? 'failure' : 'partial',
+      penalty: extra,
+      seasonsRemaining: fit.verdict === 'veto' ? 2 : 1,
+      settled: false,
+    };
+  }
+  logEvent(state, {
+    category: 'transfer',
+    code: fit.verdict === 'veto' ? 'coach.signing.vetoed' : 'coach.signing.reluctant',
+    message: `${fit.reason} The signing goes through regardless, straining the relationship.`,
+    data: { playerId: player.id, fit: fit.score, verdict: fit.verdict },
+  });
 }
 
 export type SigningResult = TransferResult | { ok: false; reason: string; refusedByPlayer: true };

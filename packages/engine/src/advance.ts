@@ -26,6 +26,7 @@ import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow, executeAcademyIntakes } from './ledgerExec.js';
 import { runReviewPhase } from './review.js';
+import { resolveCoachFriction } from './coaches.js';
 import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli, promoteJuventus } from './italyEvents.js';
 import { restoreRelegatedClubs } from './relegation.js';
@@ -112,6 +113,9 @@ function runMonth(state: GameState, rng: Rng): void {
     processOverstackUnrest(state);
     // Sustained unrest can force a kept-against-his-wishes player out.
     processAgitationDepartures(state, rng.fork(`agitation:${state.clock.date}`));
+    // M13b: settle the coach–Director relationship for the season — a floored
+    // relationship ends in resignation, a strong one lifts the group.
+    resolveCoachFriction(state);
   }
   // Juventus 2006: promote the Old Lady back to Serie A once she wins her way out
   // of the second tier — transforms her single simulated league in place. Runs in

@@ -9,9 +9,12 @@
  * scenario; anything unseeded falls back to a balanced coach on the era's shape.
  */
 
-import type { CoachArchetype, ManagerState, TraitLean } from './types.js';
+import type { CoachArchetype, GameState, ManagerState, PlayerState, TraitLean } from './types.js';
 import type { Formation } from './tactics.js';
 import { eraIdealFormation } from './tactics.js';
+import { logEvent } from './eventLog.js';
+import { parseYearMonth } from './clock.js';
+import { clubSquadPlayers } from './players.js';
 
 interface ArchetypeProfile {
   style: { physicality: number; tempo: number; technical: number };
@@ -99,6 +102,59 @@ const REAL_COACHES: Record<string, RealCoach> = {
   'bayern-2009': { identity: 'Louis van Gaal', archetype: 'possession', formation: '4-2-3-1', favourites: ['Arjen Robben'] },
 };
 
+// ── Recruitment fit (M13b) ───────────────────────────────────────────────────
+
+export type FitVerdict = 'wants' | 'fine' | 'reluctant' | 'veto';
+
+export interface CoachFit {
+  score: number; // signed; higher = better fit for this coach's profile
+  verdict: FitVerdict;
+  reason: string;
+}
+
+/** Neutral point of the 1..10 personality scale. */
+const TRAIT_MID = 5.5;
+
+/**
+ * How well a player suits the coach's recruitment profile. A possession coach
+ * who wants low-ego technicians will baulk at a volatile, big-ego maverick that
+ * a man-manager would happily take on. Favourites from former clubs are wanted
+ * outright. The coach's adaptability widens his tolerance — a flexible coach
+ * grumbles where a dogmatic one digs in and vetoes.
+ */
+export function coachFit(coach: ManagerState, player: PlayerState): CoachFit {
+  if (coach.favourites.includes(player.name)) {
+    return { score: 100, verdict: 'wants', reason: `${player.name} is one of ${coach.identity}'s own — he wants him.` };
+  }
+  const lean = coach.traitLean;
+  const per = player.personality;
+  const raw =
+    lean.professionalism * (per.professionalism - TRAIT_MID) +
+    lean.ego * (per.ego - TRAIT_MID) +
+    lean.ambition * (per.ambition - TRAIT_MID) +
+    lean.loyalty * (per.loyalty - TRAIT_MID) +
+    lean.volatility * (per.volatility - TRAIT_MID) +
+    lean.adaptability * (per.adaptability - TRAIT_MID);
+  // A more adaptable coach tolerates a wider spread of personalities.
+  const score = raw + (coach.adaptability - 5) * 1.5;
+
+  let verdict: FitVerdict;
+  if (score >= 5) verdict = 'wants';
+  else if (score >= -4) verdict = 'fine';
+  else if (score >= -10) verdict = 'reluctant';
+  else verdict = 'veto';
+
+  const reason =
+    verdict === 'wants'
+      ? `${player.name}'s profile is exactly what ${coach.identity} wants.`
+      : verdict === 'fine'
+        ? `${coach.identity} is comfortable with ${player.name}.`
+        : verdict === 'reluctant'
+          ? `${coach.identity} has reservations about ${player.name}'s temperament.`
+          : `${coach.identity} does not want ${player.name} — a poor fit for how he works.`;
+  return { score: Math.round(score * 10) / 10, verdict, reason };
+}
+
 /** Build the head coach for a scenario at its opening year. */
 export function coachForScenario(scenarioId: string, startYear: number): ManagerState {
   const real = REAL_COACHES[scenarioId];
@@ -116,4 +172,52 @@ export function coachForScenario(scenarioId: string, startYear: number): Manager
     favourites: real?.favourites ?? [],
     adaptability: base.adaptability,
   };
+}
+
+// ── Coach–Director friction (M13b) ───────────────────────────────────────────
+
+/** Below this the working relationship is untenable — the coach walks. */
+const COACH_RESIGN_FLOOR = 12;
+/** Above this a settled, trusted coach gets a tune out of the whole group. */
+const COACH_HARMONY_CEIL = 88;
+
+/** A fresh, unaligned appointment on the era-appropriate shape — who the club
+ *  turns to when a coach walks. */
+function interimCoach(year: number): ManagerState {
+  const c = coachForScenario('', year); // balanced, era shape, 'Head Coach'
+  return { ...c, identity: 'Interim Head Coach', relationshipWithUser: 48 };
+}
+
+/**
+ * Resolve the coach–Director relationship at the season boundary. A relationship
+ * ground into the floor by overruled vetoes and rejected requests ends with the
+ * coach resigning (a new appointment starts wary but clean); a strong one lifts
+ * the dressing room. Only the USER's coach exists, so a passive reality run —
+ * where nothing erodes the relationship — never trips either branch, keeping the
+ * calibration harness untouched.
+ */
+export function resolveCoachFriction(state: GameState): void {
+  const coach = state.managerRelations;
+  const year = parseYearMonth(state.clock.date).year;
+  if (coach.relationshipWithUser < COACH_RESIGN_FLOOR) {
+    logEvent(state, {
+      category: 'event',
+      code: 'coach.resigned',
+      message: `${coach.identity} has resigned — the relationship with the Director became untenable.`,
+      data: { formerIdentity: coach.identity },
+    });
+    state.managerRelations = interimCoach(year);
+    return;
+  }
+  if (coach.relationshipWithUser > COACH_HARMONY_CEIL) {
+    for (const p of clubSquadPlayers(state, state.playerClub)) {
+      p.morale = Math.min(100, p.morale + 1);
+    }
+    logEvent(state, {
+      category: 'event',
+      code: 'coach.harmony',
+      message: `${coach.identity} has the dressing room fully on side — a settled, happy camp.`,
+      data: { relationship: coach.relationshipWithUser },
+    });
+  }
 }

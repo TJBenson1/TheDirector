@@ -119,6 +119,47 @@ export function runReviewPhase(state: GameState): void {
     }
   }
 
+  // Actionable: a coach request. If one of the coach's favourites from a former
+  // club is out there in the world (and not already ours), he lobbies the Director
+  // to sign him. Backing the request warms the relationship; overruling it erodes
+  // it. Reality-default (ignore) lets the request lapse — no world change, so a
+  // passive run is untouched.
+  const wanted = coach.favourites
+    .map((name) => Object.values(state.players).find((p) => p.name === name && !p.retired && p.club !== state.playerClub))
+    .find((p): p is NonNullable<typeof p> => !!p);
+  if (wanted) {
+    const decisionId = `coach-request:${wanted.id}`;
+    if (!state.pendingDecisions.some((d) => d.id === decisionId)) {
+      state.pendingDecisions.push({
+        id: decisionId,
+        title: `${coach.identity} wants you to sign ${wanted.name}`,
+        description: `${coach.identity} knows ${wanted.name} from a former club and is pushing the Director to bring him in. Back the request and pursue him, or tell the coach no.`,
+        interrupt: false,
+        clubId: state.playerClub,
+        category: 'transfer',
+        choices: [
+          {
+            id: 'back',
+            label: `Back the coach — pursue ${wanted.name}`,
+            onSuccess: [
+              { kind: 'managerRelationship', amount: 4 },
+              { kind: 'memory', tag: 'coach', text: `Backed ${coach.identity}'s push for ${wanted.name}.` },
+            ],
+          },
+          {
+            id: 'overrule',
+            label: 'Overrule him — not this window',
+            onSuccess: [
+              { kind: 'managerRelationship', amount: -4 },
+              { kind: 'memory', tag: 'coach', text: `Overruled ${coach.identity} on ${wanted.name}.` },
+            ],
+          },
+        ],
+        memoryTags: ['coach'],
+      });
+    }
+  }
+
   // Actionable: offer a renewal for the top key players in their final year,
   // before they can walk on a free. Reality-default (ignore) is to secure them.
   const renewTargets = expiring.filter((p) => p.ability >= RENEW_ABILITY_FLOOR).slice(0, MAX_RENEWAL_OFFERS);
