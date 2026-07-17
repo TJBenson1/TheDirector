@@ -29,6 +29,7 @@ import { LIVERPOOL_2010_SQUADS } from './curated-eng-2010.js';
 import { LIVERPOOL_1995_SQUADS } from './curated-eng-1995.js';
 import { BUNDESLIGA_1997_SQUADS } from './curated-bundesliga-1997.js';
 import { EUROPE_1999_SQUADS } from './curated-europe-1999.js';
+import { ENG_DOMESTIC_1999_SQUADS } from './curated-eng-domestic-1999.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -483,6 +484,12 @@ for (const seed of [...REAL_MADRID_CASCADE_1999, ...REAL_MADRID_2000]) {
 // merged in: additions for clubs already present (PSV, Monaco, Marseille), whole new
 // clubs otherwise (Ajax, Porto, Benfica, Celtic, Rangers, Galatasaray, Feyenoord).
 for (const [club, seeds] of Object.entries(EUROPE_1999_SQUADS)) {
+  MAN_UTD_1999_SQUADS[club] = [...(MAN_UTD_1999_SQUADS[club] ?? []), ...seeds];
+}
+// Domestic mid-tier (M12 shortlist supply): the real squad players of the modelled
+// PL's non-elite clubs, so options lists read like a real 1999 shortlist rather than
+// anonymous filler. Concatenated (tops up Newcastle/Southampton; new elsewhere).
+for (const [club, seeds] of Object.entries(ENG_DOMESTIC_1999_SQUADS)) {
   MAN_UTD_1999_SQUADS[club] = [...(MAN_UTD_1999_SQUADS[club] ?? []), ...seeds];
 }
 

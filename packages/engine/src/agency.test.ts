@@ -116,9 +116,10 @@ describe('player agency & resistance (§6)', () => {
     const shearer = find(state, 'Alan Shearer');
     expect(shearer.resistance.clubLoyalty).toBeGreaterThanOrEqual(90);
     expect(shearer.resistance.hardBlocks.length).toBeGreaterThan(0);
-    // Depth behind him is procedural (anonymous).
+    // Newcastle now carries a real spine (Shearer, Given, Dyer, Solano…), with
+    // anonymous procedural depth behind it — curated stars and filler coexist.
     const newcastleProcedural = state.clubs.newcastle!.squad.filter((id) => !state.players[id]!.curated);
-    expect(newcastleProcedural.length).toBeGreaterThan(15);
+    expect(newcastleProcedural.length).toBeGreaterThan(8);
   });
 });
 
