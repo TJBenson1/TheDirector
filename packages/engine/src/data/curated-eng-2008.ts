@@ -19,6 +19,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
 import { EUROPE_2008_SQUADS } from './curated-europe-2008.js';
+import { ENG_DOMESTIC_2008_SQUADS } from './curated-eng-domestic-2008.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -263,3 +264,9 @@ export const MANCITY_2008_SQUADS: Record<string, CuratedSeed[]> = {
   // European selling clubs (M12A rollout) — the takeover-era talent pipeline.
   ...EUROPE_2008_SQUADS,
 };
+
+// Domestic mid-tier (M12 shortlist supply): real 2008-09 squad players at the
+// non-elite PL clubs, so options lists read like a real shortlist.
+for (const [club, seeds] of Object.entries(ENG_DOMESTIC_2008_SQUADS)) {
+  MANCITY_2008_SQUADS[club] = [...(MANCITY_2008_SQUADS[club] ?? []), ...seeds];
+}
