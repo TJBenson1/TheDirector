@@ -27,6 +27,9 @@ export const WILLINGNESS_THRESHOLD = 50;
 const MAGNET_ABILITY = 90;
 const MAGNET_WEIGHT = 1.8;
 const MAGNET_MAX = 14;
+// Resistance added per as-good-or-better incumbent (beyond the first) already in
+// the buyer's squad at the target's position — a logjam he won't want to join.
+const DEPTH_GLUT_PENALTY = 11;
 
 /** A club's pull from the superstars it already fields (0 if it has none). */
 export function magnetPull(state: GameState, clubId: ClubId): number {
@@ -174,6 +177,23 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
     resistance += poleResistance;
   }
 
+  // Squad-glut friction (the buyer's side of the deal): a good player will not
+  // join to sit behind an established queue in his position — the more as-good-
+  // or-better options the club already fields there, the less he fancies it,
+  // because he won't play. One incumbent of his level is normal competition; a
+  // second and third are a logjam. This is what stops a treble side signing an
+  // unproven fifth striker on a whim — you have to clear the position first.
+  const competitors = clubSquadPlayers(state, buyer.id).filter(
+    (p) =>
+      p.id !== player.id &&
+      p.positions.some((pos) => player.positions.includes(pos)) &&
+      p.ability >= player.ability - 2, // an incumbent at (or above) his level
+  ).length;
+  // Two incumbents of his calibre is a healthy rotation; a third means he'd be the
+  // fourth option and won't play — the friction rises with every body beyond that.
+  const glutted = competitors >= 3;
+  if (glutted) resistance += (competitors - 2) * DEPTH_GLUT_PENALTY;
+
   const willingness = Math.max(0, Math.min(100, Math.round(pull - resistance + 30)));
   const willing = willingness >= WILLINGNESS_THRESHOLD;
 
@@ -191,6 +211,8 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
     // lever (out-bid the selling club) rather than a flat "not convinced".
     const poleName = state.clubs[pole.to]?.name ?? pole.to;
     reason = `${player.name} is set to join ${poleName} — out-bid them at ${fromClub?.name ?? 'his club'} (beat £${(pole.fee / 1_000_000).toFixed(1)}m) to prise him away.`;
+  } else if (glutted) {
+    reason = `${player.name} sees no path to games at ${buyer.name} — you are already well stocked in his position. Clear the queue first.`;
   } else {
     reason = `${player.name} is not convinced by the move to ${buyer.name}.`;
   }
