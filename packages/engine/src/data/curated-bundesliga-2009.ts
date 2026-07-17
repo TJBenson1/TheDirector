@@ -89,7 +89,9 @@ export const BAYERN_2009_SQUADS: Record<string, CuratedSeed[]> = {
   real_madrid: REAL_MADRID_B10,
   man_utd: MANUTD_B10,
   chelsea: CHELSEA_B10,
-  man_city: MANCITY_B10,
+  // Džeko is still at Wolfsburg in 2009 (he joins City in 2011) — drop the reused
+  // 2010-11 City instance so he isn't rostered at both.
+  man_city: MANCITY_B10.filter((p) => p.name !== 'Edin Džeko'),
   liverpool: LIVERPOOL_B10,
   inter: INTER_B10,
   juventus: JUVENTUS_B10,

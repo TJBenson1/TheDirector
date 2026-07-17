@@ -118,9 +118,7 @@ export const ATHLETIC_2000: CuratedSeed[] = [
   q('athletic', 'larrainzar', 'Aitor Larrazábal', 1971, 'Spain', ['LB'], 76, 77, 2003, 25, t(8, 4, 6, 9, 4, 6)),
   q('athletic', 'alkiza', 'Bittor Alkiza', 1971, 'Spain', ['CM'], 76, 77, 2003, 30, t(8, 4, 6, 8, 4, 7)),
 ];
-export const SOCIEDAD_2000: CuratedSeed[] = [
-  q('real_sociedad', 'westerveld', 'Sander Westerveld', 1974, 'Netherlands', ['GK'], 78, 80, 2004, 25, t(8, 5, 7, 6, 5, 6)),
-  q('real_sociedad', 'kovacevic', 'Darko Kovačević', 1973, 'Serbia', ['ST'], 82, 84, 2004, 30, t(8, 6, 8, 6, 5, 7)),
+export const SOCIEDAD_2000: CuratedSeed[] = [  q('real_sociedad', 'kovacevic', 'Darko Kovačević', 1973, 'Serbia', ['ST'], 82, 84, 2004, 30, t(8, 6, 8, 6, 5, 7)),
   q('real_sociedad', 'nihat', 'Nihat Kahveci', 1979, 'Turkey', ['ST', 'RW'], 78, 84, 2005, 30, t(7, 6, 7, 6, 6, 7)),
   q('real_sociedad', 'de_pedro', 'Javier de Pedro', 1973, 'Spain', ['LW', 'AM'], 79, 81, 2003, 30, t(7, 5, 7, 7, 5, 7)),
   q('real_sociedad', 'xabi_alonso', 'Xabi Alonso', 1981, 'Spain', ['CM', 'DM'], 74, 88, 2005, 20, t(9, 5, 9, 8, 3, 8)),

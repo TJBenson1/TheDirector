@@ -157,7 +157,7 @@ export const LIVERPOOL_B12: CuratedSeed[] = [
   q('liverpool', 'henderson_lv12', 'Jordan Henderson', 1990, 'England', ['CM'], 80, 87, 2017, 20, t(10, 6, 9, 9, 5, 8), { loyalty: 90 }),
   q('liverpool', 'sterling_lv12', 'Raheem Sterling', 1994, 'England', ['RW', 'LW'], 76, 89, 2016, 20, t(8, 7, 9, 7, 5, 8)),
   q('liverpool', 'suarez_lv12', 'Luis Suárez', 1987, 'Uruguay', ['ST'], 88, 92, 2016, 20, t(8, 8, 10, 8, 8, 8)),
-  q('liverpool', 'sturridge_lv12', 'Daniel Sturridge', 1989, 'England', ['ST'], 81, 87, 2016, 30, t(7, 7, 8, 6, 6, 8)),
+  q('liverpool', 'borini_lv12', 'Fabio Borini', 1991, 'Italy', ['ST', 'LW'], 77, 82, 2016, 25, t(8, 6, 8, 7, 5, 8)),
   q('liverpool', 'downing_lv12', 'Stewart Downing', 1984, 'England', ['LW', 'RW'], 78, 80, 2015, 20, t(8, 5, 8, 8, 5, 8)),
 ];
 
@@ -254,8 +254,10 @@ export const DORTMUND_2012_SQUADS: Record<string, CuratedSeed[]> = {
   inter: INTER_B12,
   atletico: ATLETICO_B12,
   psg: PSG_B12,
-  schalke: SCHALKE_2010,
-  werder: WERDER_2010,
-  leverkusen: LEVERKUSEN_2010,
-  wolfsburg: WOLFSBURG_2010,
+  // Reused 2010-11 context squads — drop the players who had moved on by 2012 (and
+  // are curated at their new clubs above), so nobody is rostered at two clubs.
+  schalke: SCHALKE_2010.filter((p) => p.name !== 'Manuel Neuer'),
+  werder: WERDER_2010.filter((p) => p.name !== 'Claudio Pizarro'),
+  leverkusen: LEVERKUSEN_2010.filter((p) => p.name !== 'Arturo Vidal'),
+  wolfsburg: WOLFSBURG_2010.filter((p) => p.name !== 'Edin Džeko'),
 };

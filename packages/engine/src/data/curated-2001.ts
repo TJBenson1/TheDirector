@@ -326,9 +326,7 @@ export const MONACO_2001: CuratedSeed[] = [
   q('monaco', 'giuly_mo01', 'Ludovic Giuly', 1976, 'France', ['RW', 'AM'], 82, 84, 2004, 35, t(8, 6, 8, 6, 5, 7)),
   q('monaco', 'bernardi_mo01', 'Lucas Bernardi', 1977, 'Argentina', ['DM'], 77, 79, 2006, 30, t(8, 5, 7, 6, 5, 7)),
   q('monaco', 'cisse_mo01', 'Édouard Cissé', 1978, 'France', ['DM', 'CM'], 76, 78, 2005, 30, t(8, 4, 7, 6, 5, 7)),
-  q('monaco', 'prso_mo01', 'Dado Pršo', 1974, 'Croatia', ['ST'], 79, 80, 2004, 30, t(7, 6, 8, 6, 5, 7)),
-  q('monaco', 'morientes_mo01', 'Fernando Morientes', 1976, 'Spain', ['ST'], 84, 85, 2004, 30, t(8, 6, 8, 7, 4, 7)),
-  q('monaco', 'nonda_mo01', 'Shabani Nonda', 1977, 'DR Congo', ['ST'], 79, 81, 2005, 35, t(6, 7, 7, 6, 6, 7)),
+  q('monaco', 'prso_mo01', 'Dado Pršo', 1974, 'Croatia', ['ST'], 79, 80, 2004, 30, t(7, 6, 8, 6, 5, 7)),  q('monaco', 'nonda_mo01', 'Shabani Nonda', 1977, 'DR Congo', ['ST'], 79, 81, 2005, 35, t(6, 7, 7, 6, 6, 7)),
   q('monaco', 'adebayor_mo01', 'Emmanuel Adebayor', 1984, 'Togo', ['ST'], 72, 84, 2006, 30, t(6, 7, 8, 6, 6, 7)),
 ];
 

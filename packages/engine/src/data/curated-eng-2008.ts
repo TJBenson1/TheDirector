@@ -186,7 +186,7 @@ export const INTER_E8: CuratedSeed[] = [
   q('inter', 'sneijder_e8', 'Wesley Sneijder', 1984, 'Netherlands', ['AM', 'CM'], 86, 88, 2014, 20, t(7, 7, 9, 7, 6, 8)),
   q('inter', 'stankovic_e8', 'Dejan Stanković', 1978, 'Serbia', ['CM', 'AM'], 82, 82, 2012, 25, t(8, 6, 8, 8, 5, 7)),
   q('inter', 'muntari', 'Sulley Muntari', 1984, 'Ghana', ['CM', 'DM'], 80, 82, 2013, 20, t(7, 6, 8, 7, 6, 8)),
-  q('inter', 'eto_e8', 'Samuel Eto’o', 1981, 'Cameroon', ['ST', 'RW'], 87, 88, 2014, 20, t(7, 8, 9, 6, 6, 7)),
+  q('inter', 'ibrahimovic_e8', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 88, 89, 2013, 20, t(6, 9, 9, 6, 6, 8)),
   q('inter', 'milito_e8', 'Diego Milito', 1979, 'Argentina', ['ST'], 84, 86, 2014, 20, t(8, 7, 9, 8, 5, 7)),
   q('inter', 'balotelli_e8', 'Mario Balotelli', 1990, 'Italy', ['ST'], 76, 88, 2013, 20, t(4, 9, 8, 5, 9, 6)),
   q('inter', 'pandev_e8', 'Goran Pandev', 1983, 'North Macedonia', ['AM', 'ST'], 80, 82, 2013, 20, t(8, 6, 8, 7, 5, 7)),

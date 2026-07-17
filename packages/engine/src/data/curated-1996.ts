@@ -194,7 +194,7 @@ export const MILAN_1996: CuratedSeed[] = [
   q('milan', 'maldini_m96', 'Paolo Maldini', 1968, 'Italy', ['LB', 'CB'], 88, 89, 2002, 20, t(10, 6, 9, 10, 3, 7), { loyalty: 99, hardBlocks: [{ reason: 'Paolo Maldini is Milan for life.', untilYear: 2099 }] }),
   q('milan', 'baresi_m96', 'Franco Baresi', 1960, 'Italy', ['CB'], 86, 86, 1998, 25, t(10, 6, 9, 10, 3, 6), { loyalty: 99, hardBlocks: [{ reason: 'Franco Baresi is a Milan legend.', untilYear: 2099 }] }),
   q('milan', 'costacurta_m96', 'Alessandro Costacurta', 1966, 'Italy', ['CB'], 84, 85, 2001, 25, t(9, 5, 8, 10, 3, 7), { loyalty: 94 }),
-  q('milan', 'panucci_m96', 'Christian Panucci', 1969, 'Italy', ['RB', 'CB'], 81, 83, 1999, 25, t(7, 6, 7, 6, 5, 7)),
+  q('milan', 'reiziger_m96', 'Michael Reiziger', 1973, 'Netherlands', ['RB', 'CB'], 81, 83, 1999, 20, t(8, 5, 8, 7, 5, 8)),
   q('milan', 'albertini_m96', 'Demetrio Albertini', 1971, 'Italy', ['CM', 'DM'], 83, 85, 2001, 25, t(9, 5, 8, 8, 3, 7)),
   q('milan', 'desailly_m96', 'Marcel Desailly', 1968, 'France', ['DM', 'CB'], 85, 86, 2000, 25, t(9, 5, 8, 7, 4, 7)),
   q('milan', 'boban_m96', 'Zvonimir Boban', 1968, 'Croatia', ['AM'], 83, 84, 2000, 30, t(8, 6, 8, 7, 5, 7)),

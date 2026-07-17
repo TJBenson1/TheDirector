@@ -44,7 +44,7 @@ export const BARCELONA_2014: CuratedSeed[] = [
   q('barcelona', 'rakitic_b14', 'Ivan Rakitić', 1988, 'Croatia', ['CM'], 85, 86, 2019, 20, t(9, 5, 8, 8, 4, 8)),
   q('barcelona', 'iniesta_b14', 'Andrés Iniesta', 1984, 'Spain', ['CM', 'AM'], 88, 88, 2018, 20, t(10, 5, 9, 10, 3, 8), { loyalty: 96 }),
   q('barcelona', 'xavi_b14', 'Xavi', 1980, 'Spain', ['CM'], 84, 84, 2015, 15, t(10, 5, 9, 10, 3, 8), { loyalty: 97 }),
-  q('barcelona', 'rafinha_b14', 'Rafinha', 1993, 'Brazil', ['AM', 'CM'], 76, 84, 2018, 25, t(8, 5, 8, 8, 5, 8)),
+  q('barcelona', 'rafinha_b14', 'Rafinha Alcântara', 1993, 'Brazil', ['AM', 'CM'], 76, 84, 2018, 25, t(8, 5, 8, 8, 5, 8)),
   q('barcelona', 'sergi_roberto_b14', 'Sergi Roberto', 1992, 'Spain', ['CM', 'RB'], 76, 84, 2018, 15, t(9, 5, 8, 10, 4, 8), { loyalty: 92 }),
   q('barcelona', 'messi_b14', 'Lionel Messi', 1987, 'Argentina', ['RW', 'AM', 'ST'], 95, 99, 2019, 15, t(10, 6, 10, 10, 3, 8), { loyalty: 94 }),
   q('barcelona', 'suarez_b14', 'Luis Suárez', 1987, 'Uruguay', ['ST'], 90, 92, 2019, 20, t(8, 8, 10, 8, 8, 8)),

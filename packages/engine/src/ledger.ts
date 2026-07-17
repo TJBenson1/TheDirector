@@ -543,7 +543,9 @@ const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
   { playerId: 'cur_fabregas_a8', from: 'arsenal', to: 'barcelona', window: '2011-08', fee: 29_000_000, id: 'cesc-barca-2011' },
   { playerId: 'cur_arteta_ev', from: 'everton', to: 'arsenal', window: '2011-08', fee: 10_000_000, id: 'arteta-arsenal-2011' },
   { playerId: 'cur_sneijder_e8', from: 'real_madrid', to: 'inter', window: '2009-08', fee: 15_000_000, id: 'sneijder-inter-2009' },
-  { playerId: 'cur_etoo_e8', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000, id: 'etoo-inter-2009' },
+  // The 2009 Ibrahimović–Eto'o swap, both halves (Ibra was Inter's striker in 2008-09).
+  { playerId: 'cur_ibrahimovic_e8', from: 'inter', to: 'barcelona', window: '2009-07', fee: 46_000_000, id: 'ibra-barca-2009' },
+  { playerId: 'cur_etoo_e8', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000, id: 'etoo-inter-2009', enabledBy: 'ibra-barca-2009' },
 ];
 
 /**

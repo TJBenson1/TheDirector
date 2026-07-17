@@ -144,9 +144,7 @@ export const PARMA_1998: CuratedSeed[] = [
   q('parma', 'fuser', 'Diego Fuser', 1968, 'Italy', ['RW', 'RB'], 79, 80, 2001, 25, t(8, 5, 8, 7, 5, 7)),
   q('parma', 'stanic', 'Mario Stanić', 1972, 'Croatia', ['RW', 'ST'], 78, 80, 2002, 25, t(7, 6, 7, 7, 5, 7)),
   q('parma', 'crespo_p', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 85, 89, 2003, 25, t(8, 7, 9, 7, 5, 7)),
-  q('parma', 'chiesa_p', 'Enrico Chiesa', 1970, 'Italy', ['ST'], 82, 83, 2002, 30, t(8, 6, 8, 7, 5, 7)),
-  q('parma', 'balbo_p', 'Abel Balbo', 1966, 'Argentina', ['ST'], 76, 77, 2000, 30, t(7, 5, 7, 6, 5, 7)),
-];
+  q('parma', 'chiesa_p', 'Enrico Chiesa', 1970, 'Italy', ['ST'], 82, 83, 2002, 30, t(8, 6, 8, 7, 5, 7)),];
 
 // ── Fiorentina, 1998–99 (Batistuta and Rui Costa) ─────────────────────────────
 export const FIORENTINA_1998: CuratedSeed[] = [

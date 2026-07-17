@@ -185,11 +185,13 @@ export const REAL_MADRID_2006_SQUADS: Record<string, CuratedSeed[]> = {
   deportivo: DEPORTIVO_2006,
   liverpool: LIVERPOOL_2006,
   man_utd: MANUTD_2007,
-  milan: MILAN_2007,
+  // Reused 2007 context squads — drop players still at their 2006 clubs above
+  // (Emerson & Ronaldo at Real, Sissoko at Liverpool) so nobody is double-rostered.
+  milan: MILAN_2007.filter((p) => p.name !== 'Emerson' && p.name !== 'Ronaldo'),
   inter: INTER_2007,
   bayern: BAYERN_2007,
   chelsea: CHELSEA_2007,
-  juventus: JUVENTUS_2007,
+  juventus: JUVENTUS_2007.filter((p) => p.name !== 'Momo Sissoko'),
   dortmund: DORTMUND_2007,
   porto: PORTO_2007,
 };

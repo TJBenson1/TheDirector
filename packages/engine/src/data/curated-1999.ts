@@ -374,7 +374,7 @@ const INTER_1999_EXTRA: CuratedSeed[] = [
   q('inter', 'peruzzi_i99', 'Angelo Peruzzi', 1970, 'Italy', ['GK'], 82, 83, 2002, 30, t(8, 6, 8, 8, 5, 6)),
   q('inter', 'blanc_i99', 'Laurent Blanc', 1965, 'France', ['CB'], 82, 83, 2001, 30, t(9, 6, 8, 8, 4, 7)),
   q('inter', 'cauet_i99', 'Benoît Cauet', 1969, 'France', ['CM', 'DM'], 78, 79, 2002, 35, t(8, 5, 7, 7, 5, 6)),
-  q('inter', 'simeone_i99', 'Diego Simeone', 1970, 'Argentina', ['CM', 'DM'], 82, 83, 2001, 35, t(8, 7, 9, 7, 7, 7)),
+  q('inter', 'ze_elias_i99', 'Zé Elias', 1976, 'Brazil', ['DM', 'CM'], 82, 83, 2002, 25, t(8, 6, 8, 7, 6, 8)),
   q('inter', 'rbaggio_i99', 'Roberto Baggio', 1967, 'Italy', ['AM', 'ST'], 84, 85, 2000, 45, t(8, 6, 8, 7, 5, 8)),
   q('inter', 'zamorano_i99', 'Iván Zamorano', 1967, 'Chile', ['ST'], 80, 81, 2001, 35, t(8, 6, 9, 8, 5, 7)),
   q('inter', 'recoba_i99', 'Álvaro Recoba', 1976, 'Uruguay', ['AM', 'LW'], 80, 82, 2004, 35, t(6, 8, 7, 6, 6, 7)),

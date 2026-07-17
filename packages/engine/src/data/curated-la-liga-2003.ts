@@ -234,9 +234,7 @@ export const PORTO_2003D: CuratedSeed[] = [
   q('porto', 'maniche', 'Maniche', 1977, 'Portugal', ['CM'], 81, 82, 2007, 25, t(8, 6, 8, 7, 5, 7)),
 ];
 export const MONACO_2003D: CuratedSeed[] = [
-  q('monaco', 'roma_m3', 'Flavio Roma', 1974, 'Italy', ['GK'], 79, 79, 2006, 25, t(8, 5, 7, 8, 5, 6)),
-  q('monaco', 'morientes_mo3', 'Fernando Morientes', 1976, 'Spain', ['ST'], 84, 85, 2004, 25, t(8, 6, 8, 8, 4, 7)),
-  q('monaco', 'giuly_m3', 'Ludovic Giuly', 1976, 'France', ['RW', 'AM'], 82, 83, 2006, 25, t(8, 6, 8, 7, 5, 7)),
+  q('monaco', 'roma_m3', 'Flavio Roma', 1974, 'Italy', ['GK'], 79, 79, 2006, 25, t(8, 5, 7, 8, 5, 6)),  q('monaco', 'giuly_m3', 'Ludovic Giuly', 1976, 'France', ['RW', 'AM'], 82, 83, 2006, 25, t(8, 6, 8, 7, 5, 7)),
   q('monaco', 'rothen', 'Jérôme Rothen', 1978, 'France', ['LW', 'LB'], 80, 82, 2006, 25, t(7, 6, 8, 7, 5, 7)),
   q('monaco', 'prso', 'Dado Pršo', 1974, 'Croatia', ['ST'], 78, 79, 2005, 25, t(8, 5, 8, 7, 5, 7)),
   q('monaco', 'evra_m3', 'Patrice Evra', 1981, 'France', ['LB'], 79, 86, 2007, 20, t(9, 6, 8, 8, 5, 8)),
