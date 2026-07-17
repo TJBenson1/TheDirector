@@ -30,6 +30,9 @@ export type TransferResult =
   | { ok: true; playerId: PlayerId; from: ClubId | null; to: ClubId; fee: number }
   | { ok: false; reason: string };
 
+/** Morale drop for an incumbent whose place is threatened by a new arrival. */
+const HARMONY_MORALE_HIT = 6;
+
 /** Current calendar year from the game clock. */
 export function currentYear(state: GameState): number {
   return parseYearMonth(state.clock.date).year;
@@ -106,6 +109,21 @@ export function executeTransfer(
     buyer.starButterfly += clubStarPremium(state, buyer.id) - buyerStarBefore;
     if (fromClubId && state.clubs[fromClubId]) {
       state.clubs[fromClubId]!.starButterfly += clubStarPremium(state, fromClubId) - sellerStarBefore;
+    }
+  }
+
+  // Squad harmony (§ internal friction): a new arrival unsettles the incumbents
+  // he now competes with. When the USER stacks a position, those whose place is
+  // threatened — at or below the newcomer's level — lose morale, so overloading
+  // a position carries a real dressing-room cost (a reality move is the world as
+  // it was and banks no such shock). Signing an upgrade dents more players; a
+  // fringe body clearly worse than the incumbents troubles no one.
+  if (!opts.reality && req.toClub === state.playerClub) {
+    for (const mate of clubSquadPlayers(state, buyer.id)) {
+      if (mate.id === player.id) continue;
+      if (!mate.positions.some((pos) => player.positions.includes(pos))) continue;
+      if (mate.ability > player.ability + 4) continue; // clearly ahead — not threatened
+      mate.morale = Math.max(0, mate.morale - HARMONY_MORALE_HIT);
     }
   }
 

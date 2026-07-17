@@ -100,7 +100,7 @@ export const MAN_UTD_1999: CuratedSeed[] = [
   p('gneville', 'Gary Neville', 1975, 'England', ['RB'], 82, 86, 2004, 25, t(9, 5, 8, 10, 4, 7)),
   p('pneville', 'Phil Neville', 1977, 'England', ['LB', 'CM'], 78, 82, 2004, 25, t(8, 4, 7, 9, 3, 8)),
   p('irwin', 'Denis Irwin', 1965, 'Ireland', ['LB', 'RB'], 82, 82, 2001, 22, t(9, 3, 7, 9, 2, 8)),
-  p('silvestre', 'Mikael Silvestre', 1977, 'France', ['CB', 'LB'], 79, 86, 2004, 28, t(7, 5, 7, 6, 4, 8)),
+  p('silvestre', 'Mikaël Silvestre', 1977, 'France', ['CB', 'LB'], 79, 86, 2004, 28, t(7, 5, 7, 6, 4, 8)),
   p('stam', 'Jaap Stam', 1972, 'Netherlands', ['CB'], 89, 90, 2003, 35, t(8, 6, 8, 6, 5, 6)),
   p('rjohnsen', 'Ronny Johnsen', 1969, 'Norway', ['CB', 'DM'], 79, 80, 2002, 55, t(8, 4, 6, 7, 3, 6)),
   p('wbrown', 'Wes Brown', 1979, 'England', ['CB'], 74, 85, 2004, 60, t(7, 4, 7, 9, 4, 6)),
@@ -206,7 +206,7 @@ export const LAZIO_1999: CuratedSeed[] = [
   q('lazio', 'veron', 'Juan Sebastián Verón', 1975, 'Argentina', ['CM', 'AM'], 86, 87, 2004, 35, t(7, 6, 8, 5, 5, 5)),
 ];
 export const PSV_1999: CuratedSeed[] = [
-  q('psv', 'ruud', 'Ruud van Nistelrooy', 1976, 'Netherlands', ['ST'], 85, 90, 2004, 60, t(8, 6, 9, 6, 4, 7)),
+  q('psv', 'ruud', 'Ruud van Nistelrooy', 1976, 'Netherlands', ['ST'], 82, 90, 2004, 60, t(8, 6, 9, 6, 4, 7)),
 ];
 export const MARSEILLE_1999: CuratedSeed[] = [
   q('marseille', 'pires', 'Robert Pirès', 1973, 'France', ['LW', 'AM'], 83, 87, 2002, 30, t(8, 5, 7, 6, 3, 7)),
