@@ -18,6 +18,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
 import { EUROPE_2012_SQUADS } from './curated-europe-2012.js';
+import { GER_DOMESTIC_2012_SQUADS } from './curated-ger-domestic-2012.js';
 import { SCHALKE_2010, WERDER_2010, LEVERKUSEN_2010, WOLFSBURG_2010 } from './curated-bundesliga-2010.js';
 
 type Trait = PlayerState['personality'];
@@ -266,5 +267,12 @@ export const DORTMUND_2012_SQUADS: Record<string, CuratedSeed[]> = {
 // European selling clubs (M12A rollout) — the early-2010s foreign talent pipeline.
 // All whole new clubs merged into the dortmund-2012 universe.
 for (const [club, seeds] of Object.entries(EUROPE_2012_SQUADS)) {
+  DORTMUND_2012_SQUADS[club] = [...(DORTMUND_2012_SQUADS[club] ?? []), ...seeds];
+}
+
+// Domestic mid-tier of the 2012-13 Bundesliga (M12 shortlist supply) — real
+// squad players at the non-elite clubs so options lists read like a real
+// shortlist.
+for (const [club, seeds] of Object.entries(GER_DOMESTIC_2012_SQUADS)) {
   DORTMUND_2012_SQUADS[club] = [...(DORTMUND_2012_SQUADS[club] ?? []), ...seeds];
 }
