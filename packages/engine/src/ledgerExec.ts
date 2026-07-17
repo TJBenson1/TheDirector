@@ -38,12 +38,17 @@ export function executeAcademyIntakes(state: GameState): void {
   const year = Number(state.clock.date.slice(0, 4));
   const rng = new Rng(state.meta.rngState).fork(`intake:${year}`);
   const byId = new Map(pack.academyGraduates.map((g) => [g.id, g]));
+  // Real people already in the world (under ANY id) — a later-start era's kickoff
+  // squad already holds the then-current stars, so a shared cross-era graduate pool
+  // must never inject a second Harry Kane on top of the one the pack shipped.
+  const presentNames = new Set(Object.values(state.players).map((p) => p.name));
 
   for (const intake of pack.academyIntakes) {
     if (intake.year !== year) continue;
-    if (state.players[intake.playerId]) continue; // already in the world
+    if (state.players[intake.playerId]) continue; // already in the world (by id)
     const seed = byId.get(intake.playerId);
     if (!seed) continue;
+    if (presentNames.has(seed.name)) continue; // already in the world (by identity)
     const club = state.clubs[intake.clubId];
     if (!club) continue;
     const player = instantiateCuratedSeed(seed, year, rng.fork(intake.playerId));

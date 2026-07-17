@@ -17,6 +17,9 @@
 import type { ClubId, PlayerId, YearMonth } from './types.js';
 import type { CuratedSeed } from './data/curated-1999.js';
 import { GRADUATES_1999, INTAKES_1999 } from './data/curated-graduates-1999.js';
+import { GRADUATES_ESP, INTAKES_ESP } from './data/curated-graduates-esp.js';
+import { GRADUATES_ITA, INTAKES_ITA } from './data/curated-graduates-ita.js';
+import { GRADUATES_GER, INTAKES_GER } from './data/curated-graduates-ger.js';
 
 /** One real historical transfer among tracked clubs. */
 export interface RealTransferLedgerEntry {
@@ -818,29 +821,29 @@ const INJURIES_1998: RealInjuryEntry[] = [
 
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
-  'era-1996': { realTransferLedger: LEDGER_1996_2001, academyIntakes: [], realInjuries: [] },
+  'era-1996': { realTransferLedger: LEDGER_1996_2001, academyIntakes: INTAKES_1999, realInjuries: [], academyGraduates: GRADUATES_1999 },
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: INTAKES_1999, realInjuries: INJURIES_1999, academyGraduates: GRADUATES_1999 },
-  'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013 },
-  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, nearMissLedger: NEAR_MISS_2004 },
-  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [] },
-  'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: [], realInjuries: INJURIES_2000 },
-  'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: [], realInjuries: INJURIES_1995 },
-  'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: [], realInjuries: INJURIES_1998 },
-  'era-la-liga-2003': { realTransferLedger: LEDGER_LA_LIGA_2003, academyIntakes: [], realInjuries: [] },
-  'era-la-liga-2006': { realTransferLedger: LEDGER_LA_LIGA_2006, academyIntakes: [], realInjuries: [] },
-  'era-la-liga-2014': { realTransferLedger: LEDGER_LA_LIGA_2014, academyIntakes: [], realInjuries: [] },
-  'era-eng-2008': { realTransferLedger: LEDGER_ENG_2008, academyIntakes: [], realInjuries: [] },
-  'era-eng-2010': { realTransferLedger: LEDGER_ENG_2010, academyIntakes: [], realInjuries: [] },
-  'era-eng-1995': { realTransferLedger: LEDGER_ENG_1995, academyIntakes: [], realInjuries: [] },
-  'era-bundesliga-1997': { realTransferLedger: LEDGER_BUNDESLIGA_1997, academyIntakes: [], realInjuries: [] },
-  'era-bundesliga-1998': { realTransferLedger: LEDGER_BUNDESLIGA_1997, academyIntakes: [], realInjuries: [] },
-  'era-bundesliga-2009': { realTransferLedger: LEDGER_BUNDESLIGA_2009, academyIntakes: [], realInjuries: [] },
-  'era-bundesliga-2012': { realTransferLedger: LEDGER_BUNDESLIGA_2012, academyIntakes: [], realInjuries: [] },
-  'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: [], realInjuries: [] },
+  'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: INTAKES_1999, realInjuries: INJURIES_2013, academyGraduates: GRADUATES_1999 },
+  'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: INTAKES_1999, realInjuries: INJURIES_2004, nearMissLedger: NEAR_MISS_2004, academyGraduates: GRADUATES_1999 },
+  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: INTAKES_1999, realInjuries: [], academyGraduates: GRADUATES_1999 },
+  'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: INTAKES_ESP, realInjuries: INJURIES_2000, academyGraduates: GRADUATES_ESP },
+  'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: INTAKES_ITA, realInjuries: INJURIES_1995, academyGraduates: GRADUATES_ITA },
+  'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: INTAKES_ITA, realInjuries: INJURIES_1998, academyGraduates: GRADUATES_ITA },
+  'era-la-liga-2003': { realTransferLedger: LEDGER_LA_LIGA_2003, academyIntakes: INTAKES_ESP, realInjuries: [], academyGraduates: GRADUATES_ESP },
+  'era-la-liga-2006': { realTransferLedger: LEDGER_LA_LIGA_2006, academyIntakes: INTAKES_ESP, realInjuries: [], academyGraduates: GRADUATES_ESP },
+  'era-la-liga-2014': { realTransferLedger: LEDGER_LA_LIGA_2014, academyIntakes: INTAKES_ESP, realInjuries: [], academyGraduates: GRADUATES_ESP },
+  'era-eng-2008': { realTransferLedger: LEDGER_ENG_2008, academyIntakes: INTAKES_1999, realInjuries: [], academyGraduates: GRADUATES_1999 },
+  'era-eng-2010': { realTransferLedger: LEDGER_ENG_2010, academyIntakes: INTAKES_1999, realInjuries: [], academyGraduates: GRADUATES_1999 },
+  'era-eng-1995': { realTransferLedger: LEDGER_ENG_1995, academyIntakes: INTAKES_1999, realInjuries: [], academyGraduates: GRADUATES_1999 },
+  'era-bundesliga-1997': { realTransferLedger: LEDGER_BUNDESLIGA_1997, academyIntakes: INTAKES_GER, realInjuries: [], academyGraduates: GRADUATES_GER },
+  'era-bundesliga-1998': { realTransferLedger: LEDGER_BUNDESLIGA_1997, academyIntakes: INTAKES_GER, realInjuries: [], academyGraduates: GRADUATES_GER },
+  'era-bundesliga-2009': { realTransferLedger: LEDGER_BUNDESLIGA_2009, academyIntakes: INTAKES_GER, realInjuries: [], academyGraduates: GRADUATES_GER },
+  'era-bundesliga-2012': { realTransferLedger: LEDGER_BUNDESLIGA_2012, academyIntakes: INTAKES_GER, realInjuries: [], academyGraduates: GRADUATES_GER },
+  'era-serie-a-2004': { realTransferLedger: LEDGER_SERIE_A_2004, academyIntakes: INTAKES_ITA, realInjuries: [], academyGraduates: GRADUATES_ITA },
   // Juventus 2006 rejoins the late-2000s Serie A world from 2007, so it draws on
   // the same reality ledger — Pirlo's 2011 free transfer to Juventus included.
-  'era-serie-a-2006': { realTransferLedger: LEDGER_2007_2013, academyIntakes: [], realInjuries: INJURIES_2007 },
-  'era-serie-a-2007': { realTransferLedger: LEDGER_2007_2013, academyIntakes: [], realInjuries: INJURIES_2007 },
+  'era-serie-a-2006': { realTransferLedger: LEDGER_2007_2013, academyIntakes: INTAKES_ITA, realInjuries: INJURIES_2007, academyGraduates: GRADUATES_ITA },
+  'era-serie-a-2007': { realTransferLedger: LEDGER_2007_2013, academyIntakes: INTAKES_ITA, realInjuries: INJURIES_2007, academyGraduates: GRADUATES_ITA },
   'era-2003': { realTransferLedger: LEDGER_2003_2011, academyIntakes: [], realInjuries: INJURIES_2003, nearMissLedger: NEAR_MISS_2003 },
 };
 
