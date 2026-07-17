@@ -23,6 +23,7 @@ import {
   MANUTD_1996, ARSENAL_1996, CHELSEA_1996, SPURS_1996, MANCITY_1996,
   REAL_1996, BARCA_1996, BAYERN_1996, JUVENTUS_1996, MILAN_1996, INTER_1996,
 } from './curated-1996.js';
+import { EUROPE_MID90S_SQUADS } from './curated-europe-mid90s.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -107,3 +108,9 @@ export const LIVERPOOL_1995_SQUADS: Record<string, CuratedSeed[]> = {
   milan: MILAN_1996,
   inter: INTER_1996,
 };
+
+// European selling clubs (M12A rollout) — the mid-90s talent pipeline (shared with
+// the 1996 English world). Merged by CONCATENATION onto any club already present.
+for (const [club, seeds] of Object.entries(EUROPE_MID90S_SQUADS)) {
+  LIVERPOOL_1995_SQUADS[club] = [...(LIVERPOOL_1995_SQUADS[club] ?? []), ...seeds];
+}

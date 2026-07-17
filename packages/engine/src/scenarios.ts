@@ -83,9 +83,13 @@ const ERA_1996_CONTEXT: ClubSeed[] = [
   { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
   { id: 'porto', name: 'FC Porto', prestige: 74 },
   { id: 'monaco', name: 'AS Monaco', prestige: 74 },
-  { id: 'ajax', name: 'Ajax', prestige: 78 },
-  { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 72 },
+  { id: 'ajax', name: 'Ajax', prestige: 80 },
+  { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 74 },
   { id: 'dynamo_kyiv', name: 'Dynamo Kyiv', prestige: 70 },
+  // European selling clubs (M12A rollout) — the mid-90s talent pipeline.
+  { id: 'psv', name: 'PSV Eindhoven', prestige: 74 },
+  { id: 'fiorentina', name: 'Fiorentina', prestige: 76 },
+  { id: 'lazio', name: 'Lazio', prestige: 76 },
 ];
 
 // era-2001: the whole of Europe contests the Cup, not just the English top four.
@@ -914,6 +918,15 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'chelsea', name: 'Chelsea', prestige: 72 },
       { id: 'spurs', name: 'Tottenham Hotspur', prestige: 70 },
       { id: 'man_city', name: 'Manchester City', prestige: 60 },
+      // European selling clubs (M12A rollout) — the mid-90s talent pipeline.
+      { id: 'ajax', name: 'Ajax', prestige: 80 },
+      { id: 'psv', name: 'PSV Eindhoven', prestige: 74 },
+      { id: 'porto', name: 'FC Porto', prestige: 74 },
+      { id: 'monaco', name: 'AS Monaco', prestige: 74 },
+      { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 74 },
+      { id: 'fiorentina', name: 'Fiorentina', prestige: 76 },
+      { id: 'lazio', name: 'Lazio', prestige: 76 },
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
     ],
     domesticLeagueId: 'eng-1995',
   },

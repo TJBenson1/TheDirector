@@ -12,6 +12,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { EUROPE_MID90S_SQUADS } from './curated-europe-mid90s.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -275,3 +276,9 @@ export const ARSENAL_1996_SQUADS: Record<string, CuratedSeed[]> = {
   inter: INTER_1996,
   spurs: SPURS_1996,
 };
+
+// European selling clubs (M12A rollout) — the mid-90s talent pipeline (shared with
+// the 1995 English world). Merged by CONCATENATION onto any club already present.
+for (const [club, seeds] of Object.entries(EUROPE_MID90S_SQUADS)) {
+  ARSENAL_1996_SQUADS[club] = [...(ARSENAL_1996_SQUADS[club] ?? []), ...seeds];
+}
