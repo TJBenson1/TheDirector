@@ -42,10 +42,40 @@ GET  /game/:id/narrative  { since? }                              → NarrativeB
   return ranges with confidence and risk grades (M5+). Bind to those fields, not
   to hidden truth.
 
-> **Status:** the `/api` package is hardened at M10; until then the endpoints are
-> a stable contract you can mock against. The `GameState` shape is already real —
-> `packages/engine` produces it today. You can generate fixtures by importing
-> `createNewGame` / `advanceWindow` from `@director/engine`.
+## Integration — run the engine, don't call a server
+
+The engine (`@director/engine`) is a **pure, deterministic, browser-safe TypeScript
+package**: no I/O, no clock, no randomness outside a seeded RNG. Every function is a
+pure transform over a **fully serialisable `GameState`**. Two ways to wire it up —
+both project the *same* `GameState`, so build the views once:
+
+- **Client-side (recommended for Lovable).** Import the engine directly and run the
+  whole game in the browser — no backend at all. Persist with `saveGame(state)` →
+  JSON string (to `localStorage` or Supabase) and `loadGame(json)` → `GameState`.
+  The REST rows above map 1:1 to function calls:
+
+  ```ts
+  import {
+    createNewGame, advanceWindow, applyDecision, saveGame, loadGame,
+    SCENARIOS, getScenario, suggestTargets, scoutPlayer, medicalCheck, queryPlayer,
+  } from '@director/engine';
+
+  let state = createNewGame({ scenarioId: 'man-utd-1999' /*, seed, settings */ });
+  // resolve a pending decision:
+  state = applyDecision(state, decision.id, choice.id).state;
+  // advance time (interactive: unfold sub-steps, pausing on interrupts):
+  const { state: next, events } = advanceWindow(state, { pausePerStep: true });
+  state = next;                       // render it
+  // events: LoggedEvent[] that just happened → the feed
+  ```
+
+  Because determinism holds, a save is just the JSON; reloading and advancing is
+  bit-identical to never having stopped.
+
+- **Server-backed.** If you'd rather hold state server-side, wrap those same calls
+  behind the REST contract above (a thin handler per row). Nothing else changes.
+
+`createNewGame` / `advanceWindow` also generate fixtures for Storybook/tests.
 
 ## The six views (all render from `GameState`)
 
@@ -79,3 +109,73 @@ defaults are the calibrated realism bands.
 Every screen must be fully usable with narration **off** (raw structured output).
 The `/narrative` endpoint is an optional prose layer over the same events — it
 never introduces information that isn't already in the log.
+
+## Start points (scenario select)
+
+`SCENARIOS` is a registry of **27 curated start points** (1995–2014), e.g.
+`man-utd-1999` "After the Treble", `chelsea-2003` "The Roman Empire",
+`barcelona-2014` "Peak — Don't Waste It", `dortmund-2012` "Hold the Wall". Build a
+picker from it — each `ScenarioSeed` carries `id`, `name`, `playerClub`, `startDate`,
+`mandate`, and `boardExpectedFinish`. `DEFAULT_SCENARIO_ID` is `man-utd-1999`.
+
+```ts
+Object.values(SCENARIOS).map(s => ({ id: s.id, name: s.name, mandate: s.mandate }));
+```
+
+## Event vocabulary (the feed)
+
+The feed is `eventLog: LoggedEvent[]` — key off `event.code` (+ `event.category`,
+`event.data`) to group and style. A career surfaces these families; render them,
+don't invent them:
+
+- **Real history playing out** — `scripted.fired` (a historical beat, e.g. the
+  Keane contract, the Glazer takeover), `ledger.executed` / `nearmiss.signed` (a
+  real transfer happens), `academy.graduate` (a real youth debut), `career.retired`.
+- **The story follows the man** — `personal.fired` (at your club, interactive) /
+  `personal.world` (a marquee personal storyline that travels with a player wherever
+  the counterfactual sent him — "Rio still misses his drug test at Arsenal").
+- **The world diverges as you reshape it** — `divergence.displaced` (a giant comes
+  for a star you relocated), `divergence.suitor`, `divergence.storyline`,
+  `divergence.contract`, `ambition.override` (a rival makes an off-script statement
+  signing), and **`reality.thwarted-signing` / `reality.thwarted-trophy`** (a club
+  you denied a signing or a title is stung into clawing back).
+- **Macro world events** — `macro.world` / `macro.fired` (era-defining moments that
+  fire regardless of club: **Covid 2020, the Super League 2021, City's financial
+  charges 2023**), `ffp.constrained` (a benefactor's blank cheque is curbed),
+  `points.deducted`, `league.promoted-in-place`.
+- **Club & squad life** — `injury.serious` / `injury.recurrence`, `scandal.fired`,
+  `decline.*`, `development.unlocked` / `development.busted`, `raid.suffered`,
+  `poach.*`, `club.distress`.
+- **Board & dugout** — `board.warning` / `board.sacked`, `internal.crisis`,
+  `manager.pressure` / `manager.appointed` / `manager.departed`, `directive.*`.
+
+`pendingDecisions` is the *now* (interrupts to resolve); the codes above are the
+*record* of what happened (the feed). Both come off the same `GameState`.
+
+## Keeping the front-end and the engine in sync
+
+The engine **is** the contract — `@director/engine` exports `GameState`, every type,
+and the pure functions above. Keep them from drifting apart:
+
+1. **Depend on a pinned version.** Consume `@director/engine` as a versioned package
+   (npm private or a git tag). The front-end updates deliberately, never silently.
+2. **Let TypeScript be the drift detector.** Because you import the engine's *types*
+   (`GameState`, `Decision`, `PlayerState`, …), any breaking change to a shape the UI
+   binds to **fails the front-end's `tsc` build**. Keep `index.ts` as the curated
+   public surface — if it's not exported there, don't rely on it.
+3. **The save format is versioned.** `state.meta.version` stamps every game;
+   `loadGame` rejects a payload without it. Bump it on a breaking `GameState` change
+   and migrate (or invalidate) old saves — so a stale save never renders wrong.
+4. **A public-API contract test guards the surface** (`packages/engine/src/public-api.test.ts`):
+   it asserts the front-end-critical exports exist, that `GameState` still has its
+   top-level keys, and that it round-trips through `saveGame`/`loadGame`. Removing or
+   renaming any of them fails CI **before** you publish.
+5. **The engine's own gates protect behaviour.** `pnpm vitest` (incl. the
+   27-scenario invariant + determinism suite) and `pnpm harness` (the calibration
+   run) must stay green on every engine change; the front-end can trust that a new
+   version is behaviourally sound, not just type-compatible.
+
+**Workflow when you change the engine:** edit → `vitest` + `harness` green → bump the
+version → publish → front-end bumps the dependency; `tsc` + its own tests flag any
+integration break. That's the whole loop — the types catch shape drift, the contract
+test catches surface drift, the harness catches behaviour drift.
