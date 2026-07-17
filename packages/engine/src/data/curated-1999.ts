@@ -18,6 +18,8 @@ import { ENGLAND_1996_SQUADS } from './curated-1996.js';
 import { BARCELONA_2014_SQUADS } from './curated-2014.js';
 import { MILAN_2007_SQUADS, JUVENTUS_2006_SQUADS } from './curated-2007.js';
 import { BUNDESLIGA_1997_SQUADS } from './curated-1997.js';
+import { BARCELONA_2003_SQUADS } from './curated-2003.js';
+import { REAL_MADRID_2006_SQUADS } from './curated-2006.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -493,4 +495,6 @@ export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'liverpool-1995': ENGLAND_1996_SQUADS,
   'chelsea-1996': ENGLAND_1996_SQUADS,
   'barcelona-2014': BARCELONA_2014_SQUADS,
+  'barcelona-2003': BARCELONA_2003_SQUADS,
+  'real-madrid-2006': REAL_MADRID_2006_SQUADS,
 };

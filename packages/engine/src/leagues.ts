@@ -416,10 +416,72 @@ export const SPAIN_2014: LeagueSeed = {
   ],
 };
 
+/** La Liga, 2003–04 — the peak Galácticos, Ronaldinho's arriving Barça, and
+ *  Benítez's Valencia (the champions). Used by barcelona-2003. */
+export const SPAIN_2003: LeagueSeed = {
+  id: 'esp-2003',
+  name: 'La Liga',
+  season: '2003-07',
+  clubs: [
+    { id: 'real_madrid', name: 'Real Madrid', prestige: 90, strength: 88 },
+    { id: 'barcelona', name: 'Barcelona', prestige: 86, strength: 84 },
+    { id: 'valencia', name: 'Valencia', prestige: 76, strength: 84 },
+    { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 70, strength: 82 },
+    { id: 'real_sociedad', name: 'Real Sociedad', prestige: 64, strength: 79 },
+    { id: 'sevilla', name: 'Sevilla', prestige: 66, strength: 76 },
+    { id: 'villarreal', name: 'Villarreal', prestige: 60, strength: 76 },
+    { id: 'atletico', name: 'Atlético Madrid', prestige: 74, strength: 74 },
+    { id: 'betis', name: 'Real Betis', prestige: 60, strength: 74 },
+    { id: 'athletic_bilbao', name: 'Athletic Bilbao', prestige: 64, strength: 72 },
+    { id: 'celta', name: 'Celta Vigo', prestige: 56, strength: 72 },
+    { id: 'malaga', name: 'Málaga', prestige: 54, strength: 71 },
+    { id: 'zaragoza', name: 'Real Zaragoza', prestige: 58, strength: 70 },
+    { id: 'espanyol', name: 'Espanyol', prestige: 56, strength: 69 },
+    { id: 'mallorca', name: 'Mallorca', prestige: 54, strength: 69 },
+    { id: 'osasuna', name: 'Osasuna', prestige: 50, strength: 67 },
+    { id: 'racing', name: 'Racing Santander', prestige: 48, strength: 65 },
+    { id: 'valladolid', name: 'Real Valladolid', prestige: 48, strength: 64 },
+    { id: 'albacete', name: 'Albacete', prestige: 42, strength: 62 },
+    { id: 'murcia', name: 'Real Murcia', prestige: 42, strength: 61 },
+  ],
+};
+
+/** La Liga, 2006–07 — Capello's champion Real Madrid at the end of the galáctico
+ *  era, Ronaldinho's Barça, Sevilla's rise. Used by real-madrid-2006. */
+export const SPAIN_2006: LeagueSeed = {
+  id: 'esp-2006',
+  name: 'La Liga',
+  season: '2006-07',
+  clubs: [
+    { id: 'barcelona', name: 'Barcelona', prestige: 88, strength: 86 },
+    { id: 'real_madrid', name: 'Real Madrid', prestige: 88, strength: 84 },
+    { id: 'sevilla', name: 'Sevilla', prestige: 72, strength: 81 },
+    { id: 'valencia', name: 'Valencia', prestige: 74, strength: 78 },
+    { id: 'villarreal', name: 'Villarreal', prestige: 66, strength: 76 },
+    { id: 'atletico', name: 'Atlético Madrid', prestige: 74, strength: 75 },
+    { id: 'zaragoza', name: 'Real Zaragoza', prestige: 60, strength: 74 },
+    { id: 'osasuna', name: 'Osasuna', prestige: 54, strength: 73 },
+    { id: 'espanyol', name: 'Espanyol', prestige: 58, strength: 72 },
+    { id: 'getafe', name: 'Getafe', prestige: 50, strength: 71 },
+    { id: 'betis', name: 'Real Betis', prestige: 60, strength: 70 },
+    { id: 'athletic_bilbao', name: 'Athletic Bilbao', prestige: 64, strength: 70 },
+    { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 62, strength: 70 },
+    { id: 'recreativo', name: 'Recreativo Huelva', prestige: 44, strength: 68 },
+    { id: 'mallorca', name: 'Mallorca', prestige: 52, strength: 68 },
+    { id: 'levante', name: 'Levante', prestige: 46, strength: 66 },
+    { id: 'racing', name: 'Racing Santander', prestige: 48, strength: 66 },
+    { id: 'celta', name: 'Celta Vigo', prestige: 54, strength: 65 },
+    { id: 'real_sociedad', name: 'Real Sociedad', prestige: 58, strength: 64 },
+    { id: 'nastic', name: 'Gimnàstic Tarragona', prestige: 40, strength: 61 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'eng-1996': ENGLAND_1996,
   'esp-1': SPAIN_2000,
+  'esp-2003': SPAIN_2003,
+  'esp-2006': SPAIN_2006,
   'esp-2014': SPAIN_2014,
   'ita-1': SERIE_A_1998,
   'ita-1995': SERIE_A_1995,
@@ -504,6 +566,8 @@ export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
   'eng-2004': ENGLISH_POOL,
   'eng-2013': ENGLISH_POOL,
   'esp-1': SPANISH_POOL,
+  'esp-2003': SPANISH_POOL,
+  'esp-2006': SPANISH_POOL,
   'esp-2014': SPANISH_POOL,
   'ita-1': ITALIAN_POOL,
   'ita-1995': ITALIAN_POOL,

@@ -337,6 +337,30 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     domesticLeagueId: 'ita-b-2006',
   },
 
+  // ── La Liga (Spanish tier) ───────────────────────────────────────────────────
+  'barcelona-2003': {
+    id: 'barcelona-2003',
+    name: 'Barcelona — 2003: Pre-Messi Dawn',
+    startDate: '2003-07',
+    playerClub: 'barcelona',
+    mandate: 'Ronaldinho has arrived — turn the dawn into a dynasty with the golden generation before it fully blooms.',
+    boardPatience: 72,
+    boardExpectedFinish: 1,
+    clubs: ELITE_CLUBS,
+    domesticLeagueId: 'esp-2003',
+  },
+  'real-madrid-2006': {
+    id: 'real-madrid-2006',
+    name: 'Real Madrid — 2006: Post-Galáctico Rebuild',
+    startDate: '2006-07',
+    playerClub: 'real_madrid',
+    mandate: 'End the galáctico circus — rebuild a team that wins Spain and, at last, the Décima.',
+    boardPatience: 68,
+    boardExpectedFinish: 1,
+    clubs: ELITE_CLUBS,
+    domesticLeagueId: 'esp-2006',
+  },
+
   // ── La Liga 2014-15 ──────────────────────────────────────────────────────────
   'barcelona-2014': {
     id: 'barcelona-2014',

@@ -2015,6 +2015,114 @@ const BARCELONA_2014_PACK: ScriptedEvent[] = [
   },
 ];
 
+const BARCELONA_2003_PACK: ScriptedEvent[] = [
+  {
+    id: 'ronaldinho-dawn',
+    date: '2003-10',
+    requires: (s) => playerAt(s, 'cur_ronaldinho03', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:ronaldinho-dawn',
+      title: 'Ronaldinho arrives to lift a fallen giant',
+      description: 'Barça finished sixth last season and have not won the league in five years. The board have spent big on a smiling Brazilian to be the face of the revival. Build the whole project around Ronaldinho\'s joy now, or make him earn his place in a struggling side first?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'build-around', label: 'Hand him the keys — build everything around him', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_ronaldinho03', amount: 10 }, { kind: 'memory', tag: 'man-management', text: 'Unleashed Ronaldinho — the dawn of the revival, as reality (the 2004 second-half surge).' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'earn-it', label: 'Make him earn it in a struggling side', successProbability: 0.5, onSuccess: [{ kind: 'morale', playerId: 'cur_ronaldinho03', amount: 5 }], onFailure: [{ kind: 'agitation', playerId: 'cur_ronaldinho03', amount: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'man-management', text: 'Ronaldinho finds his own rhythm at the Camp Nou.' }],
+      memoryTags: ['man-management', 'cur_ronaldinho03'],
+    }),
+  },
+  {
+    id: 'quaresma-or-deco',
+    date: '2004-06',
+    requires: (s) => playerAt(s, 'cur_quaresma03', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:quaresma-or-deco',
+      title: 'A trickster\'s gift, or a proven brain',
+      description: 'Ricardo Quaresma is 20 and dazzling — flicks and trivelas that light up training — but raw and impatient for minutes. Porto will hand you the reigning Champions League midfielder Deco if you let the boy go. Cash in the potential for a finished article, or keep the wonderkid?',
+      interrupt: true, clubId: 'barcelona', category: 'transfer',
+      choices: [
+        { id: 'sell-for-deco', label: 'Trade Quaresma for Deco', successProbability: 0.65, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Cashed the raw gift for Deco — the engine of the title win, as reality.' }, { kind: 'transferOut', playerId: 'cur_quaresma03' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'keep-quaresma', label: 'Keep the wonderkid and develop him', successProbability: 0.4, onSuccess: [{ kind: 'ability', playerId: 'cur_quaresma03', amount: 4 }, { kind: 'memory', tag: 'development', text: 'Bet on Quaresma\'s gift against history\'s verdict.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_quaresma03', amount: 10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'The Quaresma question is left to solve itself.' }],
+      memoryTags: ['transfer', 'cur_quaresma03'],
+    }),
+  },
+  {
+    id: 'iniesta-breakout-03',
+    date: '2004-02',
+    requires: (s) => playerAt(s, 'cur_iniesta03', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:iniesta-breakout-03',
+      title: 'A shy boy from Fuentealbilla is ready',
+      description: 'The academy is buzzing about a slight, quiet 19-year-old who never loses the ball. The coaching staff are split: some see the finest midfielder La Masia has ever produced, others a lightweight who will be bullied in the Primera. Throw Iniesta in now, or protect him another year?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'promote-now', label: 'Give Iniesta his chance now', successProbability: 0.6, onSuccess: [{ kind: 'ability', playerId: 'cur_iniesta03', amount: 4 }, { kind: 'morale', playerId: 'cur_iniesta03', amount: 8 }, { kind: 'memory', tag: 'development', text: 'Blooded Iniesta early — a decade of genius begins, as reality.' }], onFailure: [{ kind: 'morale', playerId: 'cur_iniesta03', amount: -3 }] },
+        { id: 'protect', label: 'Protect him for another season', successProbability: 0.55, onSuccess: [{ kind: 'ability', playerId: 'cur_iniesta03', amount: 2 }], onFailure: [{ kind: 'agitation', playerId: 'cur_iniesta03', amount: 5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'development', text: 'Iniesta bides his time in the reserves.' }],
+      memoryTags: ['development', 'cur_iniesta03'],
+    }),
+  },
+];
+
+const REAL_MADRID_2006_PACK: ScriptedEvent[] = [
+  {
+    id: 'capello-vs-galacticos',
+    date: '2006-10',
+    requires: (s) => playerAt(s, 'cur_ronaldo06', 'real_madrid') && s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:capello-vs-galacticos',
+      title: 'The galáctico circus must end',
+      description: 'Three trophyless seasons have followed the era of signing a superstar every summer. The dressing room still runs on reputation, not sweat, and an overweight Ronaldo trains as he pleases. Impose iron discipline and win ugly, or keep the box office happy and hope the talent tells?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'iron-discipline', label: 'Impose discipline — results over glamour', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'man-management', text: 'Ended the circus — grind out the title, as reality (Capello 2007).' }, { kind: 'boardPatience', amount: 3 }], onFailure: [{ kind: 'agitation', playerId: 'cur_ronaldo06', amount: 8 }, { kind: 'boardPatience', amount: -4 }] },
+        { id: 'keep-glamour', label: 'Keep the galácticos happy', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'real_madrid', amount: 5 }], onFailure: [{ kind: 'boardPatience', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'man-management', text: 'The Bernabéu drifts between glamour and grit.' }],
+      memoryTags: ['man-management', 'cur_ronaldo06'],
+    }),
+  },
+  {
+    id: 'ronaldo-to-milan',
+    date: '2007-01',
+    requires: (s) => playerAt(s, 'cur_ronaldo06', 'real_madrid') && s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:ronaldo-to-milan',
+      title: 'Il Fenomeno wants out',
+      description: 'Ronaldo is out of shape, out of favour and Milan are on the phone with a January offer. The phenomenon can still win you a game from nothing on his day — but those days are rarer, and his presence undermines the discipline you preach. Cash in and move on, or gamble on one last flash of genius?',
+      interrupt: true, clubId: 'real_madrid', category: 'transfer',
+      choices: [
+        { id: 'sell-ronaldo', label: 'Sell him to Milan and move on', successProbability: 0.65, onSuccess: [{ kind: 'money', amount: 8 }, { kind: 'memory', tag: 'transfer', text: 'Let Ronaldo go — the rebuild breathes, as reality (Milan, Jan 2007).' }, { kind: 'transferOut', playerId: 'cur_ronaldo06' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'keep-ronaldo', label: 'Keep him for one last gamble', successProbability: 0.35, onSuccess: [{ kind: 'morale', playerId: 'cur_ronaldo06', amount: 8 }, { kind: 'ability', playerId: 'cur_ronaldo06', amount: 3 }, { kind: 'memory', tag: 'man-management', text: 'Bet on the phenomenon against history.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_ronaldo06', amount: 10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Ronaldo\'s future is left unresolved into the summer.' }],
+      memoryTags: ['transfer', 'cur_ronaldo06'],
+    }),
+  },
+  {
+    id: 'beckham-frozen-out',
+    date: '2007-01',
+    requires: (s) => playerAt(s, 'cur_beckham06', 'real_madrid') && s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:beckham-frozen-out',
+      title: 'Beckham has signed for LA',
+      description: 'David Beckham has announced a summer move to the Galaxy, and the easy call is to freeze out a player already halfway out the door. But he is your best crosser, a relentless professional, and the fans still adore him. Banish him to the stands on principle, or swallow your pride and reinstate him for the run-in?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'reinstate', label: 'Reinstate him — winning trumps pride', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_beckham06', amount: 10 }, { kind: 'memory', tag: 'man-management', text: 'Brought Beckham back in from the cold — decisive in the title, as reality.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'freeze-out', label: 'Freeze him out — he chose to leave', successProbability: 0.4, onSuccess: [{ kind: 'memory', tag: 'man-management', text: 'Held the line and banished Beckham.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_beckham06', amount: 8 }, { kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'man-management', text: 'Beckham drifts to the fringes before his exit.' }],
+      memoryTags: ['man-management', 'cur_beckham06'],
+    }),
+  },
+];
+
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
   'barcelona-2014': BARCELONA_2014_PACK,
@@ -2036,6 +2144,8 @@ const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'inter-1998': INTER_1998_PACK,
   'chelsea-2003': CHELSEA_2003_PACK,
   'arsenal-1996': ARSENAL_1996_PACK,
+  'barcelona-2003': BARCELONA_2003_PACK,
+  'real-madrid-2006': REAL_MADRID_2006_PACK,
 };
 
 function fireScriptedEvents(state: GameState): void {

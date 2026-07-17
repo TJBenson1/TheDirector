@@ -67,6 +67,7 @@ const STYLE_BY_NAME: Record<string, ManagerStyle> = {
   'Roy Evans': st('Passing, flair-friendly', 0.65, 0.55),
   'Ruud Gullit': st('Sexy football — expansive', 0.7, 0.55),
   'Luis Enrique': st('Vertical, intense possession', 0.85, 0.7),
+  'Frank Rijkaard': st('Fluid, expressive possession', 0.8, 0.7),
   'Jürgen Klopp': st('Heavy-metal pressing, youth', 0.55, 0.8),
   'Manuel Pellegrini': st('Attacking possession', 0.7, 0.45),
   'Brendan Rodgers': st('High-tempo possession', 0.75, 0.6),
@@ -101,6 +102,8 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
   'liverpool-1995': { name: 'Roy Evans', reputation: 68 },
   'chelsea-1996': { name: 'Ruud Gullit', reputation: 70 },
   'barcelona-2014': { name: 'Luis Enrique', reputation: 80 },
+  'barcelona-2003': { name: 'Frank Rijkaard', reputation: 74 },
+  'real-madrid-2006': { name: 'Fabio Capello', reputation: 84 },
 };
 
 /** A pool of coaches available to hire, each with the YEARS he was a plausible
