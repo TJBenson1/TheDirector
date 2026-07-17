@@ -63,7 +63,7 @@ const PORTO_2004: CuratedSeed[] = [
 
 // ── AS Monaco, 2003-04 (the CL finalists; a teenage Evra & Adebayor) ───────────
 const MONACO_2004: CuratedSeed[] = [
-  q('monaco', 'morientes_04', 'Fernando Morientes', 1976, 'Spain', ['ST'], 83, 85, 2006, 20, t(8, 6, 8, 7, 5, 8)),
+  q('monaco', 'givet_04', 'Gaël Givet', 1981, 'France', ['CB', 'LB'], 78, 83, 2007, 25, t(8, 5, 8, 7, 5, 8)),
   q('monaco', 'nonda_04', 'Shabani Nonda', 1977, 'DR Congo', ['ST'], 79, 82, 2006, 25, t(7, 6, 8, 7, 6, 8)),
   q('monaco', 'rothen_04', 'Jérôme Rothen', 1978, 'France', ['LW', 'LB'], 80, 82, 2006, 20, t(7, 6, 8, 7, 6, 8)),
   q('monaco', 'prso_04', 'Dado Pršo', 1974, 'Croatia', ['ST'], 78, 80, 2005, 20, t(8, 6, 8, 7, 5, 8)),
