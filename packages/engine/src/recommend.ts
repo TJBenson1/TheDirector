@@ -75,7 +75,19 @@ export interface SuggestOptions {
   maxPrice?: number;
   /** Bias toward easy-to-acquire options (bosman/unsettled/distressed). */
   favourAvailable?: boolean;
+  /**
+   * Prospect mode (§4, §16): surface the young talents with the most UPSIDE for a
+   * position — ranked by scouted POTENTIAL rather than current ability — so a
+   * teenage Kirkland or a raw Gareth Barry is listable, not buried beneath the
+   * established names. Restricts to players who are both young and yet to arrive.
+   */
+  prospects?: boolean;
 }
+
+/** The oldest a player can be to count as a "prospect" (§4). */
+const PROSPECT_MAX_AGE = 21;
+/** How much scouted upside (ceiling over current ability) a prospect must show. */
+const PROSPECT_MIN_UPSIDE = 5;
 
 /**
  * Suggest realistic targets for a position, ranked by ability with a boost for
@@ -116,8 +128,17 @@ export function suggestTargets(
     if (unraidable) continue;
     const report = scoutPlayer(state, state.playerClub, p.id, deterministicScoutRng(state, p.id), { observation: 0.5 });
 
+    // Prospect mode: only the young with real upside, ranked by scouted ceiling.
+    if (opts.prospects) {
+      if (ageOf(state, p) > PROSPECT_MAX_AGE) continue;
+      if (p.potentialCeiling - p.ability < PROSPECT_MIN_UPSIDE) continue;
+    }
+
     const availability = tags.length * (opts.favourAvailable ? 9 : 5) + (verdict.willing ? 4 : -6);
-    const score = p.ability + availability;
+    // Prospects rank by upside (scouted potential, fog-aware); senior targets by
+    // present ability. Availability nudges both so genuine opportunities float up.
+    const base = opts.prospects ? (report.potential.low + report.potential.high) / 2 : p.ability;
+    const score = base + availability;
     rows.push({
       score,
       s: {
