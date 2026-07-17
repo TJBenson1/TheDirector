@@ -18,6 +18,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
 import { EUROPE_1995_SQUADS } from './curated-europe-1995.js';
+import { ITA_DOMESTIC_1995_SQUADS } from './curated-ita-domestic-1995.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -489,5 +490,12 @@ for (const extra of [REAL_1995_EXTRA, BARCA_1995_EXTRA, BAYERN_1995_EXTRA, CHELS
 // European selling clubs (M12A rollout) — the 1995-96 foreign talent pipeline
 // (shared with milan-1995). All whole new clubs merged into the 1995 universe.
 for (const [club, seeds] of Object.entries(EUROPE_1995_SQUADS)) {
+  JUVENTUS_1995_SQUADS[club] = [...(JUVENTUS_1995_SQUADS[club] ?? []), ...seeds];
+}
+
+// Domestic mid-tier top-up of the 1995-96 Serie A (M12 shortlist supply) — real
+// squad players at the thin non-elite clubs so options lists read like a real
+// shortlist.
+for (const [club, seeds] of Object.entries(ITA_DOMESTIC_1995_SQUADS)) {
   JUVENTUS_1995_SQUADS[club] = [...(JUVENTUS_1995_SQUADS[club] ?? []), ...seeds];
 }
