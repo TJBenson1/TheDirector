@@ -11,6 +11,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { EUROPE_2001_SQUADS } from './curated-europe-2001.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -354,3 +355,10 @@ export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
   parma: [CHELSEA_TARGETS_2003[3]!],
   southampton: [CHELSEA_TARGETS_2003[4]!],
 };
+
+// European selling clubs (M12A rollout) — the turn-of-the-millennium talent
+// pipeline (Ajax, Feyenoord, Valencia, Deportivo, Lazio, Roma, Leverkusen,
+// Dortmund, Celtic, Lyon). All whole new clubs merged into the 2001 universe.
+for (const [club, seeds] of Object.entries(EUROPE_2001_SQUADS)) {
+  LIVERPOOL_2001_SQUADS[club] = [...(LIVERPOOL_2001_SQUADS[club] ?? []), ...seeds];
+}

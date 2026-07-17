@@ -111,6 +111,18 @@ const ERA_2001_CONTEXT: ClubSeed[] = [
   // Mourinho's Porto and Deschamps' Monaco — the 2003–04 finalists.
   { id: 'porto', name: 'FC Porto', prestige: 78 },
   { id: 'monaco', name: 'AS Monaco', prestige: 74 },
+  // European selling clubs (M12A rollout) — the turn-of-the-millennium pipeline.
+  { id: 'ajax', name: 'Ajax', prestige: 76 },
+  { id: 'psv', name: 'PSV Eindhoven', prestige: 74 },
+  { id: 'feyenoord', name: 'Feyenoord', prestige: 72 },
+  { id: 'valencia', name: 'Valencia', prestige: 82 },
+  { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 80 },
+  { id: 'lazio', name: 'Lazio', prestige: 80 },
+  { id: 'roma', name: 'AS Roma', prestige: 82 },
+  { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 80 },
+  { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
+  { id: 'celtic', name: 'Celtic', prestige: 72 },
+  { id: 'lyon', name: 'Olympique Lyonnais', prestige: 76 },
 ];
 
 // era-2003: the continental powers plus the Barça-counterfactual source clubs.
