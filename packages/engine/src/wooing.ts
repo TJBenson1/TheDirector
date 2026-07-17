@@ -12,6 +12,13 @@
 import type { ClubId, GameState, PlayerId } from './types.js';
 import { logEvent } from './eventLog.js';
 import { ERA_REALITY, eraForScenario, entryKey } from './ledger.js';
+import { transferWindowOrdinal } from './clock.js';
+
+/** How far ahead a reality move can be and still read as "in pole position" for
+ *  a player NOW — i.e. imminent enough to gazump. A move further out than this
+ *  has not been lined up yet: Nedvěd's 2001 Juventus move is not his "pole" in
+ *  1999. Two window-ordinals ≈ one year (this summer → next summer). */
+const POLE_HORIZON_ORDINALS = 2;
 
 /** How much one "speak to his people" nudges pursuit; decay per window. */
 const COURT_STEP = 30;
@@ -54,11 +61,13 @@ export function decayPursuit(state: GameState): void {
 export function poleMoveFor(state: GameState, playerId: PlayerId): { to: ClubId; fee: number; window: string } | null {
   const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   if (!pack) return null;
+  const nowOrd = transferWindowOrdinal(state.clock.date);
   let best: { window: string; to: ClubId; fee: number } | null = null;
   for (const e of pack.realTransferLedger) {
     if (e.playerId !== playerId) continue;
     if (e.to === state.playerClub) continue; // the user's own real signing, not a rival suitor
     if (state.meta.executedLedger.includes(entryKey(e))) continue; // his move already resolved
+    if (transferWindowOrdinal(e.window) - nowOrd > POLE_HORIZON_ORDINALS) continue; // too far off to be "in pole" now
     if (!best || e.window < best.window) best = { window: e.window, to: e.to, fee: e.fee };
   }
   return best ? { to: best.to, fee: best.fee, window: best.window } : null;

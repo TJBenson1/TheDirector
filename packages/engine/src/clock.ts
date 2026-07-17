@@ -54,6 +54,24 @@ export function formatYearMonth({ year, month }: ParsedYearMonth): YearMonth {
   return `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}`;
 }
 
+/**
+ * Ordinal identifying the transfer window a calendar month belongs to, so two
+ * months in the SAME real window compare equal. The sim models a summer window
+ * (opening around July) and a winter window (January), but the real ledger dates
+ * moves to their actual month — a late-summer transfer is `YYYY-08` or `YYYY-09`.
+ * Without this, a lexical `YYYY-MM` compare strands an August move outside the
+ * July summer window and defers it to January (e.g. Van der Sar → Juventus).
+ *
+ * Months Jun–Dec map to that year's SUMMER window; Jan–May map to that year's
+ * WINTER window. `year*2 + isSummer` then orders windows chronologically:
+ * winter(Y) < summer(Y) < winter(Y+1).
+ */
+export function transferWindowOrdinal(ym: YearMonth): number {
+  const { year, month } = parseYearMonth(ym);
+  const isSummer = month >= SEASON_START_CALENDAR_MONTH - 1 ? 1 : 0; // Jun onward = summer
+  return year * 2 + isSummer;
+}
+
 /** The next calendar month (rolls the year over from December). */
 export function nextMonth(ym: YearMonth): YearMonth {
   const { year, month } = parseYearMonth(ym);
