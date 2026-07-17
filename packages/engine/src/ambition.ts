@@ -236,9 +236,25 @@ const AMBITION_BUDGET_STRETCH = 1.6; // a statement buy stretches, doesn't inven
 const NEED_MIN = -1; // target must be at least (baseStrength + this) — improves the side
 const NEED_MAX = 6; // …but at most (baseStrength + this) — a plausible, not fantasy, target
 
+const CHURN_REF = 5; // real ledger moves in a ±1yr window that count as a "busy" market
+
 function overrideProbability(score: number): number {
   const over = Math.max(0, score - OVERRIDE_THRESHOLD) / 100;
   return Math.max(0, Math.min(OVERRIDE_MAX_PROB, over * OVERRIDE_PROB_SLOPE));
+}
+
+/** How many real ledger transfers execute within ±1 year of `year` — a proxy for
+ *  how busy the real market is right now, i.e. how much genuine AI activity an
+ *  override would be a minority of. Front-loaded per era, so it decays as the era's
+ *  real churn winds down. */
+function localLedgerChurn(state: GameState, year: number): number {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack) return 0;
+  let n = 0;
+  for (const e of pack.realTransferLedger) {
+    if (Math.abs(Number(e.window.slice(0, 4)) - year) <= 1) n++;
+  }
+  return n;
 }
 
 /** All players who are subjects of the era's real timeline (ledger moves, near-
@@ -317,14 +333,15 @@ export function runAmbitionOverrides(state: GameState, rng: Rng): void {
   eligible.sort((a, b) => b.score - a.score || (a.club.id < b.club.id ? -1 : 1));
 
   const top = eligible[0]!;
-  // One roll for the window, on the most-pressured club's score. The chance tapers
-  // as the era's real transfer churn winds down (later seasons): overrides are meant
-  // to be a MINORITY share of significant AI activity, and the reality ledger is
-  // front-loaded, so a flat rate would balloon the share once reality goes quiet.
-  // The taper keeps overrides a bounded share across a full-length career (the
-  // reality-ambition-overrides ≤20% guard) instead of only while it is cut short.
-  const elapsed = year - state.meta.startYear;
-  const activityTaper = Math.max(0.35, 1 - elapsed * 0.08); // 1.0 at kickoff → 0.35 by ~year 8
+  // One roll for the window, on the most-pressured club's score, scaled by the LOCAL
+  // density of real transfer churn. Overrides are meant to be a bounded MINORITY of
+  // significant AI activity, but that activity (the real ledger, the override's
+  // denominator) is front-loaded per era — so a flat rate balloons the SHARE once
+  // reality goes quiet. Tapering by how busy the real market is right now keeps the
+  // share bounded over a full career in EVERY era (rich eras keep overrides flowing;
+  // a sparse tail thins them), rather than only while the career is cut short by an
+  // early sacking. Era-fair, so it doesn't over-suppress a rich-ledger scenario.
+  const activityTaper = Math.max(0.15, Math.min(1, localLedgerChurn(state, year) / CHURN_REF));
   if (!r.chance(overrideProbability(top.score) * activityTaper)) return;
 
   // Give the override to the highest-pressure club that actually has a plausible
