@@ -43,6 +43,40 @@ describe('board & job security (internal-friction §1)', () => {
     expect(dismissed).toBe(true);
   });
 
+  const rec = (points: number) => ({
+    played: 38, won: Math.floor(points / 3), drawn: 0, lost: 38 - Math.floor(points / 3),
+    goalsFor: points, goalsAgainst: 76 - points, points,
+  });
+  const placeUser = (state: GameState, rank: number) => {
+    const lg = state.leagues[state.clubs[state.playerClub]!.leagueId!]!;
+    const others = lg.clubIds.filter((id) => id !== state.playerClub);
+    for (const id of lg.clubIds) lg.standings[id] = rec(20);
+    for (let i = 0; i < rank - 1; i++) lg.standings[others[i]!] = rec(90 - i * 2); // clubs above the user
+    lg.standings[state.playerClub] = rec(90 - (rank - 1) * 2 - 1); // the user, just below them
+    lg.titleHistory.push({ seasonYear: 1999 + lg.titleHistory.length, championId: others[0]!, points: 90 });
+    return lg;
+  };
+
+  it('grace band: finishing one place short of the target does not spiral to the sack', () => {
+    const state = cloneState(createNewGame({ seed: 'grace' }));
+    state.board.expectedFinish = 1;
+    state.board.patience = 50;
+    for (let i = 0; i < 8; i++) { placeUser(state, 2); reviewBoard(state, Rng.fromSeed(`g:${i}`)); } // finish 2nd, expected 1
+    expect(state.board.dismissed).toBe(false); // a perennial runner-up keeps the job
+    expect(state.board.warnings).toBe(0);
+  });
+
+  it('the board recalibrates its expectation toward a sustained finishing level', () => {
+    const state = cloneState(createNewGame({ seed: 'recalibrate' }));
+    state.board.expectedFinish = 1;
+    state.board.patience = 60;
+    for (let i = 0; i < 6 && !state.board.dismissed; i++) { placeUser(state, 6); reviewBoard(state, Rng.fromSeed(`r:${i}`)); }
+    // The Director's drifting bar relaxes; the scenario baseline (read by the manager
+    // review) stays put.
+    expect(state.board.driftedExpected).toBeGreaterThan(1);
+    expect(state.board.expectedFinish).toBe(1);
+  });
+
   it('a dismissed career does not advance', () => {
     const state = cloneState(createNewGame({ seed: 'sacked' }));
     state.board.dismissed = true;

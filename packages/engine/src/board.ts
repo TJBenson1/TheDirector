@@ -33,16 +33,34 @@ export function reviewBoard(state: GameState, rng: Rng): void {
   if (pos < 0) return;
   const finish = pos + 1;
   const wonTitle = league.titleHistory[league.titleHistory.length - 1]!.championId === state.playerClub;
-  const expected = state.board.expectedFinish;
+  // The Director judges against a bar that drifts toward reality over a career; the
+  // manager-standing review keeps reading the immutable scenario baseline, so this
+  // recalibration never bleeds into that (calibrated) system.
+  const expected = state.board.driftedExpected ?? state.board.expectedFinish;
 
+  // Patience swing for the season. A grace band keeps a near-miss from spiralling
+  // into the sack — finishing one place short of the target (2nd for a title club)
+  // is treated as a fair season, not a failure — while a genuine collapse still
+  // erodes the board's faith. The slope is softened from the old -9/place so a
+  // single bad year is survivable and a run of them, not one result, is what sacks
+  // you (calibrated in board.test / the player-sackable harness target).
+  const miss = finish - expected; // ≤0 met/beat the target; >0 places short
   let delta: number;
-  if (wonTitle) delta = 10;
-  else if (finish <= expected) delta = 4;
-  else delta = -(finish - expected) * 9;
+  if (wonTitle) delta = 12;
+  else if (miss <= 0) delta = 6; // met or beat expectation
+  else if (miss === 1) delta = 0; // a single place short — no erosion (grace)
+  else delta = -5 * (miss - 1); // real shortfall: 3rd for a title club = -5, 6th = -20
 
   state.board.patience = Math.max(0, Math.min(100, state.board.patience + delta));
+  // The board's faith mean-reverts a little each summer toward a mid-level baseline:
+  // banked goodwill fades AND a run of grievance is not a one-way ratchet, so a club
+  // that settles at a new (lower) level stops sliding inevitably toward the sack —
+  // only real, sustained collapse erodes past the point of no return. This is what
+  // breaks the "do nothing → guaranteed dismissal" spiral while keeping the job a
+  // genuine risk (player-sackable harness target: >0, ≤60%).
+  state.board.patience = Math.max(0, Math.min(100, Math.round(state.board.patience + (40 - state.board.patience) * 0.2)));
 
-  if (delta < 0 && state.board.patience < 35) {
+  if (miss >= 2 && state.board.patience < 25) {
     state.board.warnings += 1;
     logEvent(state, {
       category: 'system',
@@ -52,9 +70,9 @@ export function reviewBoard(state: GameState, rng: Rng): void {
     });
     appendMemory(state, 'board', `Warning after a ${finish}${ordinal(finish)}-place finish.`);
 
-    // Dismissal: sustained failure. A little variance keeps it from being a
-    // deterministic cliff, but the job is genuinely at risk.
-    if (state.board.warnings >= 2 && state.board.patience < 22 && rng.chance(0.85)) {
+    // Dismissal: sustained, deep failure. Probabilistic over several seasons in the
+    // danger zone (the board keeps some faith), not a one-season cliff.
+    if (state.board.warnings >= 2 && state.board.patience < 12 && rng.chance(0.6)) {
       state.board.dismissed = true;
       logEvent(state, {
         category: 'system',
@@ -63,8 +81,23 @@ export function reviewBoard(state: GameState, rng: Rng): void {
         data: { finish },
       });
     }
-  } else if (delta > 0 && state.board.patience > 55) {
+  } else if (miss <= 0 && state.board.patience > 45) {
     state.board.warnings = Math.max(0, state.board.warnings - 1);
+  }
+
+  // The board recalibrates its ambition toward the club's actual level — a slow,
+  // capped drift (one place per season). A settled mid-table reality resets the bar
+  // so you are judged against something achievable rather than a frozen dream; a
+  // sudden collapse still misses badly for several seasons before the bar catches up.
+  // Overachievement raises expectations again.
+  if (finish > expected + 1) {
+    const gap = finish - expected;
+    const step = gap >= 6 ? 3 : gap >= 4 ? 2 : 1; // catch up faster the sharper the collapse
+    state.board.driftedExpected = Math.min(17, expected + step); // at worst, "just stay up"
+  } else if (finish < expected) {
+    state.board.driftedExpected = Math.max(1, expected - 1);
+  } else {
+    state.board.driftedExpected = expected; // hold
   }
 }
 

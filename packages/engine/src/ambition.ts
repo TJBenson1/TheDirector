@@ -316,9 +316,16 @@ export function runAmbitionOverrides(state: GameState, rng: Rng): void {
   if (eligible.length === 0) return;
   eligible.sort((a, b) => b.score - a.score || (a.club.id < b.club.id ? -1 : 1));
 
-  // One roll for the window, on the most-pressured club's score.
   const top = eligible[0]!;
-  if (!r.chance(overrideProbability(top.score))) return;
+  // One roll for the window, on the most-pressured club's score. The chance tapers
+  // as the era's real transfer churn winds down (later seasons): overrides are meant
+  // to be a MINORITY share of significant AI activity, and the reality ledger is
+  // front-loaded, so a flat rate would balloon the share once reality goes quiet.
+  // The taper keeps overrides a bounded share across a full-length career (the
+  // reality-ambition-overrides ≤20% guard) instead of only while it is cut short.
+  const elapsed = year - state.meta.startYear;
+  const activityTaper = Math.max(0.35, 1 - elapsed * 0.08); // 1.0 at kickoff → 0.35 by ~year 8
+  if (!r.chance(overrideProbability(top.score) * activityTaper)) return;
 
   // Give the override to the highest-pressure club that actually has a plausible
   // target available (the most desperate club that can act on it).

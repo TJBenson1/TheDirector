@@ -474,8 +474,13 @@ export interface Consequence {
 export interface BoardState {
   mandate: string;
   patience: number; // 0..100; sustained failure erodes it
-  /** League position the board expects (1 = title). Missing it costs patience. */
+  /** League position the board expects (1 = title). Missing it costs patience. The
+   *  scenario baseline — immutable; the manager-standing review reads this. */
   expectedFinish: number;
+  /** The Director's OWN expectation, which drifts toward the club's actual level
+   *  over a career (board.ts). Defaults to `expectedFinish`; only the patience
+   *  review uses it, so the manager review stays anchored to the baseline. */
+  driftedExpected?: number;
   /** Formal warnings issued after poor seasons. */
   warnings: number;
   /** True once the player has been dismissed — the career is over. */
