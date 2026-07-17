@@ -12,6 +12,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
 import { EUROPE_2013_SQUADS } from './curated-europe-2013.js';
+import { ENG_DOMESTIC_2013_SQUADS } from './curated-eng-domestic-2013.js';
 
 type Trait = PlayerState['personality'];
 
@@ -343,5 +344,10 @@ export const MAN_UTD_2013_SQUADS: Record<string, CuratedSeed[]> = {
 // by CONCATENATION so new clubs are added and the pack's existing thin sellers
 // (Ajax, Benfica, Roma, Valencia) are augmented rather than overwritten.
 for (const [club, seeds] of Object.entries(EUROPE_2013_SQUADS)) {
+  MAN_UTD_2013_SQUADS[club] = [...(MAN_UTD_2013_SQUADS[club] ?? []), ...seeds];
+}
+// Domestic mid-tier (M12 shortlist supply): real 2013-14 squad players at the
+// non-elite PL clubs, so options lists read like a real shortlist.
+for (const [club, seeds] of Object.entries(ENG_DOMESTIC_2013_SQUADS)) {
   MAN_UTD_2013_SQUADS[club] = [...(MAN_UTD_2013_SQUADS[club] ?? []), ...seeds];
 }
