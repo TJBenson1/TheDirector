@@ -12,6 +12,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
 import { EUROPE_2001_SQUADS } from './curated-europe-2001.js';
+import { ENG_DOMESTIC_2001_SQUADS } from './curated-eng-domestic-2001.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -360,5 +361,10 @@ export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
 // pipeline (Ajax, Feyenoord, Valencia, Deportivo, Lazio, Roma, Leverkusen,
 // Dortmund, Celtic, Lyon). All whole new clubs merged into the 2001 universe.
 for (const [club, seeds] of Object.entries(EUROPE_2001_SQUADS)) {
+  LIVERPOOL_2001_SQUADS[club] = [...(LIVERPOOL_2001_SQUADS[club] ?? []), ...seeds];
+}
+// Domestic mid-tier (M12 shortlist supply): real 2001-02 squad players at the
+// non-elite PL clubs, so options lists read like a real shortlist.
+for (const [club, seeds] of Object.entries(ENG_DOMESTIC_2001_SQUADS)) {
   LIVERPOOL_2001_SQUADS[club] = [...(LIVERPOOL_2001_SQUADS[club] ?? []), ...seeds];
 }
