@@ -196,6 +196,11 @@ const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
   { playerId: 'cur_sneijder', from: 'real_madrid', to: 'inter', window: '2009-08', fee: 15_000_000, enabledBy: 'cr7-real-2009' },
   // United reinvested some of the Ronaldo money on depth — probably, not surely.
   { playerId: 'cur_valencia_w', from: 'wigan', to: 'man_utd', window: '2009-06', fee: 16_000_000, id: 'valencia-utd-2009', enabledBy: 'cr7-real-2009', cancelChance: 0.5 },
+  // Gap-sweep: Van Nistelrooy's 2001 arrival and his 2006 move to Madrid. (Stam's
+  // exit is intentionally NOT here — it is already the `stam-exit` scripted event,
+  // a user choice; a ledger entry would pre-empt and skip it.)
+  { playerId: 'cur_ruud', from: 'psv', to: 'man_utd', window: '2001-07', fee: 19_000_000, id: 'ruud-utd-2001' },
+  { playerId: 'cur_ruud', from: 'man_utd', to: 'real_madrid', window: '2006-07', fee: 14_000_000 },
 ];
 
 /** Real injuries of the era — fire only if the player is at his real club. */
@@ -228,6 +233,14 @@ const LEDGER_2013_2016: RealTransferLedgerEntry[] = [
   { playerId: 'cur_dimaria', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000 },
   { playerId: 'cur_lukeshaw', from: 'southampton', to: 'man_utd', window: '2014-06', fee: 30_000_000 },
   { playerId: 'cur_lallana', from: 'southampton', to: 'liverpool', window: '2014-07', fee: 25_000_000 },
+  // Gap-sweep: United's marquee post-2013 business (Mata, a free Zlatan, the record
+  // Pogba, Lukaku; Rooney home to Everton) and Spurs' Walker sale to City.
+  { playerId: 'cur_mata', from: 'chelsea', to: 'man_utd', window: '2014-01', fee: 37_000_000 },
+  { playerId: 'cur_ibrahimovic', from: 'psg', to: 'man_utd', window: '2016-07', fee: 0 },
+  { playerId: 'cur_pogba', from: 'juventus', to: 'man_utd', window: '2016-08', fee: 89_000_000 },
+  { playerId: 'cur_lukaku', from: 'everton', to: 'man_utd', window: '2017-07', fee: 75_000_000 },
+  { playerId: 'cur_rooney', from: 'man_utd', to: 'everton', window: '2017-07', fee: 0 },
+  { playerId: 'cur_kwalker', from: 'spurs', to: 'man_city', window: '2017-07', fee: 50_000_000 },
 ];
 
 /** Real 2013–14 injuries — fire only if the player is at his real club. */
@@ -321,6 +334,9 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   { playerId: 'cur_crespo03', from: 'inter', to: 'chelsea', window: '2003-07', fee: 16_800_000, id: 'crespo-chelsea-2003', enabledBy: 'abramovich' },
   { playerId: 'cur_mutu03', from: 'parma', to: 'chelsea', window: '2003-07', fee: 15_800_000, id: 'mutu-chelsea-2003', enabledBy: 'abramovich' },
   { playerId: 'cur_bridge03', from: 'southampton', to: 'chelsea', window: '2003-07', fee: 7_000_000, id: 'bridge-chelsea-2003', enabledBy: 'abramovich' },
+  // Gap-sweep: Liverpool's real exits in the era — Fowler to Leeds, Owen to Madrid.
+  { playerId: 'cur_fowler01', from: 'liverpool', to: 'leeds', window: '2001-08', fee: 11_000_000 },
+  { playerId: 'cur_owen01', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 8_000_000 },
 ];
 
 /**
@@ -488,6 +504,13 @@ const LEDGER_2003_2011: RealTransferLedgerEntry[] = [
   { playerId: 'cur_ibrahimovic_i', from: 'inter', to: 'barcelona', window: '2009-07', fee: 46_000_000, id: 'ibra-barca-2009' },
   { playerId: 'cur_etoo', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000, id: 'etoo-inter-2009', enabledBy: 'ibra-barca-2009' },
   { playerId: 'cur_villa_v', from: 'valencia', to: 'barcelona', window: '2010-07', fee: 40_000_000, id: 'villa-barca-2010' },
+  // Gap-sweep: Chelsea's own post-2003 Mourinho spine for the chelsea-2003 world —
+  // Carvalho, a free Ballack, Shevchenko in; Verón & Duff out.
+  { playerId: 'cur_carvalho_p', from: 'porto', to: 'chelsea', window: '2004-07', fee: 20_000_000 },
+  { playerId: 'cur_ballack_b', from: 'bayern', to: 'chelsea', window: '2006-07', fee: 0 },
+  { playerId: 'cur_shevchenko_m', from: 'milan', to: 'chelsea', window: '2006-07', fee: 30_000_000 },
+  { playerId: 'cur_veron_c3', from: 'chelsea', to: 'inter', window: '2004-08', fee: 0 },
+  { playerId: 'cur_duff_c', from: 'chelsea', to: 'newcastle', window: '2006-07', fee: 5_000_000 },
 ];
 
 /** Real 2003-era injuries — fire only if the player is at his real club. */
@@ -514,6 +537,8 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
   { playerId: 'cur_anelka_a96', from: 'arsenal', to: 'real_madrid', window: '1999-07', fee: 22_500_000, id: 'anelka-real-1999' },
   { playerId: 'cur_figo_b96', from: 'barcelona', to: 'real_madrid', window: '2000-07', fee: 37_000_000, id: 'figo-real-2000' },
   { playerId: 'cur_zidane_j96', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 46_000_000, id: 'zidane-real-2001' },
+  // Gap-sweep: Petit's 1997 arrival for the arsenal-1996 world.
+  { playerId: 'cur_petit_96', from: 'monaco', to: 'arsenal', window: '1997-07', fee: 3_500_000 },
 ];
 
 /**
@@ -549,6 +574,8 @@ const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
   // The 2009 Ibrahimović–Eto'o swap, both halves (Ibra was Inter's striker in 2008-09).
   { playerId: 'cur_ibrahimovic_e8', from: 'inter', to: 'barcelona', window: '2009-07', fee: 46_000_000, id: 'ibra-barca-2009' },
   { playerId: 'cur_etoo_e8', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000, id: 'etoo-inter-2009', enabledBy: 'ibra-barca-2009' },
+  // Gap-sweep: Agüero's statement arrival at City (2011).
+  { playerId: 'cur_aguero_08', from: 'atletico', to: 'man_city', window: '2011-07', fee: 38_000_000 },
 ];
 
 /**
@@ -592,6 +619,10 @@ const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
   { playerId: 'cur_bale_10', from: 'spurs', to: 'real_madrid', window: '2013-09', fee: 85_000_000, id: 'bale-real-2013' },
   { playerId: 'cur_kroos_2010', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
   { playerId: 'cur_di_maria_rm10', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000, id: 'dimaria-utd-2014' },
+  // Gap-sweep: Liverpool's rebuild intake — Henderson, Coutinho, Sturridge.
+  { playerId: 'cur_henderson_su10', from: 'sunderland', to: 'liverpool', window: '2011-07', fee: 16_000_000 },
+  { playerId: 'cur_coutinho_in10', from: 'inter', to: 'liverpool', window: '2013-01', fee: 8_500_000 },
+  { playerId: 'cur_sturridge_ch10', from: 'chelsea', to: 'liverpool', window: '2013-01', fee: 12_000_000 },
 ];
 
 /**
@@ -628,6 +659,8 @@ const LEDGER_BUNDESLIGA_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_torres_lv10', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
   { playerId: 'cur_di_maria_rm10', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000, id: 'dimaria-utd-2014' },
   { playerId: 'cur_suarez_lv10', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 75_000_000, id: 'suarez-barca-2014' },
+  // Gap-sweep: Neuer's move from Schalke to Bayern (2011).
+  { playerId: 'cur_neuer_sc10', from: 'schalke', to: 'bayern', window: '2011-07', fee: 22_000_000 },
 ];
 
 /**
@@ -700,6 +733,8 @@ const LEDGER_LA_LIGA_2006: RealTransferLedgerEntry[] = [
   // ── Fernando Torres's move that built Liverpool's spine ──
   { playerId: 'cur_torres_a6', from: 'atletico', to: 'liverpool', window: '2007-07', fee: 26_500_000, id: 'torres-liverpool-2007' },
   { playerId: 'cur_mascherano_l6', from: 'liverpool', to: 'barcelona', window: '2010-08', fee: 24_000_000, id: 'masche-barca-2010' },
+  // Gap-sweep: Benzema's arrival at Madrid (2009).
+  { playerId: 'cur_benzema_07', from: 'lyon', to: 'real_madrid', window: '2009-07', fee: 30_000_000 },
 ];
 
 const LEDGER_LA_LIGA_2003: RealTransferLedgerEntry[] = [
@@ -716,6 +751,10 @@ const LEDGER_LA_LIGA_2003: RealTransferLedgerEntry[] = [
   { playerId: 'cur_shevchenko_m3', from: 'milan', to: 'chelsea', window: '2006-07', fee: 43_800_000, id: 'sheva-chelsea-2006' },
   { playerId: 'cur_carvalho_p3', from: 'porto', to: 'chelsea', window: '2004-07', fee: 30_000_000, id: 'carvalho-chelsea-2004' },
   { playerId: 'cur_fernando_torres_a3', from: 'atletico', to: 'liverpool', window: '2007-07', fee: 26_500_000, id: 'torres-liverpool-2007' },
+  // Gap-sweep: Barça's own era business — a declining Ronaldinho sold to Milan, and
+  // David Villa arriving (the MSN forerunner).
+  { playerId: 'cur_ronaldinho_b3', from: 'barcelona', to: 'milan', window: '2008-07', fee: 21_000_000 },
+  { playerId: 'cur_villa_za03', from: 'zaragoza', to: 'barcelona', window: '2010-07', fee: 40_000_000 },
 ];
 
 /**
@@ -776,6 +815,8 @@ const LEDGER_2007_2013: RealTransferLedgerEntry[] = [
   { playerId: 'cur_torres_07', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
   // ── Higuaín cashed in as Madrid reload ──
   { playerId: 'cur_higuain_07', from: 'real_madrid', to: 'napoli', window: '2013-07', fee: 39_000_000, id: 'higuain-napoli-2013' },
+  // Gap-sweep: Robinho's move to Milan (2010) for the milan-2007 world.
+  { playerId: 'cur_robinho_07', from: 'real_madrid', to: 'milan', window: '2010-08', fee: 18_000_000 },
 ];
 
 /**
@@ -808,6 +849,8 @@ const LEDGER_SERIE_A_2004: RealTransferLedgerEntry[] = [
   // ── Torres's move that built Liverpool's spine ──
   { playerId: 'cur_torres_a04', from: 'atletico', to: 'liverpool', window: '2007-07', fee: 26_500_000, id: 'torres-liverpool-2007' },
   { playerId: 'cur_robben_04', from: 'chelsea', to: 'real_madrid', window: '2007-08', fee: 35_000_000, id: 'robben-real-2007' },
+  // Gap-sweep: Figo's free move from Madrid to Inter (2005).
+  { playerId: 'cur_figo_04', from: 'real_madrid', to: 'inter', window: '2005-07', fee: 0 },
 ];
 
 /** Pato's knee — the wonderkid whose body betrayed him — and the ageing champions'
