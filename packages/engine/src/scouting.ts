@@ -77,7 +77,17 @@ export function scoutPlayer(
   const reach = reachMultiplier(state, scoutClubId, player);
 
   const r = rng.fork(`scout:${scoutClubId}:${playerId}`);
-  const halfWidth = Math.max(2, Math.round(BASE_HALF_WIDTH * fog * reach * (1 - 0.35 * observation)));
+  // How KNOWN the player is. An established pro is a read you can trust to a point or
+  // two; a teenager who has barely played is a genuine gamble — on both his current
+  // level and his ceiling. So the fog narrows sharply with age/establishment.
+  const age = Number(state.clock.date.slice(0, 4)) - player.birthYear;
+  const establishment =
+    age <= 18 ? 1.0 :
+    age <= 21 ? 0.78 :
+    age <= 24 ? 0.58 :
+    age <= 28 ? 0.42 :
+    0.36;
+  const halfWidth = Math.max(2, Math.round(BASE_HALF_WIDTH * fog * reach * (1 - 0.35 * observation) * establishment));
 
   // Centre within ±halfWidth/2 of truth so the midpoint isn't a giveaway, but
   // the true value is still contained in the range.

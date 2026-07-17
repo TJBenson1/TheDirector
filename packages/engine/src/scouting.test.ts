@@ -30,11 +30,11 @@ describe('fog-of-war scouting (§7)', () => {
 
   it('sees own-league players more sharply than exotic ones', () => {
     const state = createNewGame({ seed: 'reach' });
-    // A domestic (eng-1) player vs a foreign context-club player.
-    const domestic = Object.values(state.players).find((p) => p.club === 'leeds')!;
-    const exotic = Object.values(state.players).find((p) => p.club === 'real_madrid')!;
-    const rHome = scoutPlayer(state, 'man_utd', domestic.id, Rng.fromSeed('a'));
-    const rAway = scoutPlayer(state, 'man_utd', exotic.id, Rng.fromSeed('a'));
+    // Same player, two vantage points — so reach is isolated from age/establishment:
+    // a same-league scout reads him sharply, a foreign scout only fuzzily.
+    const target = Object.values(state.players).find((p) => p.club === 'leeds')!;
+    const rHome = scoutPlayer(state, 'man_utd', target.id, Rng.fromSeed('a')); // eng-1 → eng-1
+    const rAway = scoutPlayer(state, 'real_madrid', target.id, Rng.fromSeed('a')); // esp-1 → eng-1
     const width = (x: { ability: { low: number; high: number } }) => x.ability.high - x.ability.low;
     expect(width(rHome)).toBeLessThan(width(rAway));
   });
