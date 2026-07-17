@@ -20,7 +20,9 @@ import type {
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { parseYearMonth } from './clock.js';
-import { SECOND_TIER_CLUB } from './leagues.js';
+import { SECOND_TIER_CLUB, LEAGUES } from './leagues.js';
+import type { LeagueClubSeed } from './leagues.js';
+import { getScenario } from './scenarios.js';
 import {
   generateSquad,
   deriveRawStrength,
@@ -335,6 +337,110 @@ export function applyPromotionRelegation(state: GameState, league: LeagueState, 
   });
 }
 
+/** Bring a top-flight seed club into the simulated division on an in-place
+ *  promotion: re-attach it if it already exists (a context club), else instantiate
+ *  it with a fresh procedural squad. Mirrors `promoteClub` but works from a league
+ *  seed (prestige/strength) rather than the reservoir pool. */
+function attachTopFlightClub(state: GameState, seed: LeagueClubSeed, leagueId: string, year: number, rng: Rng): void {
+  const existing = state.clubs[seed.id];
+  if (existing) {
+    existing.leagueId = leagueId;
+    existing.relegationThreatened = false;
+    if (existing.squad.length === 0) {
+      const clubRng = rng.fork(`attach:${seed.id}`);
+      for (const p of generateSquad(existing.id, leagueId, existing.baseStrength || seed.strength, year, clubRng)) {
+        state.players[p.id] = p;
+        existing.squad.push(p.id);
+      }
+      existing.squadStrengthAnchor = deriveRawStrength(clubSquadPlayers(state, existing.id));
+    }
+    recomputeClubStrength(state, seed.id);
+    return;
+  }
+  const clubRng = rng.fork(`attach:${seed.id}`);
+  const club: ClubState = {
+    id: seed.id,
+    name: seed.name,
+    tier: 1,
+    prestige: seed.prestige,
+    squad: [],
+    strength: seed.strength,
+    baseStrength: seed.strength,
+    squadStrengthAnchor: 0,
+    form: 0,
+    leagueId,
+    finances: { ownership: 'sustainable', transferBudget: 0, wageBudget: 0, wageBill: 0 },
+    pendingCounterPunch: 0,
+    grudge: 0,
+    financialHealth: 'healthy',
+    relegationThreatened: false,
+  };
+  state.clubs[club.id] = club;
+  for (const p of generateSquad(club.id, leagueId, club.baseStrength, year, clubRng)) {
+    state.players[p.id] = p;
+    club.squad.push(p.id);
+  }
+  club.squadStrengthAnchor = deriveRawStrength(clubSquadPlayers(state, club.id));
+  recomputeClubStrength(state, club.id);
+  club.finances = initialFinances(club.prestige, year, 'sustainable', computeWageBill(state, club.id));
+}
+
+/**
+ * In-place promotion of the player's OWN club (juventus-2006's Serie B → Serie A).
+ * If the player's club finished within `maxPosition`, the simulated division is
+ * transformed one level up: the top-flight seed's clubs come in around it, the
+ * beaten second-tier sides drop to the reservoir, and the player continues the
+ * career in the higher division. Returns true if the promotion fired (so the
+ * caller skips the generic pool swap). Runs on a forked stream; only ever active
+ * in a second-tier start, so calibrated top-flight scenarios are untouched.
+ */
+export function applyInPlacePromotion(
+  state: GameState,
+  league: LeagueState,
+  promo: { leagueId: string; maxPosition: number },
+  rng: Rng,
+): boolean {
+  const topSeed = LEAGUES[promo.leagueId];
+  if (!topSeed) return false;
+  if (!league.clubIds.includes(state.playerClub)) return false;
+  const pos = standingsOrder(league).indexOf(state.playerClub) + 1;
+  if (pos < 1 || pos > promo.maxPosition) return false;
+
+  const year = parseYearMonth(state.clock.date).year;
+  const seedIds = topSeed.clubs.map((c) => c.id).filter((id) => id !== state.playerClub);
+  const keepCount = Math.max(0, topSeed.clubs.length - 1); // leave room for the player's club
+  const memberSeedIds = seedIds.slice(0, keepCount);
+  const overflowSeedIds = seedIds.slice(keepCount);
+  const newMembers = [state.playerClub, ...memberSeedIds];
+  const newSet = new Set(newMembers);
+
+  for (const seed of topSeed.clubs) {
+    if (!newSet.has(seed.id) || seed.id === state.playerClub) continue;
+    attachTopFlightClub(state, seed, league.id, year, rng.fork(`top:${seed.id}`));
+  }
+
+  const dropped = league.clubIds.filter((id) => id !== state.playerClub && !newSet.has(id));
+  for (const id of dropped) {
+    const c = state.clubs[id];
+    if (c) {
+      c.leagueId = null;
+      c.relegationThreatened = true;
+    }
+  }
+
+  league.name = topSeed.name; // the division now IS the top flight
+  league.clubIds = newMembers;
+  league.reservoir = [...new Set([...(league.reservoir ?? []), ...dropped, ...overflowSeedIds])];
+
+  logEvent(state, {
+    category: 'match',
+    code: 'league.promoted-in-place',
+    message: `${state.clubs[state.playerClub]?.name ?? state.playerClub} promoted to ${topSeed.name} (finished ${pos})`,
+    data: { leagueId: league.id, into: promo.leagueId, position: pos },
+  });
+  return true;
+}
+
 /**
  * Advance every simulated league by one calendar month. Called from
  * `advanceWindow`'s per-month hook. Handles the season boundary: crown at June,
@@ -356,7 +462,19 @@ export function stepLeagueMonth(state: GameState, rng: Rng): void {
       // & relegation happen HERE — after the old table was read/crowned, before
       // the new one is built — on a forked stream so the match RNG is untouched.
       if (league.seasonYear !== owningSeasonYear) {
-        applyPromotionRelegation(state, league, leagueRng.fork('promrel'));
+        // A second-tier start (Juventus in Serie B) can promote the player's own
+        // club straight up, transforming the division in place; otherwise the
+        // generic bottom-3/top-3 pool swap keeps the membership churning. The
+        // in-place path only exists for a scenario with a `promotion` config while
+        // the league still wears its second-tier name, so calibrated top-flight
+        // scenarios take the identical generic path (bit-for-bit).
+        const scenario = getScenario(state.meta.scenarioId);
+        const promo = scenario.promotion;
+        let promoted = false;
+        if (promo && league.clubIds.includes(state.playerClub) && league.name === LEAGUES[scenario.domesticLeagueId]?.name) {
+          promoted = applyInPlacePromotion(state, league, promo, leagueRng.fork('inplace'));
+        }
+        if (!promoted) applyPromotionRelegation(state, league, leagueRng.fork('promrel'));
         initLeagueSeason(league, owningSeasonYear);
       }
       const target = Math.round((seasonRounds(league) * idx) / PLAYING_MONTHS);

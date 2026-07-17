@@ -15,11 +15,14 @@
  */
 
 import type {
+  ClubId,
+  ClubState,
   Consequence,
   Decision,
   GameState,
   LoggedEvent,
   PlayerState,
+  YearMonth,
 } from './types.js';
 import { Rng } from './rng.js';
 import { setPlayerAbility } from './attributes.js';
@@ -27,7 +30,7 @@ import { logEvent } from './eventLog.js';
 import { cloneState } from './state.js';
 import { eventsSince } from './eventLog.js';
 import { appendMemory } from './memory.js';
-import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
+import { divergenceFactor, rollDivergentStoryline, RESHAPED_AGGRESSION } from './divergence.js';
 import { executeTransfer } from './transfers.js';
 import { recomputeClubStrength, instantiateCuratedPlayer } from './players.js';
 import { performSack, appointManager, imposeDirective, retireManager } from './manager.js';
@@ -2451,11 +2454,192 @@ function fireScriptedEvents(state: GameState): void {
   }
 }
 
+// ── Personal storylines that follow the player (§9f; the "Rio still misses his
+//    drug test at Arsenal" beat) ───────────────────────────────────────────────
+
+/**
+ * A marquee PERSONAL storyline attached to a real person, not a club. Where a
+ * scenario pack scripts the beat at his real club (`homeClub`), the pack owns it;
+ * everywhere else the story travels WITH him — so if the counterfactual sends Rio
+ * Ferdinand to Arsenal, his missed drug test catches up with him there.
+ *
+ * It fires only once the player is DISPLACED from his seed club (a genuine
+ * divergence) and is not at `homeClub`. At your own club it becomes a decision —
+ * but only for a reshaped world (gated on aggression), so the calibration run,
+ * whose only travelling candidate can never sit at the user's club while passive,
+ * is untouched. Anywhere else it is pure, mutation-free colour.
+ */
+interface PersonalEvent {
+  id: string;
+  playerId: string;
+  date: YearMonth; // the historical month it belongs to
+  windowMonths?: number; // how long after `date` it may still land (default 18)
+  homeClub?: ClubId; // the club a scenario pack already scripts this beat at
+  /** The interactive form, when it lands at the user's (reshaped) club. */
+  build: (state: GameState, player: PlayerState, club: ClubState) => Decision;
+  /** The logged colour, when it happens to a player you do not manage. */
+  worldLine: (player: PlayerState, club: ClubState) => string;
+}
+
+function ymIndex(date: string): number {
+  const y = Number(date.slice(0, 4));
+  const m = Number(date.slice(5, 7));
+  return y * 12 + (m - 1);
+}
+
+const PERSONAL_EVENTS: PersonalEvent[] = [
+  {
+    id: 'rio-missed-test',
+    playerId: 'cur_ferdinand',
+    date: '2003-09',
+    homeClub: 'man_utd', // man-utd-1999 pack owns the drug-test beat at United
+    build: (_state, player, club) => ({
+      id: `personal:rio-missed-test:${club.id}`,
+      title: `${player.name} has missed a drug test`,
+      description: `${player.name} failed to attend a mandatory drugs test at ${club.name} and the FA are pushing for a long ban. The tabloids are merciless. Stand publicly behind your player, or distance the club and let him face it alone?`,
+      interrupt: true,
+      clubId: club.id,
+      category: 'event',
+      choices: [
+        {
+          id: 'stand-by-him',
+          label: 'Stand publicly behind him',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'restPlayer', playerId: player.id, months: 8, amount: 0 }, { kind: 'morale', playerId: player.id, amount: 6 }, { kind: 'memory', tag: 'ban', text: `Stood by ${player.name} through his ban at ${club.name}.` }],
+          onFailure: [{ kind: 'restPlayer', playerId: player.id, months: 8, amount: 0 }, { kind: 'fanTrust', amount: -4, text: `The ${player.name} affair drags on.` }],
+        },
+        {
+          id: 'distance-club',
+          label: 'Distance the club from it',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'restPlayer', playerId: player.id, months: 8, amount: 0 }, { kind: 'boardPatience', amount: 3 }, { kind: 'agitation', playerId: player.id, amount: 15 }],
+          onFailure: [{ kind: 'restPlayer', playerId: player.id, months: 8, amount: 0 }, { kind: 'morale', playerId: player.id, amount: -10 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'restPlayer', playerId: player.id, months: 8, amount: 0 }, { kind: 'morale', playerId: player.id, amount: -6 }, { kind: 'memory', tag: 'ban', text: `Stayed silent through ${player.name}'s ban.` }],
+      memoryTags: ['ban', player.id],
+    }),
+    worldLine: (player, club) => `${player.name} is handed an eight-month ban for a missed drug test at ${club.name} — the story follows him, as it did in reality`,
+  },
+  {
+    id: 'cassano-bustup',
+    playerId: 'cur_cassano06',
+    date: '2007-02',
+    build: (_state, player, club) => ({
+      id: `personal:cassano-bustup:${club.id}`,
+      title: `${player.name} has blown up again`,
+      description: `Another "cassanata": ${player.name} has had a furious training-ground bust-up at ${club.name}, thrown his toys, and the squad is unsettled. His talent is undeniable and his temperament impossible. Come down hard, or put an arm around him?`,
+      interrupt: true,
+      clubId: club.id,
+      category: 'event',
+      choices: [
+        {
+          id: 'come-down-hard',
+          label: 'Discipline him hard',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'agitation', playerId: player.id, amount: -10 }, { kind: 'memory', tag: 'man-management', text: `Laid down the law with ${player.name}.` }],
+          onFailure: [{ kind: 'agitation', playerId: player.id, amount: 12 }, { kind: 'morale', playerId: player.id, amount: -6 }],
+        },
+        {
+          id: 'arm-around',
+          label: 'Put an arm around him',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'morale', playerId: player.id, amount: 8 }, { kind: 'ability', playerId: player.id, amount: 2 }, { kind: 'memory', tag: 'man-management', text: `Coaxed the best from ${player.name} where others couldn't.` }],
+          onFailure: [{ kind: 'agitation', playerId: player.id, amount: 8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: player.id, amount: 10 }, { kind: 'memory', tag: 'man-management', text: `Let ${player.name}'s latest tantrum slide.` }],
+      memoryTags: ['man-management', player.id],
+    }),
+    worldLine: (player, club) => `${player.name} is at the centre of another training-ground bust-up at ${club.name}`,
+  },
+  {
+    id: 'adriano-turmoil',
+    playerId: 'cur_adriano04i',
+    date: '2005-11',
+    homeClub: 'inter', // inter-2004 pack owns Adriano's arc at Inter
+    build: (_state, player, club) => ({
+      id: `personal:adriano-turmoil:${club.id}`,
+      title: `${player.name} is unravelling off the pitch`,
+      description: `${player.name} is grieving, drinking, and turning up unfit; the gift that terrified defences is slipping away at ${club.name}. Intervene now with real support to try to save him, or accept the decline and plan around it?`,
+      interrupt: true,
+      clubId: club.id,
+      category: 'event',
+      choices: [
+        {
+          id: 'save-him',
+          label: 'Intervene to save the player',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'ability', playerId: player.id, amount: 4 }, { kind: 'injuryProneness', playerId: player.id, amount: -8 }, { kind: 'memory', tag: 'man-management', text: `Reached ${player.name} before the fall — the gift preserved, a divergence from his real ruin.` }],
+          onFailure: [{ kind: 'agitation', playerId: player.id, amount: 8 }],
+        },
+        {
+          id: 'plan-around',
+          label: 'Accept the decline and plan around it',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'man-management', text: `Cut losses on ${player.name}'s decline and planned around it.` }],
+          onFailure: [{ kind: 'morale', clubId: club.id, amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'ability', playerId: player.id, amount: -4 }, { kind: 'memory', tag: 'man-management', text: `Left ${player.name} to his demons — history's sad path.` }],
+      memoryTags: ['man-management', player.id],
+    }),
+    worldLine: (player, club) => `${player.name} is spiralling off the field at ${club.name}, his form collapsing`,
+  },
+];
+
+/**
+ * Fire personal storylines that travel with the player (see PersonalEvent). Run
+ * every month alongside the scripted packs; consumes no RNG and mutates no
+ * outcome-bearing state on the flavour path, so it is calibration-safe.
+ */
+export function firePersonalEvents(state: GameState): void {
+  const curYM = ymIndex(state.clock.date);
+  for (const ev of PERSONAL_EVENTS) {
+    const firedKey = `personal:${ev.id}`;
+    if (state.meta.firedScripted.includes(firedKey)) continue;
+    const evYM = ymIndex(ev.date);
+    if (curYM < evYM) continue;
+    if (curYM > evYM + (ev.windowMonths ?? 18)) {
+      state.meta.firedScripted.push(firedKey); // window lapsed; stop checking
+      continue;
+    }
+    const player = state.players[ev.playerId];
+    if (!player || player.club == null) continue;
+    if (ev.homeClub && player.club === ev.homeClub) continue; // the scenario pack owns it here
+    if (player.originClub != null && player.club === player.originClub) continue; // not displaced
+
+    state.meta.firedScripted.push(firedKey); // fire once
+    const club = state.clubs[player.club];
+    if (!club) continue;
+    if (player.club === state.playerClub && state.userAggression >= RESHAPED_AGGRESSION) {
+      state.pendingDecisions.push(ev.build(state, player, club));
+      logEvent(state, {
+        category: 'event',
+        code: 'personal.fired',
+        message: `Personal storyline fired: ${ev.id} (${player.name} at ${club.name})`,
+        data: { id: ev.id, playerId: player.id, clubId: club.id },
+      });
+    } else {
+      const line = ev.worldLine(player, club);
+      state.timeline.divergenceLog.push({ date: state.clock.date, kind: 'storyline', detail: line });
+      appendMemory(state, 'divergence', line);
+      logEvent(state, {
+        category: 'event',
+        code: 'personal.world',
+        message: `The story follows the man: ${line}`,
+        data: { id: ev.id, playerId: player.id, clubId: club.id },
+      });
+    }
+  }
+}
+
 // ── Monthly entry point ──────────────────────────────────────────────────────
 
 /** Fire scripted + procedural events for the current month. */
 export function rollEventsMonth(state: GameState, rng: Rng): void {
   fireScriptedEvents(state);
+  firePersonalEvents(state);
   rollScandals(state, rng.fork(`events:${state.clock.date}`));
   // Non-real storylines emerge as the world diverges from real history (§9f).
   rollDivergentStoryline(state, rng.fork(`divergence:${state.clock.date}`));

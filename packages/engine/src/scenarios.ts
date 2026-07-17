@@ -32,6 +32,12 @@ export interface ScenarioSeed {
   contextExtra?: ClubSeed[];
   /** The player's simulated domestic league (§15). */
   domesticLeagueId: string;
+  /** For a second-tier start (Juventus in Serie B after Calciopoli): the top flight
+   *  the player's OWN club rises INTO if it finishes within `maxPosition`. The
+   *  simulated division transforms in place — the seed's clubs come in, the beaten
+   *  second-tier sides drop to the reservoir — so the campaign continues one level
+   *  up instead of the generic pool swap. */
+  promotion?: { leagueId: string; maxPosition: number };
   /** Clubs in real financial distress this era (fire-sale sources). */
   distressedClubs?: Record<ClubId, 'strained' | 'crisis'>;
   /** Per-club ownership override (transfer-budget scale): a sugar-daddy buyer
@@ -335,6 +341,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     boardExpectedFinish: 1,
     clubs: ELITE_CLUBS,
     domesticLeagueId: 'ita-b-2006',
+    // Finish in the top two of Serie B and Juventus rise straight back into Serie A.
+    promotion: { leagueId: 'ita-2007', maxPosition: 2 },
   },
 
   // ── La Liga (Spanish tier) ───────────────────────────────────────────────────

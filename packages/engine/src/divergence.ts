@@ -67,7 +67,7 @@ function realStars(state: GameState, minAbility: number): PlayerState[] {
  *  user's club also nudge `userAggression`, so a passive (calibration) user sits
  *  at ~2–3; this threshold clears that baseline, keeping the calibration run inert
  *  (its only divergence output stays pure, mutation-free flavour). */
-const RESHAPED_AGGRESSION = 8;
+export const RESHAPED_AGGRESSION = 8;
 
 /** A plausible glamour suitor for `target`: a comparable-or-bigger club (a giant,
  *  prestige ≥ 82), never the player's own club. Foreign context giants COUNT — the
