@@ -19,6 +19,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
 import { EUROPE_2007_SQUADS } from './curated-europe-2007.js';
+import { ESP_DOMESTIC_2006_SQUADS } from './curated-esp-domestic-2006.js';
 import {
   MANUTD_2007, MILAN_2007, INTER_2007, BAYERN_2007, CHELSEA_2007,
   JUVENTUS_2007, DORTMUND_2007, PORTO_2007,
@@ -201,5 +202,11 @@ export const REAL_MADRID_2006_SQUADS: Record<string, CuratedSeed[]> = {
 // Merged by CONCATENATION onto any club already present (Porto is augmented).
 for (const [club, seeds] of Object.entries(EUROPE_2007_SQUADS)) {
   if (club === 'porto') continue; // this pack already curates the full 2006-07 Porto
+  REAL_MADRID_2006_SQUADS[club] = [...(REAL_MADRID_2006_SQUADS[club] ?? []), ...seeds];
+}
+
+// Domestic mid-tier of the 2006-07 La Liga (M12 shortlist supply) — real squad
+// players at the non-elite clubs so options lists read like a real shortlist.
+for (const [club, seeds] of Object.entries(ESP_DOMESTIC_2006_SQUADS)) {
   REAL_MADRID_2006_SQUADS[club] = [...(REAL_MADRID_2006_SQUADS[club] ?? []), ...seeds];
 }
