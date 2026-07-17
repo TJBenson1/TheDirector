@@ -314,6 +314,30 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     domesticLeagueId: 'ita-b-2006',
   },
 
+  // ── Bundesliga 1997/98 cluster (shared curated pack) ─────────────────────────
+  'dortmund-1997': {
+    id: 'dortmund-1997',
+    name: 'Borussia Dortmund — 1997: Kings of Europe',
+    startDate: '1997-07',
+    playerClub: 'dortmund',
+    mandate: 'You are champions of Europe. Don\'t let the throne slip as the great side begins to age.',
+    boardPatience: 74,
+    boardExpectedFinish: 2,
+    clubs: ELITE_CLUBS,
+    domesticLeagueId: 'ger-1997',
+  },
+  'bayern-1998': {
+    id: 'bayern-1998',
+    name: 'Bayern München — 1998: The Treble Denied',
+    startDate: '1998-07',
+    playerClub: 'bayern',
+    mandate: 'Ninety seconds from the European Cup last time. Now finish the job.',
+    boardPatience: 72,
+    boardExpectedFinish: 1,
+    clubs: ELITE_CLUBS,
+    domesticLeagueId: 'ger-1997',
+  },
+
   'spurs-2013': {
     id: 'spurs-2013',
     name: 'Tottenham — 2013: The Bale Money',

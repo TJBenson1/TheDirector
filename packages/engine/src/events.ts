@@ -1630,8 +1630,120 @@ const JUVENTUS_2006_PACK: ScriptedEvent[] = [
 
 /** Scripted historical storylines by scenario. man-utd-1999 is the calibration
  *  pack; the others fire only in their own start point (no calibration impact). */
+// ── Borussia Dortmund, 1997 (kings of Europe) storyline pack ─────────────────
+const DORTMUND_1997_PACK: ScriptedEvent[] = [
+  {
+    id: 'dortmund-throne',
+    date: '1997-08',
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:dortmund-throne',
+      title: 'Champions of Europe — but for how long?',
+      description: 'You sit on the throne of European football, but the side that won it is ageing fast — Kohler, Zorc, Sammer\'s ravaged knees. Defend the crown with the old guard, or start refreshing before the decline arrives?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'defend', label: 'Defend the crown with the champions', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 6 }, { kind: 'memory', tag: 'board', text: 'Rode the ageing champions one more year.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'refresh', label: 'Refresh the squad before the fall', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'board', text: 'Rebuilt early — the divergence from the real slow slide.' }], onFailure: [{ kind: 'morale', clubId: 'dortmund', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'board', text: 'The champions roll on, a year older.' }],
+      memoryTags: ['board', 'dynasty'],
+    }),
+  },
+  {
+    id: 'sammer-knee',
+    date: '1997-11',
+    requires: (s) => playerAt(s, 'cur_sammer97', 'dortmund') && s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:sammer-knee',
+      title: 'Matthias Sammer\'s knee is failing him',
+      description: 'Your Ballon d\'Or libero — the heartbeat of the champions — has a knee that may not last the season. Every game you play him could be his last; every one you rest him, you miss the best defender in the world. Reality lost him to it. What do you do?',
+      interrupt: true, clubId: 'dortmund', category: 'injury',
+      choices: [
+        { id: 'protect', label: 'Protect him — manage the knee', successProbability: 0.55, onSuccess: [{ kind: 'restPlayer', playerId: 'cur_sammer97', months: 2, amount: -10 }, { kind: 'memory', tag: 'injury', text: 'Nursed Sammer\'s knee — buying time reality never could.' }], onFailure: [{ kind: 'morale', playerId: 'cur_sammer97', amount: -4 }] },
+        { id: 'ride', label: 'Play him while you still can', successProbability: 0.4, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 6 }], onFailure: [{ kind: 'reinjure', playerId: 'cur_sammer97', months: 8 }, { kind: 'memory', tag: 'injury', text: 'Rode Sammer and the knee gave out — the career-ending blow, as reality.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'injuryProneness', playerId: 'cur_sammer97', amount: 10 }],
+      memoryTags: ['injury', 'cur_sammer97'],
+    }),
+  },
+  {
+    id: 'dortmund-ageing-core',
+    date: '1998-06',
+    requires: (s) => playerAt(s, 'cur_moller97', 'dortmund') && s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:dortmund-ageing-core',
+      title: 'The golden generation is fading',
+      description: 'Möller, Kohler, Zorc, Reuter — the men who conquered Europe are past 30 and slowing. Do you hand the reins to Ricken and the kids now, or squeeze one more campaign from the legends?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'promote-youth', label: 'Hand it to Ricken and the young ones', successProbability: 0.5, onSuccess: [{ kind: 'morale', playerId: 'cur_ricken97', amount: 10 }, { kind: 'memory', tag: 'development', text: 'Trusted the youth — a bolder path than reality took.' }], onFailure: [{ kind: 'morale', clubId: 'dortmund', amount: -3 }] },
+        { id: 'one-more', label: 'One more year from the legends', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'development', text: 'Leaned on the old guard again.' }], onFailure: [{ kind: 'morale', clubId: 'dortmund', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'development', text: 'The transition drifts, unmanaged.' }],
+      memoryTags: ['development', 'dynasty'],
+    }),
+  },
+];
+
+// ── Bayern München, 1998 (the treble denied) storyline pack ──────────────────
+const BAYERN_1998_PACK: ScriptedEvent[] = [
+  {
+    id: 'bayern-finish-job',
+    date: '1998-08',
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:bayern-finish-job',
+      title: 'Finish the job in Europe',
+      description: 'The wounds of past European near-misses run deep at this club. The squad is strong, hardened, hungry. Set the season\'s single obsession as the European Cup — or keep the focus on a domestic clean sweep first?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'europe', label: 'Make the European Cup the obsession', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 6 }, { kind: 'memory', tag: 'board', text: 'Set the whole season on Europe — the mission.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'domestic', label: 'Win Germany first, Europe second', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'board', text: 'Prioritised the Bundesliga — the surer prize.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'board', text: 'The season starts without a clear obsession.' }],
+      memoryTags: ['board', 'europe'],
+    }),
+  },
+  {
+    id: 'bayern-egos',
+    date: '1998-10',
+    requires: (s) => playerAt(s, 'cur_effenberg98', 'bayern') && s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:bayern-egos',
+      title: 'A dressing room of giant egos',
+      description: 'Effenberg the alpha, a 37-year-old Matthäus who wants to run everything, Basler the maverick who trains how he likes. This is "FC Hollywood" — brilliant and combustible. Impose your authority, or let the big characters police themselves?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'authority', label: 'Impose firm authority', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'managerRelationship', amount: 4 }, { kind: 'memory', tag: 'dressing-room', text: 'Stamped authority on FC Hollywood.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_basler98', amount: 12 }] },
+        { id: 'let-lead', label: 'Let the leaders run the room', successProbability: 0.55, onSuccess: [{ kind: 'morale', playerId: 'cur_effenberg98', amount: 8 }, { kind: 'memory', tag: 'dressing-room', text: 'Trusted the alphas to hold the room — as reality often did.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'bayern', amount: -3 }],
+      memoryTags: ['dressing-room', 'cur_effenberg98'],
+    }),
+  },
+  {
+    id: 'bayern-1999-final',
+    date: '1999-05',
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:bayern-1999-final',
+      title: 'The European Cup final — don\'t let it slip',
+      description: 'You are ninety minutes from the crown. Reality remembers this night for two injury-time goals that ripped it away. Lead 1-0 late — do you shut up shop and defend the lead, or keep going for the second that kills it?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'kill-it', label: 'Go for the second goal to kill the game', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 10 }, { kind: 'fanTrust', amount: 10, text: 'The second goal settles it — the ghost is exorcised.' }, { kind: 'memory', tag: 'europe', text: 'Went for the throat and finished it — rewriting the nightmare.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -6 }] },
+        { id: 'defend', label: 'Shut up shop and defend the lead', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 8 }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -12 }, { kind: 'fanTrust', amount: -8, text: 'Two injury-time goals — the exact horror of reality.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'bayern', amount: -6 }, { kind: 'memory', tag: 'europe', text: 'The final slips away, as it did in Barcelona.' }],
+      memoryTags: ['europe', 'final'],
+    }),
+  },
+];
+
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
+  'dortmund-1997': DORTMUND_1997_PACK,
+  'bayern-1998': BAYERN_1998_PACK,
   'newcastle-1995': NEWCASTLE_1995_PACK,
   'spurs-2013': SPURS_2013_PACK,
   'milan-2007': MILAN_2007_PACK,

@@ -63,6 +63,7 @@ const STYLE_BY_NAME: Record<string, ManagerStyle> = {
   'Pep Guardiola': st('Positional possession — total control', 0.98, 0.75),
   'Kevin Keegan': st('Cavalier — all-out attack', 0.6, 0.6),
   'Didier Deschamps': st('Pragmatic, winning-first', 0.4, 0.5),
+  'Nevio Scala': st('Balanced, Italian rigour', 0.5, 0.5),
   'Jürgen Klopp': st('Heavy-metal pressing, youth', 0.55, 0.8),
   'Manuel Pellegrini': st('Attacking possession', 0.7, 0.45),
   'Brendan Rodgers': st('High-tempo possession', 0.75, 0.6),
@@ -90,6 +91,8 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
   'spurs-2013': { name: 'André Villas-Boas', reputation: 70 },
   'milan-2007': { name: 'Carlo Ancelotti', reputation: 84 },
   'juventus-2006': { name: 'Didier Deschamps', reputation: 68 },
+  'dortmund-1997': { name: 'Nevio Scala', reputation: 72 },
+  'bayern-1998': { name: 'Ottmar Hitzfeld', reputation: 82 },
 };
 
 /** A pool of coaches available to hire, each with the YEARS he was a plausible

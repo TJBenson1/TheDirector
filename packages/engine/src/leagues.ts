@@ -298,6 +298,35 @@ export const SERIE_B_2006: LeagueSeed = {
   ],
 };
 
+/** Bundesliga, 1997–98 — Dortmund the reigning European champions, Bayern rebuilding
+ *  towards the 1999 final; Kaiserslautern's sensational newly-promoted title. Shared
+ *  by dortmund-1997 and bayern-1998. */
+export const BUNDESLIGA_1997: LeagueSeed = {
+  id: 'ger-1997',
+  name: 'Bundesliga',
+  season: '1997-07',
+  clubs: [
+    { id: 'bayern', name: 'Bayern Munich', prestige: 86, strength: 86 },
+    { id: 'dortmund', name: 'Borussia Dortmund', prestige: 82, strength: 84 },
+    { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 74, strength: 81 },
+    { id: 'kaiserslautern', name: '1. FC Kaiserslautern', prestige: 64, strength: 80 },
+    { id: 'schalke', name: 'Schalke 04', prestige: 72, strength: 79 },
+    { id: 'stuttgart', name: 'VfB Stuttgart', prestige: 72, strength: 78 },
+    { id: 'bremen', name: 'Werder Bremen', prestige: 70, strength: 76 },
+    { id: 'munich_1860', name: '1860 Munich', prestige: 60, strength: 74 },
+    { id: 'hamburg', name: 'Hamburger SV', prestige: 68, strength: 73 },
+    { id: 'bochum', name: 'VfL Bochum', prestige: 54, strength: 72 },
+    { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 52, strength: 70 },
+    { id: 'gladbach', name: 'Borussia Mönchengladbach', prestige: 62, strength: 69 },
+    { id: 'hansa', name: 'Hansa Rostock', prestige: 50, strength: 68 },
+    { id: 'duisburg', name: 'MSV Duisburg', prestige: 48, strength: 67 },
+    { id: 'karlsruhe', name: 'Karlsruher SC', prestige: 50, strength: 66 },
+    { id: 'bielefeld', name: 'Arminia Bielefeld', prestige: 46, strength: 64 },
+    { id: 'koln', name: '1. FC Köln', prestige: 58, strength: 65 },
+    { id: 'hertha', name: 'Hertha BSC', prestige: 56, strength: 63 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
   'esp-1': SPAIN_2000,
@@ -307,6 +336,7 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-2013': ENGLAND_2013,
   'eng-2004': ENGLAND_2004,
   'eng-2001': ENGLAND_2001,
+  'ger-1997': BUNDESLIGA_1997,
   'ger-2009': BUNDESLIGA_2009,
 };
 
@@ -382,6 +412,8 @@ export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
   'eng-2013': ENGLISH_POOL,
   'esp-1': SPANISH_POOL,
   'ita-1': ITALIAN_POOL,
+  'ita-2007': ITALIAN_POOL,
+  'ger-1997': GERMAN_POOL,
   'ger-2009': GERMAN_POOL,
 };
 
