@@ -14,6 +14,7 @@ import { logEvent } from './eventLog.js';
 import { parseYearMonth } from './clock.js';
 import { clubSquadPlayers } from './players.js';
 import { retireAgeFor } from './ageing.js';
+import { isProcedural } from './ledger.js';
 
 /** A player worth a conscious renewal call — a genuine squad contributor. */
 const RENEW_ABILITY_FLOOR = 76;
@@ -27,7 +28,11 @@ export function runReviewPhase(state: GameState): void {
   const club = state.clubs[state.playerClub];
   if (!club) return;
   const year = parseYearMonth(state.clock.date).year;
-  const squad = clubSquadPlayers(state, state.playerClub);
+  // Only REAL players are reviewed — the manager tracks recognisable names, not
+  // the procedural filler that pads a squad (whose generated names read oddly and
+  // whose expiry is inconsequential: contracts drive a Bosman discount, not a
+  // departure).
+  const squad = clubSquadPlayers(state, state.playerClub).filter((p) => !isProcedural(p));
   const ageOf = (p: (typeof squad)[number]) => year - p.birthYear;
 
   // Categorise the looming issues.
