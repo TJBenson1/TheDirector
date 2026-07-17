@@ -14,7 +14,7 @@ import { Rng } from './rng.js';
 import { parseYearMonth } from './clock.js';
 import { valuePlayer } from './finance.js';
 import { scoutPlayer, type ScoutReport } from './scouting.js';
-import { evaluateApproach } from './agency.js';
+import { evaluateApproach, areDirectRivals } from './agency.js';
 import { isProcedural } from './ledger.js';
 
 const GROUP: Record<Position, string> = {
@@ -95,6 +95,9 @@ export function suggestTargets(
     if (p.retired) continue; // hung up his boots
     if (p.club === state.playerClub || p.club === null) continue;
     if (ageOf(state, p) < 16) continue; // 16+ rule
+    // A direct rival will not sell you a player to strengthen you — don't dangle
+    // Seaman to a United manager. (You can still chase a dream by naming him.)
+    if (areDirectRivals(state, p.club, state.playerClub)) continue;
     const inPosition = p.positions.includes(position) || p.positions.some((pos) => GROUP[pos] === group);
     if (!inPosition) continue;
 
@@ -103,6 +106,14 @@ export function suggestTargets(
 
     const tags = acquisitionTags(state, p);
     const verdict = evaluateApproach(state, { playerId: p.id, toClub: state.playerClub });
+    // A franchise player (80+) settled at a strong, healthy club, with no lever
+    // (out of contract / unsettled / distress), is not realistically on the market —
+    // Kahn does not leave Bayern for the asking. Don't dangle him on the shortlist.
+    const seller = p.club ? state.clubs[p.club] : undefined;
+    const unraidable =
+      !verdict.willing && tags.length === 0 && p.ability >= 80 &&
+      !!seller && seller.prestige >= 82 && seller.financialHealth === 'healthy';
+    if (unraidable) continue;
     const report = scoutPlayer(state, state.playerClub, p.id, deterministicScoutRng(state, p.id), { observation: 0.5 });
 
     const availability = tags.length * (opts.favourAvailable ? 9 : 5) + (verdict.willing ? 4 : -6);
