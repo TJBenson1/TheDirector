@@ -22,6 +22,7 @@
 
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
+import { EUROPE_LATE90S_SQUADS } from './curated-europe-late90s.js';
 import {
   MANUTD_1996, ARSENAL_1996, CHELSEA_1996, LIVERPOOL_1996,
   REAL_1996, BARCA_1996, JUVENTUS_1996, MILAN_1996, INTER_1996,
@@ -127,3 +128,9 @@ export const BUNDESLIGA_1997_SQUADS: Record<string, CuratedSeed[]> = {
   arsenal: ARSENAL_1996,
   chelsea: CHELSEA_1996,
 };
+
+// European selling clubs (M12A rollout) — the late-90s foreign talent pipeline
+// (shared with inter-1998). All whole new clubs merged into the Bundesliga worlds.
+for (const [club, seeds] of Object.entries(EUROPE_LATE90S_SQUADS)) {
+  BUNDESLIGA_1997_SQUADS[club] = [...(BUNDESLIGA_1997_SQUADS[club] ?? []), ...seeds];
+}
