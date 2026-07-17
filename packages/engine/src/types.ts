@@ -11,6 +11,8 @@
 
 // ── Identifier & primitive aliases ──────────────────────────────────────────
 
+import type { Formation } from './tactics.js';
+
 export type ClubId = string;
 export type PlayerId = string;
 export type ScenarioId = string;
@@ -305,10 +307,50 @@ export interface InjuryState {
 
 // ── Later-milestone placeholders (shape only) ────────────────────────────────
 
-/** TODO(M8): manager as an agent. */
+export type CoachArchetype =
+  | 'possession'
+  | 'gegenpress'
+  | 'pragmatic-counter'
+  | 'defensive-block'
+  | 'man-manager'
+  | 'balanced';
+
+/** Weights on the six personality traits a coach values (>0) or won't tolerate
+ *  (<0) in a signing — Guardiola's system needs professionalism and low ego where
+ *  a man-manager will take a volatile maverick and get a tune out of him. */
+export interface TraitLean {
+  professionalism: number;
+  ego: number;
+  ambition: number;
+  loyalty: number;
+  volatility: number;
+  adaptability: number;
+}
+
+/**
+ * The head coach (M13) — an agent with their own tactical and recruitment
+ * preferences, distinct from the user (the Director). They favour a playing
+ * style and formation, rate certain player personalities, keep favourites from
+ * former clubs, and push back on signings and shape changes they don't want. The
+ * `relationshipWithUser` is the working relationship the friction plays out on.
+ */
 export interface ManagerState {
   identity: string;
-  relationshipWithUser: number;
+  relationshipWithUser: number; // 0..100
+  archetype: CoachArchetype;
+  /** Preferred playing style, on the LeagueStyle scale (1..10). */
+  style: { physicality: number; tempo: number; technical: number };
+  /** The shape they want to play, and the one currently set (the Director may
+   *  have persuaded them onto another). */
+  preferredFormation: Formation;
+  activeFormation: Formation;
+  traitLean: TraitLean;
+  /** Player NAMES the coach would push to sign (favourites from former clubs),
+   *  matched to whoever is actually in the world. */
+  favourites: string[];
+  /** 0..10 — propensity to accept the Director's suggestions and tolerate
+   *  signings made against their wishes. */
+  adaptability: number;
 }
 
 export interface DivergenceEntry {
@@ -368,6 +410,7 @@ export interface Consequence {
     | 'transferOut' // sell a player to `clubId` for `amount`
     | 'signReal' // sign an incoming real target to the user club (funds + moves)
     | 'renewContract' // extend a player's contract by `amount` years
+    | 'changeFormation' // switch the coach's active shape (M13)
     | 'memory' // append a narrative-memory entry (§10)
     | 'log'; // purely informational log line
   playerId?: PlayerId;
@@ -376,6 +419,7 @@ export interface Consequence {
   months?: number; // for 'ban'
   tag?: string; // memory tag
   text?: string; // human-readable detail
+  formation?: Formation; // for 'changeFormation'
 }
 
 /** Board mandate, patience and job security (§11, internal-friction §1). */

@@ -31,8 +31,9 @@ describe('calibration harness', () => {
       runCareer({ seed: `batch:${i}`, years: 15, bot: ALL_BOTS[i % ALL_BOTS.length]! }),
     );
     const results = evaluateAll(careers);
-    // 9 §12 rows + 9 reality/friction/governing rows (design docs).
-    expect(results).toHaveLength(18);
+    // 9 §12 rows + 9 reality/friction/governing rows (design docs) + 2 season
+    // points-spread rows (champion points, draw rate).
+    expect(results).toHaveLength(20);
 
     // Live targets through M9 must all pass.
     const live = [
@@ -50,6 +51,8 @@ describe('calibration harness', () => {
       'scripted-event-fidelity',
       'reality-ledger-fidelity',
       'reality-squad-match',
+      'season-champion-points',
+      'season-draw-rate',
     ];
     for (const id of live) {
       const t = results.find((r) => r.id === id)!;

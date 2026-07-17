@@ -15,6 +15,7 @@ import { parseYearMonth } from './clock.js';
 import { clubSquadPlayers } from './players.js';
 import { retireAgeFor } from './ageing.js';
 import { isProcedural } from './ledger.js';
+import { formationEraModifier, eraIdealFormation, formationLabel } from './tactics.js';
 
 /** A player worth a conscious renewal call — a genuine squad contributor. */
 const RENEW_ABILITY_FLOOR = 76;
@@ -63,6 +64,59 @@ export function runReviewPhase(state: GameState): void {
         declining: declining.map((p) => p.id),
       },
     });
+  }
+
+  // Actionable: the tactical era. If the coach's active shape is being left
+  // behind — a flat two overrun by the modern three-man midfields — the Director
+  // can suggest moving to the era-appropriate shape. The coach isn't a pushover:
+  // whether he agrees turns on his adaptability and how he rates the Director.
+  const coach = state.managerRelations;
+  const ideal = eraIdealFormation(year);
+  const currentDelta = formationEraModifier(coach.activeFormation, year);
+  const idealDelta = formationEraModifier(ideal, year);
+  if (coach.activeFormation !== ideal && idealDelta - currentDelta >= 2) {
+    const decisionId = `formation:${year}`;
+    if (!state.pendingDecisions.some((d) => d.id === decisionId)) {
+      // Acceptance probability: an adaptable coach who trusts the Director bends;
+      // a dogmatic one on a shaky relationship digs in on his shape.
+      const accept = Math.max(
+        0.1,
+        Math.min(0.9, 0.2 + coach.adaptability * 0.05 + (coach.relationshipWithUser - 60) * 0.004),
+      );
+      state.pendingDecisions.push({
+        id: decisionId,
+        title: `${formationLabel(coach.activeFormation)} is being left behind — the modern game is a three-man midfield`,
+        description: `${coach.identity} still sets up in a ${formationLabel(coach.activeFormation)}. You can push him toward a ${formationLabel(ideal)} to match the era, or back his judgement and leave the shape to him.`,
+        interrupt: false,
+        clubId: state.playerClub,
+        category: 'decision',
+        choices: [
+          {
+            id: 'suggest-switch',
+            label: `Suggest switching to a ${formationLabel(ideal)}`,
+            successProbability: accept,
+            onSuccess: [
+              { kind: 'changeFormation', formation: ideal },
+              { kind: 'memory', tag: 'tactics', text: `${coach.identity} agreed to switch to a ${formationLabel(ideal)}.` },
+            ],
+            onFailure: [
+              { kind: 'managerRelationship', amount: -4 },
+              { kind: 'memory', tag: 'tactics', text: `${coach.identity} rebuffed the Director's push to change shape.` },
+            ],
+          },
+          {
+            id: 'trust-coach',
+            label: 'Back his judgement — leave the shape to him',
+            onSuccess: [
+              { kind: 'managerRelationship', amount: 2 },
+              { kind: 'memory', tag: 'tactics', text: `Left the formation to ${coach.identity}.` },
+            ],
+          },
+        ],
+        // Reality-default: the Director doesn't interfere — the coach keeps his shape.
+        memoryTags: ['tactics'],
+      });
+    }
   }
 
   // Actionable: offer a renewal for the top key players in their final year,

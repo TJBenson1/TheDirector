@@ -30,6 +30,7 @@ import {
 } from './players.js';
 import { initialFinances, suggestWage } from './finance.js';
 import { CURATED_SQUADS } from './data/curated-1999.js';
+import { coachForScenario } from './coaches.js';
 
 /** Calibrated defaults (§13): 1 = the §12 realism bands. */
 export const DEFAULT_SETTINGS: DifficultySettings = {
@@ -185,7 +186,7 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
     clubs,
     leagues: { [leagueState.id]: leagueState },
     players: {},
-    managerRelations: { identity: 'Unassigned', relationshipWithUser: 50 },
+    managerRelations: coachForScenario(scenarioId, parseYearMonth(scenario.startDate).year),
     timeline: { divergenceLog: [], narrativeMemory: [] },
     pendingDecisions: [],
     eventLog: [],

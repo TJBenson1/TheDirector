@@ -118,6 +118,11 @@ export function applyConsequence(state: GameState, c: Consequence): void {
       }
       break;
     }
+    case 'changeFormation':
+      // The coach switches shape. His preference doesn't change — only what he
+      // fields — so a reluctant switch can drift back later if unhappy.
+      if (c.formation) state.managerRelations.activeFormation = c.formation;
+      break;
     case 'memory':
       appendMemory(state, c.tag ?? 'event', c.text ?? '');
       break;

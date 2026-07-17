@@ -20,6 +20,7 @@ import type {
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { parseYearMonth } from './clock.js';
+import { formationEraModifier } from './tactics.js';
 
 // ── Tunable match-model constants (calibrated in season.test.ts) ─────────────
 const HOME_ADVANTAGE = 6; // strength points
@@ -165,14 +166,24 @@ function nudgeForm(state: GameState, clubId: ClubId, delta: number): void {
  *  star-premium swing that moves the Champions League moves the league table too —
  *  an aggressive user who guts a rival's spine climbs past them, a raided club
  *  slips. Zero in a passive world, so the calibrated tables are undisturbed. */
-export function matchStrength(club: ClubState): number {
-  return club.strength + club.form + (club.starButterfly ?? 0) - (club.chemistryPenalty ?? 0);
+export function matchStrength(club: ClubState, eraDelta = 0): number {
+  return club.strength + club.form + (club.starButterfly ?? 0) - (club.chemistryPenalty ?? 0) + eraDelta;
+}
+
+/** The tactical-era delta for a club in a given season. Non-zero only for the
+ *  USER's club — the AI world is abstracted as always era-appropriate, so the
+ *  reality baseline and the calibration harness stay untouched. */
+function eraDeltaFor(state: GameState, clubId: ClubId, seasonYear: number): number {
+  if (clubId !== state.playerClub) return 0;
+  return formationEraModifier(state.managerRelations.activeFormation, seasonYear);
 }
 
 function playMatch(state: GameState, league: LeagueState, fixture: Fixture, rng: Rng): void {
   const home = state.clubs[fixture.home]!;
   const away = state.clubs[fixture.away]!;
-  const result = simulateMatch(matchStrength(home), matchStrength(away), rng);
+  const homeDelta = eraDeltaFor(state, fixture.home, league.seasonYear);
+  const awayDelta = eraDeltaFor(state, fixture.away, league.seasonYear);
+  const result = simulateMatch(matchStrength(home, homeDelta), matchStrength(away, awayDelta), rng);
 
   applyResult(league.standings[fixture.home]!, result.homeGoals, result.awayGoals);
   applyResult(league.standings[fixture.away]!, result.awayGoals, result.homeGoals);
