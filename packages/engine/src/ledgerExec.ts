@@ -14,7 +14,7 @@
 
 import type { ClubId, Decision, GameState, PlayerState } from './types.js';
 import { Rng, hashStringToU32 } from './rng.js';
-import { WINDOW_STEPS } from './clock.js';
+import { WINDOW_STEPS, transferWindowOrdinal } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
@@ -115,27 +115,91 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
   // windows existed, so determinism and calibration are preserved.
   const r = rng.fork(`ledger:${now}`);
 
+  const nowYear = Number(now.slice(0, 4));
+  const nowOrd = transferWindowOrdinal(now);
+
   // Players whose real move is still ahead — used to let a deprived club hijack
   // a player reality was already moving IMMINENTLY (Arsenal → Ferdinand, whose
   // move was a year away). Only moves within ~1 year count: you can't pull a
   // striker's 2007 transfer forward to 2004 to plug a gap now.
-  const nowYear = Number(now.slice(0, 4));
   const futureByPlayer = new Map<string, string[]>();
   for (const e of pack.realTransferLedger) {
-    if (e.window > now && Number(e.window.slice(0, 4)) - nowYear <= 2 && !state.meta.executedLedger.includes(entryKey(e))) {
+    if (transferWindowOrdinal(e.window) > nowOrd && Number(e.window.slice(0, 4)) - nowYear <= 2 && !state.meta.executedLedger.includes(entryKey(e))) {
       const arr = futureByPlayer.get(e.playerId) ?? [];
       arr.push(entryKey(e));
       futureByPlayer.set(e.playerId, arr);
     }
   }
 
-  for (const entry of pack.realTransferLedger) {
-    const key = entryKey(entry);
+  // Everything due this window (a real window spans Jul–Aug, so -07/-08/-09 all
+  // resolve in the summer window — see transferWindowOrdinal). Execute them in a
+  // canonical order so (a) per-step unfolding is byte-identical to a single batch
+  // sweep, and (b) dependencies never invert: an arrival resolves before the same
+  // player's departure, and an enabler before its dependent. Order key is
+  // (effectiveStep, window, index): step is primary because the per-step path
+  // groups by step, so the batch path must too for byte-identity.
+  const due = pack.realTransferLedger
+    .map((entry, index) => ({ entry, index, key: entryKey(entry) }))
+    .filter((d) => !state.meta.executedLedger.includes(d.key) && transferWindowOrdinal(d.entry.window) <= nowOrd);
+
+  // Effective step, raised by dependency propagation so a dependent/departure is
+  // never scheduled before its enabler/arrival. Base = the drama-spread step.
+  const effStep = new Map<string, number>();
+  for (const d of due) effStep.set(d.key, stepForEntry(d.entry));
+  const byKey = new Map(due.map((d) => [d.key, d]));
+  // A same-player, same-window later move (his departure) depends on the earlier
+  // one (his arrival); an enabledBy dependent depends on its enabler.
+  const dependsOn = new Map<string, string[]>();
+  const byPlayer = new Map<string, typeof due>();
+  for (const d of due) {
+    const arr = byPlayer.get(d.entry.playerId) ?? [];
+    arr.push(d); byPlayer.set(d.entry.playerId, arr);
+  }
+  for (const list of byPlayer.values()) {
+    list.sort((a, b) => (a.entry.window < b.entry.window ? -1 : a.entry.window > b.entry.window ? 1 : a.index - b.index));
+    for (let i = 1; i < list.length; i++) (dependsOn.get(list[i]!.key) ?? dependsOn.set(list[i]!.key, []).get(list[i]!.key)!).push(list[i - 1]!.key);
+  }
+  for (const d of due) {
+    if (d.entry.enabledBy && byKey.has(d.entry.enabledBy)) {
+      (dependsOn.get(d.key) ?? dependsOn.set(d.key, []).get(d.key)!).push(d.entry.enabledBy);
+    }
+  }
+  // Propagate: effStep[dep] >= effStep[enabler]. Iterate to a fixpoint (chains are short).
+  for (let pass = 0; pass < due.length; pass++) {
+    let changed = false;
+    for (const [depKey, enablers] of dependsOn) {
+      for (const enKey of enablers) {
+        const want = effStep.get(enKey) ?? 1;
+        if ((effStep.get(depKey) ?? 1) < want) { effStep.set(depKey, want); changed = true; }
+      }
+    }
+    if (!changed) break;
+  }
+
+  const dueSorted = [...due].sort((a, b) => {
+    const sa = effStep.get(a.key)!, sb = effStep.get(b.key)!;
+    if (sa !== sb) return sa - sb;
+    if (a.entry.window !== b.entry.window) return a.entry.window < b.entry.window ? -1 : 1;
+    return a.index - b.index;
+  });
+
+  for (const { entry, key } of dueSorted) {
     if (state.meta.executedLedger.includes(key)) continue;
-    if (entry.window > now) continue; // not due yet (YYYY-MM compares lexically)
     // Multi-step: only this step's slice fires now; the deadline step sweeps up
     // whatever remains due (so the full window still executes the same set).
-    if (!isFinalStep && stepForEntry(entry) !== step) continue;
+    if (!isFinalStep && effStep.get(key) !== step) continue;
+    // Defer a dependent whose enabler is still an OPEN user-club decision. The
+    // user resolves real moves involving their club BETWEEN windows, so a swap
+    // like Cole→Chelsea (a user sale) enabling Gallas→Arsenal must wait for that
+    // sanction — exactly what the pre-merge summer/winter window gap guaranteed.
+    // Leave it due (don't mark executed) and it retries once the user has acted.
+    if (
+      entry.enabledBy &&
+      !state.meta.realizedLedger.includes(entry.enabledBy) &&
+      state.pendingDecisions.some((d) => d.id === `real-out:${entry.enabledBy}` || d.id === `real-in:${entry.enabledBy}`)
+    ) {
+      continue;
+    }
     state.meta.executedLedger.push(key);
 
     const player = state.players[entry.playerId];
