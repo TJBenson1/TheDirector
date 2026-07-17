@@ -91,7 +91,6 @@ export const JUVENTUS_1995: CuratedSeed[] = [
   q('juventus', 'ferrara95', 'Ciro Ferrara', 1967, 'Italy', ['CB'], 82, 82, 2000, 32, t(8, 4, 7, 9, 4, 7), { archetype: 'covering-cb' }),
   q('juventus', 'vierchowod95', 'Pietro Vierchowod', 1959, 'Italy', ['CB'], 80, 80, 1997, 38, t(9, 4, 6, 8, 4, 6), { archetype: 'covering-cb' }),
   q('juventus', 'pessotto95', 'Gianluca Pessotto', 1970, 'Italy', ['LB', 'RB'], 78, 80, 2000, 30, t(8, 3, 7, 8, 4, 7), { archetype: 'full-back-attacking' }),
-  q('juventus', 'iuliano95', 'Mark Iuliano', 1973, 'Italy', ['CB'], 75, 80, 2000, 30, t(7, 4, 7, 8, 5, 6)),
   q('juventus', 'porrini95', 'Sergio Porrini', 1968, 'Italy', ['RB', 'CB'], 75, 76, 1998, 30, t(7, 4, 6, 7, 5, 6)),
   q('juventus', 'deschamps95', 'Didier Deschamps', 1968, 'France', ['DM', 'CM'], 82, 83, 2000, 28, t(9, 5, 8, 8, 4, 8), { archetype: 'deep-playmaker' }),
   q('juventus', 'sousa95', 'Paulo Sousa', 1970, 'Portugal', ['DM', 'CM'], 82, 83, 1997, 30, t(9, 5, 8, 6, 4, 7), { archetype: 'deep-playmaker' }),
