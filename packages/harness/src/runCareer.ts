@@ -169,6 +169,14 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
       } else if (zeroDivergence && e.code === 'ledger.fallback') {
         metrics.ledgerExpected += 1;
       }
+      // Season-model shape: champion / runner-up points and league draw rate.
+      if (e.code === 'league.season.complete' && e.data) {
+        metrics.seasonsCompleted += 1;
+        metrics.championPointsSum += Number(e.data.points ?? 0);
+        metrics.runnerUpPointsSum += Number(e.data.runnerUpPoints ?? 0);
+        metrics.leagueDrawnTeamGames += Number(e.data.drawnTeamGames ?? 0);
+        metrics.leagueTeamGames += Number(e.data.teamGames ?? 0);
+      }
     }
 
     // Internal crises imposed on the player (§ internal-friction).

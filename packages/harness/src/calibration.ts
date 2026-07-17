@@ -85,6 +85,32 @@ export const TARGETS: CalibrationTarget[] = [
     },
   },
   {
+    id: 'season-champion-points',
+    label: 'Champion points per season (a real title race, not a procession)',
+    band: '~72–96 avg',
+    ownedBy: 'M2',
+    active: true,
+    evaluate: (c) => {
+      const seasons = sum(c, (x) => x.seasonsCompleted);
+      const pts = sum(c, (x) => x.championPointsSum);
+      const avg = seasons > 0 ? pts / seasons : 0;
+      return { value: `${avg.toFixed(1)} pts/season`, pass: avg >= 72 && avg <= 96 };
+    },
+  },
+  {
+    id: 'season-draw-rate',
+    label: 'League draw rate (strength is not destiny — draws and upsets happen)',
+    band: '~20–32%',
+    ownedBy: 'M2',
+    active: true,
+    evaluate: (c) => {
+      const drawn = sum(c, (x) => x.leagueDrawnTeamGames);
+      const games = sum(c, (x) => x.leagueTeamGames);
+      const f = games > 0 ? drawn / games : 0;
+      return { value: pct(f), pass: f >= 0.2 && f <= 0.32 };
+    },
+  },
+  {
     id: 'rival-counter-punch',
     label: 'Rival counter-punch within 2 windows of being raided',
     band: '≥70% of raids',

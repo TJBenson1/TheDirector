@@ -84,6 +84,16 @@ export interface CareerMetrics {
   /** Clubs exceeding their plausible ceiling without a logged multi-cause chain.
    *  MUST stay 0 (no fantasy leaps). */
   fantasyLeaps: number;
+
+  // ── Season-model shape (points spread / draw rate) ────────────
+  /** Completed simulated seasons, and the sum of champion / runner-up points and
+   *  league draw stats across them — for the "real title race, not a procession"
+   *  points-spread target. */
+  seasonsCompleted: number;
+  championPointsSum: number;
+  runnerUpPointsSum: number;
+  leagueDrawnTeamGames: number;
+  leagueTeamGames: number;
 }
 
 export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
@@ -124,6 +134,11 @@ export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
     leagueTitlesTotal: 0,
     internalCrises: 0,
     fantasyLeaps: 0,
+    seasonsCompleted: 0,
+    championPointsSum: 0,
+    runnerUpPointsSum: 0,
+    leagueDrawnTeamGames: 0,
+    leagueTeamGames: 0,
   };
 }
 

@@ -23,8 +23,13 @@ import { parseYearMonth } from './clock.js';
 
 // ── Tunable match-model constants (calibrated in season.test.ts) ─────────────
 const HOME_ADVANTAGE = 6; // strength points
-const BASE_GOALS = 1.35; // expected goals for an evenly-matched neutral game
-const BETA = 0.024; // sensitivity of xG to effective-strength difference
+const BASE_GOALS = 1.25; // expected goals for an evenly-matched neutral game
+// Sensitivity of xG to effective-strength difference. Calibrated so the top of
+// the table matches reality rather than a procession: at 0.024 the strongest
+// sides beat the field almost deterministically (champion ~103 pts, ~20% draws);
+// 0.014 restores real upsets and draws (champion ~85, ~24% draws in the harness —
+// cf. real PL champion ~88, draw rate ~25%).
+const BETA = 0.014;
 const MAX_LAMBDA = 6; // safety cap on the Poisson mean
 const FORM_STEP = 1; // form nudge per win/loss
 const FORM_CAP = 3; // momentum swings the table, but doesn't swamp squad strength
@@ -225,11 +230,22 @@ export function finalizeSeason(state: GameState, league: LeagueState): void {
   const championId = order[0]!;
   const points = league.standings[championId]!.points;
   league.titleHistory.push({ seasonYear: league.seasonYear, championId, points });
+  // Table-shape stats for the points-spread calibration target (a real title race
+  // is not a procession): the champion's total, the runner-up's, and the league
+  // draw rate. Each drawn match increments two teams' `drawn`; drawn/played over
+  // all teams is therefore the fraction of team-games drawn.
+  const runnerUpPoints = order[1] ? league.standings[order[1]]!.points : points;
+  let drawnTeamGames = 0;
+  let teamGames = 0;
+  for (const id of league.clubIds) {
+    const rec = league.standings[id];
+    if (rec) { drawnTeamGames += rec.drawn; teamGames += rec.played; }
+  }
   logEvent(state, {
     category: 'match',
     code: 'league.season.complete',
     message: `${state.clubs[championId]!.name} win the ${league.name} (${league.seasonYear}–${league.seasonYear + 1}) with ${points} pts`,
-    data: { leagueId: league.id, seasonYear: league.seasonYear, championId, points },
+    data: { leagueId: league.id, seasonYear: league.seasonYear, championId, points, runnerUpPoints, drawnTeamGames, teamGames },
   });
 }
 
