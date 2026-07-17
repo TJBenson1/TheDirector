@@ -297,9 +297,9 @@ const CAUSE_NEWS: Record<keyof ClubPressure, string> = {
 };
 
 // ── Tunables (calibrated against the harness — the override SHARE target) ──────
-const OVERRIDE_THRESHOLD = 52; // dominant-pressure score to be eligible
-const OVERRIDE_PROB_SLOPE = 0.5; // how sharply probability rises past threshold
-const OVERRIDE_MAX_PROB = 0.42; // per-summer ceiling on a single club's chance
+const OVERRIDE_THRESHOLD = 44; // dominant-pressure score to be eligible (churn taper bounds the share)
+const OVERRIDE_PROB_SLOPE = 0.9; // how sharply probability rises past threshold
+const OVERRIDE_MAX_PROB = 0.6; // per-summer ceiling on a single club's chance
 const AMBITION_BUDGET_STRETCH = 1.6; // a statement buy stretches, doesn't invent, the budget
 const NEED_MIN = -1; // target must be at least (baseStrength + this) — improves the side
 const NEED_MAX = 6; // …but at most (baseStrength + this) — a plausible, not fantasy, target
@@ -320,7 +320,11 @@ function localLedgerChurn(state: GameState, year: number): number {
   if (!pack) return 0;
   let n = 0;
   for (const e of pack.realTransferLedger) {
-    if (Math.abs(Number(e.window.slice(0, 4)) - year) <= 1) n++;
+    // Only count entries that will actually FIRE — the player exists in this world.
+    // A scenario whose ledger references players it doesn't curate (a procedural
+    // mid-era start) has ~0 real churn, so its overrides self-throttle to the floor
+    // and its share stays bounded even as the base rate rises.
+    if (Math.abs(Number(e.window.slice(0, 4)) - year) <= 1 && state.players[e.playerId]) n++;
   }
   return n;
 }
@@ -409,7 +413,10 @@ export function runAmbitionOverrides(state: GameState, rng: Rng): void {
   // share bounded over a full career in EVERY era (rich eras keep overrides flowing;
   // a sparse tail thins them), rather than only while the career is cut short by an
   // early sacking. Era-fair, so it doesn't over-suppress a rich-ledger scenario.
-  const activityTaper = Math.max(0.15, Math.min(1, localLedgerChurn(state, year) / CHURN_REF));
+  // No floor: a world with zero real transfer churn (a procedural or Serie-B start
+  // with no curated market) gets no statement signings — the override share can't
+  // balloon against a near-empty denominator.
+  const activityTaper = Math.min(1, localLedgerChurn(state, year) / CHURN_REF);
   if (!r.chance(overrideProbability(top.score) * activityTaper)) return;
 
   // Give the override to the highest-pressure club that actually has a plausible

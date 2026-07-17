@@ -925,8 +925,60 @@ const ACADEMY_2009: AcademyGraduate[] = [
   { year: 2010, seed: { id: 'cur_gotze09', club: 'dortmund', name: 'Mario Götze', birthYear: 1992, nationality: 'Germany', positions: ['AM', 'RW'], ability: 64, potentialCeiling: 84, latentCeiling: 91, contractUntil: 2014, injuryProneness: 45, personality: per(7, 6, 8, 6, 5, 7) } },
 ];
 
+/** era-2003 forward ledger (barcelona-2003 / chelsea-2003 starts) — the real exits
+ *  of the curated 2003 Clásico squads across 2003–08, so a mid-era start has a real
+ *  transfer market rather than a ledger that is already in the past. */
+const LEDGER_2003: RealTransferLedgerEntry[] = [
+  { playerId: 'cur_quaresma03', from: 'barcelona', to: 'porto', window: '2004-07', fee: 6_000_000 },
+  { playerId: 'cur_kluivert03', from: 'barcelona', to: 'newcastle', window: '2004-07', fee: 7_000_000 },
+  { playerId: 'cur_cocu03', from: 'barcelona', to: 'psv', window: '2004-07', fee: 0 },
+  { playerId: 'cur_davids03', from: 'barcelona', to: 'inter', window: '2004-07', fee: 0 },
+  { playerId: 'cur_saviola03', from: 'barcelona', to: 'monaco', window: '2004-07', fee: 0 },
+  { playerId: 'cur_reiziger03', from: 'barcelona', to: 'psv', window: '2004-07', fee: 0 },
+  { playerId: 'cur_cambiasso03', from: 'real_madrid', to: 'inter', window: '2004-07', fee: 0 },
+  { playerId: 'cur_figo03', from: 'real_madrid', to: 'inter', window: '2005-07', fee: 0 },
+  { playerId: 'cur_portillo03', from: 'real_madrid', to: 'fiorentina', window: '2005-07', fee: 0 },
+  { playerId: 'cur_ronaldo03', from: 'real_madrid', to: 'milan', window: '2007-01', fee: 7_500_000 },
+  { playerId: 'cur_beckham03', from: 'real_madrid', to: 'la_galaxy', window: '2007-07', fee: 0 },
+];
+
+/** era-2006 forward ledger (real-madrid-2006 / juventus-2006 / milan-2007 starts) —
+ *  the real exits of the curated 2006 Real Madrid & Barça squads across 2006–11.
+ *  real-madrid-2006 had NO forward ledger before this (its era-1995-2005 fallthrough
+ *  was entirely in the past); now the Galáctico break-up plays out as reality. */
+const LEDGER_2006: RealTransferLedgerEntry[] = [
+  // Real Madrid — the Capello champions dismantled.
+  { playerId: 'cur_ronaldo06', from: 'real_madrid', to: 'milan', window: '2007-01', fee: 7_500_000 },
+  { playerId: 'cur_cassano06', from: 'real_madrid', to: 'sampdoria', window: '2007-07', fee: 0 },
+  { playerId: 'cur_emerson06', from: 'real_madrid', to: 'milan', window: '2007-07', fee: 0 },
+  { playerId: 'cur_robertocarlos06', from: 'real_madrid', to: 'fenerbahce', window: '2007-07', fee: 0 },
+  { playerId: 'cur_beckham06', from: 'real_madrid', to: 'la_galaxy', window: '2007-07', fee: 0 },
+  { playerId: 'cur_helguera06', from: 'real_madrid', to: 'valencia', window: '2007-07', fee: 0 },
+  { playerId: 'cur_robinho06', from: 'real_madrid', to: 'man_city', window: '2008-08', fee: 32_000_000 },
+  { playerId: 'cur_cannavaro06', from: 'real_madrid', to: 'juventus', window: '2009-07', fee: 0 },
+  { playerId: 'cur_salgado06', from: 'real_madrid', to: 'blackburn', window: '2009-07', fee: 0 },
+  { playerId: 'cur_vannistelrooy06', from: 'real_madrid', to: 'hamburg', window: '2010-01', fee: 0 },
+  { playerId: 'cur_raul06', from: 'real_madrid', to: 'schalke', window: '2010-07', fee: 0 },
+  { playerId: 'cur_guti06', from: 'real_madrid', to: 'besiktas', window: '2010-07', fee: 0 },
+  // Barcelona — the Rijkaard side breaking up.
+  { playerId: 'cur_giuly06', from: 'barcelona', to: 'roma', window: '2007-07', fee: 3_000_000 },
+  { playerId: 'cur_ronaldinho06', from: 'barcelona', to: 'milan', window: '2008-07', fee: 21_000_000 },
+  { playerId: 'cur_deco06', from: 'barcelona', to: 'chelsea', window: '2008-07', fee: 8_000_000 },
+  { playerId: 'cur_zambrotta06', from: 'barcelona', to: 'milan', window: '2008-07', fee: 9_000_000 },
+  { playerId: 'cur_oleguer06', from: 'barcelona', to: 'ajax', window: '2008-07', fee: 0 },
+  { playerId: 'cur_edmilson06', from: 'barcelona', to: 'villarreal', window: '2008-07', fee: 0 },
+  { playerId: 'cur_motta06', from: 'barcelona', to: 'genoa', window: '2008-07', fee: 0 },
+  { playerId: 'cur_giovani06', from: 'barcelona', to: 'spurs', window: '2008-07', fee: 5_000_000 },
+  { playerId: 'cur_etoo06', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000 },
+  { playerId: 'cur_gudjohnsen06', from: 'barcelona', to: 'monaco', window: '2009-07', fee: 0 },
+  { playerId: 'cur_sylvinho06', from: 'barcelona', to: 'man_city', window: '2009-07', fee: 0 },
+  { playerId: 'cur_marquez06', from: 'barcelona', to: 'ny_red_bulls', window: '2010-07', fee: 0 },
+];
+
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
+  'era-2003': { realTransferLedger: LEDGER_2003, academyIntakes: [], realInjuries: [], retirements: [], academyGraduates: [], nearMisses: [] },
+  'era-2006': { realTransferLedger: LEDGER_2006, academyIntakes: [], realInjuries: [], retirements: [], academyGraduates: [], nearMisses: [] },
   'era-1998': { realTransferLedger: LEDGER_1998, academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998, academyGraduates: ACADEMY_1998, nearMisses: NEARMISS_1998 },
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999, nearMisses: NEARMISS_1999_2014 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013, nearMisses: [...NEARMISS_2013, ...NEARMISS_2013_NM] },
@@ -943,6 +995,10 @@ export function eraForScenario(scenarioId: string): string {
   if (scenarioId.endsWith('-2004')) return 'era-2004';
   if (scenarioId.endsWith('-2001')) return 'era-2001';
   if (scenarioId.endsWith('-1998')) return 'era-1998';
+  // Mid-era starts get their own FORWARD ledger (their era-1995-2005 fallthrough was
+  // already in the past → a near-empty market). §reality-default.
+  if (scenarioId.endsWith('-2003')) return 'era-2003';
+  if (scenarioId.endsWith('-2006') || scenarioId.endsWith('-2007')) return 'era-2006';
   return 'era-1995-2005';
 }
 
