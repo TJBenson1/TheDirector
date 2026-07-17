@@ -20,6 +20,7 @@ import {
   LIVERPOOL_B10, MANUTD_B10, CHELSEA_B10, MANCITY_B10, BAYERN_2010,
   BARCELONA_B10, REAL_MADRID_B10, INTER_B10, JUVENTUS_B10,
 } from './curated-bundesliga-2010.js';
+import { EUROPE_2010_SQUADS } from './curated-europe-2010.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -88,4 +89,6 @@ export const LIVERPOOL_2010_SQUADS: Record<string, CuratedSeed[]> = {
   bayern: BAYERN_2010,
   inter: INTER_B10,
   juventus: JUVENTUS_B10,
+  // European selling clubs (M12A rollout) — the 2010s talent pipeline.
+  ...EUROPE_2010_SQUADS,
 };
