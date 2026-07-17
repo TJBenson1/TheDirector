@@ -168,3 +168,17 @@ export {
   emptyRecord,
   type MatchResult,
 } from './season.js';
+export {
+  coachForScenario,
+  coachFit,
+  resolveCoachFriction,
+  playerStyleProfile,
+  type CoachFit,
+  type FitVerdict,
+} from './coaches.js';
+export {
+  formationLabel,
+  formationEraModifier,
+  eraIdealFormation,
+  ALL_FORMATIONS,
+} from './tactics.js';
