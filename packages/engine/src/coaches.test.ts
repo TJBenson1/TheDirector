@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { coachForScenario, coachFit, resolveCoachFriction } from './coaches.js';
+import { coachForScenario, coachFit, resolveCoachFriction, playerStyleProfile } from './coaches.js';
 import { createNewGame } from './state.js';
 import { runReviewPhase } from './review.js';
 import { executeTransfer } from './transfers.js';
@@ -32,6 +32,47 @@ describe('coach recruitment fit (M13b)', () => {
     const p = anExternalPlayer(s);
     p.name = 'Robert Lewandowski';
     expect(coachFit(klopp, p).verdict).toBe('wants');
+  });
+});
+
+describe('playing-style fit (M13c)', () => {
+  const NEUTRAL = { professionalism: 5, ego: 5, ambition: 5, loyalty: 5, volatility: 5, adaptability: 5 };
+
+  it('derives a style profile from position — a winger is more technical/faster than a centre-half', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'style-a' });
+    const p = anExternalPlayer(s);
+    p.positions = ['LW'];
+    const wing = playerStyleProfile(p);
+    p.positions = ['CB'];
+    const cb = playerStyleProfile(p);
+    expect(wing.technical).toBeGreaterThan(cb.technical);
+    expect(wing.tempo).toBeGreaterThan(cb.tempo);
+    expect(cb.physicality).toBeGreaterThan(wing.physicality);
+  });
+
+  it('a possession coach rates a technical creator above a physical centre-half (style, not temperament)', () => {
+    const pep = coachForScenario('barcelona-2003', 2003); // possession: low physicality, high technical
+    const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'style-b' });
+    const p = anExternalPlayer(s);
+    p.personality = { ...NEUTRAL }; // hold temperament constant so only STYLE differs
+    p.positions = ['AM'];
+    const creator = coachFit(pep, p).score;
+    p.positions = ['CB'];
+    const stopper = coachFit(pep, p).score;
+    expect(creator).toBeGreaterThan(stopper);
+  });
+
+  it('a gegenpress coach prefers a high-tempo runner to a slower playmaker', () => {
+    const klopp = coachForScenario('dortmund-2012', 2012); // gegenpress: high tempo/physicality
+    const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'style-c' });
+    const p = anExternalPlayer(s);
+    p.personality = { ...NEUTRAL };
+    p.name = 'not-a-favourite'; // avoid the favourite short-circuit
+    p.positions = ['RW'];
+    const runner = coachFit(klopp, p).score;
+    p.positions = ['AM'];
+    const playmaker = coachFit(klopp, p).score;
+    expect(runner).toBeGreaterThan(playmaker);
   });
 });
 

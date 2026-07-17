@@ -9,12 +9,13 @@
  * scenario; anything unseeded falls back to a balanced coach on the era's shape.
  */
 
-import type { CoachArchetype, GameState, ManagerState, PlayerState, TraitLean } from './types.js';
+import type { CoachArchetype, GameState, ManagerState, PlayerState, Position, TraitLean } from './types.js';
 import type { Formation } from './tactics.js';
 import { eraIdealFormation } from './tactics.js';
 import { logEvent } from './eventLog.js';
 import { parseYearMonth } from './clock.js';
 import { clubSquadPlayers } from './players.js';
+import { styleDistance, type LeagueStyle } from './leaguestyle.js';
 
 interface ArchetypeProfile {
   style: { physicality: number; tempo: number; technical: number };
@@ -102,7 +103,49 @@ const REAL_COACHES: Record<string, RealCoach> = {
   'bayern-2009': { identity: 'Louis van Gaal', archetype: 'possession', formation: '4-2-3-1', favourites: ['Arjen Robben'] },
 };
 
-// ── Recruitment fit (M13b) ───────────────────────────────────────────────────
+// ── Playing style (M13c) ─────────────────────────────────────────────────────
+
+/**
+ * How each position tends to play, on the same {physicality, tempo, technical}
+ * axes a coach's style uses. Players carry no style data of their own, so a
+ * profile is derived from where they play — the honest, calibration-free signal
+ * that a ball-playing winger is not a route-one centre-half. (A future curation
+ * pass could tag distinctive individuals — a target-man vs a poacher — to
+ * override this within a position.)
+ */
+const POSITION_STYLE: Record<Position, LeagueStyle> = {
+  GK: { physicality: 5, tempo: 3, technical: 5 },
+  CB: { physicality: 8, tempo: 4, technical: 4 },
+  LB: { physicality: 6, tempo: 7, technical: 6 },
+  RB: { physicality: 6, tempo: 7, technical: 6 },
+  DM: { physicality: 7, tempo: 4, technical: 6 },
+  CM: { physicality: 6, tempo: 6, technical: 7 },
+  AM: { physicality: 4, tempo: 6, technical: 9 },
+  LW: { physicality: 4, tempo: 9, technical: 8 },
+  RW: { physicality: 4, tempo: 9, technical: 8 },
+  ST: { physicality: 7, tempo: 6, technical: 6 },
+};
+
+/** A player's playing-style profile, averaged over the positions he can fill. */
+export function playerStyleProfile(player: PlayerState): LeagueStyle {
+  const rows = player.positions.map((pos) => POSITION_STYLE[pos]);
+  const n = rows.length || 1;
+  const sum = rows.reduce(
+    (acc, s) => ({
+      physicality: acc.physicality + s.physicality,
+      tempo: acc.tempo + s.tempo,
+      technical: acc.technical + s.technical,
+    }),
+    { physicality: 0, tempo: 0, technical: 0 },
+  );
+  return {
+    physicality: sum.physicality / n,
+    tempo: sum.tempo / n,
+    technical: sum.technical / n,
+  };
+}
+
+// ── Recruitment fit (M13b + M13c) ────────────────────────────────────────────
 
 export type FitVerdict = 'wants' | 'fine' | 'reluctant' | 'veto';
 
@@ -115,12 +158,23 @@ export interface CoachFit {
 /** Neutral point of the 1..10 personality scale. */
 const TRAIT_MID = 5.5;
 
+/** How strongly playing-style fit swings the verdict, relative to personality.
+ *  A perfect style match adds ~+7; a total mismatch subtracts ~-9. */
+const STYLE_WEIGHT = 16;
+/** Style distance (0..1) at which the style term is neutral — a modest gap is
+ *  tolerated before it starts counting against the fit. */
+const STYLE_NEUTRAL = 0.45;
+
 /**
- * How well a player suits the coach's recruitment profile. A possession coach
- * who wants low-ego technicians will baulk at a volatile, big-ego maverick that
- * a man-manager would happily take on. Favourites from former clubs are wanted
- * outright. The coach's adaptability widens his tolerance — a flexible coach
- * grumbles where a dogmatic one digs in and vetoes.
+ * How well a player suits the coach's recruitment profile — on TWO axes:
+ *   • personality: a possession coach who wants low-ego technicians baulks at a
+ *     volatile, big-ego maverick a man-manager would happily take on;
+ *   • playing style: that same possession coach (high technical, low
+ *     physicality) rates a ball-playing creator far above a route-one, physical
+ *     profile — where a gegenpress coach wants tempo and running.
+ * Favourites from former clubs are wanted outright. The coach's adaptability
+ * widens his personality tolerance — a flexible coach grumbles where a dogmatic
+ * one digs in and vetoes.
  */
 export function coachFit(coach: ManagerState, player: PlayerState): CoachFit {
   if (coach.favourites.includes(player.name)) {
@@ -136,7 +190,14 @@ export function coachFit(coach: ManagerState, player: PlayerState): CoachFit {
     lean.volatility * (per.volatility - TRAIT_MID) +
     lean.adaptability * (per.adaptability - TRAIT_MID);
   // A more adaptable coach tolerates a wider spread of personalities.
-  const score = raw + (coach.adaptability - 5) * 1.5;
+  const personalityScore = raw + (coach.adaptability - 5) * 1.5;
+
+  // Playing-style fit: how close the player's derived style is to the coach's.
+  const dist = styleDistance(coach.style, playerStyleProfile(player)); // 0..1
+  const styleScore = (STYLE_NEUTRAL - dist) * STYLE_WEIGHT;
+  const styleMismatch = dist > 0.6; // a genuinely wrong profile for this coach
+
+  const score = personalityScore + styleScore;
 
   let verdict: FitVerdict;
   if (score >= 5) verdict = 'wants';
@@ -144,14 +205,15 @@ export function coachFit(coach: ManagerState, player: PlayerState): CoachFit {
   else if (score >= -10) verdict = 'reluctant';
   else verdict = 'veto';
 
+  const styleNote = styleMismatch ? ` — the wrong playing profile for his system` : '';
   const reason =
     verdict === 'wants'
       ? `${player.name}'s profile is exactly what ${coach.identity} wants.`
       : verdict === 'fine'
         ? `${coach.identity} is comfortable with ${player.name}.`
         : verdict === 'reluctant'
-          ? `${coach.identity} has reservations about ${player.name}'s temperament.`
-          : `${coach.identity} does not want ${player.name} — a poor fit for how he works.`;
+          ? `${coach.identity} has reservations about ${player.name}${styleNote || `'s temperament`}.`
+          : `${coach.identity} does not want ${player.name}${styleNote || ' — a poor fit for how he works'}.`;
   return { score: Math.round(score * 10) / 10, verdict, reason };
 }
 
