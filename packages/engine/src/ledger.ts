@@ -940,6 +940,32 @@ const LEDGER_2003: RealTransferLedgerEntry[] = [
   { playerId: 'cur_portillo03', from: 'real_madrid', to: 'fiorentina', window: '2005-07', fee: 0 },
   { playerId: 'cur_ronaldo03', from: 'real_madrid', to: 'milan', window: '2007-01', fee: 7_500_000 },
   { playerId: 'cur_beckham03', from: 'real_madrid', to: 'la_galaxy', window: '2007-07', fee: 0 },
+  // English top three (chelsea-2003) — the real churn of the Roman Empire's first
+  // years and the break-up of the Invincibles / Ferguson's rebuild.
+  { playerId: 'cur_hasselbaink03c', from: 'chelsea', to: 'middlesbrough', window: '2004-07', fee: 0 },
+  { playerId: 'cur_desailly03c', from: 'chelsea', to: 'al_gharafa', window: '2004-07', fee: 0 },
+  { playerId: 'cur_melchiot03c', from: 'chelsea', to: 'birmingham', window: '2004-07', fee: 0 },
+  { playerId: 'cur_veron03c', from: 'chelsea', to: 'inter', window: '2004-08', fee: 0 },
+  { playerId: 'cur_crespo03c', from: 'chelsea', to: 'milan', window: '2004-08', fee: 0 },
+  { playerId: 'cur_mutu03c', from: 'chelsea', to: 'juventus', window: '2005-01', fee: 0 },
+  { playerId: 'cur_babayaro03c', from: 'chelsea', to: 'newcastle', window: '2005-01', fee: 0 },
+  { playerId: 'cur_gallas03c', from: 'chelsea', to: 'arsenal', window: '2006-07', fee: 0 },
+  { playerId: 'cur_duff03c', from: 'chelsea', to: 'newcastle', window: '2006-07', fee: 10_000_000 },
+  { playerId: 'cur_geremi03c', from: 'chelsea', to: 'newcastle', window: '2007-07', fee: 0 },
+  { playerId: 'cur_gjohnson03c', from: 'chelsea', to: 'portsmouth', window: '2007-07', fee: 4_000_000 },
+  { playerId: 'cur_wiltord03a', from: 'arsenal', to: 'lyon', window: '2004-07', fee: 0 },
+  { playerId: 'cur_vieira03a', from: 'arsenal', to: 'juventus', window: '2005-07', fee: 13_000_000 },
+  { playerId: 'cur_edu03a', from: 'arsenal', to: 'valencia', window: '2005-07', fee: 0 },
+  { playerId: 'cur_acole03a', from: 'arsenal', to: 'chelsea', window: '2006-07', fee: 5_000_000 },
+  { playerId: 'cur_campbell03a', from: 'arsenal', to: 'portsmouth', window: '2006-07', fee: 0 },
+  { playerId: 'cur_pires03a', from: 'arsenal', to: 'villarreal', window: '2006-07', fee: 0 },
+  { playerId: 'cur_lauren03a', from: 'arsenal', to: 'portsmouth', window: '2007-07', fee: 0 },
+  { playerId: 'cur_butt03m', from: 'man_utd', to: 'newcastle', window: '2004-07', fee: 0 },
+  { playerId: 'cur_forlan03m', from: 'man_utd', to: 'villarreal', window: '2004-07', fee: 0 },
+  { playerId: 'cur_keane03m', from: 'man_utd', to: 'celtic', window: '2005-11', fee: 0 },
+  { playerId: 'cur_pneville03m', from: 'man_utd', to: 'everton', window: '2005-07', fee: 0 },
+  { playerId: 'cur_kleberson03m', from: 'man_utd', to: 'besiktas', window: '2005-07', fee: 0 },
+  { playerId: 'cur_ronaldo03m', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000 },
 ];
 
 /** era-2006 forward ledger (real-madrid-2006 / juventus-2006 / milan-2007 starts) —
