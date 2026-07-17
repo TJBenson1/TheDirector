@@ -459,6 +459,7 @@ export interface Consequence {
     | 'transferOut' // sell a player to `clubId` for `amount`
     | 'signReal' // sign an incoming real target to the user club (funds + moves)
     | 'signNearMiss' // complete a seed-based near-miss: spawn the subject at the user club; `tag` = near-miss key, `amount` = fee
+    | 'deductPoints' // dock `amount` league points from `clubId` (or the user) this season
     | 'memory' // append a narrative-memory entry (§10)
     | 'log'; // purely informational log line
   playerId?: PlayerId;
