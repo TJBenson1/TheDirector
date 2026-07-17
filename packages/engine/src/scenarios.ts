@@ -262,6 +262,14 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       // PSG holds the young Ronaldinho — the gambit source club (see PSG_1999).
       { id: 'psg', name: 'Paris Saint-Germain', prestige: 70 },
       { id: 'wigan', name: 'Wigan Athletic', prestige: 52 },
+      // European selling clubs (M12A) — the real talent pipeline into the big leagues.
+      { id: 'ajax', name: 'Ajax', prestige: 72 },
+      { id: 'feyenoord', name: 'Feyenoord', prestige: 66 },
+      { id: 'porto', name: 'FC Porto', prestige: 72 },
+      { id: 'benfica', name: 'Benfica', prestige: 70 },
+      { id: 'celtic', name: 'Celtic', prestige: 68 },
+      { id: 'rangers', name: 'Rangers', prestige: 68 },
+      { id: 'galatasaray', name: 'Galatasaray', prestige: 66 },
     ],
     domesticLeagueId: 'eng-1',
     // Leeds' overreach and Lazio's Cragnotti crash are the era's fire-sales.

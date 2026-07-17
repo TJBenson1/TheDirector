@@ -150,6 +150,9 @@ const NEAR_MISS_2003: NearMissEntry[] = [
  * one triggers the fallback + a logged butterfly (§9f).
  */
 const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
+  // Van der Sar's real summer-1999 move out of Ajax — now a live deal a United (or
+  // anyone) can gazump in the opening window, not a fait accompli (M12A/C).
+  { playerId: 'cur_vandersar', from: 'ajax', to: 'juventus', window: '1999-08', fee: 5_000_000 },
   { playerId: 'cur_anelka', from: 'arsenal', to: 'real_madrid', window: '1999-08', fee: 22_000_000 },
   { playerId: 'cur_mcmanaman', from: 'liverpool', to: 'real_madrid', window: '1999-08', fee: 0 },
   { playerId: 'cur_overmars', from: 'arsenal', to: 'barcelona', window: '2000-07', fee: 25_000_000 },

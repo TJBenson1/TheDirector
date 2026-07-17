@@ -14,7 +14,7 @@ describe('contextual development (§5)', () => {
     // Development is stochastic — a playing season usually grows the player but
     // can stall (§5; internal-friction §5). Assert the common case across seeds.
     let grew = 0;
-    const trials = 20;
+    const trials = 40; // enough samples that the clear majority (~70%) is stable, not on a knife-edge
     for (let i = 0; i < trials; i++) {
       const state = cloneState(createNewGame({ seed: `dev-play:${i}` }));
       const p = firstCB(state, 'watford');
@@ -25,6 +25,7 @@ describe('contextual development (§5)', () => {
       // Control professionalism so the test isolates the MINUTES factor rather
       // than whichever procedural filler (and its random personality) is picked.
       p.personality = { professionalism: 9, ego: 4, ambition: 7, loyalty: 7, volatility: 2, adaptability: 7 };
+      p.injuryProneness = 15; // and health, so the roll isolates minutes, not which filler was picked
       expect(estimateMinutesShare(state, state.clubs.watford!, p)).toBeGreaterThanOrEqual(0.6);
       const before = p.ability;
       processSeasonDevelopment(state, Rng.fromSeed(`run:${i}`));

@@ -28,6 +28,7 @@ import { MANCITY_2008_SQUADS } from './curated-eng-2008.js';
 import { LIVERPOOL_2010_SQUADS } from './curated-eng-2010.js';
 import { LIVERPOOL_1995_SQUADS } from './curated-eng-1995.js';
 import { BUNDESLIGA_1997_SQUADS } from './curated-bundesliga-1997.js';
+import { EUROPE_1999_SQUADS } from './curated-europe-1999.js';
 
 /** A curated seed: the intrinsic record plus optional agency hints (§6). Wage,
  *  the `curated` flag, live state and a generated resistance profile are filled
@@ -280,7 +281,8 @@ export const MIDFIELD_POOL_1999: Array<[ClubId, CuratedSeed]> = [
  */
 export const ERA_1999_POOL: Array<[ClubId, CuratedSeed]> = [
   // ── Goalkeepers ──
-  ['juventus', q('juventus', 'vandersar', 'Edwin van der Sar', 1970, 'Netherlands', ['GK'], 84, 85, 2002, 20, t(9, 5, 7, 6, 2, 8))],
+  // Van der Sar starts at Ajax (his real 1998-99 club); his move to Juventus is a
+  // pending ledger deal this window — hijackable (M12A/C), not pre-parked at Juve.
   ['bayern', q('bayern', 'kahn', 'Oliver Kahn', 1969, 'Germany', ['GK'], 88, 88, 2004, 20, t(9, 7, 9, 9, 5, 6))],
   ['real_madrid', q('real_madrid', 'casillas', 'Iker Casillas', 1981, 'Spain', ['GK'], 76, 90, 2004, 20, t(9, 4, 8, 9, 3, 8))],
   // ── Defenders ──
@@ -351,6 +353,9 @@ const BAYERN_1999: CuratedSeed[] = [
   q('bayern', 'zickler_b99', 'Alexander Zickler', 1974, 'Germany', ['ST'], 77, 79, 2002, 40, t(7, 5, 7, 7, 5, 7)),
 ];
 const JUVENTUS_1999: CuratedSeed[] = [
+  // Juve's stopgap keeper until Van der Sar's real move from Ajax completes this
+  // window (Peruzzi having gone the other way, to Inter).
+  q('juventus', 'rampulla_j99', 'Michelangelo Rampulla', 1962, 'Italy', ['GK'], 72, 73, 2002, 20, t(9, 4, 7, 9, 4, 6), { loyalty: 90 }),
   q('juventus', 'ferrara_j99', 'Ciro Ferrara', 1967, 'Italy', ['CB'], 82, 83, 2001, 30, t(9, 5, 8, 9, 4, 6)),
   q('juventus', 'iuliano_j99', 'Mark Iuliano', 1973, 'Italy', ['CB'], 79, 80, 2003, 35, t(8, 5, 7, 8, 5, 6)),
   q('juventus', 'montero_j99', 'Paolo Montero', 1971, 'Uruguay', ['CB'], 83, 84, 2003, 40, t(8, 7, 8, 8, 7, 6)),
@@ -473,6 +478,12 @@ for (const [club, seed] of [...MIDFIELD_POOL_1999, ...ERA_1999_POOL]) {
 // The 2009 Madrid-cascade depth + the 2000 supporting cast live at Real Madrid.
 for (const seed of [...REAL_MADRID_CASCADE_1999, ...REAL_MADRID_2000]) {
   (MAN_UTD_1999_SQUADS.real_madrid ??= []).push(seed);
+}
+// The European selling clubs (M12A) — real Dutch/Portuguese/Scottish/Turkish squads
+// merged in: additions for clubs already present (PSV, Monaco, Marseille), whole new
+// clubs otherwise (Ajax, Porto, Benfica, Celtic, Rangers, Galatasaray, Feyenoord).
+for (const [club, seeds] of Object.entries(EUROPE_1999_SQUADS)) {
+  MAN_UTD_1999_SQUADS[club] = [...(MAN_UTD_1999_SQUADS[club] ?? []), ...seeds];
 }
 
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
