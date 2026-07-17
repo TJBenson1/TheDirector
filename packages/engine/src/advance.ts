@@ -24,7 +24,7 @@ import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from 
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
-import { executeLedgerWindow } from './ledgerExec.js';
+import { executeLedgerWindow, executeAcademyIntakes } from './ledgerExec.js';
 import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli, promoteJuventus } from './italyEvents.js';
 import { restoreRelegatedClubs } from './relegation.js';
@@ -71,6 +71,9 @@ function runMonth(state: GameState, rng: Rng): void {
     // Retire the aged and refresh with home-grown youth, so a 25-year save doesn't
     // ossify into a squad of fifty-year-olds (long-horizon world coherence, §5).
     processRetirementsAndYouth(state, rng);
+    // The real next generation breaks through at their debut window (Rooney at
+    // Everton, a teenage Messi at Barça) — real names beneath the aging spine.
+    executeAcademyIntakes(state);
     processSeasonMorale(state);
     // 4. Rubber-band: update world defiance from last season's finish (§9a #5).
     updateWorldDefiance(state);

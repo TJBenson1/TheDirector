@@ -144,7 +144,7 @@ export {
   type ClubPressure,
   type AmbitionOverride,
 } from './ledger.js';
-export { executeLedgerWindow, stepForEntry, ledgerSquadMatch, ledgerClubs } from './ledgerExec.js';
+export { executeLedgerWindow, executeAcademyIntakes, stepForEntry, ledgerSquadMatch, ledgerClubs } from './ledgerExec.js';
 export {
   suggestTargets,
   queryPlayer,

@@ -26,6 +26,7 @@ import {
   clubSquadPlayers,
   computeWageBill,
   buildResistance,
+  instantiateCuratedSeed,
 } from './players.js';
 import { initialFinances, suggestWage } from './finance.js';
 import { CURATED_SQUADS } from './data/curated-1999.js';
@@ -235,32 +236,7 @@ function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, 
 
     // Curated marquee real players first (real squads at real clubs).
     for (const seed of seeds) {
-      const { hardBlocks, loyalty, ...rest } = seed;
-      const age = year - seed.birthYear;
-      const player: PlayerState = {
-        ...rest,
-        positions: [...seed.positions],
-        personality: { ...seed.personality },
-        birthCeiling: seed.potentialCeiling,
-        wage: 0,
-        curated: true,
-        fitness: 100,
-        morale: 78,
-        form: 0,
-        injury: null,
-        injuryHistory: 0,
-        wonderkid: seed.potentialCeiling >= 85 && age <= 21,
-        benchedDevSeasons: 0,
-        reachedPotential: false,
-        lastSeason: null,
-        seasonMonthsInjured: 0,
-        adaptation: null,
-        resistance: buildResistance(seed.personality, seed.nationality, age, seed.ability, clubRng),
-        agitation: 0,
-      };
-      if (loyalty !== undefined) player.resistance.clubLoyalty = loyalty;
-      if (hardBlocks) player.resistance.hardBlocks = hardBlocks.map((b) => ({ ...b }));
-      player.wage = suggestWage(player, year);
+      const player = instantiateCuratedSeed(seed, year, clubRng);
       state.players[player.id] = player;
       club.squad.push(player.id);
     }

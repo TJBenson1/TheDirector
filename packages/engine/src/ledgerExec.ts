@@ -18,11 +18,47 @@ import { WINDOW_STEPS } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
-import { clubSquadPlayers, playerStarValue } from './players.js';
+import { clubSquadPlayers, playerStarValue, instantiateCuratedSeed, recomputeClubStrength } from './players.js';
 import { appendMemory } from './memory.js';
 import { areDirectRivals } from './agency.js';
 import { applyPrematureMove } from './development.js';
 import { ERA_REALITY, eraForScenario, entryKey, type RealTransferLedgerEntry, type FallbackTier, type InvalidationCause } from './ledger.js';
+
+/**
+ * Fire the era's academy intakes due this season (long-horizon fidelity, §4). At
+ * the July rollover each real graduate whose debut year has arrived is instantiated
+ * from its curated seed and joins its real club — a teenage Messi at Barça, Rooney
+ * at Everton — so a long save is repopulated by real names, not just anonymous
+ * academy filler. Idempotent: a graduate already present (or already graduated) is
+ * skipped, and an intake whose club has vanished is ignored.
+ */
+export function executeAcademyIntakes(state: GameState): void {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack?.academyIntakes?.length || !pack.academyGraduates?.length) return;
+  const year = Number(state.clock.date.slice(0, 4));
+  const rng = new Rng(state.meta.rngState).fork(`intake:${year}`);
+  const byId = new Map(pack.academyGraduates.map((g) => [g.id, g]));
+
+  for (const intake of pack.academyIntakes) {
+    if (intake.year !== year) continue;
+    if (state.players[intake.playerId]) continue; // already in the world
+    const seed = byId.get(intake.playerId);
+    if (!seed) continue;
+    const club = state.clubs[intake.clubId];
+    if (!club) continue;
+    const player = instantiateCuratedSeed(seed, year, rng.fork(intake.playerId));
+    player.club = intake.clubId; // debut at the real club
+    state.players[player.id] = player;
+    club.squad.push(player.id);
+    if (club.leagueId !== null) recomputeClubStrength(state, club.id);
+    logEvent(state, {
+      category: 'development',
+      code: 'academy.graduate',
+      message: `${player.name} breaks through at ${club.name} (${year - player.birthYear})`,
+      data: { playerId: player.id, clubId: club.id, age: year - player.birthYear },
+    });
+  }
+}
 
 function positionGroupOf(p: PlayerState): string {
   const pos = p.positions[0] ?? 'CM';

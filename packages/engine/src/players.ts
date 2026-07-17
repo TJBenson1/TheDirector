@@ -21,6 +21,7 @@ import type {
   Personality,
   ResistanceProfile,
 } from './types.js';
+import type { CuratedSeed } from './data/curated-1999.js';
 import { Rng } from './rng.js';
 import { suggestWage } from './finance.js';
 import { effectiveAbility } from './adaptation.js';
@@ -154,6 +155,41 @@ function rollAge(bias: GeneratePlayerOptions['ageBias'], rng: Rng): number {
 
 function clampAbility(a: number): number {
   return Math.max(32, Math.min(94, Math.round(a)));
+}
+
+/**
+ * Instantiate a curated real player from its seed — the single source of truth for
+ * turning a CuratedSeed into a live PlayerState, shared by game creation (the
+ * kickoff squads) and academy intakes (the real next generation arriving mid-save).
+ */
+export function instantiateCuratedSeed(seed: CuratedSeed, year: number, rng: Rng): PlayerState {
+  const { hardBlocks, loyalty, ...rest } = seed;
+  const age = year - seed.birthYear;
+  const player: PlayerState = {
+    ...rest,
+    positions: [...seed.positions],
+    personality: { ...seed.personality },
+    birthCeiling: seed.potentialCeiling,
+    wage: 0,
+    curated: true,
+    fitness: 100,
+    morale: 78,
+    form: 0,
+    injury: null,
+    injuryHistory: 0,
+    wonderkid: seed.potentialCeiling >= 85 && age <= 21,
+    benchedDevSeasons: 0,
+    reachedPotential: false,
+    lastSeason: null,
+    seasonMonthsInjured: 0,
+    adaptation: null,
+    resistance: buildResistance(seed.personality, seed.nationality, age, seed.ability, rng),
+    agitation: 0,
+  };
+  if (loyalty !== undefined) player.resistance.clubLoyalty = loyalty;
+  if (hardBlocks) player.resistance.hardBlocks = hardBlocks.map((b) => ({ ...b }));
+  player.wage = suggestWage(player, year);
+  return player;
 }
 
 export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {

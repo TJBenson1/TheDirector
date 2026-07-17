@@ -15,6 +15,8 @@
  */
 
 import type { ClubId, PlayerId, YearMonth } from './types.js';
+import type { CuratedSeed } from './data/curated-1999.js';
+import { GRADUATES_1999, INTAKES_1999 } from './data/curated-graduates-1999.js';
 
 /** One real historical transfer among tracked clubs. */
 export interface RealTransferLedgerEntry {
@@ -112,6 +114,11 @@ export interface EraRealityPack {
   /** Moves that ALMOST happened — preferred targets when a butterfly deprives
    *  their club of a real signing (§ butterfly showcase). Optional. */
   nearMissLedger?: NearMissEntry[];
+  /** The real next generation — curated seeds for players who break through
+   *  mid-timeline (a Rooney in a 1999 start), instantiated at their debut window by
+   *  `academyIntakes` so a long save is repopulated by real names, not just
+   *  anonymous academy filler (§4, long-horizon fidelity). Optional. */
+  academyGraduates?: CuratedSeed[];
 }
 
 /**
@@ -812,7 +819,7 @@ const INJURIES_1998: RealInjuryEntry[] = [
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1996': { realTransferLedger: LEDGER_1996_2001, academyIntakes: [], realInjuries: [] },
-  'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999 },
+  'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: INTAKES_1999, realInjuries: INJURIES_1999, academyGraduates: GRADUATES_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, nearMissLedger: NEAR_MISS_2004 },
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [] },
