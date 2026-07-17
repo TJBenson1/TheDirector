@@ -355,8 +355,40 @@ export const SERIE_A_1995: LeagueSeed = {
   ],
 };
 
+/** England, 1996–97 Premier League — Ferguson's champions, Newcastle's Entertainers,
+ *  Wenger's arriving Arsenal and Liverpool's Spice Boys. Shared by liverpool-1995,
+ *  chelsea-1996 and arsenal-1996. */
+export const ENGLAND_1996: LeagueSeed = {
+  id: 'eng-1996',
+  name: 'FA Premier League',
+  season: '1996-07',
+  clubs: [
+    { id: 'man_utd', name: 'Manchester United', prestige: 84, strength: 84 },
+    { id: 'newcastle', name: 'Newcastle United', prestige: 74, strength: 82 },
+    { id: 'arsenal', name: 'Arsenal', prestige: 76, strength: 80 },
+    { id: 'liverpool', name: 'Liverpool', prestige: 78, strength: 80 },
+    { id: 'chelsea', name: 'Chelsea', prestige: 68, strength: 78 },
+    { id: 'aston_villa', name: 'Aston Villa', prestige: 66, strength: 76 },
+    { id: 'blackburn', name: 'Blackburn Rovers', prestige: 66, strength: 74 },
+    { id: 'leeds', name: 'Leeds United', prestige: 66, strength: 72 },
+    { id: 'everton', name: 'Everton', prestige: 64, strength: 72 },
+    { id: 'spurs', name: 'Tottenham Hotspur', prestige: 66, strength: 72 },
+    { id: 'sheffield_wednesday', name: 'Sheffield Wednesday', prestige: 56, strength: 70 },
+    { id: 'wimbledon', name: 'Wimbledon', prestige: 50, strength: 70 },
+    { id: 'leicester', name: 'Leicester City', prestige: 52, strength: 69 },
+    { id: 'west_ham', name: 'West Ham United', prestige: 58, strength: 69 },
+    { id: 'middlesbrough', name: 'Middlesbrough', prestige: 54, strength: 68 },
+    { id: 'derby', name: 'Derby County', prestige: 50, strength: 67 },
+    { id: 'sunderland', name: 'Sunderland', prestige: 52, strength: 65 },
+    { id: 'coventry', name: 'Coventry City', prestige: 48, strength: 65 },
+    { id: 'southampton', name: 'Southampton', prestige: 48, strength: 65 },
+    { id: 'nottm_forest', name: 'Nottingham Forest', prestige: 52, strength: 63 },
+  ],
+};
+
 export const LEAGUES: Record<string, LeagueSeed> = {
   'eng-1': ENGLAND_1999,
+  'eng-1996': ENGLAND_1996,
   'esp-1': SPAIN_2000,
   'ita-1': SERIE_A_1998,
   'ita-1995': SERIE_A_1995,
@@ -436,6 +468,7 @@ const GERMAN_POOL: LeagueClubSeed[] = [
  *  out at attach time). */
 export const SECOND_TIER: Record<string, LeagueClubSeed[]> = {
   'eng-1': ENGLISH_POOL,
+  'eng-1996': ENGLISH_POOL,
   'eng-2001': ENGLISH_POOL,
   'eng-2004': ENGLISH_POOL,
   'eng-2013': ENGLISH_POOL,

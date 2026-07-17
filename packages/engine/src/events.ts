@@ -1850,8 +1850,120 @@ const JUVENTUS_1995_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── Liverpool, 1995 (the Spice Boys) storyline pack ──────────────────────────
+const LIVERPOOL_1995_PACK: ScriptedEvent[] = [
+  {
+    id: 'spice-boys-culture',
+    date: '1995-09',
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:spice-boys-culture',
+      title: 'The "Spice Boys" tag is sticking',
+      description: 'Your gifted young side has the talent to win the title — and a growing reputation for fashion shoots, nightclubs and flakiness. The press mock the white suits before they\'re even worn. Crack down on the culture, or trust the talent to deliver?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'crack-down', label: 'Instil steel and professionalism', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'culture', text: 'Toughened up the Spice Boys — the divergence from the real flakiness.' }], onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -3 }] },
+        { id: 'trust', label: 'Let the talent express itself', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 6 }, { kind: 'memory', tag: 'culture', text: 'Trusted the flair — brilliant on its day, brittle on others.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'culture', text: 'The image problem festers, as reality.' }],
+      memoryTags: ['culture', 'spice-boys'],
+    }),
+  },
+  {
+    id: 'collymore-fowler',
+    date: '1995-11',
+    requires: (s) => playerAt(s, 'cur_collymore96', 'liverpool') && s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:collymore-fowler',
+      title: 'Stan Collymore is unsettled and combustible',
+      description: 'Your British-record striker is a prodigious talent and a management nightmare — homesick, moody, at odds with the dressing room. Invest the time to settle him alongside Fowler, or cut your losses before it sours?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'settle', label: 'Put your arm around him and settle him', successProbability: 0.5, onSuccess: [{ kind: 'morale', playerId: 'cur_collymore96', amount: 10 }, { kind: 'agitation', playerId: 'cur_collymore96', amount: -18 }, { kind: 'memory', tag: 'man-management', text: 'Settled Collymore — unlocking the talent reality wasted.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_collymore96', amount: 10 }] },
+        { id: 'hard-line', label: 'Take a hard line — he must conform', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'agitation', playerId: 'cur_collymore96', amount: 14 }], onFailure: [{ kind: 'morale', playerId: 'cur_collymore96', amount: -10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_collymore96', amount: 14 }],
+      memoryTags: ['man-management', 'cur_collymore96'],
+    }),
+  },
+  {
+    id: 'mcmanaman-bosman',
+    date: '1997-01',
+    requires: (s) => playerAt(s, 'cur_mcmanaman96', 'liverpool') && s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:mcmanaman-bosman',
+      title: 'Real Madrid are circling Steve McManaman',
+      description: 'The new Bosman ruling means your best creative player could walk for nothing when his deal expires — and Real Madrid are watching (they eventually took him free in 1999). Tie him down now on big money, cash in while you can, or risk losing him for nothing?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'tie-down', label: 'Break the wage structure to keep him', successProbability: 0.55, onSuccess: [{ kind: 'morale', playerId: 'cur_mcmanaman96', amount: 8 }, { kind: 'money', clubId: 'liverpool', amount: -4_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Kept McManaman off a Bosman — the divergence from his free Madrid move.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_mcmanaman96', amount: 8 }] },
+        { id: 'cash-in', label: 'Cash in now while he has value', successProbability: 0.75, onSuccess: [{ kind: 'transferOut', playerId: 'cur_mcmanaman96', clubId: 'real_madrid', amount: 12_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Sold McManaman for a fee, not a Bosman free.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_mcmanaman96', amount: 10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer-saga', text: 'The McManaman contract drifts towards a free exit, as reality.' }],
+      memoryTags: ['transfer-saga', 'cur_mcmanaman96'],
+    }),
+  },
+];
+
+// ── Chelsea, 1996 (Gullit's revolution, pre-money) storyline pack ────────────
+const CHELSEA_1996_PACK: ScriptedEvent[] = [
+  {
+    id: 'gullit-revolution',
+    date: '1996-08',
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:gullit-revolution',
+      title: 'Sexy football, foreign stars — a new Chelsea',
+      description: 'Your player-manager is importing continental flair — Vialli, Leboeuf, soon Zola — and preaching "sexy football". It is glamorous and years ahead of its time, but there are no billions behind it. Go all-in on the cosmopolitan vision, or keep some English steel and pragmatism?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'all-in', label: 'Go all-in on the continental revolution', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'chelsea', amount: 6 }, { kind: 'fanTrust', amount: 6, text: 'The Bridge falls in love with the sexy football.' }, { kind: 'memory', tag: 'identity', text: 'Backed Gullit\'s revolution — the making of the modern Chelsea.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'balance', label: 'Temper the flair with English steel', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'identity', text: 'Kept a pragmatic core alongside the imports.' }], onFailure: [{ kind: 'morale', clubId: 'chelsea', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'identity', text: 'The revolution rolls on without your steer.' }],
+      memoryTags: ['identity', 'gullit'],
+    }),
+  },
+  {
+    id: 'zola-magic',
+    date: '1996-12',
+    requires: (s) => playerAt(s, 'cur_zola96', 'chelsea') && s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:zola-magic',
+      title: 'Gianfranco Zola has lit up the league',
+      description: 'Your November signing has been a revelation — the little Sardinian magician is the best player in England and adored at the Bridge. Build the whole side to serve his genius, or keep a system that doesn\'t lean on one man?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'serve-zola', label: 'Build everything around Zola', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_zola96', amount: 8 }, { kind: 'fanTrust', amount: 6, text: 'Zola at the heart of it all — magic every week.' }, { kind: 'memory', tag: 'tactics', text: 'Made Zola the fulcrum — Footballer of the Year, as reality.' }], onFailure: [{ kind: 'morale', clubId: 'chelsea', amount: -3 }] },
+        { id: 'system', label: 'Keep a balanced system', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }], onFailure: [{ kind: 'agitation', playerId: 'cur_zola96', amount: 6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'tactics', text: 'Zola dazzles regardless.' }],
+      memoryTags: ['tactics', 'cur_zola96'],
+    }),
+  },
+  {
+    id: 'gullit-board-tension',
+    date: '1998-02',
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:gullit-board-tension',
+      title: 'The player-manager wants a "netto" pay rise',
+      description: 'Gullit is doing brilliantly, but a contract row is brewing — and reality remembers this ending in a shock sacking despite success. Meet his demands and keep the revolution\'s architect, or stand firm and risk losing him?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'meet', label: 'Meet his demands — keep the architect', successProbability: 0.55, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Kept Gullit — the divergence from his shock 1998 sacking.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'stand-firm', label: 'Stand firm on the money', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Held the line — as the real board did, to Gullit\'s cost.' }], onFailure: [{ kind: 'managerRelationship', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: -5 }],
+      memoryTags: ['manager', 'gullit'],
+    }),
+  },
+];
+
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
+  'liverpool-1995': LIVERPOOL_1995_PACK,
+  'chelsea-1996': CHELSEA_1996_PACK,
   'milan-1995': MILAN_1995_PACK,
   'juventus-1995': JUVENTUS_1995_PACK,
   'dortmund-1997': DORTMUND_1997_PACK,

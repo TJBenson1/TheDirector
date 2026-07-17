@@ -246,6 +246,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     clubs: ELITE_CLUBS,
     domesticLeagueId: 'eng-1',
   },
+  // ── English 1996 cluster (shared curated pack) ───────────────────────────────
   'arsenal-1996': {
     id: 'arsenal-1996',
     name: 'Arsenal — 1996: Arrival of Wenger',
@@ -255,7 +256,29 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     boardPatience: 75,
     boardExpectedFinish: 3,
     clubs: ELITE_CLUBS,
-    domesticLeagueId: 'eng-1',
+    domesticLeagueId: 'eng-1996',
+  },
+  'liverpool-1995': {
+    id: 'liverpool-1995',
+    name: 'Liverpool — 1995: Spice Boys',
+    startDate: '1995-07',
+    playerClub: 'liverpool',
+    mandate: 'Make the swagger count — win the title the flashy, flaky Spice Boys never did.',
+    boardPatience: 74,
+    boardExpectedFinish: 3,
+    clubs: ELITE_CLUBS,
+    domesticLeagueId: 'eng-1996',
+  },
+  'chelsea-1996': {
+    id: 'chelsea-1996',
+    name: 'Chelsea — 1996: Pre-Money',
+    startDate: '1996-07',
+    playerClub: 'chelsea',
+    mandate: 'No billions, no shortcuts — build a top-four side the hard way around Gullit\'s cosmopolitan revolution.',
+    boardPatience: 76,
+    boardExpectedFinish: 6,
+    clubs: ELITE_CLUBS,
+    domesticLeagueId: 'eng-1996',
   },
   'real-madrid-2000': {
     id: 'real-madrid-2000',

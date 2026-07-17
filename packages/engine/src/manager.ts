@@ -64,6 +64,8 @@ const STYLE_BY_NAME: Record<string, ManagerStyle> = {
   'Kevin Keegan': st('Cavalier — all-out attack', 0.6, 0.6),
   'Didier Deschamps': st('Pragmatic, winning-first', 0.4, 0.5),
   'Nevio Scala': st('Balanced, Italian rigour', 0.5, 0.5),
+  'Roy Evans': st('Passing, flair-friendly', 0.65, 0.55),
+  'Ruud Gullit': st('Sexy football — expansive', 0.7, 0.55),
   'Jürgen Klopp': st('Heavy-metal pressing, youth', 0.55, 0.8),
   'Manuel Pellegrini': st('Attacking possession', 0.7, 0.45),
   'Brendan Rodgers': st('High-tempo possession', 0.75, 0.6),
@@ -95,6 +97,8 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
   'bayern-1998': { name: 'Ottmar Hitzfeld', reputation: 82 },
   'milan-1995': { name: 'Fabio Capello', reputation: 84 },
   'juventus-1995': { name: 'Marcello Lippi', reputation: 82 },
+  'liverpool-1995': { name: 'Roy Evans', reputation: 68 },
+  'chelsea-1996': { name: 'Ruud Gullit', reputation: 70 },
 };
 
 /** A pool of coaches available to hire, each with the YEARS he was a plausible
