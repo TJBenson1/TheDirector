@@ -21,6 +21,12 @@ importers:
         specifier: ^3.0.5
         version: 3.2.7(@types/node@26.1.1)(tsx@4.23.0)
 
+  apps/api:
+    dependencies:
+      '@director/engine':
+        specifier: workspace:*
+        version: link:../../packages/engine
+
   packages/engine: {}
 
   packages/harness:

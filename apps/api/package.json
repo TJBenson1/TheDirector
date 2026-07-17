@@ -1,0 +1,16 @@
+{
+  "name": "@director/api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Zero-dependency HTTP API wrapping the pure @director/engine. The app's backend.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "@director/engine": "workspace:*"
+  }
+}
