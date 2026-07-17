@@ -19,6 +19,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
 import { EUROPE_LATE90S_SQUADS } from './curated-europe-late90s.js';
+import { ITA_DOMESTIC_1998_SQUADS } from './curated-ita-domestic-1998.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -351,5 +352,11 @@ export const INTER_1998_SQUADS: Record<string, CuratedSeed[]> = {
 // already present.
 for (const [club, seeds] of Object.entries(EUROPE_LATE90S_SQUADS)) {
   if (club === 'porto' || club === 'valencia' || club === 'deportivo') continue; // already curated here
+  INTER_1998_SQUADS[club] = [...(INTER_1998_SQUADS[club] ?? []), ...seeds];
+}
+
+// Domestic mid-tier of the 1998-99 Serie A (M12 shortlist supply) — real squad
+// players at the non-elite clubs so options lists read like a real shortlist.
+for (const [club, seeds] of Object.entries(ITA_DOMESTIC_1998_SQUADS)) {
   INTER_1998_SQUADS[club] = [...(INTER_1998_SQUADS[club] ?? []), ...seeds];
 }
