@@ -34,7 +34,10 @@ describe('scenarios (§14 start points)', () => {
       expect(league).toBeDefined();
       expect(league!.clubIds).toContain(state.playerClub);
       expect(state.meta.startYear).toBe(Number(scenario.startDate.slice(0, 4)));
-      expect(Object.keys(state.players).length).toBeGreaterThan(400);
+      // A populated world of REAL players only — no procedural filler (no regens):
+      // the curated spine across every modelled club, so a real spine, not a wall
+      // of anonymous names. Depth below the spine is abstract, not extra bodies.
+      expect(Object.keys(state.players).length).toBeGreaterThan(150);
 
       // A full season completes and crowns a champion without error.
       const ended = playASeason(state);

@@ -11,7 +11,7 @@
 import type { GameState, Position } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
-import { clubSquadPlayers, recomputeClubStrength, overstackedStars, generatePlayer } from './players.js';
+import { clubSquadPlayers, recomputeClubStrength, overstackedStars } from './players.js';
 
 /** Age at which decline begins, by position group (keepers last longest). */
 const DECLINE_START: Record<Position, number> = {
@@ -88,7 +88,6 @@ export function retireAgeFor(positions: Position[], professionalism: number): nu
 
 /** The 23-slot squad-refresh template — a young graduate is generated into a
  *  position the squad most needs, cycling through this canonical spine. */
-const YOUTH_SLOTS: Position[] = ['GK', 'CB', 'RB', 'LB', 'CB', 'DM', 'CM', 'AM', 'RW', 'LW', 'ST'];
 
 /**
  * Retirement & youth regeneration (§5, long-horizon world coherence). Applied at
@@ -98,17 +97,19 @@ const YOUTH_SLOTS: Position[] = ['GK', 'CB', 'RB', 'LB', 'CB', 'DM', 'CM', 'AM',
  * refreshes with home-grown youth so squads stay a realistic age pyramid rather
  * than the frozen kickoff generation slowly aching into their sixties.
  *
- * Reality-faithful ACADEMY INTAKES (the real next generation — a Rooney, a Messi)
- * are layered on top of this by the ledger's academyIntakes; this is the
- * procedural depth beneath them, exactly as generated filler sits beneath the
- * curated stars at kickoff (Principle 2).
+ * The real next generation — a Rooney, a Messi — arrives via the ledger's
+ * authored academyIntakes. There is NO procedural regeneration (no regens, real
+ * youth only): a retiree simply leaves, and the squad depth his exit opens is
+ * carried by the abstract depth term in the strength calc, not by an invented
+ * academy body. Squads thin toward their real, named spine over a long save
+ * rather than being padded back out with fabricated names.
  */
 export function processRetirementsAndYouth(state: GameState, rng: Rng): void {
   const year = Number(state.clock.date.slice(0, 4));
   const rr = rng.fork(`retire:${year}`);
 
   for (const club of Object.values(state.clubs)) {
-    // 1. Retirements — collect first, then remove (don't mutate while iterating).
+    // Retirements — collect first, then remove (don't mutate while iterating).
     const retirees = [];
     for (const player of clubSquadPlayers(state, club.id)) {
       const age = year - player.birthYear;
@@ -133,34 +134,7 @@ export function processRetirementsAndYouth(state: GameState, rng: Rng): void {
       });
     }
 
-    // 2. Youth regeneration — top a thinned squad back up to a working size with
-    //    home-grown prospects (procedural depth, below the curated/real spine).
-    const target = club.leagueId !== null ? 20 : 18;
-    let slot = 0;
-    while (club.squad.length < target) {
-      const position = YOUTH_SLOTS[slot % YOUTH_SLOTS.length]!;
-      slot += 1;
-      const base = Math.round(club.baseStrength ?? club.strength ?? 60);
-      const id = `gen:${club.id}:${year}:${slot}`;
-      if (state.players[id]) continue; // determinism guard (shouldn't collide)
-      const youth = generatePlayer({
-        rng: rr.fork(id),
-        id,
-        clubId: club.id,
-        leagueId: club.leagueId,
-        position,
-        targetAbility: Math.max(40, base - 16),
-        currentYear: year,
-        ageBias: 'young',
-      });
-      // Anonymous academy depth, not a tracked "generational prospect" — the real
-      // next-gen stars arrive via authored academyIntakes (Principle 2), so this
-      // filler never counts as a speculative wonderkid gamble.
-      youth.wonderkid = false;
-      state.players[id] = youth;
-      club.squad.push(id);
-    }
-    if (club.leagueId !== null) recomputeClubStrength(state, club.id);
+    if (retirees.length && club.leagueId !== null) recomputeClubStrength(state, club.id);
   }
 }
 

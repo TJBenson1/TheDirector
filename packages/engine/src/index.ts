@@ -64,15 +64,15 @@ export {
 } from './adaptation.js';
 export { computeSeasonStats, computePlayerSeason } from './stats.js';
 export {
-  generatePlayer,
-  generateSquad,
   deriveRawStrength,
   recomputeClubStrength,
+  clubAnchorRaw,
+  clubDepthPad,
   clubSquadPlayers,
   availableSquadPlayers,
   isAvailable,
   computeWageBill,
-  type GeneratePlayerOptions,
+  type DepthPad,
 } from './players.js';
 export {
   processInjuriesMonth,

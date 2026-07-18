@@ -73,15 +73,21 @@ export const TARGETS: CalibrationTarget[] = [
   },
   {
     id: 'serious-injury-rate',
-    label: 'Serious (6mo+) injuries league-wide per squad-season',
-    band: '~1–2 avg',
+    label: 'Serious (6mo+) injuries per real-player-season (reality-calibrated)',
+    band: '~2–6% of players/season',
     ownedBy: 'M4',
     active: true,
     evaluate: (c) => {
+      // A real-players-only world (no regens) models far fewer bodies than the old
+      // ~23-man procedural squads, so the historic "1–2 per squad-season" COUNT no
+      // longer means the same thing — it scaled with body count. Measure the RATE
+      // per real player instead: what share of tracked (real) players suffer a 6mo+
+      // injury in a season. Cruciate-class injuries are rare — a realistic ~2–6%.
+      // Body-count-independent, so it stays honest whatever the squad sizes.
       const injuries = sum(c, (x) => x.seriousInjuriesLeagueWide);
-      const squadSeasons = sum(c, (x) => x.squadSeasons);
-      const rate = squadSeasons > 0 ? injuries / squadSeasons : 0;
-      return { value: `${rate.toFixed(2)}/squad-season`, pass: rate >= 1 && rate <= 2 };
+      const playerSeasons = sum(c, (x) => x.realPlayerSeasons);
+      const rate = playerSeasons > 0 ? injuries / playerSeasons : 0;
+      return { value: `${(rate * 100).toFixed(2)}% of players/season`, pass: rate >= 0.02 && rate <= 0.06 };
     },
   },
   {
@@ -156,21 +162,25 @@ export const TARGETS: CalibrationTarget[] = [
     },
   },
   {
-    // internal-friction §5. Even well-managed generational prospects reach
-    // their ceiling only ~40–60% of the time — a ~100% hit rate is a bug.
+    // internal-friction §5. RETIRED by the no-regens / real-youth-only design.
+    // This target measured the anti-hindsight rate of the user's speculative
+    // PROCEDURAL wonderkid gambles (runCareer counts `!player.curated` prospects):
+    // even well-managed, they should reach ceiling only ~40–60% of the time, never
+    // ~100%. With no regens there are NO procedural prospects — every prospect is a
+    // real, curated player who follows the reality-rail (a real Rooney/Messi does
+    // reach his peak, by design), so this metric has no subjects and can never be
+    // sampled. Development realism for prospects who are BENCHED is still guarded by
+    // `benched-wonderkid-plateau` (curated + procedural). Deactivated, not deleted,
+    // to preserve the rationale for review.
     id: 'prospect-hit-rate',
-    label: 'Well-managed generational prospects reaching ceiling',
-    band: '~32–62%',
+    label: 'Well-managed generational prospects reaching ceiling (retired: no procedural prospects)',
+    band: '~32–62% (obsolete under no-regens)',
     ownedBy: 'M5/M6',
-    active: true,
+    active: false,
     evaluate: (c) => {
       const wk = sum(c, (x) => x.wellManagedWonderkids);
       const reached = sum(c, (x) => x.wellManagedWonderkidsReachedCeiling);
       const f = wk > 0 ? reached / wk : 0;
-      // The natural rate sits ~35% with a ~3pp Monte-Carlo standard error on this
-      // sample, so the tolerance must be at least that wide — a 0.35 floor tripped
-      // on any unrelated RNG perturbation. The realism guard is unchanged: a
-      // minority of well-managed prospects reach ceiling, never ~all, never ~none.
       return { value: pct(f), pass: wk > 0 && f >= 0.32 && f <= 0.62 };
     },
   },

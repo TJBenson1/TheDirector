@@ -60,10 +60,9 @@ describe('player query + the 16+ rule (§4)', () => {
     expect(q.note).toMatch(/16\+ rule|not yet on the radar/i);
   });
 
-  it('never surfaces procedural filler as a queryable player', () => {
+  it('the world contains no procedural filler at all (real players only, no regens)', () => {
     const state = createNewGame({ seed: 'filler' });
-    const proc = Object.values(state.players).find((p) => isProcedural(p))!;
-    const q = queryPlayer(state, proc.id);
-    expect(q.visible).toBe(false);
+    const proc = Object.values(state.players).filter((p) => isProcedural(p));
+    expect(proc.length).toBe(0);
   });
 });

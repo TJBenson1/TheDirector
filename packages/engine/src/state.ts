@@ -20,10 +20,8 @@ import { getScenario, DEFAULT_SCENARIO_ID } from './scenarios.js';
 import { LEAGUES } from './leagues.js';
 import { initLeagueSeason } from './season.js';
 import {
-  generateSquad,
-  deriveRawStrength,
+  clubAnchorRaw,
   recomputeClubStrength,
-  clubSquadPlayers,
   computeWageBill,
   buildResistance,
   instantiateCuratedSeed,
@@ -225,12 +223,11 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
 /**
  * Fill every club's squad, then anchor its live strength to its authored
  * baseline and derive its finances. Curated real players are used where the
- * scenario provides them; the rest is procedural filler (§4, §9e).
+ * scenario provides them; squad depth below the named spine is modelled
+ * abstractly in the strength calc, never as procedural filler (§4, no regens).
  */
 function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, rng: Rng): void {
   const curatedForScenario = CURATED_SQUADS[scenarioId] ?? {};
-
-  const TARGET_SQUAD = 23;
 
   for (const club of Object.values(state.clubs)) {
     const clubRng = rng.fork(`squad:${club.id}`);
@@ -243,34 +240,16 @@ function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, 
       club.squad.push(player.id);
     }
 
-    // The PLAYABLE club is REAL PLAYERS ONLY — no procedural filler in the squad
-    // the Director actually manages (his own dressing room must read true, name by
-    // name). Rival/context clubs still get anonymous depth so their squads are
-    // numerically complete for match strength.
-    const realOnly = club.id === state.playerClub;
+    // REAL PLAYERS ONLY — every club holds only its curated, named spine (Principle:
+    // no regens, real youth only). The squad depth a reserve/academy side would
+    // provide is modelled ABSTRACTLY in the strength calc (clubDepthPad), not as
+    // procedural filler in the world, so no invented name ever appears anywhere —
+    // whichever club the Director inspects reads true, name by name. Real next-gen
+    // players arrive over the save via authored academyIntakes.
 
-    // Procedural depth to fill the squad out (anonymous, per Principle 2). Where a
-    // real first XI is already curated, the filler is DEPTH only — it must not
-    // out-rate the club's own stars (a Gerrard has to stand out from his squad).
-    const fillCount = realOnly ? 0 : Math.max(0, TARGET_SQUAD - club.squad.length);
-    if (fillCount > 0) {
-      const firstTeamSlots = seeds.length > 0 ? Math.max(0, 11 - seeds.length) : 14;
-      // Anonymous filler must never OUT-RATE the club's own real stars — a Gerrard
-      // always leads his squad, not some procedural nobody (§4 ratings spread).
-      const starCap = seeds.length > 0 ? Math.max(...seeds.map((s) => s.ability)) - 1 : Infinity;
-      const generated = generateSquad(club.id, club.leagueId, club.baseStrength, year, clubRng, firstTeamSlots);
-      for (const player of generated.slice(0, fillCount)) {
-        if (player.ability > starCap) {
-          player.ability = starCap;
-          if (player.birthCeiling < player.ability) player.birthCeiling = player.ability;
-        }
-        state.players[player.id] = player;
-        club.squad.push(player.id);
-      }
-    }
-
-    // Anchor strength so it equals baseStrength now, then let it float later.
-    club.squadStrengthAnchor = deriveRawStrength(clubSquadPlayers(state, club.id));
+    // Anchor strength so it equals baseStrength now (abstract depth padding makes a
+    // thin real spine field a coherent XI at its level), then let it float later.
+    club.squadStrengthAnchor = clubAnchorRaw(state, club.id);
     recomputeClubStrength(state, club.id);
 
     // Finances from prestige, era and current wage bill.

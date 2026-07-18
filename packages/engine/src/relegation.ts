@@ -11,7 +11,7 @@ import type { ClubId, ClubState, GameState, PlayerState } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { parseYearMonth } from './clock.js';
-import { generateSquad, deriveRawStrength, recomputeClubStrength, clubSquadPlayers } from './players.js';
+import { clubAnchorRaw, recomputeClubStrength } from './players.js';
 
 const PLACEHOLDER_PREFIX = 'promoted_';
 
@@ -48,21 +48,19 @@ export function relegateClub(state: GameState, clubId: ClubId, returnYear: numbe
   if (!club || club.leagueId === null || club.relegatedUntil !== undefined) return;
   const league = state.leagues[club.leagueId];
   if (!league) return;
-  const year = parseYearMonth(state.clock.date).year;
 
   league.clubIds = league.clubIds.filter((id) => id !== clubId);
   club.relegatedUntil = returnYear;
 
-  // A promoted club takes the vacated slot (procedural, modest strength).
+  // A promoted club takes the vacated slot at a modest strength. Under the
+  // no-regens principle it carries NO invented players — its whole squad is
+  // abstract depth pegged to its level (clubDepthPad), so it fields a coherent
+  // side at ~`strength` without a single fabricated name entering the world.
   const pid = `${PLACEHOLDER_PREFIX}${clubId}`;
   const strength = 58;
   const placeholder = newPromotedClub(pid, replacementName, league.id, strength);
   state.clubs[pid] = placeholder;
-  for (const p of generateSquad(pid, league.id, strength, year, rng.fork(pid)).slice(0, 23)) {
-    state.players[p.id] = p;
-    placeholder.squad.push(p.id);
-  }
-  placeholder.squadStrengthAnchor = deriveRawStrength(clubSquadPlayers(state, pid));
+  placeholder.squadStrengthAnchor = clubAnchorRaw(state, pid);
   recomputeClubStrength(state, pid);
   league.clubIds.push(pid);
 

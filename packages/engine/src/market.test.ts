@@ -5,9 +5,8 @@ import {
   valuePlayer,
   suggestWage,
 } from './finance.js';
-import { generatePlayer, deriveRawStrength, clubSquadPlayers } from './players.js';
+import { deriveRawStrength } from './players.js';
 import { executeTransfer, currentYear, squadSize } from './transfers.js';
-import { Rng } from './rng.js';
 import type { PlayerState } from './types.js';
 
 describe('market inflation (§11)', () => {
@@ -56,43 +55,26 @@ describe('valuations & wages (§11)', () => {
   });
 });
 
-describe('player generation (§4, §9e)', () => {
-  it('builds a full curated + procedural world for the scenario', () => {
+describe('world building (§4, §9e — real players only, no regens)', () => {
+  it('builds a REAL-ONLY world for the scenario — no procedural filler', () => {
     const state = createNewGame({ seed: 'gen' });
-    expect(Object.keys(state.players).length).toBeGreaterThan(600);
+    const players = Object.values(state.players);
+    // A populated world (curated spine across every modelled club)…
+    expect(players.length).toBeGreaterThan(150);
+    // …and EVERY player in it is a real, curated name — no regens anywhere.
+    expect(players.every((p) => p.curated)).toBe(true);
     // The curated Man Utd squad is present and flagged.
-    const keane = Object.values(state.players).find((p) => p.name === 'Roy Keane');
+    const keane = players.find((p) => p.name === 'Roy Keane');
     expect(keane?.curated).toBe(true);
     expect(keane?.club).toBe('man_utd');
   });
 
   it('anchors each club to its authored baseline strength at kickoff', () => {
+    // Abstract depth padding lets a thin real spine still read exactly baseStrength.
     const state = createNewGame({ seed: 'anchor' });
     for (const club of Object.values(state.clubs)) {
       expect(Math.abs(club.strength - club.baseStrength)).toBeLessThan(0.001);
     }
-  });
-
-  it('weights nationality by club region', () => {
-    const state = createNewGame({ seed: 'nat' });
-    const british = ['England', 'Scotland', 'Wales', 'Ireland', 'N. Ireland'];
-    const watford = clubSquadPlayers(state, 'watford');
-    const brit = watford.filter((p) => british.includes(p.nationality)).length;
-    expect(brit / watford.length).toBeGreaterThan(0.5);
-  });
-
-  it('generatePlayer is deterministic for a given stream', () => {
-    const mk = () =>
-      generatePlayer({
-        id: 'x',
-        clubId: 'man_utd',
-        leagueId: 'eng-1',
-        position: 'ST',
-        targetAbility: 80,
-        currentYear: 1999,
-        rng: Rng.fromSeed('p'),
-      });
-    expect(mk()).toEqual(mk());
   });
 
   it('deriveRawStrength rewards a stronger squad', () => {

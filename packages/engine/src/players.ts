@@ -1,15 +1,16 @@
 /**
- * Player generation and squad-strength derivation (§4, §9e, §15).
+ * Real-player instantiation and squad-strength derivation (§4, §9e, §15).
  *
- * Procedural filler is generated with realistic name/nationality distributions
- * (weighted by the club's region), a realistic potential curve (most are
- * filler), position needs, and age spread. Curated real players (see
- * data/curated-1999.ts) are layered on top for the vertical-slice club.
+ * The world holds REAL, curated players ONLY — no procedural generation, no
+ * regens (`instantiateCuratedSeed` is the single source of truth for turning a
+ * CuratedSeed into a live player). The squad DEPTH a reserve/academy side would
+ * provide is modelled abstractly in the strength calc (`clubDepthPad`), never as
+ * invented bodies, so whichever club is inspected reads true, name by name.
  *
- * Squad strength for the season sim is DERIVED from the squad (weighted XI +
- * depth, §15) but ANCHORED so it equals the club's authored `baseStrength` at
- * kickoff — preserving M2's calibrated tables — then drifts as the squad
- * changes through transfers (M3) and development (M5).
+ * Squad strength for the season sim is DERIVED from the real squad (weighted XI +
+ * depth, §15), padded to shape by abstract depth, but ANCHORED so it equals the
+ * club's authored `baseStrength` at kickoff — preserving M2's calibrated tables —
+ * then drifts as the squad changes through transfers (M3) and development (M5).
  */
 
 import type {
@@ -50,113 +51,6 @@ export function buildResistance(
   };
 }
 
-// ── Name & nationality pools by region ───────────────────────────────────────
-
-interface Region {
-  nationalities: string[];
-  first: string[];
-  last: string[];
-}
-
-const REGIONS: Record<string, Region> = {
-  britain: {
-    nationalities: ['England', 'England', 'England', 'Scotland', 'Wales', 'Ireland', 'N. Ireland'],
-    first: ['Jack', 'Harry', 'Tom', 'James', 'Michael', 'David', 'Paul', 'Lee', 'Craig', 'Scott', 'Danny', 'Ryan', 'Wayne', 'Andy', 'Gary', 'Steven', 'Ashley', 'Joe', 'Sam', 'Kevin', 'Mark', 'Neil'],
-    last: ['Smith', 'Taylor', 'Brown', 'Wilson', 'Walker', 'Robinson', 'Wright', 'Thompson', 'Evans', 'Roberts', 'Johnson', 'Clarke', 'Hughes', 'Green', 'Hall', 'Cooper', 'Ward', 'Baker', 'Carter', 'Phillips', 'Turner', 'Parker', 'Collins', 'Murphy', 'Kelly', 'Reid'],
-  },
-  iberia: {
-    nationalities: ['Spain', 'Spain', 'Spain', 'Portugal', 'Argentina', 'Brazil'],
-    first: ['Carlos', 'Javier', 'Sergio', 'Pablo', 'Raúl', 'Fernando', 'Diego', 'Álvaro', 'Rubén', 'Iván', 'Jesús', 'Marcos', 'David', 'Antonio', 'Miguel', 'José', 'Luis', 'Andrés', 'Xavi', 'Gonzalo'],
-    last: ['García', 'Martínez', 'López', 'Sánchez', 'Fernández', 'Gómez', 'Ruiz', 'Díaz', 'Moreno', 'Álvarez', 'Romero', 'Torres', 'Navarro', 'Ramos', 'Vidal', 'Castro', 'Silva', 'Costa', 'Reyes', 'Herrera'],
-  },
-  italy: {
-    nationalities: ['Italy', 'Italy', 'Italy', 'Italy'],
-    first: ['Marco', 'Alessandro', 'Andrea', 'Francesco', 'Luca', 'Matteo', 'Giovanni', 'Roberto', 'Stefano', 'Fabio', 'Paolo', 'Antonio', 'Davide', 'Simone', 'Gianluca', 'Cristian', 'Massimo', 'Daniele', 'Emiliano', 'Riccardo'],
-    last: ['Rossi', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco', 'Bruno', 'Gallo', 'Conti', 'De Luca', 'Costa', 'Giordano', 'Mancini', 'Rizzo', 'Lombardi', 'Moretti', 'Barbieri'],
-  },
-  germanic: {
-    nationalities: ['Germany', 'Germany', 'Germany', 'Austria', 'Switzerland', 'Netherlands'],
-    first: ['Michael', 'Thomas', 'Stefan', 'Andreas', 'Markus', 'Jan', 'Sven', 'Lars', 'Dennis', 'Kai', 'Jens', 'Oliver', 'Tobias', 'Christian', 'Marcel', 'Patrick', 'Robin', 'Niklas', 'Florian', 'Max'],
-    last: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schäfer', 'Koch', 'Bauer', 'Richter', 'Klein', 'Wolf', 'Neumann', 'Braun', 'Krüger', 'Hofmann', 'Vogel'],
-  },
-  world: {
-    nationalities: ['France', 'Brazil', 'Argentina', 'Nigeria', 'Ghana', 'Senegal', 'Croatia', 'Serbia', 'Denmark', 'Sweden', 'Norway', 'Belgium'],
-    first: ['Didier', 'Emmanuel', 'Youssef', 'Kolo', 'Nwankwo', 'Ola', 'Zlatan', 'Dado', 'Sinisa', 'Thomas', 'Marc', 'Olof', 'Henri', 'Bruno', 'Salif', 'Papa', 'Nemanja', 'Ivan', 'Jesper', 'Ole'],
-    last: ['Diarra', 'Traoré', 'Okocha', 'Kanu', 'Ibrahimović', 'Prso', 'Mihajlović', 'Sørensen', 'Larsson', 'Solskjær', 'Diouf', 'Camara', 'Vidić', 'Rakitić', 'Boateng', 'Essien', 'Touré', 'Adebayor', 'Drogba', 'Eto'],
-  },
-};
-
-/** Primary talent region for each club (drives name/nationality weighting). */
-const CLUB_REGION: Record<ClubId, keyof typeof REGIONS> = {
-  real_madrid: 'iberia',
-  barcelona: 'iberia',
-  juventus: 'italy',
-  milan: 'italy',
-  inter: 'italy',
-  bayern: 'germanic',
-};
-
-function regionForClub(clubId: ClubId, leagueId: string | null): keyof typeof REGIONS {
-  if (CLUB_REGION[clubId]) return CLUB_REGION[clubId]!;
-  if (leagueId === 'eng-1') return 'britain';
-  return 'world';
-}
-
-// ── Squad composition ────────────────────────────────────────────────────────
-
-/** A realistic 25-man squad's positional makeup. */
-const SQUAD_TEMPLATE: Position[] = [
-  'GK', 'GK', 'GK',
-  'CB', 'CB', 'CB', 'CB',
-  'LB', 'LB', 'RB', 'RB',
-  'DM', 'DM', 'CM', 'CM', 'CM', 'AM', 'AM',
-  'LW', 'LW', 'RW', 'RW',
-  'ST', 'ST', 'ST',
-];
-
-export interface GeneratePlayerOptions {
-  /** Caller-supplied unique, stable id (no hidden global state → determinism). */
-  id: PlayerId;
-  clubId: ClubId;
-  leagueId: string | null;
-  position: Position;
-  /** Target ability center; actual is a spread around this. */
-  targetAbility: number;
-  currentYear: number;
-  /** Bias toward youth (prospects) or a settled pro. */
-  ageBias?: 'young' | 'prime' | 'veteran' | 'mixed';
-  rng: Rng;
-}
-
-function pickName(region: Region, rng: Rng): { name: string; nationality: string } {
-  const first = rng.pick(region.first);
-  const last = rng.pick(region.last);
-  const nationality = rng.pick(region.nationalities);
-  return { name: `${first} ${last}`, nationality };
-}
-
-function rollAge(bias: GeneratePlayerOptions['ageBias'], rng: Rng): number {
-  switch (bias) {
-    case 'young':
-      return rng.int(17, 21);
-    case 'veteran':
-      return rng.int(30, 35);
-    case 'prime':
-      return rng.int(23, 29);
-    default: {
-      // Mixed: a realistic squad age pyramid.
-      const r = rng.next();
-      if (r < 0.18) return rng.int(17, 21);
-      if (r < 0.75) return rng.int(22, 29);
-      return rng.int(30, 35);
-    }
-  }
-}
-
-function clampAbility(a: number): number {
-  return Math.max(32, Math.min(94, Math.round(a)));
-}
-
 /**
  * Instantiate a curated real player from its seed — the single source of truth for
  * turning a CuratedSeed into a live PlayerState, shared by game creation (the
@@ -192,107 +86,6 @@ export function instantiateCuratedSeed(seed: CuratedSeed, year: number, rng: Rng
   return player;
 }
 
-export function generatePlayer(opts: GeneratePlayerOptions): PlayerState {
-  const { rng, clubId, leagueId, position, targetAbility, currentYear } = opts;
-  const region = REGIONS[regionForClub(clubId, leagueId)]!;
-  const { name, nationality } = pickName(region, rng);
-  const age = rollAge(opts.ageBias ?? 'mixed', rng);
-  const birthYear = currentYear - age;
-
-  const ability = clampAbility(targetAbility + rng.gaussian(0, 5));
-
-  // Potential: young players can be well above current ability; the upside
-  // shrinks with age. Most prospects are filler (small gap); a few are gems.
-  let ceiling = ability;
-  if (age <= 23) {
-    const upsideRoll = rng.next();
-    const upside = upsideRoll > 0.92 ? rng.int(10, 20) : upsideRoll > 0.6 ? rng.int(3, 9) : rng.int(0, 3);
-    ceiling = Math.min(97, ability + Math.round((upside * (24 - age)) / 6));
-  } else if (age <= 27) {
-    ceiling = Math.min(97, ability + rng.int(0, 3));
-  }
-
-  const personality = {
-    professionalism: rng.int(3, 10),
-    ego: rng.int(1, 9),
-    ambition: rng.int(3, 10),
-    loyalty: rng.int(2, 9),
-    volatility: rng.int(1, 9),
-    adaptability: rng.int(2, 10),
-  };
-
-  // Injury proneness: most players low, a minority fragile.
-  const injuryProneness = Math.max(5, Math.min(95, Math.round(rng.gaussian(30, 16))));
-
-  const player: PlayerState = {
-    id: opts.id,
-    name,
-    birthYear,
-    nationality,
-    positions: [position],
-    club: clubId,
-    contractUntil: currentYear + rng.int(1, 5),
-    wage: 0,
-    ability,
-    potentialCeiling: ceiling,
-    birthCeiling: ceiling,
-    personality,
-    injuryProneness,
-    curated: false,
-    fitness: 100,
-    morale: rng.int(60, 85),
-    form: 0,
-    injury: null,
-    injuryHistory: 0,
-    wonderkid: ceiling >= 85 && age <= 21,
-    benchedDevSeasons: 0,
-    reachedPotential: false,
-    lastSeason: null,
-    seasonMonthsInjured: 0,
-    adaptation: null,
-    resistance: buildResistance(personality, nationality, age, ability, rng),
-    agitation: 0,
-  };
-  player.wage = suggestWage(player, currentYear);
-  return player;
-}
-
-/**
- * Generate a full procedural squad for a club, targeting its base strength.
- * `firstTeamSlots` is how many players are first-team quality (`baseStrength+2`);
- * the rest are squad depth / prospects (`baseStrength-11`). It defaults to 14, but
- * a club whose real first XI is already CURATED passes a small number (or zero),
- * so the anonymous filler is genuine DEPTH sitting BELOW the real stars — never a
- * wall of 88-rated nobodies drowning out a Gerrard (§4, the ratings-spread fix).
- */
-export function generateSquad(
-  clubId: ClubId,
-  leagueId: string | null,
-  baseStrength: number,
-  currentYear: number,
-  rng: Rng,
-  firstTeamSlots = 14,
-): PlayerState[] {
-  const squad: PlayerState[] = [];
-  SQUAD_TEMPLATE.forEach((position, i) => {
-    const isStarter = i < firstTeamSlots;
-    const target = isStarter ? baseStrength + 2 : baseStrength - 11;
-    const ageBias = !isStarter && rng.chance(0.4) ? 'young' : 'mixed';
-    squad.push(
-      generatePlayer({
-        id: `p_${clubId}_${i}`,
-        clubId,
-        leagueId,
-        position,
-        targetAbility: target,
-        currentYear,
-        ageBias,
-        rng,
-      }),
-    );
-  });
-  return squad;
-}
 
 // ── Squad-strength derivation (§15) ──────────────────────────────────────────
 
@@ -307,6 +100,23 @@ function strengthGroup(p: PlayerState): 'GK' | 'DEF' | 'MID' | 'ATT' {
 
 /** A 4-3-3 skeleton: you field ONE team, so a fourth striker is depth, not XI. */
 const FORMATION: Record<'GK' | 'DEF' | 'MID' | 'ATT', number> = { GK: 1, DEF: 4, MID: 3, ATT: 3 };
+
+/** Abstract squad depth (§4, no-regens): the quality of the unmodelled reserve
+ *  players a club fields BELOW its real, named spine, expressed as ability pegs
+ *  rather than as procedural filler in the world. `xiPeg` fills XI slots a thin
+ *  real spine can't (≈ the club's own level); `benchPeg` fills the bench. */
+export interface DepthPad {
+  xiPeg: number;
+  benchPeg: number;
+  benchSize?: number;
+}
+
+/** A club's abstract depth, pegged to its authored level. Mirrors the old
+ *  procedural-filler targets (first-team ≈ base+2, depth ≈ base−11) so replacing
+ *  named filler with a number leaves strength dynamics essentially unchanged. */
+export function clubDepthPad(baseStrength: number): DepthPad {
+  return { xiPeg: Math.min(99, baseStrength + 2), benchPeg: Math.max(30, baseStrength - 11), benchSize: 9 };
+}
 
 /** How many of the XI's best count toward the star term. Summing each one's
  *  MARGIN over a FIXED replacement level keeps the term monotonic and responsive:
@@ -342,8 +152,8 @@ export const STAR_WEIGHT_CL = 0.2;
  * ~zero premium; a star-built one loses that premium — and more than the mean —
  * when a talisman departs, which is what makes the continental butterfly bite.
  */
-export function deriveRawStrength(players: PlayerState[], starWeight = 0): number {
-  if (players.length === 0) return 0;
+export function deriveRawStrength(players: PlayerState[], starWeight = 0, pad?: DepthPad): number {
+  if (players.length === 0 && !pad) return 0;
   // Effective ability so an unsettled signing (adaptation penalty) genuinely
   // weakens the XI while he beds in (§3).
   const byGroup: Record<string, number[]> = { GK: [], DEF: [], MID: [], ATT: [] };
@@ -354,13 +164,26 @@ export function deriveRawStrength(players: PlayerState[], starWeight = 0): numbe
   const leftover: number[] = [];
   for (const g of ['GK', 'DEF', 'MID', 'ATT'] as const) {
     const need = FORMATION[g];
-    xi.push(...byGroup[g]!.slice(0, need));
-    leftover.push(...byGroup[g]!.slice(need));
+    const real = byGroup[g]!;
+    xi.push(...real.slice(0, need));
+    // ABSTRACT DEPTH (§4, real-players-only): a position short of real bodies is
+    // filled to shape by unmodelled squad depth pegged to the club's level — the
+    // "no regens" replacement for anonymous filler players. The world holds only
+    // real names; the depth a real academy/reserve side would provide lives here
+    // as a number, so a thin real spine still fields a coherent XI at its level.
+    if (pad && real.length < need) for (let k = real.length; k < need; k++) xi.push(pad.xiPeg);
+    leftover.push(...real.slice(need));
   }
   leftover.sort((a, b) => b - a);
   // A short position (e.g. only three defenders) is patched from the best
-  // leftover — a real side still fields eleven.
+  // leftover — a real side still fields eleven — then, if still short, by depth.
   while (xi.length < 11 && leftover.length) xi.push(leftover.shift()!);
+  if (pad) while (xi.length < 11) xi.push(pad.xiPeg);
+  // Bench depth to a working size: real reserves first, then abstract depth.
+  if (pad) {
+    const benchSize = pad.benchSize ?? 9;
+    while (leftover.length < benchSize) leftover.push(pad.benchPeg);
+  }
 
   const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
   const xiAvg = avg(xi);
@@ -428,9 +251,18 @@ export function playerStarValue(ability: number): number {
 export function recomputeClubStrength(state: GameState, clubId: ClubId): void {
   const club = state.clubs[clubId];
   if (!club) return;
-  const raw = deriveRawStrength(availableSquadPlayers(state, clubId));
+  const raw = deriveRawStrength(availableSquadPlayers(state, clubId), 0, clubDepthPad(club.baseStrength));
   club.strength = Math.max(20, Math.min(99, club.baseStrength + (raw - club.squadStrengthAnchor)));
   club.chemistryPenalty = squadChemistryPenalty(state, clubId);
+}
+
+/** The anchored raw strength of a club's currently-available squad, padded with
+ *  its abstract depth. The single source of truth for both the kickoff anchor and
+ *  live recomputation, so `strength` reads exactly `baseStrength` when unchanged. */
+export function clubAnchorRaw(state: GameState, clubId: ClubId): number {
+  const club = state.clubs[clubId];
+  if (!club) return 0;
+  return deriveRawStrength(availableSquadPlayers(state, clubId), 0, clubDepthPad(club.baseStrength));
 }
 
 // ── Squad chemistry / balance (§ over-stacking) ──────────────────────────────
@@ -496,7 +328,7 @@ export function reanchorClubStrength(state: GameState, clubId: ClubId, target: n
   const club = state.clubs[clubId];
   if (!club) return;
   club.baseStrength = Math.max(20, Math.min(99, target));
-  club.squadStrengthAnchor = deriveRawStrength(availableSquadPlayers(state, clubId));
+  club.squadStrengthAnchor = clubAnchorRaw(state, clubId);
   recomputeClubStrength(state, clubId);
 }
 

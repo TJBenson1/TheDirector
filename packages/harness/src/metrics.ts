@@ -23,9 +23,14 @@ export interface CareerMetrics {
   userMajorInjuryCrisisDecades: number;
   userScandalDecades: number;
   decadesElapsed: number;
-  /** League-wide serious (6mo+) injuries, summed, plus squad-seasons for the rate. */
+  /** League-wide serious (6mo+) injuries, summed, plus squad-seasons for context. */
   seriousInjuriesLeagueWide: number;
   squadSeasons: number;
+  /** Real-player-seasons across all simulated leagues (Σ real players present at
+   *  each season's completion). The body-count-independent denominator for the
+   *  serious-injury RATE, so the rate stays meaningful in a real-players-only
+   *  world where squads are smaller than the old 23-body procedural ones. */
+  realPlayerSeasons: number;
 
   // ── M6: agency ────────────────────────────────────────────────
   raidsSuffered: number;
@@ -108,6 +113,7 @@ export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
     decadesElapsed: Math.max(1, Math.floor(years / 10)),
     seriousInjuriesLeagueWide: 0,
     squadSeasons: 0,
+    realPlayerSeasons: 0,
     raidsSuffered: 0,
     raidsCounterPunchedWithin2Windows: 0,
     keepHappyCampaigns: 0,

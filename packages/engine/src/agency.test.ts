@@ -85,18 +85,25 @@ describe('player agency & resistance (§6)', () => {
 
   it('an ordinary player is willing to move up for a fair package', () => {
     const state = createNewGame({ seed: 'willing' });
-    // A modest, non-rival, low-loyalty player moving up to Man Utd.
+    // Ordinary (non-star) modest-club players who aren't one-club loyalists.
     const modest = new Set(['sunderland', 'leicester', 'west_ham', 'middlesbrough', 'coventry']);
-    const target = Object.values(state.players).find(
+    const candidates = Object.values(state.players).filter(
       (p) =>
         p.club !== null &&
         modest.has(p.club) &&
-        p.resistance.clubLoyalty < 55 &&
+        p.ability < 78 &&
+        p.resistance.clubLoyalty < 66 &&
         p.resistance.hardBlocks.length === 0,
-    )!;
-    const verdict = evaluateApproach(state, { playerId: target.id, toClub: 'man_utd', wageOffer: target.wage * 1.5 });
-    expect(verdict.willing).toBe(true);
-    expect(wouldAcceptMove(state, target.id, 'man_utd')).toBe(true);
+    );
+    expect(candidates.length).toBeGreaterThan(0);
+    // At least one such player both entertains a fair approach from Man Utd and
+    // would accept the step up.
+    const someMovesUp = candidates.some(
+      (t) =>
+        evaluateApproach(state, { playerId: t.id, toClub: 'man_utd', wageOffer: t.wage * 1.5 }).willing &&
+        wouldAcceptMove(state, t.id, 'man_utd'),
+    );
+    expect(someMovesUp).toBe(true);
   });
 
   it('a boyhood dream club adds real pull', () => {
@@ -108,21 +115,22 @@ describe('player agency & resistance (§6)', () => {
     expect(withDream).toBeGreaterThan(without);
   });
 
-  it('curated marquee players get their agency; squads keep procedural depth', () => {
+  it('curated marquee players get their agency; the world is real players only', () => {
     const state = createNewGame({ seed: 'squads' });
     // 21 real players: Silvestre & Fortune are United's real 1999 signings, now
     // OFFERED via the ledger (real-in) rather than baked in — they join in the
     // opening window by default.
     expect(state.clubs.man_utd!.squad.length).toBe(21);
-    expect(state.clubs.newcastle!.squad.length).toBe(23);
     // Shearer is present with his loyalty and block.
     const shearer = find(state, 'Alan Shearer');
     expect(shearer.resistance.clubLoyalty).toBeGreaterThanOrEqual(90);
     expect(shearer.resistance.hardBlocks.length).toBeGreaterThan(0);
-    // Newcastle now carries a real spine (Shearer, Given, Dyer, Solano…), with
-    // anonymous procedural depth behind it — curated stars and filler coexist.
-    const newcastleProcedural = state.clubs.newcastle!.squad.filter((id) => !state.players[id]!.curated);
-    expect(newcastleProcedural.length).toBeGreaterThan(8);
+    // Newcastle is a REAL spine (Shearer, Given, Dyer, Solano…) with NO procedural
+    // filler behind it — no regens: every name in the squad is a real player, and
+    // the depth beneath the spine is abstract, not invented bodies.
+    const newcastle = state.clubs.newcastle!.squad.map((id) => state.players[id]!);
+    expect(newcastle.length).toBeGreaterThanOrEqual(10);
+    expect(newcastle.every((p) => p.curated)).toBe(true);
   });
 });
 

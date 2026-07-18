@@ -20,6 +20,8 @@ import {
   maxConsecutiveTitles,
   significantInjuredCount,
   ledgerSquadMatch,
+  clubSquadPlayers,
+  isProcedural,
   cloneState,
   type GameState,
   type NewGameOptions,
@@ -176,6 +178,14 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
         metrics.runnerUpPointsSum += Number(e.data.runnerUpPoints ?? 0);
         metrics.leagueDrawnTeamGames += Number(e.data.drawnTeamGames ?? 0);
         metrics.leagueTeamGames += Number(e.data.teamGames ?? 0);
+        // Real players at risk this league-season — the denominator for the
+        // per-real-player serious-injury rate (real-players-only world).
+        const lg = state.leagues[String(e.data.leagueId)];
+        if (lg) {
+          for (const cid of lg.clubIds) {
+            metrics.realPlayerSeasons += clubSquadPlayers(state, cid).filter((p) => !isProcedural(p)).length;
+          }
+        }
       }
     }
 
