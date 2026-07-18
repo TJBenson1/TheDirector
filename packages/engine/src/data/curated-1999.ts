@@ -212,7 +212,6 @@ export const EVERTON_1999: CuratedSeed[] = [
   q('everton', 'mball99', 'Michael Ball', 1979, 'England', ['LB'], 70, 80, 2003, 40, t(7, 5, 7, 7, 4, 6), { archetype: 'full-back-attacking' }),
   // Richard Dunne — a raw 19-year-old who became a Premier League stalwart (pot 82).
   q('everton', 'dunne99', 'Richard Dunne', 1979, 'Ireland', ['CB'], 66, 82, 2002, 30, t(5, 5, 7, 6, 6, 6), { archetype: 'covering-cb' }),
-  q('everton', 'dacourt99', 'Olivier Dacourt', 1974, 'France', ['DM', 'CM'], 79, 82, 2003, 30, t(7, 7, 8, 4, 6, 6), { archetype: 'destroyer' }),
   q('everton', 'collins99', 'John Collins', 1968, 'Scotland', ['CM', 'DM'], 75, 75, 2002, 25, t(9, 5, 6, 6, 3, 7), { archetype: 'deep-playmaker' }),
   q('everton', 'hutchison99', 'Don Hutchison', 1971, 'Scotland', ['CM', 'AM'], 75, 77, 2002, 35, t(5, 6, 6, 6, 7, 6), { archetype: 'box-to-box' }),
   q('everton', 'barmby99', 'Nick Barmby', 1974, 'England', ['AM'], 77, 78, 2003, 35, t(7, 6, 7, 4, 5, 6), { archetype: 'playmaker' }),
