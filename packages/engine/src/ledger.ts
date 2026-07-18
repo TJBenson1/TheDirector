@@ -430,19 +430,19 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   // so intercepting one is a butterfly and a deprived Chelsea buys an alternative.
   { playerId: 'cur_drogba', from: 'marseille', to: 'chelsea', window: '2004-07', fee: 24_000_000, id: 'drogba-chelsea-2004' },
   { playerId: 'cur_robben2', from: 'psv', to: 'chelsea', window: '2004-07', fee: 12_000_000, id: 'robben-chelsea-2004' },
-  { playerId: 'cur_vieira2', from: 'arsenal', to: 'juventus', window: '2005-07', fee: 20_000_000, id: 'vieira-juve-2005' },
+  { playerId: 'cur_vieira2', from: 'arsenal', to: 'juventus', window: '2005-07', fee: 13_750_000, id: 'vieira-juve-2005' },
   { playerId: 'cur_acole', from: 'arsenal', to: 'chelsea', window: '2006-07', fee: 16_000_000, id: 'cole-chelsea-2006' },
   // The Gallas move was the OTHER HALF of the Cole deal — a swap. If the user
   // keeps Cole, the swap never happens, so Gallas never arrives.
   { playerId: 'cur_gallas2', from: 'chelsea', to: 'arsenal', window: '2006-08', fee: 5_000_000, id: 'gallas-arsenal-2006', enabledBy: 'cole-chelsea-2006' },
-  { playerId: 'cur_henry', from: 'arsenal', to: 'barcelona', window: '2007-07', fee: 24_000_000, id: 'henry-barca-2007' },
+  { playerId: 'cur_henry', from: 'arsenal', to: 'barcelona', window: '2007-07', fee: 16_100_000, id: 'henry-barca-2007' },
   { playerId: 'cur_cristiano2', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cr7b-real-2009' },
 
   // United's real rebuild — the reason they, not Arsenal, dominated 2007-09.
   { playerId: 'cur_vidic', from: 'spartak_moscow', to: 'man_utd', window: '2006-01', fee: 7_000_000, id: 'vidic-utd-2006' },
   { playerId: 'cur_evra', from: 'monaco', to: 'man_utd', window: '2006-01', fee: 5_500_000, id: 'evra-utd-2006' },
   { playerId: 'cur_carrick2', from: 'spurs', to: 'man_utd', window: '2006-07', fee: 18_600_000, id: 'carrick-utd-2006' },
-  { playerId: 'cur_vannistelrooy2', from: 'man_utd', to: 'real_madrid', window: '2006-07', fee: 14_000_000, id: 'ruud-real-2006' },
+  { playerId: 'cur_vannistelrooy2', from: 'man_utd', to: 'real_madrid', window: '2006-07', fee: 10_000_000, id: 'ruud-real-2006' },
   { playerId: 'cur_hargreaves', from: 'bayern', to: 'man_utd', window: '2007-07', fee: 17_000_000, id: 'hargreaves-utd-2007' },
   { playerId: 'cur_tevez', from: 'west_ham', to: 'man_utd', window: '2007-07', fee: 20_000_000, id: 'tevez-utd-2007' },
   { playerId: 'cur_anderson_p', from: 'porto', to: 'man_utd', window: '2007-07', fee: 20_000_000, id: 'anderson-utd-2007' },
@@ -514,7 +514,7 @@ const INJURIES_2004: RealInjuryEntry[] = [
   // Woodgate — the £13m Madrid signing who didn't play a competitive minute in
   // his first season (thigh trouble, then an infamous debut own goal + red card).
   { playerId: 'cur_woodgate04', atClub: 'real_madrid', since: '2004-09', months: 11, serious: true, note: 'thigh/muscle trouble wrecks his first season' },
-  { playerId: 'cur_hargreaves', atClub: 'bayern', since: '2005-09', months: 5, serious: true, note: 'recurring knee tendinitis' },
+  { playerId: 'cur_hargreaves', atClub: 'bayern', since: '2006-09', months: 6, serious: true, note: 'broken leg (Sept 2006) — out most of the season' },
 ];
 
 /** Real 2009–12 injuries — fire only if the player is at his real club. */
@@ -577,8 +577,8 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   // the raid happens ON the user (Barça take Deco, Chelsea take Carvalho/Ferreira)
   // — beat them to it in 2002–03 at a food-chain discount and you keep the jewels.
   { playerId: 'cur_deco01', from: 'porto', to: 'barcelona', window: '2004-07', fee: 21_000_000, id: 'deco-barca-2004' },
-  { playerId: 'cur_carvalho01', from: 'porto', to: 'chelsea', window: '2004-08', fee: 30_000_000, id: 'carvalho-chelsea-2004', enabledBy: 'abramovich' },
-  { playerId: 'cur_pferreira01', from: 'porto', to: 'chelsea', window: '2004-07', fee: 20_000_000, id: 'ferreira-chelsea-2004', enabledBy: 'abramovich' },
+  { playerId: 'cur_carvalho01', from: 'porto', to: 'chelsea', window: '2004-08', fee: 20_000_000, id: 'carvalho-chelsea-2004', enabledBy: 'abramovich' },
+  { playerId: 'cur_pferreira01', from: 'porto', to: 'chelsea', window: '2004-07', fee: 13_200_000, id: 'ferreira-chelsea-2004', enabledBy: 'abramovich' },
   // ── Leeds "living the dream" collapse (§ distress). Overspending on the
   // Champions League run tipped them into meltdown; from 2002 the side was
   // dismantled dirt-cheap. Ferdinand banked £30m, but the rest went for a
@@ -588,7 +588,7 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   { playerId: 'cur_ferdinand01', from: 'leeds', to: 'man_utd', window: '2002-07', fee: 30_000_000, id: 'ferdinand-utd-2002' },
   { playerId: 'cur_woodgate01', from: 'leeds', to: 'newcastle', window: '2003-01', fee: 9_000_000, id: 'woodgate-newcastle-2003' },
   { playerId: 'cur_kewell01', from: 'leeds', to: 'liverpool', window: '2003-07', fee: 5_000_000, id: 'kewell-liverpool-2003' },
-  { playerId: 'cur_bowyer', from: 'leeds', to: 'newcastle', window: '2003-07', fee: 500_000, id: 'bowyer-newcastle-2003' },
+  { playerId: 'cur_bowyer', from: 'leeds', to: 'west_ham', window: '2003-01', fee: 500_000, id: 'bowyer-westham-2003' },
   { playerId: 'cur_smith01', from: 'leeds', to: 'man_utd', window: '2004-07', fee: 7_000_000, id: 'smith-utd-2004' },
 ];
 
@@ -661,7 +661,7 @@ const ACADEMY_2013: AcademyGraduate[] = [
 
 // ── era-2004 (Arsenal Invincibles) retirements + academy ─────────────────────
 const RETIREMENTS_2004: RealRetirement[] = [
-  { playerId: 'cur_lehmann', year: 2011 }, { playerId: 'cur_lauren', year: 2012 },
+  { playerId: 'cur_lehmann', year: 2011 }, { playerId: 'cur_lauren', year: 2010 },
   { playerId: 'cur_toure', year: 2017 }, { playerId: 'cur_campbell2', year: 2012 },
   { playerId: 'cur_gilberto', year: 2013 }, { playerId: 'cur_vieira2', year: 2011 },
   { playerId: 'cur_pires2', year: 2015 }, { playerId: 'cur_ljungberg', year: 2012 },
@@ -673,7 +673,7 @@ const RETIREMENTS_2004: RealRetirement[] = [
   { playerId: 'cur_makelele2', year: 2011 }, { playerId: 'cur_lampard2', year: 2017 },
   { playerId: 'cur_terry2', year: 2018 }, { playerId: 'cur_carragher2', year: 2013 },
   { playerId: 'cur_gerrard3', year: 2016 }, { playerId: 'cur_hyypia2', year: 2011 },
-  { playerId: 'cur_shevchenko2', year: 2012 }, { playerId: 'cur_ballack', year: 2013 },
+  { playerId: 'cur_shevchenko2', year: 2012 }, { playerId: 'cur_ballack', year: 2012 },
 ];
 
 const ACADEMY_2004: AcademyGraduate[] = [
@@ -703,12 +703,12 @@ const RETIREMENTS_2001: RealRetirement[] = [
   { playerId: 'cur_stam01', year: 2007 }, { playerId: 'cur_blanc', year: 2003 },
   { playerId: 'cur_keane01', year: 2006 }, { playerId: 'cur_scholes01', year: 2013 },
   { playerId: 'cur_beckham01', year: 2013 }, { playerId: 'cur_giggs01', year: 2014 },
-  { playerId: 'cur_veron01', year: 2012 }, { playerId: 'cur_ruud01', year: 2012 },
+  { playerId: 'cur_veron01', year: 2014 }, { playerId: 'cur_ruud01', year: 2012 },
   { playerId: 'cur_solskjaer01', year: 2007 }, { playerId: 'cur_cole01', year: 2008 },
   { playerId: 'cur_seaman01', year: 2004 }, { playerId: 'cur_adams01', year: 2002 },
   { playerId: 'cur_vieira01', year: 2011 }, { playerId: 'cur_bergkamp01', year: 2006 },
   { playerId: 'cur_henry01', year: 2014 }, { playerId: 'cur_shearer01', year: 2006 },
-  { playerId: 'cur_martyn', year: 2006 }, { playerId: 'cur_speed01', year: 2011 },
+  { playerId: 'cur_martyn', year: 2006 }, { playerId: 'cur_speed01', year: 2010 },
 ];
 
 const ACADEMY_2001: AcademyGraduate[] = [
@@ -871,7 +871,7 @@ const RETIREMENTS_1998: RealRetirement[] = [
   { playerId: 'cur_costacurta', year: 2007 }, { playerId: 'cur_bierhoff', year: 2003 },
   { playerId: 'cur_boban', year: 2002 }, { playerId: 'cur_deschamps', year: 2001 },
   { playerId: 'cur_batistuta', year: 2005 }, { playerId: 'cur_aldair', year: 2003 },
-  { playerId: 'cur_zidane98', year: 2006 }, { playerId: 'cur_delpiero', year: 2012 },
+  { playerId: 'cur_zidane98', year: 2006 }, { playerId: 'cur_delpiero', year: 2015 },
   { playerId: 'cur_mihajlovic', year: 2006 }, { playerId: 'cur_weah', year: 2003 },
 ];
 
@@ -912,7 +912,7 @@ const LEDGER_2009: RealTransferLedgerEntry[] = [
 
 const RETIREMENTS_2009: RealRetirement[] = [
   { playerId: 'cur_hyypia09', year: 2011 }, { playerId: 'cur_lehmann09', year: 2011 },
-  { playerId: 'cur_guti09', year: 2011 }, { playerId: 'cur_butt09', year: 2012 },
+  { playerId: 'cur_guti09', year: 2011 }, { playerId: 'cur_butt09', year: 2011 },
   { playerId: 'cur_vannistelrooy09', year: 2012 }, { playerId: 'cur_frings09', year: 2013 },
   { playerId: 'cur_klose09', year: 2016 }, { playerId: 'cur_raul09', year: 2015 },
   { playerId: 'cur_casillas09', year: 2020 }, { playerId: 'cur_pizarro09', year: 2020 },
@@ -930,11 +930,11 @@ const ACADEMY_2009: AcademyGraduate[] = [
  *  transfer market rather than a ledger that is already in the past. */
 const LEDGER_2003: RealTransferLedgerEntry[] = [
   { playerId: 'cur_quaresma03', from: 'barcelona', to: 'porto', window: '2004-07', fee: 6_000_000 },
-  { playerId: 'cur_kluivert03', from: 'barcelona', to: 'newcastle', window: '2004-07', fee: 7_000_000 },
+  { playerId: 'cur_kluivert03', from: 'barcelona', to: 'newcastle', window: '2004-07', fee: 0 },
   { playerId: 'cur_cocu03', from: 'barcelona', to: 'psv', window: '2004-07', fee: 0 },
   { playerId: 'cur_davids03', from: 'barcelona', to: 'inter', window: '2004-07', fee: 0 },
   { playerId: 'cur_saviola03', from: 'barcelona', to: 'monaco', window: '2004-07', fee: 0 },
-  { playerId: 'cur_reiziger03', from: 'barcelona', to: 'psv', window: '2004-07', fee: 0 },
+  { playerId: 'cur_reiziger03', from: 'barcelona', to: 'middlesbrough', window: '2004-07', fee: 0 },
   { playerId: 'cur_cambiasso03', from: 'real_madrid', to: 'inter', window: '2004-07', fee: 0 },
   { playerId: 'cur_figo03', from: 'real_madrid', to: 'inter', window: '2005-07', fee: 0 },
   { playerId: 'cur_portillo03', from: 'real_madrid', to: 'fiorentina', window: '2005-07', fee: 0 },
@@ -959,11 +959,11 @@ const LEDGER_2003: RealTransferLedgerEntry[] = [
   { playerId: 'cur_acole03a', from: 'arsenal', to: 'chelsea', window: '2006-07', fee: 5_000_000 },
   { playerId: 'cur_campbell03a', from: 'arsenal', to: 'portsmouth', window: '2006-07', fee: 0 },
   { playerId: 'cur_pires03a', from: 'arsenal', to: 'villarreal', window: '2006-07', fee: 0 },
-  { playerId: 'cur_lauren03a', from: 'arsenal', to: 'portsmouth', window: '2007-07', fee: 0 },
+  { playerId: 'cur_lauren03a', from: 'arsenal', to: 'portsmouth', window: '2007-01', fee: 0 },
   { playerId: 'cur_butt03m', from: 'man_utd', to: 'newcastle', window: '2004-07', fee: 0 },
   { playerId: 'cur_forlan03m', from: 'man_utd', to: 'villarreal', window: '2004-07', fee: 0 },
   { playerId: 'cur_keane03m', from: 'man_utd', to: 'celtic', window: '2005-11', fee: 0 },
-  { playerId: 'cur_pneville03m', from: 'man_utd', to: 'everton', window: '2005-07', fee: 0 },
+  { playerId: 'cur_pneville03m', from: 'man_utd', to: 'everton', window: '2005-07', fee: 3_500_000 },
   { playerId: 'cur_kleberson03m', from: 'man_utd', to: 'besiktas', window: '2005-07', fee: 0 },
   { playerId: 'cur_ronaldo03m', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000 },
 ];
