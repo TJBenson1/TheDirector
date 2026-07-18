@@ -53,11 +53,19 @@ All bodies are JSON. Every mutating response returns `{ state, view, ... }`.
   coach: { identity, archetype, relationship, preferredFormation, activeFormation, style },
   finances: { transferBudget, wageBill },
   table:  [{ pos, clubId, name, played, won, drawn, lost, goalsFor, goalsAgainst, points, isUser }],
-  squad:  [{ id, name, positions, age, ability, potential, morale, fitness, contractUntil, injured }],
+  squad:  [{ id, name, positions, age, ability, potential, morale, fitness, contractUntil, injured, wageWeekly, wageAnnual }],
   decisions: Decision[],     // engine shape — render generically
-  events:    LoggedEvent[],  // most-recent first — render generically
+  events:    LoggedEvent[],  // most-recent first — render generically; ALREADY filtered of filler noise
 }
 ```
+
+**Wages:** render `wageWeekly` (£/week). `wageAnnual` is the same figure ×52 —
+do not label the annual number as weekly.
+
+**Feed:** `events` is already filtered server-side to drop procedural squad-filler
+noise. Render `event.message` verbatim — never invent or embellish narrative the
+engine did not produce (there is no "manager heart attack" unless an engine event
+says so).
 
 `Decision` = `{ id, title, description, interrupt, clubId?, category?, choices: [{ id, label, successProbability? }] }`.
 `LoggedEvent` = `{ seq, date, category, code, message, data? }`.
