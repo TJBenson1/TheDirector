@@ -297,7 +297,7 @@ export const VALENCIA_1999: CuratedSeed[] = [
   q('valencia', 'canizares99', 'Santiago Cañizares', 1969, 'Spain', ['GK'], 83, 84, 2004, 25, t(8, 6, 7, 7, 5, 7)),
   q('valencia', 'angloma99', 'Jocelyn Angloma', 1965, 'France', ['RB', 'CB'], 79, 79, 2002, 25, t(8, 4, 6, 8, 3, 8)),
   q('valencia', 'pellegrino99', 'Mauricio Pellegrino', 1971, 'Argentina', ['CB'], 80, 81, 2002, 30, t(9, 3, 7, 8, 2, 7)),
-  q('valencia', 'djukic99', 'Miroslav Đukić', 1966, 'Yugoslavia', ['CB'], 79, 79, 2001, 25, t(8, 4, 6, 7, 3, 7)),
+  q('valencia', 'djukic99', 'Miroslav Đukić', 1966, 'Serbia', ['CB'], 79, 79, 2001, 25, t(8, 4, 6, 7, 3, 7)),
   q('valencia', 'carboni99', 'Amedeo Carboni', 1965, 'Italy', ['LB'], 78, 78, 2003, 22, t(8, 4, 6, 9, 3, 8)),
   // Mendieta — the best midfielder in the 2000 CL, then a record move to Lazio in
   // 2001 soured and he fell away sharply. A fragile star (latent 86).

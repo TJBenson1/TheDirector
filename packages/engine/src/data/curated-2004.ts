@@ -18,7 +18,7 @@ const t = (prof: number, ego: number, amb: number, loy: number, vol: number, ada
 function q(
   club: ClubId, id: string, name: string, birthYear: number, nationality: string, positions: Position[],
   ability: number, potentialCeiling: number, contractUntil: number, injuryProneness: number, personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string; loanFrom?: ClubId } = {},
 ): CuratedSeed {
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
@@ -148,7 +148,7 @@ export const SPURS_2004: CuratedSeed[] = [
 /** Everton, 2004–05 — Champions-League chasers; Rooney's old club. */
 export const EVERTON_2004: CuratedSeed[] = [
   q('everton', 'cahill_t', 'Tim Cahill', 1979, 'Australia', ['AM', 'CM'], 80, 83, 2008, 30, t(8, 5, 8, 7, 5, 7)),
-  q('everton', 'arteta2', 'Mikel Arteta', 1982, 'Spain', ['CM', 'AM'], 80, 85, 2009, 25, t(9, 5, 7, 7, 3, 8)),
+  q('everton', 'arteta2', 'Mikel Arteta', 1982, 'Spain', ['CM', 'AM'], 80, 85, 2009, 25, t(9, 5, 7, 7, 3, 8), { loanFrom: 'real_sociedad' }),
   q('everton', 'lescott', 'Joleon Lescott', 1982, 'England', ['CB', 'LB'], 78, 84, 2009, 30, t(8, 5, 8, 7, 4, 7)),
 ];
 
@@ -175,7 +175,7 @@ export const MONACO_2004: CuratedSeed[] = [
   q('monaco', 'plasil04', 'Jaroslav Plašil', 1982, 'Czech Republic', ['CM', 'AM'], 72, 82, 2009, 25, t(8, 5, 8, 7, 5, 7)),
   // Saviola — "the next Maradona" on loan from Barça; gifted, but never sustained
   // the elite level his teenage years promised. A lost talent (latent 88).
-  q('monaco', 'saviola04', 'Javier Saviola', 1981, 'Argentina', ['ST', 'AM'], 82, 85, 2006, 30, t(8, 6, 8, 5, 6, 7), { latentCeiling: 88 }),
+  q('monaco', 'saviola04', 'Javier Saviola', 1981, 'Argentina', ['ST', 'AM'], 82, 85, 2006, 30, t(8, 6, 8, 5, 6, 7), { latentCeiling: 88, loanFrom: 'barcelona' }),
   q('monaco', 'nonda04', 'Shabani Nonda', 1977, 'DR Congo', ['ST'], 78, 80, 2007, 70, t(7, 7, 8, 6, 6, 6)),
   q('monaco', 'kallon04', 'Mohamed Kallon', 1979, 'Sierra Leone', ['ST', 'AM'], 76, 79, 2008, 40, t(6, 8, 7, 5, 7, 6)),
 ];
@@ -431,7 +431,7 @@ export const ZARAGOZA_2004: CuratedSeed[] = [
   // Spain's great modern striker. A reality-rail talent (latent 90).
   q('zaragoza', 'villa04', 'David Villa', 1981, 'Spain', ['ST'], 80, 89, 2008, 30, t(7, 6, 9, 6, 5, 7), { latentCeiling: 90, archetype: 'poacher' }),
   q('zaragoza', 'javimoreno04', 'Javi Moreno', 1974, 'Spain', ['ST'], 74, 74, 2006, 45, t(6, 6, 6, 5, 6, 6), { archetype: 'poacher' }),
-  q('zaragoza', 'drulic04', 'Goran Drulić', 1977, 'Serbia and Montenegro', ['ST'], 68, 70, 2006, 55, t(5, 5, 5, 5, 6, 5)),
+  q('zaragoza', 'drulic04', 'Goran Drulić', 1977, 'Serbia', ['ST'], 68, 70, 2006, 55, t(5, 5, 5, 5, 6, 5)),
 ];
 
 /** Curated squads for the arsenal-2004 scenario, keyed by club. */
@@ -447,7 +447,7 @@ export const INTER_2004: CuratedSeed[] = [
   q('inter', 'mihajlovic04i', 'Siniša Mihajlović', 1969, 'Serbia', ['CB', 'LB'], 78, 79, 2006, 30, t(7, 7, 8, 7, 8, 6)),
   q('inter', 'cambiasso04i', 'Esteban Cambiasso', 1980, 'Argentina', ['DM', 'CM'], 82, 86, 2009, 25, t(9, 5, 9, 8, 4, 8), { archetype: 'deep-playmaker' }),
   q('inter', 'czanetti04i', 'Cristiano Zanetti', 1977, 'Italy', ['DM', 'CM'], 79, 81, 2008, 40, t(8, 5, 7, 7, 5, 7), { archetype: 'deep-playmaker' }),
-  q('inter', 'veron04i', 'Juan Sebastián Verón', 1975, 'Argentina', ['CM', 'AM'], 82, 88, 2007, 40, t(7, 7, 8, 6, 6, 6), { archetype: 'playmaker' }),
+  q('inter', 'veron04i', 'Juan Sebastián Verón', 1975, 'Argentina', ['CM', 'AM'], 82, 88, 2007, 40, t(7, 7, 8, 6, 6, 6), { archetype: 'playmaker', loanFrom: 'chelsea' }),
   q('inter', 'stankovic04i', 'Dejan Stanković', 1978, 'Serbia', ['AM', 'CM'], 82, 84, 2009, 30, t(8, 6, 8, 7, 6, 7), { archetype: 'playmaker' }),
   q('inter', 'emre04i', 'Emre Belözoğlu', 1980, 'Turkey', ['CM', 'AM'], 79, 83, 2008, 35, t(6, 7, 7, 6, 8, 6), { archetype: 'playmaker' }),
   q('inter', 'vandermeyde04i', 'Andy van der Meyde', 1979, 'Netherlands', ['RW', 'AM'], 76, 80, 2008, 40, t(5, 6, 6, 5, 7, 6), { archetype: 'inside-forward' }),

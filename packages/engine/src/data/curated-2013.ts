@@ -36,7 +36,7 @@ function q(
   contractUntil: number,
   injuryProneness: number,
   personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string; loanFrom?: ClubId } = {},
 ): CuratedSeed {
   return {
     id: `cur_${id}`,
@@ -191,7 +191,7 @@ export const EVERTON_2013: CuratedSeed[] = [
   q('everton', 'distin', 'Sylvain Distin', 1978, 'France', ['CB'], 79, 80, 2015, 25, t(8, 5, 7, 7, 4, 6)),
   q('everton', 'baines', 'Leighton Baines', 1984, 'England', ['LB'], 83, 84, 2015, 25, t(9, 5, 8, 8, 3, 7)),
   q('everton', 'fellaini', 'Marouane Fellaini', 1987, 'Belgium', ['CM', 'DM'], 80, 83, 2016, 30, t(7, 6, 7, 6, 6, 6)),
-  q('everton', 'gbarry', 'Gareth Barry', 1981, 'England', ['DM', 'CM'], 80, 81, 2014, 25, t(9, 4, 7, 7, 3, 7)),
+  q('everton', 'gbarry', 'Gareth Barry', 1981, 'England', ['DM', 'CM'], 80, 81, 2014, 25, t(9, 4, 7, 7, 3, 7), { loanFrom: 'man_city' }),
   q('everton', 'mccarthy', 'James McCarthy', 1990, 'Ireland', ['CM', 'DM'], 79, 85, 2018, 30, t(8, 4, 8, 8, 4, 7)),
   q('everton', 'osman', 'Leon Osman', 1981, 'England', ['CM', 'AM'], 77, 78, 2015, 30, t(8, 4, 7, 8, 4, 7)),
   q('everton', 'pienaar', 'Steven Pienaar', 1982, 'South Africa', ['LW', 'AM'], 78, 80, 2016, 40, t(7, 5, 7, 7, 5, 7)),
@@ -199,8 +199,8 @@ export const EVERTON_2013: CuratedSeed[] = [
   // Barkley & Deulofeu — two academy-golden talents who stalled; either can be
   // the player everyone saw at 19 if a manager gets the best out of him.
   q('everton', 'barkley', 'Ross Barkley', 1993, 'England', ['AM', 'CM'], 77, 87, 2018, 35, t(6, 6, 8, 8, 5, 6), { latentCeiling: 91 }),
-  q('everton', 'lukaku', 'Romelu Lukaku', 1993, 'Belgium', ['ST'], 82, 89, 2018, 30, t(7, 7, 9, 6, 5, 7)),
-  q('everton', 'deulofeu', 'Gerard Deulofeu', 1994, 'Spain', ['LW', 'RW'], 75, 85, 2017, 35, t(6, 7, 7, 5, 6, 6), { latentCeiling: 88 }),
+  q('everton', 'lukaku', 'Romelu Lukaku', 1993, 'Belgium', ['ST'], 82, 89, 2018, 30, t(7, 7, 9, 6, 5, 7), { loanFrom: 'chelsea' }),
+  q('everton', 'deulofeu', 'Gerard Deulofeu', 1994, 'Spain', ['LW', 'RW'], 75, 85, 2017, 35, t(6, 7, 7, 5, 6, 6), { latentCeiling: 88, loanFrom: 'barcelona' }),
 ];
 
 /** Southampton, 2013–14 — Shaw (a later Van Gaal target the user skips) + core. */
@@ -354,7 +354,7 @@ export const AJAX_2013: CuratedSeed[] = [
   q('ajax', 'poulsen13', 'Christian Poulsen', 1980, 'Denmark', ['DM', 'CM'], 71, 71, 2015, 50, t(7, 6, 6, 6, 6, 6)),
   // Bojan — the ex-Barça wonderkid on a season's loan, his once-huge ceiling long
   // since sapped by pressure and volatility. A lost talent (latent 84).
-  q('ajax', 'bojan13', 'Bojan Krkić', 1990, 'Spain', ['ST', 'AM', 'LW'], 74, 78, 2015, 45, t(7, 4, 6, 5, 7, 6), { latentCeiling: 84 }),
+  q('ajax', 'bojan13', 'Bojan Krkić', 1990, 'Spain', ['ST', 'AM', 'LW'], 74, 78, 2015, 45, t(7, 4, 6, 5, 7, 6), { latentCeiling: 84, loanFrom: 'barcelona' }),
   // Fischer — an electric young winger whose knee ligaments kept betraying him.
   // Fragile-and-lost (latent 88).
   q('ajax', 'fischer13', 'Viktor Fischer', 1994, 'Denmark', ['LW', 'ST'], 71, 82, 2017, 80, t(7, 6, 8, 5, 6, 6), { latentCeiling: 88 }),
@@ -480,7 +480,7 @@ export const NEWCASTLE_2013: CuratedSeed[] = [
   // Ben Arfa — mercurial, hugely gifted, never sustained it. A wasted talent (latent 84).
   q('newcastle', 'benarfa13', 'Hatem Ben Arfa', 1987, 'France', ['AM', 'RW'], 72, 74, 2015, 55, t(5, 8, 5, 4, 8, 4), { latentCeiling: 84 }),
   q('newcastle', 'gouffran13', 'Yoan Gouffran', 1986, 'France', ['LW', 'ST'], 72, 73, 2016, 35, t(7, 5, 6, 7, 5, 7)),
-  q('newcastle', 'remy13', 'Loïc Rémy', 1987, 'France', ['ST'], 78, 80, 2014, 50, t(7, 7, 7, 4, 5, 6)),
+  q('newcastle', 'remy13', 'Loïc Rémy', 1987, 'France', ['ST'], 78, 80, 2014, 50, t(7, 7, 7, 4, 5, 6), { loanFrom: 'qpr' }),
   q('newcastle', 'cisse13', 'Papiss Cissé', 1985, 'Senegal', ['ST'], 74, 76, 2016, 45, t(6, 7, 6, 6, 6, 6)),
 ];
 
@@ -495,7 +495,7 @@ export const SWANSEA_2013: CuratedSeed[] = [
   q('swansea', 'rangel13', 'Àngel Rangel', 1982, 'Spain', ['RB'], 72, 72, 2015, 35, t(8, 3, 5, 9, 2, 7)),
   q('swansea', 'britton13', 'Leon Britton', 1982, 'England', ['CM', 'DM'], 73, 73, 2015, 30, t(8, 3, 5, 9, 2, 7)),
   q('swansea', 'shelvey13', 'Jonjo Shelvey', 1992, 'England', ['CM'], 73, 80, 2018, 40, t(6, 7, 8, 5, 7, 6)),
-  q('swansea', 'deguzman13', 'Jonathan de Guzmán', 1987, 'Netherlands', ['AM', 'CM'], 74, 76, 2016, 45, t(7, 6, 7, 5, 5, 6)),
+  q('swansea', 'deguzman13', 'Jonathan de Guzmán', 1987, 'Netherlands', ['AM', 'CM'], 74, 76, 2016, 45, t(7, 6, 7, 5, 5, 6), { loanFrom: 'villarreal' }),
   q('swansea', 'routledge13', 'Wayne Routledge', 1985, 'England', ['LW', 'RW'], 72, 72, 2016, 45, t(7, 4, 5, 7, 3, 7)),
   q('swansea', 'dyer13', 'Nathan Dyer', 1987, 'England', ['RW', 'LW'], 73, 73, 2018, 45, t(7, 5, 6, 7, 4, 7)),
   q('swansea', 'hernandez13', 'Pablo Hernández', 1985, 'Spain', ['RW', 'AM'], 73, 74, 2016, 40, t(7, 6, 6, 5, 5, 6)),
@@ -555,7 +555,7 @@ export const WEST_BROM_2013: CuratedSeed[] = [
   q('west_brom', 'yacob13', 'Claudio Yacob', 1987, 'Argentina', ['DM', 'CM'], 69, 70, 2016, 42, t(7, 4, 6, 7, 5, 6)),
   q('west_brom', 'brunt13', 'Chris Brunt', 1984, 'Northern Ireland', ['LB', 'LW'], 70, 70, 2016, 45, t(7, 6, 7, 8, 6, 6)),
   q('west_brom', 'morrison13', 'James Morrison', 1986, 'Scotland', ['CM', 'AM'], 70, 71, 2017, 48, t(7, 5, 6, 8, 5, 7)),
-  q('west_brom', 'amalfitano13', 'Morgan Amalfitano', 1985, 'France', ['RW', 'AM'], 71, 71, 2014, 40, t(6, 6, 6, 5, 6, 6)),
+  q('west_brom', 'amalfitano13', 'Morgan Amalfitano', 1985, 'France', ['RW', 'AM'], 71, 71, 2014, 40, t(6, 6, 6, 5, 6, 6), { loanFrom: 'marseille' }),
   q('west_brom', 'sessegnon13', 'Stéphane Sessègnon', 1984, 'Benin', ['AM', 'ST'], 74, 74, 2017, 43, t(6, 7, 6, 5, 7, 6)),
   // Berahino — the top-scoring young striker whose attitude and form then collapsed.
   // Wasted talent (latent 80).
@@ -605,7 +605,7 @@ export const CRYSTAL_PALACE_2013: CuratedSeed[] = [
   q('crystal_palace', 'ward13', 'Joel Ward', 1989, 'England', ['RB', 'LB'], 66, 70, 2017, 30, t(8, 4, 6, 9, 3, 7)),
   q('crystal_palace', 'jedinak13', 'Mile Jedinak', 1984, 'Australia', ['DM', 'CM'], 72, 73, 2017, 35, t(9, 6, 7, 8, 5, 7)),
   q('crystal_palace', 'dikgacoi13', 'Kagisho Dikgacoi', 1984, 'South Africa', ['DM', 'CM'], 65, 66, 2015, 40, t(7, 4, 5, 7, 5, 6)),
-  q('crystal_palace', 'puncheon13', 'Jason Puncheon', 1986, 'England', ['AM', 'LW'], 68, 71, 2017, 35, t(6, 6, 6, 6, 6, 6)),
+  q('crystal_palace', 'puncheon13', 'Jason Puncheon', 1986, 'England', ['AM', 'LW'], 68, 71, 2017, 35, t(6, 6, 6, 6, 6, 6), { loanFrom: 'southampton' }),
   // Bolasie — a raw, exciting winger here who kicked on to a big move. Reality-rail.
   q('crystal_palace', 'bolasie13', 'Yannick Bolasie', 1989, 'DR Congo', ['RW', 'LW'], 70, 82, 2017, 35, t(5, 6, 7, 6, 6, 6)),
   q('crystal_palace', 'chamakh13', 'Marouane Chamakh', 1984, 'Morocco', ['ST', 'AM'], 65, 67, 2015, 40, t(6, 6, 5, 6, 5, 6)),
@@ -642,7 +642,7 @@ export const FULHAM_2013: CuratedSeed[] = [
   q('fulham', 'kasami13', 'Pajtim Kasami', 1992, 'Switzerland', ['CM', 'AM'], 64, 74, 2015, 30, t(5, 7, 8, 5, 6, 6)),
   q('fulham', 'dejagah13', 'Ashkan Dejagah', 1986, 'Iran', ['RW', 'LW'], 65, 68, 2015, 42, t(6, 6, 7, 6, 5, 6)),
   // Taarabt — outrageous talent, no application: the archetypal wasted gift (latent 80).
-  q('fulham', 'taarabt13', 'Adel Taarabt', 1989, 'Morocco', ['AM'], 64, 72, 2014, 32, t(3, 9, 6, 3, 9, 4), { latentCeiling: 80 }),
+  q('fulham', 'taarabt13', 'Adel Taarabt', 1989, 'Morocco', ['AM'], 64, 72, 2014, 32, t(3, 9, 6, 3, 9, 4), { latentCeiling: 80, loanFrom: 'qpr' }),
   q('fulham', 'berbatov13', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST'], 72, 72, 2014, 35, t(6, 8, 5, 5, 5, 6)),
   q('fulham', 'rodallega13', 'Hugo Rodallega', 1985, 'Colombia', ['ST'], 64, 66, 2015, 30, t(7, 6, 6, 6, 4, 6)),
 ];
