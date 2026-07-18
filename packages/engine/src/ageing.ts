@@ -8,7 +8,7 @@
  * and dominance erodes over a career.
  */
 
-import type { GameState, Position } from './types.js';
+import type { GameState, Position, PlayerState } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { clubSquadPlayers, recomputeClubStrength, overstackedStars } from './players.js';
@@ -86,6 +86,36 @@ export function retireAgeFor(positions: Position[], professionalism: number): nu
   return BASE_RETIRE_AGE + gk + defender + pro;
 }
 
+/**
+ * How far a player's CURRENT level shifts his retirement age — the reality that
+ * hanging up the boots tracks DECLINE, not just the calendar. A still-elite
+ * veteran plays deep into his late thirties or beyond (Maldini, Buffon, Giggs);
+ * a player who has faded to fringe quality bows out earlier rather than soldier
+ * on at 41 barely able to play. Centred on 0 for a solid top-flight regular.
+ */
+function retireAbilityShift(ability: number): number {
+  if (ability >= 84) return 2; // still excellent — plays on
+  if (ability >= 74) return 0; // a dependable regular — the baseline
+  if (ability >= 64) return -1;
+  if (ability >= 54) return -3;
+  return -5; // clearly faded — hangs it up rather than limp on for years
+}
+
+/**
+ * Probability a player retires this summer. Retirement opens as he approaches his
+ * DECLINE-ADJUSTED age (position + professionalism + current level), never before
+ * a hard floor of 32 so no one leaves in their twenties, and ramps to near-certain
+ * a few seasons later. A great at 84+ can push into his forties; a faded squad man
+ * bows out in his mid-thirties.
+ */
+function retirementProbability(player: PlayerState, age: number): number {
+  const effectiveRetireAge =
+    retireAgeFor(player.positions, player.personality.professionalism) + retireAbilityShift(player.ability);
+  const opensAt = Math.max(32, effectiveRetireAge - 3);
+  if (age < opensAt) return 0;
+  return Math.max(0, Math.min(1, (age - opensAt + 1) * 0.24));
+}
+
 /** The 23-slot squad-refresh template — a young graduate is generated into a
  *  position the squad most needs, cycling through this canonical spine. */
 
@@ -112,12 +142,10 @@ export function processRetirementsAndYouth(state: GameState, rng: Rng): void {
     // Retirements — collect first, then remove (don't mutate while iterating).
     const retirees = [];
     for (const player of clubSquadPlayers(state, club.id)) {
-      const age = year - player.birthYear;
-      const retireAge = retireAgeFor(player.positions, player.personality.professionalism);
-      if (age < retireAge - 2) continue;
-      // Probability ramps from the threshold to near-certain ~5 seasons later.
-      const prob = Math.max(0, Math.min(1, (age - (retireAge - 2)) * 0.2));
-      if (rr.chance(prob)) retirees.push(player);
+      const prob = retirementProbability(player, year - player.birthYear);
+      // Only players in the retirement window draw — a young player never consumes
+      // an RNG draw (keeps the stream stable and cheap).
+      if (prob > 0 && rr.chance(prob)) retirees.push(player);
     }
     for (const player of retirees) {
       // Remove from the squad but KEEP `club` (his final club is his reality — the

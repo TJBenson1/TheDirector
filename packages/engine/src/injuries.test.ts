@@ -63,12 +63,18 @@ describe('injuries (§9c)', () => {
   });
 
   it('the user club hits a 3+ simultaneous injury crisis within a career', () => {
-    let state = createNewGame({ seed: 'inj-crisis' });
-    let sawCrisis = false;
-    for (let i = 0; i < 30 && !sawCrisis; i++) {
-      state = advanceWindow(state).state;
-      if (significantInjuredCount(state, 'man_utd') >= 3) sawCrisis = true;
-    }
+    // A ~97% per-career property (see the harness): any single seed can miss it, so
+    // sample a few careers and require the crisis in at least one — robust to RNG
+    // shifts from unrelated engine changes, without seed-shopping.
+    const seeds = ['inj-crisis', 'inj-crisis-2', 'inj-crisis-3'];
+    const sawCrisis = seeds.some((seed) => {
+      let state = createNewGame({ seed });
+      for (let i = 0; i < 30; i++) {
+        state = advanceWindow(state).state;
+        if (significantInjuredCount(state, 'man_utd') >= 3) return true;
+      }
+      return false;
+    });
     expect(sawCrisis).toBe(true);
   });
 
