@@ -7,7 +7,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "harness": "tsx src/run.ts",
-    "play": "tsx src/play.ts"
+    "play": "tsx src/play.ts",
+    "audit": "tsx src/hunt.ts"
   },
   "dependencies": {
     "@director/engine": "workspace:*"
