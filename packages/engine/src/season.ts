@@ -21,6 +21,7 @@ import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { parseYearMonth } from './clock.js';
 import { formationEraModifier } from './tactics.js';
+import { anchorSeasonToReality } from './realStandings.js';
 
 // ── Tunable match-model constants (calibrated in season.test.ts) ─────────────
 const HOME_ADVANTAGE = 6; // strength points
@@ -231,6 +232,9 @@ function alreadyCrowned(league: LeagueState, seasonYear: number): boolean {
 /** Crown the champion of a completed season and record it. */
 export function finalizeSeason(state: GameState, league: LeagueState): void {
   if (alreadyCrowned(league, league.seasonYear)) return;
+  // M14: pull the final table toward reality (scaled by divergence) BEFORE crowning
+  // — a passive run reproduces the real champion, top four and relegation.
+  anchorSeasonToReality(state, league);
   const order = standingsOrder(league);
   // Bottom three go down — their players become easy pickings next season.
   const relegated = new Set(order.slice(-3));

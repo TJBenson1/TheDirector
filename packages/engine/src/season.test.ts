@@ -149,9 +149,11 @@ describe('season simulation — sane 1999–2000 table', () => {
     // Man Utd should average a top-few finish; Watford should be near the drop.
     expect(strongAvg).toBeLessThan(4);
     expect(weakAvg).toBeGreaterThan(14);
-    // The strongest club wins most seasons, but NOT all (variance is real, §12).
-    expect(strongTitles).toBeGreaterThan(SEASONS * 0.4);
-    expect(strongTitles).toBeLessThan(SEASONS); // never a clean sweep
+    // M14 reality-default: a PASSIVE replay of a covered season reproduces the real
+    // champion, so the real 1999/2000 winner (Man Utd) takes every passive season.
+    // (Emergent match variance still governs uncovered seasons and divergent runs —
+    // exercised by the calibration harness's active/bot careers.)
+    expect(strongTitles).toBe(SEASONS);
   });
 });
 
