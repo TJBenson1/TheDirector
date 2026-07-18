@@ -142,9 +142,73 @@ export const MAN_UTD_2003: CuratedSeed[] = [
 ];
 
 /** Curated squads for the barcelona-2003 start — Barça and the Galácticos both real. */
+/** Deportivo La Coruña, 2003–04 — "Super Depor" at their European peak: Champions
+ *  League quarter-final 4-0 demolition of Milan, Valerón the artist, Mauro Silva and
+ *  Fran the veterans, Pandiani signed to replace the departed Makaay. */
+export const DEPORTIVO_2003: CuratedSeed[] = [
+  q('deportivo', 'molina03', 'José Molina', 1970, 'Spain', ['GK'], 80, 80, 2006, 25, t(8, 5, 6, 8, 3, 7)),
+  q('deportivo', 'munua03', 'Gustavo Munúa', 1978, 'Uruguay', ['GK'], 74, 78, 2007, 25, t(7, 5, 7, 6, 4, 7)),
+  q('deportivo', 'songoo03', "Jacques Songo'o", 1964, 'Cameroon', ['GK'], 71, 71, 2004, 25, t(8, 4, 5, 8, 3, 6)),
+  q('deportivo', 'manuelpablo03', 'Manuel Pablo', 1976, 'Spain', ['RB'], 79, 80, 2007, 40, t(8, 4, 7, 10, 3, 7), { archetype: 'full-back-attacking' }),
+  q('deportivo', 'scaloni03', 'Lionel Scaloni', 1978, 'Argentina', ['RB'], 77, 79, 2006, 30, t(8, 5, 8, 7, 4, 8)),
+  q('deportivo', 'capdevila03', 'Joan Capdevila', 1978, 'Spain', ['LB'], 79, 82, 2007, 25, t(8, 4, 7, 7, 4, 8), { archetype: 'full-back-attacking' }),
+  q('deportivo', 'romero03d', 'Enrique Romero', 1972, 'Spain', ['LB'], 74, 74, 2005, 30, t(7, 4, 6, 7, 4, 7)),
+  q('deportivo', 'naybet03', 'Noureddine Naybet', 1970, 'Morocco', ['CB'], 82, 82, 2005, 30, t(9, 5, 7, 8, 3, 7), { archetype: 'covering-cb', loyalty: 88 }),
+  q('deportivo', 'andrade03', 'Jorge Andrade', 1978, 'Portugal', ['CB'], 80, 83, 2006, 30, t(8, 5, 7, 7, 4, 7), { archetype: 'covering-cb' }),
+  q('deportivo', 'cesarmartin03', 'César Martín', 1977, 'Spain', ['CB'], 77, 79, 2007, 30, t(8, 4, 6, 7, 4, 7), { archetype: 'covering-cb' }),
+  q('deportivo', 'hector03', 'Héctor', 1980, 'Spain', ['CB'], 72, 78, 2007, 30, t(7, 4, 7, 7, 4, 7)),
+  q('deportivo', 'maurosilva03', 'Mauro Silva', 1968, 'Brazil', ['DM'], 82, 82, 2005, 25, t(9, 3, 6, 10, 2, 8), { archetype: 'destroyer', loyalty: 90 }),
+  q('deportivo', 'duscher03', 'Aldo Duscher', 1979, 'Argentina', ['DM', 'CM'], 79, 81, 2007, 30, t(7, 6, 8, 6, 6, 7), { archetype: 'destroyer' }),
+  q('deportivo', 'sergiog03', 'Sergio', 1976, 'Spain', ['CM'], 79, 80, 2006, 30, t(8, 5, 7, 7, 4, 7)),
+  q('deportivo', 'fran03', 'Fran', 1969, 'Spain', ['CM', 'AM'], 79, 79, 2005, 30, t(8, 4, 6, 10, 3, 7), { loyalty: 92 }),
+  q('deportivo', 'victorsanchez03', 'Víctor Sánchez', 1976, 'Spain', ['RW', 'AM'], 77, 79, 2006, 30, t(7, 5, 7, 7, 5, 7)),
+  q('deportivo', 'munitis03', 'Pedro Munitis', 1975, 'Spain', ['RW', 'AM'], 78, 80, 2006, 30, t(7, 5, 7, 6, 5, 7)),
+  // Valerón — the sublime playmaker, the artist at the heart of Super Depor.
+  q('deportivo', 'valeron03', 'Juan Carlos Valerón', 1975, 'Spain', ['AM'], 85, 87, 2007, 45, t(9, 4, 7, 9, 3, 8), { archetype: 'playmaker', latentCeiling: 88 }),
+  q('deportivo', 'tristan03', 'Diego Tristán', 1976, 'Spain', ['ST'], 83, 84, 2006, 40, t(6, 7, 7, 6, 6, 6), { archetype: 'poacher' }),
+  q('deportivo', 'luque03', 'Albert Luque', 1978, 'Spain', ['LW', 'ST'], 81, 83, 2006, 35, t(7, 6, 7, 6, 6, 7), { archetype: 'inside-forward' }),
+  // Pandiani — the €7.2m Makaay replacement who top-scored with 19 and downed Milan.
+  q('deportivo', 'pandiani03', 'Walter Pandiani', 1976, 'Uruguay', ['ST'], 80, 81, 2006, 35, t(7, 6, 8, 6, 5, 7), { archetype: 'poacher' }),
+];
+
+/** Valencia CF, 2003–04 — Rafa Benítez's La Liga + UEFA Cup DOUBLE winners: the
+ *  Albelda–Baraja engine, Aimar and Vicente the flair, Mista's 19 goals, marshalled by
+ *  Cañizares and captain Ayala. One of the great modern non-giant sides. */
+export const VALENCIA_2003: CuratedSeed[] = [
+  q('valencia', 'canizares03', 'Santiago Cañizares', 1969, 'Spain', ['GK'], 84, 84, 2007, 25, t(8, 6, 7, 8, 5, 7)),
+  q('valencia', 'palop03', 'Andrés Palop', 1973, 'Spain', ['GK'], 74, 78, 2005, 25, t(8, 5, 6, 7, 4, 7)),
+  q('valencia', 'rangel03', 'David Rangel', 1979, 'Spain', ['GK'], 68, 72, 2006, 25, t(7, 4, 6, 7, 4, 6)),
+  q('valencia', 'currotorres03', 'Curro Torres', 1976, 'Spain', ['RB'], 78, 79, 2006, 30, t(8, 4, 7, 8, 3, 7)),
+  // Ayala — the captain and defensive rock of the double-winning side.
+  q('valencia', 'ayala03', 'Roberto Ayala', 1973, 'Argentina', ['CB'], 85, 85, 2007, 25, t(9, 5, 8, 8, 4, 7), { archetype: 'covering-cb', loyalty: 88 }),
+  q('valencia', 'marchena03', 'Carlos Marchena', 1979, 'Spain', ['CB', 'DM'], 80, 82, 2007, 25, t(8, 5, 7, 7, 4, 7), { archetype: 'covering-cb' }),
+  q('valencia', 'pellegrino03', 'Mauricio Pellegrino', 1971, 'Argentina', ['CB'], 80, 80, 2004, 25, t(9, 4, 7, 8, 3, 7), { archetype: 'covering-cb' }),
+  q('valencia', 'davidnavarro03', 'David Navarro', 1980, 'Spain', ['CB'], 74, 78, 2007, 30, t(7, 5, 6, 7, 5, 6), { archetype: 'covering-cb' }),
+  q('valencia', 'carboni03', 'Amedeo Carboni', 1965, 'Italy', ['LB'], 76, 76, 2005, 25, t(8, 5, 7, 8, 3, 8), { archetype: 'full-back-attacking' }),
+  q('valencia', 'fabioaurelio03', 'Fábio Aurélio', 1979, 'Brazil', ['LB'], 76, 80, 2006, 55, t(8, 4, 7, 7, 4, 7), { archetype: 'full-back-attacking' }),
+  q('valencia', 'albelda03', 'David Albelda', 1977, 'Spain', ['DM'], 83, 84, 2008, 30, t(9, 5, 8, 10, 5, 7), { archetype: 'destroyer', loyalty: 90 }),
+  q('valencia', 'baraja03', 'Rubén Baraja', 1975, 'Spain', ['CM'], 84, 85, 2007, 30, t(8, 6, 9, 8, 5, 7), { archetype: 'deep-playmaker' }),
+  // Sissoko — the teenage engine signed on a free, a future Liverpool midfielder.
+  q('valencia', 'sissoko03', 'Mohamed Sissoko', 1985, 'Mali', ['DM', 'CM'], 70, 84, 2007, 30, t(7, 5, 8, 6, 5, 7), { archetype: 'destroyer', latentCeiling: 85 }),
+  q('valencia', 'jorgelopez03', 'Jorge López', 1978, 'Spain', ['RW'], 76, 78, 2006, 30, t(7, 5, 7, 7, 5, 7)),
+  q('valencia', 'rufete03', 'Francisco Rufete', 1976, 'Spain', ['RW'], 78, 79, 2006, 30, t(8, 5, 7, 7, 4, 7)),
+  // Aimar — the little playmaker Maradona called his favourite; Valencia's spark.
+  q('valencia', 'aimar03', 'Pablo Aimar', 1979, 'Argentina', ['AM'], 84, 87, 2006, 45, t(8, 5, 7, 7, 4, 8), { archetype: 'playmaker', latentCeiling: 87 }),
+  // Vicente — the electric left winger; scored the opening penalty in the UEFA Cup final.
+  q('valencia', 'vicente03', 'Vicente', 1981, 'Spain', ['LW'], 84, 87, 2007, 50, t(7, 6, 8, 7, 5, 7), { archetype: 'inside-forward', latentCeiling: 88 }),
+  q('valencia', 'angulo03', 'Miguel Ángel Angulo', 1977, 'Spain', ['RW', 'ST'], 76, 78, 2006, 30, t(8, 4, 6, 8, 4, 7)),
+  q('valencia', 'xisco03', 'Xisco Muñoz', 1980, 'Spain', ['LW'], 71, 74, 2006, 30, t(7, 5, 6, 7, 5, 7)),
+  // Mista — 19 La Liga goals and a strike in the UEFA Cup final; the season's cutting edge.
+  q('valencia', 'mista03', 'Mista', 1978, 'Spain', ['ST'], 82, 83, 2006, 30, t(7, 6, 8, 7, 5, 7), { archetype: 'poacher' }),
+  q('valencia', 'juansanchez03', 'Juan Sánchez', 1972, 'Spain', ['ST'], 74, 75, 2005, 35, t(7, 4, 6, 7, 4, 7), { archetype: 'poacher' }),
+  q('valencia', 'oliveira03', 'Ricardo Oliveira', 1980, 'Brazil', ['ST'], 78, 82, 2006, 30, t(6, 7, 7, 5, 6, 7), { archetype: 'poacher' }),
+];
+
 export const BARCELONA_2003_SQUADS: Record<string, CuratedSeed[]> = {
   barcelona: BARCELONA_2003,
   real_madrid: REAL_MADRID_2003,
+  deportivo: DEPORTIVO_2003,
+  valencia: VALENCIA_2003,
 };
 
 /** Curated squads for the chelsea-2003 start — the Roman Empire and its English
