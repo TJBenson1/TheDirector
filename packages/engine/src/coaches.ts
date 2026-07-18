@@ -158,62 +158,72 @@ export interface CoachFit {
 /** Neutral point of the 1..10 personality scale. */
 const TRAIT_MID = 5.5;
 
-/** How strongly playing-style fit swings the verdict, relative to personality.
- *  A perfect style match adds ~+7; a total mismatch subtracts ~-9. */
-const STYLE_WEIGHT = 16;
-/** Style distance (0..1) at which the style term is neutral — a modest gap is
- *  tolerated before it starts counting against the fit. */
-const STYLE_NEUTRAL = 0.45;
+/** Professionalism and ambition are uniformly high in elite targets, so they
+ *  barely DISCRIMINATE between good players — down-weight them so the coach's
+ *  opinion is driven by the traits that actually vary (ego, volatility, loyalty)
+ *  and by playing style. Without this every coach "wants" every star. */
+const FLAT_TRAIT_WEIGHT = 0.4;
+/** Playing-style swing, and the distance at which it turns neutral. */
+const STYLE_WEIGHT = 6;
+const STYLE_NEUTRAL = 0.28;
+/** A coach genuinely COVETS a player above this score (favourites aside). Set so
+ *  "wants" is a minority — the players he'd push for, not everyone he'd accept. */
+const WANTS_AT = 9;
 
 /**
- * How well a player suits the coach's recruitment profile — on TWO axes:
- *   • personality: a possession coach who wants low-ego technicians baulks at a
- *     volatile, big-ego maverick a man-manager would happily take on;
- *   • playing style: that same possession coach (high technical, low
- *     physicality) rates a ball-playing creator far above a route-one, physical
- *     profile — where a gegenpress coach wants tempo and running.
- * Favourites from former clubs are wanted outright. The coach's adaptability
- * widens his personality tolerance — a flexible coach grumbles where a dogmatic
- * one digs in and vetoes.
+ * How well a player suits the coach's recruitment profile — on two axes,
+ * personality and playing style. A possession coach baulks at a volatile,
+ * big-ego maverick a man-manager would take on and rates a ball-playing creator
+ * far above a route-one profile; a gegenpress coach wants tempo and running.
+ * Favourites from former clubs are wanted outright.
+ *
+ * `wants` is reserved for players the coach actively covets; most decent signings
+ * are `fine` (he'll take him); `reluctant`/`veto` are poor fits. Adaptability
+ * doesn't make a coach want MORE players — it makes him TOLERATE poor ones (a
+ * flexible coach grumbles where a dogmatic one digs in and vetoes).
  */
 export function coachFit(coach: ManagerState, player: PlayerState): CoachFit {
   if (coach.favourites.includes(player.name)) {
-    return { score: 100, verdict: 'wants', reason: `${player.name} is one of ${coach.identity}'s own — he wants him.` };
+    return { score: 100, verdict: 'wants', reason: `${player.name} is one of ${coach.identity}'s own — he wants him back.` };
   }
   const lean = coach.traitLean;
   const per = player.personality;
   const raw =
-    lean.professionalism * (per.professionalism - TRAIT_MID) +
+    lean.professionalism * (per.professionalism - TRAIT_MID) * FLAT_TRAIT_WEIGHT +
     lean.ego * (per.ego - TRAIT_MID) +
-    lean.ambition * (per.ambition - TRAIT_MID) +
+    lean.ambition * (per.ambition - TRAIT_MID) * FLAT_TRAIT_WEIGHT +
     lean.loyalty * (per.loyalty - TRAIT_MID) +
     lean.volatility * (per.volatility - TRAIT_MID) +
     lean.adaptability * (per.adaptability - TRAIT_MID);
-  // A more adaptable coach tolerates a wider spread of personalities.
-  const personalityScore = raw + (coach.adaptability - 5) * 1.5;
 
-  // Playing-style fit: how close the player's derived style is to the coach's.
   const dist = styleDistance(coach.style, playerStyleProfile(player)); // 0..1
   const styleScore = (STYLE_NEUTRAL - dist) * STYLE_WEIGHT;
-  const styleMismatch = dist > 0.6; // a genuinely wrong profile for this coach
+  const styleDriven = dist <= 0.2; // an unusually good stylistic match
+  const styleMismatch = dist > 0.55; // a genuinely wrong profile for his system
 
-  const score = personalityScore + styleScore;
+  const score = raw + styleScore;
+  const tol = Math.max(0, coach.adaptability - 5) * 1.5; // adaptable → tolerates more
 
   let verdict: FitVerdict;
-  if (score >= 5) verdict = 'wants';
-  else if (score >= -4) verdict = 'fine';
-  else if (score >= -10) verdict = 'reluctant';
+  if (score >= WANTS_AT) verdict = 'wants';
+  else if (score >= -3 - tol) verdict = 'fine';
+  else if (score >= -10 - tol) verdict = 'reluctant';
   else verdict = 'veto';
 
-  const styleNote = styleMismatch ? ` — the wrong playing profile for his system` : '';
   const reason =
     verdict === 'wants'
-      ? `${player.name}'s profile is exactly what ${coach.identity} wants.`
+      ? styleDriven
+        ? `${player.name} fits ${coach.identity}'s system perfectly.`
+        : `${coach.identity} rates ${player.name} highly and wants him.`
       : verdict === 'fine'
-        ? `${coach.identity} is comfortable with ${player.name}.`
+        ? `${coach.identity} would happily work with ${player.name}.`
         : verdict === 'reluctant'
-          ? `${coach.identity} has reservations about ${player.name}${styleNote || `'s temperament`}.`
-          : `${coach.identity} does not want ${player.name}${styleNote || ' — a poor fit for how he works'}.`;
+          ? styleMismatch
+            ? `${coach.identity} isn't sure ${player.name} suits how he plays.`
+            : `${coach.identity} has doubts about ${player.name}'s temperament.`
+          : styleMismatch
+            ? `${coach.identity} doesn't want ${player.name} — the wrong profile for his system.`
+            : `${coach.identity} doesn't want ${player.name} — too much of a risk in his dressing room.`;
   return { score: Math.round(score * 10) / 10, verdict, reason };
 }
 
