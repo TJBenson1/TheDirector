@@ -100,7 +100,9 @@ export const MAN_UTD_1999: CuratedSeed[] = [
   p('gneville', 'Gary Neville', 1975, 'England', ['RB'], 82, 86, 2004, 25, t(9, 5, 8, 10, 4, 7)),
   p('pneville', 'Phil Neville', 1977, 'England', ['LB', 'CM'], 78, 82, 2004, 25, t(8, 4, 7, 9, 3, 8)),
   p('irwin', 'Denis Irwin', 1965, 'Ireland', ['LB', 'RB'], 82, 82, 2001, 22, t(9, 3, 7, 9, 2, 8)),
-  p('silvestre', 'Mikaël Silvestre', 1977, 'France', ['CB', 'LB'], 79, 86, 2004, 28, t(7, 5, 7, 6, 4, 8)),
+  // Silvestre & Fortune are United's real 1999 SUMMER SIGNINGS — seeded at their
+  // selling clubs (Inter, Atlético) below and OFFERED to the Director as ledger
+  // real-in decisions, not baked in. Reality-default lands them if you do nothing.
   p('stam', 'Jaap Stam', 1972, 'Netherlands', ['CB'], 89, 90, 2003, 35, t(8, 6, 8, 6, 5, 6)),
   p('rjohnsen', 'Ronny Johnsen', 1969, 'Norway', ['CB', 'DM'], 79, 80, 2002, 55, t(8, 4, 6, 7, 3, 6)),
   p('wbrown', 'Wes Brown', 1979, 'England', ['CB'], 74, 85, 2004, 60, t(7, 4, 7, 9, 4, 6)),
@@ -113,7 +115,6 @@ export const MAN_UTD_1999: CuratedSeed[] = [
   p('butt', 'Nicky Butt', 1975, 'England', ['CM', 'DM'], 79, 82, 2003, 25, t(8, 4, 7, 9, 4, 7)),
   p('blomqvist', 'Jesper Blomqvist', 1974, 'Sweden', ['LW'], 74, 76, 2001, 70, t(7, 4, 6, 5, 3, 7)),
   p('cruyff', 'Jordi Cruyff', 1974, 'Netherlands', ['AM', 'RW'], 73, 76, 2001, 40, t(7, 6, 6, 5, 4, 7)),
-  p('fortune', 'Quinton Fortune', 1977, 'South Africa', ['LW', 'LB'], 73, 78, 2003, 35, t(7, 4, 6, 6, 4, 8)),
   p('cole', 'Andy Cole', 1971, 'England', ['ST'], 85, 86, 2002, 30, t(7, 7, 8, 7, 6, 6)),
   p('yorke', 'Dwight Yorke', 1971, 'Trinidad & Tobago', ['ST'], 86, 87, 2003, 35, t(6, 7, 7, 6, 7, 8)),
   p('solskjaer', 'Ole Gunnar Solskjær', 1973, 'Norway', ['ST'], 84, 85, 2003, 25, t(9, 3, 7, 9, 2, 7)),
@@ -492,6 +493,14 @@ for (const [club, seeds] of Object.entries(EUROPE_1999_SQUADS)) {
 for (const [club, seeds] of Object.entries(ENG_DOMESTIC_1999_SQUADS)) {
   MAN_UTD_1999_SQUADS[club] = [...(MAN_UTD_1999_SQUADS[club] ?? []), ...seeds];
 }
+// United's real 1999 summer signings, at their SELLING clubs — the ledger offers
+// them to the Director as decisions (real-in), landing them by default if ignored.
+(MAN_UTD_1999_SQUADS.inter ??= []).push(
+  q('inter', 'silvestre', 'Mikaël Silvestre', 1977, 'France', ['CB', 'LB'], 79, 86, 2004, 28, t(7, 5, 7, 6, 4, 8)),
+);
+(MAN_UTD_1999_SQUADS.atletico ??= []).push(
+  q('atletico', 'fortune', 'Quinton Fortune', 1977, 'South Africa', ['LW', 'LB'], 73, 78, 2003, 35, t(7, 4, 6, 6, 4, 8)),
+);
 
 export const CURATED_SQUADS: Record<string, Record<string, CuratedSeed[]>> = {
   'man-utd-1999': MAN_UTD_1999_SQUADS,

@@ -110,7 +110,10 @@ describe('player agency & resistance (§6)', () => {
 
   it('curated marquee players get their agency; squads keep procedural depth', () => {
     const state = createNewGame({ seed: 'squads' });
-    expect(state.clubs.man_utd!.squad.length).toBe(23);
+    // 21 real players: Silvestre & Fortune are United's real 1999 signings, now
+    // OFFERED via the ledger (real-in) rather than baked in — they join in the
+    // opening window by default.
+    expect(state.clubs.man_utd!.squad.length).toBe(21);
     expect(state.clubs.newcastle!.squad.length).toBe(23);
     // Shearer is present with his loyalty and block.
     const shearer = find(state, 'Alan Shearer');

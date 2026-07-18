@@ -288,6 +288,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     clubs: ELITE_CLUBS,
     contextExtra: [
       { id: 'monaco', name: 'AS Monaco', prestige: 74 },
+      { id: 'atletico', name: 'Atlético Madrid', prestige: 76 },
       { id: 'lazio', name: 'Lazio', prestige: 78 },
       { id: 'psv', name: 'PSV Eindhoven', prestige: 72 },
       { id: 'marseille', name: 'Olympique de Marseille', prestige: 72 },

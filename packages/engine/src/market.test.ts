@@ -178,7 +178,7 @@ describe('transfers (§11) + property invariants (§18)', () => {
     const res = executeTransfer(state, { playerId: 'fa1', toClub: 'man_utd' });
     expect(res.ok).toBe(true);
     expect(state.clubs.man_utd!.finances.transferBudget).toBe(budget); // free
-    expect(squadSize(state, 'man_utd')).toBeGreaterThan(23);
+    expect(squadSize(state, 'man_utd')).toBeGreaterThan(21); // 21 curated + the free agent
   });
 
   it('world generation is deterministic (same seed ⇒ identical hash)', () => {

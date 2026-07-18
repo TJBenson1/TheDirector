@@ -150,6 +150,11 @@ const NEAR_MISS_2003: NearMissEntry[] = [
  * one triggers the fallback + a logged butterfly (§9f).
  */
 const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
+  // United's real 1999 summer signings — OFFERED to a United Director as real-in
+  // decisions in the opening window (execute by default if ignored), rather than
+  // baked into the starting squad. Seeded at their selling clubs (Inter, Atlético).
+  { playerId: 'cur_silvestre', from: 'inter', to: 'man_utd', window: '1999-07', fee: 4_000_000, id: 'silvestre-utd-1999' },
+  { playerId: 'cur_fortune', from: 'atletico', to: 'man_utd', window: '1999-07', fee: 1_500_000, id: 'fortune-utd-1999' },
   // Van der Sar's real summer-1999 move out of Ajax — now a live deal a United (or
   // anyone) can gazump in the opening window, not a fait accompli (M12A/C).
   { playerId: 'cur_vandersar', from: 'ajax', to: 'juventus', window: '1999-08', fee: 5_000_000 },
