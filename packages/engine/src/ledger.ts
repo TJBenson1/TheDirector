@@ -304,6 +304,14 @@ const INJURIES_2004: RealInjuryEntry[] = [
   { playerId: 'cur_rooney2', atClub: 'man_utd', since: '2006-04', months: 2, serious: false, note: 'metatarsal fracture before the World Cup' },
 ];
 
+/** Real 2001–02 injuries so a liverpool-2001 start maps to history from month one,
+ *  rather than a procedural random draw. The landmark case is Markus Babbel, whose
+ *  Guillain-Barré syndrome wiped out effectively two seasons. */
+const INJURIES_2001: RealInjuryEntry[] = [
+  { playerId: 'cur_babbel', atClub: 'liverpool', since: '2001-10', months: 14, serious: true, note: 'Guillain-Barré syndrome' },
+  { playerId: 'cur_gerrard01', atClub: 'liverpool', since: '2002-04', months: 3, serious: false, note: 'groin operation — missed the 2002 World Cup' },
+];
+
 /**
  * Real 2001–05 transfers for the post-treble era pack. Liverpool's real recruits
  * (Diouf, Cheyrou) are OFFERED to the user — the counterfactual passes on the
@@ -873,7 +881,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: INTAKES_1999, realInjuries: INJURIES_1999, academyGraduates: GRADUATES_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: INTAKES_1999, realInjuries: INJURIES_2013, academyGraduates: GRADUATES_1999 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: INTAKES_1999, realInjuries: INJURIES_2004, nearMissLedger: NEAR_MISS_2004, academyGraduates: GRADUATES_1999 },
-  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: INTAKES_1999, realInjuries: [], academyGraduates: GRADUATES_1999 },
+  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: INTAKES_1999, realInjuries: INJURIES_2001, academyGraduates: GRADUATES_1999 },
   'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: INTAKES_ESP, realInjuries: INJURIES_2000, academyGraduates: GRADUATES_ESP },
   'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: INTAKES_ITA, realInjuries: INJURIES_1995, academyGraduates: GRADUATES_ITA },
   'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: INTAKES_ITA, realInjuries: INJURIES_1998, academyGraduates: GRADUATES_ITA },

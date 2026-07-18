@@ -243,10 +243,16 @@ function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, 
       club.squad.push(player.id);
     }
 
+    // The PLAYABLE club is REAL PLAYERS ONLY — no procedural filler in the squad
+    // the Director actually manages (his own dressing room must read true, name by
+    // name). Rival/context clubs still get anonymous depth so their squads are
+    // numerically complete for match strength.
+    const realOnly = club.id === state.playerClub;
+
     // Procedural depth to fill the squad out (anonymous, per Principle 2). Where a
     // real first XI is already curated, the filler is DEPTH only — it must not
     // out-rate the club's own stars (a Gerrard has to stand out from his squad).
-    const fillCount = Math.max(0, TARGET_SQUAD - club.squad.length);
+    const fillCount = realOnly ? 0 : Math.max(0, TARGET_SQUAD - club.squad.length);
     if (fillCount > 0) {
       const firstTeamSlots = seeds.length > 0 ? Math.max(0, 11 - seeds.length) : 14;
       // Anonymous filler must never OUT-RATE the club's own real stars — a Gerrard

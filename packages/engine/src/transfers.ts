@@ -15,6 +15,7 @@ import { rollAdaptation } from './adaptation.js';
 import { Rng } from './rng.js';
 import { evaluateApproach, type ApproachVerdict } from './agency.js';
 import { coachFit } from './coaches.js';
+import { isProcedural } from './ledger.js';
 
 export interface TransferRequest {
   playerId: PlayerId;
@@ -230,6 +231,13 @@ export function attemptSigning(
   state: GameState,
   req: TransferRequest & { wageOffer?: number },
 ): SigningResult {
+  // Procedural filler is never a real target — the Director signs recognisable
+  // footballers, not anonymous squad-padding. (The recommender already hides
+  // them; this refuses a direct, by-id attempt too.)
+  const target = state.players[req.playerId];
+  if (target && isProcedural(target)) {
+    return { ok: false, reason: `${target.name} is squad filler, not a signable player.` };
+  }
   const verdict: ApproachVerdict = evaluateApproach(state, {
     playerId: req.playerId,
     toClub: req.toClub,

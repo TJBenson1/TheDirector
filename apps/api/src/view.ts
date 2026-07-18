@@ -13,6 +13,7 @@ import {
   clubSquadPlayers,
   parseYearMonth,
   windowStepLabel,
+  isProcedural,
   WINDOW_STEPS,
   type GameState,
   type ClubId,
@@ -76,6 +77,8 @@ interface SquadPlayer {
   fitness: number;
   contractUntil: number;
   injured: boolean;
+  wageWeekly: number; // £/week — render this
+  wageAnnual: number; // £/year
 }
 
 const WINDOW_LABEL: Record<string, string> = { summer: 'Summer window', winter: 'Winter window' };
@@ -124,6 +127,8 @@ export function buildView(state: GameState): GameView {
       fitness: p.fitness,
       contractUntil: p.contractUntil,
       injured: !!p.injury,
+      wageWeekly: Math.round(p.wage / 52),
+      wageAnnual: p.wage,
     }))
     .sort((a, b) => b.ability - a.ability);
 
@@ -162,6 +167,29 @@ export function buildView(state: GameState): GameView {
     table,
     squad,
     decisions: state.pendingDecisions,
-    events: [...state.eventLog].slice(-RECENT_EVENTS).reverse(),
+    events: feedEvents(state),
   };
+}
+
+/** The Feed shows real football, not filler noise: drop any event whose subject
+ *  is a procedural squad-filler player (the league-wide fake-name injury/transfer
+ *  churn that made the feed feel like an injury crisis). Everything real —
+ *  transfers, scripted history, board, decisions, the user's own club — stays. */
+function feedEvents(state: GameState): unknown[] {
+  const isFiller = (id: unknown): boolean => {
+    if (typeof id !== 'string') return false;
+    const p = state.players[id];
+    return !!p && isProcedural(p);
+  };
+  return [...state.eventLog]
+    .filter((e) => {
+      const d = e.data ?? {};
+      // Injury/transfer events carry the player in data.playerId; a filler subject
+      // is noise unless it somehow concerns the user's club (it won't — the user's
+      // squad is real-only).
+      if (isFiller((d as Record<string, unknown>).playerId)) return false;
+      return true;
+    })
+    .slice(-RECENT_EVENTS)
+    .reverse();
 }
