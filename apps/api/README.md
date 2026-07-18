@@ -1,4 +1,23 @@
-# @director/api — the engine API (the app's backend)
+# @director/api — the engine API + hosted narrator (the shareable game)
+
+## The hosted game (one URL, anyone can play)
+
+This service also **is** the game: it serves a chat website at `/` and runs the
+Claude narration server-side, so anyone plays with just a browser — no Claude
+subscription, no MCP connector.
+
+- `GET /` — the chat website.
+- `POST /games/narrate` `{ state, message, history }` → `{ narration, state, situation, history }`.
+  Runs one Director turn: the model reads the message + state, calls the engine
+  tools (`ops.ts`), and narrates the result. The engine owns every fact.
+
+**Required env for narration:** `ANTHROPIC_API_KEY` (the host's key — this is what
+lets users play without their own). Optional: `NARRATE_MODEL` (default
+`claude-sonnet-5`). Deploy exactly like below and add `ANTHROPIC_API_KEY`; the
+play URL is just the service root.
+
+---
+
 
 A zero-dependency HTTP wrapper over the pure `@director/engine`. The engine is
 the single source of truth; this service just exposes its transitions over

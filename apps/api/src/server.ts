@@ -14,6 +14,10 @@
  */
 
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+import { narrate } from './narrate.js';
 import {
   createNewGame,
   advanceWindow,
@@ -42,10 +46,16 @@ const PORT = Number(process.env.PORT ?? 8787);
 // Lock this to your Lovable app's origin in production; '*' is fine for dev.
 const ALLOW_ORIGIN = process.env.CORS_ORIGIN ?? '*';
 
-type Handler = (body: any) => unknown;
+type Handler = (body: any) => unknown | Promise<unknown>;
 
 /** POST route table — every game transition is a pure engine call. */
 const routes: Record<string, Handler> = {
+  // The hosted narrator: one Director turn (message in → prose + new state out).
+  // Runs the Claude tool-loop server-side on the host's key, so anyone can play
+  // with just a browser.
+  '/games/narrate': ({ state, message, history }) =>
+    narrate({ state: state ?? null, message: String(message ?? ''), history }),
+
   '/games': ({ scenarioId, seed }) => {
     const state = createNewGame({ scenarioId, seed: seed ?? `web:${Date.now()}` });
     return { state, view: buildView(state) };
@@ -255,13 +265,19 @@ const server = createServer(async (req, res) => {
   const path = url.pathname.replace(/\/$/, '') || '/';
 
   try {
+    // The chat website — one URL anyone can play.
+    if (req.method === 'GET' && (path === '/' || path === '/play')) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(chatPage());
+      return;
+    }
     if (req.method === 'GET' && getRoutes[path]) {
       send(res, 200, getRoutes[path]!());
       return;
     }
     if (req.method === 'POST' && routes[path]) {
       const body = await readBody(req);
-      send(res, 200, routes[path]!(body));
+      send(res, 200, await routes[path]!(body));
       return;
     }
     send(res, 404, { error: `No route ${req.method} ${path}` });
@@ -269,6 +285,13 @@ const server = createServer(async (req, res) => {
     send(res, 400, { error: err instanceof Error ? err.message : String(err) });
   }
 });
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+let _page: string | null = null;
+function chatPage(): string {
+  if (_page === null) _page = readFileSync(join(HERE, 'index.html'), 'utf8');
+  return _page;
+}
 
 server.listen(PORT, () => {
   // eslint-disable-next-line no-console
