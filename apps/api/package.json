@@ -11,6 +11,7 @@
     "start": "tsx src/server.ts"
   },
   "dependencies": {
-    "@director/engine": "workspace:*"
+    "@director/engine": "workspace:*",
+    "tsx": "^4.19.2"
   }
 }
