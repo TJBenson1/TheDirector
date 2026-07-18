@@ -144,19 +144,32 @@ const routes: Record<string, Handler> = {
     };
   },
 
-  // Who would buy one of YOUR players, and for how much. Powers "sell" in the UI.
+  // Who would realistically buy one of YOUR players, and for how much. A fringe
+  // player draws clubs AT HIS LEVEL (not the elite, who don't want him) at a
+  // discount to book value, with fees varying by club. Powers "sell" in the UI.
   '/games/offers': ({ state, playerId }) => {
     const s = state as GameState;
     const p = s.players[playerId];
-    if (!p || p.club !== s.playerClub) return { offers: [] };
+    if (!p || p.club !== s.playerClub) return { offers: [], marketValue: 0 };
     const value = valuePlayer(p, currentYear(s));
+    const jitter = (str: string): number => {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+      return (h >>> 0) % 100; // 0..99
+    };
     const offers = Object.values(s.clubs)
-      .filter((c) => c.id !== s.playerClub && c.leagueId !== null && c.finances.transferBudget >= value * 0.7)
+      .filter((c) => c.id !== s.playerClub && c.leagueId !== null)
+      // Clubs roughly at the player's level: the elite don't want a squad player,
+      // and a much weaker club can't realistically land him.
+      .filter((c) => c.strength >= p.ability - 13 && c.strength <= p.ability + 5)
+      .filter((c) => c.finances.transferBudget >= value * 0.5)
       .map((c) => {
-        // Fee scales with the buyer's ambition/prestige; a keener club bids over the odds.
-        const factor = 0.8 + (c.prestige / 100) * 0.5;
+        // Discounted, varied bid (0.6–0.95 of value) — you rarely get full price
+        // for a man you're offloading.
+        const factor = 0.6 + (jitter(c.id + playerId) / 100) * 0.35;
         return { clubId: c.id, clubName: c.name, fee: Math.round(Math.min(c.finances.transferBudget, value * factor)) };
       })
+      .filter((o) => o.fee > 0)
       .sort((a, b) => b.fee - a.fee)
       .slice(0, 4);
     return { offers, marketValue: Math.round(value) };
