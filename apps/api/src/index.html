@@ -52,7 +52,10 @@
 <body>
 <div id="app">
   <header>
-    <h1>The Director</h1>
+    <div style="display:flex; justify-content:space-between; align-items:baseline;">
+      <h1>The Director</h1>
+      <button class="reset" id="newgame" type="button">New game</button>
+    </div>
     <div class="status" id="status">A counterfactual football story · 1995–2025</div>
   </header>
   <nav id="tabs">
@@ -110,13 +113,26 @@ async function send(message){
 function offerStarts(){
   fetch('/scenarios').then(r=>r.json()).then(list=>{
     const wrap=document.createElement('div'); wrap.className='starts';
-    const pick = list.slice().sort(()=>Math.random()-0.5).slice(0,5);
-    pick.forEach(sc=>{ const b=document.createElement('button'); b.textContent=sc.name; b.onclick=()=>send('Take the '+sc.name+' job.'); wrap.appendChild(b); });
+    // ALL scenarios (sorted by year), so nothing is hidden.
+    list.slice().sort((a,b)=>String(a.startDate).localeCompare(String(b.startDate))).forEach(sc=>{
+      const b=document.createElement('button'); b.textContent=sc.name; b.onclick=()=>send('Take the '+sc.name+' job.'); wrap.appendChild(b);
+    });
     log.appendChild(wrap);
   });
 }
+function newGame(){
+  if(state && !confirm('Leave this playthrough and start a new one? Your current game will be cleared.')) return;
+  state=null; history=[]; panelsCache=null;
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  log.innerHTML=''; renderStatus();
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('active', x.dataset.tab==='chat'));
+  showTab('chat');
+  bubble("You're the Director — the power above the manager. Pick a seat to take, or just tell me which club and season you want.", 'narrator');
+  offerStarts();
+}
 
 document.getElementById('form').addEventListener('submit', e=>{ e.preventDefault(); const v=input.value.trim(); if(v) send(v); });
+document.getElementById('newgame').addEventListener('click', ()=>newGame());
 
 // ── Clickable panels ─────────────────────────────────────────────────────────
 const panel = document.getElementById('panel');
@@ -143,7 +159,8 @@ function esc(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;',
 function renderPanel(tab){
   const p = panelsCache; if(!p) return;
   if(tab==='squad'){
-    panel.innerHTML = p.squad.map(pl=>`<div class="prow"><div><div>${esc(pl.name)}${pl.injured?' 🩹':''}</div><div class="sub">${esc(pl.position)} · ${pl.age}y · abi ${pl.ability} · to ${pl.contractUntil}</div><div class="bar"><i style="width:${pl.happiness}%"></i></div></div><div style="text-align:right"><div>${esc(pl.value)}</div><div class="sub">${esc(pl.minutes)} · ${esc(pl.impact)}</div></div></div>`).join('');
+    const legend = `<div class="sub" style="padding:2px 4px 8px">value · wage · happiness (bar) · mins% · impact — minutes &amp; impact fill in after a season</div>`;
+    panel.innerHTML = legend + p.squad.map(pl=>`<div class="prow"><div><div>${esc(pl.name)}${pl.injured?' 🩹':''}</div><div class="sub">${esc(pl.position)} · ${pl.age}y · abi ${pl.ability} · to ${pl.contractUntil}</div><div class="bar"><i style="width:${pl.happiness}%"></i></div></div><div style="text-align:right"><div>${esc(pl.value)}</div><div class="sub">${esc(pl.wage||'')}</div><div class="sub">${esc(pl.minutes)} · ${esc(pl.impact)}</div></div></div>`).join('');
   } else if(tab==='finances'){
     const f=p.finances;
     panel.innerHTML =

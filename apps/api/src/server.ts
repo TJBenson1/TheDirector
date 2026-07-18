@@ -317,6 +317,7 @@ function buildPanels(state: GameState) {
         age: year - p.birthYear,
         ability: p.ability,
         value: gbp(valuePlayer(p, year)),
+        wage: `£${Math.round(p.wage / 52 / 1000)}k/wk`,
         contractUntil: p.contractUntil,
         happiness: p.morale, // 0..100
         minutes: mins === null ? '—' : `${mins}%`,
