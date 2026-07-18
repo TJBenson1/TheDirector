@@ -22,6 +22,10 @@ const RENEW_ABILITY_FLOOR = 76;
 /** Cap on renewal decisions per window: you consciously tie down your key men;
  *  the rest of the expiring squad is the briefing's business, not a click each. */
 const MAX_RENEWAL_OFFERS = 4;
+
+/** Players whose expiring-contract story is told by a bespoke scripted event, so
+ *  the generic renewal decision must not also raise one for them. */
+const SCRIPTED_CONTRACT_STORIES = new Set(['cur_keane']);
 /** Long-term injury threshold for the briefing (months still to run). */
 const LONG_TERM_INJURY_MONTHS = 4;
 
@@ -162,7 +166,12 @@ export function runReviewPhase(state: GameState): void {
 
   // Actionable: offer a renewal for the top key players in their final year,
   // before they can walk on a free. Reality-default (ignore) is to secure them.
-  const renewTargets = expiring.filter((p) => p.ability >= RENEW_ABILITY_FLOOR).slice(0, MAX_RENEWAL_OFFERS);
+  // Players whose contract story is a scripted set-piece (e.g. Keane's 1999
+  // landmark-deal saga) are handled by that event alone — skip the generic offer
+  // so the two don't collide.
+  const renewTargets = expiring
+    .filter((p) => p.ability >= RENEW_ABILITY_FLOOR && !SCRIPTED_CONTRACT_STORIES.has(p.id))
+    .slice(0, MAX_RENEWAL_OFFERS);
   for (const p of renewTargets) {
     const decisionId = `renew:${p.id}`;
     if (state.pendingDecisions.some((d) => d.id === decisionId)) continue;

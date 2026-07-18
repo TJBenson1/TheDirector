@@ -108,7 +108,11 @@ export const MAN_UTD_1999: CuratedSeed[] = [
   p('wbrown', 'Wes Brown', 1979, 'England', ['CB'], 74, 85, 2004, 60, t(7, 4, 7, 9, 4, 6)),
   p('berg', 'Henning Berg', 1969, 'Norway', ['CB'], 77, 78, 2001, 30, t(8, 4, 6, 7, 3, 7)),
   p('may', 'David May', 1970, 'England', ['CB'], 70, 72, 2002, 40, t(6, 6, 5, 7, 5, 6)),
-  p('keane', 'Roy Keane', 1971, 'Ireland', ['CM', 'DM'], 90, 91, 2003, 45, t(9, 7, 10, 8, 8, 6)),
+  // Summer 1999: Keane is in the FINAL YEAR of his deal (expires 2000) — the whole
+  // point of the landmark-contract saga (scripted, Dec 1999) is that United risk
+  // losing their captain on a free. The reality-default resolution of that event
+  // renews him (he signed, staying to 2005), so a passive run reproduces history.
+  p('keane', 'Roy Keane', 1971, 'Ireland', ['CM', 'DM'], 90, 91, 2000, 45, t(9, 7, 10, 8, 8, 6)),
   p('scholes', 'Paul Scholes', 1974, 'England', ['CM', 'AM'], 88, 90, 2004, 20, t(9, 3, 8, 10, 5, 7)),
   p('beckham', 'David Beckham', 1975, 'England', ['RW', 'CM'], 88, 91, 2003, 20, t(9, 8, 9, 7, 4, 7)),
   p('giggs', 'Ryan Giggs', 1973, 'Wales', ['LW'], 88, 90, 2004, 30, t(9, 5, 8, 10, 3, 7)),

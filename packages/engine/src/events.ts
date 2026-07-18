@@ -347,18 +347,23 @@ const MAN_UTD_1999_PACK: ScriptedEvent[] = [
           id: 'pay',
           label: 'Smash the wage structure to keep him',
           successProbability: 0.9,
-          onSuccess: [{ kind: 'morale', playerId: 'cur_keane', amount: 10 }, { kind: 'money', clubId: 'man_utd', amount: -3_000_000 }],
+          // He signs the landmark deal — the real outcome, staying to ~2005.
+          onSuccess: [{ kind: 'renewContract', playerId: 'cur_keane', amount: 6 }, { kind: 'morale', playerId: 'cur_keane', amount: 10 }, { kind: 'money', clubId: 'man_utd', amount: -3_000_000 }],
           onFailure: [{ kind: 'morale', clubId: 'man_utd', amount: -3 }],
         },
         {
           id: 'hold',
           label: 'Hold firm on the structure',
           successProbability: 0.4,
-          onSuccess: [{ kind: 'boardPatience', amount: 5 }],
+          // Hold firm and he settles for a straight deal anyway; fail and he's
+          // alienated, runs the clock down and leaves on a free in 2000 (divergence).
+          onSuccess: [{ kind: 'renewContract', playerId: 'cur_keane', amount: 6 }, { kind: 'boardPatience', amount: 5 }],
           onFailure: [{ kind: 'morale', playerId: 'cur_keane', amount: -14 }, { kind: 'managerRelationship', amount: -6 }],
         },
       ],
-      falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_keane', amount: -10 }],
+      // Reality-default: ignoring the saga still ends with him signing (he did),
+      // but the messy public standoff dents the dressing room.
+      falloutIfIgnored: [{ kind: 'renewContract', playerId: 'cur_keane', amount: 6 }, { kind: 'morale', playerId: 'cur_keane', amount: -10 }],
       memoryTags: ['contract', 'cur_keane'],
     }),
   },
