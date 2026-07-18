@@ -39,10 +39,25 @@ All bodies are JSON. Every mutating response returns `{ state, view, ... }`.
 | POST | `/games` | `{ scenarioId, seed? }` | `{ state, view }` |
 | POST | `/games/advance` | `{ state, perStep? }` | `{ state, view, events }` |
 | POST | `/games/decision` | `{ state, decisionId, choiceId }` | `{ state, view, events, success }` |
-| POST | `/games/targets` | `{ state, position, maxPrice? }` | `{ targets }` |
+| POST | `/games/targets` | `{ state, position, maxPrice? }` | `{ targets }` (each has `positions`, `coach`) |
+| POST | `/games/find` | `{ state, query }` | `{ found, target? }` — name a dream target (even unraidable ones) |
 | POST | `/games/sign` | `{ state, playerId, feeM? }` | `{ state, view, result }` |
+| POST | `/games/offers` | `{ state, playerId }` | `{ offers: [{ clubId, clubName, fee }], marketValue }` |
+| POST | `/games/sell` | `{ state, playerId, toClub, fee }` | `{ state, view, result }` |
+| POST | `/games/renew` | `{ state, playerId, years }` | `{ state, view, result }` — years 1–5 |
 | POST | `/games/scout` | `{ state, playerId }` | `{ report, value }` |
 | POST | `/games/view` | `{ state }` | `{ view }` |
+
+- `targets[]` / `find.target` carry `positions` (the player's ACTUAL positions —
+  render them so a striker found under an LW search reads "Lewandowski (ST)").
+  Targets are sorted natural-position-first.
+- `askingPrice` and `fee`/`marketValue` are in **pounds** (e.g. `30800000` = £30.8m)
+  — divide by 1e6 for display, don't append "m" to the raw number.
+- `ability`/`potential` on a target are fogged **ranges** `{ low, high }` (or a
+  `confidence`) — render as "82–90", not a single number.
+- **Sell flow:** `/games/offers` lists who'll buy one of your players and for how
+  much; `/games/sell` accepts a chosen offer. **Renew:** `/games/renew` extends a
+  contract by 1–5 years (not just 3).
 
 ### Transfers (market screen)
 
