@@ -316,6 +316,10 @@ function rollScandals(state: GameState, rng: Rng): void {
 interface ScriptedEvent {
   id: string;
   date: string; // YearMonth it fires
+  /** Scenarios this event belongs to. An event is only ever processed for its own
+   *  scenario — so a different scenario never logs a spurious `scripted.skipped`
+   *  for it (which would wrongly count against zero-divergence fidelity). */
+  scenarios: string[];
   /** Precondition (divergence check): usually a curated player still at his club. */
   requires: (state: GameState) => boolean;
   build: (state: GameState) => Decision;
@@ -329,6 +333,7 @@ const MAN_UTD_1999_PACK: ScriptedEvent[] = [
   {
     id: 'keane-contract',
     date: '1999-12',
+    scenarios: ['man-utd-1999'],
     requires: (s) => playerAt(s, 'cur_keane', 'man_utd') && s.playerClub === 'man_utd',
     build: (s) => ({
       id: 'scripted:keane-contract',
@@ -360,6 +365,7 @@ const MAN_UTD_1999_PACK: ScriptedEvent[] = [
   {
     id: 'stam-exit',
     date: '2001-08',
+    scenarios: ['man-utd-1999'],
     requires: (s) => playerAt(s, 'cur_stam', 'man_utd') && s.playerClub === 'man_utd',
     build: () => ({
       id: 'scripted:stam-exit',
@@ -391,6 +397,7 @@ const MAN_UTD_1999_PACK: ScriptedEvent[] = [
   {
     id: 'beckham-boot',
     date: '2003-02',
+    scenarios: ['man-utd-1999'],
     requires: (s) => playerAt(s, 'cur_beckham', 'man_utd') && s.playerClub === 'man_utd',
     build: () => ({
       id: 'scripted:beckham-boot',
@@ -421,8 +428,60 @@ const MAN_UTD_1999_PACK: ScriptedEvent[] = [
   },
 ];
 
+/** Liverpool 2001 (Houllier era). */
+const LIVERPOOL_2001_PACK: ScriptedEvent[] = [
+  {
+    id: 'houllier-heart',
+    date: '2001-10',
+    scenarios: ['liverpool-2001'],
+    // Tied to Houllier actually being in post — if the Director has already
+    // parted with him (divergence), the real health crisis never happens.
+    requires: (s) => s.playerClub === 'liverpool' && s.managerRelations.identity === 'Gérard Houllier',
+    build: () => ({
+      id: 'scripted:houllier-heart',
+      title: 'Gérard Houllier taken seriously ill',
+      description:
+        'Your manager has been rushed to hospital with a heart problem and undergone major surgery — he will be out for months. His assistant can steer the club in his absence. How do you steady the ship?',
+      interrupt: true,
+      clubId: 'liverpool',
+      category: 'event',
+      choices: [
+        {
+          id: 'caretaker',
+          label: 'Back his assistant as caretaker and hold his job open',
+          successProbability: 0.75,
+          onSuccess: [
+            { kind: 'morale', clubId: 'liverpool', amount: 4 },
+            { kind: 'boardPatience', amount: 5 },
+            { kind: 'memory', tag: 'manager', text: 'Held Houllier’s job open; the squad rallied behind the caretaker.' },
+          ],
+          onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -3 }],
+        },
+        {
+          id: 'replace',
+          label: 'Start the search for a permanent replacement',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'boardPatience', amount: 2 }],
+          onFailure: [
+            { kind: 'managerRelationship', amount: -20 },
+            { kind: 'fanTrust', amount: -10, text: 'Moving on a sick manager appals the fans.' },
+          ],
+        },
+      ],
+      // Reality-default: the club stands by him and he recovers to return.
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'liverpool', amount: 3 }],
+      memoryTags: ['manager'],
+    }),
+  },
+];
+
+const ALL_SCRIPTED: ScriptedEvent[] = [...MAN_UTD_1999_PACK, ...LIVERPOOL_2001_PACK];
+
 function fireScriptedEvents(state: GameState): void {
-  for (const ev of MAN_UTD_1999_PACK) {
+  for (const ev of ALL_SCRIPTED) {
+    // Only ever consider an event for its own scenario — a different scenario must
+    // not process it, so it never logs a spurious skip against fidelity.
+    if (!ev.scenarios.includes(state.meta.scenarioId)) continue;
     if (ev.date !== state.clock.date) continue;
     if (state.meta.firedScripted.includes(ev.id)) continue;
     state.meta.firedScripted.push(ev.id);

@@ -20,11 +20,14 @@ import {
   applyDecision,
   attemptSigning,
   scoutPlayer,
+  suggestTargets,
+  coachFit,
   valuePlayer,
   currentYear,
   Rng,
   SCENARIOS,
   type GameState,
+  type Position,
 } from '@director/engine';
 import { buildView } from './view.js';
 
@@ -56,6 +59,20 @@ const routes: Record<string, Handler> = {
     const fee = feeM !== undefined ? Math.round(feeM * 1_000_000) : undefined;
     const result = attemptSigning(s, { playerId, toClub: s.playerClub, fee });
     return { state: s, view: buildView(s), result };
+  },
+
+  '/games/targets': ({ state, position, maxPrice }) => {
+    const s = state as GameState;
+    const targets = suggestTargets(s, position as Position, { maxPrice, maxResults: 12 });
+    // Enrich each with the head coach's read (M13) so the market shows whether
+    // your coach wants, tolerates or would veto the signing.
+    return {
+      targets: targets.map((t) => {
+        const p = s.players[t.playerId];
+        const fit = p ? coachFit(s.managerRelations, p) : undefined;
+        return { ...t, coach: fit ? { verdict: fit.verdict, score: fit.score, reason: fit.reason } : undefined };
+      }),
+    };
   },
 
   '/games/scout': ({ state, playerId }) => {

@@ -39,9 +39,30 @@ All bodies are JSON. Every mutating response returns `{ state, view, ... }`.
 | POST | `/games` | `{ scenarioId, seed? }` | `{ state, view }` |
 | POST | `/games/advance` | `{ state, perStep? }` | `{ state, view, events }` |
 | POST | `/games/decision` | `{ state, decisionId, choiceId }` | `{ state, view, events, success }` |
+| POST | `/games/targets` | `{ state, position, maxPrice? }` | `{ targets }` |
 | POST | `/games/sign` | `{ state, playerId, feeM? }` | `{ state, view, result }` |
 | POST | `/games/scout` | `{ state, playerId }` | `{ report, value }` |
 | POST | `/games/view` | `{ state }` | `{ view }` |
+
+### Transfers (market screen)
+
+`/games/targets` powers the market: pass a `position` (`GK|CB|LB|RB|DM|CM|AM|LW|RW|ST`)
+and it returns real, era-appropriate, scouting-fogged targets — never filler.
+Each entry:
+
+```ts
+{
+  playerId, name, club, clubName, age,
+  ability, potential, confidence,   // fogged ranges (fog of war)
+  askingPrice, tags,                // e.g. "bosman", "fire-sale", "unsettled"
+  willing, resistanceReason,        // §6 player agency — may refuse regardless of fee
+  coach: { verdict, score, reason } // M13 head-coach read: wants | fine | reluctant | veto
+}
+```
+
+To sign: `POST /games/sign { state, playerId, feeM }`. The result may be a refusal
+(player unwilling, unaffordable, or filler) — surface `result.reason`. A completed
+signing returns the updated `state`/`view`; the coach's reaction is in the feed.
 
 ### `view` shape
 
