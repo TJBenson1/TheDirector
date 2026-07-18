@@ -23,6 +23,7 @@ import {
   executeTransfer,
   scoutPlayer,
   suggestTargets,
+  isProcedural,
   resolvePlayer,
   askingPrice,
   evaluateApproach,
@@ -86,6 +87,36 @@ const routes: Record<string, Handler> = {
     // of the position group (a natural winger before a converted striker).
     enriched.sort((a, b) => Number(b.positions.includes(pos)) - Number(a.positions.includes(pos)));
     return { targets: enriched };
+  },
+
+  // Players out of contract next summer (Bosman pre-contract targets) — real,
+  // named, sorted by quality, with the coach's read. Answers "who's available on
+  // a free / running down their deal?".
+  '/games/freeagents': ({ state, position, maxResults }) => {
+    const s = state as GameState;
+    const yr = currentYear(s);
+    const wantPos = position ? (position as Position) : null;
+    const players = Object.values(s.players)
+      .filter((p) => !isProcedural(p) && !p.retired && p.club !== s.playerClub)
+      .filter((p) => p.contractUntil <= yr + 1)
+      .filter((p) => !wantPos || p.positions.includes(wantPos))
+      .sort((a, b) => b.ability - a.ability)
+      .slice(0, Math.min(20, Number(maxResults ?? 12)));
+    return {
+      freeAgents: players.map((p) => {
+        const fit = coachFit(s.managerRelations, p);
+        return {
+          playerId: p.id,
+          name: p.name,
+          club: p.club,
+          clubName: p.club ? s.clubs[p.club]?.name : 'Free agent',
+          age: yr - p.birthYear,
+          positions: p.positions,
+          expires: p.contractUntil,
+          coach: { verdict: fit.verdict, reason: fit.reason },
+        };
+      }),
+    };
   },
 
   // Name a dream target — search the world for a real player by name, even one the
