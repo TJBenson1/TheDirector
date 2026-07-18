@@ -27,6 +27,7 @@ import {
   askingPrice,
   evaluateApproach,
   coachFit,
+  narrativeContext,
   valuePlayer,
   currentYear,
   Rng,
@@ -160,6 +161,11 @@ const routes: Record<string, Handler> = {
   },
 
   '/games/view': ({ state }) => ({ view: buildView(state as GameState) }),
+
+  // Rich structured "current situation" for the narrator (the app's language
+  // model turns this into prose — a briefing, a matchday report, an answer to
+  // "how's the dressing room?"). Facts only; no prose.
+  '/games/situation': ({ state }) => ({ situation: narrativeContext(state as GameState) }),
 };
 
 /** GET route table (read-only, no body). */

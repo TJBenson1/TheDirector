@@ -182,3 +182,4 @@ export {
   eraIdealFormation,
   ALL_FORMATIONS,
 } from './tactics.js';
+export { narrativeContext, type NarrativeContext } from './narrative.js';
