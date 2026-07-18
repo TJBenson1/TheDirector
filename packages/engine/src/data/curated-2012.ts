@@ -18,7 +18,7 @@ const t = (prof: number, ego: number, amb: number, loy: number, vol: number, ada
 function q(
   club: ClubId, id: string, name: string, birthYear: number, nationality: string, positions: Position[],
   ability: number, potentialCeiling: number, contractUntil: number, injuryProneness: number, personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string; loanFrom?: ClubId } = {},
 ): CuratedSeed {
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
@@ -36,7 +36,9 @@ export const DORTMUND_2012: CuratedSeed[] = [
   q('dortmund', 'gundogan12', 'İlkay Gündoğan', 1990, 'Germany', ['CM', 'DM'], 82, 88, 2015, 40, t(8, 6, 8, 6, 4, 8), { archetype: 'deep-playmaker' }),
   q('dortmund', 'bender12', 'Sven Bender', 1989, 'Germany', ['DM', 'CM'], 80, 83, 2017, 40, t(9, 4, 8, 9, 4, 7), { archetype: 'deep-playmaker' }),
   q('dortmund', 'kehl12', 'Sebastian Kehl', 1980, 'Germany', ['DM', 'CM'], 76, 77, 2014, 35, t(9, 5, 8, 9, 5, 7)),
-  q('dortmund', 'sahin12', 'Nuri Şahin', 1988, 'Turkey', ['CM', 'DM'], 80, 85, 2015, 35, t(7, 6, 7, 7, 5, 7), { archetype: 'deep-playmaker' }),
+  // Şahin returned to Dortmund only in Jan 2013, on loan from Real Madrid (at the
+  // 2012-13 kickoff he was a Real Madrid player, on loan at Liverpool). Noted as a loan.
+  q('dortmund', 'sahin12', 'Nuri Şahin', 1988, 'Turkey', ['CM', 'DM'], 80, 85, 2015, 35, t(7, 6, 7, 7, 5, 7), { archetype: 'deep-playmaker', loanFrom: 'real_madrid' }),
   // Götze — the home-grown jewel Bayern would buy in 2013; the ultimate betrayal.
   q('dortmund', 'gotze12', 'Mario Götze', 1992, 'Germany', ['AM', 'CM'], 84, 90, 2016, 40, t(7, 7, 8, 6, 5, 8), { archetype: 'playmaker', latentCeiling: 90 }),
   // Reus — the local boy come home, electric and beloved.

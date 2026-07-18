@@ -216,6 +216,11 @@ export interface PlayerState {
    *  (the counterfactual "Real Madrid come for the Bale you took to United" story).
    *  Absent for procedural filler. */
   originClub?: ClubId;
+  /** If the player is at `club` ON LOAN, the parent club that owns his registration
+   *  (reality-accurate loan spells, e.g. Chicharito at Real Madrid on loan from Man
+   *  Utd, 2014–15). Absent for permanent members. Purely descriptive today — surfaced
+   *  in squad/scout views so a loanee reads as a loanee. */
+  loanFrom?: ClubId;
   contractUntil: number; // calendar year the contract expires
   wage: number; // annual
 

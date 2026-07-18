@@ -17,7 +17,7 @@ const t = (prof: number, ego: number, amb: number, loy: number, vol: number, ada
 function q(
   club: ClubId, id: string, name: string, birthYear: number, nationality: string, positions: Position[],
   ability: number, potentialCeiling: number, contractUntil: number, injuryProneness: number, personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string; loanFrom?: ClubId } = {},
 ): CuratedSeed {
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
@@ -36,7 +36,7 @@ export const REAL_MADRID_2006: CuratedSeed[] = [
   q('real_madrid', 'diarra06', 'Mahamadou Diarra', 1981, 'Mali', ['DM', 'CM'], 81, 82, 2011, 30, t(7, 5, 7, 6, 5, 6)),
   q('real_madrid', 'guti06', 'Guti', 1976, 'Spain', ['AM', 'CM'], 80, 82, 2009, 28, t(6, 7, 6, 10, 7, 7), { archetype: 'playmaker' }),
   q('real_madrid', 'beckham06', 'David Beckham', 1975, 'England', ['RW', 'CM'], 83, 83, 2008, 25, t(9, 8, 8, 6, 4, 8), { archetype: 'inside-forward' }),
-  q('real_madrid', 'reyes06', 'José Antonio Reyes', 1983, 'Spain', ['LW'], 79, 82, 2008, 30, t(6, 5, 6, 5, 6, 5), { archetype: 'inside-forward' }),
+  q('real_madrid', 'reyes06', 'José Antonio Reyes', 1983, 'Spain', ['LW'], 79, 82, 2008, 30, t(6, 5, 6, 5, 6, 5), { archetype: 'inside-forward', loanFrom: 'arsenal' }),
   // Robinho — the mercurial Brazilian whose gifts flickered but never fully caught
   // fire; a high-ego lost talent (latent 90).
   q('real_madrid', 'robinho06', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 82, 88, 2010, 30, t(5, 8, 7, 5, 8, 6), { archetype: 'inside-forward', latentCeiling: 90 }),

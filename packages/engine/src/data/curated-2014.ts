@@ -17,7 +17,7 @@ const t = (prof: number, ego: number, amb: number, loy: number, vol: number, ada
 function q(
   club: ClubId, id: string, name: string, birthYear: number, nationality: string, positions: Position[],
   ability: number, potentialCeiling: number, contractUntil: number, injuryProneness: number, personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string; loanFrom?: ClubId } = {},
 ): CuratedSeed {
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
@@ -58,14 +58,14 @@ export const REAL_MADRID_2014: CuratedSeed[] = [
   q('real_madrid', 'coentrao14', 'Fábio Coentrão', 1988, 'Portugal', ['LB'], 79, 80, 2018, 48, t(6, 6, 6, 7, 6, 6)),
   q('real_madrid', 'kroos14', 'Toni Kroos', 1990, 'Germany', ['CM', 'DM'], 87, 89, 2020, 28, t(9, 4, 8, 7, 2, 8), { archetype: 'deep-playmaker' }),
   q('real_madrid', 'modric14', 'Luka Modrić', 1985, 'Croatia', ['CM', 'DM'], 88, 88, 2018, 40, t(9, 3, 8, 8, 3, 8), { archetype: 'playmaker' }),
-  q('real_madrid', 'khedira14', 'Sami Khedira', 1987, 'Germany', ['CM', 'DM'], 82, 82, 2016, 50, t(8, 5, 7, 6, 4, 7)),
+  q('real_madrid', 'khedira14', 'Sami Khedira', 1987, 'Germany', ['CM', 'DM'], 82, 82, 2015, 50, t(8, 5, 7, 6, 4, 7)),
   q('real_madrid', 'illarramendi14', 'Asier Illarramendi', 1990, 'Spain', ['DM', 'CM'], 77, 80, 2018, 30, t(8, 3, 7, 7, 3, 7)),
   q('real_madrid', 'isco14', 'Isco', 1992, 'Spain', ['AM', 'CM'], 82, 88, 2018, 30, t(7, 6, 8, 7, 5, 7), { archetype: 'playmaker' }),
   q('real_madrid', 'james14', 'James Rodríguez', 1991, 'Colombia', ['AM', 'LW'], 85, 89, 2020, 40, t(7, 7, 8, 6, 6, 6), { archetype: 'playmaker' }),
   q('real_madrid', 'bale14', 'Gareth Bale', 1989, 'Wales', ['RW', 'LW'], 88, 90, 2019, 50, t(8, 5, 8, 7, 4, 6), { archetype: 'inside-forward' }),
   q('real_madrid', 'cristiano14', 'Cristiano Ronaldo', 1985, 'Portugal', ['LW', 'ST'], 93, 94, 2018, 28, t(9, 9, 10, 7, 4, 7), { archetype: 'inside-forward' }),
   q('real_madrid', 'benzema14', 'Karim Benzema', 1987, 'France', ['ST'], 86, 86, 2019, 35, t(7, 6, 7, 8, 5, 7), { archetype: 'poacher' }),
-  q('real_madrid', 'chicharito14', 'Javier Hernández', 1988, 'Mexico', ['ST'], 78, 79, 2016, 30, t(8, 4, 7, 6, 4, 7), { archetype: 'poacher' }),
+  q('real_madrid', 'chicharito14', 'Javier Hernández', 1988, 'Mexico', ['ST'], 78, 79, 2016, 30, t(8, 4, 7, 6, 4, 7), { archetype: 'poacher', loanFrom: 'man_utd' }),
   q('real_madrid', 'jese14', 'Jesé', 1993, 'Spain', ['RW', 'ST'], 78, 85, 2018, 45, t(7, 6, 8, 7, 6, 6)),
 ];
 

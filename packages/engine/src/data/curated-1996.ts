@@ -36,7 +36,7 @@ export const LIVERPOOL_1995: CuratedSeed[] = [
   q('liverpool', 'matteo96', 'Dominic Matteo', 1974, 'Scotland', ['CB', 'LB'], 73, 78, 2000, 30, t(7, 5, 6, 6, 4, 7), { archetype: 'covering-cb' }),
   q('liverpool', 'mcateer96', 'Jason McAteer', 1971, 'Ireland', ['RB', 'CM', 'RW'], 77, 78, 2000, 35, t(6, 6, 6, 6, 6, 7), { archetype: 'full-back-attacking' }),
   q('liverpool', 'redknapp96', 'Jamie Redknapp', 1973, 'England', ['CM'], 80, 82, 2000, 55, t(7, 6, 7, 7, 4, 7), { archetype: 'deep-playmaker' }),
-  q('liverpool', 'barnes96', 'John Barnes', 1963, 'England', ['CM', 'AM', 'LW'], 80, 80, 1998, 40, t(8, 6, 6, 8, 3, 8), { archetype: 'playmaker' }),
+  q('liverpool', 'barnes96', 'John Barnes', 1963, 'England', ['CM', 'AM', 'LW'], 80, 80, 1997, 40, t(8, 6, 6, 8, 3, 8), { archetype: 'playmaker' }),
   q('liverpool', 'thomas96', 'Michael Thomas', 1967, 'England', ['CM', 'DM'], 76, 76, 1998, 35, t(7, 5, 5, 6, 4, 7)),
   q('liverpool', 'mcmanaman96', 'Steve McManaman', 1972, 'England', ['RW', 'AM'], 84, 85, 2000, 30, t(7, 6, 7, 8, 4, 7), { archetype: 'inside-forward' }),
   q('liverpool', 'kennedy96', 'Mark Kennedy', 1976, 'Ireland', ['LW', 'LB'], 73, 78, 2000, 30, t(6, 6, 7, 6, 6, 6)),
@@ -44,7 +44,7 @@ export const LIVERPOOL_1995: CuratedSeed[] = [
   // Collymore — the British-record signing whose volatility and off-field troubles
   // squandered a huge talent; a lost talent if you can settle him (latent 88).
   q('liverpool', 'collymore96', 'Stan Collymore', 1971, 'England', ['ST'], 82, 84, 2000, 35, t(4, 8, 7, 3, 9, 4), { archetype: 'poacher', latentCeiling: 88 }),
-  q('liverpool', 'rush96', 'Ian Rush', 1961, 'Wales', ['ST'], 78, 78, 1998, 35, t(8, 5, 5, 9, 3, 7), { archetype: 'poacher' }),
+  q('liverpool', 'rush96', 'Ian Rush', 1961, 'Wales', ['ST'], 78, 78, 1996, 35, t(8, 5, 5, 9, 3, 7), { archetype: 'poacher' }),
 ];
 
 /** Chelsea, 1996–97 — Ruud Gullit's cosmopolitan revolution, pre-Abramovich. */

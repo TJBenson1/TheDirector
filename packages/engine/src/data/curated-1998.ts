@@ -47,7 +47,9 @@ export const INTER_1998: CuratedSeed[] = [
   // becomes the forward Inter hoped for rather than a what-might-have-been.
   q('inter', 'ventola', 'Nicola Ventola', 1978, 'Italy', ['ST'], 74, 83, 2003, 45, t(6, 6, 8, 7, 6, 7), { latentCeiling: 87 }),
   q('inter', 'moriero', 'Francesco Moriero', 1969, 'Italy', ['RW', 'LW'], 77, 79, 2001, 30, t(7, 5, 7, 7, 5, 7)),
-  q('inter', 'silvestrin', 'Gianluca Silvestrin', 1976, 'Italy', ['CB'], 70, 78, 2002, 30, t(7, 4, 7, 7, 4, 6)),
+  // Mikaël Silvestre — Inter's French defender in 1998–99 (18 Serie A apps) before his
+  // 1999 move to Manchester United. (Corrected from a bad "Gianluca Silvestrin" record.)
+  q('inter', 'silvestrin', 'Mikaël Silvestre', 1977, 'France', ['CB', 'LB'], 70, 78, 2002, 30, t(7, 4, 7, 7, 4, 6)),
 ];
 
 /** Juventus, 1998–99 — Zidane and Del Piero. */

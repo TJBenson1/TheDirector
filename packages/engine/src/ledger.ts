@@ -298,7 +298,7 @@ const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
   { playerId: 'cur_mcmanaman', from: 'liverpool', to: 'real_madrid', window: '1999-08', fee: 0 },
   { playerId: 'cur_overmars', from: 'arsenal', to: 'barcelona', window: '2000-07', fee: 25_000_000 },
   { playerId: 'cur_figo', from: 'barcelona', to: 'real_madrid', window: '2000-07', fee: 37_000_000 },
-  { playerId: 'cur_redondo', from: 'real_madrid', to: 'milan', window: '2000-08', fee: 0 },
+  { playerId: 'cur_redondo', from: 'real_madrid', to: 'milan', window: '2000-08', fee: 11_000_000 },
   { playerId: 'cur_campbell', from: 'spurs', to: 'arsenal', window: '2001-07', fee: 0 },
   { playerId: 'cur_rkeane', from: 'leeds', to: 'spurs', window: '2002-07', fee: 7_000_000 },
   { playerId: 'cur_ferdinand', from: 'leeds', to: 'man_utd', window: '2002-07', fee: 30_000_000 },
@@ -306,7 +306,7 @@ const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
   { playerId: 'cur_crespo', from: 'inter', to: 'chelsea', window: '2003-07', fee: 16_800_000 },
   { playerId: 'cur_shevchenko', from: 'milan', to: 'chelsea', window: '2006-07', fee: 30_000_000 },
   { playerId: 'cur_owen', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 8_000_000 },
-  { playerId: 'cur_nedved', from: 'lazio', to: 'juventus', window: '2001-07', fee: 41_000_000 },
+  { playerId: 'cur_nedved', from: 'lazio', to: 'juventus', window: '2001-07', fee: 25_000_000 },
 
   // ── The galáctico era (real-madrid-2000 start point) ────────────────────────
   // Figo (above) then a marquee a year: Zidane, Ronaldo, Beckham (below). The
@@ -597,12 +597,12 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
 /** Man Utd 1999 squad + marquee era stars. Ledger subjects (Beckham, Anelka,
  *  Owen…) are exempt from retirement elsewhere, so they need no entry here. */
 const RETIREMENTS_1999: RealRetirement[] = [
-  { playerId: 'cur_bosnich', year: 2009 }, { playerId: 'cur_vdgouw', year: 2003 },
+  { playerId: 'cur_bosnich', year: 2009 }, { playerId: 'cur_vdgouw', year: 2007 },
   { playerId: 'cur_gneville', year: 2011 }, { playerId: 'cur_pneville', year: 2013 },
   { playerId: 'cur_irwin', year: 2004 }, { playerId: 'cur_silvestre', year: 2014 },
   { playerId: 'cur_stam', year: 2007 }, { playerId: 'cur_rjohnsen', year: 2008 },
   { playerId: 'cur_wbrown', year: 2018 }, { playerId: 'cur_berg', year: 2004 },
-  { playerId: 'cur_may', year: 2003 }, { playerId: 'cur_keane', year: 2006 },
+  { playerId: 'cur_may', year: 2004 }, { playerId: 'cur_keane', year: 2006 },
   { playerId: 'cur_scholes', year: 2013 }, { playerId: 'cur_giggs', year: 2014 },
   { playerId: 'cur_butt', year: 2011 }, { playerId: 'cur_blomqvist', year: 2005 },
   { playerId: 'cur_cruyff', year: 2010 }, { playerId: 'cur_fortune', year: 2010 },
@@ -738,7 +738,7 @@ const LEDGER_1998: RealTransferLedgerEntry[] = [
   { playerId: 'cur_vieri98', from: 'lazio', to: 'inter', window: '1999-06', fee: 31_000_000 },
   { playerId: 'cur_simeone', from: 'inter', to: 'lazio', window: '1999-07', fee: 12_000_000 },
   { playerId: 'cur_crespo98', from: 'parma', to: 'lazio', window: '2000-07', fee: 35_000_000 },
-  { playerId: 'cur_nedved98', from: 'lazio', to: 'juventus', window: '2001-07', fee: 41_000_000 },
+  { playerId: 'cur_nedved98', from: 'lazio', to: 'juventus', window: '2001-07', fee: 25_000_000 },
   { playerId: 'cur_thuram', from: 'parma', to: 'juventus', window: '2001-07', fee: 22_000_000 },
   { playerId: 'cur_cannavaro', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000 },
 ];

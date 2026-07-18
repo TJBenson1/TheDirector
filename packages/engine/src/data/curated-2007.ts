@@ -19,7 +19,7 @@ const t = (prof: number, ego: number, amb: number, loy: number, vol: number, ada
 function q(
   club: ClubId, id: string, name: string, birthYear: number, nationality: string, positions: Position[],
   ability: number, potentialCeiling: number, contractUntil: number, injuryProneness: number, personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string; loanFrom?: ClubId } = {},
 ): CuratedSeed {
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
@@ -71,7 +71,7 @@ export const INTER_2007: CuratedSeed[] = [
   q('inter', 'figo07', 'Luís Figo', 1972, 'Portugal', ['RW', 'AM'], 82, 82, 2009, 35, t(8, 7, 8, 5, 4, 7)),
   q('inter', 'solari07', 'Santiago Solari', 1976, 'Argentina', ['LW', 'AM'], 76, 77, 2008, 35, t(7, 5, 7, 6, 4, 7)),
   q('inter', 'ibrahimovic07', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 87, 90, 2011, 35, t(7, 9, 9, 4, 8, 7), { archetype: 'inside-forward' }),
-  q('inter', 'crespo07', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 83, 84, 2008, 45, t(7, 6, 8, 5, 5, 7), { archetype: 'poacher' }),
+  q('inter', 'crespo07', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 83, 84, 2008, 45, t(7, 6, 8, 5, 5, 7), { archetype: 'poacher', loanFrom: 'chelsea' }),
   q('inter', 'cruz07', 'Julio Cruz', 1974, 'Argentina', ['ST'], 78, 78, 2009, 40, t(8, 5, 7, 7, 4, 7)),
 ];
 
@@ -94,7 +94,7 @@ export const ROMA_2007: CuratedSeed[] = [
   q('roma', 'totti07', 'Francesco Totti', 1976, 'Italy', ['ST', 'AM'], 88, 89, 2011, 45, t(8, 6, 8, 10, 6, 7), { archetype: 'playmaker', loyalty: 95 }),
   q('roma', 'montella07', 'Vincenzo Montella', 1974, 'Italy', ['ST'], 78, 78, 2008, 45, t(7, 7, 7, 7, 5, 6), { archetype: 'poacher' }),
   q('roma', 'tavano07', 'Francesco Tavano', 1979, 'Italy', ['ST'], 74, 76, 2008, 35, t(7, 5, 6, 5, 5, 6), { archetype: 'poacher' }),
-  q('roma', 'wilhelmsson07', 'Christian Wilhelmsson', 1979, 'Sweden', ['RW', 'LW'], 74, 76, 2008, 30, t(7, 5, 6, 5, 6, 7)),
+  q('roma', 'wilhelmsson07', 'Christian Wilhelmsson', 1979, 'Sweden', ['RW', 'LW'], 74, 76, 2008, 30, t(7, 5, 6, 5, 6, 7), { loanFrom: 'nantes' }),
 ];
 
 /** Juventus, 2006–07 — the Serie B side. The stars who LEFT after Calciopoli
