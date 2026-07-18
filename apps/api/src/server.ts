@@ -33,6 +33,8 @@ import {
   evaluateApproach,
   coachFit,
   narrativeContext,
+  clubSquadPlayers,
+  standingsOrder,
   valuePlayer,
   currentYear,
   Rng,
@@ -220,6 +222,9 @@ const routes: Record<string, Handler> = {
   // model turns this into prose — a briefing, a matchday report, an answer to
   // "how's the dressing room?"). Facts only; no prose.
   '/games/situation': ({ state }) => ({ situation: narrativeContext(state as GameState) }),
+
+  // Clickable panels for the chat UI: squad, finances, league table, inbox.
+  '/games/panels': ({ state }) => ({ panels: buildPanels(state as GameState) }),
 };
 
 /** GET route table (read-only, no body). */
@@ -291,6 +296,72 @@ let _page: string | null = null;
 function chatPage(): string {
   if (_page === null) _page = readFileSync(join(HERE, 'index.html'), 'utf8');
   return _page;
+}
+
+const gbp = (n: number) => `£${(n / 1_000_000).toFixed(1)}m`;
+
+/** Data for the four clickable panels (squad, finances, table, inbox). */
+function buildPanels(state: GameState) {
+  const s = state;
+  const club = s.clubs[s.playerClub]!;
+  const year = currentYear(s);
+
+  const squad = clubSquadPlayers(s, s.playerClub)
+    .sort((a, b) => b.ability - a.ability)
+    .map((p) => {
+      const mins = p.lastSeason ? Math.round(p.lastSeason.minutesShare * 100) : null;
+      const rating = p.lastSeason?.rating ?? null;
+      return {
+        name: p.name,
+        position: p.positions.join('/'),
+        age: year - p.birthYear,
+        ability: p.ability,
+        value: gbp(valuePlayer(p, year)),
+        contractUntil: p.contractUntil,
+        happiness: p.morale, // 0..100
+        minutes: mins === null ? '—' : `${mins}%`,
+        impact: rating === null ? '—' : rating >= 7.2 ? 'key' : rating >= 6.4 ? 'regular' : 'squad',
+        injured: !!p.injury,
+      };
+    });
+
+  // Commercial heft & liabilities aren't fully modelled yet — derive honest
+  // proxies from prestige and ownership rather than invent figures.
+  const heft = club.prestige >= 85 ? 'Global powerhouse' : club.prestige >= 74 ? 'Major commercial draw' : club.prestige >= 60 ? 'Established' : 'Modest reach';
+  const liabilities = club.finances.ownership === 'debt' ? 'Debt-financed ownership' : club.finances.ownership === 'sugar-daddy' ? 'Owner-underwritten' : 'Self-sustaining';
+  const finances = {
+    transferBudget: gbp(club.finances.transferBudget),
+    wageBudgetAnnual: gbp(club.finances.wageBudget),
+    wageBillAnnual: gbp(club.finances.wageBill),
+    wageHeadroom: gbp(Math.max(0, club.finances.wageBudget - club.finances.wageBill)),
+    commercialHeft: heft,
+    ownership: club.finances.ownership,
+    financialHealth: club.financialHealth,
+    liabilities,
+  };
+
+  const league = club.leagueId ? s.leagues[club.leagueId] : undefined;
+  const table = league
+    ? (league.roundsPlayed === 0 ? [...league.clubIds].sort((a, b) => s.clubs[b]!.strength - s.clubs[a]!.strength) : standingsOrder(league)).map((id: string, i: number) => ({
+        pos: i + 1,
+        club: s.clubs[id]?.name ?? id,
+        played: league.standings[id]?.played ?? 0,
+        points: league.standings[id]?.points ?? 0,
+        isYou: id === s.playerClub,
+      }))
+    : [];
+
+  const ctx = narrativeContext(s);
+  const inbox: { kind: string; text: string }[] = [];
+  for (const d of s.pendingDecisions) inbox.push({ kind: 'decision', text: d.title });
+  for (const e of ctx.squad.expiring) inbox.push({ kind: 'contract', text: `${e.name}'s deal expires ${e.until}` });
+  for (const inj of ctx.squad.injured) inbox.push({ kind: 'injury', text: `${inj.name} injured — ${inj.months}mo` });
+  for (const u of ctx.squad.unsettled) inbox.push({ kind: 'unrest', text: `${u.name} ${u.reason}` });
+  if (ctx.coach.formationTension) inbox.push({ kind: 'coach', text: ctx.coach.formationTension });
+  inbox.push({ kind: 'board', text: `Board ${ctx.board.mood} (patience ${ctx.board.patience})` });
+  for (const t of ctx.threads.slice(0, 3)) inbox.push({ kind: 'story', text: t });
+
+  return { squad, finances, table, inbox };
 }
 
 server.listen(PORT, () => {

@@ -31,6 +31,22 @@
   .dots::after { content:'…'; animation:blink 1.2s infinite; }
   @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
   .reset { background:none; border:none; color:var(--dim); font:inherit; font-size:12px; cursor:pointer; text-decoration:underline; }
+  nav { display:flex; gap:4px; padding:6px 10px 0; border-bottom:1px solid var(--line); overflow-x:auto; }
+  nav button { background:none; border:none; color:var(--dim); font:inherit; font-size:14px; padding:8px 12px; cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+  nav button.active { color:var(--accent); border-bottom-color:var(--accent); }
+  #panel { flex:1; overflow-y:auto; padding:14px; display:none; }
+  #panel.show { display:block; }
+  #log.hide { display:none; }
+  .prow { display:flex; justify-content:space-between; gap:10px; padding:9px 4px; border-bottom:1px solid var(--line); font-size:14px; }
+  .prow .sub { color:var(--dim); font-size:12px; font-family:ui-monospace,monospace; }
+  .prow.you { color:var(--accent); }
+  .bar { height:5px; border-radius:3px; background:var(--line); overflow:hidden; margin-top:4px; width:80px; }
+  .bar > i { display:block; height:100%; background:var(--accent); }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:10px; }
+  .card h3 { margin:0 0 6px; font-size:13px; color:var(--dim); text-transform:uppercase; letter-spacing:.5px; font-family:ui-monospace,monospace; }
+  .card .big { font-size:20px; }
+  .ibx { padding:9px 4px; border-bottom:1px solid var(--line); font-size:14px; }
+  .ibx .tag { color:var(--dim); font-size:11px; font-family:ui-monospace,monospace; text-transform:uppercase; margin-right:6px; }
 </style>
 </head>
 <body>
@@ -39,7 +55,15 @@
     <h1>The Director</h1>
     <div class="status" id="status">A counterfactual football story · 1995–2025</div>
   </header>
+  <nav id="tabs">
+    <button data-tab="chat" class="active">Chat</button>
+    <button data-tab="squad">Squad</button>
+    <button data-tab="finances">Finances</button>
+    <button data-tab="table">Table</button>
+    <button data-tab="inbox">Inbox</button>
+  </nav>
   <div id="log"></div>
+  <div id="panel"></div>
   <form id="form">
     <input id="input" placeholder="Speak to the room…" autocomplete="off" />
     <button class="send" id="send" type="submit">Send</button>
@@ -77,7 +101,7 @@ async function send(message){
     else {
       state = d.state; history = d.history || history;
       bubble(d.narration, 'narrator');
-      saveLocal(); renderStatus();
+      saveLocal(); renderStatus(); refreshPanelIfOpen();
     }
   } catch(e){ thinking.remove(); bubble('(the line went dead — try again)', 'sys'); }
   sendBtn.disabled=false; input.focus();
@@ -93,6 +117,49 @@ function offerStarts(){
 }
 
 document.getElementById('form').addEventListener('submit', e=>{ e.preventDefault(); const v=input.value.trim(); if(v) send(v); });
+
+// ── Clickable panels ─────────────────────────────────────────────────────────
+const panel = document.getElementById('panel');
+let panelsCache = null;
+document.getElementById('tabs').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('active', x===b));
+  showTab(b.dataset.tab);
+});
+async function showTab(tab){
+  const isChat = tab==='chat';
+  log.classList.toggle('hide', !isChat);
+  panel.classList.toggle('show', !isChat);
+  if(isChat) return;
+  if(!state){ panel.innerHTML = '<div class="sys">Start a game first — take a seat in the Chat tab.</div>'; return; }
+  panel.innerHTML = '<div class="sys">Loading…</div>';
+  try {
+    const r = await fetch('/games/panels', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ state }) });
+    panelsCache = (await r.json()).panels;
+    renderPanel(tab);
+  } catch(e){ panel.innerHTML = '<div class="sys">(could not load)</div>'; }
+}
+function esc(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function renderPanel(tab){
+  const p = panelsCache; if(!p) return;
+  if(tab==='squad'){
+    panel.innerHTML = p.squad.map(pl=>`<div class="prow"><div><div>${esc(pl.name)}${pl.injured?' 🩹':''}</div><div class="sub">${esc(pl.position)} · ${pl.age}y · abi ${pl.ability} · to ${pl.contractUntil}</div><div class="bar"><i style="width:${pl.happiness}%"></i></div></div><div style="text-align:right"><div>${esc(pl.value)}</div><div class="sub">${esc(pl.minutes)} · ${esc(pl.impact)}</div></div></div>`).join('');
+  } else if(tab==='finances'){
+    const f=p.finances;
+    panel.innerHTML =
+      `<div class="card"><h3>Transfer budget</h3><div class="big">${esc(f.transferBudget)}</div></div>`+
+      `<div class="card"><h3>Wages</h3><div>Bill ${esc(f.wageBillAnnual)} / budget ${esc(f.wageBudgetAnnual)} · headroom ${esc(f.wageHeadroom)}</div></div>`+
+      `<div class="card"><h3>Commercial heft</h3><div>${esc(f.commercialHeft)}</div></div>`+
+      `<div class="card"><h3>Liabilities &amp; ownership</h3><div>${esc(f.liabilities)} · ${esc(f.ownership)} · health: ${esc(f.financialHealth)}</div></div>`;
+  } else if(tab==='table'){
+    panel.innerHTML = p.table.map(r=>`<div class="prow ${r.isYou?'you':''}"><div>${r.pos}. ${esc(r.club)}</div><div class="sub">P${r.played} · ${r.points} pts</div></div>`).join('');
+  } else if(tab==='inbox'){
+    panel.innerHTML = p.inbox.length ? p.inbox.map(i=>`<div class="ibx"><span class="tag">${esc(i.kind)}</span>${esc(i.text)}</div>`).join('') : '<div class="sys">Nothing pressing.</div>';
+  }
+}
+// Refresh the open panel after each chat turn (state changed).
+const _origSave = saveLocal;
+function refreshPanelIfOpen(){ const active=document.querySelector('#tabs button.active'); if(active && active.dataset.tab!=='chat' && panel.classList.contains('show')) showTab(active.dataset.tab); }
 
 loadLocal();
 if (history.length){
