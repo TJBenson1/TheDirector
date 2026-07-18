@@ -1239,7 +1239,7 @@ const INTER_1998_PACK: ScriptedEvent[] = [
     // rupture and re-rupture. The comeback dilemma: caution, or rush the phenomenon
     // back? Reality rushed him, and it broke him.
     id: 'ronaldo-knee',
-    date: '1999-01',
+    date: '1999-11',
     requires: (s) => playerAt(s, 'cur_r9', 'inter') && s.playerClub === 'inter',
     build: () => ({
       id: 'scripted:ronaldo-knee',
@@ -1588,7 +1588,7 @@ const MILAN_2007_PACK: ScriptedEvent[] = [
   },
   {
     id: 'kaka-suitors',
-    date: '2008-06',
+    date: '2009-01',
     requires: (s) => playerAt(s, 'cur_kaka07', 'milan') && s.playerClub === 'milan',
     build: () => ({
       id: 'scripted:kaka-suitors',
@@ -1596,7 +1596,7 @@ const MILAN_2007_PACK: ScriptedEvent[] = [
       description: 'Your Ballon d\'Or winner is the most coveted player on earth — Real Madrid and a newly-rich Manchester City are readying nine-figure bids. Build the club around him, or take a world-record fee that would fund a whole rebuild?',
       interrupt: true, clubId: 'milan', category: 'event',
       choices: [
-        { id: 'keep', label: 'He is not for sale at any price', successProbability: 0.55, onSuccess: [{ kind: 'morale', playerId: 'cur_kaka07', amount: 8 }, { kind: 'fanTrust', amount: 8, text: 'Keeping Kaká is a statement of intent.' }, { kind: 'memory', tag: 'transfer-saga', text: 'Turned down the world for Kaká — as reality did, in 2008.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_kaka07', amount: 10 }] },
+        { id: 'keep', label: 'He is not for sale at any price', successProbability: 0.55, onSuccess: [{ kind: 'morale', playerId: 'cur_kaka07', amount: 8 }, { kind: 'fanTrust', amount: 8, text: 'Keeping Kaká is a statement of intent.' }, { kind: 'memory', tag: 'transfer-saga', text: 'Turned down the world for Kaká — as reality did, rejecting City in January 2009.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_kaka07', amount: 10 }] },
         { id: 'cash-in', label: 'Take the world-record fee', successProbability: 0.85, onSuccess: [{ kind: 'transferOut', playerId: 'cur_kaka07', clubId: 'real_madrid', amount: 65_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Cashed in Kaká early — the rebuild is funded, the icon gone.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_kaka07', amount: 12 }] },
       ],
       falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_kaka07', amount: 10 }],
@@ -2183,7 +2183,7 @@ const SPURS_2001_PACK: ScriptedEvent[] = [
       description: 'Teddy Sheringham is back at the Lane, a European Cup winner in the twilight of a great career. The dressing room looks to him. Build the side around his football brain for one glorious season, or start blooding the next generation behind him?',
       interrupt: true, clubId: 'spurs', category: 'event',
       choices: [
-        { id: 'lean-on-teddy', label: 'Build around Sheringham now', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_sheringham01s', amount: 10 }, { kind: 'memory', tag: 'man-management', text: 'Rode Sheringham\'s brilliance — a Player-of-the-Year season, as reality.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'lean-on-teddy', label: 'Build around Sheringham now', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_sheringham01s', amount: 10 }, { kind: 'memory', tag: 'man-management', text: 'Rode Sheringham\'s brilliance — at 35 he was Spurs\' talisman and earned an England recall, as reality.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
         { id: 'blood-youth', label: 'Blood the youth behind him', successProbability: 0.55, onSuccess: [{ kind: 'ability', playerId: 'cur_king01s', amount: 3 }, { kind: 'memory', tag: 'development', text: 'Used Sheringham to school the next generation.' }], onFailure: [{ kind: 'morale', playerId: 'cur_sheringham01s', amount: -4 }] },
       ],
       falloutIfIgnored: [{ kind: 'memory', tag: 'man-management', text: 'Sheringham leads by example regardless.' }],
