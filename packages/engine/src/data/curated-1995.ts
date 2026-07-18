@@ -68,7 +68,7 @@ export const MILAN_1995: CuratedSeed[] = [
   q('milan', 'baggio95', 'Roberto Baggio', 1967, 'Italy', ['AM', 'ST', 'RW'], 87, 91, 1998, 40, t(8, 8, 8, 5, 6, 6), { archetype: 'playmaker' }),
   q('milan', 'maldini95', 'Paolo Maldini', 1968, 'Italy', ['LB', 'CB'], 87, 90, 2000, 28, t(10, 5, 9, 10, 3, 8), { archetype: 'covering-cb', loyalty: 99 }),
   q('milan', 'baresi95', 'Franco Baresi', 1960, 'Italy', ['CB', 'DM'], 86, 86, 1997, 30, t(10, 4, 8, 10, 3, 7), { archetype: 'covering-cb', loyalty: 97 }),
-  q('milan', 'savicevic95', 'Dejan Savićević', 1966, 'Serbia and Montenegro', ['AM', 'RW'], 85, 86, 1998, 42, t(6, 9, 7, 6, 8, 6), { archetype: 'playmaker' }),
+  q('milan', 'savicevic95', 'Dejan Savićević', 1966, 'Montenegro', ['AM', 'RW'], 85, 86, 1998, 42, t(6, 9, 7, 6, 8, 6), { archetype: 'playmaker' }),
   q('milan', 'desailly95', 'Marcel Desailly', 1968, 'France', ['DM', 'CB'], 85, 88, 1999, 30, t(9, 5, 9, 7, 4, 8), { archetype: 'deep-playmaker' }),
   q('milan', 'boban95', 'Zvonimir Boban', 1968, 'Croatia', ['CM', 'AM'], 84, 86, 1999, 35, t(8, 6, 8, 8, 6, 7)),
   q('milan', 'albertini95', 'Demetrio Albertini', 1971, 'Italy', ['CM', 'DM'], 83, 86, 2000, 28, t(9, 5, 8, 9, 4, 7), { archetype: 'deep-playmaker' }),
