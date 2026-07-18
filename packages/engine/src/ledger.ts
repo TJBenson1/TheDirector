@@ -431,7 +431,7 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_drogba', from: 'marseille', to: 'chelsea', window: '2004-07', fee: 24_000_000, id: 'drogba-chelsea-2004' },
   { playerId: 'cur_robben2', from: 'psv', to: 'chelsea', window: '2004-07', fee: 12_000_000, id: 'robben-chelsea-2004' },
   { playerId: 'cur_vieira2', from: 'arsenal', to: 'juventus', window: '2005-07', fee: 13_750_000, id: 'vieira-juve-2005' },
-  { playerId: 'cur_acole', from: 'arsenal', to: 'chelsea', window: '2006-07', fee: 16_000_000, id: 'cole-chelsea-2006' },
+  { playerId: 'cur_acole', from: 'arsenal', to: 'chelsea', window: '2006-08', fee: 16_000_000, id: 'cole-chelsea-2006' },
   // The Gallas move was the OTHER HALF of the Cole deal — a swap. If the user
   // keeps Cole, the swap never happens, so Gallas never arrives.
   { playerId: 'cur_gallas2', from: 'chelsea', to: 'arsenal', window: '2006-08', fee: 5_000_000, id: 'gallas-arsenal-2006', enabledBy: 'cole-chelsea-2006' },
@@ -449,7 +449,7 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_nani', from: 'sporting', to: 'man_utd', window: '2007-07', fee: 17_000_000, id: 'nani-utd-2007' },
   { playerId: 'cur_park', from: 'psv', to: 'man_utd', window: '2005-07', fee: 4_000_000, id: 'park-utd-2005' },
   { playerId: 'cur_berbatov', from: 'leverkusen', to: 'spurs', window: '2006-07', fee: 11_000_000, id: 'berba-spurs-2006' },
-  { playerId: 'cur_berbatov', from: 'spurs', to: 'man_utd', window: '2008-07', fee: 30_750_000, id: 'berba-utd-2008' },
+  { playerId: 'cur_berbatov', from: 'spurs', to: 'man_utd', window: '2008-08', fee: 30_750_000, id: 'berba-utd-2008' },
   // Chelsea and Liverpool's real strengthening.
   { playerId: 'cur_essien', from: 'lyon', to: 'chelsea', window: '2005-08', fee: 24_400_000, id: 'essien-chelsea-2005' },
   { playerId: 'cur_ballack', from: 'bayern', to: 'chelsea', window: '2006-07', fee: 0, id: 'ballack-chelsea-2006' },
@@ -458,10 +458,10 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_alonso', from: 'liverpool', to: 'real_madrid', window: '2009-07', fee: 30_000_000, id: 'alonso-real-2009' },
   // Barça sign Eto'o (2004): a settled, happy star — so he is NOT a soft
   // fallback for an English club later; Villa is the more available option.
-  { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 24_000_000, id: 'etoo-barca-2004' },
+  { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 16_000_000, id: 'etoo-barca-2004' },
   // Villa's breakout move: Zaragoza → Valencia (2005), the step up that launched
   // him. Prise him from Zaragoza first (food-chain discount) and reality diverges.
-  { playerId: 'cur_villa04', from: 'zaragoza', to: 'valencia', window: '2005-07', fee: 12_000_000, id: 'villa-valencia-2005' },
+  { playerId: 'cur_villa04', from: 'zaragoza', to: 'valencia', window: '2005-07', fee: 8_000_000, id: 'villa-valencia-2005' },
   // Gabriel Milito's real 2007 move to Barcelona — another Zaragoza sale a big
   // club can beat them to.
   { playerId: 'cur_milito04', from: 'zaragoza', to: 'barcelona', window: '2007-07', fee: 17_000_000, id: 'gmilito-barca-2007' },
@@ -479,7 +479,7 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_emerson04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 20_000_000, id: 'emerson-madrid-2006' },
   { playerId: 'cur_thuram04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 5_000_000, id: 'thuram-barca-2006' },
   { playerId: 'cur_zambrotta04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 10_000_000, id: 'zambrotta-barca-2006' },
-  { playerId: 'cur_ibrahimovic04', from: 'juventus', to: 'inter', window: '2006-08', fee: 24_800_000, id: 'ibra-inter-2006' },
+  { playerId: 'cur_ibrahimovic04', from: 'juventus', to: 'inter', window: '2006-08', fee: 16_600_000, id: 'ibra-inter-2006' },
 
   // ── Porto's post-2004-CL sell-off: the classic feeder club cashing in as its
   // stars rise. A big side can pick them off EARLY (food-chain discount + they
@@ -576,7 +576,7 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   // Champions League, the giants picked Mourinho's side apart. Leave it alone and
   // the raid happens ON the user (Barça take Deco, Chelsea take Carvalho/Ferreira)
   // — beat them to it in 2002–03 at a food-chain discount and you keep the jewels.
-  { playerId: 'cur_deco01', from: 'porto', to: 'barcelona', window: '2004-07', fee: 21_000_000, id: 'deco-barca-2004' },
+  { playerId: 'cur_deco01', from: 'porto', to: 'barcelona', window: '2004-07', fee: 14_000_000, id: 'deco-barca-2004' },
   { playerId: 'cur_carvalho01', from: 'porto', to: 'chelsea', window: '2004-08', fee: 20_000_000, id: 'carvalho-chelsea-2004', enabledBy: 'abramovich' },
   { playerId: 'cur_pferreira01', from: 'porto', to: 'chelsea', window: '2004-07', fee: 13_200_000, id: 'ferreira-chelsea-2004', enabledBy: 'abramovich' },
   // ── Leeds "living the dream" collapse (§ distress). Overspending on the
@@ -742,7 +742,7 @@ const LEDGER_1998: RealTransferLedgerEntry[] = [
   { playerId: 'cur_crespo98', from: 'parma', to: 'lazio', window: '2000-07', fee: 35_000_000 },
   { playerId: 'cur_nedved98', from: 'lazio', to: 'juventus', window: '2001-07', fee: 25_000_000 },
   { playerId: 'cur_thuram', from: 'parma', to: 'juventus', window: '2001-07', fee: 22_000_000 },
-  { playerId: 'cur_cannavaro', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000 },
+  { playerId: 'cur_cannavaro', from: 'parma', to: 'inter', window: '2002-07', fee: 14_500_000 },
 ];
 
 /**
@@ -942,7 +942,7 @@ const LEDGER_2003: RealTransferLedgerEntry[] = [
   { playerId: 'cur_cambiasso03', from: 'real_madrid', to: 'inter', window: '2004-07', fee: 0 },
   { playerId: 'cur_figo03', from: 'real_madrid', to: 'inter', window: '2005-07', fee: 0 },
   { playerId: 'cur_portillo03', from: 'real_madrid', to: 'fiorentina', window: '2005-07', fee: 0 },
-  { playerId: 'cur_ronaldo03', from: 'real_madrid', to: 'milan', window: '2007-01', fee: 7_500_000 },
+  { playerId: 'cur_ronaldo03', from: 'real_madrid', to: 'milan', window: '2007-01', fee: 5_000_000 },
   { playerId: 'cur_beckham03', from: 'real_madrid', to: 'la_galaxy', window: '2007-07', fee: 0 },
   // English top three (chelsea-2003) — the real churn of the Roman Empire's first
   // years and the break-up of the Invincibles / Ferguson's rebuild.
@@ -966,7 +966,7 @@ const LEDGER_2003: RealTransferLedgerEntry[] = [
   { playerId: 'cur_lauren03a', from: 'arsenal', to: 'portsmouth', window: '2007-01', fee: 0 },
   { playerId: 'cur_butt03m', from: 'man_utd', to: 'newcastle', window: '2004-07', fee: 0 },
   { playerId: 'cur_forlan03m', from: 'man_utd', to: 'villarreal', window: '2004-07', fee: 0 },
-  { playerId: 'cur_keane03m', from: 'man_utd', to: 'celtic', window: '2005-11', fee: 0 },
+  { playerId: 'cur_keane03m', from: 'man_utd', to: 'celtic', window: '2005-12', fee: 0 },
   { playerId: 'cur_pneville03m', from: 'man_utd', to: 'everton', window: '2005-07', fee: 3_500_000 },
   { playerId: 'cur_kleberson03m', from: 'man_utd', to: 'besiktas', window: '2005-07', fee: 0 },
   { playerId: 'cur_ronaldo03m', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000 },
