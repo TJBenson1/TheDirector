@@ -381,6 +381,17 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     clubs: ELITE_CLUBS_2013,
     domesticLeagueId: 'esp-2014',
   },
+  'atletico-2013': {
+    id: 'atletico-2013',
+    name: 'Atlético Madrid — 2013: Break the Duopoly',
+    startDate: '2013-07',
+    playerClub: 'atletico',
+    mandate: 'Do what no one else could: break the Barça–Real stranglehold on La Liga — and go one better in Europe.',
+    boardPatience: 72,
+    boardExpectedFinish: 3,
+    clubs: ELITE_CLUBS_2013,
+    domesticLeagueId: 'esp-2013',
+  },
 
   // ── Serie A 1995-96 cluster (shared curated pack) ────────────────────────────
   'milan-1995': {

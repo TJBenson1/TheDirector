@@ -666,7 +666,44 @@ export const CARDIFF_2013: CuratedSeed[] = [
   q('cardiff', 'fcampbell13', 'Fraizer Campbell', 1987, 'England', ['ST'], 63, 64, 2016, 50, t(7, 5, 6, 6, 4, 6)),
 ];
 
+/** Atlético Madrid, 2013–14 — Simeone's champions who broke the Barça/Real duopoly
+ *  and pushed Real to extra time in the Lisbon final. A defensive fortress (Godín–
+ *  Miranda), Courtois on loan from Chelsea, and Diego Costa's 27-goal explosion. */
+export const ATLETICO_2013: CuratedSeed[] = [
+  // Courtois — on a three-year loan from Chelsea (2011–14); the best keeper in Spain.
+  q('atletico', 'courtois13', 'Thibaut Courtois', 1992, 'Belgium', ['GK'], 86, 91, 2014, 20, t(8, 6, 8, 6, 3, 7), { loanFrom: 'chelsea' }),
+  q('atletico', 'aranzubia13', 'Daniel Aranzubia', 1979, 'Spain', ['GK'], 71, 71, 2015, 25, t(7, 4, 6, 7, 4, 6)),
+  q('atletico', 'juanfran13', 'Juanfran', 1985, 'Spain', ['RB'], 82, 83, 2018, 25, t(8, 5, 8, 8, 4, 7), { archetype: 'full-back-attacking' }),
+  // Godín — the spine and the leader; his header at Camp Nou clinched the title.
+  q('atletico', 'godin13', 'Diego Godín', 1986, 'Uruguay', ['CB'], 85, 86, 2018, 25, t(9, 5, 9, 8, 4, 7), { archetype: 'covering-cb', loyalty: 88 }),
+  q('atletico', 'miranda13', 'Miranda', 1984, 'Brazil', ['CB'], 83, 84, 2016, 25, t(8, 5, 8, 7, 4, 7), { archetype: 'covering-cb' }),
+  q('atletico', 'filipeluis13', 'Filipe Luís', 1985, 'Brazil', ['LB'], 83, 84, 2015, 25, t(8, 5, 8, 7, 4, 7), { archetype: 'full-back-attacking' }),
+  // Alderweireld — signed from Ajax in 2013 as cover (his real 2013-14 club).
+  q('atletico', 'alderweireld_atm', 'Toby Alderweireld', 1989, 'Belgium', ['CB'], 80, 85, 2018, 25, t(8, 5, 8, 7, 4, 7), { archetype: 'covering-cb' }),
+  q('atletico', 'insua13', 'Emiliano Insúa', 1989, 'Argentina', ['LB'], 73, 77, 2016, 30, t(7, 5, 7, 6, 5, 7), { archetype: 'full-back-attacking' }),
+  q('atletico', 'manquillo13', 'Javier Manquillo', 1994, 'Spain', ['RB'], 70, 80, 2016, 30, t(7, 5, 7, 7, 4, 7)),
+  q('atletico', 'gabi13', 'Gabi', 1983, 'Spain', ['DM', 'CM'], 82, 82, 2016, 25, t(9, 5, 9, 9, 4, 7), { archetype: 'deep-playmaker', loyalty: 90 }),
+  q('atletico', 'tiago13', 'Tiago', 1981, 'Portugal', ['CM', 'DM'], 80, 80, 2015, 30, t(9, 5, 8, 7, 4, 7), { archetype: 'deep-playmaker' }),
+  // Koke — the 21-year-old midfield metronome, the creative heartbeat.
+  q('atletico', 'koke13', 'Koke', 1992, 'Spain', ['CM', 'AM'], 84, 90, 2019, 20, t(9, 5, 8, 9, 3, 8), { archetype: 'playmaker' }),
+  q('atletico', 'mariosuarez13', 'Mario Suárez', 1987, 'Spain', ['DM', 'CM'], 78, 80, 2017, 30, t(7, 6, 7, 7, 6, 6), { archetype: 'destroyer' }),
+  q('atletico', 'raulgarcia13', 'Raúl García', 1986, 'Spain', ['CM', 'AM'], 80, 81, 2016, 30, t(8, 6, 8, 7, 5, 7)),
+  q('atletico', 'arda13', 'Arda Turan', 1987, 'Turkey', ['AM', 'RW'], 84, 86, 2015, 30, t(6, 7, 8, 6, 7, 7), { archetype: 'inside-forward' }),
+  q('atletico', 'crodriguez13', 'Cristian Rodríguez', 1985, 'Uruguay', ['LW', 'AM'], 79, 80, 2016, 30, t(7, 6, 8, 6, 6, 7)),
+  q('atletico', 'olivertorres13', 'Óliver Torres', 1994, 'Spain', ['AM', 'CM'], 71, 84, 2017, 25, t(7, 5, 7, 7, 4, 7), { latentCeiling: 85 }),
+  // Diego Costa — the 27-goal spearhead who bullied La Liga and earned a Spain call.
+  q('atletico', 'diegocosta13', 'Diego Costa', 1988, 'Spain', ['ST'], 85, 86, 2016, 35, t(6, 8, 9, 6, 8, 6), { archetype: 'poacher' }),
+  // David Villa — arrived from Barcelona in 2013, reborn as a foil for Costa.
+  q('atletico', 'villa13', 'David Villa', 1981, 'Spain', ['ST'], 82, 83, 2015, 30, t(8, 6, 8, 7, 4, 7), { archetype: 'poacher' }),
+  q('atletico', 'adrian13', 'Adrián López', 1988, 'Spain', ['ST', 'RW'], 78, 80, 2016, 30, t(7, 6, 7, 7, 5, 7), { archetype: 'poacher' }),
+  q('atletico', 'baptistao13', 'Léo Baptistão', 1992, 'Brazil', ['ST', 'RW'], 70, 80, 2017, 30, t(6, 6, 7, 6, 6, 7)),
+  // Diego Ribas — rejoined on loan from Wolfsburg in Jan 2014; a title winner who
+  // scored in the Champions League run.
+  q('atletico', 'diegoribas13', 'Diego', 1985, 'Brazil', ['AM', 'CM'], 80, 82, 2014, 30, t(6, 7, 8, 5, 6, 7), { archetype: 'playmaker', loanFrom: 'wolfsburg' }),
+];
+
 export const MAN_UTD_2013_SQUADS: Record<string, CuratedSeed[]> = {
+  atletico: ATLETICO_2013,
   west_ham: WESTHAM_2013,
   sunderland: SUNDERLAND_2013,
   hull: HULL_2013,

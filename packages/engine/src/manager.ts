@@ -74,6 +74,7 @@ const STYLE_BY_NAME: Record<string, ManagerStyle> = {
   'Glenn Hoddle': st('Cultured, technical possession', 0.65, 0.55),
   'Mark Hughes': st('Physical, direct, front-foot', 0.4, 0.4),
   'Roberto Mancini': st('Pragmatic, defensively drilled', 0.5, 0.4),
+  'Diego Simeone': st('Intense low block, lethal counter (Cholismo)', 0.3, 0.55),
 };
 const DEFAULT_STYLE = st('Balanced', 0.5, 0.45);
 const CARETAKER_STYLE = st('Caretaker — keep it steady', 0.45, 0.4);
@@ -112,6 +113,7 @@ const REAL_COACHES: Record<string, { name: string; reputation: number }> = {
   'liverpool-2010': { name: 'Roy Hodgson', reputation: 68 },
   'inter-2004': { name: 'Roberto Mancini', reputation: 70 },
   'dortmund-2012': { name: 'Jürgen Klopp', reputation: 84 },
+  'atletico-2013': { name: 'Diego Simeone', reputation: 82 },
 };
 
 /** A pool of coaches available to hire, each with the YEARS he was a plausible

@@ -112,9 +112,10 @@ never introduces information that isn't already in the log.
 
 ## Start points (scenario select)
 
-`SCENARIOS` is a registry of **27 curated start points** (1995–2014), e.g.
+`SCENARIOS` is a registry of **28 curated start points** (1995–2014), e.g.
 `man-utd-1999` "After the Treble", `chelsea-2003` "The Roman Empire",
-`barcelona-2014` "Peak — Don't Waste It", `dortmund-2012` "Hold the Wall". Build a
+`barcelona-2014` "Peak — Don't Waste It", `dortmund-2012` "Hold the Wall",
+`atletico-2013` "Break the Duopoly". Build a
 picker from it — each `ScenarioSeed` carries `id`, `name`, `playerClub`, `startDate`,
 `mandate`, and `boardExpectedFinish`. `DEFAULT_SCENARIO_ID` is `man-utd-1999`.
 

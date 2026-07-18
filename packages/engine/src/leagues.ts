@@ -386,6 +386,38 @@ export const ENGLAND_1996: LeagueSeed = {
   ],
 };
 
+/** La Liga, 2013–14 — the season Simeone's Atlético broke the duopoly and won it
+ *  on the last day at Camp Nou. Barça (Messi) and Real (post-Mourinho, Ancelotti's
+ *  first year, chasing La Décima) are the co-favourites; Atlético are the challenger.
+ *  Used by atletico-2013. */
+export const SPAIN_2013: LeagueSeed = {
+  id: 'esp-2013',
+  name: 'La Liga',
+  season: '2013-07',
+  clubs: [
+    { id: 'barcelona', name: 'Barcelona', prestige: 90, strength: 89 },
+    { id: 'real_madrid', name: 'Real Madrid', prestige: 90, strength: 89 },
+    { id: 'atletico', name: 'Atlético Madrid', prestige: 76, strength: 85 },
+    { id: 'valencia', name: 'Valencia', prestige: 72, strength: 76 },
+    { id: 'sevilla', name: 'Sevilla', prestige: 70, strength: 76 },
+    { id: 'athletic_bilbao', name: 'Athletic Bilbao', prestige: 66, strength: 75 },
+    { id: 'real_sociedad', name: 'Real Sociedad', prestige: 64, strength: 74 },
+    { id: 'villarreal', name: 'Villarreal', prestige: 64, strength: 72 },
+    { id: 'malaga', name: 'Málaga', prestige: 60, strength: 70 },
+    { id: 'espanyol', name: 'Espanyol', prestige: 58, strength: 69 },
+    { id: 'betis', name: 'Real Betis', prestige: 58, strength: 68 },
+    { id: 'celta', name: 'Celta Vigo', prestige: 54, strength: 68 },
+    { id: 'getafe', name: 'Getafe', prestige: 52, strength: 67 },
+    { id: 'levante', name: 'Levante', prestige: 50, strength: 67 },
+    { id: 'granada', name: 'Granada', prestige: 48, strength: 65 },
+    { id: 'osasuna', name: 'Osasuna', prestige: 50, strength: 64 },
+    { id: 'valladolid', name: 'Real Valladolid', prestige: 50, strength: 63 },
+    { id: 'rayo', name: 'Rayo Vallecano', prestige: 48, strength: 64 },
+    { id: 'elche', name: 'Elche', prestige: 44, strength: 62 },
+    { id: 'almeria', name: 'Almería', prestige: 44, strength: 61 },
+  ],
+};
+
 /** La Liga, 2014–15 — Barcelona's MSN treble, Real Madrid's BBC, Simeone's
  *  reigning champions Atlético. Used by barcelona-2014. */
 export const SPAIN_2014: LeagueSeed = {
@@ -601,6 +633,7 @@ export const LEAGUES: Record<string, LeagueSeed> = {
   'esp-1': SPAIN_2000,
   'esp-2003': SPAIN_2003,
   'esp-2006': SPAIN_2006,
+  'esp-2013': SPAIN_2013,
   'esp-2014': SPAIN_2014,
   'ita-1': SERIE_A_1998,
   'ita-1995': SERIE_A_1995,

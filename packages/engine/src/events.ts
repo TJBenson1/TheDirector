@@ -2425,8 +2425,80 @@ const DORTMUND_2012_PACK: ScriptedEvent[] = [
   },
 ];
 
+const ATLETICO_2013_PACK: ScriptedEvent[] = [
+  {
+    id: 'villa-reborn',
+    date: '2013-08',
+    requires: (s) => playerAt(s, 'cur_villa13', 'atletico') && s.playerClub === 'atletico',
+    build: () => ({
+      id: 'scripted:villa-reborn',
+      title: 'David Villa arrives, written off',
+      description: 'Barcelona have let David Villa go for a cut price, and much of Spain thinks the 31-year-old is finished. You know better: the movement is still there and Diego Costa needs a foil. Build the attack around the pair and hand Villa a starring role, or treat him as squad rotation and lean on the kids?',
+      interrupt: true, clubId: 'atletico', category: 'event',
+      choices: [
+        { id: 'star-role', label: 'Make Villa a starter alongside Costa', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_villa13', amount: 10 }, { kind: 'ability', playerId: 'cur_villa13', amount: 2 }, { kind: 'memory', tag: 'man-management', text: 'Reborn Villa as Costa\'s foil — as reality, a title-winning partnership.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'rotation', label: 'Use him as rotation', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'man-management', text: 'Kept Villa fresh as a rotation option.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_villa13', amount: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'man-management', text: 'Villa quietly proves the doubters wrong regardless.' }],
+      memoryTags: ['man-management', 'cur_villa13'],
+    }),
+  },
+  {
+    id: 'title-run-in',
+    date: '2014-04',
+    requires: (s) => s.playerClub === 'atletico',
+    build: () => ({
+      id: 'scripted:title-run-in',
+      title: 'Two fronts, one exhausted squad',
+      description: 'A thin, magnificent squad is somehow top of La Liga AND into the Champions League final — the duopoly is one push from breaking. But the fixtures are relentless and legs are gone. Throw everything at the league now (the title is the historic prize), or manage the load to arrive fresh in the European final?',
+      interrupt: true, clubId: 'atletico', category: 'event',
+      choices: [
+        { id: 'all-in-league', label: 'Go all-in on the league', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'atletico', amount: 6 }, { kind: 'fanTrust', amount: 10, text: 'Breaking the Barça–Real duopoly is worth everything.' }, { kind: 'memory', tag: 'season-defining', text: 'Prioritised the league run-in — chasing the improbable Liga title, as reality.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'manage-load', label: 'Manage the load for Europe', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'season-defining', text: 'Rotated to protect the legs for the European final.' }], onFailure: [{ kind: 'morale', clubId: 'atletico', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'season-defining', text: 'Rode the exhaustion and let the run-in take its course.' }],
+      memoryTags: ['season-defining'],
+    }),
+  },
+  {
+    id: 'courtois-recall',
+    date: '2014-06',
+    requires: (s) => playerAt(s, 'cur_courtois13', 'atletico') && s.playerClub === 'atletico',
+    build: () => ({
+      id: 'scripted:courtois-recall',
+      title: 'Chelsea want their keeper back',
+      description: 'Thibaut Courtois has been the best goalkeeper in Spain — but he is Chelsea\'s, and his three-year loan is up. The parent club will not sell, and now they want him for themselves. You can push hard to extend the loan or prise him permanently (as reality, in vain), or accept it and reinvest in a successor.',
+      interrupt: true, clubId: 'atletico', category: 'transfer',
+      choices: [
+        { id: 'fight-for-courtois', label: 'Fight to keep Courtois', successProbability: 0.3, onSuccess: [{ kind: 'morale', playerId: 'cur_courtois13', amount: 6 }, { kind: 'fanTrust', amount: 8, text: 'Somehow kept Courtois — a divergence from his real return to Chelsea.' }, { kind: 'memory', tag: 'transfer-saga', text: 'Prised Courtois from Chelsea for good — history rewritten.' }], onFailure: [{ kind: 'memory', tag: 'transfer-saga', text: 'Chelsea recalled Courtois, as reality — a successor is needed.' }] },
+        { id: 'accept-recall', label: 'Accept the recall and reinvest', successProbability: 0.65, onSuccess: [{ kind: 'money', clubId: 'atletico', amount: 15_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Let Courtois return to Chelsea and reinvested in a new keeper — as reality (Oblak followed).' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer-saga', text: 'Courtois returns to Chelsea, his loan expired — as reality.' }],
+      memoryTags: ['transfer-saga', 'cur_courtois13'],
+    }),
+  },
+  {
+    id: 'costa-clause',
+    date: '2014-07',
+    requires: (s) => playerAt(s, 'cur_diegocosta13', 'atletico') && s.playerClub === 'atletico',
+    build: () => ({
+      id: 'scripted:costa-clause',
+      title: 'Chelsea have met Diego Costa\'s clause',
+      description: 'After a 27-goal season and a Spain call-up, Chelsea have triggered the ~£32m release clause in Diego Costa\'s contract. Your talisman — the snarling centre-forward who dragged you to the title — can walk. Take the money and rebuild the attack (as reality), or refuse to facilitate it and try to keep him one more year?',
+      interrupt: true, clubId: 'atletico', category: 'transfer',
+      choices: [
+        { id: 'cash-in-costa', label: 'Take the £32m clause money', successProbability: 0.65, onSuccess: [{ kind: 'money', clubId: 'atletico', amount: 32_000_000 }, { kind: 'transferOut', playerId: 'cur_diegocosta13', clubId: 'chelsea', amount: 32_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Cashed in Diego Costa at his peak — as reality; fund the rebuild.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'keep-costa', label: 'Refuse and keep him a year', successProbability: 0.35, onSuccess: [{ kind: 'morale', playerId: 'cur_diegocosta13', amount: 8 }, { kind: 'agitation', playerId: 'cur_diegocosta13', amount: -12 }, { kind: 'fanTrust', amount: 12, text: 'Kept Diego Costa against Chelsea\'s money — the great divergence.' }, { kind: 'memory', tag: 'transfer-saga', text: 'Held onto Diego Costa — history rewritten.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_diegocosta13', amount: 12 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'transferOut', playerId: 'cur_diegocosta13', clubId: 'chelsea', amount: 32_000_000 }, { kind: 'memory', tag: 'transfer-saga', text: 'Diego Costa joins Chelsea via his clause — as reality.' }],
+      memoryTags: ['transfer-saga', 'cur_diegocosta13'],
+    }),
+  },
+];
+
 const SCRIPTED_PACKS: Record<string, ScriptedEvent[]> = {
   'man-utd-1999': MAN_UTD_1999_PACK,
+  'atletico-2013': ATLETICO_2013_PACK,
   'barcelona-2014': BARCELONA_2014_PACK,
   'liverpool-1995': LIVERPOOL_1995_PACK,
   'chelsea-1996': CHELSEA_1996_PACK,
