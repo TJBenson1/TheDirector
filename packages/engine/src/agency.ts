@@ -14,6 +14,7 @@ import { parseYearMonth } from './clock.js';
 import { styleKeyForClub } from './leaguestyle.js';
 import { poleMoveFor } from './wooing.js';
 import { clubSquadPlayers } from './players.js';
+import { loanParent, isPersonaNonGrata } from './restrictions.js';
 
 /** Willingness at/above which a player will consider a move at a fair package. */
 export const WILLINGNESS_THRESHOLD = 50;
@@ -115,6 +116,29 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
   }
 
   const fromClub = player.club ? state.clubs[player.club] : undefined;
+
+  // 1a) On loan: the parent club controls his future — you can't buy him from the
+  //     club he's playing for (Courtois is Chelsea's, not Atlético's to sell).
+  const parent = loanParent(player.id);
+  if (parent && parent !== buyer.id) {
+    const owner = state.clubs[parent];
+    return {
+      willing: false,
+      willingness: 0,
+      hardBlocked: true,
+      reason: `${player.name} is only on loan at ${fromClub?.name ?? 'his club'} — ${owner?.name ?? 'his parent club'} own him and control his future.`,
+    };
+  }
+
+  // 1a-ii) Returning villain: the supporters would never accept it.
+  if (isPersonaNonGrata(buyer.id, player)) {
+    return {
+      willing: false,
+      willingness: 0,
+      hardBlocked: true,
+      reason: `${player.name} to ${buyer.name} is unthinkable — the supporters would never forgive it.`,
+    };
+  }
 
   // 1b) Direct rivals never trade with each other — impossible on club and player
   //     preference alike, at any price (Essien would not cross Chelsea→Arsenal).

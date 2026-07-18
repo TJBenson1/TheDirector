@@ -1,0 +1,19 @@
+{
+  "name": "@director/mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MCP server exposing the pure @director/engine as tools, so you play The Director inside Claude.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "start": "tsx src/server.ts",
+    "dev": "tsx watch src/server.ts"
+  },
+  "dependencies": {
+    "@director/engine": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "tsx": "^4.19.2",
+    "zod": "^3.23.0"
+  }
+}

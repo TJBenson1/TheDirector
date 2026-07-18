@@ -16,6 +16,7 @@ import { valuePlayer } from './finance.js';
 import { scoutPlayer, type ScoutReport } from './scouting.js';
 import { evaluateApproach, areDirectRivals } from './agency.js';
 import { isProcedural } from './ledger.js';
+import { isOnLoan, isPersonaNonGrata } from './restrictions.js';
 
 const GROUP: Record<Position, string> = {
   GK: 'GK', CB: 'DEF', LB: 'DEF', RB: 'DEF', DM: 'MID', CM: 'MID', AM: 'MID', LW: 'ATT', RW: 'ATT', ST: 'ATT',
@@ -110,6 +111,9 @@ export function suggestTargets(
     // A direct rival will not sell you a player to strengthen you — don't dangle
     // Seaman to a United manager. (You can still chase a dream by naming him.)
     if (areDirectRivals(state, p.club, state.playerClub)) continue;
+    // On loan (owned elsewhere) or a returning villain — never a real target.
+    if (isOnLoan(p.id)) continue;
+    if (isPersonaNonGrata(state.playerClub, p)) continue;
     const inPosition = p.positions.includes(position) || p.positions.some((pos) => GROUP[pos] === group);
     if (!inPosition) continue;
 
