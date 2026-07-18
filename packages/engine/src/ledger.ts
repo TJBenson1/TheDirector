@@ -476,7 +476,7 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   // same summer). The champions scatter cheaply — pick them from the wreckage, or
   // let reality hold. This is the marquee "capitalise on a club in distress" beat.
   { playerId: 'cur_cannavaro04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 5_000_000, id: 'cannavaro-madrid-2006' },
-  { playerId: 'cur_emerson04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 20_000_000, id: 'emerson-madrid-2006' },
+  { playerId: 'cur_emerson04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 11_000_000, id: 'emerson-madrid-2006' },
   { playerId: 'cur_thuram04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 5_000_000, id: 'thuram-barca-2006' },
   { playerId: 'cur_zambrotta04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 10_000_000, id: 'zambrotta-barca-2006' },
   { playerId: 'cur_ibrahimovic04', from: 'juventus', to: 'inter', window: '2006-08', fee: 16_600_000, id: 'ibra-inter-2006' },
