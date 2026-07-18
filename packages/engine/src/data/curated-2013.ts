@@ -342,6 +342,8 @@ export const VALENCIA_2013: CuratedSeed[] = [
 ];
 export const AJAX_2013: CuratedSeed[] = [
   q('ajax', 'eriksen', 'Christian Eriksen', 1992, 'Denmark', ['AM', 'CM'], 81, 88, 2016, 25, t(8, 5, 8, 6, 4, 8)),
+  // NB: Alderweireld actually moved Ajax→Atlético Madrid in July 2013; Atlético isn't a
+  // modelled club here, so he's kept at his last modelled club (Ajax) rather than dropped.
   q('ajax', 'alderweireld', 'Toby Alderweireld', 1989, 'Belgium', ['CB'], 80, 86, 2016, 25, t(8, 5, 8, 7, 4, 7)),
   q('ajax', 'cillessen13', 'Jasper Cillessen', 1989, 'Netherlands', ['GK'], 76, 82, 2016, 20, t(8, 5, 7, 6, 4, 7)),
   q('ajax', 'blind13', 'Daley Blind', 1990, 'Netherlands', ['LB', 'DM', 'CM'], 79, 84, 2016, 18, t(9, 4, 8, 6, 3, 8)),

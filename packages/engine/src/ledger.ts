@@ -684,6 +684,8 @@ const ACADEMY_2004: AcademyGraduate[] = [
   // Alexandre Pato — "O Pato", the Milan wonderkid whose every season was cut
   // short by muscle tears until the talent bled away. The definitive fragile-
   // and-lost striker: latent 92 if a manager can ever keep him on the pitch.
+  // Pato came through Internacional, but he broke into Milan's first team as an 18-year-old
+  // in Jan 2008 — surfaced here as that real young-first-team breakthrough (not an academy product).
   { year: 2008, seed: { id: 'cur_pato04', club: 'milan', name: 'Alexandre Pato', birthYear: 1989, nationality: 'Brazil', positions: ['ST'], ability: 66, potentialCeiling: 82, latentCeiling: 92, contractUntil: 2013, injuryProneness: 68, personality: per(5, 7, 8, 6, 7, 6) } },
   // Bojan Krkić — La Masia's record-breaking teenager (youngest-ever Barça
   // scorer) who buckled under the weight of expectation and never kicked on.
@@ -858,6 +860,8 @@ const ACADEMY_1998: AcademyGraduate[] = [
   // Adriano — O Imperador. Arrived at Inter with the physique and shot of a
   // generational striker; personal tragedy and lifestyle unravelled him. The
   // definitive lost talent: latent 94, but a temperament almost no one reaches.
+  // Adriano was signed from Flamengo (not a Milan-style academy product), but he did
+  // join Inter as a teenager in 2001 — surfaced here as a young first-team breakthrough.
   { year: 2001, seed: { id: 'cur_adriano', club: 'inter', name: 'Adriano', birthYear: 1982, nationality: 'Brazil', positions: ['ST'], ability: 72, potentialCeiling: 82, latentCeiling: 94, contractUntil: 2006, injuryProneness: 30, personality: per(4, 7, 8, 6, 8, 7) } },
 ];
 
