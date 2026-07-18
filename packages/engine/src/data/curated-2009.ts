@@ -19,7 +19,7 @@ const t = (prof: number, ego: number, amb: number, loy: number, vol: number, ada
 function q(
   club: ClubId, id: string, name: string, birthYear: number, nationality: string, positions: Position[],
   ability: number, potentialCeiling: number, contractUntil: number, injuryProneness: number, personality: Trait,
-  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string } = {},
+  extra: { hardBlocks?: HardBlock[]; loyalty?: number; latentCeiling?: number; archetype?: string; loanFrom?: ClubId } = {},
 ): CuratedSeed {
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
@@ -155,7 +155,7 @@ export const STUTTGART_2009: CuratedSeed[] = [
   q('stuttgart', 'boulahrouz09', 'Khalid Boulahrouz', 1981, 'Netherlands', ['CB', 'RB'], 72, 74, 2012, 60, t(7, 6, 6, 6, 6, 6)),
   q('stuttgart', 'traesch09', 'Christian Träsch', 1987, 'Germany', ['RB', 'DM'], 71, 79, 2013, 30, t(8, 5, 8, 7, 4, 8)),
   q('stuttgart', 'khedira09', 'Sami Khedira', 1987, 'Germany', ['DM', 'CM'], 76, 88, 2011, 30, t(9, 6, 9, 6, 4, 8)),
-  q('stuttgart', 'hleb09', 'Aleksandr Hleb', 1981, 'Belarus', ['AM', 'RW'], 77, 80, 2011, 45, t(7, 7, 7, 4, 7, 6)),
+  q('stuttgart', 'hleb09', 'Aleksandr Hleb', 1981, 'Belarus', ['AM', 'RW'], 77, 80, 2011, 45, t(7, 7, 7, 4, 7, 6), { loanFrom: 'barcelona' }),
   q('stuttgart', 'kuzmanovic09', 'Zdravko Kuzmanović', 1987, 'Serbia', ['CM', 'AM'], 73, 80, 2013, 35, t(6, 7, 7, 6, 7, 6)),
   // Gebhart — a much-hyped young attacker who never kicked on. Lost talent (80).
   q('stuttgart', 'gebhart09', 'Timo Gebhart', 1989, 'Germany', ['AM', 'LW'], 63, 76, 2013, 40, t(6, 7, 8, 6, 7, 6), { latentCeiling: 80 }),
@@ -201,7 +201,8 @@ export const LEVERKUSEN_2009: CuratedSeed[] = [
   // repeatedly interrupted by injury; only bloomed later. Lost talent (84).
   q('leverkusen', 'augusto09', 'Renato Augusto', 1988, 'Brazil', ['AM', 'LW'], 74, 80, 2012, 55, t(6, 6, 7, 5, 5, 5), { latentCeiling: 84 }),
   // Kroos — on an 18-month loan from Bayern; a reality-rail future great. Huge ceiling.
-  q('leverkusen', 'kroos09', 'Toni Kroos', 1990, 'Germany', ['AM', 'CM'], 79, 93, 2011, 20, t(9, 5, 9, 5, 3, 7)),
+  // On loan at Leverkusen from Bayern for 2009–10 (returned to Bayern in 2010, per the ledger).
+  q('leverkusen', 'kroos09', 'Toni Kroos', 1990, 'Germany', ['AM', 'CM'], 79, 93, 2011, 20, t(9, 5, 9, 5, 3, 7), { loanFrom: 'bayern' }),
   q('leverkusen', 'kiessling09', 'Stefan Kießling', 1983, 'Germany', ['ST'], 82, 84, 2013, 30, t(8, 4, 6, 8, 4, 6)),
   q('leverkusen', 'helmes09', 'Patrick Helmes', 1984, 'Germany', ['ST'], 77, 82, 2013, 75, t(7, 5, 6, 6, 4, 6)),
   q('leverkusen', 'derdiyok09', 'Eren Derdiyok', 1988, 'Switzerland', ['ST', 'LW'], 74, 82, 2013, 35, t(6, 5, 6, 5, 5, 6)),
@@ -430,7 +431,7 @@ export const HERTHA_2009: CuratedSeed[] = [
   q('hertha', 'cicero09', 'Cícero Santos', 1984, 'Brazil', ['DM', 'CM'], 66, 68, 2012, 33, t(7, 5, 6, 6, 5, 6)),
   q('hertha', 'raffael09', 'Raffael Caetano de Araújo', 1985, 'Brazil', ['AM', 'LW'], 75, 80, 2011, 40, t(7, 5, 7, 7, 5, 7)),
   q('hertha', 'nicu09', 'Maximilian Nicu', 1982, 'Romania', ['AM', 'LW'], 64, 66, 2011, 38, t(6, 5, 6, 6, 6, 6)),
-  q('hertha', 'gekas09', 'Theofanis Gekas', 1980, 'Greece', ['ST'], 69, 71, 2010, 34, t(7, 7, 7, 5, 5, 6)),
+  q('hertha', 'gekas09', 'Theofanis Gekas', 1980, 'Greece', ['ST'], 69, 71, 2010, 34, t(7, 7, 7, 5, 5, 6), { loanFrom: 'leverkusen' }),
   q('hertha', 'aramos09', 'Adrián Ramos', 1986, 'Colombia', ['ST'], 66, 78, 2013, 32, t(7, 5, 7, 6, 5, 7)),
 ];
 
@@ -680,7 +681,7 @@ export const MILAN_2009: CuratedSeed[] = [
   q('milan', 'ambrosini09', 'Massimo Ambrosini', 1977, 'Italy', ['CM', 'DM'], 80, 80, 2013, 40, t(9, 4, 7, 10, 4, 7)),
   q('milan', 'seedorf09', 'Clarence Seedorf', 1976, 'Netherlands', ['AM', 'CM'], 83, 83, 2012, 30, t(8, 6, 8, 7, 4, 8), { archetype: 'playmaker' }),
   q('milan', 'flamini09', 'Mathieu Flamini', 1984, 'France', ['CM', 'DM'], 77, 79, 2013, 30, t(7, 6, 7, 6, 5, 7)),
-  q('milan', 'beckhammilan09', 'David Beckham', 1975, 'England', ['CM', 'RW', 'AM'], 79, 79, 2010, 40, t(9, 7, 7, 6, 4, 7)),
+  q('milan', 'beckhammilan09', 'David Beckham', 1975, 'England', ['CM', 'RW', 'AM'], 79, 79, 2010, 40, t(9, 7, 7, 6, 4, 7), { loanFrom: 'la_galaxy' }),
   q('milan', 'ronaldinho09', 'Ronaldinho', 1980, 'Brazil', ['AM', 'LW'], 84, 84, 2011, 45, t(4, 7, 6, 4, 7, 7), { archetype: 'inside-forward', latentCeiling: 92 }),
   q('milan', 'pato09', 'Alexandre Pato', 1989, 'Brazil', ['ST'], 82, 90, 2013, 55, t(6, 6, 8, 6, 6, 6), { archetype: 'poacher', latentCeiling: 92 }),
   q('milan', 'borriello09', 'Marco Borriello', 1982, 'Italy', ['ST'], 79, 80, 2013, 35, t(6, 6, 7, 6, 6, 6), { archetype: 'poacher' }),
