@@ -665,6 +665,32 @@ function marketSaleDecision(
 }
 
 const MACRO_EVENTS: MacroEvent[] = [
+  // ── Ambient background story: Simeone's Atlético, 2013-14 ──
+  {
+    id: 'atletico-2014',
+    date: '2014-05',
+    world: (state) => {
+      // Only in games that begin in the 2013 era — a story reality wrote in that
+      // window (never narrated 15 years into a 1999 save). Pure colour: no state
+      // change, no RNG, so it can never perturb the sim or calibration.
+      if (state.meta.startYear < 2013) return;
+      const atleti = state.clubs['atletico'];
+      if (!atleti) return;
+      // Don't narrate a fairytale for a club the Director has gutted — only if the
+      // spine reality won it with is still there.
+      const core = ['cur_godin_13', 'cur_diego_costa_13', 'cur_koke_13'].filter(
+        (id) => state.players[id]?.club === 'atletico',
+      );
+      if (core.length < 2) return;
+      logEvent(state, {
+        category: 'event', code: 'macro.world',
+        message:
+          "Diego Simeone's Atlético Madrid — Courtois, Godín, Koke and Diego Costa — win La Liga on the final day at the Camp Nou, breaking the Barça–Real duopoly, and push Real to extra time in the Champions League final before falling in Lisbon. A working-man's masterpiece.",
+        data: { id: 'atletico-2014', clubId: 'atletico' },
+      });
+      appendMemory(state, 'world', "Simeone's Atlético win La Liga and reach the 2014 Champions League final — the duopoly is broken.");
+    },
+  },
   {
     id: 'china-2016',
     date: '2016-01',

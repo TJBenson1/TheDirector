@@ -7,6 +7,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { createNewGame } from './state.js';
+import { clubSquadPlayers } from './players.js';
 import { fireMacroEvents, applyConsequence } from './events.js';
 import type { GameState, YearMonth } from './types.js';
 
@@ -49,6 +50,31 @@ describe('macro market windows', () => {
     fireMacroEvents(s);
     expect(s.eventLog.some((e) => e.code === 'macro.world')).toBe(false);
     expect(s.pendingDecisions.some((d) => d.id.startsWith('macro:'))).toBe(false);
+  });
+
+  it('the Atlético 2013-14 story is a rich, pure-colour ambient background beat', () => {
+    // The title-winning spine is a full curated squad, not a shell.
+    const s0 = createNewGame({ scenarioId: 'man-utd-2013', seed: 'atleti' });
+    const squad = clubSquadPlayers(s0, 'atletico');
+    expect(squad.length).toBeGreaterThanOrEqual(16);
+    expect(squad.map((p) => p.name)).toEqual(expect.arrayContaining(['Diego Godín', 'Koke', 'Diego Costa', 'Toby Alderweireld']));
+
+    // Their real title + CL-final run is told as world colour in 2014, and it
+    // mutates nothing (no decision, no player change) — pure ambient story.
+    const s = at('2014-05');
+    const budgetBefore = s.clubs['atletico']!.finances.transferBudget;
+    const pendingBefore = s.pendingDecisions.length;
+    fireMacroEvents(s);
+    expect(s.eventLog.some((e) => e.data?.id === 'atletico-2014')).toBe(true);
+    expect(s.pendingDecisions.length).toBe(pendingBefore); // no interactive decision
+    expect(s.clubs['atletico']!.finances.transferBudget).toBe(budgetBefore); // no mutation
+  });
+
+  it('the Atlético story never fires in a pre-2013 game (the calibration scenario)', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'atleti' });
+    s.clock.date = '2014-05';
+    fireMacroEvents(s);
+    expect(s.eventLog.some((e) => e.data?.id === 'atletico-2014')).toBe(false);
   });
 
   it('cashing in sells the player OUT of the world and banks the inflated fee', () => {
