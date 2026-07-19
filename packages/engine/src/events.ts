@@ -480,7 +480,51 @@ const LIVERPOOL_2001_PACK: ScriptedEvent[] = [
   },
 ];
 
-const ALL_SCRIPTED: ScriptedEvent[] = [...MAN_UTD_1999_PACK, ...LIVERPOOL_2001_PACK];
+/** Arsenal 2004 (the Invincibles, playing forward). */
+const ARSENAL_2004_PACK: ScriptedEvent[] = [
+  {
+    id: 'battle-of-the-buffet',
+    date: '2004-10',
+    scenarios: ['arsenal-2004'],
+    // Only if the real feud's protagonist is still in the dugout — a Director who
+    // has already replaced Wenger has written this rivalry out.
+    requires: (s) => s.playerClub === 'arsenal' && s.managerRelations.identity === 'Arsène Wenger',
+    build: () => ({
+      id: 'scripted:battle-of-the-buffet',
+      title: 'The Battle of the Buffet — 49 unbeaten ends at Old Trafford',
+      description:
+        'A bad-tempered defeat at United ends your record unbeaten run, and it boils over in the tunnel — a slice of pizza flies past Ferguson and the two managers are at war in the press. The dressing room is raw. Which way do you point it?',
+      interrupt: true,
+      clubId: 'arsenal',
+      category: 'event',
+      choices: [
+        {
+          id: 'stoke',
+          label: 'Back Wenger and stoke the feud — us against the world',
+          successProbability: 0.55,
+          onSuccess: [
+            { kind: 'morale', clubId: 'arsenal', amount: 5 },
+            { kind: 'managerRelationship', amount: 4 },
+            { kind: 'memory', tag: 'rivalry', text: 'Stoked the United feud after the Old Trafford defeat; the squad closed ranks.' },
+          ],
+          onFailure: [{ kind: 'fanTrust', amount: -4, text: 'The war of words invites a media pile-on.' }],
+        },
+        {
+          id: 'calm',
+          label: 'Calm it down — draw a line, back to the football',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 3 }, { kind: 'boardPatience', amount: 3 }],
+          onFailure: [{ kind: 'managerRelationship', amount: -5 }],
+        },
+      ],
+      // Reality-default: the run's over, the feud simmers, the squad takes the knock.
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'arsenal', amount: -4 }, { kind: 'memory', tag: 'rivalry', text: 'The unbeaten run ended at Old Trafford; the Wenger–Ferguson feud hardened.' }],
+      memoryTags: ['rivalry', 'manager'],
+    }),
+  },
+];
+
+const ALL_SCRIPTED: ScriptedEvent[] = [...MAN_UTD_1999_PACK, ...LIVERPOOL_2001_PACK, ...ARSENAL_2004_PACK];
 
 function fireScriptedEvents(state: GameState): void {
   for (const ev of ALL_SCRIPTED) {
