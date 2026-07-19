@@ -200,9 +200,15 @@ const routes: Record<string, Handler> = {
     const buyer = s.clubs[toClub as string];
     if (!buyer) return { state: s, view: buildView(s), result: { ok: false, reason: 'Unknown buying club.' } };
     const price = fee !== undefined ? Math.round(fee) : Math.round(valuePlayer(p, currentYear(s)));
-    // A Director-sanctioned sale always completes — the buyer stretches to the
-    // agreed fee, so the sale banks money instead of failing on the buyer's kitty.
-    buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, price);
+    // Clubs have real budgets — a buyer who can't afford the fee isn't topped up;
+    // the deal is refused with a clear reason so another buyer can be found.
+    if (price > buyer.finances.transferBudget) {
+      return {
+        state: s,
+        view: buildView(s),
+        result: { ok: false, reason: `${buyer.name} can't afford ${gbp(price)} — their budget is ${gbp(buyer.finances.transferBudget)}.` },
+      };
+    }
     const result = executeTransfer(s, { playerId, toClub: buyer.id, fee: price });
     return { state: s, view: buildView(s), result };
   },
