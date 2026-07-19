@@ -76,10 +76,12 @@ const routes: Record<string, Handler> = {
   // scripted opening once it has created the game.
   '/games/start': ({ scenarioId, seed }) => {
     const state = createNewGame({ scenarioId: String(scenarioId), seed: seed ? String(seed) : `web:${Date.now()}` });
+    const opening = scriptedOpening(state);
     return {
       state,
       view: buildView(state),
-      narration: scriptedOpening(state),
+      narration: opening.scene, // beat one
+      secondary: opening.meeting, // beat two — the manager meeting
       situation: narrativeContext(state),
     };
   },

@@ -43,6 +43,8 @@ If there is no game yet, just call new_game for the scenario the Director names 
 
 export interface NarrateResult {
   narration: string;
+  /** A pre-scripted follow-up bubble (the manager meeting after a new game). */
+  secondary?: string;
   state: GameState | null;
   situation: unknown;
   history: Anthropic.MessageParam[];
@@ -79,6 +81,7 @@ export async function narrate(opts: {
   const BUDGET_MS = 45_000;
 
   let finalText = '';
+  let secondary: string | undefined;
   try {
     for (let hop = 0; hop < MAX_TOOL_HOPS; hop++) {
       if (Date.now() - started > BUDGET_MS) break;
@@ -115,9 +118,11 @@ export async function narrate(opts: {
         }
       }
       // A brand-new game: don't have the model write the (heavy, credit-hungry)
-      // opening live — serve the PRE-SCRIPTED opening and end the turn here.
+      // opening live — serve the PRE-SCRIPTED two-beat opening and end the turn.
       if (toolUses.some((tu) => tu.name === 'new_game') && state) {
-        finalText = scriptedOpening(state);
+        const opening = scriptedOpening(state);
+        finalText = opening.scene;
+        secondary = opening.meeting;
         break;
       }
       working.push({ role: 'user', content: results });
@@ -153,11 +158,14 @@ export async function narrate(opts: {
   // Keep the client-facing history lean: only the Director's message and the
   // narrator's reply as text (the tool exchanges are transient — state carries facts).
   const cleanMessage = opts.message; // without the injected context note
+  // The assistant's turn for history is both beats (scene + manager meeting) when a
+  // secondary reply was served, so the narrator has the full opening as context.
+  const assistantTurn = secondary ? `${finalText}\n\n${secondary}` : finalText || '…';
   const nextHistory: Anthropic.MessageParam[] = [
     ...priorText,
     { role: 'user' as const, content: cleanMessage },
-    { role: 'assistant' as const, content: finalText || '…' },
+    { role: 'assistant' as const, content: assistantTurn },
   ].slice(-24); // cap history length
 
-  return { narration: finalText || '…', state, situation: state ? situationOf(state) : null, history: nextHistory };
+  return { narration: finalText || '…', secondary, state, situation: state ? situationOf(state) : null, history: nextHistory };
 }

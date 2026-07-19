@@ -115,6 +115,8 @@ async function send(message){
     else {
       state = d.state; history = d.history || history;
       bubble(d.narration, 'narrator');
+      // A pre-scripted follow-up beat (e.g. the manager meeting after a new game).
+      if (d.secondary){ const m=d.secondary; setTimeout(()=>bubble(m, 'narrator'), 650); }
       saveLocal(); renderStatus(); refreshPanelIfOpen();
     }
   } catch(e){ thinking.remove(); bubble('(the line went dead — try again)', 'sys'); }
@@ -143,9 +145,12 @@ async function startGame(scenarioId, name){
     if (d.error){ bubble('('+d.error+')', 'sys'); }
     else {
       state = d.state;
-      // Seed the chat history with the opening so the narrator has context next turn.
-      history = [{ role:'user', content:'Take the '+name+' job.' }, { role:'assistant', content:d.narration }];
+      const full = d.secondary ? d.narration+'\n\n'+d.secondary : d.narration;
+      // Seed the chat history with the whole opening so the narrator has context next turn.
+      history = [{ role:'user', content:'Take the '+name+' job.' }, { role:'assistant', content:full }];
       bubble(d.narration, 'narrator');
+      // The manager sits down for the first meeting — a beat later, as a second reply.
+      if (d.secondary){ const m=d.secondary; setTimeout(()=>bubble(m, 'narrator'), 650); }
       saveLocal(); renderStatus(); refreshPanelIfOpen();
     }
   } catch(e){ thinking.remove(); bubble('(could not start — try again)', 'sys'); }
