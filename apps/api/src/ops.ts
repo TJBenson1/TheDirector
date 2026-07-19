@@ -107,7 +107,10 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
     case 'list_targets': {
       const pos = String(input.position) as Position;
       const maxPrice = input.maxPriceM !== undefined ? Number(input.maxPriceM) * 1_000_000 : undefined;
-      const targets = suggestTargets(s, pos, { maxPrice, maxResults: 12 }).map((t) => {
+      // `young: true` → prospect mode: rank by scouted UPSIDE, not present ability,
+      // so a request for young talent surfaces teenagers with a ceiling, not 30-yos.
+      const prospects = Boolean(input.young);
+      const targets = suggestTargets(s, pos, { maxPrice, maxResults: 12, prospects }).map((t) => {
         const p = s.players[t.playerId];
         const fit = p ? coachFit(s.managerRelations, p) : undefined;
         return { playerId: t.playerId, name: t.name, club: t.clubName, age: t.age, positions: p?.positions ?? [], askingPrice: m(t.askingPrice), ability: t.ability, tags: t.tags, willing: t.willing, coach: fit ? `${fit.verdict}: ${fit.reason}` : undefined, exact: (p?.positions ?? []).includes(pos) };
@@ -190,7 +193,7 @@ export const TOOL_SCHEMAS = [
   { name: 'squad', description: 'Your full squad with age, ability, morale, contract, wages.', input_schema: { type: 'object', properties: {} } },
   { name: 'league_table', description: 'The current league table.', input_schema: { type: 'object', properties: {} } },
   { name: 'resolve_decision', description: 'Answer an open decision by id + choice id.', input_schema: { type: 'object', properties: { decisionId: { type: 'string' }, choiceId: { type: 'string' } }, required: ['decisionId', 'choiceId'] } },
-  { name: 'list_targets', description: 'Realistic scouted transfer targets for a position (fogged ability, price, willingness, coach read).', input_schema: { type: 'object', properties: { position: { type: 'string', enum: POS }, maxPriceM: { type: 'number' } }, required: ['position'] } },
+  { name: 'list_targets', description: 'Realistic scouted transfer targets for a position (fogged ability, price, willingness, coach read). Set young:true for PROSPECTS — young players ranked by upside, for a "wonderkid"/"young talent"/"one for the future" request.', input_schema: { type: 'object', properties: { position: { type: 'string', enum: POS }, maxPriceM: { type: 'number' }, young: { type: 'boolean' } }, required: ['position'] } },
   { name: 'find_player', description: 'Look up a specific/dream target by name.', input_schema: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] } },
   { name: 'scout', description: 'A sharper scouting report on a player id.', input_schema: { type: 'object', properties: { playerId: { type: 'string' } }, required: ['playerId'] } },
   { name: 'sign', description: 'Sign a player to your club (optional fee in £m). May be refused.', input_schema: { type: 'object', properties: { playerId: { type: 'string' }, feeM: { type: 'number' } }, required: ['playerId'] } },

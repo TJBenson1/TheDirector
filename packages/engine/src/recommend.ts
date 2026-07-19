@@ -140,7 +140,11 @@ export function suggestTargets(
     if (!inPosition) continue;
 
     const price = askingPrice(state, p.id);
-    if (opts.maxPrice !== undefined && price > opts.maxPrice) continue;
+    // Young talent carries an upside premium, so a tight budget would return an
+    // empty prospect list; allow a stretch (×1.5) in prospect mode so the closest
+    // young options still surface (with their real price shown), not nothing.
+    const priceCap = opts.maxPrice !== undefined && opts.prospects ? opts.maxPrice * 1.5 : opts.maxPrice;
+    if (priceCap !== undefined && price > priceCap) continue;
 
     const tags = acquisitionTags(state, p);
     const verdict = evaluateApproach(state, { playerId: p.id, toClub: state.playerClub });
@@ -160,9 +164,14 @@ export function suggestTargets(
       if (p.potentialCeiling - p.ability < PROSPECT_MIN_UPSIDE) continue;
     }
 
-    const availability = tags.length * (opts.favourAvailable ? 9 : 5) + (verdict.willing ? 4 : -6);
+    // Availability nudges the ranking but must not DOMINATE it — an over-heavy
+    // "won't move" penalty buried every continental target beneath home-league
+    // players (who are likelier to fancy a domestic switch), making shortlists read
+    // as all-Premier-League. Keep the signal (willingness is still returned per
+    // target) but let ability/upside lead, so real foreign options surface too.
+    const availability = tags.length * (opts.favourAvailable ? 9 : 5) + (verdict.willing ? 3 : -3);
     // Prospects rank by upside (scouted potential, fog-aware); senior targets by
-    // present ability. Availability nudges both so genuine opportunities float up.
+    // present ability.
     const base = opts.prospects ? (report.potential.low + report.potential.high) / 2 : p.ability;
     const score = base + availability;
     rows.push({
