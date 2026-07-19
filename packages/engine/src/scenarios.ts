@@ -170,6 +170,12 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       // Fiorentina — heading for the 2002 bankruptcy; a doomed side to raid (Chiesa,
       // Nuno Gomes, a young Adriano) before liquidation scatters them.
       { id: 'fiorentina', name: 'Fiorentina', prestige: 70 },
+      // Selling clubs outside the big leagues — talent factories for the elite to raid:
+      // Larsson's Celtic, Advocaat's Rangers, and the Turkish giants.
+      { id: 'celtic', name: 'Celtic', prestige: 68 },
+      { id: 'rangers', name: 'Rangers', prestige: 68 },
+      { id: 'galatasaray', name: 'Galatasaray', prestige: 66 },
+      { id: 'fenerbahce', name: 'Fenerbahçe', prestige: 64 },
     ],
     domesticLeagueId: 'eng-2001',
   },

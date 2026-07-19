@@ -228,6 +228,122 @@ export const SPURS_2001_SQUADS: Record<string, CuratedSeed[]> = {
   spurs: SPURS_2001,
 };
 
+/** Celtic, 2001–02 — Martin O'Neill's reigning treble winners: Larsson's European
+ *  Golden Boot season, the Sutton/Hartson power up top, Lennon and Lambert in midfield.
+ *  A classic selling club — Petrov and Larsson would be prised away by bigger fish. */
+export const CELTIC_2001: CuratedSeed[] = [
+  q('celtic', 'douglas01', 'Robert Douglas', 1972, 'Scotland', ['GK'], 76, 77, 2005, 25, t(8, 5, 6, 8, 4, 7)),
+  q('celtic', 'gould01', 'Jonathan Gould', 1968, 'Scotland', ['GK'], 70, 70, 2003, 25, t(8, 4, 5, 8, 3, 6)),
+  q('celtic', 'valgaeren01', 'Joos Valgaeren', 1976, 'Belgium', ['CB'], 77, 79, 2005, 30, t(8, 4, 7, 7, 4, 7), { archetype: 'covering-cb' }),
+  q('celtic', 'balde01', 'Dianbobo Balde', 1975, 'Guinea', ['CB'], 78, 80, 2006, 30, t(8, 5, 7, 7, 5, 7), { archetype: 'covering-cb' }),
+  q('celtic', 'mjallby01', 'Johan Mjällby', 1971, 'Sweden', ['CB', 'DM'], 77, 78, 2004, 30, t(8, 5, 7, 8, 4, 7), { archetype: 'covering-cb' }),
+  q('celtic', 'mcnamara01', 'Jackie McNamara', 1973, 'Scotland', ['RB'], 76, 77, 2005, 30, t(8, 4, 7, 8, 4, 7), { archetype: 'full-back-attacking' }),
+  q('celtic', 'boyd01', 'Tom Boyd', 1965, 'Scotland', ['LB', 'CB'], 72, 72, 2003, 30, t(9, 4, 6, 10, 3, 7), { loyalty: 92 }),
+  q('celtic', 'lennon01', 'Neil Lennon', 1971, 'N. Ireland', ['DM'], 78, 80, 2005, 28, t(8, 6, 8, 8, 6, 7), { archetype: 'destroyer' }),
+  q('celtic', 'petrov01', 'Stiliyan Petrov', 1979, 'Bulgaria', ['CM'], 79, 84, 2006, 25, t(8, 5, 8, 7, 4, 7), { latentCeiling: 84 }),
+  q('celtic', 'lambert01', 'Paul Lambert', 1969, 'Scotland', ['CM', 'DM'], 78, 79, 2004, 30, t(9, 5, 7, 9, 4, 7), { archetype: 'deep-playmaker' }),
+  q('celtic', 'moravcik01', 'Lubomír Moravčík', 1965, 'Slovakia', ['AM', 'RW'], 80, 80, 2003, 32, t(8, 6, 7, 8, 5, 8), { archetype: 'playmaker' }),
+  q('celtic', 'thompson01', 'Alan Thompson', 1973, 'England', ['LW', 'LB'], 76, 77, 2005, 30, t(7, 6, 7, 7, 5, 7)),
+  q('celtic', 'agathe01', 'Didier Agathe', 1975, 'France', ['RW', 'RB'], 75, 77, 2005, 30, t(7, 5, 7, 7, 5, 7)),
+  q('celtic', 'petta01', 'Bobby Petta', 1974, 'Netherlands', ['LW'], 72, 74, 2004, 30, t(6, 6, 6, 6, 6, 7)),
+  q('celtic', 'guppy01', 'Steve Guppy', 1969, 'England', ['LW'], 71, 72, 2004, 30, t(7, 4, 6, 7, 4, 7)),
+  q('celtic', 'healy01', 'Colin Healy', 1980, 'Ireland', ['CM'], 70, 76, 2005, 30, t(7, 4, 7, 7, 4, 7)),
+  q('celtic', 'sylla01', 'Momo Sylla', 1977, 'Guinea', ['CM', 'RW'], 72, 74, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+  q('celtic', 'wieghorst01', 'Morten Wieghorst', 1971, 'Denmark', ['CM'], 71, 72, 2004, 45, t(7, 4, 6, 7, 4, 7)),
+  // Larsson — the King of Kings; the European Golden Boot and the club's talisman.
+  q('celtic', 'larsson01', 'Henrik Larsson', 1971, 'Sweden', ['ST'], 86, 87, 2004, 30, t(9, 6, 8, 8, 4, 8), { archetype: 'poacher', loyalty: 85 }),
+  q('celtic', 'sutton01', 'Chris Sutton', 1973, 'England', ['ST'], 80, 81, 2005, 30, t(7, 6, 7, 7, 5, 7), { archetype: 'poacher' }),
+  q('celtic', 'hartson01', 'John Hartson', 1975, 'Wales', ['ST'], 79, 80, 2005, 40, t(7, 6, 7, 6, 6, 6), { archetype: 'poacher' }),
+  q('celtic', 'maloney01', 'Shaun Maloney', 1983, 'Scotland', ['AM', 'ST'], 66, 80, 2005, 35, t(7, 5, 7, 7, 4, 7), { latentCeiling: 81 }),
+];
+
+/** Rangers, 2001–02 — Advocaat's big-spending Ibrox side (McLeish took over in Dec):
+ *  captain Barry Ferguson, the £12m Tore André Flo, Ronald de Boer and Amoruso. A
+ *  cash-rich buyer at home but a selling club to the elite south of the border. */
+export const RANGERS_2001: CuratedSeed[] = [
+  q('rangers', 'klos01', 'Stefan Klos', 1971, 'Germany', ['GK'], 80, 81, 2005, 25, t(8, 5, 6, 8, 4, 7)),
+  q('rangers', 'mcgregor01', 'Allan McGregor', 1982, 'Scotland', ['GK'], 66, 82, 2006, 25, t(7, 5, 7, 7, 5, 6), { latentCeiling: 83 }),
+  q('rangers', 'amoruso01', 'Lorenzo Amoruso', 1971, 'Italy', ['CB'], 79, 80, 2004, 30, t(8, 6, 7, 7, 5, 7), { archetype: 'covering-cb', loyalty: 85 }),
+  q('rangers', 'konterman01', 'Bert Konterman', 1971, 'Netherlands', ['CB', 'DM'], 74, 75, 2004, 30, t(8, 4, 6, 7, 4, 7), { archetype: 'covering-cb' }),
+  q('rangers', 'moore01', 'Craig Moore', 1975, 'Australia', ['CB'], 76, 78, 2005, 30, t(8, 5, 7, 7, 4, 7), { archetype: 'covering-cb' }),
+  q('rangers', 'wilson01', 'Scott Wilson', 1977, 'Scotland', ['CB'], 71, 73, 2004, 30, t(7, 4, 6, 7, 4, 7)),
+  q('rangers', 'numan01', 'Arthur Numan', 1969, 'Netherlands', ['LB'], 78, 79, 2003, 28, t(8, 5, 7, 7, 4, 7), { archetype: 'full-back-attacking' }),
+  q('rangers', 'ball01', 'Michael Ball', 1979, 'England', ['LB'], 75, 80, 2006, 40, t(7, 5, 7, 6, 5, 7), { archetype: 'full-back-attacking' }),
+  q('rangers', 'vidmar01', 'Tony Vidmar', 1970, 'Australia', ['LB', 'CB'], 73, 74, 2003, 30, t(8, 4, 6, 7, 4, 7)),
+  q('rangers', 'ricksen01', 'Fernando Ricksen', 1976, 'Netherlands', ['RB', 'DM'], 76, 78, 2006, 30, t(6, 7, 8, 6, 7, 7)),
+  q('rangers', 'ross01', 'Maurice Ross', 1981, 'Scotland', ['RB'], 70, 74, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+  // Barry Ferguson — the homegrown captain and midfield heartbeat.
+  q('rangers', 'bferguson01', 'Barry Ferguson', 1978, 'Scotland', ['CM'], 82, 84, 2005, 28, t(8, 6, 8, 8, 5, 7), { archetype: 'deep-playmaker', latentCeiling: 84 }),
+  q('rangers', 'nerlinger01', 'Christian Nerlinger', 1973, 'Germany', ['DM', 'CM'], 76, 77, 2004, 30, t(8, 5, 7, 7, 4, 7), { archetype: 'destroyer' }),
+  q('rangers', 'malcolm01', 'Bob Malcolm', 1980, 'Scotland', ['DM', 'CB'], 71, 74, 2005, 30, t(7, 4, 7, 7, 4, 6)),
+  q('rangers', 'deboer01', 'Ronald de Boer', 1970, 'Netherlands', ['AM', 'ST'], 80, 81, 2004, 30, t(8, 6, 8, 7, 5, 8), { archetype: 'playmaker' }),
+  q('rangers', 'latapy01', 'Russell Latapy', 1968, 'Trinidad and Tobago', ['AM'], 73, 74, 2003, 30, t(6, 7, 6, 5, 7, 7)),
+  q('rangers', 'mccann01', 'Neil McCann', 1974, 'Scotland', ['LW'], 75, 76, 2004, 30, t(7, 5, 7, 7, 5, 7)),
+  q('rangers', 'lovenkrands01', 'Peter Løvenkrands', 1980, 'Denmark', ['LW', 'ST'], 75, 79, 2006, 30, t(7, 5, 7, 6, 5, 7), { archetype: 'inside-forward' }),
+  // Flo — the £12m club-record striker.
+  q('rangers', 'flo01', 'Tore André Flo', 1973, 'Norway', ['ST'], 80, 81, 2005, 30, t(7, 6, 7, 6, 5, 7), { archetype: 'poacher' }),
+  q('rangers', 'caniggia01', 'Claudio Caniggia', 1967, 'Argentina', ['ST'], 77, 77, 2003, 35, t(6, 8, 7, 5, 7, 6), { archetype: 'poacher' }),
+  q('rangers', 'mols01', 'Michael Mols', 1970, 'Netherlands', ['ST'], 77, 78, 2004, 40, t(7, 6, 7, 6, 5, 7), { archetype: 'poacher' }),
+  q('rangers', 'arveladze01', 'Shota Arveladze', 1973, 'Georgia', ['ST', 'LW'], 77, 78, 2005, 30, t(7, 6, 8, 6, 5, 7), { archetype: 'poacher' }),
+  q('rangers', 'dodds01', 'Billy Dodds', 1969, 'Scotland', ['ST'], 73, 73, 2003, 32, t(7, 5, 7, 6, 5, 6), { archetype: 'poacher' }),
+  q('rangers', 'miller01', 'Kenny Miller', 1979, 'Scotland', ['ST'], 73, 80, 2005, 30, t(7, 6, 8, 6, 5, 7), { archetype: 'poacher', latentCeiling: 81 }),
+];
+
+/** Galatasaray, 2001–02 — Mircea Lucescu's Süper Lig champions, a year after the 2000
+ *  UEFA Cup triumph but with that core dismantled (Hagi retired; Taffarel, Popescu, Emre,
+ *  Okan, Jardel all sold). Hasan Şaş is the jewel the elite would come circling for. */
+export const GALATASARAY_2001: CuratedSeed[] = [
+  q('galatasaray', 'mondragon01', 'Faryd Mondragón', 1971, 'Colombia', ['GK'], 80, 81, 2005, 25, t(7, 6, 7, 7, 5, 7)),
+  q('galatasaray', 'kereminan01', 'Kerem İnan', 1980, 'Turkey', ['GK'], 66, 70, 2004, 25, t(7, 4, 6, 7, 4, 7)),
+  q('galatasaray', 'bulentkorkmaz01', 'Bülent Korkmaz', 1968, 'Turkey', ['CB'], 80, 80, 2004, 30, t(9, 6, 7, 10, 4, 7), { archetype: 'covering-cb', loyalty: 92 }),
+  q('galatasaray', 'emreasik01', 'Emre Aşık', 1973, 'Turkey', ['CB'], 78, 79, 2005, 30, t(7, 6, 7, 7, 6, 7), { archetype: 'covering-cb' }),
+  q('galatasaray', 'inceefe01', 'Vedat İnceefe', 1974, 'Turkey', ['CB'], 72, 73, 2004, 30, t(7, 4, 6, 7, 4, 7)),
+  // On loan from Marseille for 2001-02 only.
+  q('galatasaray', 'sebperez01', 'Sébastien Pérez', 1973, 'France', ['CB', 'DM'], 76, 77, 2002, 30, t(7, 5, 7, 6, 5, 6), { loanFrom: 'marseille' }),
+  q('galatasaray', 'gvictoria01', 'Gustavo Victoria', 1980, 'Colombia', ['LB', 'LW'], 72, 75, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+  q('galatasaray', 'hakanunsal01', 'Hakan Ünsal', 1973, 'Turkey', ['LB'], 78, 79, 2004, 30, t(7, 6, 7, 7, 6, 7), { archetype: 'full-back-attacking' }),
+  q('galatasaray', 'davala01', 'Ümit Davala', 1973, 'Turkey', ['RW', 'RB'], 78, 79, 2004, 30, t(7, 6, 8, 6, 6, 7)),
+  q('galatasaray', 'penbe01', 'Ergün Penbe', 1972, 'Turkey', ['DM', 'CM'], 77, 78, 2005, 28, t(8, 5, 7, 8, 4, 7), { archetype: 'destroyer' }),
+  q('galatasaray', 'suatkaya01', 'Suat Kaya', 1967, 'Turkey', ['DM', 'CM'], 73, 73, 2003, 30, t(8, 5, 6, 8, 4, 7)),
+  q('galatasaray', 'fleurquin01', 'Andrés Fleurquin', 1975, 'Uruguay', ['DM', 'CM'], 76, 77, 2005, 30, t(7, 5, 7, 6, 5, 6)),
+  q('galatasaray', 'joaobatista01', 'João Batista', 1975, 'Brazil', ['CB', 'DM'], 73, 75, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+  // Hasan Şaş — the creative heartbeat and 2002 World Cup star; the elite come calling.
+  q('galatasaray', 'hasansas01', 'Hasan Şaş', 1976, 'Turkey', ['LW', 'AM'], 83, 84, 2005, 32, t(8, 6, 8, 7, 5, 7), { archetype: 'playmaker' }),
+  q('galatasaray', 'ariferdem01', 'Arif Erdem', 1972, 'Turkey', ['ST', 'AM'], 78, 79, 2004, 30, t(8, 6, 7, 8, 5, 7), { archetype: 'poacher' }),
+  q('galatasaray', 'umitkaran01', 'Ümit Karan', 1976, 'Turkey', ['ST'], 79, 80, 2005, 32, t(7, 6, 8, 7, 5, 7), { archetype: 'poacher' }),
+  q('galatasaray', 'sedatdebreli01', 'Sedat Debreli', 1983, 'Turkey', ['ST'], 62, 76, 2005, 32, t(7, 5, 7, 7, 4, 7), { latentCeiling: 77 }),
+];
+
+/** Fenerbahçe, 2001–02 — runners-up under Mustafa Denizli then Werner Lorant. A big-club
+ *  selling engine: Rüştü was Europe's best keeper (linked with Barcelona), and Rapaić &
+ *  Revivo were prime targets — Revivo would defect to Galatasaray in the summer of 2002. */
+export const FENERBAHCE_2001: CuratedSeed[] = [
+  // Rüştü — world-class No.1, 3rd at the 2002 World Cup; the giants circle.
+  q('fenerbahce', 'rustu01', 'Rüştü Reçber', 1973, 'Turkey', ['GK'], 84, 85, 2005, 25, t(8, 6, 8, 8, 4, 7)),
+  q('fenerbahce', 'recepbiler01', 'Recep Biler', 1981, 'Turkey', ['GK'], 66, 74, 2005, 25, t(7, 4, 7, 8, 4, 7)),
+  q('fenerbahce', 'mirkovic01', 'Zoran Mirković', 1971, 'Serbia', ['RB'], 77, 78, 2004, 30, t(8, 5, 7, 6, 5, 7), { archetype: 'full-back-attacking' }),
+  q('fenerbahce', 'fatihakyel01', 'Fatih Akyel', 1977, 'Turkey', ['RB', 'CB'], 77, 78, 2005, 30, t(7, 5, 7, 7, 5, 7)),
+  q('fenerbahce', 'umitozat01', 'Ümit Özat', 1976, 'Turkey', ['CB', 'DM'], 78, 79, 2005, 30, t(8, 5, 7, 7, 5, 7), { archetype: 'covering-cb' }),
+  q('fenerbahce', 'ogun01', 'Ogün Temizkanoğlu', 1969, 'Turkey', ['CB'], 76, 77, 2003, 32, t(8, 5, 7, 8, 4, 7), { archetype: 'covering-cb' }),
+  q('fenerbahce', 'mustafadogan01', 'Mustafa Doğan', 1976, 'Turkey', ['CB'], 73, 74, 2004, 30, t(7, 5, 7, 6, 5, 7)),
+  q('fenerbahce', 'uche01', 'Uche Okechukwu', 1967, 'Nigeria', ['CB'], 77, 77, 2003, 32, t(8, 5, 7, 8, 4, 7), { archetype: 'covering-cb', loyalty: 88 }),
+  q('fenerbahce', 'serkanozsoy01', 'Serkan Özsoy', 1978, 'Turkey', ['CB', 'RB'], 71, 73, 2004, 30, t(7, 4, 6, 7, 4, 7)),
+  q('fenerbahce', 'abdullahercan01', 'Abdullah Ercan', 1971, 'Turkey', ['LB', 'CM'], 76, 77, 2005, 30, t(8, 5, 7, 7, 4, 7), { archetype: 'full-back-attacking' }),
+  q('fenerbahce', 'samjohnson01', 'Samuel Johnson', 1973, 'Ghana', ['CM', 'DM'], 76, 77, 2004, 30, t(7, 5, 7, 6, 5, 7), { archetype: 'destroyer' }),
+  q('fenerbahce', 'lazetic01', 'Nikola Lazetić', 1978, 'Serbia', ['CM'], 75, 77, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+  q('fenerbahce', 'reinaldosimao01', 'Reinaldo Vicente Simão', 1968, 'Brazil', ['DM'], 74, 74, 2004, 30, t(7, 5, 6, 6, 5, 6), { archetype: 'destroyer' }),
+  q('fenerbahce', 'bayraktar01', 'Hakan Bayraktar', 1976, 'Turkey', ['AM', 'CM'], 77, 78, 2005, 30, t(7, 5, 7, 7, 5, 7), { archetype: 'playmaker' }),
+  q('fenerbahce', 'yusufsimsek01', 'Yusuf Şimşek', 1975, 'Turkey', ['CM', 'AM'], 74, 75, 2004, 30, t(7, 5, 7, 6, 5, 7)),
+  q('fenerbahce', 'ceyhuneris01', 'Ceyhun Eriş', 1977, 'Turkey', ['AM'], 72, 75, 2005, 30, t(7, 5, 7, 6, 5, 7)),
+  // Rapaić — Croatian playmaker and prime target; left mid-season amid contract disputes.
+  q('fenerbahce', 'rapaic01', 'Milan Rapaić', 1973, 'Croatia', ['RW', 'AM'], 82, 83, 2004, 32, t(6, 7, 7, 5, 7, 7), { archetype: 'playmaker' }),
+  // Revivo — the Israeli talisman; would controversially cross to Galatasaray in summer 2002.
+  q('fenerbahce', 'revivo01', 'Haim Revivo', 1972, 'Israel', ['AM', 'LW'], 82, 83, 2004, 32, t(7, 7, 8, 5, 6, 7), { archetype: 'playmaker' }),
+  q('fenerbahce', 'kanderson01', 'Kennet Andersson', 1967, 'Sweden', ['ST'], 77, 77, 2002, 40, t(7, 5, 7, 7, 4, 7), { archetype: 'poacher' }),
+  q('fenerbahce', 'serhatakin01', 'Serhat Akın', 1981, 'Turkey', ['ST'], 73, 80, 2005, 32, t(6, 6, 8, 6, 6, 7), { archetype: 'poacher', latentCeiling: 80 }),
+  q('fenerbahce', 'oktayderelioglu01', 'Oktay Derelioğlu', 1975, 'Turkey', ['ST'], 74, 75, 2004, 32, t(7, 6, 7, 6, 5, 7), { archetype: 'poacher' }),
+];
+
 export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
   liverpool: LIVERPOOL_2001,
   man_utd: MAN_UTD_2001,
@@ -237,6 +353,10 @@ export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
   newcastle: NEWCASTLE_2001,
   porto: PORTO_2001,
   fiorentina: FIORENTINA_2001,
+  celtic: CELTIC_2001,
+  rangers: RANGERS_2001,
+  galatasaray: GALATASARAY_2001,
+  fenerbahce: FENERBAHCE_2001,
   lens: LENS_2001,
   lille: LILLE_2001,
   real_madrid: [CHELSEA_TARGETS_2003[0]!],
