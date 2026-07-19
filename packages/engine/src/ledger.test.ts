@@ -228,6 +228,15 @@ describe('2013 post-Ferguson era pack (§4 data)', () => {
     throw new Error('no Ferdinand hijack across 12 seeds');
   });
 
+  it('Ronaldo starts at PSV in 1995 and reaches Barça via his real 1996 move', () => {
+    let s = cloneState(createNewGame({ scenarioId: 'juventus-1995', seed: 'ronaldo95' }));
+    // Reality: at PSV in 1995-96, NOT Barcelona (he only joined Barça in 1996).
+    expect(s.players.cur_ronaldo_r?.club).toBe('psv');
+    // Let the ledger run his real PSV → Barça (1996) move through.
+    s = play(s, 4);
+    expect(s.players.cur_ronaldo_r?.club).toBe('barcelona');
+  });
+
   it('buying Bale cancels the sale it funded — Madrid keep Özil (causal chain)', () => {
     let s = cloneState(createNewGame({ scenarioId: 'man-utd-2013', seed: 'era2013-bale' }));
     s.clubs.man_utd!.finances.transferBudget = 200_000_000;

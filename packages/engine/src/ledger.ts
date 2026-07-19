@@ -489,6 +489,9 @@ const LEDGER_1995_2001: RealTransferLedgerEntry[] = [
   { playerId: 'cur_kanu', from: 'ajax', to: 'inter', window: '1996-07', fee: 4_500_000, id: 'kanu-inter-1996' },
   { playerId: 'cur_overmars_aj', from: 'ajax', to: 'arsenal', window: '1997-07', fee: 7_000_000, id: 'overmars-arsenal-1997' },
   { playerId: 'cur_f_de_boer', from: 'ajax', to: 'barcelona', window: '1999-01', fee: 9_000_000, id: 'fdeboer-barca-1999' },
+  // Ronaldo's real two-step: PSV → Barça (world-record, 1996) → Inter (1997). Author
+  // the 1996 move first so he is at Barça before the 1997 entry executes.
+  { playerId: 'cur_ronaldo_r', from: 'psv', to: 'barcelona', window: '1996-07', fee: 13_000_000, id: 'ronaldo-barca-1996' },
   { playerId: 'cur_ronaldo_r', from: 'barcelona', to: 'inter', window: '1997-07', fee: 19_500_000, id: 'ronaldo-inter-1997' },
   { playerId: 'cur_shevchenko_k', from: 'dynamo_kyiv', to: 'milan', window: '1999-07', fee: 24_000_000, id: 'sheva-milan-1999' },
   { playerId: 'cur_batistuta_f', from: 'fiorentina', to: 'roma', window: '2000-07', fee: 23_000_000, id: 'bati-roma-2000' },

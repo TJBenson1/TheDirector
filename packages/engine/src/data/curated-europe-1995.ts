@@ -25,6 +25,9 @@ function q(
 
 // ── PSV, 1995-96 (a 19-year-old Ronaldo tearing up the Eredivisie) ─────────────
 const PSV_95: CuratedSeed[] = [
+  // The real 1995-96 Ronaldo: at PSV, a year before his world-record move to Barça
+  // (that PSV→Barcelona 1996 move is in LEDGER_1995_2001).
+  q('psv', 'ronaldo_r', 'Ronaldo', 1976, 'Brazil', ['ST'], 88, 94, 1998, 60, t(6, 8, 8, 5, 6, 7)),
   q('psv', 'zenden_ps95', 'Boudewijn Zenden', 1976, 'Netherlands', ['LW', 'AM'], 74, 84, 1999, 20, t(8, 5, 8, 7, 5, 8)),
   q('psv', 'nilis_ps95', 'Luc Nilis', 1967, 'Belgium', ['ST'], 81, 82, 1998, 20, t(9, 6, 8, 8, 4, 8)),
   q('psv', 'numan_ps95', 'Arthur Numan', 1969, 'Netherlands', ['LB'], 78, 81, 1998, 20, t(9, 5, 8, 8, 4, 8)),

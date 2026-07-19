@@ -235,7 +235,8 @@ export const REAL_1995: CuratedSeed[] = [
   q('real_madrid', 'mijatovic', 'Predrag Mijatović', 1969, 'Montenegro', ['ST', 'AM'], 83, 84, 1999, 30, t(7, 7, 8, 6, 5, 7)),
 ];
 export const BARCA_1995: CuratedSeed[] = [
-  q('barcelona', 'ronaldo_r', 'Ronaldo', 1976, 'Brazil', ['ST'], 88, 94, 1998, 60, t(6, 8, 8, 5, 6, 7)),
+  // Ronaldo is NOT here in 1995 — he was at PSV (see PSV_95 in curated-europe-1995)
+  // and only moved to Barça in 1996 (that real move is in LEDGER_1995_2001).
   q('barcelona', 'figo_95', 'Luís Figo', 1972, 'Portugal', ['RW', 'AM'], 85, 89, 1999, 25, t(8, 7, 8, 6, 4, 7)),
   q('barcelona', 'guardiola_95', 'Pep Guardiola', 1971, 'Spain', ['DM', 'CM'], 82, 83, 1999, 25, t(9, 6, 8, 9, 3, 7)),
 ];
@@ -438,6 +439,9 @@ export const BARCA_1995_EXTRA: CuratedSeed[] = [
   q('barcelona', 'kodro_ba95', 'Meho Kodro', 1967, 'Bosnia', ['ST'], 79, 80, 1998, 30, t(7, 6, 7, 6, 5, 7)),
   q('barcelona', 'prosinecki_ba95', 'Robert Prosinečki', 1969, 'Croatia', ['AM'], 82, 83, 1997, 45, t(6, 7, 7, 6, 6, 6)),
   q('barcelona', 'jordicruyff_ba95', 'Jordi Cruyff', 1974, 'Netherlands', ['AM', 'ST'], 76, 79, 1996, 30, t(7, 6, 7, 6, 4, 7)),
+  // Homegrown, breaking through in 1995-96 (backfills the slot Ronaldo vacated when
+  // he was moved to his real 1995 club, PSV).
+  q('barcelona', 'delapenya_ba95', 'Iván de la Peña', 1976, 'Spain', ['AM', 'DM'], 76, 84, 1999, 25, t(8, 6, 8, 8, 4, 7)),
 ];
 export const BAYERN_1995_EXTRA: CuratedSeed[] = [
   q('bayern', 'herzog_by95', 'Andreas Herzog', 1968, 'Austria', ['AM'], 79, 80, 1998, 30, t(7, 6, 7, 6, 5, 7)),

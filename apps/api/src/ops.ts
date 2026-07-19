@@ -19,7 +19,6 @@ import {
   realDepartureThisWindow,
   evaluateApproach,
   coachFit,
-  valuePlayer,
   currentYear,
   narrativeContext,
   coachBriefing,
@@ -215,7 +214,10 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
     case 'offers': {
       const p = s.players[String(input.playerId)];
       if (!p || p.club !== s.playerClub) return { state: s, result: { offers: [], reason: 'Not your player.' } };
-      const value = valuePlayer(p, currentYear(s));
+      // Reality-anchored value: askingPrice uses the real sale fee when the ledger
+      // knows it (Baggio → Milan was £6.5m, not his £14m abstract model value), so
+      // an offer never inflates a departure the history books already priced.
+      const value = askingPrice(s, p.id);
       const offers = Object.values(s.clubs)
         .filter((c) => c.id !== s.playerClub && c.leagueId !== null && c.strength >= p.ability - 13 && c.strength <= p.ability + 5 && c.finances.transferBudget >= value * 0.5)
         .map((c) => ({ clubId: c.id, club: c.name, fee: Math.round(Math.min(c.finances.transferBudget, value * (0.6 + (jitter(c.id + p.id) / 100) * 0.35))) }))
@@ -229,9 +231,10 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
       const buyer = s.clubs[String(input.toClub)];
       if (!buyer) return { state: s, result: { ok: false, reason: 'Unknown buying club.' } };
       // Never sell for £0 because the fee arrived missing/garbled — fall back to
-      // the player's market value so a fumbled number can't give a player away.
+      // the reality-anchored asking price so a fumbled number can't give a player
+      // away (and matches the real fee when the ledger knows it).
       const rawFee = Number(input.fee);
-      const fee = Number.isFinite(rawFee) && rawFee > 0 ? Math.round(rawFee) : Math.round(valuePlayer(p, currentYear(s)));
+      const fee = Number.isFinite(rawFee) && rawFee > 0 ? Math.round(rawFee) : askingPrice(s, p.id);
       // Clubs have REAL budgets — a buyer that can't afford the fee doesn't get
       // topped up. Reject clearly so the Director can pick a buyer who can pay or
       // sell fewer players (e.g. "Roma can take one, not both"), rather than the
