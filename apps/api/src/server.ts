@@ -170,7 +170,10 @@ const routes: Record<string, Handler> = {
       return (h >>> 0) % 100; // 0..99
     };
     const offers = Object.values(s.clubs)
-      .filter((c) => c.id !== s.playerClub && c.leagueId !== null)
+      // Any real club may bid — including continental giants, who in an English
+      // save carry no simulated leagueId but are very much in the market (Vieira to
+      // Juventus, say). Exclude only the user and synthetic promoted placeholders.
+      .filter((c) => c.id !== s.playerClub && !c.id.startsWith('promoted_'))
       // Clubs roughly at the player's level: the elite don't want a squad player,
       // and a much weaker club can't realistically land him.
       .filter((c) => c.strength >= p.ability - 13 && c.strength <= p.ability + 5)

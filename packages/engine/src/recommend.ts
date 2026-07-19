@@ -12,10 +12,10 @@
 import type { ClubId, GameState, PlayerId, PlayerState, Position } from './types.js';
 import { Rng } from './rng.js';
 import { parseYearMonth } from './clock.js';
-import { valuePlayer } from './finance.js';
+import { valuePlayer, inflationFactor } from './finance.js';
 import { scoutPlayer, type ScoutReport } from './scouting.js';
 import { evaluateApproach, areDirectRivals } from './agency.js';
-import { isProcedural } from './ledger.js';
+import { isProcedural, ERA_REALITY, eraForScenario } from './ledger.js';
 import { isOnLoan, isPersonaNonGrata } from './restrictions.js';
 
 const GROUP: Record<Position, string> = {
@@ -42,8 +42,29 @@ export function acquisitionTags(state: GameState, player: PlayerState): Acquisit
   return tags;
 }
 
-/** The fee a selling club would realistically accept (distress/relegation cut
- *  it; a Bosman is already cheap via the contract factor in valuePlayer). */
+/** What a player REALLY sold for out of his current club, if the era ledger knows
+ *  — the reality anchor for his market price. A Vidić at Spartak costs roughly what
+ *  United really paid (~£7m), not the abstract model value of an 82-rated CB (~£15m):
+ *  the market discounts an unproven talent in a lesser league, and the real fee IS
+ *  that discount. Inflation-adjusted from the real transfer's window to now. */
+function realMarketFee(state: GameState, p: PlayerState): number | null {
+  if (!p.club) return null;
+  const ledger = ERA_REALITY[eraForScenario(state.meta.scenarioId)]?.realTransferLedger;
+  if (!ledger) return null;
+  // His real departure FROM where he sits now — the market-clearing price for
+  // prising him loose. (Once he has really moved on, the entry no longer applies.)
+  const entries = ledger.filter((e) => e.playerId === p.id && e.from === p.club && e.fee > 0);
+  if (!entries.length) return null;
+  entries.sort((a, b) => a.window.localeCompare(b.window));
+  const e = entries[0]!;
+  const entryYear = Number(e.window.slice(0, 4));
+  return e.fee * (inflationFactor(year(state)) / inflationFactor(entryYear));
+}
+
+/** The fee a selling club would realistically accept. Anchored to the player's
+ *  REAL sale fee when the ledger knows it (reality-default pricing), else the model
+ *  valuation. Distress/relegation cut it further; a Bosman is already cheap via the
+ *  contract factor in valuePlayer. */
 export function askingPrice(state: GameState, playerId: PlayerId): number {
   const p = state.players[playerId];
   if (!p) return 0;
@@ -52,7 +73,8 @@ export function askingPrice(state: GameState, playerId: PlayerId): number {
   if (club?.financialHealth === 'crisis') mult *= 0.5;
   else if (club?.financialHealth === 'strained') mult *= 0.72;
   if (club?.relegationThreatened) mult *= 0.75;
-  return Math.max(50_000, Math.round((valuePlayer(p, year(state)) * mult) / 100_000) * 100_000);
+  const base = realMarketFee(state, p) ?? valuePlayer(p, year(state));
+  return Math.max(50_000, Math.round((base * mult) / 100_000) * 100_000);
 }
 
 export interface TargetSuggestion {
