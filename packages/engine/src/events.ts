@@ -114,7 +114,19 @@ export function applyConsequence(state: GameState, c: Consequence): void {
           const year = parseYearMonth(state.clock.date).year;
           p.contractUntil = Math.max(p.contractUntil, year + Math.max(1, c.amount ?? 3));
           p.wage = Math.round(p.wage * 1.1);
+          p.letLapse = false; // a renewal reverses any decision to let him walk
         }
+      }
+      break;
+    }
+    case 'letContractLapse': {
+      // The Director elects NOT to renew: flag him to walk on a free when his deal
+      // actually runs out (window phase 2). His contract is left as it is — he runs
+      // it DOWN, he isn't torn up early — so a man with years left stays until they
+      // expire, and only one already at the end walks this summer.
+      if (c.playerId) {
+        const p = state.players[c.playerId];
+        if (p) p.letLapse = true;
       }
       break;
     }

@@ -50,6 +50,21 @@ export function runReviewPhase(state: GameState): void {
   const injured = squad.filter((p) => p.injury && p.injury.monthsRemaining >= LONG_TERM_INJURY_MONTHS);
   const declining = squad.filter((p) => ageOf(p) >= 32 && p.ability <= p.potentialCeiling - 3);
 
+  // FINAL WARNING (§3 window phase 1): every deal running down this summer, named,
+  // so the Director sees the full list before the window opens. Anyone he does not
+  // renew — via the renewal decisions below, or by telling the club to let a deal
+  // lapse — leaves on a free when the window's second phase comes round. Doing
+  // nothing keeps them all (reality-default): the club offers fresh terms.
+  const runningDownNow = expiring.filter((p) => p.contractUntil <= year);
+  if (expiring.length) {
+    logEvent(state, {
+      category: 'transfer',
+      code: 'window.contracts.warning',
+      message: `Final contract warning — ${club.name}: ${expiring.map((p) => `${p.name} (to ${p.contractUntil})`).join(', ')}. Renew whom you want to keep; anyone left to lapse walks for free when the window opens.`,
+      data: { expiring: expiring.map((p) => p.id), lapsingNow: runningDownNow.map((p) => p.id) },
+    });
+  }
+
   // The briefing (informational): what the manager should be aware of going in.
   if (expiring.length || retiring.length || injured.length || declining.length) {
     const bits: string[] = [];
@@ -185,7 +200,7 @@ export function runReviewPhase(state: GameState): void {
       category: 'transfer',
       choices: [
         { id: 'renew', label: 'Offer a new 3-year deal', onSuccess: [{ kind: 'renewContract', playerId: p.id, amount: 3 }, { kind: 'morale', playerId: p.id, amount: 3 }] },
-        { id: 'let-run', label: 'Let it run down', onSuccess: [{ kind: 'memory', tag: 'contract', text: `Let ${p.name}'s deal run down.` }, { kind: 'morale', playerId: p.id, amount: -3 }] },
+        { id: 'let-run', label: 'Let it run down — he leaves on a free', onSuccess: [{ kind: 'letContractLapse', playerId: p.id }, { kind: 'memory', tag: 'contract', text: `Chose to let ${p.name}'s deal lapse — he leaves on a free.` }, { kind: 'morale', playerId: p.id, amount: -3 }] },
       ],
       // Reality-default: a mainstay is never lost to inattention — the club renews.
       falloutIfIgnored: [{ kind: 'renewContract', playerId: p.id, amount: 3 }],

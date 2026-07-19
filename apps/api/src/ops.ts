@@ -234,6 +234,13 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
       return { state: s, result: { ok: true, player: p.name, contractUntil: s.players[p.id]?.contractUntil } };
     }
 
+    case 'let_lapse': {
+      const p = s.players[String(input.playerId)];
+      if (!p || p.club !== s.playerClub) return { state: s, result: { ok: false, reason: 'Not your player.' } };
+      applyConsequence(s, { kind: 'letContractLapse', playerId: p.id });
+      return { state: s, result: { ok: true, player: p.name, note: `${p.name}'s deal will run down — he leaves on a free at the next summer window unless you renew him first.` } };
+    }
+
     case 'free_agents': {
       const yr = currentYear(s);
       const wantPos = input.position ? (String(input.position) as Position) : null;
@@ -273,5 +280,6 @@ export const TOOL_SCHEMAS = [
   { name: 'offers', description: 'Who would buy one of your players, and for how much.', input_schema: { type: 'object', properties: { playerId: { type: 'string' } }, required: ['playerId'] } },
   { name: 'sell', description: 'Sell your player to a club for a fee (from offers).', input_schema: { type: 'object', properties: { playerId: { type: 'string' }, toClub: { type: 'string' }, fee: { type: 'number' } }, required: ['playerId', 'toClub', 'fee'] } },
   { name: 'renew', description: "Extend one of your players' contracts by 1-5 years.", input_schema: { type: 'object', properties: { playerId: { type: 'string' }, years: { type: 'number' } }, required: ['playerId', 'years'] } },
+  { name: 'let_lapse', description: "Choose NOT to renew a player — let his contract run down so he leaves on a free at the next summer window (real free agency). Reverse it any time before then by renewing him.", input_schema: { type: 'object', properties: { playerId: { type: 'string' } }, required: ['playerId'] } },
   { name: 'free_agents', description: 'Players out of contract next summer, optionally by position.', input_schema: { type: 'object', properties: { position: { type: 'string', enum: POS } } } },
 ];

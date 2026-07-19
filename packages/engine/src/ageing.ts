@@ -182,6 +182,10 @@ export function processRetirementsAndYouth(state: GameState, rng: Rng): void {
 export function processContractRenewals(state: GameState): void {
   const year = Number(state.clock.date.slice(0, 4));
   for (const club of Object.values(state.clubs)) {
+    // The DIRECTOR handles his own club's renewals inside the window (the final
+    // warning + the phase-2 lifecycle), so he can choose to let a man walk — the
+    // AI keeps its own house here.
+    if (club.id === state.playerClub) continue;
     for (const player of clubSquadPlayers(state, club.id)) {
       if (player.retired) continue;
       if (player.contractUntil > year + 1) continue; // not running down yet
@@ -191,6 +195,47 @@ export function processContractRenewals(state: GameState): void {
       player.contractUntil = year + 3; // a keeper gets a fresh deal
     }
   }
+}
+
+/**
+ * The USER club's contract lifecycle at the window's SECOND phase (§3, real free
+ * agency part 2). By now the Director has had the final warning and the renewal
+ * calls. Reality-default holds: any expiring deal he DIDN'T explicitly let lapse is
+ * renewed by the club (so a passive/reality run keeps its whole squad and the
+ * calibration harness — which never sets the lapse flag — is untouched). A player
+ * he DID choose to let go, whose deal is now up, LEAVES on a free — a genuine
+ * Bosman exit into free agency. Returns the names who walked, for the narrator.
+ */
+export function processContractLifecycle(state: GameState): string[] {
+  const club = state.clubs[state.playerClub];
+  if (!club) return [];
+  const year = Number(state.clock.date.slice(0, 4));
+  const walked: string[] = [];
+  for (const player of [...clubSquadPlayers(state, state.playerClub)]) {
+    if (player.retired) continue;
+    if (player.letLapse && player.contractUntil <= year) {
+      // He walks: out of the squad and onto the free market (club = null), the
+      // Director's own choice to let his deal run down.
+      club.squad = club.squad.filter((id) => id !== player.id);
+      player.club = null;
+      player.letLapse = false;
+      delete state.pursuit[player.id];
+      walked.push(player.name);
+      logEvent(state, {
+        category: 'transfer',
+        code: 'contract.bosman.out',
+        message: `${player.name} leaves ${club.name} on a free — his contract ran down and was not renewed`,
+        data: { playerId: player.id, from: club.id },
+      });
+    } else if (!player.letLapse && player.contractUntil <= year + 1) {
+      // Reality-default: a deal left untouched is renewed — the Director never loses
+      // a man to pure inattention (and the passive world holds its squad). A man he
+      // chose to let lapse is NOT renewed; he runs his deal down toward a free exit.
+      player.contractUntil = year + 3;
+    }
+  }
+  if (walked.length) recomputeClubStrength(state, club.id);
+  return walked;
 }
 
 /**

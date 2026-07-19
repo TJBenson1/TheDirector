@@ -198,6 +198,9 @@ export interface PlayerState {
   positions: Position[];
   club: ClubId | null;
   contractUntil: number; // calendar year the contract expires
+  /** The Director has chosen NOT to renew — he leaves on a free when his deal
+   *  lapses (real free agency; §3 window phase 2). Cleared by a renewal. */
+  letLapse?: boolean;
   wage: number; // annual
 
   // HIDDEN (§7) — revealed only via scouting/medicals:
@@ -410,6 +413,7 @@ export interface Consequence {
     | 'transferOut' // sell a player to `clubId` for `amount`
     | 'signReal' // sign an incoming real target to the user club (funds + moves)
     | 'renewContract' // extend a player's contract by `amount` years
+    | 'letContractLapse' // flag a player to leave on a free when his deal expires
     | 'changeFormation' // switch the coach's active shape (M13)
     | 'memory' // append a narrative-memory entry (§10)
     | 'log'; // purely informational log line
@@ -496,6 +500,9 @@ export interface GameStateMeta {
   /** Window dates whose pre-window REVIEW briefing has already run, so the
    *  club's looming-issues review fires once per window (§3 phase 1). */
   reviewedWindows: string[];
+  /** Summer-window dates whose contract lifecycle (renewals + free-agent
+   *  departures) has already settled, so it fires once per window (§3 phase 2). */
+  contractsSettledWindows?: string[];
 }
 
 export interface GameClock {

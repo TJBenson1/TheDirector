@@ -14,7 +14,7 @@
 import type { GameState, LoggedEvent } from './types.js';
 import { cloneState } from './state.js';
 import { Rng } from './rng.js';
-import { advanceOneMonth, windowForMonthIndex, windowStepLabel, WINDOW_STEPS, parseYearMonth } from './clock.js';
+import { advanceOneMonth, windowForMonthIndex, windowStepLabel, WINDOW_STEPS, WINDOW_PHASE_MARKET, parseYearMonth } from './clock.js';
 import { simulateChampionsLeague } from './champions.js';
 import { eventsSince } from './eventLog.js';
 import { stepLeagueMonth, applySeasonRevenue } from './season.js';
@@ -31,7 +31,7 @@ import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli, promoteJuventus } from './italyEvents.js';
 import { restoreRelegatedClubs } from './relegation.js';
 import { decayPursuit } from './wooing.js';
-import { processSeasonAgeing, processSeasonMorale, processOverstackUnrest, processRetirementsAndYouth, processContractRenewals } from './ageing.js';
+import { processSeasonAgeing, processSeasonMorale, processOverstackUnrest, processRetirementsAndYouth, processContractRenewals, processContractLifecycle } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
 import { resolveAdaptationSeason } from './adaptation.js';
@@ -157,6 +157,19 @@ function runWindowStep(state: GameState, rng: Rng, step: number): void {
   if (state.clock.window === 'summer' && !state.meta.reviewedWindows.includes(state.clock.date)) {
     state.meta.reviewedWindows.push(state.clock.date);
     runReviewPhase(state);
+  }
+  // Phase 2 (§3, real free agency): from the MARKET phase on, the user club's
+  // contract lifecycle settles — deals left untouched are renewed (reality-default,
+  // so a passive run holds its squad), and any the Director chose to let lapse walk
+  // on a free. Fires once per summer window; in per-step play the Director has acted
+  // on the phase-1 warning by now, in batch nothing was flagged so it only renews.
+  if (
+    state.clock.window === 'summer' &&
+    step >= WINDOW_PHASE_MARKET &&
+    !(state.meta.contractsSettledWindows ?? []).includes(state.clock.date)
+  ) {
+    (state.meta.contractsSettledWindows ??= []).push(state.clock.date);
+    processContractLifecycle(state);
   }
   // M10: proactive AI transfers follow the REAL ledger by default (§9f) — this
   // step's slice of it (or the whole window, on a final-step sweep).
