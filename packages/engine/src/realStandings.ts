@@ -38,6 +38,10 @@ function jitter(s: string): number {
  *  keeps its emergent result. */
 const REAL_STANDINGS: Record<string, Record<number, ClubId[]>> = {
   english: {
+    1995: ['man_utd', 'newcastle', 'liverpool', 'aston_villa', 'arsenal', 'everton', 'blackburn', 'spurs', 'nottm_forest', 'west_ham', 'chelsea', 'middlesbrough', 'leeds', 'wimbledon', 'sheffield_wednesday', 'coventry', 'southampton', 'man_city', 'qpr', 'bolton'],
+    1996: ['man_utd', 'newcastle', 'arsenal', 'liverpool', 'aston_villa', 'chelsea', 'sheffield_wednesday', 'wimbledon', 'leicester', 'spurs', 'leeds', 'derby', 'blackburn', 'west_ham', 'everton', 'southampton', 'coventry', 'sunderland', 'middlesbrough', 'nottm_forest'],
+    1997: ['arsenal', 'man_utd', 'liverpool', 'chelsea', 'leeds', 'blackburn', 'aston_villa', 'west_ham', 'derby', 'leicester', 'coventry', 'southampton', 'newcastle', 'spurs', 'wimbledon', 'sheffield_wednesday', 'everton', 'bolton'],
+    1998: ['man_utd', 'arsenal', 'chelsea', 'leeds', 'west_ham', 'aston_villa', 'liverpool', 'derby', 'middlesbrough', 'leicester', 'spurs', 'sheffield_wednesday', 'newcastle', 'everton', 'coventry', 'wimbledon', 'southampton', 'blackburn', 'nottm_forest'],
     1999: ['man_utd', 'arsenal', 'leeds', 'liverpool', 'chelsea', 'aston_villa', 'sunderland', 'leicester', 'west_ham', 'spurs', 'newcastle', 'middlesbrough', 'everton', 'coventry', 'southampton', 'derby', 'bradford', 'wimbledon', 'sheffield_wednesday', 'watford'],
     2000: ['man_utd', 'arsenal', 'liverpool', 'leeds', 'ipswich', 'chelsea', 'sunderland', 'aston_villa', 'charlton', 'southampton', 'newcastle', 'spurs', 'leicester', 'middlesbrough', 'west_ham', 'everton', 'derby', 'man_city', 'coventry', 'bradford'],
     2001: ['arsenal', 'liverpool', 'man_utd', 'newcastle', 'leeds', 'chelsea', 'west_ham', 'aston_villa', 'spurs', 'blackburn', 'southampton', 'middlesbrough', 'fulham', 'charlton', 'everton', 'bolton', 'sunderland', 'ipswich', 'derby', 'leicester'],
@@ -186,14 +190,23 @@ export function anchorSeasonToReality(state: GameState, league: LeagueState, pro
   const order = REAL_STANDINGS[key]?.[league.seasonYear];
   if (!order) return;
 
-  const weight = (1 - divergenceFactor(state)) * Math.max(0, Math.min(1, progress));
-  if (weight <= 0) return;
+  const prog = Math.max(0, Math.min(1, progress));
+  if (prog <= 0) return;
+  const div = divergenceFactor(state);
 
   const n = league.clubIds.length;
   const full = (n - 1) * 2;
   order.forEach((clubId, rank0) => {
     const rec = league.standings[clubId];
     if (!rec || rec.played === 0) return; // not simulated / not started
+    // The FIELD stays anchored to reality however far the Director has pushed the
+    // world — buying players for YOUR club must not free-fall Man Utd to 8th or
+    // Newcastle to 7th. Only the user's OWN club floats off its real result,
+    // scaled by divergence (passive = fully anchored, so passive reproduces the
+    // real table exactly; a title-builder rises as far as his real squad warrants,
+    // displacing the field minimally rather than scrambling it).
+    const weight = (clubId === state.playerClub ? 1 - div : 1) * prog;
+    if (weight <= 0) return;
     // The real full-season points, pro-rated to the games played so far.
     const realPts = pointsForRank(rank0, n, key) * (full > 0 ? rec.played / full : 1);
     const real = synthRecord(realPts, rank0, n, league.seasonYear, rec.played);
