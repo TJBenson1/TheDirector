@@ -462,6 +462,7 @@ export interface Consequence {
     | 'retireManager' // the head coach retires → caretaker + hire shortlist
     | 'agitation' // raise a player's unrest
     | 'transferOut' // sell a player to `clubId` for `amount`
+    | 'sellAbroad' // sell a player OUT of the modelled world (China/Saudi/MLS); credit `amount`, `clubId` = market sentinel
     | 'signReal' // sign an incoming real target to the user club (funds + moves)
     | 'signNearMiss' // complete a seed-based near-miss: spawn the subject at the user club; `tag` = near-miss key, `amount` = fee
     | 'deductPoints' // dock `amount` league points from `clubId` (or the user) this season

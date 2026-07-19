@@ -32,7 +32,8 @@ import { eventsSince } from './eventLog.js';
 import { appendMemory } from './memory.js';
 import { divergenceFactor, rollDivergentStoryline, RESHAPED_AGGRESSION } from './divergence.js';
 import { executeTransfer } from './transfers.js';
-import { recomputeClubStrength, instantiateCuratedPlayer } from './players.js';
+import { recomputeClubStrength, instantiateCuratedPlayer, clubSquadPlayers } from './players.js';
+import { valuePlayer } from './finance.js';
 import { performSack, appointManager, imposeDirective, retireManager } from './manager.js';
 import { ERA_REALITY, eraForScenario, nearMissKey } from './ledger.js';
 
@@ -108,6 +109,21 @@ export function applyConsequence(state: GameState, c: Consequence): void {
       if (c.playerId && c.clubId) {
         const res = executeTransfer(state, { playerId: c.playerId, toClub: c.clubId, fee: c.amount ?? 0 });
         if (res.ok) markLedgerRealized(state, c.tag);
+      }
+      break;
+    }
+    case 'sellAbroad': {
+      // Sell a player OUT of the modelled world (China/Saudi/MLS): pull him from his
+      // club's squad, credit the fee, and park him at the non-league market sentinel.
+      const p = c.playerId ? state.players[c.playerId] : undefined;
+      if (p && p.club) {
+        const seller = state.clubs[p.club];
+        if (seller) {
+          seller.squad = seller.squad.filter((id) => id !== p.id);
+          seller.finances.transferBudget += c.amount ?? 0;
+          p.club = c.clubId ?? 'abroad';
+          recomputeClubStrength(state, seller.id);
+        }
       }
       break;
     }
@@ -2755,6 +2771,58 @@ interface MacroEvent {
   build?: (state: GameState, userClub: ClubState) => Decision | null;
 }
 
+/**
+ * A market-window selling opportunity (China / Saudi / MLS). When a cash-rich
+ * destination opens up, a real, inflated bid arrives for one of the user's players
+ * who fits that market's profile — a chance to cash in above true value. Deterministic
+ * (picks the highest-valued eligible player); "keep him" is the first choice, so a
+ * passive/reality run never sells and calibration is undisturbed. Returns null (no
+ * decision) if the squad has no one who fits — the world colour still fires.
+ */
+function marketSaleDecision(
+  state: GameState,
+  userClub: ClubState,
+  o: { market: string; marketName: string; minAge: number; minAbility: number; maxAbility?: number; feeMult: number; pitch: string },
+): Decision | null {
+  const year = Number(state.clock.date.slice(0, 4));
+  const eligible = clubSquadPlayers(state, userClub.id).filter(
+    (p) => !p.injury && year - p.birthYear >= o.minAge && p.ability >= o.minAbility && p.ability <= (o.maxAbility ?? 99),
+  );
+  if (eligible.length === 0) return null;
+  const target = eligible
+    .slice()
+    .sort((a, b) => valuePlayer(b, year) - valuePlayer(a, year) || a.id.localeCompare(b.id))[0]!;
+  const pendingId = `macro:${o.market}:${target.id}`;
+  if (state.pendingDecisions.some((d) => d.id.startsWith(pendingId))) return null;
+  const fee = Math.round(valuePlayer(target, year) * o.feeMult);
+  return {
+    id: `${pendingId}:${state.clock.date}`,
+    title: `${o.marketName} table a huge bid for ${target.name}`,
+    description: `${o.pitch} They have tabled an offer for ${target.name} that dwarfs his market value — £${Math.round(fee / 1_000_000)}m. Cash in on a fee reality would envy, or keep your man?`,
+    interrupt: true,
+    clubId: userClub.id,
+    category: 'transfer',
+    choices: [
+      {
+        id: 'keep',
+        label: `Keep him — reject the money`,
+        successProbability: 0.6,
+        onSuccess: [{ kind: 'morale', playerId: target.id, amount: 4 }, { kind: 'memory', tag: 'transfer-saga', text: `Turned down ${o.marketName}'s money for ${target.name}.` }],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 10 }],
+      },
+      {
+        id: 'cash-in',
+        label: `Cash in (£${Math.round(fee / 1_000_000)}m)`,
+        successProbability: 0.9,
+        onSuccess: [{ kind: 'sellAbroad', playerId: target.id, clubId: o.market, amount: fee }, { kind: 'memory', tag: 'transfer-saga', text: `Sold ${target.name} to ${o.marketName} for a fee above his worth.` }],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 8 }],
+      },
+    ],
+    falloutIfIgnored: [{ kind: 'memory', tag: 'transfer-saga', text: `${o.marketName}'s money for ${target.name} went unanswered.` }],
+    memoryTags: ['transfer-saga', target.id],
+  };
+}
+
 const MACRO_EVENTS: MacroEvent[] = [
   {
     id: 'covid-2020',
@@ -2867,6 +2935,58 @@ const MACRO_EVENTS: MacroEvent[] = [
         memoryTags: ['world'],
       };
     },
+  },
+  // ── Market windows: cash-rich destinations open up as selling opportunities ──
+  {
+    id: 'china-2016',
+    date: '2016-01',
+    windowMonths: 6,
+    world: (state) => {
+      logEvent(state, {
+        category: 'event', code: 'macro.world',
+        message: 'The Chinese Super League is spending extraordinary sums, luring established names east with wages Europe cannot match',
+        data: { id: 'china-2016' },
+      });
+      appendMemory(state, 'world', 'The Chinese Super League spending boom opens a lucrative exit for established players.');
+    },
+    build: (state, club) => marketSaleDecision(state, club, {
+      market: 'china', marketName: 'A Chinese Super League club', minAge: 27, minAbility: 74, maxAbility: 87, feeMult: 1.9,
+      pitch: 'A cash-flooded Chinese Super League club has come calling.',
+    }),
+  },
+  {
+    id: 'mls-2020',
+    date: '2020-07',
+    windowMonths: 4,
+    world: (state) => {
+      logEvent(state, {
+        category: 'event', code: 'macro.world',
+        message: 'MLS has become a real destination for stars seeking a fresh challenge — and a designated-player payday — in their thirties',
+        data: { id: 'mls-2020' },
+      });
+      appendMemory(state, 'world', 'MLS is now a genuine landing spot for experienced stars — a graceful, well-paid exit.');
+    },
+    build: (state, club) => marketSaleDecision(state, club, {
+      market: 'mls', marketName: 'An MLS franchise', minAge: 31, minAbility: 76, feeMult: 1.4,
+      pitch: 'An ambitious MLS franchise wants a marquee designated player.',
+    }),
+  },
+  {
+    id: 'saudi-2023',
+    date: '2023-07',
+    windowMonths: 4,
+    world: (state) => {
+      logEvent(state, {
+        category: 'event', code: 'macro.world',
+        message: "Saudi Arabia's PIF-backed clubs launch a stunning raid on the game's biggest names, dangling sums that rewrite the market",
+        data: { id: 'saudi-2023' },
+      });
+      appendMemory(state, 'world', "The PIF-funded Saudi Pro League detonates the market, chasing the game's marquee names.");
+    },
+    build: (state, club) => marketSaleDecision(state, club, {
+      market: 'saudi', marketName: 'A PIF-backed Saudi Pro League club', minAge: 29, minAbility: 80, feeMult: 1.7,
+      pitch: 'A PIF-bankrolled Saudi Pro League club has arrived with a blank cheque.',
+    }),
   },
 ];
 
