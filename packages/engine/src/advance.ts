@@ -31,7 +31,7 @@ import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli, promoteJuventus } from './italyEvents.js';
 import { restoreRelegatedClubs } from './relegation.js';
 import { decayPursuit } from './wooing.js';
-import { processSeasonAgeing, processSeasonMorale, processOverstackUnrest, processRetirementsAndYouth, processContractRenewals, processContractLifecycle } from './ageing.js';
+import { processSeasonAgeing, processSeasonMorale, processOverstackUnrest, processRetirementsAndYouth, processContractRenewals, processContractLifecycle, processWageMarketUnrest } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
 import { resolveAdaptationSeason } from './adaptation.js';
@@ -80,6 +80,9 @@ function runMonth(state: GameState, rng: Rng): void {
     // Everton, a teenage Messi at Barça) — real names beneath the aging spine.
     executeAcademyIntakes(state);
     processSeasonMorale(state);
+    // The living wage market: men left behind the going rate grow restless (user
+    // club only, gated on divergence — a passive world holds to its real wages).
+    processWageMarketUnrest(state);
     // 4. Rubber-band: update world defiance from last season's finish (§9a #5).
     updateWorldDefiance(state);
     // 5. Reconcile strength for the simulated (in-league) clubs after ability

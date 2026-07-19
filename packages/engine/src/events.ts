@@ -32,7 +32,7 @@ import { appendMemory } from './memory.js';
 import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 import { executeTransfer } from './transfers.js';
 import { clubSquadPlayers, recomputeClubStrength } from './players.js';
-import { valuePlayer } from './finance.js';
+import { valuePlayer, suggestWage } from './finance.js';
 
 /**
  * Dressing-room wage parity (§ internal friction). Football wages only ratchet
@@ -166,7 +166,13 @@ export function applyConsequence(state: GameState, c: Consequence): void {
         if (p) {
           const year = parseYearMonth(state.clock.date).year;
           p.contractUntil = Math.max(p.contractUntil, year + Math.max(1, c.amount ?? 3));
-          p.wage = Math.round(p.wage * 1.1);
+          // A new deal keeps up with the market: at least a 10% rise, and — once the
+          // Director has begun reshaping the world — never below the going rate for
+          // his ability at today's inflated wages, so renewing a man who has fallen
+          // behind brings him up to scratch. A passive, reality-default world keeps
+          // its real wage history (the plain rise), so the calibration is untouched.
+          const bumped = Math.round(p.wage * 1.1);
+          p.wage = divergenceFactor(state) > 0 ? Math.max(bumped, suggestWage(p, year)) : bumped;
           p.letLapse = false; // a renewal reverses any decision to let him walk
           // Give a key man a lucrative new deal and the dressing room takes note —
           // his comparable peers want their own terms brought up to the market.

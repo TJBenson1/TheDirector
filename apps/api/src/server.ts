@@ -41,6 +41,7 @@ import {
   clubSquadPlayers,
   standingsOrder,
   valuePlayer,
+  suggestWage,
   liveRoleEstimate,
   currentYear,
   Rng,
@@ -376,6 +377,10 @@ function buildPanels(state: GameState) {
       const live = liveRoleEstimate(s, club, p);
       const mins = Math.round((p.lastSeason ? p.lastSeason.minutesShare : live.minutesShare) * 100);
       const rating = p.lastSeason?.rating ?? live.rating;
+      // How his pay sits against the going market rate for his ability — so the
+      // Director can see who has fallen behind and will want a new deal.
+      const market = suggestWage(p, year);
+      const underMarket = p.wage < market * 0.85;
       return {
         id: p.id,
         name: p.name,
@@ -384,6 +389,8 @@ function buildPanels(state: GameState) {
         ability: p.ability,
         value: gbp(valuePlayer(p, year)),
         wage: `£${Math.round(p.wage / 52 / 1000)}k/wk`,
+        underMarket,
+        marketWage: `£${Math.round(market / 52 / 1000)}k/wk`,
         contractUntil: p.contractUntil,
         happiness: p.morale, // 0..100
         minutes: `${mins}%`,

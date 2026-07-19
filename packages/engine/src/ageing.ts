@@ -12,6 +12,8 @@ import type { GameState, Position, PlayerState } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { clubSquadPlayers, recomputeClubStrength, overstackedStars } from './players.js';
+import { suggestWage } from './finance.js';
+import { divergenceFactor } from './divergence.js';
 
 /** Age at which decline begins, by position group (keepers last longest). */
 const DECLINE_START: Record<Position, number> = {
@@ -242,6 +244,43 @@ export function processContractLifecycle(state: GameState): string[] {
  * Light end-of-season morale drift from league finish (§17.4 stub; §6/M6 owns
  * the full happiness → departure loop). Winners' squads lift; strugglers dip.
  */
+/**
+ * The living wage market (§ internal friction). Football's going rate ratchets up
+ * with inflation year on year, so a player left on an old deal falls behind the
+ * market and grows restless for terms that match it — the "he wants a new
+ * contract to reflect his worth" story. The Director settles it by renewing him
+ * (which brings his wage up to the going rate).
+ *
+ * The USER's squad only — it is a dressing-room dynamic for the Director to
+ * manage. Gated on divergence: a passive, reality-default world holds to its real
+ * wage history untouched (and the calibration run, which never diverges, never
+ * sees it). Deterministic — no RNG. Modest and only for a MEANINGFUL shortfall,
+ * so it surfaces as unrest rather than reliably forcing an exit on its own.
+ */
+export function processWageMarketUnrest(state: GameState): void {
+  if (divergenceFactor(state) <= 0) return;
+  const year = Number(state.clock.date.slice(0, 4));
+  const restless: string[] = [];
+  for (const p of clubSquadPlayers(state, state.playerClub)) {
+    if (!p.curated || p.injury) continue;
+    const market = suggestWage(p, year);
+    if (p.wage >= market * 0.75) continue; // within a fair margin of the going rate
+    const shortfall = Math.min(1, 1 - p.wage / market); // 0.25..~1
+    const bump = 3 + Math.round(shortfall * 6); // ~4..9 per season behind
+    p.agitation = Math.max(0, Math.min(100, p.agitation + bump));
+    p.morale = Math.max(0, Math.min(100, p.morale - Math.round(bump / 3)));
+    if (p.ability >= 78) restless.push(p.name); // name only the ones worth flagging
+  }
+  if (restless.length) {
+    logEvent(state, {
+      category: 'development',
+      code: 'wage.market',
+      message: `The wage market has moved on: ${restless.slice(0, 4).join(', ')} want terms that match the going rate`,
+      data: { clubId: state.playerClub, count: restless.length },
+    });
+  }
+}
+
 export function processSeasonMorale(state: GameState): void {
   for (const league of Object.values(state.leagues)) {
     if (league.titleHistory.length === 0) continue;
