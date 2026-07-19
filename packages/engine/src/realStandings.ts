@@ -56,25 +56,47 @@ const REAL_STANDINGS: Record<string, Record<number, ClubId[]>> = {
   },
 };
 
-/** Realistic Premier-League points by finishing rank (20-team league). Strictly
- *  decreasing so an anchored table has a definite order. Champion ~88 down to a
- *  ~24-point bottom side. */
+/** Realistic Premier-League points by finishing rank (20-team, 38-game league).
+ *  Strictly decreasing so an anchored table has a definite order. Champion ~88
+ *  down to a ~24-point bottom side. This is the SHAPE reused (normalised) for every
+ *  league; the champion/wooden-spoon anchors below scale it per league and size. */
 const PL_POINTS_BY_RANK = [88, 80, 74, 69, 64, 60, 56, 53, 50, 48, 45, 43, 41, 39, 37, 35, 33, 30, 27, 24];
+/** The PL curve normalised to 1.0 (champion) … 0.0 (bottom) — a league-agnostic
+ *  shape re-scaled to each competition's realistic points spread. */
+const PL_SHAPE = PL_POINTS_BY_RANK.map((p) => (p - 24) / (88 - 24));
+
+/** Points-per-game for the champion and the wooden-spoon side, by league. The
+ *  spread is what makes an anchored table read true to its competition: La Liga's
+ *  Barça/Real routinely clear 90+ over 38, Serie A and the 34-game Bundesliga peak
+ *  lower. Multiplying by games played makes an 18-team (34-game) season and a
+ *  20-team (38-game) one each land at realistic totals off one curve. */
+const CHAMP_PPG: Record<string, number> = { english: 2.32, spanish: 2.42, italian: 2.30, german: 2.29 };
+const BOTTOM_PPG: Record<string, number> = { english: 0.63, spanish: 0.70, italian: 0.68, german: 0.62 };
 
 /** League key for the club's competition, or null if we don't anchor it. */
 function leagueKey(league: LeagueState): string | null {
-  // Only the English top flight is seeded so far (id like "england"/"epl").
   const id = league.id.toLowerCase();
   if (id.includes('england') || id.includes('premier') || id.includes('epl') || id.includes('eng')) return 'english';
+  if (id.includes('esp') || id.includes('liga') || id.includes('spain')) return 'spanish';
+  if (id.includes('ita') || id.includes('serie') || id.includes('italy')) return 'italian';
+  if (id.includes('ger') || id.includes('bundes') || id.includes('germany')) return 'german';
   return null;
 }
 
-/** Target points for a finishing rank in an n-club league. */
-function pointsForRank(rank0: number, n: number): number {
-  if (n === 20) return PL_POINTS_BY_RANK[rank0] ?? 30;
-  // Rescale the 20-team curve onto a differently-sized league.
-  const idx = Math.round((rank0 / Math.max(1, n - 1)) * (PL_POINTS_BY_RANK.length - 1));
-  return PL_POINTS_BY_RANK[Math.min(PL_POINTS_BY_RANK.length - 1, idx)] ?? 30;
+/** Target points for a finishing rank in an n-club league, on that league's own
+ *  realistic spread. The normalised PL shape is interpolated across the league's
+ *  size and mapped onto its champion…bottom band, so every competition anchors to
+ *  a table that reads true (a Bundesliga champion on ~78, not a rescaled 88). */
+function pointsForRank(rank0: number, n: number, key: string): number {
+  const games = (n - 1) * 2;
+  const champ = Math.round(games * (CHAMP_PPG[key] ?? 2.32));
+  const bottom = Math.round(games * (BOTTOM_PPG[key] ?? 0.63));
+  const t = n <= 1 ? 0 : rank0 / (n - 1); // 0 (champion) … 1 (bottom)
+  const idx = t * (PL_SHAPE.length - 1);
+  const lo = Math.floor(idx);
+  const hi = Math.min(PL_SHAPE.length - 1, Math.ceil(idx));
+  const shape = PL_SHAPE[lo]! + (PL_SHAPE[hi]! - PL_SHAPE[lo]!) * (idx - lo);
+  return Math.round(bottom + shape * (champ - bottom));
 }
 
 /** Plausible W/D/L/goals for a target points total at a finishing rank, so the
@@ -110,7 +132,7 @@ export function anchorSeasonToReality(state: GameState, league: LeagueState): vo
   order.forEach((clubId, rank0) => {
     const rec = league.standings[clubId];
     if (!rec) return; // in the real table but not simulated this season
-    const realPts = pointsForRank(rank0, n);
+    const realPts = pointsForRank(rank0, n, key);
     const real = synthRecord(realPts, rank0, n, league.seasonYear);
     // Blend the simulated record toward the real one by `weight`.
     const blended: TeamRecord = {
