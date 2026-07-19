@@ -411,6 +411,7 @@ export interface Consequence {
     | 'managerRelationship'
     | 'agitation' // raise a player's unrest
     | 'transferOut' // sell a player to `clubId` for `amount`
+    | 'sellAbroad' // sell a player OUT of the modelled world (China/Saudi/MLS market window)
     | 'signReal' // sign an incoming real target to the user club (funds + moves)
     | 'renewContract' // extend a player's contract by `amount` years
     | 'letContractLapse' // flag a player to leave on a free when his deal expires

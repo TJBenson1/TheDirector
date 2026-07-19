@@ -64,7 +64,15 @@ function recentlyFeatured(state: GameState, playerId: string, months: number): b
  *  sources of transfer sagas as the world diverges. */
 function realStars(state: GameState, minAbility: number): PlayerState[] {
   return Object.values(state.players).filter(
-    (p) => p.curated && p.club != null && !p.injury && p.ability >= minAbility && p.club !== state.playerClub,
+    (p) =>
+      p.curated &&
+      p.club != null &&
+      // The club must actually exist in the world — excludes a player sold OUT of
+      // it via a market window (parked at a phantom 'china'/'saudi'/'mls' id).
+      state.clubs[p.club] != null &&
+      !p.injury &&
+      p.ability >= minAbility &&
+      p.club !== state.playerClub,
   );
 }
 

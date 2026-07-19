@@ -15,11 +15,13 @@
  */
 
 import type {
+  ClubState,
   Consequence,
   Decision,
   GameState,
   LoggedEvent,
   PlayerState,
+  YearMonth,
 } from './types.js';
 import { Rng } from './rng.js';
 import { parseYearMonth } from './clock.js';
@@ -29,6 +31,8 @@ import { eventsSince } from './eventLog.js';
 import { appendMemory } from './memory.js';
 import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 import { executeTransfer } from './transfers.js';
+import { clubSquadPlayers, recomputeClubStrength } from './players.js';
+import { valuePlayer } from './finance.js';
 
 // ── Consequence application ──────────────────────────────────────────────────
 
@@ -91,6 +95,25 @@ export function applyConsequence(state: GameState, c: Consequence): void {
         if (buyer && c.amount) buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, c.amount);
         const res = executeTransfer(state, { playerId: c.playerId, toClub: c.clubId, fee: c.amount ?? 0 }, { reality: true });
         if (res.ok) markLedgerRealized(state, c.tag);
+      }
+      break;
+    }
+    case 'sellAbroad': {
+      // Sell a player OUT of the modelled world (China/Saudi/MLS market window):
+      // pull him from his club's squad, credit the fee, and park him at the
+      // non-league market sentinel (`clubId`, e.g. 'china'). His departure is a
+      // real squad change, so recompute the seller's strength.
+      if (c.playerId) {
+        const p = state.players[c.playerId];
+        if (p && p.club) {
+          const seller = state.clubs[p.club];
+          if (seller) {
+            seller.squad = seller.squad.filter((id) => id !== p.id);
+            seller.finances.transferBudget += c.amount ?? 0;
+            p.club = c.clubId ?? 'abroad';
+            recomputeClubStrength(state, seller.id);
+          }
+        }
       }
       break;
     }
@@ -567,11 +590,173 @@ function fireScriptedEvents(state: GameState): void {
   }
 }
 
+// ── Macro market windows (China / MLS / Saudi) ───────────────────────────────
+
+function ymIndex(date: string): number {
+  return Number(date.slice(0, 4)) * 12 + (Number(date.slice(5, 7)) - 1);
+}
+
+/**
+ * A date-anchored world event. `world` fires its global colour once when the date
+ * is reached; `build` optionally raises an interactive decision for the user's
+ * club. Market windows use `windowMonths` to stay open a while after the date.
+ */
+interface MacroEvent {
+  id: string;
+  date: YearMonth;
+  windowMonths?: number;
+  /** Logged world colour, applied once when the date is reached. */
+  world?: (state: GameState) => void;
+  /** An interactive decision for the user's club, or null to stay world-only. */
+  build?: (state: GameState, userClub: ClubState) => Decision | null;
+}
+
+/**
+ * A market-window selling opportunity (China / Saudi / MLS). When a cash-rich
+ * destination opens up, a real, inflated bid arrives for one of the user's players
+ * who fits that market's profile — a chance to cash in above true value.
+ * Deterministic (picks the highest-valued eligible player), and "keep him" is the
+ * first choice, so a passive/reality run never sells. Returns null (no decision)
+ * if the squad has no one who fits — the world colour still fires.
+ */
+function marketSaleDecision(
+  state: GameState,
+  userClub: ClubState,
+  o: { market: string; marketName: string; minAge: number; minAbility: number; maxAbility?: number; feeMult: number; pitch: string },
+): Decision | null {
+  const year = Number(state.clock.date.slice(0, 4));
+  const eligible = clubSquadPlayers(state, userClub.id).filter(
+    (p) => !p.injury && year - p.birthYear >= o.minAge && p.ability >= o.minAbility && p.ability <= (o.maxAbility ?? 99),
+  );
+  if (eligible.length === 0) return null;
+  const target = eligible
+    .slice()
+    .sort((a, b) => valuePlayer(b, year) - valuePlayer(a, year) || a.id.localeCompare(b.id))[0]!;
+  const pendingId = `macro:${o.market}:${target.id}`;
+  if (state.pendingDecisions.some((d) => d.id.startsWith(pendingId))) return null;
+  const fee = Math.round(valuePlayer(target, year) * o.feeMult);
+  const feeM = Math.round(fee / 1_000_000);
+  return {
+    id: `${pendingId}:${state.clock.date}`,
+    title: `${o.marketName} table a huge bid for ${target.name}`,
+    description: `${o.pitch} They have tabled an offer for ${target.name} that dwarfs his market value — £${feeM}m. Cash in on a fee reality would envy, or keep your man?`,
+    interrupt: true,
+    clubId: userClub.id,
+    category: 'transfer',
+    choices: [
+      {
+        id: 'keep',
+        label: 'Keep him — reject the money',
+        successProbability: 0.6,
+        onSuccess: [{ kind: 'morale', playerId: target.id, amount: 4 }, { kind: 'memory', tag: 'transfer-saga', text: `Turned down ${o.marketName}'s money for ${target.name}.` }],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 10 }],
+      },
+      {
+        id: 'cash-in',
+        label: `Cash in (£${feeM}m)`,
+        successProbability: 0.9,
+        onSuccess: [{ kind: 'sellAbroad', playerId: target.id, clubId: o.market, amount: fee }, { kind: 'memory', tag: 'transfer-saga', text: `Sold ${target.name} to ${o.marketName} for a fee above his worth.` }],
+        onFailure: [{ kind: 'agitation', playerId: target.id, amount: 8 }],
+      },
+    ],
+    falloutIfIgnored: [{ kind: 'memory', tag: 'transfer-saga', text: `${o.marketName}'s money for ${target.name} went unanswered.` }],
+    memoryTags: ['transfer-saga', target.id],
+  };
+}
+
+const MACRO_EVENTS: MacroEvent[] = [
+  {
+    id: 'china-2016',
+    date: '2016-01',
+    windowMonths: 6,
+    world: (state) => {
+      logEvent(state, {
+        category: 'event', code: 'macro.world',
+        message: 'The Chinese Super League is spending extraordinary sums, luring established names east with wages Europe cannot match',
+        data: { id: 'china-2016' },
+      });
+      appendMemory(state, 'world', 'The Chinese Super League spending boom opens a lucrative exit for established players.');
+    },
+    build: (state, club) => marketSaleDecision(state, club, {
+      market: 'china', marketName: 'A Chinese Super League club', minAge: 27, minAbility: 74, maxAbility: 87, feeMult: 1.9,
+      pitch: 'A cash-flooded Chinese Super League club has come calling.',
+    }),
+  },
+  {
+    id: 'mls-2020',
+    date: '2020-07',
+    windowMonths: 4,
+    world: (state) => {
+      logEvent(state, {
+        category: 'event', code: 'macro.world',
+        message: 'MLS has become a real destination for stars seeking a fresh challenge — and a designated-player payday — in their thirties',
+        data: { id: 'mls-2020' },
+      });
+      appendMemory(state, 'world', 'MLS is now a genuine landing spot for experienced stars — a graceful, well-paid exit.');
+    },
+    build: (state, club) => marketSaleDecision(state, club, {
+      market: 'mls', marketName: 'An MLS franchise', minAge: 31, minAbility: 76, feeMult: 1.4,
+      pitch: 'An ambitious MLS franchise wants a marquee designated player.',
+    }),
+  },
+  {
+    id: 'saudi-2023',
+    date: '2023-07',
+    windowMonths: 4,
+    world: (state) => {
+      logEvent(state, {
+        category: 'event', code: 'macro.world',
+        message: "Saudi Arabia's PIF-backed clubs launch a stunning raid on the game's biggest names, dangling sums that rewrite the market",
+        data: { id: 'saudi-2023' },
+      });
+      appendMemory(state, 'world', "The PIF-funded Saudi Pro League detonates the market, chasing the game's marquee names.");
+    },
+    build: (state, club) => marketSaleDecision(state, club, {
+      market: 'saudi', marketName: 'A PIF-backed Saudi Pro League club', minAge: 29, minAbility: 80, feeMult: 1.7,
+      pitch: 'A PIF-bankrolled Saudi Pro League club has arrived with a blank cheque.',
+    }),
+  },
+];
+
+/**
+ * Fire date-anchored macro market windows (China 2016, MLS 2020, Saudi 2023).
+ * Deterministic and dated — each fires once when its window is reached, tracked in
+ * meta.firedScripted. Every anchor is in 2016+, beyond the calibration horizon
+ * (man-utd-1999 runs to 2014), so this is calibration-safe: the harness never
+ * reaches these dates. Consumes no RNG.
+ */
+export function fireMacroEvents(state: GameState): void {
+  const curYM = ymIndex(state.clock.date);
+  for (const ev of MACRO_EVENTS) {
+    const key = `macro:${ev.id}`;
+    if (state.meta.firedScripted.includes(key)) continue;
+    const evYM = ymIndex(ev.date);
+    if (curYM < evYM) continue;
+    // Past the window with no fire — mark it done so it never fires late.
+    if (curYM > evYM + (ev.windowMonths ?? 3)) { state.meta.firedScripted.push(key); continue; }
+    state.meta.firedScripted.push(key);
+    ev.world?.(state);
+    const club = state.clubs[state.playerClub];
+    if (ev.build && club) {
+      const decision = ev.build(state, club);
+      if (decision) {
+        state.pendingDecisions.push(decision);
+        logEvent(state, {
+          category: 'event', code: 'macro.fired',
+          message: `Macro event reaches ${club.name}: ${ev.id}`,
+          data: { id: ev.id, clubId: club.id },
+        });
+      }
+    }
+  }
+}
+
 // ── Monthly entry point ──────────────────────────────────────────────────────
 
 /** Fire scripted + procedural events for the current month. */
 export function rollEventsMonth(state: GameState, rng: Rng): void {
   fireScriptedEvents(state);
+  fireMacroEvents(state);
   rollScandals(state, rng.fork(`events:${state.clock.date}`));
   // Non-real storylines emerge as the world diverges from real history (§9f).
   rollDivergentStoryline(state, rng.fork(`divergence:${state.clock.date}`));
