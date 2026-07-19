@@ -111,13 +111,31 @@ export async function narrate(opts: {
       working.push({ role: 'user', content: results });
     }
   } catch {
-    // A model call failed or timed out. Keep the Director's game intact and hand
-    // back an in-world nudge rather than a dead line, so he can simply try again.
-    if (!finalText) {
-      finalText = state
-        ? 'The line to the boardroom crackled for a moment there — say that again and I’ll pick it straight up.'
-        : 'The line crackled — tell me which job you want and we’ll get started.';
+    // A model call failed or timed out mid-loop — fall through; the synthesis
+    // step below tries to answer from what was gathered, else a graceful nudge.
+  }
+
+  // If the loop stopped (budget or hop cap) with tools mid-flight and no prose
+  // written yet, force ONE final answer from everything gathered — no tools — so a
+  // big multi-part turn (five signings, three enquiries, a board meeting) still
+  // REPLIES with what it found instead of dying on a bare "line went dead".
+  if (!finalText && working.length > 2) {
+    try {
+      const wrap = await client.messages.create({
+        model: MODEL,
+        max_tokens: 1600,
+        system: `${SYSTEM}\n\nWrap up NOW: answer the Director in prose from what you have already gathered. Do not ask for more time and do not call any tools.`,
+        messages: working,
+      });
+      finalText = wrap.content.filter((b): b is Anthropic.TextBlock => b.type === 'text').map((b) => b.text).join('\n').trim();
+    } catch {
+      /* fall through to the nudge */
     }
+  }
+  if (!finalText) {
+    finalText = state
+      ? 'The line to the boardroom crackled for a moment there — say that again and I’ll pick it straight up.'
+      : 'The line crackled — tell me which job you want and we’ll get started.';
   }
 
   // Keep the client-facing history lean: only the Director's message and the
