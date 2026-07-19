@@ -42,6 +42,19 @@ export const GRADUATES_GER: CuratedSeed[] = [
   q('dortmund', 'bellingham_ger', 'Jude Bellingham', 2003, 'England', ['CM', 'AM'], 70, 93, 2025, 15, t(9, 7, 10, 8, 4, 8)),
   q('bayern', 'musiala_ger', 'Jamal Musiala', 2003, 'Germany', ['AM'], 64, 91, 2026, 15, t(9, 6, 9, 9, 4, 8)),
   q('leverkusen', 'wirtz_ger', 'Florian Wirtz', 2003, 'Germany', ['AM'], 66, 92, 2027, 20, t(10, 6, 9, 9, 4, 8)),
+
+  // ── Squad-depth Bundesliga academy products (2004-2011) ──
+  // Real breakthroughs beyond the marquee names — Stuttgart's and Dortmund's famous
+  // youth lines, Bayern's Alaba, Gladbach's ter Stegen — the home-grown spine that
+  // keeps the German world real over a long save.
+  q('stuttgart', 'gomez_ger', 'Mario Gómez', 1985, 'Germany', ['ST'], 64, 84, 2008, 20, t(8, 6, 8, 7, 5, 7)),
+  q('dortmund', 'sahin_ger', 'Nuri Şahin', 1988, 'Turkey', ['CM'], 62, 84, 2009, 25, t(8, 6, 8, 8, 5, 7)),
+  q('stuttgart', 'khedira_ger', 'Sami Khedira', 1987, 'Germany', ['CM', 'DM'], 62, 85, 2010, 25, t(9, 6, 9, 7, 4, 8)),
+  q('hertha', 'boateng_ger', 'Jérôme Boateng', 1988, 'Germany', ['CB'], 62, 85, 2010, 25, t(7, 6, 8, 6, 5, 7)),
+  q('schalke', 'howedes_ger', 'Benedikt Höwedes', 1988, 'Germany', ['CB'], 60, 82, 2011, 20, t(9, 5, 8, 9, 4, 7), { loyalty: 90 }),
+  q('bayern', 'alaba_ger', 'David Alaba', 1992, 'Austria', ['LB', 'CM'], 62, 87, 2015, 15, t(9, 6, 9, 9, 4, 8)),
+  q('dortmund', 'gotze_ger', 'Mario Götze', 1992, 'Germany', ['AM'], 62, 87, 2015, 30, t(7, 6, 8, 7, 5, 8)),
+  q('gladbach', 'terstegen_ger', 'Marc-André ter Stegen', 1992, 'Germany', ['GK'], 62, 88, 2015, 15, t(9, 6, 9, 8, 4, 8)),
 ];
 
 export const INTAKES_GER: AcademyIntake[] = [
@@ -64,4 +77,14 @@ export const INTAKES_GER: AcademyIntake[] = [
   { clubId: 'dortmund', year: 2020, playerId: 'cur_bellingham_ger' },
   { clubId: 'bayern', year: 2021, playerId: 'cur_musiala_ger' },
   { clubId: 'leverkusen', year: 2021, playerId: 'cur_wirtz_ger' },
+
+  // ── Squad-depth academy products, at their real debut years ──
+  { clubId: 'stuttgart', year: 2004, playerId: 'cur_gomez_ger' },
+  { clubId: 'dortmund', year: 2005, playerId: 'cur_sahin_ger' },
+  { clubId: 'stuttgart', year: 2006, playerId: 'cur_khedira_ger' },
+  { clubId: 'hertha', year: 2007, playerId: 'cur_boateng_ger' },
+  { clubId: 'schalke', year: 2007, playerId: 'cur_howedes_ger' },
+  { clubId: 'bayern', year: 2010, playerId: 'cur_alaba_ger' },
+  { clubId: 'dortmund', year: 2010, playerId: 'cur_gotze_ger' },
+  { clubId: 'gladbach', year: 2011, playerId: 'cur_terstegen_ger' },
 ];

@@ -42,6 +42,25 @@ export const GRADUATES_ESP: CuratedSeed[] = [
   q('barcelona', 'pedri_esp', 'Pedri', 2002, 'Spain', ['CM', 'AM'], 68, 91, 2026, 20, t(10, 5, 9, 9, 3, 8)),
   q('barcelona', 'gavi_esp', 'Gavi', 2004, 'Spain', ['CM'], 64, 89, 2026, 20, t(9, 7, 9, 9, 5, 8)),
   q('barcelona', 'fati_esp', 'Ansu Fati', 2002, 'Spain', ['LW', 'ST'], 62, 88, 2027, 30, t(8, 6, 9, 9, 5, 8)),
+
+  // ── Squad-depth La Liga academy products (2000-2013) ──
+  // Real cantera breakthroughs beyond the marquee names — Atléti's Torres, the
+  // Basque conveyor at Athletic and Sociedad, Sevilla's and Villarreal's youth —
+  // the home-grown spine that keeps the Spanish world real over a long save.
+  q('atletico', 'torres_esp', 'Fernando Torres', 1984, 'Spain', ['ST'], 68, 87, 2004, 25, t(8, 6, 9, 9, 5, 8), { loyalty: 88 }),
+  q('real_sociedad', 'xabi_esp', 'Xabi Alonso', 1981, 'Spain', ['CM', 'DM'], 66, 87, 2004, 15, t(10, 5, 9, 8, 3, 8)),
+  q('real_sociedad', 'griezmann_esp', 'Antoine Griezmann', 1991, 'France', ['ST', 'AM'], 62, 88, 2013, 15, t(9, 6, 9, 8, 4, 8)),
+  q('athletic', 'llorente_esp', 'Fernando Llorente', 1985, 'Spain', ['ST'], 64, 82, 2009, 25, t(8, 5, 8, 8, 5, 7)),
+  q('athletic', 'javimartinez_esp', 'Javi Martínez', 1988, 'Spain', ['DM', 'CB'], 62, 85, 2011, 20, t(9, 5, 8, 8, 4, 7)),
+  q('athletic', 'muniain_esp', 'Iker Muniain', 1992, 'Spain', ['LW', 'AM'], 60, 82, 2015, 25, t(8, 6, 8, 9, 5, 7), { loyalty: 90 }),
+  q('athletic', 'laporte_esp', 'Aymeric Laporte', 1994, 'France', ['CB'], 62, 85, 2017, 20, t(9, 6, 8, 7, 4, 7)),
+  q('sevilla', 'reyes_esp', 'José Antonio Reyes', 1983, 'Spain', ['LW', 'RW'], 66, 84, 2004, 25, t(6, 7, 8, 7, 6, 7)),
+  q('sevilla', 'navas_esp', 'Jesús Navas', 1985, 'Spain', ['RW'], 64, 84, 2008, 30, t(8, 5, 8, 9, 5, 6), { loyalty: 90 }),
+  q('villarreal', 'cazorla_esp', 'Santi Cazorla', 1984, 'Spain', ['AM', 'LW'], 64, 85, 2008, 25, t(9, 6, 8, 8, 4, 8)),
+  q('valencia', 'albiol_esp', 'Raúl Albiol', 1985, 'Spain', ['CB'], 62, 82, 2009, 20, t(8, 5, 8, 8, 4, 7)),
+  q('barcelona', 'bojan_esp', 'Bojan Krkić', 1990, 'Spain', ['ST', 'RW'], 62, 80, 2011, 25, t(8, 6, 8, 8, 5, 7)),
+  q('barcelona', 'thiago_esp', 'Thiago Alcântara', 1991, 'Spain', ['CM', 'AM'], 64, 87, 2014, 30, t(9, 6, 9, 8, 4, 8)),
+  q('barcelona', 'sergiroberto_esp', 'Sergi Roberto', 1992, 'Spain', ['CM', 'RB'], 62, 82, 2017, 20, t(9, 5, 8, 9, 4, 8), { loyalty: 90 }),
 ];
 
 export const INTAKES_ESP: AcademyIntake[] = [
@@ -64,4 +83,20 @@ export const INTAKES_ESP: AcademyIntake[] = [
   { clubId: 'barcelona', year: 2020, playerId: 'cur_pedri_esp' },
   { clubId: 'barcelona', year: 2019, playerId: 'cur_fati_esp' },
   { clubId: 'barcelona', year: 2021, playerId: 'cur_gavi_esp' },
+
+  // ── Squad-depth cantera products, at their real debut years ──
+  { clubId: 'real_sociedad', year: 2000, playerId: 'cur_xabi_esp' },
+  { clubId: 'sevilla', year: 2000, playerId: 'cur_reyes_esp' },
+  { clubId: 'atletico', year: 2001, playerId: 'cur_torres_esp' },
+  { clubId: 'sevilla', year: 2003, playerId: 'cur_navas_esp' },
+  { clubId: 'villarreal', year: 2003, playerId: 'cur_cazorla_esp' },
+  { clubId: 'valencia', year: 2004, playerId: 'cur_albiol_esp' },
+  { clubId: 'athletic', year: 2005, playerId: 'cur_llorente_esp' },
+  { clubId: 'athletic', year: 2006, playerId: 'cur_javimartinez_esp' },
+  { clubId: 'barcelona', year: 2007, playerId: 'cur_bojan_esp' },
+  { clubId: 'real_sociedad', year: 2009, playerId: 'cur_griezmann_esp' },
+  { clubId: 'athletic', year: 2009, playerId: 'cur_muniain_esp' },
+  { clubId: 'barcelona', year: 2009, playerId: 'cur_thiago_esp' },
+  { clubId: 'athletic', year: 2012, playerId: 'cur_laporte_esp' },
+  { clubId: 'barcelona', year: 2013, playerId: 'cur_sergiroberto_esp' },
 ];

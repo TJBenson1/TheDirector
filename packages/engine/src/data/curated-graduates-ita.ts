@@ -39,6 +39,16 @@ export const GRADUATES_ITA: CuratedSeed[] = [
   q('milan', 'tonali_ita', 'Sandro Tonali', 2000, 'Italy', ['DM', 'CM'], 66, 88, 2025, 15, t(9, 6, 9, 8, 4, 8)),
   q('roma', 'zaniolo_ita', 'Nicolò Zaniolo', 1999, 'Italy', ['AM', 'RW'], 64, 86, 2024, 30, t(6, 7, 8, 7, 6, 8)),
   q('juventus', 'kean_ita', 'Moise Kean', 2000, 'Italy', ['ST'], 62, 85, 2025, 20, t(7, 7, 8, 7, 6, 8)),
+
+  // ── Squad-depth Serie A academy products (2003-2015) ──
+  // Real vivaio breakthroughs beyond the marquee names — Inter's Balotelli, Milan's
+  // Donnarumma, Roma's and Atalanta's youth lines — keeping the Italian world real.
+  q('roma', 'aquilani_ita', 'Alberto Aquilani', 1984, 'Italy', ['CM', 'AM'], 64, 83, 2007, 40, t(8, 5, 8, 8, 5, 7)),
+  q('juventus', 'giovinco_ita', 'Sebastian Giovinco', 1987, 'Italy', ['AM', 'ST'], 62, 80, 2010, 25, t(8, 6, 8, 7, 5, 7)),
+  q('inter', 'balotelli_ita', 'Mario Balotelli', 1990, 'Italy', ['ST'], 64, 86, 2011, 30, t(4, 8, 8, 5, 8, 7)),
+  q('atalanta', 'bonaventura_ita', 'Giacomo Bonaventura', 1989, 'Italy', ['AM', 'CM'], 60, 80, 2011, 25, t(8, 5, 8, 8, 4, 7)),
+  q('roma', 'romagnoli_ita', 'Alessio Romagnoli', 1995, 'Italy', ['CB'], 60, 83, 2017, 20, t(8, 6, 8, 7, 4, 7)),
+  q('milan', 'donnarumma_ita', 'Gianluigi Donnarumma', 1999, 'Italy', ['GK'], 66, 89, 2018, 15, t(8, 6, 8, 7, 4, 8)),
 ];
 
 export const INTAKES_ITA: AcademyIntake[] = [
@@ -58,4 +68,12 @@ export const INTAKES_ITA: AcademyIntake[] = [
   { clubId: 'inter', year: 2019, playerId: 'cur_barella_ita' },
   { clubId: 'juventus', year: 2017, playerId: 'cur_kean_ita' },
   { clubId: 'milan', year: 2020, playerId: 'cur_tonali_ita' },
+
+  // ── Squad-depth vivaio products, at their real debut years ──
+  { clubId: 'roma', year: 2003, playerId: 'cur_aquilani_ita' },
+  { clubId: 'juventus', year: 2006, playerId: 'cur_giovinco_ita' },
+  { clubId: 'inter', year: 2007, playerId: 'cur_balotelli_ita' },
+  { clubId: 'atalanta', year: 2007, playerId: 'cur_bonaventura_ita' },
+  { clubId: 'roma', year: 2013, playerId: 'cur_romagnoli_ita' },
+  { clubId: 'milan', year: 2015, playerId: 'cur_donnarumma_ita' },
 ];
