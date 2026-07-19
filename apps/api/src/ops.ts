@@ -152,12 +152,25 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
     case 'sell': {
       const p = s.players[String(input.playerId)];
       if (!p || p.club !== s.playerClub) return { state: s, result: { ok: false, reason: 'Not your player.' } };
+      const buyer = s.clubs[String(input.toClub)];
+      if (!buyer) return { state: s, result: { ok: false, reason: 'Unknown buying club.' } };
       // Never sell for £0 because the fee arrived missing/garbled — fall back to
       // the player's market value so the sale actually banks money.
       const rawFee = Number(input.fee);
       const fee = Number.isFinite(rawFee) && rawFee > 0 ? Math.round(rawFee) : Math.round(valuePlayer(p, currentYear(s)));
-      const result = executeTransfer(s, { playerId: p.id, toClub: String(input.toClub), fee });
-      return { state: s, result: result.ok ? { ok: true, sold: p.name, to: s.clubs[String(input.toClub)]?.name, fee: m(result.fee) } : { ok: false, reason: result.reason } };
+      // A Director-sanctioned sale always completes: the buying club stretches to
+      // the agreed fee (as real clubs do for a target they want), so the sale
+      // reliably banks money instead of silently failing when that club's kitty is
+      // short — the "fee never landed" bug. Report the resulting budget so the
+      // narrator states the real number rather than guessing.
+      buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, fee);
+      const result = executeTransfer(s, { playerId: p.id, toClub: buyer.id, fee });
+      return {
+        state: s,
+        result: result.ok
+          ? { ok: true, sold: p.name, to: buyer.name, fee: m(result.fee), newBudget: m(s.clubs[s.playerClub]!.finances.transferBudget) }
+          : { ok: false, reason: result.reason },
+      };
     }
 
     case 'renew': {

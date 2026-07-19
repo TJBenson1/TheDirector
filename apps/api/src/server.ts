@@ -196,8 +196,13 @@ const routes: Record<string, Handler> = {
     const s = state as GameState;
     const p = s.players[playerId];
     if (!p || p.club !== s.playerClub) return { state: s, view: buildView(s), result: { ok: false, reason: 'Not your player.' } };
+    const buyer = s.clubs[toClub as string];
+    if (!buyer) return { state: s, view: buildView(s), result: { ok: false, reason: 'Unknown buying club.' } };
     const price = fee !== undefined ? Math.round(fee) : Math.round(valuePlayer(p, currentYear(s)));
-    const result = executeTransfer(s, { playerId, toClub: toClub as string, fee: price });
+    // A Director-sanctioned sale always completes — the buyer stretches to the
+    // agreed fee, so the sale banks money instead of failing on the buyer's kitty.
+    buyer.finances.transferBudget = Math.max(buyer.finances.transferBudget, price);
+    const result = executeTransfer(s, { playerId, toClub: buyer.id, fee: price });
     return { state: s, view: buildView(s), result };
   },
 
