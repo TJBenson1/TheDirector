@@ -22,6 +22,9 @@ import {
   currentYear,
   narrativeContext,
   coachBriefing,
+  managerRoom,
+  appointCoach,
+  coachArchetypes,
   standingsOrder,
   clubSquadPlayers,
   isProcedural,
@@ -84,6 +87,26 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
 
     case 'manager_meeting':
       return { state: s, result: coachBriefing(s) };
+
+    case 'manager_room':
+      return { state: s, result: managerRoom(s) };
+
+    case 'change_coach': {
+      const styles = coachArchetypes();
+      // If no style is named, list the choices rather than guessing.
+      if (!input.style && !input.name) {
+        return { state: s, result: { chooseFrom: styles.map((c) => ({ style: c.archetype, plays: c.style, formation: c.formation })) } };
+      }
+      const wanted = String(input.style ?? '').toLowerCase().replace(/\s+/g, '-');
+      const match = styles.find((c) => c.archetype === wanted);
+      appointCoach(s, {
+        identity: input.name ? String(input.name) : undefined,
+        archetype: match?.archetype,
+        formation: input.formation ? (String(input.formation) as any) : undefined,
+      });
+      const c = s.managerRelations;
+      return { state: s, result: { ok: true, coach: c.identity, style: c.archetype, formation: c.preferredFormation } };
+    }
 
     case 'squad': {
       const year = currentYear(s);
@@ -226,6 +249,8 @@ export const TOOL_SCHEMAS = [
   { name: 'new_game', description: 'Start a new career at a scenario id.', input_schema: { type: 'object', properties: { scenarioId: { type: 'string' }, seed: { type: 'string' } }, required: ['scenarioId'] } },
   { name: 'situation', description: 'Current story: club, board mood, coach, squad tensions, open decisions.', input_schema: { type: 'object', properties: {} } },
   { name: 'manager_meeting', description: "The head coach's briefing: his mood, the club's priority (league/Europe/both), the shape he wants, his best XI, players he isn't sold on, positions to strengthen, and concrete targets. Use it for the opening manager meeting and whenever the Director asks the coach's view.", input_schema: { type: 'object', properties: {} } },
+  { name: 'manager_room', description: "The head coach's full dashboard: his happiness, playing style and formation, first-choice XI (top performers marked), position-by-position depth chart, rising stars and whether they're getting minutes to develop, concerns (age/form/happiness/injury/contract), and his transfer wishlist in and out. Use when the Director asks about the squad, the coach's plans, who's developing, who to sell, or the state of the dressing room.", input_schema: { type: 'object', properties: {} } },
+  { name: 'change_coach', description: "Appoint a new head coach — the Director's prerogative, so it always goes through. Call with no arguments to list the playing styles to choose from; then call again with a style (and optionally a name and formation) to make the change. Never refuse a coach change.", input_schema: { type: 'object', properties: { style: { type: 'string', description: 'possession | gegenpress | pragmatic-counter | defensive-block | man-manager | balanced' }, name: { type: 'string', description: "the new coach's name (optional)" }, formation: { type: 'string' } }, required: [] } },
   { name: 'advance', description: 'Move time forward one step (window phase or month). Returns what happened + new decisions.', input_schema: { type: 'object', properties: {} } },
   { name: 'squad', description: 'Your full squad with age, ability, morale, contract, wages.', input_schema: { type: 'object', properties: {} } },
   { name: 'league_table', description: 'The current league table.', input_schema: { type: 'object', properties: {} } },

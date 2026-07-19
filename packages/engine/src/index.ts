@@ -172,9 +172,12 @@ export {
   coachForScenario,
   coachFit,
   resolveCoachFriction,
+  appointCoach,
+  coachArchetypes,
   playerStyleProfile,
   type CoachFit,
   type FitVerdict,
+  type CoachOption,
 } from './coaches.js';
 export {
   formationLabel,
@@ -185,7 +188,14 @@ export {
 export { narrativeContext, type NarrativeContext } from './narrative.js';
 export {
   coachBriefing,
+  managerRoom,
   type CoachBriefing,
   type BriefingXI,
   type BriefingTarget,
+  type ManagerRoom,
+  type RoomXI,
+  type DepthLine,
+  type RisingStar,
+  type Concern,
+  type OffloadItem,
 } from './briefing.js';

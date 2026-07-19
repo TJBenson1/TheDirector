@@ -8,12 +8,13 @@
  * the narrator turns it into the manager's own voice.
  */
 
-import type { GameState, Position, PlayerState } from './types.js';
+import type { CoachArchetype, GameState, Position, PlayerState } from './types.js';
 import type { Formation } from './tactics.js';
 import { formationLabel } from './tactics.js';
 import { clubSquadPlayers } from './players.js';
 import { effectiveAbility } from './adaptation.js';
 import { coachFit } from './coaches.js';
+import { estimateMinutesShare } from './development.js';
 import { suggestTargets } from './recommend.js';
 import { getScenario } from './scenarios.js';
 
@@ -186,4 +187,165 @@ export function coachBriefing(state: GameState): CoachBriefing {
     targets: targets.slice(0, 4),
     // starters kept implicit in bestXI; exported set unused externally.
   } satisfies CoachBriefing;
+}
+
+// ── Manager's Room (the coach's dashboard) ───────────────────────────────────
+
+export interface RoomXI { slot: Position; name: string; ability: number; natural: boolean; topPerformer: boolean }
+export interface DepthLine { position: Position; label: string; players: Array<{ name: string; ability: number; age: number; starter: boolean; injured: boolean }> }
+export interface RisingStar { name: string; age: number; ability: number; potential: number; minutesPct: number; developing: boolean; note: string }
+export interface Concern { name: string; issue: string; severity: 'watch' | 'urgent' }
+export interface OffloadItem { name: string; reason: string }
+
+export interface ManagerRoom {
+  coach: string;
+  happiness: string;
+  happinessPct: number;
+  style: string;
+  formation: string;
+  priority: string;
+  xi: RoomXI[];
+  depth: DepthLine[];
+  risingStars: RisingStar[];
+  concerns: Concern[];
+  wants: BriefingTarget[];
+  offload: OffloadItem[];
+}
+
+const STYLE_PROSE: Record<CoachArchetype, string> = {
+  possession: 'Possession — patient build-up, technical midfielders, a high line.',
+  gegenpress: 'Gegenpressing — high tempo, win it back high up, runners everywhere.',
+  'pragmatic-counter': 'Pragmatic — a solid shape that hits hard on the counter.',
+  'defensive-block': 'Defensive — a deep, compact block that gives little away.',
+  'man-manager': 'Man-management — gets a tune out of big characters, shape flexes to the group.',
+  balanced: 'Balanced — sets the plan by the opponent, no fixed dogma.',
+};
+
+/** Canonical spine order for a readable depth chart. */
+const DEPTH_ORDER: Position[] = ['GK', 'RB', 'CB', 'LB', 'DM', 'CM', 'AM', 'RW', 'LW', 'ST'];
+
+/**
+ * The Manager's Room — the head coach's full dashboard for the Director: his mood,
+ * style and shape; the first-choice XI with the standout performers marked; a
+ * position-by-position depth chart; the rising stars and whether they're getting
+ * the minutes to develop; the concerns (age, form, happiness, injury, contract);
+ * and his transfer wishlist, in and out. Pure and deterministic (scouting inside
+ * suggestTargets forks its own stream), so reading it never perturbs the sim.
+ */
+export function managerRoom(state: GameState): ManagerRoom {
+  const coach = state.managerRelations;
+  const formation = coach.activeFormation ?? coach.preferredFormation;
+  const year = Number(state.clock.date.slice(0, 4));
+  const club = state.clubs[state.playerClub]!;
+  const squad = clubSquadPlayers(state, state.playerClub);
+  const brief = coachBriefing(state);
+
+  const xiRaw = bestEleven(state, formation);
+  const starterNames = new Set(xiRaw.map((x) => x.name));
+  // Standout performers: the three highest by last season's rating (or ability
+  // before any season is banked), so the coach's key men are flagged.
+  const perf = (name: string): number => {
+    const p = squad.find((q) => q.name === name);
+    if (!p) return 0;
+    return p.lastSeason ? p.lastSeason.rating : effectiveAbility(p) / 10 - 0.6;
+  };
+  const topThree = new Set([...xiRaw].sort((a, b) => perf(b.name) - perf(a.name)).slice(0, 3).map((x) => x.name));
+  const xi: RoomXI[] = xiRaw.map((x) => ({ ...x, topPerformer: topThree.has(x.name) }));
+
+  // Depth chart: for each spine position, everyone who can fill it, best first.
+  const depth: DepthLine[] = [];
+  for (const pos of DEPTH_ORDER) {
+    const players = squad
+      .filter((p) => p.positions.includes(pos))
+      .sort((a, b) => effectiveAbility(b) - effectiveAbility(a))
+      .map((p) => ({
+        name: p.name,
+        ability: Math.round(effectiveAbility(p)),
+        age: year - p.birthYear,
+        starter: starterNames.has(p.name) && xiRaw.find((x) => x.name === p.name)?.slot === pos,
+        injured: !!p.injury,
+      }));
+    if (players.length) depth.push({ position: pos, label: POSITION_LABEL[pos], players });
+  }
+
+  // Rising stars: the young with real upside, and whether they're playing enough
+  // to fulfil it (a benched prospect stalls, §5).
+  const risingStars: RisingStar[] = squad
+    .filter((p) => year - p.birthYear <= 21 && p.potentialCeiling - p.ability >= 5)
+    .sort((a, b) => b.potentialCeiling - a.potentialCeiling)
+    .slice(0, 6)
+    .map((p) => {
+      const minutesPct = Math.round(estimateMinutesShare(state, club, p) * 100);
+      const developing = minutesPct >= 35;
+      return {
+        name: p.name,
+        age: year - p.birthYear,
+        ability: p.ability,
+        potential: p.potentialCeiling,
+        minutesPct,
+        developing,
+        note: developing
+          ? 'getting the minutes to grow'
+          : minutesPct >= 15
+            ? 'needs more game time to keep developing'
+            : 'stuck on the fringe — will stall unless he plays or moves on loan',
+      };
+    });
+
+  // Concerns: the one most pressing issue per player, urgent first.
+  const concerns: Concern[] = [];
+  for (const p of squad) {
+    const age = year - p.birthYear;
+    const star = p.ability >= 82;
+    if (p.injury) {
+      concerns.push({ name: p.name, issue: 'currently injured', severity: p.injury.monthsRemaining >= 3 ? 'urgent' : 'watch' });
+    } else if (p.contractUntil === year || p.contractUntil === year + 1) {
+      // Only an ACTIONABLE deal — one expiring this season or next. (A deal already
+      // lapsed is the contract-renewal gap, not a live "tie him down" call.)
+      concerns.push({ name: p.name, issue: `contract expires ${p.contractUntil} — tie him down or risk losing him`, severity: star ? 'urgent' : 'watch' });
+    } else if (p.morale <= 35) {
+      concerns.push({ name: p.name, issue: `unhappy (happiness ${p.morale})`, severity: p.morale <= 25 ? 'urgent' : 'watch' });
+    } else if (age >= 33) {
+      concerns.push({ name: p.name, issue: `ageing (${age}) — plan the succession`, severity: 'watch' });
+    } else if (p.form <= -3) {
+      concerns.push({ name: p.name, issue: 'a dip in form', severity: 'watch' });
+    } else if (p.lastSeason && p.lastSeason.rating <= 5.5) {
+      concerns.push({ name: p.name, issue: 'underperformed last season', severity: 'watch' });
+    }
+  }
+  concerns.sort((a, b) => (a.severity === 'urgent' ? 0 : 1) - (b.severity === 'urgent' ? 0 : 1));
+
+  // Offload list: the men the coach isn't sold on, the deeply unhappy, and ageing
+  // squad filler blocking a rising star's path.
+  const offload: OffloadItem[] = [];
+  const seenOff = new Set<string>();
+  const addOff = (name: string, reason: string) => {
+    if (seenOff.has(name)) return;
+    seenOff.add(name);
+    offload.push({ name, reason });
+  };
+  for (const n of brief.notKeenOn) addOff(n.name, 'not a fit for how the coach plays');
+  for (const p of squad) {
+    if (p.morale <= 25 && p.ability < 82) addOff(p.name, 'wants out — deeply unsettled');
+  }
+  for (const line of depth) {
+    line.players.forEach((pl, i) => {
+      if (i >= 2 && pl.age >= 31) addOff(pl.name, `surplus at ${line.label} — blocking a younger option`);
+    });
+  }
+
+  return {
+    coach: coach.identity,
+    happiness: moodFor(coach.relationshipWithUser),
+    happinessPct: coach.relationshipWithUser,
+    style: STYLE_PROSE[coach.archetype],
+    formation: formationLabel(formation),
+    priority: brief.priority,
+    xi,
+    depth,
+    risingStars,
+    concerns: concerns.slice(0, 8),
+    wants: brief.targets,
+    offload: offload.slice(0, 5),
+  };
 }

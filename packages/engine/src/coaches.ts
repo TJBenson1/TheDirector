@@ -11,7 +11,7 @@
 
 import type { CoachArchetype, GameState, ManagerState, PlayerState, Position, TraitLean } from './types.js';
 import type { Formation } from './tactics.js';
-import { eraIdealFormation } from './tactics.js';
+import { eraIdealFormation, formationLabel } from './tactics.js';
 import { logEvent } from './eventLog.js';
 import { parseYearMonth } from './clock.js';
 import { clubSquadPlayers } from './players.js';
@@ -244,6 +244,69 @@ export function coachForScenario(scenarioId: string, startYear: number): Manager
     favourites: real?.favourites ?? [],
     adaptability: base.adaptability,
   };
+}
+
+// ── Appointing a coach (the Director's prerogative) ──────────────────────────
+
+export interface CoachOption {
+  archetype: CoachArchetype;
+  label: string;
+  style: string;
+  formation: Formation;
+}
+
+const ARCHETYPE_PROSE: Record<CoachArchetype, string> = {
+  possession: 'Possession — patient build-up, technical midfielders, a high line.',
+  gegenpress: 'Gegenpressing — high tempo, win it back high, runners everywhere.',
+  'pragmatic-counter': 'Pragmatic — a solid shape that hits hard on the counter.',
+  'defensive-block': 'Defensive — a deep, compact block that gives little away.',
+  'man-manager': 'Man-management — gets a tune out of big characters; flexible shape.',
+  balanced: 'Balanced — sets the plan by the opponent, no fixed dogma.',
+};
+
+/** The styles the Director can appoint a coach to play, each with its default
+ *  shape (used to offer a choice when changing manager). */
+export function coachArchetypes(): CoachOption[] {
+  return (Object.keys(ARCHETYPES) as CoachArchetype[]).map((archetype) => ({
+    archetype,
+    label: archetype,
+    style: ARCHETYPE_PROSE[archetype],
+    formation: ARCHETYPES[archetype].formation,
+  }));
+}
+
+/**
+ * Appoint a new head coach — the boardroom's call, so it always goes through
+ * (this is the Director's power, §1). The incoming coach plays the chosen style
+ * and shape and starts cautiously aligned with the Director who hired him. Only
+ * ever invoked by an explicit user action, so a passive/reality run — and the
+ * calibration harness — never touches it.
+ */
+export function appointCoach(
+  state: GameState,
+  opts: { identity?: string; archetype?: CoachArchetype; formation?: Formation } = {},
+): void {
+  const archetype: CoachArchetype = opts.archetype && ARCHETYPES[opts.archetype] ? opts.archetype : 'balanced';
+  const base = ARCHETYPES[archetype];
+  const formation = opts.formation ?? base.formation;
+  const previous = state.managerRelations.identity;
+  state.managerRelations = {
+    identity: opts.identity?.trim() || 'New Head Coach',
+    relationshipWithUser: 58, // a fresh appointment: onside with the Director who hired him
+    archetype,
+    style: { ...base.style },
+    preferredFormation: formation,
+    activeFormation: formation,
+    traitLean: { ...base.traitLean },
+    favourites: [],
+    adaptability: base.adaptability,
+  };
+  logEvent(state, {
+    category: 'event',
+    code: 'coach.appointed',
+    message: `${state.managerRelations.identity} appointed head coach${previous ? `, replacing ${previous}` : ''} — ${archetype}, ${formationLabel(formation)}.`,
+    data: { archetype, formation, previous },
+  });
 }
 
 // ── Coach–Director friction (M13b) ───────────────────────────────────────────

@@ -34,6 +34,9 @@ import {
   coachFit,
   narrativeContext,
   coachBriefing,
+  managerRoom,
+  appointCoach,
+  coachArchetypes,
   clubSquadPlayers,
   standingsOrder,
   valuePlayer,
@@ -244,6 +247,19 @@ const routes: Record<string, Handler> = {
   // he isn't sold on, positions to strengthen, targets) — the manager meeting.
   '/games/manager': ({ state }) => ({ briefing: coachBriefing(state as GameState) }),
 
+  // The Manager's Room dashboard (XI, depth, rising stars, concerns, wishlist).
+  '/games/manager-room': ({ state }) => ({ room: managerRoom(state as GameState) }),
+
+  // Appoint a new head coach (list styles when none is given).
+  '/games/change-coach': ({ state, style, name, formation }) => {
+    const s = state as GameState;
+    if (!style && !name) return { state: s, view: buildView(s), styles: coachArchetypes() };
+    const wanted = String(style ?? '').toLowerCase().replace(/\s+/g, '-');
+    const match = coachArchetypes().find((c) => c.archetype === wanted);
+    appointCoach(s, { identity: name ? String(name) : undefined, archetype: match?.archetype, formation });
+    return { state: s, view: buildView(s), result: { ok: true, coach: s.managerRelations.identity, style: s.managerRelations.archetype, formation: s.managerRelations.preferredFormation } };
+  },
+
   // Rich structured "current situation" for the narrator (the app's language
   // model turns this into prose — a briefing, a matchday report, an answer to
   // "how's the dressing room?"). Facts only; no prose.
@@ -391,7 +407,7 @@ function buildPanels(state: GameState) {
   inbox.push({ kind: 'board', text: `Board ${ctx.board.mood} (patience ${ctx.board.patience})` });
   for (const t of ctx.threads.slice(0, 3)) inbox.push({ kind: 'story', text: t });
 
-  return { squad, finances, table, inbox };
+  return { squad, finances, table, inbox, manager: managerRoom(s) };
 }
 
 server.listen(PORT, () => {
