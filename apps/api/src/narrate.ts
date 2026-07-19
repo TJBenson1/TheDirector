@@ -11,9 +11,13 @@ import Anthropic from '@anthropic-ai/sdk';
 import { runOp, situationOf, TOOL_SCHEMAS } from './ops.js';
 import type { GameState } from '@director/engine';
 
-// The richest narrator by default; override per-deploy with NARRATE_MODEL (e.g.
-// dial back to claude-sonnet-5 when cost/latency matters).
-const MODEL = process.env.NARRATE_MODEL ?? 'claude-opus-4-8';
+// Sonnet 5 is the default: fast enough to run the interactive tool-loop reliably,
+// including the heavy opening turn (new game + manager meeting). Opus is far richer
+// but too slow here — its first call alone can outrun the turn budget, so the game
+// never starts. Set NARRATE_MODEL=claude-opus-4-8 to opt into the depth if you can
+// accept the latency; the enriched prompt + token budget already lift Sonnet well
+// above a bare match-ticker.
+const MODEL = process.env.NARRATE_MODEL ?? 'claude-sonnet-5';
 const MAX_TOOL_HOPS = 8;
 
 const SYSTEM = `You are the narrator of "The Director", a counterfactual football-management story. The user is the Director — the boardroom power above the manager — at a real club in a real season. A deterministic engine owns every fact; you own the voice.
@@ -54,7 +58,7 @@ export async function narrate(opts: {
   // A per-request timeout and a retry so a single slow/dropped model call can't
   // hang the whole turn until the platform severs the connection ("the line went
   // dead"). The loop below also enforces an overall wall-clock budget.
-  const client = new Anthropic({ apiKey, timeout: 30_000, maxRetries: 1 });
+  const client = new Anthropic({ apiKey, timeout: 40_000, maxRetries: 1 });
 
   let state = opts.state;
   const priorText = opts.history ?? [];
