@@ -186,6 +186,7 @@ export {
   ALL_FORMATIONS,
 } from './tactics.js';
 export { narrativeContext, type NarrativeContext } from './narrative.js';
+export { realLeaguePosition } from './realStandings.js';
 export {
   coachBriefing,
   managerRoom,

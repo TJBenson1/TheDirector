@@ -16,6 +16,7 @@ import { standingsOrder } from './season.js';
 import { clubSquadPlayers } from './players.js';
 import { isProcedural } from './ledger.js';
 import { formationLabel, formationEraModifier, eraIdealFormation } from './tactics.js';
+import { realLeaguePosition } from './realStandings.js';
 
 export interface NarrativeContext {
   club: string;
@@ -23,6 +24,10 @@ export interface NarrativeContext {
   season: string;
   form: { momentum: 'surging' | 'steady' | 'slumping'; value: number };
   league: { position: number | null; of: number; points: number };
+  /** How the club's league campaign maps to real history this season (M14). */
+  reality: { realPosition: number | null; note: string } | null;
+  /** The most recent Champions League final, and the club's part in it. */
+  europe: { season: number; winner: string; runnerUp: string; youWon: boolean; youReachedFinal: boolean } | null;
   board: { mandate: string; patience: number; mood: string; warnings: number; dismissed: boolean };
   coach: {
     identity: string;
@@ -40,6 +45,12 @@ export interface NarrativeContext {
   };
   threads: string[];
   recent: string[];
+}
+
+function ordinal(n: number): string {
+  const s = ['th', 'st', 'nd', 'rd'];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] ?? s[v] ?? s[0]!);
 }
 
 function momentum(form: number): 'surging' | 'steady' | 'slumping' {
@@ -65,7 +76,7 @@ function coachMood(rel: number): string {
 
 /** Only recent, story-worthy events — not procedural filler churn. */
 function isNotable(code: string): boolean {
-  return /scripted|coach|transfer\.completed|window\.review|board|scandal|injury\.(serious|real)|season\.complete|crisis|takeover|retire/.test(code);
+  return /scripted|coach|transfer\.completed|window\.review|board|scandal|injury\.(serious|real)|season\.complete|crisis|takeover|retire|ucl\.final/.test(code);
 }
 
 export function narrativeContext(state: GameState, opts: { recent?: number } = {}): NarrativeContext {
@@ -138,12 +149,44 @@ export function narrativeContext(state: GameState, opts: { recent?: number } = {
     .reverse()
     .map((e) => `${e.date}: ${e.message}`);
 
+  // How this campaign maps to reality (M14) — so a faithful bad season reads as
+  // faithful, not as the Director's failure, and an overachievement is celebrated
+  // as beating history. Only meaningful for an anchored league/season.
+  const realPos = realLeaguePosition(state);
+  let reality: NarrativeContext['reality'] = null;
+  if (realPos != null && position != null) {
+    const diff = realPos - position; // >0 = better than reality (lower number)
+    const note =
+      Math.abs(diff) <= 1
+        ? `${club.name} really finished ${ordinal(realPos)} this season — your ${ordinal(position)} tracks history closely.`
+        : diff > 0
+          ? `${club.name} really finished ${ordinal(realPos)} this season — your ${ordinal(position)} is AHEAD of history, an overachievement.`
+          : `${club.name} really finished ${ordinal(realPos)} this season — your ${ordinal(position)} is BEHIND where they landed in reality.`;
+    reality = { realPosition: realPos, note };
+  }
+
+  // The most recent Champions League final, so the narrator always has the
+  // European story (and whether the club was in it) to report at the rollover.
+  let europe: NarrativeContext['europe'] = null;
+  const lastCup = state.europeanCup?.titleHistory.at(-1);
+  if (lastCup) {
+    europe = {
+      season: lastCup.seasonYear,
+      winner: state.clubs[lastCup.winnerId]?.name ?? lastCup.winnerId,
+      runnerUp: state.clubs[lastCup.runnerUpId]?.name ?? lastCup.runnerUpId,
+      youWon: lastCup.winnerId === state.playerClub,
+      youReachedFinal: lastCup.winnerId === state.playerClub || lastCup.runnerUpId === state.playerClub,
+    };
+  }
+
   return {
     club: club.name,
     date: state.clock.date,
     season: `${league?.seasonYear ?? year}/${((league?.seasonYear ?? year) + 1) % 100}`,
     form: { momentum: momentum(club.form), value: Math.round(club.form) },
     league: { position, of: league?.clubIds.length ?? 0, points },
+    reality,
+    europe,
     board: {
       mandate: state.board.mandate,
       patience: state.board.patience,

@@ -227,3 +227,20 @@ export function anchorSeasonToReality(state: GameState, league: LeagueState, pro
     league.standings[clubId] = blended;
   });
 }
+
+/**
+ * The club's REAL historical finishing position for the current league season
+ * (1-indexed), or null if this league/season isn't in the ledger. Lets the
+ * narrator tell the Director how his campaign maps to history — "Inter really
+ * finished 8th in 1998–99, so an 8th here is faithful, not a failure of yours".
+ */
+export function realLeaguePosition(state: GameState, clubId: ClubId = state.playerClub): number | null {
+  const club = state.clubs[clubId];
+  const league = club?.leagueId ? state.leagues[club.leagueId] : undefined;
+  if (!league) return null;
+  const key = leagueKey(league);
+  const order = key ? REAL_STANDINGS[key]?.[league.seasonYear] : undefined;
+  if (!order) return null;
+  const idx = order.indexOf(clubId);
+  return idx >= 0 ? idx + 1 : null;
+}
