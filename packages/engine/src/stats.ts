@@ -67,6 +67,24 @@ export function computePlayerSeason(
 }
 
 /**
+ * A LIVE, in-season read of a player's role — his expected minutes share and an
+ * impact rating from role + ability — so the squad panel shows a meaningful
+ * mins%/impact from the first months, before any season has completed (until then
+ * `lastSeason` is null and the panel read blank). Deterministic: a current-standing
+ * snapshot, not a projection, so it doesn't churn window to window.
+ */
+export function liveRoleEstimate(
+  state: GameState,
+  club: ClubState,
+  player: PlayerState,
+): { minutesShare: number; rating: number } {
+  const share = estimateMinutesShare(state, club, player);
+  const abilityScale = Math.max(0, (effectiveAbility(player) - 50) / 40);
+  const rating = Math.max(4, Math.min(9, 5.5 + abilityScale * 2 + (share - 0.5) * 1.5));
+  return { minutesShare: Number(share.toFixed(2)), rating: Number(rating.toFixed(1)) };
+}
+
+/**
  * Write `lastSeason` for every simulated-club player from the season just
  * completed, then reset the injury-month counter for the new season.
  */

@@ -62,7 +62,7 @@ export {
   rollAdaptation,
   resolveAdaptationSeason,
 } from './adaptation.js';
-export { computeSeasonStats, computePlayerSeason } from './stats.js';
+export { computeSeasonStats, computePlayerSeason, liveRoleEstimate } from './stats.js';
 export {
   deriveRawStrength,
   recomputeClubStrength,

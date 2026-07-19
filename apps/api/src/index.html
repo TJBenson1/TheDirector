@@ -159,7 +159,7 @@ function esc(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;',
 function renderPanel(tab){
   const p = panelsCache; if(!p) return;
   if(tab==='squad'){
-    const legend = `<div class="sub" style="padding:2px 4px 8px">value · wage · happiness (bar) · mins% · impact — minutes &amp; impact fill in after a season</div>`;
+    const legend = `<div class="sub" style="padding:2px 4px 8px">value · wage · happiness (bar) · mins% · impact — a live read of each player's role, sharpening once a season completes</div>`;
     panel.innerHTML = legend + p.squad.map(pl=>`<div class="prow"><div><div>${esc(pl.name)}${pl.injured?' 🩹':''}</div><div class="sub">${esc(pl.position)} · ${pl.age}y · abi ${pl.ability} · to ${pl.contractUntil}</div><div class="bar"><i style="width:${pl.happiness}%"></i></div></div><div style="text-align:right"><div>${esc(pl.value)}</div><div class="sub">${esc(pl.wage||'')}</div><div class="sub">${esc(pl.minutes)} · ${esc(pl.impact)}</div></div></div>`).join('');
   } else if(tab==='finances'){
     const f=p.finances;

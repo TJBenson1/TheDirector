@@ -36,6 +36,7 @@ import {
   clubSquadPlayers,
   standingsOrder,
   valuePlayer,
+  liveRoleEstimate,
   currentYear,
   Rng,
   SCENARIOS,
@@ -312,8 +313,11 @@ function buildPanels(state: GameState) {
   const squad = clubSquadPlayers(s, s.playerClub)
     .sort((a, b) => b.ability - a.ability)
     .map((p) => {
-      const mins = p.lastSeason ? Math.round(p.lastSeason.minutesShare * 100) : null;
-      const rating = p.lastSeason?.rating ?? null;
+      // Prefer the completed season's real numbers; before the first season ends,
+      // fall back to a live role read so mins%/impact aren't blank mid-season.
+      const live = liveRoleEstimate(s, club, p);
+      const mins = Math.round((p.lastSeason ? p.lastSeason.minutesShare : live.minutesShare) * 100);
+      const rating = p.lastSeason?.rating ?? live.rating;
       return {
         name: p.name,
         position: p.positions.join('/'),
@@ -323,8 +327,8 @@ function buildPanels(state: GameState) {
         wage: `£${Math.round(p.wage / 52 / 1000)}k/wk`,
         contractUntil: p.contractUntil,
         happiness: p.morale, // 0..100
-        minutes: mins === null ? '—' : `${mins}%`,
-        impact: rating === null ? '—' : rating >= 7.2 ? 'key' : rating >= 6.4 ? 'regular' : 'squad',
+        minutes: `${mins}%`,
+        impact: rating >= 7.2 ? 'key' : rating >= 6.4 ? 'regular' : 'squad',
         injured: !!p.injury,
       };
     });
