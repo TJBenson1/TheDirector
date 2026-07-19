@@ -206,6 +206,26 @@ const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
   // a user choice; a ledger entry would pre-empt and skip it.)
   { playerId: 'cur_ruud', from: 'psv', to: 'man_utd', window: '2001-07', fee: 19_000_000, id: 'ruud-utd-2001' },
   { playerId: 'cur_ruud', from: 'man_utd', to: 'real_madrid', window: '2006-07', fee: 14_000_000 },
+  // ── Academy graduates' real onward moves ──
+  // The home-grown players seeded by INTAKES_1999 don't stay put: their real
+  // transfers execute by default, so a Carrick ends up at United, a Henderson at
+  // Liverpool, an O'Shea drifts to Sunderland — reality, not a frozen debut club.
+  // (`from` matches where each sits at the time, so sequential moves chain.)
+  { playerId: 'cur_carrick_grad', from: 'west_ham', to: 'spurs', window: '2004-07', fee: 3_500_000 },
+  { playerId: 'cur_carrick_grad', from: 'spurs', to: 'man_utd', window: '2006-07', fee: 18_600_000, id: 'carrick-utd-2006' },
+  { playerId: 'cur_defoe_grad', from: 'west_ham', to: 'spurs', window: '2004-01', fee: 7_000_000 },
+  { playerId: 'cur_g_johnson_grad', from: 'west_ham', to: 'chelsea', window: '2003-07', fee: 6_000_000 },
+  { playerId: 'cur_lennon_grad', from: 'leeds', to: 'spurs', window: '2005-07', fee: 1_000_000 },
+  { playerId: 'cur_a_johnson_grad', from: 'middlesbrough', to: 'man_city', window: '2010-01', fee: 7_000_000 },
+  { playerId: 'cur_downing_grad', from: 'middlesbrough', to: 'aston_villa', window: '2009-07', fee: 12_000_000 },
+  { playerId: 'cur_downing_grad', from: 'aston_villa', to: 'liverpool', window: '2011-07', fee: 20_000_000 },
+  { playerId: 'cur_carroll_grad', from: 'newcastle', to: 'liverpool', window: '2011-01', fee: 35_000_000 },
+  { playerId: 'cur_henderson_grad', from: 'sunderland', to: 'liverpool', window: '2011-06', fee: 16_000_000, id: 'henderson-lfc-2011' },
+  { playerId: 'cur_rodwell_grad', from: 'everton', to: 'man_city', window: '2012-08', fee: 12_000_000 },
+  { playerId: 'cur_oxlade_grad', from: 'southampton', to: 'arsenal', window: '2011-08', fee: 12_000_000 },
+  { playerId: 'cur_lallana_grad', from: 'southampton', to: 'liverpool', window: '2014-07', fee: 25_000_000 },
+  { playerId: 'cur_shaw_grad', from: 'southampton', to: 'man_utd', window: '2014-06', fee: 30_000_000, id: 'shaw-utd-2014' },
+  { playerId: 'cur_oshea_grad', from: 'man_utd', to: 'sunderland', window: '2011-07', fee: 4_000_000 },
 ];
 
 /** Real injuries of the era — fire only if the player is at his real club. */
