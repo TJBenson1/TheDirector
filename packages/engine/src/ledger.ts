@@ -499,6 +499,28 @@ const SHOCKS_2004: FinancialShock[] = [
   { clubId: 'juventus', year: 2006, health: 'crisis', note: 'is relegated to Serie B in the Calciopoli scandal — a forced fire-sale opens' },
 ];
 
+/** The 90s Serie A "seven sisters" who spent their way to the brink — the real
+ *  financial reckonings that reshaped the golden-age Italian world in the background
+ *  as a 1995/2000-era career runs forward (fires only if the club exists in the world). */
+const SHOCKS_1995: FinancialShock[] = [
+  // Cragnotti's galáctico Lazio, undone by the Cirio food-empire crisis: Nesta and
+  // Crespo cashed in (2002), the whole project dismantled (2003).
+  { clubId: 'lazio', year: 2002, health: 'strained', note: "are buckling as the Cirio crisis engulfs Cragnotti's empire — the galácticos must be cashed in" },
+  { clubId: 'lazio', year: 2003, health: 'crisis', note: "have collapsed under the Cirio debts — a forced fire-sale of Cragnotti's stars begins" },
+  // Fiorentina's Cecchi Gori bankruptcy — relegated and refounded from the ashes.
+  { clubId: 'fiorentina', year: 2002, health: 'crisis', note: 'have gone bankrupt (Cecchi Gori) — the squad is broken up before liquidation' },
+  // Parma, bankrolled by Parmalat, ruined when the dairy giant imploded in a huge fraud.
+  { clubId: 'parma', year: 2004, health: 'crisis', note: 'are plunged into crisis by the Parmalat collapse — administration forces a fire-sale of the whole squad' },
+];
+
+/** Spanish financial reckonings that play out in the background of a 2003-era world:
+ *  Valencia's stadium-debt implosion and Deportivo's post-Super-Depor collapse. */
+const SHOCKS_2003: FinancialShock[] = [
+  { clubId: 'valencia', year: 2008, health: 'strained', note: 'are straining under the Nou Mestalla debt — the half-built stadium forces cutbacks' },
+  { clubId: 'valencia', year: 2009, health: 'crisis', note: 'are in financial crisis — the crown jewels (Villa, Silva, Mata) must be sold to survive' },
+  { clubId: 'deportivo', year: 2011, health: 'crisis', note: 'have collapsed after years of Super-Depor overspending — relegation and a fire-sale beckon' },
+];
+
 /** Leeds's over-reach for the Champions League tips them into meltdown — the
  *  books slide from strained (2002) to a full fire-sale crisis (2003). */
 const SHOCKS_2001: FinancialShock[] = [
@@ -1007,10 +1029,10 @@ const LEDGER_2006: RealTransferLedgerEntry[] = [
 
 /** Registry keyed by era pack id. */
 export const ERA_REALITY: Record<string, EraRealityPack> = {
-  'era-2003': { realTransferLedger: LEDGER_2003, academyIntakes: [], realInjuries: [], retirements: [], academyGraduates: [], nearMisses: [] },
+  'era-2003': { realTransferLedger: LEDGER_2003, academyIntakes: [], realInjuries: [], retirements: [], academyGraduates: [], financialShocks: SHOCKS_2003, nearMisses: [] },
   'era-2006': { realTransferLedger: LEDGER_2006, academyIntakes: [], realInjuries: [], retirements: [], academyGraduates: [], nearMisses: [] },
   'era-1998': { realTransferLedger: LEDGER_1998, academyIntakes: [], realInjuries: INJURIES_1998, retirements: RETIREMENTS_1998, academyGraduates: ACADEMY_1998, nearMisses: NEARMISS_1998 },
-  'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999, nearMisses: NEARMISS_1999_2014 },
+  'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: [], realInjuries: INJURIES_1999, retirements: RETIREMENTS_1999, academyGraduates: ACADEMY_1999, financialShocks: SHOCKS_1995, nearMisses: NEARMISS_1999_2014 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: [], realInjuries: INJURIES_2013, retirements: RETIREMENTS_2013, academyGraduates: ACADEMY_2013, nearMisses: [...NEARMISS_2013, ...NEARMISS_2013_NM] },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: [], realInjuries: INJURIES_2004, retirements: RETIREMENTS_2004, academyGraduates: ACADEMY_2004, financialShocks: SHOCKS_2004, nearMisses: NEARMISS_2004_NM },
   'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: [], realInjuries: [], retirements: RETIREMENTS_2001, academyGraduates: ACADEMY_2001, financialShocks: SHOCKS_2001, nearMisses: NEARMISS_2001_NM },
