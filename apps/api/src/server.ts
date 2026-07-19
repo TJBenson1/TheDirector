@@ -77,7 +77,13 @@ const routes: Record<string, Handler> = {
 
   '/games/sign': ({ state, playerId, feeM }) => {
     const s = state as GameState;
-    const fee = feeM !== undefined ? Math.round(feeM * 1_000_000) : undefined;
+    const p = s.players[playerId];
+    // Realism floor: a contracted player can't be signed for less than his asking
+    // price (near-expiry Bosman discount + distress already baked in) — no free
+    // transfers of players still under contract; only a true free agent is free.
+    const floor = p && p.club && p.club !== s.playerClub ? askingPrice(s, p.id) : 0;
+    const raw = feeM !== undefined ? Math.round(feeM * 1_000_000) : undefined;
+    const fee = raw !== undefined ? Math.max(raw, floor) : floor > 0 ? floor : undefined;
     const result = attemptSigning(s, { playerId, toClub: s.playerClub, fee });
     return { state: s, view: buildView(s), result };
   },

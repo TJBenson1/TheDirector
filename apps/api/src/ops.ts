@@ -137,7 +137,14 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
     }
 
     case 'sign': {
-      const fee = input.feeM !== undefined ? Math.round(Number(input.feeM) * 1_000_000) : undefined;
+      const p = s.players[String(input.playerId)];
+      // Realism floor: a player still under contract can't be prised from his club
+      // for less than his asking price — which already bakes in the near-expiry
+      // (Bosman) discount and any distress. No taking a contracted player for
+      // nothing in January; a genuine free applies only to an actual free agent.
+      const floor = p && p.club && p.club !== s.playerClub ? askingPrice(s, p.id) : 0;
+      const raw = input.feeM !== undefined ? Math.round(Number(input.feeM) * 1_000_000) : undefined;
+      const fee = raw !== undefined ? Math.max(raw, floor) : floor > 0 ? floor : undefined;
       const result = attemptSigning(s, { playerId: String(input.playerId), toClub: s.playerClub, fee });
       return { state: s, result: result.ok ? { ok: true, signed: s.players[String(input.playerId)]?.name, fee: m(result.fee) } : { ok: false, reason: result.reason } };
     }
