@@ -158,6 +158,14 @@ export function applyConsequence(state: GameState, c: Consequence): void {
       // fields — so a reluctant switch can drift back later if unhappy.
       if (c.formation) state.managerRelations.activeFormation = c.formation;
       break;
+    case 'deductPoints': {
+      // A governance sanction: dock league points from the club's live standings.
+      const club = c.clubId ? state.clubs[c.clubId] : undefined;
+      const league = club?.leagueId ? state.leagues[club.leagueId] : undefined;
+      const rec = league && c.clubId ? league.standings[c.clubId] : undefined;
+      if (rec) rec.points = Math.max(0, rec.points - (c.amount ?? 0));
+      break;
+    }
     case 'memory':
       appendMemory(state, c.tag ?? 'event', c.text ?? '');
       break;
@@ -691,6 +699,120 @@ const MACRO_EVENTS: MacroEvent[] = [
       appendMemory(state, 'world', "Simeone's Atlético win La Liga and reach the 2014 Champions League final — the duopoly is broken.");
     },
   },
+  // ── Global governance / world-shaking events (2020s) ──
+  {
+    id: 'covid-2020',
+    date: '2020-03',
+    world: (state) => {
+      // Matchday revenue vanishes: every simulated club's budget is slashed and the
+      // financially-weaker ones tip into strain.
+      for (const club of Object.values(state.clubs)) {
+        if (club.leagueId == null) continue;
+        club.finances.transferBudget = Math.round(club.finances.transferBudget * 0.6);
+        if (club.financialHealth === 'healthy' && club.prestige < 70) club.financialHealth = 'strained';
+      }
+      logEvent(state, {
+        category: 'event', code: 'macro.world',
+        message: 'A global pandemic suspends football — stadiums stand empty and revenues collapse across the game',
+        data: { id: 'covid-2020' },
+      });
+      appendMemory(state, 'world', "The 2020 pandemic empties the stadiums and drains the game's finances.");
+    },
+    build: (_state, club) => ({
+      id: 'macro:covid-2020',
+      title: 'Football stops: the pandemic hits',
+      description: 'A global pandemic has suspended the season. Stadiums will sit empty for a year, matchday revenue has vanished, and the players are anxious and idle. How do you steer the club through the shutdown?',
+      interrupt: true, clubId: club.id, category: 'event',
+      choices: [
+        {
+          id: 'wage-deferral', label: 'Agree wage deferrals with the squad', successProbability: 0.6,
+          onSuccess: [{ kind: 'money', clubId: club.id, amount: 20_000_000 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'world', text: 'Negotiated wage deferrals through the shutdown — the finances held.' }],
+          onFailure: [{ kind: 'morale', clubId: club.id, amount: -5 }, { kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'full-pay', label: 'Guarantee full pay and eat the loss', successProbability: 0.7,
+          onSuccess: [{ kind: 'morale', clubId: club.id, amount: 8 }, { kind: 'fanTrust', amount: 6, text: 'Stood by the staff and players through Covid.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -5, text: 'The board balks at the losses.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: club.id, amount: -4 }, { kind: 'memory', tag: 'world', text: 'Drifted through the shutdown without a plan.' }],
+      memoryTags: ['world'],
+    }),
+  },
+  {
+    id: 'super-league-2021',
+    date: '2021-04',
+    world: (state) => {
+      logEvent(state, {
+        category: 'event', code: 'macro.world',
+        message: "Twelve of Europe's giants launch a breakaway Super League — and within days fan revolt and political fury collapse it",
+        data: { id: 'super-league-2021' },
+      });
+      appendMemory(state, 'world', 'The European Super League launches and implodes within 72 hours under fan revolt.');
+    },
+    build: (_state, club) => {
+      if (club.prestige < 80) return null; // only the invited giants face the choice
+      return {
+        id: 'macro:super-league-2021',
+        title: 'The Super League: a founding invitation',
+        description: 'A closed, breakaway European Super League — guaranteed places, no relegation, a fortune in founding money — has invited your club to join twelve self-appointed giants. The football world is aghast and your own supporters are already marching on the stadium. Sign up, or refuse and stand with the pyramid?',
+        interrupt: true, clubId: club.id, category: 'event',
+        choices: [
+          {
+            id: 'join', label: 'Sign up — take the guaranteed billions', successProbability: 0.5,
+            onSuccess: [{ kind: 'money', clubId: club.id, amount: 150_000_000 }, { kind: 'boardPatience', amount: 8 }, { kind: 'fanTrust', amount: -12, text: 'Joining the Super League enraged the supporters.' }, { kind: 'memory', tag: 'world', text: 'Joined the Super League for the money — the fans never forgot.' }],
+            onFailure: [{ kind: 'fanTrust', amount: -14, text: 'The Super League gamble blew up in your face.' }, { kind: 'boardPatience', amount: -4 }],
+          },
+          {
+            id: 'refuse', label: 'Refuse — stand with the fans and the pyramid', successProbability: 0.75,
+            onSuccess: [{ kind: 'fanTrust', amount: 14, text: 'Rejected the Super League — the supporters adore you for it.' }, { kind: 'memory', tag: 'world', text: 'Turned down the breakaway and stood with the fans.' }],
+            onFailure: [{ kind: 'boardPatience', amount: -6, text: 'The board wanted the guaranteed riches.' }],
+          },
+        ],
+        falloutIfIgnored: [{ kind: 'fanTrust', amount: -6, text: 'Silence on the Super League satisfied no one.' }],
+        memoryTags: ['world'],
+      };
+    },
+  },
+  {
+    id: 'city-charges-2023',
+    date: '2023-02',
+    world: (state) => {
+      // World colour only when the user is NOT the club in the dock.
+      if (state.playerClub !== 'man_city' && state.clubs['man_city']) {
+        logEvent(state, {
+          category: 'event', code: 'macro.world',
+          message: 'The Premier League charges Manchester City with 100+ alleged breaches of financial rules across a decade — a points deduction, even expulsion, is on the table',
+          data: { id: 'city-charges-2023', clubId: 'man_city' },
+        });
+        appendMemory(state, 'world', 'Manchester City are charged with over a hundred financial breaches.');
+      }
+    },
+    build: (_state, club) => {
+      if (club.id !== 'man_city') return null; // the charges are City's to answer
+      return {
+        id: 'macro:city-charges-2023',
+        title: 'Over a hundred financial charges',
+        description: `The league has charged ${club.name} with more than a hundred alleged breaches of financial rules across a decade of spending. A points deduction — even expulsion — is on the table. Fight every charge through years of litigation, or negotiate a settlement now?`,
+        interrupt: true, clubId: club.id, category: 'event',
+        choices: [
+          {
+            id: 'fight', label: 'Fight every charge', successProbability: 0.5,
+            onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'world', text: 'Fought the charges through the courts and, for now, held them off.' }],
+            onFailure: [{ kind: 'deductPoints', clubId: club.id, amount: 10 }, { kind: 'fanTrust', amount: -6, text: 'The charges stuck — a heavy points deduction.' }],
+          },
+          {
+            id: 'settle', label: 'Negotiate a settlement', successProbability: 0.7,
+            onSuccess: [{ kind: 'money', clubId: club.id, amount: -50_000_000 }, { kind: 'deductPoints', clubId: club.id, amount: 4 }, { kind: 'memory', tag: 'world', text: 'Settled the charges — a fine and a modest points hit.' }],
+            onFailure: [{ kind: 'deductPoints', clubId: club.id, amount: 8 }],
+          },
+        ],
+        falloutIfIgnored: [{ kind: 'deductPoints', clubId: club.id, amount: 6 }, { kind: 'memory', tag: 'world', text: 'Ignoring the charges cost points on the pitch.' }],
+        memoryTags: ['world'],
+      };
+    },
+  },
+  // ── Market windows: cash-rich destinations open up as selling opportunities ──
   {
     id: 'china-2016',
     date: '2016-01',

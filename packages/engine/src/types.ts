@@ -416,6 +416,7 @@ export interface Consequence {
     | 'renewContract' // extend a player's contract by `amount` years
     | 'letContractLapse' // flag a player to leave on a free when his deal expires
     | 'changeFormation' // switch the coach's active shape (M13)
+    | 'deductPoints' // dock `amount` league points from `clubId` (governance sanction)
     | 'memory' // append a narrative-memory entry (§10)
     | 'log'; // purely informational log line
   playerId?: PlayerId;

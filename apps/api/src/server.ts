@@ -377,6 +377,7 @@ function buildPanels(state: GameState) {
       const mins = Math.round((p.lastSeason ? p.lastSeason.minutesShare : live.minutesShare) * 100);
       const rating = p.lastSeason?.rating ?? live.rating;
       return {
+        id: p.id,
         name: p.name,
         position: p.positions.join('/'),
         age: year - p.birthYear,

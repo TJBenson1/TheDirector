@@ -56,14 +56,32 @@
   .chip { display:inline-block; background:#1c1c20; border:1px solid var(--line); border-radius:8px; padding:4px 8px; font-size:12.5px; }
   .chip.star { border-color:var(--accent); }
   #hint { text-align:center; color:var(--dim); font-size:11.5px; padding:6px 12px 10px; }
+  .adv { background:var(--panel); border:1px solid var(--accent); color:var(--accent); border-radius:9px;
+    padding:6px 12px; font:inherit; font-size:13px; font-weight:700; cursor:pointer; margin-left:10px; }
+  .adv:hover { background:var(--accent); color:#1a1206; }
+  .adv:disabled { opacity:.5; cursor:default; }
+  .act { display:flex; gap:6px; margin-top:6px; justify-content:flex-end; flex-wrap:wrap; }
+  .act button { background:#1c1c20; border:1px solid var(--line); color:var(--text); border-radius:8px;
+    padding:5px 10px; font:inherit; font-size:12px; cursor:pointer; }
+  .act button:hover { border-color:var(--accent); }
+  .act button.sell:hover { border-color:#d9704e; color:#d9704e; }
+  .decision { background:var(--panel); border:1px solid var(--accent); border-radius:12px; padding:12px 14px; align-self:stretch; max-width:100%; }
+  .decision .t { font-size:15px; margin-bottom:8px; }
+  .decision .choices { display:flex; flex-wrap:wrap; gap:8px; }
+  .decision .choices button { background:#1c1c20; border:1px solid var(--line); color:var(--text); border-radius:9px;
+    padding:8px 12px; font:inherit; font-size:13px; cursor:pointer; }
+  .decision .choices button:hover { border-color:var(--accent); }
 </style>
 </head>
 <body>
 <div id="app">
   <header>
-    <div style="display:flex; justify-content:space-between; align-items:baseline;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
       <h1>The Director</h1>
-      <button class="reset" id="newgame" type="button">New game</button>
+      <div style="display:flex; align-items:center;">
+        <button class="adv" id="advance" type="button" title="Move time forward without spending a chat message">Advance ▸</button>
+        <button class="reset" id="newgame" type="button" style="margin-left:10px;">New game</button>
+      </div>
     </div>
     <div class="status" id="status">A counterfactual football story · 1995–2025</div>
   </header>
@@ -117,10 +135,69 @@ async function send(message){
       bubble(d.narration, 'narrator');
       // A pre-scripted follow-up beat (e.g. the manager meeting after a new game).
       if (d.secondary){ const m=d.secondary; setTimeout(()=>bubble(m, 'narrator'), 650); }
-      saveLocal(); renderStatus(); refreshPanelIfOpen();
+      saveLocal(); renderStatus(); refreshPanelIfOpen(); renderPendingDecisions();
     }
   } catch(e){ thinking.remove(); bubble('(the line went dead — try again)', 'sys'); }
   sendBtn.disabled=false; input.focus();
+}
+
+// Keep the narrator's chat history in sync with token-free direct actions (advance,
+// sell, renew, decisions) so the next chat turn still has continuity — capped like
+// the server does.
+function noteTurn(u, a){ history.push({ role:'user', content:u }, { role:'assistant', content:a }); history = history.slice(-24); }
+
+// ── Advance: move time forward with NO model call (saves tokens) ──────────────
+async function advance(){
+  if(!state){ bubble('Take a seat first — start a game in the Chat tab.', 'sys'); return; }
+  const advBtn = document.getElementById('advance');
+  advBtn.disabled=true; sendBtn.disabled=true;
+  try {
+    const r = await fetch('/games/advance', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ state, perStep:true }) });
+    const d = await r.json();
+    if (d.error){ bubble('('+d.error+')', 'sys'); }
+    else {
+      state = d.state;
+      const msgs = (d.events||[]).map(e=>e.message).filter(Boolean);
+      const st = stFrom(state);
+      const head = st ? `${st.date} · ${st.window||'in season'}` : 'Advanced';
+      const body = msgs.length ? msgs.slice(0,10).join('\n') : 'The month passes quietly.';
+      bubble(head + '\n' + body, 'narrator');
+      noteTurn('Advance.', head+' — '+(msgs.slice(0,6).join('; ')||'quiet'));
+      renderPendingDecisions();
+      saveLocal(); renderStatus(); refreshPanelIfOpen();
+    }
+  } catch(e){ bubble('(could not advance — try again)', 'sys'); }
+  advBtn.disabled=false; sendBtn.disabled=false;
+}
+
+// Surface any open interrupts as clickable, token-free decision cards.
+function renderPendingDecisions(){
+  const ds = (state && state.pendingDecisions) || [];
+  for (const d of ds){
+    if (document.querySelector('[data-decision="'+CSS.escape(d.id)+'"]')) continue; // already shown
+    const wrap=document.createElement('div'); wrap.className='msg decision'; wrap.dataset.decision=d.id;
+    const t=document.createElement('div'); t.className='t'; t.textContent=d.title; wrap.appendChild(t);
+    const ch=document.createElement('div'); ch.className='choices';
+    (d.choices||[]).forEach(c=>{ const b=document.createElement('button'); b.textContent=c.label; b.onclick=()=>resolveDecision(d.id, c.id, d.title, c.label); ch.appendChild(b); });
+    wrap.appendChild(ch); log.appendChild(wrap); log.scrollTop=log.scrollHeight;
+  }
+}
+
+async function resolveDecision(decisionId, choiceId, title, label){
+  const card = document.querySelector('[data-decision="'+CSS.escape(decisionId)+'"]');
+  if(card) card.querySelectorAll('button').forEach(b=>b.disabled=true);
+  try {
+    const r = await fetch('/games/decision', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ state, decisionId, choiceId }) });
+    const d = await r.json();
+    if (d.error){ bubble('('+d.error+')', 'sys'); return; }
+    state = d.state;
+    if(card) card.remove();
+    const msgs = (d.events||[]).map(e=>e.message).filter(Boolean);
+    bubble('▸ '+label+(msgs.length?'\n'+msgs.slice(0,6).join('\n'):''), 'director');
+    noteTurn(title+' → '+label, msgs.slice(0,6).join('; ')||'Done.');
+    renderPendingDecisions();
+    saveLocal(); renderStatus(); refreshPanelIfOpen();
+  } catch(e){ bubble('(could not resolve — try again)', 'sys'); }
 }
 
 function offerStarts(){
@@ -169,6 +246,55 @@ function newGame(){
 
 document.getElementById('form').addEventListener('submit', e=>{ e.preventDefault(); const v=input.value.trim(); if(v) send(v); });
 document.getElementById('newgame').addEventListener('click', ()=>newGame());
+document.getElementById('advance').addEventListener('click', ()=>advance());
+
+// ── Squad actions: extend a contract, or look for a sale — all token-free ─────
+async function extendFlow(id, name){
+  const yrs = prompt(`Extend ${name}'s contract by how many years? (1–5)`, '3');
+  if(yrs===null) return;
+  const years = Math.max(1, Math.min(5, Math.round(Number(yrs)||3)));
+  try {
+    const r = await fetch('/games/renew', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ state, playerId:id, years }) });
+    const d = await r.json();
+    if(d.result && d.result.ok){ state=d.state; noteTurn(`Extend ${name}'s contract`, `${name} signs on until ${d.result.contractUntil}.`); bubble(`✓ ${name} extended to ${d.result.contractUntil}.`, 'sys'); saveLocal(); renderStatus(); showTab('squad'); }
+    else bubble('('+((d.result&&d.result.reason)||d.error||'could not extend')+')', 'sys');
+  } catch(e){ bubble('(could not extend — try again)', 'sys'); }
+}
+
+async function sellFlow(id, name){
+  try {
+    const r = await fetch('/games/offers', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ state, playerId:id }) });
+    const d = await r.json();
+    const offers = d.offers||[];
+    if(!offers.length){ bubble(`No club is in the market for ${name} right now (value ~£${((d.marketValue||0)/1e6).toFixed(1)}m).`, 'sys'); return; }
+    // Replace the row's action area with the concrete offers.
+    const row = document.querySelector('[data-player="'+CSS.escape(id)+'"] .act');
+    const gbp = f=>'£'+(f/1e6).toFixed(1)+'m';
+    if(row){
+      row.innerHTML = `<span class="sub" style="align-self:center">Sell to:</span>` +
+        offers.map(o=>`<button class="sell" data-club="${esc(o.clubId)}" data-fee="${o.fee}">${esc(o.clubName)} ${gbp(o.fee)}</button>`).join('') +
+        `<button data-cancel="1">Cancel</button>`;
+      row.querySelectorAll('button').forEach(b=>{
+        if(b.dataset.cancel){ b.onclick=()=>showTab('squad'); return; }
+        b.onclick=()=>doSell(id, name, b.dataset.club, b.textContent, Number(b.dataset.fee));
+      });
+    }
+  } catch(e){ bubble('(could not fetch offers — try again)', 'sys'); }
+}
+
+async function doSell(id, name, toClub, clubLabel, fee){
+  try {
+    const r = await fetch('/games/sell', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ state, playerId:id, toClub, fee }) });
+    const d = await r.json();
+    if(d.result && d.result.ok){
+      state=d.state;
+      const ripple = d.result.sated ? ` (${clubLabel.trim()} now drop their move for ${d.result.sated})` : '';
+      bubble(`✓ Sold ${name} to ${clubLabel.trim()}.${ripple}`, 'sys');
+      noteTurn(`Sell ${name}`, `${name} sold to ${clubLabel.trim()}.${ripple}`);
+      saveLocal(); renderStatus(); showTab('squad');
+    } else bubble('('+((d.result&&d.result.reason)||d.error||'sale fell through')+')', 'sys');
+  } catch(e){ bubble('(could not sell — try again)', 'sys'); }
+}
 
 // ── Clickable panels ─────────────────────────────────────────────────────────
 const panel = document.getElementById('panel');
@@ -195,8 +321,10 @@ function esc(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;',
 function renderPanel(tab){
   const p = panelsCache; if(!p) return;
   if(tab==='squad'){
-    const legend = `<div class="sub" style="padding:2px 4px 8px">value · wage · happiness (bar) · mins% · impact — a live read of each player's role, sharpening once a season completes</div>`;
-    panel.innerHTML = legend + p.squad.map(pl=>`<div class="prow"><div><div>${esc(pl.name)}${pl.injured?' 🩹':''}</div><div class="sub">${esc(pl.position)} · ${pl.age}y · abi ${pl.ability} · to ${pl.contractUntil}</div><div class="bar"><i style="width:${pl.happiness}%"></i></div></div><div style="text-align:right"><div>${esc(pl.value)}</div><div class="sub">${esc(pl.wage||'')}</div><div class="sub">${esc(pl.minutes)} · ${esc(pl.impact)}</div></div></div>`).join('');
+    const legend = `<div class="sub" style="padding:2px 4px 8px">value · wage · happiness (bar) · mins% · impact — tap Extend or Sell to act without spending a chat message</div>`;
+    panel.innerHTML = legend + p.squad.map(pl=>`<div class="prow" data-player="${esc(pl.id)}"><div style="flex:1"><div>${esc(pl.name)}${pl.injured?' 🩹':''}</div><div class="sub">${esc(pl.position)} · ${pl.age}y · abi ${pl.ability} · to ${pl.contractUntil}</div><div class="bar"><i style="width:${pl.happiness}%"></i></div></div><div style="text-align:right"><div>${esc(pl.value)}</div><div class="sub">${esc(pl.wage||'')}</div><div class="sub">${esc(pl.minutes)} · ${esc(pl.impact)}</div><div class="act"><button data-ext="${esc(pl.id)}" data-name="${esc(pl.name)}">Extend</button><button class="sell" data-sell="${esc(pl.id)}" data-name="${esc(pl.name)}">Sell</button></div></div></div>`).join('');
+    panel.querySelectorAll('[data-ext]').forEach(b=>b.onclick=()=>extendFlow(b.dataset.ext, b.dataset.name));
+    panel.querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>sellFlow(b.dataset.sell, b.dataset.name));
   } else if(tab==='finances'){
     const f=p.finances;
     panel.innerHTML =
@@ -232,7 +360,7 @@ function refreshPanelIfOpen(){ const active=document.querySelector('#tabs button
 loadLocal();
 if (history.length){
   history.forEach(h=>{ const t = typeof h.content==='string'? h.content : ''; if(t) bubble(t, h.role==='user'?'director':'narrator'); });
-  renderStatus();
+  renderStatus(); renderPendingDecisions();
 } else {
   bubble("You're the Director — the power above the manager. Pick a seat to take, or just tell me which club and season you want.", 'narrator');
   offerStarts();

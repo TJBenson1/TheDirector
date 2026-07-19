@@ -77,6 +77,38 @@ describe('macro market windows', () => {
     expect(s.eventLog.some((e) => e.data?.id === 'atletico-2014')).toBe(false);
   });
 
+  it('the 2020s world events fire (Covid, Super League, City charges)', () => {
+    const covid = at('2020-04');
+    fireMacroEvents(covid);
+    expect(covid.eventLog.some((e) => e.data?.id === 'covid-2020')).toBe(true);
+    // Covid slashes simulated-club budgets.
+    expect(covid.pendingDecisions.some((d) => d.id === 'macro:covid-2020')).toBe(true);
+
+    const sl = at('2021-05');
+    fireMacroEvents(sl);
+    expect(sl.eventLog.some((e) => e.data?.id === 'super-league-2021')).toBe(true);
+    // man-utd (prestige ≥80) gets the founding-invitation decision.
+    expect(sl.pendingDecisions.some((d) => d.id === 'macro:super-league-2021')).toBe(true);
+
+    const city = at('2023-03');
+    fireMacroEvents(city);
+    // Not City → world colour only, no decision for this club.
+    expect(city.eventLog.some((e) => e.data?.id === 'city-charges-2023')).toBe(true);
+    expect(city.pendingDecisions.some((d) => d.id === 'macro:city-charges-2023')).toBe(false);
+  });
+
+  it('deductPoints docks a club’s live league points (clamped at zero)', () => {
+    const s = at('2023-03');
+    const league = s.clubs['man_utd']!.leagueId!;
+    const rec = s.leagues[league].standings['man_utd']!;
+    rec.points = 7;
+    applyConsequence(s, { kind: 'deductPoints', clubId: 'man_utd', amount: 10 });
+    expect(s.leagues[league].standings['man_utd']!.points).toBe(0);
+    rec.points = 20;
+    applyConsequence(s, { kind: 'deductPoints', clubId: 'man_utd', amount: 6 });
+    expect(s.leagues[league].standings['man_utd']!.points).toBe(14);
+  });
+
   it('cashing in sells the player OUT of the world and banks the inflated fee', () => {
     const s = at('2023-08');
     fireMacroEvents(s);
