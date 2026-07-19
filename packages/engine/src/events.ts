@@ -34,6 +34,36 @@ import { executeTransfer } from './transfers.js';
 import { clubSquadPlayers, recomputeClubStrength } from './players.js';
 import { valuePlayer } from './finance.js';
 
+/**
+ * Dressing-room wage parity (§ internal friction). Football wages only ratchet
+ * upward: when a KEY player lands a lucrative new deal, comparable teammates who
+ * are now out-earned by a peer of similar or greater standing want their own terms
+ * brought up to the market. Modelled as unrest on the aggrieved men — surfaced to
+ * the Director as "wants his deal looked at". Deterministic (no RNG), so it never
+ * perturbs a roll: only a handful of players' agitation shifts, and only when the
+ * user (or an ignored contract call) renews a star. Contained to the top few peers.
+ */
+function applyWageParityRipple(state: GameState, renewedId: string): void {
+  const star = state.players[renewedId];
+  if (!star || !star.club) return;
+  if (star.ability < 80) return; // only a genuine key man's deal moves the room
+  const peers = clubSquadPlayers(state, star.club)
+    .filter((p) => p.id !== star.id && p.curated && p.ability >= star.ability - 2 && p.wage < star.wage)
+    .sort((a, b) => b.ability - a.ability || a.id.localeCompare(b.id))
+    .slice(0, 3);
+  if (peers.length === 0) return;
+  for (const p of peers) {
+    p.agitation = clamp(p.agitation + 6, 0, 100);
+    p.morale = clamp(p.morale - 2, 0, 100);
+  }
+  logEvent(state, {
+    category: 'event',
+    code: 'wage.parity',
+    message: `${star.name}'s new deal ripples through the dressing room — ${peers.map((p) => p.name).join(', ')} want their own terms brought up to the market`,
+    data: { playerId: star.id, clubId: star.club, peers: peers.map((p) => p.id) },
+  });
+}
+
 // ── Consequence application ──────────────────────────────────────────────────
 
 export function applyConsequence(state: GameState, c: Consequence): void {
@@ -138,6 +168,9 @@ export function applyConsequence(state: GameState, c: Consequence): void {
           p.contractUntil = Math.max(p.contractUntil, year + Math.max(1, c.amount ?? 3));
           p.wage = Math.round(p.wage * 1.1);
           p.letLapse = false; // a renewal reverses any decision to let him walk
+          // Give a key man a lucrative new deal and the dressing room takes note —
+          // his comparable peers want their own terms brought up to the market.
+          applyWageParityRipple(state, p.id);
         }
       }
       break;

@@ -100,13 +100,13 @@ describe('macro market windows', () => {
   it('deductPoints docks a club’s live league points (clamped at zero)', () => {
     const s = at('2023-03');
     const league = s.clubs['man_utd']!.leagueId!;
-    const rec = s.leagues[league].standings['man_utd']!;
+    const rec = s.leagues[league]!.standings['man_utd']!;
     rec.points = 7;
     applyConsequence(s, { kind: 'deductPoints', clubId: 'man_utd', amount: 10 });
-    expect(s.leagues[league].standings['man_utd']!.points).toBe(0);
+    expect(s.leagues[league]!.standings['man_utd']!.points).toBe(0);
     rec.points = 20;
     applyConsequence(s, { kind: 'deductPoints', clubId: 'man_utd', amount: 6 });
-    expect(s.leagues[league].standings['man_utd']!.points).toBe(14);
+    expect(s.leagues[league]!.standings['man_utd']!.points).toBe(14);
   });
 
   it('cashing in sells the player OUT of the world and banks the inflated fee', () => {
