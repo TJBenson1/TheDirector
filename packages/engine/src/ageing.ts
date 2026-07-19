@@ -167,6 +167,33 @@ export function processRetirementsAndYouth(state: GameState, rng: Rng): void {
 }
 
 /**
+ * Contract management at the summer rollover (real free agency, part 1). A club
+ * renews the players it wants to keep — a genuine squad member not yet in his
+ * mid-30s whose deal is running down — extending it to a fresh multi-year contract.
+ * This is what keeps a long save's contract data sane: valued players stay tied
+ * down instead of every deal silently lapsing and reading as "expired" a decade on.
+ *
+ * Pure arithmetic — no RNG, no squad change — so a passive/reality run is
+ * byte-identical and the calibration harness is untouched. A veteran (34+) is left
+ * to run his deal down toward retirement, and deep-fringe filler is allowed to lapse
+ * (realistic churn, no invented free agents). The physical DEPARTURE of a lapsed
+ * player is a separate, squad-changing step handled elsewhere.
+ */
+export function processContractRenewals(state: GameState): void {
+  const year = Number(state.clock.date.slice(0, 4));
+  for (const club of Object.values(state.clubs)) {
+    for (const player of clubSquadPlayers(state, club.id)) {
+      if (player.retired) continue;
+      if (player.contractUntil > year + 1) continue; // not running down yet
+      const age = year - player.birthYear;
+      if (age >= 34) continue; // a veteran is left to run down toward retirement
+      if (player.ability < club.strength - 15) continue; // deep fringe — allowed to lapse
+      player.contractUntil = year + 3; // a keeper gets a fresh deal
+    }
+  }
+}
+
+/**
  * Light end-of-season morale drift from league finish (§17.4 stub; §6/M6 owns
  * the full happiness → departure loop). Winners' squads lift; strugglers dip.
  */

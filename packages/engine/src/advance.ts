@@ -31,7 +31,7 @@ import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli, promoteJuventus } from './italyEvents.js';
 import { restoreRelegatedClubs } from './relegation.js';
 import { decayPursuit } from './wooing.js';
-import { processSeasonAgeing, processSeasonMorale, processOverstackUnrest, processRetirementsAndYouth } from './ageing.js';
+import { processSeasonAgeing, processSeasonMorale, processOverstackUnrest, processRetirementsAndYouth, processContractRenewals } from './ageing.js';
 import { processSeasonDevelopment } from './development.js';
 import { computeSeasonStats } from './stats.js';
 import { resolveAdaptationSeason } from './adaptation.js';
@@ -73,6 +73,9 @@ function runMonth(state: GameState, rng: Rng): void {
     // Retire the aged and refresh with home-grown youth, so a 25-year save doesn't
     // ossify into a squad of fifty-year-olds (long-horizon world coherence, §5).
     processRetirementsAndYouth(state, rng);
+    // Clubs renew the keepers whose deals are running down (real contract churn) —
+    // pure arithmetic, so the passive/reality world is byte-identical.
+    processContractRenewals(state);
     // The real next generation breaks through at their debut window (Rooney at
     // Everton, a teenage Messi at Barça) — real names beneath the aging spine.
     executeAcademyIntakes(state);
