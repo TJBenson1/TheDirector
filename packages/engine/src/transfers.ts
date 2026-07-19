@@ -66,7 +66,13 @@ export function executeTransfer(
   const sellerStarBefore = !opts.reality && fromClubId ? clubStarPremium(state, fromClubId) : 0;
 
   const year = currentYear(state);
-  const fee = fromClubId ? Math.max(0, req.fee ?? valuePlayer(player, year)) : 0;
+  // A missing/NaN fee (e.g. a narrator that fumbled the number) must never sell a
+  // player for £0 or corrupt a budget to NaN — fall back to market value.
+  const fee = fromClubId
+    ? typeof req.fee === 'number' && Number.isFinite(req.fee)
+      ? Math.max(0, req.fee)
+      : valuePlayer(player, year)
+    : 0;
 
   if (fee > buyer.finances.transferBudget) {
     return {
@@ -83,7 +89,12 @@ export function executeTransfer(
       // A healthy club banks the fee to reinvest. A club in financial distress
       // does NOT — its fire-sale proceeds go to its creditors, not a transfer
       // kitty (the real Parma/Leeds/Lazio pattern), so distress can't rebuild.
-      if (seller.financialHealth === 'healthy') seller.finances.transferBudget += fee;
+      // The USER's own club is the exception: the Director directs the money, so a
+      // sanctioned sale always replenishes his budget (a sale he made to fund a
+      // buy must actually fund it), regardless of the club's financial health.
+      if (seller.financialHealth === 'healthy' || fromClubId === state.playerClub) {
+        seller.finances.transferBudget += fee;
+      }
     }
   }
   buyer.squad.push(player.id);

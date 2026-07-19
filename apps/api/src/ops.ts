@@ -152,7 +152,11 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
     case 'sell': {
       const p = s.players[String(input.playerId)];
       if (!p || p.club !== s.playerClub) return { state: s, result: { ok: false, reason: 'Not your player.' } };
-      const result = executeTransfer(s, { playerId: p.id, toClub: String(input.toClub), fee: Math.round(Number(input.fee)) });
+      // Never sell for £0 because the fee arrived missing/garbled — fall back to
+      // the player's market value so the sale actually banks money.
+      const rawFee = Number(input.fee);
+      const fee = Number.isFinite(rawFee) && rawFee > 0 ? Math.round(rawFee) : Math.round(valuePlayer(p, currentYear(s)));
+      const result = executeTransfer(s, { playerId: p.id, toClub: String(input.toClub), fee });
       return { state: s, result: result.ok ? { ok: true, sold: p.name, to: s.clubs[String(input.toClub)]?.name, fee: m(result.fee) } : { ok: false, reason: result.reason } };
     }
 
