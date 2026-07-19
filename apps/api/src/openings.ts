@@ -67,11 +67,21 @@ export function scriptedOpening(state: GameState): Opening {
     : '';
 
   // ── Beat one: the scene ──
+  // A curated scenario supplies authored, historically-accurate context for this
+  // exact summer (the state of the club, the mood, the real subplots — e.g. Lippi
+  // cashing in Baggio). It carries far more colour than the generic star line, so
+  // when it's present we lead with it; otherwise fall back to the inherited-star line.
+  const context = b.openingProse
+    ? b.openingProse
+    : star
+      ? `It's a squad with ${star.name} at its heart, and it's yours to shape.`
+      : '';
   const scene = [
     `${club.name}, ${seasonLabel}. You've taken the Director's chair — the boardroom power above the manager — and the board's brief is not complicated: ${sc.mandate}`,
-    `${star ? `It's a squad with ${star.name} at its heart, and it's yours to shape.` : ''}${marqueeLine ? `${star ? ' ' : ''}${marqueeLine}` : ''}`.trim(),
+    context,
+    marqueeLine,
     `${b.coach} is here for your first meeting.`,
-  ].filter((p) => p.length).join('\n\n');
+  ].filter((p) => p && p.length).join('\n\n');
 
   // ── Beat two: the manager meeting ──
   const byGroup: Record<Group, string[]> = { GK: [], DEF: [], MID: [], ATT: [] };

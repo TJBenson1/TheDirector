@@ -190,6 +190,7 @@ export {
   ALL_FORMATIONS,
 } from './tactics.js';
 export { narrativeContext, type NarrativeContext } from './narrative.js';
+export { SCENARIO_OPENINGS, type ScenarioOpening } from './data/openings.js';
 export { realLeaguePosition } from './realStandings.js';
 export {
   coachBriefing,
