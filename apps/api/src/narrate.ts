@@ -43,7 +43,10 @@ export async function narrate(opts: {
 }): Promise<NarrateResult> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set on the server.');
-  const client = new Anthropic({ apiKey });
+  // A per-request timeout and a retry so a single slow/dropped model call can't
+  // hang the whole turn until the platform severs the connection ("the line went
+  // dead"). The loop below also enforces an overall wall-clock budget.
+  const client = new Anthropic({ apiKey, timeout: 30_000, maxRetries: 1 });
 
   let state = opts.state;
   const priorText = opts.history ?? [];
@@ -56,30 +59,58 @@ export async function narrate(opts: {
     { role: 'user', content: `${opts.message}${contextNote}` },
   ];
 
+  // Overall wall-clock budget for the turn, comfortably under a typical platform
+  // HTTP timeout — if we're close, stop looping and answer with what we have
+  // rather than letting the request die mid-flight.
+  const started = Date.now();
+  const BUDGET_MS = 45_000;
+
   let finalText = '';
-  for (let hop = 0; hop < MAX_TOOL_HOPS; hop++) {
-    const res = await client.messages.create({
-      model: MODEL,
-      max_tokens: 1024,
-      system: SYSTEM,
-      tools: TOOL_SCHEMAS as Anthropic.Tool[],
-      messages: working,
-    });
-    working.push({ role: 'assistant', content: res.content });
+  try {
+    for (let hop = 0; hop < MAX_TOOL_HOPS; hop++) {
+      if (Date.now() - started > BUDGET_MS) break;
+      const res = await client.messages.create({
+        model: MODEL,
+        max_tokens: 1024,
+        system: SYSTEM,
+        tools: TOOL_SCHEMAS as Anthropic.Tool[],
+        messages: working,
+      });
+      working.push({ role: 'assistant', content: res.content });
 
-    const toolUses = res.content.filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use');
-    finalText = res.content.filter((b): b is Anthropic.TextBlock => b.type === 'text').map((b) => b.text).join('\n').trim();
+      const toolUses = res.content.filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use');
+      finalText = res.content.filter((b): b is Anthropic.TextBlock => b.type === 'text').map((b) => b.text).join('\n').trim();
 
-    if (toolUses.length === 0 || res.stop_reason !== 'tool_use') break;
+      if (toolUses.length === 0 || res.stop_reason !== 'tool_use') break;
 
-    const results: Anthropic.ToolResultBlockParam[] = [];
-    for (const tu of toolUses) {
-      const base = state ?? ({} as GameState);
-      const { state: next, result } = runOp(base, tu.name, (tu.input ?? {}) as Record<string, unknown>);
-      if (tu.name === 'new_game' || next !== base) state = next;
-      results.push({ type: 'tool_result', tool_use_id: tu.id, content: JSON.stringify(result) });
+      const results: Anthropic.ToolResultBlockParam[] = [];
+      for (const tu of toolUses) {
+        const base = state ?? ({} as GameState);
+        // Isolate each tool: a single op throwing must not kill the turn — hand the
+        // model an error result and let it recover in-world.
+        try {
+          const { state: next, result } = runOp(base, tu.name, (tu.input ?? {}) as Record<string, unknown>);
+          if (tu.name === 'new_game' || next !== base) state = next;
+          results.push({ type: 'tool_result', tool_use_id: tu.id, content: JSON.stringify(result) });
+        } catch (err) {
+          results.push({
+            type: 'tool_result',
+            tool_use_id: tu.id,
+            is_error: true,
+            content: `That didn't work: ${err instanceof Error ? err.message : String(err)}`,
+          });
+        }
+      }
+      working.push({ role: 'user', content: results });
     }
-    working.push({ role: 'user', content: results });
+  } catch {
+    // A model call failed or timed out. Keep the Director's game intact and hand
+    // back an in-world nudge rather than a dead line, so he can simply try again.
+    if (!finalText) {
+      finalText = state
+        ? 'The line to the boardroom crackled for a moment there — say that again and I’ll pick it straight up.'
+        : 'The line crackled — tell me which job you want and we’ll get started.';
+    }
   }
 
   // Keep the client-facing history lean: only the Director's message and the
