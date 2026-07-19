@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createNewGame } from './state.js';
 import { coachBriefing } from './briefing.js';
-import { realInboundThisWindow } from './recommend.js';
+import { realInboundThisWindow, realDepartureThisWindow } from './recommend.js';
 import { SCENARIOS } from './scenarios.js';
 
 describe('coachBriefing', () => {
@@ -52,6 +52,19 @@ describe('coachBriefing', () => {
     expect(figo?.fee).toBe(37_000_000);
     // Highest fee ranks first — the biggest statement heads the list.
     expect(inbound[0]?.fee).toBeGreaterThanOrEqual(inbound[inbound.length - 1]?.fee ?? 0);
+  });
+
+  it('surfaces a real DEPARTURE this window (keep is free, fee is the sale)', () => {
+    // Juventus 1995: Baggio really left for Milan (£6.5m). It must show as a
+    // departure the Director can bank OR block — never a fee to keep his own man.
+    const s = createNewGame({ scenarioId: 'juventus-1995', seed: 'brief' });
+    const out = realDepartureThisWindow(s);
+    const baggio = out.find((d) => d.name === 'Roberto Baggio');
+    expect(baggio).toBeDefined();
+    expect(baggio?.toClub).toBe('AC Milan');
+    expect(baggio?.fee).toBe(6_500_000);
+    // He is still ours at the point of the offer (not yet sold).
+    expect(s.players[baggio!.playerId]?.club).toBe(s.playerClub);
   });
 
   it('is deterministic and never throws across every scenario', () => {

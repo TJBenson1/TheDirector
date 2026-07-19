@@ -153,11 +153,13 @@ export {
   askingPrice,
   resolvePlayer,
   realInboundThisWindow,
+  realDepartureThisWindow,
   type TargetSuggestion,
   type PlayerQuery,
   type AcquisitionTag,
   type SuggestOptions,
   type RealInboundTarget,
+  type RealDeparture,
 } from './recommend.js';
 export { courtPlayer, decayPursuit, poleSuitorFor } from './wooing.js';
 export {

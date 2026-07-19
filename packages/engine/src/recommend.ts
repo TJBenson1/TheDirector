@@ -239,6 +239,54 @@ export function realInboundThisWindow(state: GameState): RealInboundTarget[] {
   return out;
 }
 
+/** A real DEPARTURE the club made this window — one of your own players whose
+ *  reality was a move OUT (Baggio → Milan, 1995). The Director can sanction the
+ *  sale (bank the fee) or keep him at NO fee (he simply doesn't leave). */
+export interface RealDeparture {
+  playerId: PlayerId;
+  name: string;
+  toClub: string;
+  toClubId: ClubId;
+  /** The real fee the BUYER paid — what you bank if you sanction the sale, never
+   *  a cost to keep him. Keeping your own player is always free. */
+  fee: number;
+  window: YearMonth;
+}
+
+/**
+ * The real departures FROM the user's club this window — the mirror of
+ * realInboundThisWindow. These are your own players history sold on (Baggio to
+ * Milan in 1995-07): a reality-default "sanction the sale or keep him" call.
+ * Keeping costs nothing — the fee is what a sanctioned sale BANKS, not a price to
+ * retain him. Skips a player already gone or a move already realized. Pure ledger
+ * read (no RNG). */
+export function realDepartureThisWindow(state: GameState): RealDeparture[] {
+  const ledger = ERA_REALITY[eraForScenario(state.meta.scenarioId)]?.realTransferLedger;
+  if (!ledger) return [];
+  const now = state.clock.date;
+  const done = new Set(state.meta.realizedLedger);
+  const out: RealDeparture[] = [];
+  for (const e of ledger) {
+    if (e.from !== state.playerClub) continue;
+    if (e.window !== now) continue;
+    const key = e.id ?? `${e.playerId}@${e.window}->${e.to}`;
+    if (done.has(key)) continue; // already sold on
+    const p = state.players[e.playerId];
+    if (!p || p.retired) continue;
+    if (p.club !== state.playerClub) continue; // already left
+    out.push({
+      playerId: e.playerId,
+      name: p.name,
+      toClub: state.clubs[e.to]?.name ?? e.to,
+      toClubId: e.to,
+      fee: e.fee,
+      window: e.window,
+    });
+  }
+  out.sort((a, b) => b.fee - a.fee);
+  return out;
+}
+
 export interface PlayerQuery {
   visible: boolean;
   note?: string;

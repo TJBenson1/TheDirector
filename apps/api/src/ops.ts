@@ -16,6 +16,7 @@ import {
   suggestTargets,
   resolvePlayer,
   askingPrice,
+  realDepartureThisWindow,
   evaluateApproach,
   coachFit,
   valuePlayer,
@@ -150,8 +151,46 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
     case 'find_player': {
       const p = resolvePlayer(s, String(input.name));
       if (!p) return { state: s, result: { found: false } };
-      const verdict = evaluateApproach(s, { playerId: p.id, toClub: s.playerClub });
       const fit = coachFit(s.managerRelations, p);
+      // YOUR OWN player has no asking price TO YOU — you already own him. Returning
+      // one made the narrator invent "pay £6.5m to keep Baggio", which is nonsense:
+      // keeping your own man costs no fee. Report his standing instead, and if
+      // reality has him leaving this window, frame the real keep/sell call plainly.
+      if (p.club === s.playerClub) {
+        const dep = realDepartureThisWindow(s).find((d) => d.playerId === p.id);
+        // Prefer a live pending decision (once the window has opened) so the narrator
+        // can resolve it directly; else point at how to action it.
+        const pending = s.pendingDecisions.find((d) => d.id.startsWith('real-out:') && (d.memoryTags ?? []).includes(p.id));
+        return {
+          state: s,
+          result: {
+            found: true,
+            yours: true,
+            playerId: p.id,
+            name: p.name,
+            club: s.clubs[p.club]?.name,
+            age: currentYear(s) - p.birthYear,
+            positions: p.positions,
+            contractUntil: p.contractUntil,
+            morale: p.morale,
+            coach: `${fit.verdict}: ${fit.reason}`,
+            ...(dep
+              ? {
+                  realDeparture: {
+                    toClub: dep.toClub,
+                    sellBanks: m(dep.fee),
+                    keepCost: 'nothing — keeping your own player costs NO transfer fee; you simply block the move. He wanted to go, so expect him to be unsettled.',
+                    note: `This is the window ${p.name} really left for ${dep.toClub}. Sanction the sale to bank ${m(dep.fee)}, or keep him for free (he sulks, since he wanted the move).`,
+                    ...(pending
+                      ? { decisionId: pending.id, keepChoiceId: 'keep', sellChoiceId: 'sell' }
+                      : { howToAction: 'When the window opens (advance), his sale comes up as a keep/sell decision — resolve it as keep to retain him. Doing nothing lets reality hold and he leaves.' }),
+                  },
+                }
+              : {}),
+          },
+        };
+      }
+      const verdict = evaluateApproach(s, { playerId: p.id, toClub: s.playerClub });
       return { state: s, result: { found: true, playerId: p.id, name: p.name, club: p.club ? s.clubs[p.club]?.name : 'Free agent', age: currentYear(s) - p.birthYear, positions: p.positions, askingPrice: m(askingPrice(s, p.id)), willing: verdict.willing, resistanceReason: verdict.reason, coach: `${fit.verdict}: ${fit.reason}` } };
     }
 
