@@ -54,6 +54,62 @@ const REAL_STANDINGS: Record<string, Record<number, ClubId[]>> = {
     2012: ['man_utd', 'man_city', 'chelsea', 'arsenal', 'spurs', 'everton', 'liverpool', 'west_brom', 'swansea', 'west_ham', 'norwich', 'fulham', 'stoke', 'southampton', 'aston_villa', 'newcastle', 'sunderland', 'wigan', 'reading', 'qpr'],
     2013: ['man_city', 'liverpool', 'chelsea', 'arsenal', 'everton', 'spurs', 'man_utd', 'southampton', 'stoke', 'newcastle', 'crystal_palace', 'swansea', 'west_ham', 'sunderland', 'aston_villa', 'hull', 'west_brom', 'norwich', 'fulham', 'cardiff'],
   },
+  // La Liga (Primera División), 2000–01 → 2013–14. Real finishing order; clubs the
+  // pack doesn't model that season are omitted (their relative order is kept).
+  spanish: {
+    2000: ['real_madrid', 'deportivo', 'mallorca', 'barcelona', 'valencia', 'celta', 'villarreal', 'malaga', 'espanyol', 'alaves', 'las_palmas', 'athletic', 'real_sociedad', 'rayo', 'osasuna', 'valladolid', 'zaragoza', 'oviedo', 'racing', 'numancia'],
+    2001: ['valencia', 'deportivo', 'real_madrid', 'barcelona', 'celta', 'betis', 'alaves', 'sevilla', 'athletic', 'malaga', 'rayo', 'valladolid', 'real_sociedad', 'espanyol', 'villarreal', 'mallorca', 'osasuna', 'las_palmas', 'zaragoza'],
+    2002: ['real_madrid', 'real_sociedad', 'deportivo', 'celta', 'valencia', 'barcelona', 'athletic', 'betis', 'mallorca', 'sevilla', 'osasuna', 'atletico', 'malaga', 'valladolid', 'villarreal', 'racing', 'espanyol', 'recreativo', 'alaves', 'rayo'],
+    2003: ['valencia', 'barcelona', 'deportivo', 'real_madrid', 'athletic', 'sevilla', 'atletico', 'villarreal', 'betis', 'malaga', 'mallorca', 'zaragoza', 'osasuna', 'albacete', 'real_sociedad', 'racing', 'espanyol', 'valladolid', 'celta', 'murcia'],
+    2004: ['barcelona', 'real_madrid', 'villarreal', 'betis', 'espanyol', 'sevilla', 'valencia', 'deportivo', 'athletic', 'malaga', 'atletico', 'zaragoza', 'getafe', 'real_sociedad', 'osasuna', 'racing', 'mallorca', 'levante', 'numancia', 'albacete'],
+    2005: ['barcelona', 'real_madrid', 'valencia', 'osasuna', 'sevilla', 'celta', 'villarreal', 'deportivo', 'getafe', 'atletico', 'zaragoza', 'athletic', 'mallorca', 'betis', 'espanyol', 'real_sociedad', 'racing', 'alaves', 'malaga'],
+    2006: ['real_madrid', 'barcelona', 'sevilla', 'valencia', 'villarreal', 'zaragoza', 'atletico', 'recreativo', 'getafe', 'racing', 'espanyol', 'mallorca', 'deportivo', 'osasuna', 'levante', 'betis', 'athletic', 'celta', 'real_sociedad', 'nastic'],
+    2007: ['real_madrid', 'villarreal', 'barcelona', 'atletico', 'sevilla', 'racing', 'mallorca', 'almeria', 'deportivo', 'valencia', 'athletic', 'espanyol', 'betis', 'getafe', 'valladolid', 'recreativo', 'osasuna', 'zaragoza', 'murcia', 'levante'],
+    2008: ['barcelona', 'real_madrid', 'sevilla', 'atletico', 'villarreal', 'valencia', 'deportivo', 'malaga', 'mallorca', 'espanyol', 'almeria', 'racing', 'athletic', 'osasuna', 'valladolid', 'getafe', 'betis', 'numancia', 'recreativo'],
+    2009: ['barcelona', 'real_madrid', 'valencia', 'sevilla', 'mallorca', 'getafe', 'villarreal', 'athletic', 'atletico', 'deportivo', 'espanyol', 'osasuna', 'almeria', 'zaragoza', 'racing', 'malaga', 'valladolid'],
+    2010: ['barcelona', 'real_madrid', 'valencia', 'villarreal', 'sevilla', 'athletic', 'atletico', 'espanyol', 'osasuna', 'malaga', 'racing', 'zaragoza', 'levante', 'real_sociedad', 'getafe', 'mallorca', 'deportivo', 'almeria'],
+    2011: ['real_madrid', 'barcelona', 'valencia', 'malaga', 'atletico', 'levante', 'osasuna', 'mallorca', 'sevilla', 'athletic', 'getafe', 'real_sociedad', 'betis', 'espanyol', 'rayo', 'zaragoza', 'granada', 'villarreal', 'racing'],
+    2012: ['barcelona', 'real_madrid', 'atletico', 'real_sociedad', 'valencia', 'malaga', 'betis', 'rayo', 'sevilla', 'getafe', 'levante', 'athletic', 'espanyol', 'valladolid', 'granada', 'osasuna', 'celta', 'mallorca', 'deportivo', 'zaragoza'],
+    2013: ['atletico', 'barcelona', 'real_madrid', 'athletic', 'sevilla', 'villarreal', 'real_sociedad', 'valencia', 'celta', 'levante', 'malaga', 'rayo', 'getafe', 'espanyol', 'granada', 'elche', 'almeria', 'osasuna', 'valladolid', 'betis'],
+  },
+  // Serie A, 1995–96 → 2007–08. 18-team era to 2003–04, 20-team from 2004–05.
+  // 2005–06 is the revised post-Calciopoli table (Juventus placed last, Inter
+  // champions); 2006–07 omits Juventus (Serie B).
+  italian: {
+    1995: ['milan', 'juventus', 'lazio', 'fiorentina', 'roma', 'parma', 'inter', 'sampdoria', 'vicenza', 'cagliari', 'udinese', 'napoli', 'atalanta', 'piacenza', 'bari', 'torino'],
+    1996: ['juventus', 'parma', 'inter', 'lazio', 'udinese', 'sampdoria', 'bologna', 'vicenza', 'fiorentina', 'atalanta', 'milan', 'roma', 'napoli', 'cagliari', 'piacenza', 'perugia'],
+    1997: ['juventus', 'inter', 'udinese', 'roma', 'fiorentina', 'parma', 'lazio', 'bologna', 'sampdoria', 'milan', 'bari', 'piacenza', 'empoli', 'vicenza', 'brescia', 'atalanta', 'lecce', 'napoli'],
+    1998: ['milan', 'lazio', 'fiorentina', 'parma', 'roma', 'juventus', 'udinese', 'inter', 'bologna', 'bari', 'venezia', 'piacenza', 'cagliari', 'perugia', 'sampdoria', 'vicenza', 'empoli'],
+    1999: ['lazio', 'juventus', 'milan', 'inter', 'parma', 'roma', 'fiorentina', 'udinese', 'perugia', 'reggina', 'bologna', 'lecce', 'bari', 'torino', 'venezia', 'cagliari', 'piacenza'],
+    2000: ['roma', 'juventus', 'lazio', 'parma', 'inter', 'milan', 'atalanta', 'brescia', 'fiorentina', 'bologna', 'perugia', 'udinese', 'lecce', 'reggina', 'vicenza', 'napoli', 'bari'],
+    2001: ['juventus', 'roma', 'inter', 'milan', 'chievo', 'lazio', 'bologna', 'perugia', 'atalanta', 'parma', 'torino', 'piacenza', 'brescia', 'udinese', 'lecce', 'fiorentina', 'venezia'],
+    2002: ['juventus', 'inter', 'milan', 'lazio', 'parma', 'udinese', 'chievo', 'roma', 'brescia', 'perugia', 'bologna', 'modena', 'empoli', 'atalanta', 'reggina', 'piacenza', 'torino'],
+    2003: ['milan', 'roma', 'juventus', 'inter', 'parma', 'lazio', 'udinese', 'sampdoria', 'chievo', 'lecce', 'brescia', 'bologna', 'reggina', 'siena', 'perugia', 'modena', 'empoli'],
+    2004: ['juventus', 'milan', 'inter', 'udinese', 'sampdoria', 'palermo', 'messina', 'roma', 'livorno', 'reggina', 'lecce', 'cagliari', 'lazio', 'siena', 'chievo', 'fiorentina', 'bologna', 'parma', 'brescia', 'atalanta'],
+    2005: ['inter', 'roma', 'milan', 'chievo', 'palermo', 'livorno', 'parma', 'empoli', 'fiorentina', 'ascoli', 'udinese', 'sampdoria', 'reggina', 'cagliari', 'siena', 'lazio', 'messina', 'lecce', 'juventus'],
+    2006: ['inter', 'roma', 'lazio', 'milan', 'palermo', 'fiorentina', 'empoli', 'atalanta', 'sampdoria', 'udinese', 'livorno', 'parma', 'siena', 'catania', 'reggina', 'torino', 'cagliari', 'chievo', 'ascoli', 'messina'],
+    2007: ['inter', 'roma', 'juventus', 'fiorentina', 'milan', 'sampdoria', 'udinese', 'napoli', 'atalanta', 'genoa', 'palermo', 'lazio', 'siena', 'cagliari', 'torino', 'reggina', 'catania', 'empoli', 'parma', 'livorno'],
+  },
+  // Bundesliga, 1997–98 → 2013–14. 18 teams, 34 games throughout.
+  german: {
+    1997: ['kaiserslautern', 'bayern', 'leverkusen', 'stuttgart', 'schalke', 'hansa', 'werder', 'duisburg', 'hamburg', 'dortmund', 'hertha', 'bochum', 'munich_1860', 'wolfsburg', 'gladbach', 'karlsruhe', 'koln', 'bielefeld'],
+    1998: ['bayern', 'leverkusen', 'hertha', 'dortmund', 'kaiserslautern', 'wolfsburg', 'hamburg', 'duisburg', 'munich_1860', 'schalke', 'stuttgart', 'freiburg', 'werder', 'hansa', 'frankfurt', 'nurnberg', 'bochum', 'gladbach'],
+    1999: ['bayern', 'leverkusen', 'hamburg', 'munich_1860', 'kaiserslautern', 'hertha', 'wolfsburg', 'stuttgart', 'werder', 'frankfurt', 'dortmund', 'freiburg', 'schalke', 'hansa', 'bielefeld', 'duisburg'],
+    2000: ['bayern', 'schalke', 'dortmund', 'leverkusen', 'hertha', 'freiburg', 'werder', 'kaiserslautern', 'wolfsburg', 'koln', 'munich_1860', 'hansa', 'hamburg', 'stuttgart', 'frankfurt', 'bochum'],
+    2001: ['dortmund', 'leverkusen', 'bayern', 'hertha', 'schalke', 'werder', 'kaiserslautern', 'stuttgart', 'munich_1860', 'wolfsburg', 'hamburg', 'gladbach', 'hansa', 'nurnberg', 'freiburg', 'koln'],
+    2002: ['bayern', 'stuttgart', 'dortmund', 'hamburg', 'hertha', 'werder', 'schalke', 'wolfsburg', 'bochum', 'munich_1860', 'hannover', 'gladbach', 'hansa', 'kaiserslautern', 'leverkusen', 'bielefeld', 'nurnberg'],
+    2003: ['werder', 'bayern', 'leverkusen', 'stuttgart', 'bochum', 'dortmund', 'schalke', 'hamburg', 'hansa', 'wolfsburg', 'gladbach', 'hertha', 'kaiserslautern', 'freiburg', 'hannover', 'frankfurt', 'munich_1860', 'koln'],
+    2004: ['bayern', 'schalke', 'werder', 'hertha', 'stuttgart', 'leverkusen', 'dortmund', 'hamburg', 'wolfsburg', 'hannover', 'mainz', 'kaiserslautern', 'bielefeld', 'nurnberg', 'gladbach', 'bochum', 'hansa', 'freiburg'],
+    2005: ['bayern', 'werder', 'hamburg', 'schalke', 'leverkusen', 'hertha', 'dortmund', 'nurnberg', 'stuttgart', 'gladbach', 'mainz', 'hannover', 'bielefeld', 'frankfurt', 'wolfsburg', 'kaiserslautern', 'koln', 'duisburg'],
+    2006: ['stuttgart', 'schalke', 'werder', 'bayern', 'leverkusen', 'nurnberg', 'hamburg', 'bochum', 'dortmund', 'hertha', 'hannover', 'bielefeld', 'frankfurt', 'wolfsburg', 'mainz', 'gladbach'],
+    2007: ['bayern', 'werder', 'schalke', 'hamburg', 'wolfsburg', 'stuttgart', 'leverkusen', 'hannover', 'frankfurt', 'hertha', 'karlsruhe', 'bochum', 'dortmund', 'bielefeld', 'nurnberg', 'hansa', 'duisburg'],
+    2008: ['wolfsburg', 'bayern', 'stuttgart', 'hertha', 'hamburg', 'dortmund', 'hoffenheim', 'schalke', 'leverkusen', 'werder', 'hannover', 'koln', 'frankfurt', 'bochum', 'gladbach', 'karlsruhe', 'bielefeld'],
+    2009: ['bayern', 'schalke', 'werder', 'leverkusen', 'dortmund', 'stuttgart', 'hamburg', 'wolfsburg', 'mainz', 'frankfurt', 'hoffenheim', 'gladbach', 'koln', 'freiburg', 'hannover', 'nurnberg', 'bochum', 'hertha'],
+    2010: ['dortmund', 'leverkusen', 'bayern', 'hannover', 'mainz', 'nurnberg', 'kaiserslautern', 'hamburg', 'freiburg', 'koln', 'hoffenheim', 'stuttgart', 'werder', 'schalke', 'wolfsburg', 'gladbach', 'frankfurt'],
+    2011: ['dortmund', 'bayern', 'schalke', 'gladbach', 'leverkusen', 'stuttgart', 'hannover', 'wolfsburg', 'werder', 'nurnberg', 'hoffenheim', 'freiburg', 'mainz', 'augsburg', 'hamburg', 'hertha', 'koln', 'kaiserslautern'],
+    2012: ['bayern', 'dortmund', 'leverkusen', 'schalke', 'freiburg', 'frankfurt', 'hamburg', 'gladbach', 'hannover', 'nurnberg', 'wolfsburg', 'stuttgart', 'mainz', 'werder', 'augsburg', 'hoffenheim', 'dusseldorf', 'furth'],
+    2013: ['bayern', 'dortmund', 'schalke', 'leverkusen', 'wolfsburg', 'gladbach', 'mainz', 'augsburg', 'hoffenheim', 'hannover', 'hertha', 'werder', 'frankfurt', 'freiburg', 'stuttgart', 'hamburg', 'nurnberg'],
+  },
 };
 
 /** Realistic Premier-League points by finishing rank (20-team, 38-game league).
