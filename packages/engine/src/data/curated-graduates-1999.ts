@@ -64,6 +64,36 @@ export const GRADUATES_1999: CuratedSeed[] = [
   q('arsenal', 'saka_grad', 'Bukayo Saka', 2001, 'England', ['RW', 'LW'], 60, 89, 2024, 15, t(9, 6, 9, 9, 4, 8)),
   q('man_city', 'haaland_grad', 'Erling Haaland', 2000, 'Norway', ['ST'], 88, 94, 2027, 15, t(9, 7, 10, 8, 4, 8)),
   q('chelsea', 'palmer_grad', 'Cole Palmer', 2002, 'England', ['AM', 'RW'], 74, 89, 2028, 15, t(9, 6, 9, 8, 4, 8)),
+
+  // ── Squad-depth academy products (2000-2012) ──
+  // The real home-grown players who broke through at English clubs beyond the
+  // marquee names above — the everyday spine that keeps mid-table and background
+  // sides real over a long save, rather than draining to a bare skeleton. Debut
+  // clubs, birth years and positions are real; ability/potential are estimates.
+  q('man_utd', 'oshea_grad', "John O'Shea", 1981, 'Ireland', ['CB', 'RB'], 62, 78, 2004, 20, t(9, 4, 7, 9, 3, 8)),
+  q('man_utd', 'fletcher_grad', 'Darren Fletcher', 1984, 'Scotland', ['CM'], 60, 80, 2006, 30, t(9, 4, 8, 9, 3, 7)),
+  q('man_utd', 'evans_grad', 'Jonny Evans', 1988, 'N. Ireland', ['CB'], 58, 80, 2010, 25, t(9, 4, 7, 8, 3, 7)),
+  q('man_utd', 'cleverley_grad', 'Tom Cleverley', 1989, 'England', ['CM', 'AM'], 60, 75, 2014, 25, t(8, 5, 7, 7, 4, 7)),
+  q('arsenal', 'wilshere_grad', 'Jack Wilshere', 1992, 'England', ['CM', 'AM'], 64, 84, 2013, 60, t(7, 6, 8, 8, 6, 7)),
+  q('arsenal', 'gibbs_grad', 'Kieran Gibbs', 1989, 'England', ['LB'], 60, 77, 2012, 30, t(8, 5, 7, 7, 4, 7)),
+  q('west_ham', 'carrick_grad', 'Michael Carrick', 1981, 'England', ['CM', 'DM'], 64, 84, 2004, 20, t(9, 4, 8, 7, 3, 8)),
+  q('west_ham', 'g_johnson_grad', 'Glen Johnson', 1984, 'England', ['RB'], 60, 80, 2006, 30, t(7, 6, 7, 6, 5, 7)),
+  q('west_ham', 'noble_grad', 'Mark Noble', 1987, 'England', ['CM'], 58, 77, 2010, 25, t(9, 5, 7, 10, 4, 7), { loyalty: 92 }),
+  q('spurs', 'king_grad', 'Ledley King', 1980, 'England', ['CB'], 64, 85, 2004, 65, t(9, 5, 8, 10, 3, 8), { loyalty: 90 }),
+  q('everton', 'osman_grad', 'Leon Osman', 1981, 'England', ['AM', 'CM'], 58, 75, 2006, 25, t(8, 4, 7, 9, 3, 7)),
+  q('everton', 'rodwell_grad', 'Jack Rodwell', 1991, 'England', ['CM', 'CB'], 60, 76, 2011, 45, t(7, 5, 7, 6, 4, 7)),
+  q('everton', 'barkley_grad', 'Ross Barkley', 1993, 'England', ['AM', 'CM'], 62, 82, 2014, 30, t(6, 6, 8, 6, 6, 7)),
+  q('man_city', 'richards_grad', 'Micah Richards', 1988, 'England', ['RB', 'CB'], 62, 80, 2008, 40, t(7, 6, 8, 7, 5, 7)),
+  q('aston_villa', 'agbonlahor_grad', 'Gabriel Agbonlahor', 1986, 'England', ['ST', 'RW'], 62, 78, 2009, 30, t(7, 5, 7, 9, 4, 7)),
+  q('newcastle', 'carroll_grad', 'Andy Carroll', 1989, 'England', ['ST'], 60, 79, 2010, 55, t(6, 7, 7, 6, 6, 6)),
+  q('newcastle', 's_taylor_grad', 'Steven Taylor', 1986, 'England', ['CB'], 58, 74, 2007, 35, t(7, 6, 7, 8, 5, 7)),
+  q('middlesbrough', 'downing_grad', 'Stewart Downing', 1984, 'England', ['LW'], 62, 80, 2005, 25, t(8, 5, 7, 7, 4, 7)),
+  q('middlesbrough', 'a_johnson_grad', 'Adam Johnson', 1987, 'England', ['RW'], 60, 78, 2008, 30, t(6, 6, 7, 6, 6, 7)),
+  q('leeds', 'lennon_grad', 'Aaron Lennon', 1987, 'England', ['RW'], 60, 80, 2006, 30, t(8, 5, 7, 7, 4, 8)),
+  q('sunderland', 'henderson_grad', 'Jordan Henderson', 1990, 'England', ['CM'], 60, 83, 2011, 20, t(10, 5, 9, 8, 3, 8)),
+  q('southampton', 'lallana_grad', 'Adam Lallana', 1988, 'England', ['AM', 'CM'], 60, 82, 2009, 30, t(9, 5, 8, 8, 4, 8)),
+  q('southampton', 'oxlade_grad', 'Alex Oxlade-Chamberlain', 1993, 'England', ['RW', 'CM'], 60, 81, 2013, 45, t(8, 6, 8, 7, 5, 7)),
+  q('southampton', 'shaw_grad', 'Luke Shaw', 1995, 'England', ['LB'], 62, 82, 2015, 45, t(7, 6, 7, 7, 5, 7)),
 ];
 
 /** The debut schedule: which graduate arrives at which club, and when. */
@@ -100,4 +130,30 @@ export const INTAKES_1999: AcademyIntake[] = [
   { clubId: 'arsenal', year: 2019, playerId: 'cur_saka_grad' },
   { clubId: 'man_city', year: 2022, playerId: 'cur_haaland_grad' },
   { clubId: 'chelsea', year: 2023, playerId: 'cur_palmer_grad' },
+
+  // ── Squad-depth academy products, at their real debut years ──
+  { clubId: 'man_utd', year: 2000, playerId: 'cur_oshea_grad' },
+  { clubId: 'west_ham', year: 2000, playerId: 'cur_carrick_grad' },
+  { clubId: 'spurs', year: 2000, playerId: 'cur_king_grad' },
+  { clubId: 'middlesbrough', year: 2002, playerId: 'cur_downing_grad' },
+  { clubId: 'everton', year: 2003, playerId: 'cur_osman_grad' },
+  { clubId: 'man_utd', year: 2003, playerId: 'cur_fletcher_grad' },
+  { clubId: 'west_ham', year: 2003, playerId: 'cur_g_johnson_grad' },
+  { clubId: 'leeds', year: 2003, playerId: 'cur_lennon_grad' },
+  { clubId: 'newcastle', year: 2004, playerId: 'cur_s_taylor_grad' },
+  { clubId: 'man_city', year: 2005, playerId: 'cur_richards_grad' },
+  { clubId: 'middlesbrough', year: 2005, playerId: 'cur_a_johnson_grad' },
+  { clubId: 'aston_villa', year: 2006, playerId: 'cur_agbonlahor_grad' },
+  { clubId: 'southampton', year: 2006, playerId: 'cur_lallana_grad' },
+  { clubId: 'man_utd', year: 2007, playerId: 'cur_evans_grad' },
+  { clubId: 'west_ham', year: 2007, playerId: 'cur_noble_grad' },
+  { clubId: 'newcastle', year: 2007, playerId: 'cur_carroll_grad' },
+  { clubId: 'everton', year: 2008, playerId: 'cur_rodwell_grad' },
+  { clubId: 'sunderland', year: 2008, playerId: 'cur_henderson_grad' },
+  { clubId: 'arsenal', year: 2009, playerId: 'cur_gibbs_grad' },
+  { clubId: 'arsenal', year: 2010, playerId: 'cur_wilshere_grad' },
+  { clubId: 'southampton', year: 2010, playerId: 'cur_oxlade_grad' },
+  { clubId: 'man_utd', year: 2011, playerId: 'cur_cleverley_grad' },
+  { clubId: 'everton', year: 2011, playerId: 'cur_barkley_grad' },
+  { clubId: 'southampton', year: 2012, playerId: 'cur_shaw_grad' },
 ];
