@@ -126,6 +126,9 @@ const ERA_2001_CONTEXT: ClubSeed[] = [
   { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 80 },
   { id: 'dortmund', name: 'Borussia Dortmund', prestige: 80 },
   { id: 'celtic', name: 'Celtic', prestige: 72 },
+  { id: 'rangers', name: 'Rangers', prestige: 70 },
+  { id: 'galatasaray', name: 'Galatasaray', prestige: 70 },
+  { id: 'fenerbahce', name: 'Fenerbahçe', prestige: 68 },
   { id: 'lyon', name: 'Olympique Lyonnais', prestige: 76 },
 ];
 

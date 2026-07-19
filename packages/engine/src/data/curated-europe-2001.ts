@@ -139,6 +139,65 @@ const CELTIC_2001: CuratedSeed[] = [
   q('celtic', 'valgaeren_01', 'Joos Valgaeren', 1976, 'Belgium', ['CB'], 76, 79, 2005, 20, t(8, 5, 8, 8, 5, 7)),
 ];
 
+// ── Rangers, 2001-02 (Advocaat/McLeish; the £12m Flo, De Boer, captain Ferguson) ─
+const RANGERS_2001: CuratedSeed[] = [
+  q('rangers', 'klos_01', 'Stefan Klos', 1971, 'Germany', ['GK'], 80, 81, 2005, 20, t(8, 5, 6, 8, 4, 7)),
+  q('rangers', 'amoruso_01', 'Lorenzo Amoruso', 1971, 'Italy', ['CB'], 79, 80, 2004, 25, t(8, 6, 7, 7, 5, 7), { loyalty: 85 }),
+  q('rangers', 'moore_r01', 'Craig Moore', 1975, 'Australia', ['CB'], 76, 78, 2005, 25, t(8, 5, 7, 7, 4, 7)),
+  q('rangers', 'konterman_01', 'Bert Konterman', 1971, 'Netherlands', ['CB', 'DM'], 74, 75, 2004, 25, t(8, 4, 6, 7, 4, 7)),
+  q('rangers', 'numan_r01', 'Arthur Numan', 1969, 'Netherlands', ['LB'], 78, 79, 2003, 20, t(8, 5, 7, 7, 4, 7)),
+  q('rangers', 'ball_01', 'Michael Ball', 1979, 'England', ['LB'], 75, 80, 2006, 30, t(7, 5, 7, 6, 5, 7)),
+  q('rangers', 'ricksen_01', 'Fernando Ricksen', 1976, 'Netherlands', ['RB', 'DM'], 76, 78, 2006, 25, t(6, 7, 8, 6, 7, 7)),
+  q('rangers', 'bferguson_01', 'Barry Ferguson', 1978, 'Scotland', ['CM'], 82, 84, 2005, 20, t(8, 6, 8, 8, 5, 7)),
+  q('rangers', 'nerlinger_01', 'Christian Nerlinger', 1973, 'Germany', ['DM', 'CM'], 76, 77, 2004, 25, t(8, 5, 7, 7, 4, 7)),
+  q('rangers', 'deboer_r01', 'Ronald de Boer', 1970, 'Netherlands', ['AM', 'ST'], 80, 81, 2004, 25, t(8, 6, 8, 7, 5, 8)),
+  q('rangers', 'mccann_01', 'Neil McCann', 1974, 'Scotland', ['LW'], 75, 76, 2004, 25, t(7, 5, 7, 7, 5, 7)),
+  q('rangers', 'lovenkrands_01', 'Peter Løvenkrands', 1980, 'Denmark', ['LW', 'ST'], 75, 79, 2006, 25, t(7, 5, 7, 6, 5, 7)),
+  q('rangers', 'flo_01', 'Tore André Flo', 1973, 'Norway', ['ST'], 80, 81, 2005, 25, t(7, 6, 7, 6, 5, 7)),
+  q('rangers', 'arveladze_01', 'Shota Arveladze', 1973, 'Georgia', ['ST', 'LW'], 77, 78, 2005, 25, t(7, 6, 8, 6, 5, 7)),
+  q('rangers', 'mols_01', 'Michael Mols', 1970, 'Netherlands', ['ST'], 77, 78, 2004, 35, t(7, 6, 7, 6, 5, 7)),
+  q('rangers', 'miller_r01', 'Kenny Miller', 1979, 'Scotland', ['ST'], 73, 80, 2005, 25, t(7, 6, 8, 6, 5, 7)),
+  q('rangers', 'caniggia_01', 'Claudio Caniggia', 1967, 'Argentina', ['ST'], 77, 77, 2003, 30, t(6, 8, 7, 5, 7, 6)),
+  q('rangers', 'mcgregor_01', 'Allan McGregor', 1982, 'Scotland', ['GK'], 66, 82, 2006, 20, t(7, 5, 7, 7, 5, 6)),
+];
+
+// ── Galatasaray, 2001-02 (Lucescu's Süper Lig champions; Hasan Şaş the jewel) ────
+const GALATASARAY_2001: CuratedSeed[] = [
+  q('galatasaray', 'mondragon_01', 'Faryd Mondragón', 1971, 'Colombia', ['GK'], 80, 81, 2005, 20, t(7, 6, 7, 7, 5, 7)),
+  q('galatasaray', 'bulentkorkmaz_01', 'Bülent Korkmaz', 1968, 'Turkey', ['CB'], 80, 80, 2004, 25, t(9, 6, 7, 10, 4, 7), { loyalty: 92 }),
+  q('galatasaray', 'emreasik_01', 'Emre Aşık', 1973, 'Turkey', ['CB'], 78, 79, 2005, 25, t(7, 6, 7, 7, 6, 7)),
+  q('galatasaray', 'hakanunsal_01', 'Hakan Ünsal', 1973, 'Turkey', ['LB'], 78, 79, 2004, 25, t(7, 6, 7, 7, 6, 7)),
+  q('galatasaray', 'davala_01', 'Ümit Davala', 1973, 'Turkey', ['RW', 'RB'], 78, 79, 2004, 25, t(7, 6, 8, 6, 6, 7)),
+  q('galatasaray', 'penbe_01', 'Ergün Penbe', 1972, 'Turkey', ['DM', 'CM'], 77, 78, 2005, 20, t(8, 5, 7, 8, 4, 7)),
+  q('galatasaray', 'fleurquin_01', 'Andrés Fleurquin', 1975, 'Uruguay', ['DM', 'CM'], 76, 77, 2005, 25, t(7, 5, 7, 6, 5, 6)),
+  q('galatasaray', 'hasansas_01', 'Hasan Şaş', 1976, 'Turkey', ['LW', 'AM'], 83, 84, 2005, 25, t(8, 6, 8, 7, 5, 7)),
+  q('galatasaray', 'ariferdem_01', 'Arif Erdem', 1972, 'Turkey', ['ST', 'AM'], 78, 79, 2004, 25, t(8, 6, 7, 8, 5, 7)),
+  q('galatasaray', 'umitkaran_01', 'Ümit Karan', 1976, 'Turkey', ['ST'], 79, 80, 2005, 25, t(7, 6, 8, 7, 5, 7)),
+  q('galatasaray', 'sebperez_01', 'Sébastien Pérez', 1973, 'France', ['CB', 'DM'], 76, 77, 2004, 25, t(7, 5, 7, 6, 5, 6)),
+  q('galatasaray', 'gvictoria_01', 'Gustavo Victoria', 1980, 'Colombia', ['LB', 'LW'], 72, 75, 2005, 25, t(7, 5, 7, 6, 5, 7)),
+  q('galatasaray', 'suatkaya_01', 'Suat Kaya', 1967, 'Turkey', ['DM', 'CM'], 73, 73, 2003, 25, t(8, 5, 6, 8, 4, 7)),
+  q('galatasaray', 'inceefe_01', 'Vedat İnceefe', 1974, 'Turkey', ['CB'], 72, 73, 2004, 25, t(7, 4, 6, 7, 4, 7)),
+];
+
+// ── Fenerbahçe, 2001-02 (a selling engine: Rüştü, Rapaić, Revivo the elite circle) ─
+const FENERBAHCE_2001: CuratedSeed[] = [
+  q('fenerbahce', 'rustu_01', 'Rüştü Reçber', 1973, 'Turkey', ['GK'], 84, 85, 2005, 20, t(8, 6, 8, 8, 4, 7)),
+  q('fenerbahce', 'mirkovic_01', 'Zoran Mirković', 1971, 'Serbia', ['RB'], 77, 78, 2004, 25, t(8, 5, 7, 6, 5, 7)),
+  q('fenerbahce', 'fatihakyel_01', 'Fatih Akyel', 1977, 'Turkey', ['RB', 'CB'], 77, 78, 2005, 25, t(7, 5, 7, 7, 5, 7)),
+  q('fenerbahce', 'umitozat_01', 'Ümit Özat', 1976, 'Turkey', ['CB', 'DM'], 78, 79, 2005, 25, t(8, 5, 7, 7, 5, 7)),
+  q('fenerbahce', 'uche_01', 'Uche Okechukwu', 1967, 'Nigeria', ['CB'], 77, 77, 2003, 30, t(8, 5, 7, 8, 4, 7), { loyalty: 88 }),
+  q('fenerbahce', 'ogun_01', 'Ogün Temizkanoğlu', 1969, 'Turkey', ['CB'], 76, 77, 2003, 30, t(8, 5, 7, 8, 4, 7)),
+  q('fenerbahce', 'abdullahercan_01', 'Abdullah Ercan', 1971, 'Turkey', ['LB', 'CM'], 76, 77, 2005, 25, t(8, 5, 7, 7, 4, 7)),
+  q('fenerbahce', 'samjohnson_01', 'Samuel Johnson', 1973, 'Ghana', ['CM', 'DM'], 76, 77, 2004, 25, t(7, 5, 7, 6, 5, 7)),
+  q('fenerbahce', 'lazetic_01', 'Nikola Lazetić', 1978, 'Serbia', ['CM'], 75, 77, 2005, 25, t(7, 5, 7, 6, 5, 7)),
+  q('fenerbahce', 'bayraktar_01', 'Hakan Bayraktar', 1976, 'Turkey', ['AM', 'CM'], 77, 78, 2005, 25, t(7, 5, 7, 7, 5, 7)),
+  q('fenerbahce', 'rapaic_01', 'Milan Rapaić', 1973, 'Croatia', ['RW', 'AM'], 82, 83, 2004, 25, t(6, 7, 7, 5, 7, 7)),
+  q('fenerbahce', 'revivo_01', 'Haim Revivo', 1972, 'Israel', ['AM', 'LW'], 82, 83, 2004, 25, t(7, 7, 8, 5, 6, 7)),
+  q('fenerbahce', 'kanderson_01', 'Kennet Andersson', 1967, 'Sweden', ['ST'], 77, 77, 2003, 35, t(7, 5, 7, 7, 4, 7)),
+  q('fenerbahce', 'serhatakin_01', 'Serhat Akın', 1981, 'Turkey', ['ST'], 73, 80, 2005, 30, t(6, 6, 8, 6, 6, 7)),
+  q('fenerbahce', 'oktayderelioglu_01', 'Oktay Derelioğlu', 1975, 'Turkey', ['ST'], 74, 75, 2004, 30, t(7, 6, 7, 6, 5, 7)),
+];
+
 // ── Olympique Lyonnais, 2001-02 (the first of seven straight titles) ───────────
 const LYON_2001: CuratedSeed[] = [
   q('lyon', 'coupet_01', 'Grégory Coupet', 1972, 'France', ['GK'], 82, 84, 2005, 20, t(9, 5, 8, 9, 5, 7), { loyalty: 88 }),
@@ -163,5 +222,8 @@ export const EUROPE_2001_SQUADS: Record<string, CuratedSeed[]> = {
   leverkusen: LEVERKUSEN_2001,
   dortmund: DORTMUND_2001,
   celtic: CELTIC_2001,
+  rangers: RANGERS_2001,
+  galatasaray: GALATASARAY_2001,
+  fenerbahce: FENERBAHCE_2001,
   lyon: LYON_2001,
 };
