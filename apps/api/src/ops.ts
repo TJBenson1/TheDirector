@@ -21,6 +21,7 @@ import {
   valuePlayer,
   currentYear,
   narrativeContext,
+  coachBriefing,
   standingsOrder,
   clubSquadPlayers,
   isProcedural,
@@ -80,6 +81,9 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
         },
       };
     }
+
+    case 'manager_meeting':
+      return { state: s, result: coachBriefing(s) };
 
     case 'squad': {
       const year = currentYear(s);
@@ -206,6 +210,7 @@ export const TOOL_SCHEMAS = [
   { name: 'list_scenarios', description: 'List playable starting points (club + season + mandate).', input_schema: { type: 'object', properties: {} } },
   { name: 'new_game', description: 'Start a new career at a scenario id.', input_schema: { type: 'object', properties: { scenarioId: { type: 'string' }, seed: { type: 'string' } }, required: ['scenarioId'] } },
   { name: 'situation', description: 'Current story: club, board mood, coach, squad tensions, open decisions.', input_schema: { type: 'object', properties: {} } },
+  { name: 'manager_meeting', description: "The head coach's briefing: his mood, the club's priority (league/Europe/both), the shape he wants, his best XI, players he isn't sold on, positions to strengthen, and concrete targets. Use it for the opening manager meeting and whenever the Director asks the coach's view.", input_schema: { type: 'object', properties: {} } },
   { name: 'advance', description: 'Move time forward one step (window phase or month). Returns what happened + new decisions.', input_schema: { type: 'object', properties: {} } },
   { name: 'squad', description: 'Your full squad with age, ability, morale, contract, wages.', input_schema: { type: 'object', properties: {} } },
   { name: 'league_table', description: 'The current league table.', input_schema: { type: 'object', properties: {} } },

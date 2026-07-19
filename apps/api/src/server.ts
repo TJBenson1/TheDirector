@@ -33,6 +33,7 @@ import {
   evaluateApproach,
   coachFit,
   narrativeContext,
+  coachBriefing,
   clubSquadPlayers,
   standingsOrder,
   valuePlayer,
@@ -226,6 +227,10 @@ const routes: Record<string, Handler> = {
   },
 
   '/games/view': ({ state }) => ({ view: buildView(state as GameState) }),
+
+  // The head coach's opening briefing (mood, priority, shape, best XI, players
+  // he isn't sold on, positions to strengthen, targets) — the manager meeting.
+  '/games/manager': ({ state }) => ({ briefing: coachBriefing(state as GameState) }),
 
   // Rich structured "current situation" for the narrator (the app's language
   // model turns this into prose — a briefing, a matchday report, an answer to

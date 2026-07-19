@@ -183,3 +183,9 @@ export {
   ALL_FORMATIONS,
 } from './tactics.js';
 export { narrativeContext, type NarrativeContext } from './narrative.js';
+export {
+  coachBriefing,
+  type CoachBriefing,
+  type BriefingXI,
+  type BriefingTarget,
+} from './briefing.js';

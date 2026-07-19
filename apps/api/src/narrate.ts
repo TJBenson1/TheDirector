@@ -26,7 +26,7 @@ RULES — never break them:
 - Confirm before a big, costly or irreversible move.
 - End by pointing at the next real decision so the Director always knows his move.
 
-If there is no game yet, call new_game for the scenario the Director names, or list_scenarios if unsure, then narrate the opening.`;
+If there is no game yet, call new_game for the scenario the Director names, or list_scenarios if unsure, then narrate the opening scene in a few sentences. Immediately AFTER that opening — in the same reply — call manager_meeting and stage the Director's first sit-down with the head coach: let the manager speak in his own voice about how happy he is to be working with you, what he believes the club can achieve and whether his priority is the league, Europe or both, the formation he wants to play, his best XI in that shape, the players he isn't sold on, the positions he wants strengthened, and the specific targets he has in mind. Close by handing the Director his first move.`;
 
 export interface NarrateResult {
   narration: string;
