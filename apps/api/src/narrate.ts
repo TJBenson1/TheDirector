@@ -102,6 +102,9 @@ export async function narrate(opts: {
 
   let state = opts.state;
   const priorText = opts.history ?? [];
+  // The last model error, if any — surfaced to the server log so a crackle is
+  // never silent: a bad NARRATE_MODEL, a revoked key or an access issue shows up.
+  let lastErr: unknown;
   // Ground the model with the current situation (facts) alongside the message.
   const contextNote = state
     ? `\n\n[Current situation: ${JSON.stringify(situationOf(state))}]`
@@ -118,15 +121,39 @@ export async function narrate(opts: {
   const BUDGET_MS = 45_000;
 
   // Route this turn to Opus or Sonnet up front (consistent across the turn's hops).
+  // `activeModel` can drop to Sonnet mid-turn if the routed model call fails — a
+  // pinned/unavailable Opus must not sink the whole turn into a dead line.
   const model = pickModel(opts.state, opts.message);
+  let activeModel = model;
+
+  // One model call, with a safety net: if the chosen model errors (unavailable on
+  // the key, a bad NARRATE_MODEL, a transient 5xx), log it and retry once on the
+  // known-good Sonnet before giving up — so the turn degrades gracefully instead
+  // of crackling. Never swallows the error silently: it lands in the server log.
+  async function createMessage(
+    params: Anthropic.MessageCreateParamsNonStreaming,
+  ): Promise<Anthropic.Message> {
+    try {
+      return await client.messages.create({ ...params, model: activeModel });
+    } catch (err) {
+      lastErr = err;
+      console.error(`[narrate] model "${activeModel}" failed:`, err instanceof Error ? err.message : err);
+      if (activeModel !== SONNET_MODEL) {
+        activeModel = SONNET_MODEL;
+        console.error('[narrate] retrying on fallback model:', SONNET_MODEL);
+        return await client.messages.create({ ...params, model: activeModel });
+      }
+      throw err;
+    }
+  }
 
   let finalText = '';
   let secondary: string | undefined;
   try {
     for (let hop = 0; hop < MAX_TOOL_HOPS; hop++) {
       if (Date.now() - started > BUDGET_MS) break;
-      const res = await client.messages.create({
-        model,
+      const res = await createMessage({
+        model: activeModel,
         max_tokens: 1600,
         system: SYSTEM,
         tools: TOOL_SCHEMAS as Anthropic.Tool[],
@@ -167,9 +194,10 @@ export async function narrate(opts: {
       }
       working.push({ role: 'user', content: results });
     }
-  } catch {
+  } catch (err) {
     // A model call failed or timed out mid-loop — fall through; the synthesis
     // step below tries to answer from what was gathered, else a graceful nudge.
+    lastErr = err;
   }
 
   // If the loop stopped (budget or hop cap) with tools mid-flight and no prose
@@ -178,18 +206,24 @@ export async function narrate(opts: {
   // REPLIES with what it found instead of dying on a bare "line went dead".
   if (!finalText && working.length > 2) {
     try {
-      const wrap = await client.messages.create({
-        model,
+      const wrap = await createMessage({
+        model: activeModel,
         max_tokens: 1600,
         system: `${SYSTEM}\n\nWrap up NOW: answer the Director in prose from what you have already gathered. Do not ask for more time and do not call any tools.`,
         messages: working,
       });
       finalText = wrap.content.filter((b): b is Anthropic.TextBlock => b.type === 'text').map((b) => b.text).join('\n').trim();
-    } catch {
-      /* fall through to the nudge */
+    } catch (err) {
+      lastErr = err;
     }
   }
   if (!finalText) {
+    // Never silent: record WHY the turn produced nothing (model error, empty reply)
+    // so a recurring crackle can be diagnosed from the server log.
+    console.error(
+      '[narrate] no narration produced — serving the crackle fallback.',
+      lastErr instanceof Error ? lastErr.message : (lastErr ?? '(model returned empty text)'),
+    );
     finalText = state
       ? 'The line to the boardroom crackled for a moment there — say that again and I’ll pick it straight up.'
       : 'The line crackled — tell me which job you want and we’ll get started.';
