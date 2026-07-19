@@ -167,10 +167,19 @@ export function coachBriefing(state: GameState): CoachBriefing {
     const found = suggestTargets(state, need.position, { maxResults: 2, favourAvailable: true });
     for (const t of found) {
       if (targets.some((x) => x.name === t.name)) continue;
+      // Label him by the position he ACTUALLY plays, not the slot he'd cover.
+      // suggestTargets returns same-group fill-ins (a CB for an RB need), so a
+      // straight `need.position` mislabels Nesta/Cannavaro as right-backs. Prefer
+      // the exact need position when he genuinely plays it, else his primary role.
+      const player = state.players[t.playerId];
+      const displayPosition =
+        player && player.positions.includes(need.position)
+          ? need.position
+          : player?.positions[0] ?? need.position;
       targets.push({
         name: t.name,
         club: t.clubName,
-        position: need.position,
+        position: displayPosition,
         note: t.willing ? 'gettable' : 'would take some persuading',
       });
     }

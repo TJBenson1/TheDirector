@@ -13,7 +13,7 @@
  * mood, his plan, his best XI, his concerns and the names he's floated.
  */
 
-import { coachBriefing, getScenario, clubSquadPlayers, type GameState } from '@director/engine';
+import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, type GameState } from '@director/engine';
 
 type Group = 'GK' | 'DEF' | 'MID' | 'ATT';
 const GROUP: Record<string, Group> = {
@@ -24,6 +24,14 @@ const POSITION_LABEL: Record<string, string> = {
   GK: 'goalkeeper', CB: 'centre-back', LB: 'left-back', RB: 'right-back', DM: 'holding midfield',
   CM: 'central midfield', AM: 'attacking midfield', LW: 'left wing', RW: 'right wing', ST: 'up front',
 };
+
+/** A transfer fee in the game's shorthand: £37m, £3.5m, or "a free". */
+function fee(pounds: number): string {
+  if (pounds <= 0) return 'a free transfer';
+  const m = pounds / 1_000_000;
+  if (m >= 10) return `£${Math.round(m)}m`;
+  return `£${(Math.round(m * 10) / 10).toString()}m`;
+}
 
 function joinNames(names: string[]): string {
   if (names.length === 0) return '';
@@ -50,11 +58,20 @@ export function scriptedOpening(state: GameState): Opening {
   // The marquee man you've inherited, for a line of colour in the scene.
   const star = [...clubSquadPlayers(state, state.playerClub)].sort((a, b) => b.ability - a.ability)[0];
 
+  // The headline real signing already on the table this window — the deal history
+  // says the club made on day one (Figo → Real Madrid, 2000). Naming it gives the
+  // opening its "sign the deal Pérez really did, or veto it" hook.
+  const marquee = realInboundThisWindow(state)[0];
+  const marqueeLine = marquee
+    ? `And there's already a deal on the table: ${marquee.name}, ${fee(marquee.fee)} from ${marquee.fromClub} — the signing history remembers. It's yours to push through or to walk away from.`
+    : '';
+
   // ── Beat one: the scene ──
   const scene = [
     `${club.name}, ${seasonLabel}. You've taken the Director's chair — the boardroom power above the manager — and the board's brief is not complicated: ${sc.mandate}`,
-    `${star ? `It's a squad with ${star.name} at its heart, and it's yours to shape. ` : ''}${b.coach} is here for your first meeting.`,
-  ].join('\n\n');
+    `${star ? `It's a squad with ${star.name} at its heart, and it's yours to shape.` : ''}${marqueeLine ? `${star ? ' ' : ''}${marqueeLine}` : ''}`.trim(),
+    `${b.coach} is here for your first meeting.`,
+  ].filter((p) => p.length).join('\n\n');
 
   // ── Beat two: the manager meeting ──
   const byGroup: Record<Group, string[]> = { GK: [], DEF: [], MID: [], ATT: [] };

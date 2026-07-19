@@ -9,7 +9,7 @@
  * Lazio…). Procedural filler never appears here — real players only (Principle 2).
  */
 
-import type { ClubId, GameState, PlayerId, PlayerState, Position } from './types.js';
+import type { ClubId, GameState, PlayerId, PlayerState, Position, YearMonth } from './types.js';
 import { Rng } from './rng.js';
 import { parseYearMonth } from './clock.js';
 import { valuePlayer, inflationFactor } from './finance.js';
@@ -194,6 +194,49 @@ export function suggestTargets(
   }
   rows.sort((a, b) => b.score - a.score);
   return rows.slice(0, max).map((r) => r.s);
+}
+
+/** A marquee real arrival the club actually made — offered to the Director as a
+ *  live decision this window (the Figo move Pérez really did, on day one). */
+export interface RealInboundTarget {
+  playerId: PlayerId;
+  name: string;
+  fromClub: string;
+  toClub: string;
+  fee: number;
+  window: YearMonth;
+}
+
+/**
+ * The real signings the club is positioned to make THIS window — the era ledger's
+ * inbound entries to the user's club whose window is live now (Figo → Real Madrid
+ * in 2000-07). These are the marquee decisions history put on the Director's desk;
+ * surfacing the headline one gives the opening its "sign the deal Pérez really did"
+ * hook. Pure ledger read (no RNG), ranked by fee (the biggest statement first).
+ * A player already at the club, retired, or under 16 is filtered out. */
+export function realInboundThisWindow(state: GameState): RealInboundTarget[] {
+  const ledger = ERA_REALITY[eraForScenario(state.meta.scenarioId)]?.realTransferLedger;
+  if (!ledger) return [];
+  const now = state.clock.date;
+  const out: RealInboundTarget[] = [];
+  for (const e of ledger) {
+    if (e.to !== state.playerClub) continue;
+    if (e.window !== now) continue;
+    const p = state.players[e.playerId];
+    if (!p || p.retired) continue;
+    if (p.club === state.playerClub) continue; // already ours
+    if (ageOf(state, p) < 16) continue;
+    out.push({
+      playerId: e.playerId,
+      name: p.name,
+      fromClub: e.from ? state.clubs[e.from]?.name ?? e.from : 'a free transfer',
+      toClub: state.clubs[state.playerClub]?.name ?? state.playerClub,
+      fee: e.fee,
+      window: e.window,
+    });
+  }
+  out.sort((a, b) => b.fee - a.fee);
+  return out;
 }
 
 export interface PlayerQuery {
