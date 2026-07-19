@@ -10,16 +10,53 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { runOp, situationOf, TOOL_SCHEMAS } from './ops.js';
 import { scriptedOpening } from './openings.js';
-import type { GameState } from '@director/engine';
+import { getScenario, type GameState } from '@director/engine';
 
-// Sonnet 5 is the default: fast enough to run the interactive tool-loop reliably,
-// including the heavy opening turn (new game + manager meeting). Opus is far richer
-// but too slow here — its first call alone can outrun the turn budget, so the game
-// never starts. Set NARRATE_MODEL=claude-opus-4-8 to opt into the depth if you can
-// accept the latency; the enriched prompt + token budget already lift Sonnet well
-// above a bare match-ticker.
-const MODEL = process.env.NARRATE_MODEL ?? 'claude-sonnet-5';
+// Two-model routing (below). Opus writes the set-pieces worth the best prose — the
+// end-of-season review and the market opening — while fast, cheap Sonnet handles
+// routine turns AND is the fallback for a heavy multi-part message Opus would time
+// out on. NARRATE_MODEL pins one model (a specific id), or 'auto'/unset uses the
+// router.
+const OPUS_MODEL = 'claude-opus-4-8';
+const SONNET_MODEL = 'claude-sonnet-5';
+const ENV_MODEL = process.env.NARRATE_MODEL;
 const MAX_TOOL_HOPS = 8;
+
+/** A message with many asks in one go — Opus can outrun the turn budget on these,
+ *  so they fall back to fast Sonnet (the user's "keep it short" nudge, enforced). */
+function isHeavyMessage(message: string): boolean {
+  const t = message.trim();
+  if (t.length > 240) return true;
+  const asks = t.split(/[.?!]+\s|\band\b|\bthen\b|,\s|\?/i).filter((s) => s.trim().length > 6);
+  return asks.length >= 4;
+}
+
+/** The rich set-pieces the Director should hear in the best prose: the end-of-season
+ *  REVIEW and the MARKET OPENING (season two onward — season one opens pre-scripted).
+ *  Read from where the game sits and what the Director asked, not the model's mood. A
+ *  plain action confirmation is routine even inside a big window. */
+function isSetPiece(state: GameState, message: string): boolean {
+  if (/\b(sign|sell|renew|buy|bid|accept|reject|sack|fire|keep|let (him|it|them)|yes|no|do it|confirm|pass)\b/i.test(message)) return false;
+  const startYear = Number(getScenario(state.meta.scenarioId).startDate.slice(0, 4));
+  const year = Number(state.clock.date.slice(0, 4));
+  const seasonTwoPlus = year > startYear;
+  // The summer window carries the pre-window review AND the market opening.
+  if (state.clock.window === 'summer' && seasonTwoPlus) return true;
+  // Advancing through the run-in (Apr–Jun) or the July rollover crowns the season
+  // and produces the end-of-season review.
+  const advancing =
+    /\b(continue|advance|next|proceed|play on|carry on|move on|go on|onward|forward|skip|roll|season|review|results?|finish)\b/i.test(message) ||
+    message.trim().split(/\s+/).length <= 4;
+  return advancing && /-0[4567]$/.test(state.clock.date);
+}
+
+/** Choose the model for THIS turn. */
+function pickModel(state: GameState | null, message: string): string {
+  if (ENV_MODEL && ENV_MODEL !== 'auto') return ENV_MODEL; // pinned by deploy
+  if (isHeavyMessage(message)) return SONNET_MODEL; // fallback for big multi-part asks
+  if (state && isSetPiece(state, message)) return OPUS_MODEL; // the beats worth Opus
+  return SONNET_MODEL; // routine turns, confirmations, short asks
+}
 
 const SYSTEM = `You are the narrator of "The Director", a counterfactual football-management story. The user is the Director — the boardroom power above the manager — at a real club in a real season. A deterministic engine owns every fact; you own the voice.
 
@@ -80,13 +117,16 @@ export async function narrate(opts: {
   const started = Date.now();
   const BUDGET_MS = 45_000;
 
+  // Route this turn to Opus or Sonnet up front (consistent across the turn's hops).
+  const model = pickModel(opts.state, opts.message);
+
   let finalText = '';
   let secondary: string | undefined;
   try {
     for (let hop = 0; hop < MAX_TOOL_HOPS; hop++) {
       if (Date.now() - started > BUDGET_MS) break;
       const res = await client.messages.create({
-        model: MODEL,
+        model,
         max_tokens: 1600,
         system: SYSTEM,
         tools: TOOL_SCHEMAS as Anthropic.Tool[],
@@ -139,7 +179,7 @@ export async function narrate(opts: {
   if (!finalText && working.length > 2) {
     try {
       const wrap = await client.messages.create({
-        model: MODEL,
+        model,
         max_tokens: 1600,
         system: `${SYSTEM}\n\nWrap up NOW: answer the Director in prose from what you have already gathered. Do not ask for more time and do not call any tools.`,
         messages: working,
