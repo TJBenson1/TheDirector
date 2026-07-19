@@ -663,6 +663,56 @@ export function ledgerSquadMatch(state: GameState): { atRealClub: number; total:
   return { atRealClub, total };
 }
 
+/**
+ * A Director's SALE can sate a club's need (§9f, the mirror of the raid-ripple):
+ * when the user sells a player to club C, and C had an upcoming REAL signing of
+ * the same position the sold man fills, that signing becomes redundant — C no
+ * longer needs it — so it is cancelled with a traceable butterfly ("Parma, having
+ * just signed your Zamorano, no longer move for their real striker"). Only cancels
+ * when the sold player genuinely fills the slot (comparable-or-better than the real
+ * target), so dumping a fringe body doesn't call off a marquee arrival. Invoked
+ * only from the interactive sell path (never the harness), so calibration is
+ * untouched. Returns the cancelled target's name for the narrator, or null.
+ */
+export function rippleSaleSatesNeed(state: GameState, buyerId: ClubId, soldPlayerId: string): { cancelled: string } | null {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack) return null;
+  const buyer = state.clubs[buyerId];
+  const sold = state.players[soldPlayerId];
+  if (!buyer || !sold || buyerId === state.playerClub) return null;
+  const group = positionGroupOf(sold);
+  const nowOrd = transferWindowOrdinal(state.clock.date);
+  const nowYear = Number(state.clock.date.slice(0, 4));
+
+  let best: { entry: RealTransferLedgerEntry; target: PlayerState } | undefined;
+  for (const e of pack.realTransferLedger) {
+    if (e.to !== buyerId) continue; // a real signing the buyer was going to make
+    if (state.meta.executedLedger.includes(entryKey(e))) continue;
+    if (transferWindowOrdinal(e.window) <= nowOrd) continue; // still ahead
+    if (Number(e.window.slice(0, 4)) - nowYear > 2) continue; // within ~2 years
+    const p = state.players[e.playerId];
+    if (!p) continue;
+    if (positionGroupOf(p) !== group) continue; // fills the same slot
+    if (sold.ability < p.ability - 4) continue; // the sold man genuinely covers it
+    if (!best || e.window < best.entry.window) best = { entry: e, target: p };
+  }
+  if (!best) return null;
+
+  state.meta.executedLedger.push(entryKey(best.entry)); // cancel: the need is met
+  state.timeline.divergenceLog.push({
+    date: state.clock.date,
+    kind: 'butterfly',
+    detail: `${buyer.name}, having just signed your ${sold.name}, no longer need ${best.target.name} — that real move is off.`,
+  });
+  logEvent(state, {
+    category: 'transfer',
+    code: 'ledger.sated',
+    message: `${buyer.name} drop their move for ${best.target.name} — your sale of ${sold.name} filled the gap`,
+    data: { clubId: buyerId, cancelled: best.target.id, via: sold.id },
+  });
+  return { cancelled: best.target.name };
+}
+
 export function ledgerClubs(): Set<ClubId> {
   const pack = ERA_REALITY['era-1995-2005'];
   const set = new Set<ClubId>();

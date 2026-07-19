@@ -37,6 +37,7 @@ import {
   managerRoom,
   appointCoach,
   coachArchetypes,
+  rippleSaleSatesNeed,
   clubSquadPlayers,
   standingsOrder,
   valuePlayer,
@@ -219,7 +220,9 @@ const routes: Record<string, Handler> = {
       };
     }
     const result = executeTransfer(s, { playerId, toClub: buyer.id, fee: price });
-    return { state: s, view: buildView(s), result };
+    // A sale can sate the buyer's need — cancelling their same-position ledger move.
+    const sated = result.ok ? rippleSaleSatesNeed(s, buyer.id, playerId) : null;
+    return { state: s, view: buildView(s), result: result.ok ? { ...result, sated: sated?.cancelled ?? null } : result };
   },
 
   // Renew a squad player for a chosen number of years (1–5).

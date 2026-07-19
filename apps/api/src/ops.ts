@@ -29,6 +29,7 @@ import {
   clubSquadPlayers,
   isProcedural,
   applyConsequence,
+  rippleSaleSatesNeed,
   SCENARIOS,
   Rng,
   type GameState,
@@ -207,10 +208,20 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
         };
       }
       const result = executeTransfer(s, { playerId: p.id, toClub: buyer.id, fee });
+      // Selling to a club can sate a real need — cancelling their same-position
+      // ledger signing with a traceable butterfly (the mirror of the raid-ripple).
+      const sated = result.ok ? rippleSaleSatesNeed(s, buyer.id, p.id) : null;
       return {
         state: s,
         result: result.ok
-          ? { ok: true, sold: p.name, to: buyer.name, fee: m(result.fee), newBudget: m(s.clubs[s.playerClub]!.finances.transferBudget) }
+          ? {
+              ok: true,
+              sold: p.name,
+              to: buyer.name,
+              fee: m(result.fee),
+              newBudget: m(s.clubs[s.playerClub]!.finances.transferBudget),
+              ...(sated ? { ripple: `${buyer.name} now no longer need to sign ${sated.cancelled} — you've filled their gap.` } : {}),
+            }
           : { ok: false, reason: result.reason },
       };
     }
