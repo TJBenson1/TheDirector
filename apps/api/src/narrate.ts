@@ -9,6 +9,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { runOp, situationOf, TOOL_SCHEMAS } from './ops.js';
+import { scriptedOpening } from './openings.js';
 import type { GameState } from '@director/engine';
 
 // Sonnet 5 is the default: fast enough to run the interactive tool-loop reliably,
@@ -38,7 +39,7 @@ RULES — never break them:
 - End by pointing at the next real decision so the Director always knows his move.
 - At a season's end, always give the Director three things from the situation: the LEAGUE finish AND how it maps to reality (the situation's 'reality' note — a faithful-but-poor season is history holding, not his failure; beating the club's real finish is an achievement to celebrate); the CHAMPIONS LEAGUE result (the 'europe' field — who won it, and whether his club was involved); and only then the decisions on his desk. Never skip the reality mapping or the European result when they're present.
 
-If there is no game yet, call new_game for the scenario the Director names, or list_scenarios if unsure, then narrate the opening scene in a few sentences. Immediately AFTER that opening — in the same reply — call manager_meeting and stage the Director's first sit-down with the head coach: let the manager speak in his own voice about how happy he is to be working with you, what he believes the club can achieve and whether his priority is the league, Europe or both, the formation he wants to play, his best XI in that shape, the players he isn't sold on, the positions he wants strengthened, and the specific targets he has in mind. Close by handing the Director his first move.`;
+If there is no game yet, just call new_game for the scenario the Director names (or list_scenarios if you're unsure which he means). Do NOT write an opening yourself — the game's opening scene and the manager meeting are served automatically once new_game runs. Your job on a fresh game is only to pick the right scenario and start it.`;
 
 export interface NarrateResult {
   narration: string;
@@ -112,6 +113,12 @@ export async function narrate(opts: {
             content: `That didn't work: ${err instanceof Error ? err.message : String(err)}`,
           });
         }
+      }
+      // A brand-new game: don't have the model write the (heavy, credit-hungry)
+      // opening live — serve the PRE-SCRIPTED opening and end the turn here.
+      if (toolUses.some((tu) => tu.name === 'new_game') && state) {
+        finalText = scriptedOpening(state);
+        break;
       }
       working.push({ role: 'user', content: results });
     }

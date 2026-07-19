@@ -49,6 +49,7 @@ import {
   type Position,
 } from '@director/engine';
 import { buildView } from './view.js';
+import { scriptedOpening } from './openings.js';
 
 const PORT = Number(process.env.PORT ?? 8787);
 // Lock this to your Lovable app's origin in production; '*' is fine for dev.
@@ -67,6 +68,20 @@ const routes: Record<string, Handler> = {
   '/games': ({ scenarioId, seed }) => {
     const state = createNewGame({ scenarioId, seed: seed ?? `web:${Date.now()}` });
     return { state, view: buildView(state) };
+  },
+
+  // Start a new game and return its PRE-SCRIPTED opening in one shot — no model
+  // call, so it's instant and free. Powers the scenario buttons; a typed "take the
+  // X job" still routes through the narrator, which short-circuits to the same
+  // scripted opening once it has created the game.
+  '/games/start': ({ scenarioId, seed }) => {
+    const state = createNewGame({ scenarioId: String(scenarioId), seed: seed ? String(seed) : `web:${Date.now()}` });
+    return {
+      state,
+      view: buildView(state),
+      narration: scriptedOpening(state),
+      situation: narrativeContext(state),
+    };
   },
 
   '/games/advance': ({ state, perStep }) => {

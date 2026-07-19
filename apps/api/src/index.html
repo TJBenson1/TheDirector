@@ -55,6 +55,7 @@
   .chips { display:flex; flex-wrap:wrap; gap:6px; }
   .chip { display:inline-block; background:#1c1c20; border:1px solid var(--line); border-radius:8px; padding:4px 8px; font-size:12.5px; }
   .chip.star { border-color:var(--accent); }
+  #hint { text-align:center; color:var(--dim); font-size:11.5px; padding:6px 12px 10px; }
 </style>
 </head>
 <body>
@@ -80,6 +81,7 @@
     <input id="input" placeholder="Speak to the room…" autocomplete="off" />
     <button class="send" id="send" type="submit">Send</button>
   </form>
+  <div id="hint">Tip: one or two requests per message keeps the boardroom sharp and the replies quick.</div>
 </div>
 <script>
 const KEY = 'the-director-web-v1';
@@ -124,10 +126,30 @@ function offerStarts(){
     const wrap=document.createElement('div'); wrap.className='starts';
     // ALL scenarios (sorted by year), so nothing is hidden.
     list.slice().sort((a,b)=>String(a.startDate).localeCompare(String(b.startDate))).forEach(sc=>{
-      const b=document.createElement('button'); b.textContent=sc.name; b.onclick=()=>send('Take the '+sc.name+' job.'); wrap.appendChild(b);
+      const b=document.createElement('button'); b.textContent=sc.name; b.onclick=()=>startGame(sc.id, sc.name); wrap.appendChild(b);
     });
     log.appendChild(wrap);
   });
+}
+// Start a game via the PRE-SCRIPTED opening — no model call, so it's instant.
+async function startGame(scenarioId, name){
+  bubble('Take the '+name+' job.', 'director');
+  sendBtn.disabled=true;
+  const thinking = bubble('', 'msg narrator'); thinking.className='msg narrator dots';
+  try {
+    const r = await fetch('/games/start', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ scenarioId }) });
+    const d = await r.json();
+    thinking.remove();
+    if (d.error){ bubble('('+d.error+')', 'sys'); }
+    else {
+      state = d.state;
+      // Seed the chat history with the opening so the narrator has context next turn.
+      history = [{ role:'user', content:'Take the '+name+' job.' }, { role:'assistant', content:d.narration }];
+      bubble(d.narration, 'narrator');
+      saveLocal(); renderStatus(); refreshPanelIfOpen();
+    }
+  } catch(e){ thinking.remove(); bubble('(could not start — try again)', 'sys'); }
+  sendBtn.disabled=false;
 }
 function newGame(){
   if(state && !confirm('Leave this playthrough and start a new one? Your current game will be cleared.')) return;
