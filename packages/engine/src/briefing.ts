@@ -17,6 +17,7 @@ import { coachFit } from './coaches.js';
 import { estimateMinutesShare } from './development.js';
 import { suggestTargets } from './recommend.js';
 import { getScenario } from './scenarios.js';
+import { SCENARIO_OPENINGS, type ScenarioOpening } from './data/openings.js';
 
 export interface BriefingXI {
   slot: Position;
@@ -24,6 +25,48 @@ export interface BriefingXI {
   ability: number;
   /** Whether the player naturally plays the slot's position (vs an out-of-position fill). */
   natural: boolean;
+}
+
+/** Map the readable position tags used in curated openings (RM/LM/CF/RWB/LWB and
+ *  the canonical set) onto the engine's Position slots, so a curated XI groups the
+ *  same way the derived one does. */
+const OPENING_SLOT: Record<string, Position> = {
+  GK: 'GK', RB: 'RB', CB: 'CB', LB: 'LB', RWB: 'RB', LWB: 'LB',
+  DM: 'DM', CM: 'CM', RM: 'RW', LM: 'LW', AM: 'AM', RW: 'RW', LW: 'LW', CF: 'ST', ST: 'ST',
+};
+
+/** Strip diacritics + lowercase, so "Šmicer"/"smicer" and "Peруzzi" compare. */
+function norm(s: string): string {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
+/** Turn a curated opening's real first XI ("GK Angelo Peruzzi", …) into the
+ *  BriefingXI shape, looking each man's ability up from the live squad (falling
+ *  back to the squad median so the "weak link" heuristic stays sane). This is what
+ *  keeps a sold or frozen-out star (Baggio) OUT of the opening XI. */
+function curatedEleven(opening: ScenarioOpening, squad: PlayerState[]): BriefingXI[] {
+  const abilities = squad.map((p) => effectiveAbility(p)).sort((a, b) => a - b);
+  const median = abilities.length ? abilities[Math.floor(abilities.length / 2)]! : 78;
+  const byName = new Map(squad.map((p) => [norm(p.name), p]));
+  return opening.firstEleven.map((entry) => {
+    const sp = entry.indexOf(' ');
+    const tag = entry.slice(0, sp);
+    const name = entry.slice(sp + 1).trim();
+    const slot = OPENING_SLOT[tag] ?? 'CM';
+    const player = byName.get(norm(name));
+    const ability = player ? Math.round(effectiveAbility(player)) : Math.round(median);
+    const natural = player ? player.positions.includes(slot) : true;
+    return { slot, name, ability, natural };
+  });
+}
+
+/** "Roberto Baggio — sold to Milan" → { name, reason }. */
+function parseFringe(fringe: string[] | undefined): Array<{ name: string; reason: string }> {
+  return (fringe ?? []).map((f) => {
+    const i = f.indexOf('—');
+    if (i < 0) return { name: f.trim(), reason: '' };
+    return { name: f.slice(0, i).trim(), reason: f.slice(i + 1).trim() };
+  });
 }
 
 export interface BriefingTarget {
@@ -42,6 +85,13 @@ export interface CoachBriefing {
   notKeenOn: Array<{ name: string; reason: string }>;
   strengthen: Array<{ position: Position; reason: string }>;
   targets: BriefingTarget[];
+  /** When the scenario has a curated opening (data/openings.ts): 2–4 sentences of
+   *  authored, historically-accurate context for this exact summer, for the scene.
+   *  Absent for scenarios that fall back to the derived opening. */
+  openingProse?: string;
+  /** The real men on the fringe that summer — frozen-out, sold, wantaway, or a
+   *  wonderkid — each with the reason. Curated scenarios only. */
+  fringe?: Array<{ name: string; reason: string }>;
 }
 
 /** The eleven positional slots each shape lines up in — enough to pick a best XI
@@ -130,7 +180,12 @@ export function coachBriefing(state: GameState): CoachBriefing {
   const formation = coach.activeFormation ?? coach.preferredFormation;
   const squad = clubSquadPlayers(state, state.playerClub);
 
-  const xi = bestEleven(state, formation);
+  // A curated opening (data/openings.ts) supplies the coach's REAL first-choice XI
+  // for this scenario, so the opener reflects history — a frozen-out or sold star
+  // (Baggio at Juventus 1995) never lands in the XI just because his ability is
+  // high. Fall back to the ability-derived XI when a scenario has no entry.
+  const opening = SCENARIO_OPENINGS[state.meta.scenarioId];
+  const xi = opening ? curatedEleven(opening, squad) : bestEleven(state, formation);
 
   // Players the coach isn't sold on: a poor fit for how he plays / his dressing
   // room. Surface the clearest few, worst first.
@@ -189,11 +244,13 @@ export function coachBriefing(state: GameState): CoachBriefing {
     coach: coach.identity,
     mood: moodFor(coach.relationshipWithUser),
     priority: priorityFor(state),
-    formation: formationLabel(formation),
+    // Prefer the real shape the coach used that season when curated.
+    formation: opening?.formation ?? formationLabel(formation),
     bestXI: xi,
     notKeenOn,
     strengthen: topNeeds,
     targets: targets.slice(0, 4),
+    ...(opening ? { openingProse: opening.briefing, fringe: parseFringe(opening.fringe) } : {}),
     // starters kept implicit in bestXI; exported set unused externally.
   } satisfies CoachBriefing;
 }
