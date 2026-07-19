@@ -48,6 +48,7 @@ export {
   outputFactor,
   suggestWage,
   initialFinances,
+  seasonTransferRevenue,
 } from './finance.js';
 export {
   LEAGUE_STYLES,
@@ -166,6 +167,7 @@ export {
   stepLeagueMonth,
   maxConsecutiveTitles,
   emptyRecord,
+  applySeasonRevenue,
   type MatchResult,
 } from './season.js';
 export {

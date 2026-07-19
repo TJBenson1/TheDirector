@@ -22,6 +22,7 @@ import { logEvent } from './eventLog.js';
 import { parseYearMonth } from './clock.js';
 import { formationEraModifier } from './tactics.js';
 import { anchorSeasonToReality } from './realStandings.js';
+import { seasonTransferRevenue } from './finance.js';
 
 // ── Tunable match-model constants (calibrated in season.test.ts) ─────────────
 const HOME_ADVANTAGE = 6; // strength points
@@ -262,6 +263,52 @@ export function finalizeSeason(state: GameState, league: LeagueState): void {
     message: `${state.clubs[championId]!.name} win the ${league.name} (${league.seasonYear}–${league.seasonYear + 1}) with ${points} pts`,
     data: { leagueId: league.id, seasonYear: league.seasonYear, championId, points, runnerUpPoints, drawnTeamGames, teamGames },
   });
+}
+
+/**
+ * Bank each club's season revenue into its transfer kitty at the summer rollover —
+ * the "new budget" a Director gets to spend, scaled by commercial standing and last
+ * season's finish (prize money + European qualification). Pure arithmetic (no RNG),
+ * so a passive/reality run is byte-identical and the calibration harness's
+ * zero-divergence careers are unaffected; only a Director who actually spends feels
+ * the extra. Called once at the July rollover, before the new season is initialised
+ * (so the finishing table is still the one just completed).
+ */
+export function applySeasonRevenue(state: GameState): void {
+  const year = parseYearMonth(state.clock.date).year;
+  for (const league of Object.values(state.leagues)) {
+    const order = standingsOrder(league);
+    const n = order.length;
+    order.forEach((clubId, rank0) => {
+      const club = state.clubs[clubId];
+      if (!club) return;
+      const finishFrac = n > 1 ? (n - 1 - rank0) / (n - 1) : 0.5;
+      bankRevenue(club, seasonTransferRevenue(club.prestige, finishFrac, year), year);
+    });
+  }
+  // Context clubs (no simulated league) — a mid-table-equivalent income so the
+  // continental giants keep their buying power over a long save.
+  for (const club of Object.values(state.clubs)) {
+    if (club.leagueId !== null) continue;
+    bankRevenue(club, seasonTransferRevenue(club.prestige, 0.5, year), year);
+  }
+}
+
+/** Add a season's revenue to a club's kitty, but don't let seasonal income alone
+ *  balloon it: cap the accumulation at ~three years' worth (a Director can save for
+ *  a marquee signing, not forever). A larger balance from a big SALE is left intact —
+ *  the ceiling only bounds what income piles on. A club in financial distress banks
+ *  little or nothing: its revenue services creditors, not transfers (the same rule
+ *  that keeps a Parmalat fire-sale from rebuilding Parma). */
+function bankRevenue(club: GameState['clubs'][string], revenue: number, year: number): void {
+  const healthMult = club.financialHealth === 'crisis' ? 0 : club.financialHealth === 'strained' ? 0.4 : 1;
+  const rev = revenue * healthMult;
+  if (rev <= 0) return;
+  const ceiling = seasonTransferRevenue(club.prestige, 1, year) * 3;
+  club.finances.transferBudget = Math.min(
+    Math.max(club.finances.transferBudget, ceiling),
+    club.finances.transferBudget + rev,
+  );
 }
 
 /**

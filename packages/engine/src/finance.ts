@@ -110,6 +110,21 @@ export function suggestWage(player: PlayerState, year: number): number {
   return Math.max(40_000, Math.round(raw / 20_000) * 20_000);
 }
 
+/**
+ * The transfer money a club can put toward the SUMMER from a season's revenue —
+ * the "new budget" a Director expects each year. Scales with the club's
+ * commercial standing (prestige) and last season's finish (prize money +
+ * European qualification), inflation-adjusted. `finishFrac` is 1 for the champions
+ * down to 0 for bottom; a context club with no league finish passes ~0.5.
+ * Deliberately modest, so it replenishes without inflating the market.
+ */
+export function seasonTransferRevenue(prestige: number, finishFrac: number, year: number): number {
+  const commercial = 2_600_000 * Math.exp(0.05 * (prestige - 70));
+  const finishBonus = 4_000_000 * Math.max(0, Math.min(1, finishFrac));
+  const raw = (commercial + finishBonus) * inflationFactor(year);
+  return Math.max(0, Math.round(raw / 100_000) * 100_000);
+}
+
 /** Ownership-model multipliers applied to the prestige-derived base budget. */
 const OWNERSHIP_BUDGET_MULT: Record<OwnershipModel, number> = {
   debt: 0.7, // leveraged buyouts drain the kitty

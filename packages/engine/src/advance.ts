@@ -17,7 +17,7 @@ import { Rng } from './rng.js';
 import { advanceOneMonth, windowForMonthIndex, windowStepLabel, WINDOW_STEPS, parseYearMonth } from './clock.js';
 import { simulateChampionsLeague } from './champions.js';
 import { eventsSince } from './eventLog.js';
-import { stepLeagueMonth } from './season.js';
+import { stepLeagueMonth, applySeasonRevenue } from './season.js';
 import { processInjuriesMonth } from './injuries.js';
 import { rollEventsMonth, resolveIgnoredDecisions, resolvePendingLedgerDecisions } from './events.js';
 import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from './rival.js';
@@ -106,6 +106,10 @@ function runMonth(state: GameState, rng: Rng): void {
     resolveParmalat(state, rng.fork(`parmalat:${state.clock.date}`));
     resolveCalciopoli(state, rng.fork(`calciopoli:${state.clock.date}`));
     restoreRelegatedClubs(state);
+    // 6d. Bank each club's season revenue into its transfer budget — the summer
+    //     "new budget" — while last season's finishing table is still in place
+    //     (before stepLeagueMonth opens the new one). Pure arithmetic, no RNG.
+    applySeasonRevenue(state);
     // 7. Board review (job security) + an imposed internal crisis (M9).
     reviewBoard(state, rng.fork(`board:${state.clock.date}`));
     rollInternalCrisis(state, rng.fork(`crisis:${state.clock.date}`), divergenceFactor(state) * 0.3);
