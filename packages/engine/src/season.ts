@@ -288,6 +288,11 @@ export function stepLeagueMonth(state: GameState, rng: Rng): void {
       const target = Math.round((roundsFor(league) * idx) / PLAYING_MONTHS);
       const played = playRoundsUpTo(state, league, target, leagueRng);
       if (played > 0) {
+        // Trend the running table toward reality as the season unfolds (M14), so a
+        // mid-season table reads true instead of scrambled — full anchor lands at
+        // finalisation. Scaled by season progress and (inside) by divergence.
+        const total = roundsFor(league);
+        anchorSeasonToReality(state, league, total > 0 ? league.roundsPlayed / total : 1);
         logEvent(state, {
           category: 'match',
           code: 'league.month',

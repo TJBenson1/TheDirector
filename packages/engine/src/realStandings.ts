@@ -155,42 +155,49 @@ function pointsForRank(rank0: number, n: number, key: string): number {
   return Math.round(bottom + shape * (champ - bottom));
 }
 
-/** Plausible W/D/L/goals for a target points total at a finishing rank, so the
- *  displayed record is internally consistent (points = 3·W + D). Draws sit near the
- *  league average (~26%) with a little rank-seeded jitter. */
-function synthRecord(points: number, rank0: number, n: number, salt: number): TeamRecord {
-  const games = (n - 1) * 2;
-  const drawn = Math.max(4, Math.min(16, 9 + jitter(`${salt}:${rank0}`) - 2));
+/** Plausible W/D/L/goals for a target points total at a finishing rank over
+ *  `games` matches, so the displayed record is internally consistent
+ *  (points = 3·W + D). Draws and goals scale with games so a mid-season record
+ *  reads right, not a full-season one crammed into 23 games. */
+function synthRecord(points: number, rank0: number, n: number, salt: number, games: number): TeamRecord {
+  const full = (n - 1) * 2;
+  const frac = full > 0 ? games / full : 1;
+  const drawn = Math.max(0, Math.min(games, Math.round((9 + jitter(`${salt}:${rank0}`) - 2) * frac)));
   let won = Math.round((points - drawn) / 3);
   won = Math.max(0, Math.min(games - drawn, won));
   const lost = games - won - drawn;
-  const goalsFor = Math.max(20, Math.round(74 - rank0 * (52 / Math.max(1, n - 1))));
-  const goalsAgainst = Math.max(18, Math.round(24 + rank0 * (44 / Math.max(1, n - 1))));
+  const goalsFor = Math.max(0, Math.round((74 - rank0 * (52 / Math.max(1, n - 1))) * frac));
+  const goalsAgainst = Math.max(0, Math.round((24 + rank0 * (44 / Math.max(1, n - 1))) * frac));
   return { played: games, won, drawn, lost, goalsFor, goalsAgainst, points: 3 * won + drawn };
 }
 
 /**
- * Anchor a just-completed league season toward its real final table, scaled by how
- * far the Director has pushed the world off course. Mutates `league.standings` in
- * place; call BEFORE crowning the champion so the real winner is crowned in a
- * passive run.
+ * Anchor a league season toward its real table, scaled by how far the Director has
+ * pushed the world off course (divergence) AND, mid-season, by how far the campaign
+ * has run (`progress` 0→1). Called every month so the table TRENDS toward reality
+ * as the season unfolds — no more a passive Spurs top at Christmas that snaps to a
+ * real Chelsea title in June — and at finalisation with progress 1 (identical to
+ * before, so the crowned champion and end-of-season table are unchanged). The real
+ * target is pro-rated to games actually played. Mutates `league.standings`.
  */
-export function anchorSeasonToReality(state: GameState, league: LeagueState): void {
+export function anchorSeasonToReality(state: GameState, league: LeagueState, progress = 1): void {
   const key = leagueKey(league);
   if (!key) return;
   const order = REAL_STANDINGS[key]?.[league.seasonYear];
   if (!order) return;
 
-  const weight = 1 - divergenceFactor(state); // 1 = full reality (passive)
+  const weight = (1 - divergenceFactor(state)) * Math.max(0, Math.min(1, progress));
   if (weight <= 0) return;
 
   const n = league.clubIds.length;
+  const full = (n - 1) * 2;
   order.forEach((clubId, rank0) => {
     const rec = league.standings[clubId];
-    if (!rec) return; // in the real table but not simulated this season
-    const realPts = pointsForRank(rank0, n, key);
-    const real = synthRecord(realPts, rank0, n, league.seasonYear);
-    // Blend the simulated record toward the real one by `weight`.
+    if (!rec || rec.played === 0) return; // not simulated / not started
+    // The real full-season points, pro-rated to the games played so far.
+    const realPts = pointsForRank(rank0, n, key) * (full > 0 ? rec.played / full : 1);
+    const real = synthRecord(realPts, rank0, n, league.seasonYear, rec.played);
+    // Blend the simulated record toward the (pro-rated) real one by `weight`.
     const blended: TeamRecord = {
       played: rec.played,
       won: Math.round(rec.won * (1 - weight) + real.won * weight),
