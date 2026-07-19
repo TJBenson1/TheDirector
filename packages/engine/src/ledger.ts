@@ -226,6 +226,16 @@ const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
   { playerId: 'cur_lallana_grad', from: 'southampton', to: 'liverpool', window: '2014-07', fee: 25_000_000 },
   { playerId: 'cur_shaw_grad', from: 'southampton', to: 'man_utd', window: '2014-06', fee: 30_000_000, id: 'shaw-utd-2014' },
   { playerId: 'cur_oshea_grad', from: 'man_utd', to: 'sunderland', window: '2011-07', fee: 4_000_000 },
+  // ── United's real 2007-2011 arrivals — OFFERED to a United Director (real-in) ──
+  // Fills the mid/late-2000s gap so a long 1999 save keeps being presented real
+  // signings (Nani, Anderson, Hargreaves in the '07 rebuild; Berbatov '08; De Gea
+  // '11). Each subject debuts at his source club via INTAKES_1999; declining any
+  // simply diverges from history. `from` matches where INTAKES_1999 seeds him.
+  { playerId: 'cur_nani_grad', from: 'sporting', to: 'man_utd', window: '2007-07', fee: 17_000_000, id: 'nani-utd-2007' },
+  { playerId: 'cur_anderson_grad', from: 'porto', to: 'man_utd', window: '2007-07', fee: 20_000_000, id: 'anderson-utd-2007' },
+  { playerId: 'cur_hargreaves_grad', from: 'bayern', to: 'man_utd', window: '2007-07', fee: 17_000_000, id: 'hargreaves-utd-2007' },
+  { playerId: 'cur_berbatov_grad', from: 'spurs', to: 'man_utd', window: '2008-07', fee: 30_750_000, id: 'berba-grad-utd-2008' },
+  { playerId: 'cur_degea_grad', from: 'atletico', to: 'man_utd', window: '2011-07', fee: 18_900_000, id: 'degea-utd-2011' },
 ];
 
 /** Real injuries of the era — fire only if the player is at his real club. */

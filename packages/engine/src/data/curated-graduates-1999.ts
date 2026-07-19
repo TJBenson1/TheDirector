@@ -94,6 +94,19 @@ export const GRADUATES_1999: CuratedSeed[] = [
   q('southampton', 'lallana_grad', 'Adam Lallana', 1988, 'England', ['AM', 'CM'], 60, 82, 2009, 30, t(9, 5, 8, 8, 4, 8)),
   q('southampton', 'oxlade_grad', 'Alex Oxlade-Chamberlain', 1993, 'England', ['RW', 'CM'], 60, 81, 2013, 45, t(8, 6, 8, 7, 5, 7)),
   q('southampton', 'shaw_grad', 'Luke Shaw', 1995, 'England', ['LB'], 62, 82, 2015, 45, t(7, 6, 7, 7, 5, 7)),
+
+  // ── United's real 2007-2011 arrivals, at their real source clubs ──
+  // The Ferguson rebuild that kept United on top after the 2003 Ronaldo signing:
+  // these are the real names a 1999 Director is OFFERED (real-in decisions) as
+  // their own club's history, filling the mid/late-2000s window. Each breaks
+  // through young at a source club that exists in this world (Sporting, Porto,
+  // Bayern, Spurs, Atlético) via INTAKES_1999, then moves to United on his real
+  // date via LEDGER_1999_2004 — declinable, reality if ignored.
+  q('sporting', 'nani_grad', 'Nani', 1986, 'Portugal', ['RW', 'LW'], 66, 84, 2007, 35, t(6, 8, 7, 6, 7, 7)),
+  q('porto', 'anderson_grad', 'Anderson', 1988, 'Brazil', ['CM', 'AM'], 64, 84, 2011, 55, t(6, 7, 7, 6, 6, 7)),
+  q('bayern', 'hargreaves_grad', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 72, 84, 2007, 65, t(9, 5, 8, 7, 4, 7)),
+  q('spurs', 'berbatov_grad', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST', 'AM'], 76, 86, 2006, 30, t(7, 7, 7, 6, 5, 7)),
+  q('atletico', 'degea_grad', 'David de Gea', 1990, 'Spain', ['GK'], 66, 89, 2011, 15, t(8, 6, 8, 7, 4, 7)),
 ];
 
 /** The debut schedule: which graduate arrives at which club, and when. */
@@ -156,4 +169,12 @@ export const INTAKES_1999: AcademyIntake[] = [
   { clubId: 'man_utd', year: 2011, playerId: 'cur_cleverley_grad' },
   { clubId: 'everton', year: 2011, playerId: 'cur_barkley_grad' },
   { clubId: 'southampton', year: 2012, playerId: 'cur_shaw_grad' },
+  // United's real 2007-2011 arrivals debut at their source clubs (skipped in any
+  // era whose kickoff squad already holds the man — e.g. arsenal-2004 ships Nani
+  // at Sporting — via the name guard in executeAcademyIntakes).
+  { clubId: 'bayern', year: 2001, playerId: 'cur_hargreaves_grad' },
+  { clubId: 'sporting', year: 2005, playerId: 'cur_nani_grad' },
+  { clubId: 'spurs', year: 2006, playerId: 'cur_berbatov_grad' },
+  { clubId: 'porto', year: 2006, playerId: 'cur_anderson_grad' },
+  { clubId: 'atletico', year: 2009, playerId: 'cur_degea_grad' },
 ];

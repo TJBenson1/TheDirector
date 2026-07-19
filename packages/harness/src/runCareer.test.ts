@@ -45,7 +45,8 @@ describe('calibration harness', () => {
       'player-sackable',
       'internal-crisis-cadence',
       'benched-wonderkid-plateau',
-      'prospect-hit-rate',
+      // NB: 'prospect-hit-rate' is intentionally DEACTIVATED under the no-regens
+      // design (no procedural prospects to sample); it now sits in the pending set.
       'hard-block-integrity',
       'adaptation-signing-risk',
       'scripted-event-fidelity',
@@ -63,7 +64,9 @@ describe('calibration harness', () => {
     // Targets owned by later milestones stay pending — no false pass/fail.
     const pending = results.filter((r) => !r.active);
     expect(pending.every((r) => r.pass === null)).toBe(true);
-    expect(pending.length).toBe(4);
+    // title-dynasty, prospect-hit-rate (deactivated: no-regens), reality-ambition-
+    // overrides, money-club-trophy-share, no-fantasy-leaps.
+    expect(pending.length).toBe(5);
     // 36 careers × 15 years is genuinely heavy (~20s); a generous ceiling keeps
     // the batch from flaking under CI/machine load without weakening any assertion.
   }, 90000);
