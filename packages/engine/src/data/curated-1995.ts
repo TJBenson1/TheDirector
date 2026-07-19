@@ -364,6 +364,7 @@ export const DEPTH_1995: Array<[ClubId, CuratedSeed]> = [
   ['juventus', q('juventus', 'chimenti', 'Antonio Chimenti', 1970, 'Italy', ['GK'], 72, 74, 1999, 25, t(8, 4, 6, 8, 4, 6))],
   ['milan', q('milan', 'panucci', 'Christian Panucci', 1969, 'Italy', ['RB', 'CB'], 81, 83, 1999, 25, t(7, 6, 7, 6, 5, 7))],
   ['milan', q('milan', 'lentini', 'Gianluigi Lentini', 1969, 'Italy', ['RW'], 76, 78, 1997, 40, t(6, 6, 6, 7, 6, 6))],
+  ['milan', q('milan', 'dicanio', 'Paolo Di Canio', 1968, 'Italy', ['ST', 'AM'], 78, 80, 1998, 30, t(5, 8, 8, 6, 8, 6))],
   ['inter', q('inter', 'festa', 'Gianluca Festa', 1969, 'Italy', ['CB'], 77, 78, 1998, 25, t(8, 4, 7, 7, 4, 7))],
   ['inter', q('inter', 'paganin', 'Massimo Paganin', 1970, 'Italy', ['CB'], 75, 77, 1998, 25, t(8, 4, 6, 7, 4, 7))],
   ['lazio', q('lazio', 'nesta_l', 'Alessandro Nesta', 1976, 'Italy', ['CB'], 76, 90, 2001, 25, t(9, 5, 8, 9, 3, 7), { loyalty: 88 })],

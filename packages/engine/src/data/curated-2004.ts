@@ -42,6 +42,10 @@ export const ARSENAL_2004: CuratedSeed[] = [
   q('arsenal', 'rvp', 'Robin van Persie', 1983, 'Netherlands', ['ST', 'LW'], 74, 90, 2009, 55, t(6, 7, 8, 6, 6, 7)),
   q('arsenal', 'clichy', 'Gaël Clichy', 1985, 'France', ['LB'], 70, 84, 2008, 30, t(8, 5, 7, 7, 4, 7)),
   q('arsenal', 'edu', 'Edu', 1978, 'Brazil', ['CM'], 80, 82, 2005, 30, t(8, 5, 7, 6, 4, 7)),
+  // Real 2003-04 depth to the era minimum (Taylor deputising for Lehmann; Wiltord,
+  // a genuine Invincible, in the forward rotation).
+  q('arsenal', 'staylor_04', 'Stuart Taylor', 1980, 'England', ['GK'], 72, 76, 2007, 30, t(8, 4, 7, 7, 4, 7)),
+  q('arsenal', 'wiltord_04', 'Sylvain Wiltord', 1974, 'France', ['RW', 'ST'], 80, 82, 2005, 30, t(6, 7, 7, 6, 6, 7)),
 ];
 
 /** Chelsea, 2004–05 — Mourinho's first title side. */

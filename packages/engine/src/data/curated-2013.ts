@@ -172,6 +172,15 @@ export const SPURS_2013: CuratedSeed[] = [
   q('spurs', 'defoe', 'Jermain Defoe', 1982, 'England', ['ST'], 79, 80, 2015, 30, t(7, 6, 8, 6, 5, 7)),
   q('spurs', 'adebayor', 'Emmanuel Adebayor', 1984, 'Togo', ['ST'], 80, 84, 2016, 35, t(5, 8, 6, 5, 7, 6)),
   q('spurs', 'bale', 'Gareth Bale', 1989, 'Wales', ['LW', 'AM'], 88, 92, 2017, 40, t(8, 7, 9, 6, 5, 7)),
+  // Real 2013-14 depth to the era minimum. The marquee Bale-money arrivals (Lamela,
+  // Soldado, Eriksen) come in via the transfer ledger; these are the rest of the
+  // assembled squad, so they belong to the kickoff roster (Friedel deputising).
+  q('spurs', 'friedel_13', 'Brad Friedel', 1971, 'United States', ['GK'], 76, 76, 2015, 20, t(9, 5, 8, 8, 4, 6)),
+  q('spurs', 'chiriches_13', 'Vlad Chiricheș', 1989, 'Romania', ['CB'], 76, 80, 2017, 30, t(7, 5, 7, 6, 5, 7)),
+  q('spurs', 'capoue_13', 'Étienne Capoue', 1988, 'France', ['DM', 'CM'], 78, 82, 2017, 30, t(8, 5, 7, 7, 4, 7)),
+  q('spurs', 'paulinho_13', 'Paulinho', 1988, 'Brazil', ['CM'], 79, 83, 2017, 30, t(7, 6, 8, 6, 5, 7)),
+  q('spurs', 'chadli_13', 'Nacer Chadli', 1989, 'Belgium', ['LW', 'AM'], 77, 82, 2017, 30, t(7, 5, 7, 6, 5, 7)),
+  q('spurs', 'townsend_13', 'Andros Townsend', 1991, 'England', ['RW'], 76, 82, 2017, 35, t(7, 6, 7, 6, 6, 7)),
 ];
 
 /** Everton, 2013–14 — Baines is the target. */

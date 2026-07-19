@@ -45,6 +45,10 @@ export const LIVERPOOL_2001: CuratedSeed[] = [
   q('liverpool', 'smicer', 'Vladimír Šmicer', 1973, 'Czech Republic', ['RW', 'AM'], 77, 79, 2005, 45, t(7, 5, 7, 6, 5, 7)),
   // On loan from PSG — the sign-him-permanently call (real Liverpool passed).
   q('liverpool', 'anelka01', 'Nicolas Anelka', 1979, 'France', ['ST'], 84, 87, 2002, 30, t(5, 8, 8, 4, 6, 6)),
+  // Real 2001-02 depth to the era minimum (Kirkland, the young deputy keeper;
+  // Barmby in the wide/attacking-midfield rotation).
+  q('liverpool', 'kirkland01', 'Chris Kirkland', 1981, 'England', ['GK'], 74, 82, 2006, 40, t(8, 4, 7, 7, 4, 7)),
+  q('liverpool', 'barmby01', 'Nick Barmby', 1974, 'England', ['AM', 'LW'], 77, 79, 2004, 35, t(7, 5, 7, 6, 5, 7)),
 ];
 
 /** Manchester United, 2001–02. */
@@ -228,6 +232,11 @@ export const SPURS_2001: CuratedSeed[] = [
   q('spurs', 'sheringham01', 'Teddy Sheringham', 1966, 'England', ['ST', 'AM'], 82, 83, 2004, 30, t(9, 6, 8, 7, 4, 7)),
   q('spurs', 'ferdinand_l01', 'Les Ferdinand', 1966, 'England', ['ST'], 79, 80, 2003, 40, t(8, 6, 8, 7, 5, 6)),
   q('spurs', 'rebrov01', 'Sergei Rebrov', 1974, 'Ukraine', ['ST', 'AM'], 78, 81, 2005, 30, t(7, 6, 7, 6, 5, 6)),
+  // Real 2001-02 depth to the era minimum (Sherwood anchoring midfield, Taricco at
+  // left-back, and Dean Richards, Hoddle's club-record centre-half signing).
+  q('spurs', 'sherwood01', 'Tim Sherwood', 1969, 'England', ['CM'], 77, 78, 2003, 30, t(8, 5, 8, 7, 5, 6)),
+  q('spurs', 'taricco01', 'Mauricio Taricco', 1973, 'Argentina', ['LB'], 76, 77, 2004, 35, t(7, 5, 7, 7, 6, 7)),
+  q('spurs', 'richards01', 'Dean Richards', 1974, 'England', ['CB'], 77, 79, 2005, 35, t(8, 5, 7, 7, 4, 6)),
 ];
 
 /**

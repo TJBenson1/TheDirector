@@ -247,6 +247,13 @@ const CHELSEA_2003_EXTRA: CuratedSeed[] = [
   q('chelsea', 'crespo_c3', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 84, 85, 2007, 40, t(8, 6, 8, 6, 5, 7)),
   q('chelsea', 'mutu_c3', 'Adrian Mutu', 1979, 'Romania', ['ST', 'AM'], 81, 84, 2008, 35, t(5, 8, 8, 5, 8, 6)),
   q('chelsea', 'joecole_c3', 'Joe Cole', 1981, 'England', ['AM', 'LW'], 80, 85, 2008, 30, t(7, 6, 8, 7, 5, 7)),
+  // Real 2003-04 depth to the era squad-size minimum (a second keeper, the veteran
+  // spine and the front-line the Roman-empire summer inherited).
+  q('chelsea', 'cudicini_c3', 'Carlo Cudicini', 1973, 'Italy', ['GK'], 80, 81, 2007, 30, t(8, 5, 7, 7, 4, 7)),
+  q('chelsea', 'desailly_c3', 'Marcel Desailly', 1968, 'France', ['CB', 'DM'], 82, 82, 2005, 25, t(9, 5, 8, 7, 3, 7)),
+  q('chelsea', 'melchiot_c3', 'Mario Melchiot', 1976, 'Netherlands', ['RB'], 78, 79, 2004, 25, t(8, 5, 7, 7, 4, 7)),
+  q('chelsea', 'geremi_c3', 'Geremi', 1978, 'Cameroon', ['CM', 'RB'], 78, 80, 2007, 25, t(8, 5, 7, 7, 4, 7)),
+  q('chelsea', 'hasselbaink_c3', 'Jimmy Floyd Hasselbaink', 1972, 'Netherlands', ['ST'], 81, 82, 2004, 30, t(7, 7, 8, 6, 6, 6)),
 ];
 /** Manchester City, 2003–04 — a mid-table side (Anelka up front, pre-takeover). */
 const MAN_CITY_2003: CuratedSeed[] = [

@@ -59,6 +59,8 @@ export const DORTMUND_1997: CuratedSeed[] = [
   q('dortmund', 'riedle_97', 'Karl-Heinz Riedle', 1965, 'Germany', ['ST'], 81, 81, 1998, 25, t(9, 6, 8, 8, 4, 7)),
   q('dortmund', 'chapuisat_97', 'Stéphane Chapuisat', 1969, 'Switzerland', ['ST', 'LW'], 83, 84, 2000, 30, t(8, 6, 8, 8, 5, 8)),
   q('dortmund', 'tretschok_97', 'René Tretschok', 1968, 'Germany', ['CM'], 76, 77, 1999, 25, t(8, 5, 7, 8, 5, 7)),
+  // Real depth to the era minimum (de Beer, Klos's long-serving deputy in goal).
+  q('dortmund', 'debeer_97', 'Wolfgang de Beer', 1964, 'Germany', ['GK'], 74, 74, 2000, 25, t(8, 4, 7, 9, 4, 6)),
 ];
 
 // ── Bayern München, 1998–99 (Hitzfeld; ninety seconds from the treble) ────────
@@ -78,6 +80,8 @@ export const BAYERN_1998: CuratedSeed[] = [
   q('bayern', 'elber_98', 'Giovane Élber', 1972, 'Brazil', ['ST'], 83, 85, 2002, 25, t(8, 6, 9, 8, 5, 8)),
   q('bayern', 'jancker_98', 'Carsten Jancker', 1974, 'Germany', ['ST'], 80, 82, 2002, 25, t(8, 6, 8, 8, 5, 7)),
   q('bayern', 'salihamidzic_98', 'Hasan Salihamidžić', 1977, 'Bosnia', ['RW', 'CM'], 78, 83, 2002, 20, t(9, 6, 8, 8, 5, 8)),
+  // Real depth to the era minimum (Dreher, Kahn's deputy in goal).
+  q('bayern', 'dreher_98', 'Bernd Dreher', 1966, 'Germany', ['GK'], 72, 72, 2001, 25, t(8, 4, 7, 8, 4, 6)),
 ];
 
 // ── Bundesliga context (real, lighter) ────────────────────────────────────────

@@ -43,6 +43,10 @@ export const ARSENAL_1996: CuratedSeed[] = [
   q('arsenal', 'bergkamp_a96', 'Dennis Bergkamp', 1969, 'Netherlands', ['AM', 'ST'], 87, 89, 2000, 20, t(9, 6, 8, 8, 3, 6)),
   q('arsenal', 'hartson_a96', 'John Hartson', 1975, 'Wales', ['ST'], 76, 79, 1999, 35, t(6, 7, 7, 6, 7, 6)),
   q('arsenal', 'anelka_a96', 'Nicolas Anelka', 1979, 'France', ['ST'], 68, 88, 2001, 30, t(6, 8, 8, 4, 6, 6)),
+  // Real 1996-97 depth to the era minimum (Lukic back as Seaman's deputy; Garde,
+  // one of Wenger's first French imports, in midfield).
+  q('arsenal', 'lukic_a96', 'John Lukic', 1960, 'England', ['GK'], 76, 76, 1999, 25, t(8, 4, 7, 8, 4, 6)),
+  q('arsenal', 'garde_a96', 'Rémi Garde', 1966, 'France', ['DM', 'CM'], 76, 77, 1999, 30, t(8, 4, 7, 7, 4, 7)),
 ];
 
 // ── Manchester United, 1996–97 (champions; Cantona's last season) ─────────────
@@ -98,6 +102,10 @@ export const CHELSEA_1996: CuratedSeed[] = [
   q('chelsea', 'vialli_c96', 'Gianluca Vialli', 1964, 'Italy', ['ST'], 82, 82, 1999, 30, t(9, 7, 9, 7, 5, 7)),
   q('chelsea', 'hughes_c96', 'Mark Hughes', 1963, 'Wales', ['ST'], 79, 79, 1998, 30, t(8, 6, 7, 7, 6, 6)),
   q('chelsea', 'burley_c96', 'Craig Burley', 1971, 'Scotland', ['CM'], 75, 78, 1999, 25, t(8, 5, 7, 7, 5, 7)),
+  // Real 1996-97 depth to the era minimum (Hitchcock deputising in goal; Duberry,
+  // the young academy centre-half of Gullit's FA Cup side).
+  q('chelsea', 'hitchcock_c96', 'Kevin Hitchcock', 1962, 'England', ['GK'], 74, 74, 1998, 25, t(8, 4, 6, 8, 4, 6)),
+  q('chelsea', 'duberry_c96', 'Michael Duberry', 1975, 'England', ['CB'], 75, 79, 2000, 30, t(7, 5, 7, 7, 5, 7)),
 ];
 
 // ── Newcastle United, 1996–97 (2nd; Shearer's world-record homecoming) ────────

@@ -176,6 +176,14 @@ export const LIVERPOOL_B10: CuratedSeed[] = [
   q('liverpool', 'suarez_lv10', 'Luis Suárez', 1987, 'Uruguay', ['ST'], 85, 91, 2016, 20, t(8, 8, 10, 8, 8, 8)),
   q('liverpool', 'carroll_lv10', 'Andy Carroll', 1989, 'England', ['ST'], 78, 84, 2016, 30, t(5, 7, 7, 6, 7, 7)),
   q('liverpool', 'torres_lv10', 'Fernando Torres', 1984, 'Spain', ['ST'], 86, 89, 2014, 30, t(8, 6, 9, 7, 5, 8)),
+  // Real 2010-11 depth to the era minimum (Jones deputising for Reina; the
+  // full-back cover and the summer's midfield/attacking additions).
+  q('liverpool', 'bjones_lv10', 'Brad Jones', 1982, 'Australia', ['GK'], 72, 73, 2013, 25, t(8, 4, 7, 7, 5, 7)),
+  q('liverpool', 'aurelio_lv10', 'Fábio Aurélio', 1979, 'Brazil', ['LB'], 78, 79, 2012, 45, t(8, 4, 7, 7, 4, 7)),
+  q('liverpool', 'konchesky_lv10', 'Paul Konchesky', 1981, 'England', ['LB'], 74, 75, 2014, 25, t(7, 5, 7, 6, 5, 7)),
+  q('liverpool', 'kyrgiakos_lv10', 'Sotirios Kyrgiakos', 1979, 'Greece', ['CB'], 76, 77, 2012, 30, t(7, 6, 7, 7, 6, 6)),
+  q('liverpool', 'poulsen_lv10', 'Christian Poulsen', 1980, 'Denmark', ['DM'], 76, 77, 2013, 30, t(7, 5, 7, 6, 5, 7)),
+  q('liverpool', 'joecole_lv10', 'Joe Cole', 1981, 'England', ['AM', 'LW'], 78, 80, 2014, 30, t(6, 6, 7, 6, 5, 7)),
 ];
 
 export const INTER_B10: CuratedSeed[] = [

@@ -53,6 +53,11 @@ export const DORTMUND_2012: CuratedSeed[] = [
   q('dortmund', 'lewandowski_12', 'Robert Lewandowski', 1988, 'Poland', ['ST'], 87, 92, 2014, 15, t(9, 7, 10, 8, 5, 8)),
   q('dortmund', 'schieber', 'Julian Schieber', 1989, 'Germany', ['ST'], 76, 79, 2015, 20, t(8, 6, 8, 8, 5, 7)),
   q('dortmund', 'perisic_12', 'Ivan Perišić', 1989, 'Croatia', ['LW', 'RW'], 79, 85, 2016, 20, t(7, 6, 8, 7, 6, 8)),
+  // Real 2012-13 depth to the era minimum (Şahin back on loan in midfield, plus
+  // Leitner and Kirch in the rotation of Klopp's CL-final squad).
+  q('dortmund', 'sahin_12', 'Nuri Şahin', 1988, 'Turkey', ['CM', 'DM'], 81, 84, 2016, 25, t(8, 6, 8, 8, 5, 8)),
+  q('dortmund', 'leitner_12', 'Moritz Leitner', 1992, 'Germany', ['AM', 'CM'], 74, 82, 2016, 25, t(8, 5, 7, 7, 5, 7)),
+  q('dortmund', 'kirch_12', 'Oliver Kirch', 1982, 'Germany', ['RB', 'CM'], 74, 75, 2015, 25, t(8, 5, 7, 8, 5, 7)),
 ];
 
 // ── Bayern München, 2012–13 (Heynckes; the treble juggernaut) ─────────────────

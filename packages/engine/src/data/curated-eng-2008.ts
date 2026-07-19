@@ -51,6 +51,11 @@ export const MANCITY_2008: CuratedSeed[] = [
   q('man_city', 'robinho_c8', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 84, 86, 2013, 25, t(5, 8, 8, 5, 6, 7)),
   q('man_city', 'caicedo', 'Felipe Caicedo', 1988, 'Ecuador', ['ST'], 74, 80, 2013, 20, t(6, 6, 8, 7, 6, 7)),
   q('man_city', 'sturridge_c8', 'Daniel Sturridge', 1989, 'England', ['ST'], 74, 86, 2012, 25, t(6, 7, 8, 6, 6, 8)),
+  // Real 2008-09 depth to the era minimum (Elano's creativity, Ćorluka's defensive
+  // cover, Benjani up front — the pre-splurge takeover squad).
+  q('man_city', 'elano_c8', 'Elano', 1981, 'Brazil', ['AM', 'RW'], 80, 82, 2011, 25, t(7, 6, 7, 6, 5, 7)),
+  q('man_city', 'corluka_c8', 'Vedran Ćorluka', 1986, 'Croatia', ['CB', 'RB'], 78, 82, 2012, 25, t(8, 5, 7, 7, 5, 7)),
+  q('man_city', 'benjani_c8', 'Benjani', 1978, 'Zimbabwe', ['ST'], 75, 76, 2011, 30, t(7, 5, 7, 7, 5, 6)),
 ];
 
 // ── Manchester United, 2008–09 (Ferguson; champions of England and Europe) ────

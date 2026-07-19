@@ -52,6 +52,8 @@ export const BARCELONA_2014: CuratedSeed[] = [
   q('barcelona', 'neymar_b14', 'Neymar', 1992, 'Brazil', ['LW', 'ST'], 89, 95, 2018, 20, t(6, 8, 9, 7, 6, 8)),
   q('barcelona', 'pedro_b14', 'Pedro', 1987, 'Spain', ['RW', 'ST'], 82, 83, 2016, 20, t(9, 5, 8, 9, 4, 8)),
   q('barcelona', 'munir', 'Munir El Haddadi', 1995, 'Spain', ['ST', 'RW'], 70, 82, 2018, 20, t(8, 6, 8, 8, 5, 7)),
+  // Real 2014-15 depth to the era minimum (Mathieu, that summer's centre-half signing).
+  q('barcelona', 'mathieu_b14', 'Jérémy Mathieu', 1983, 'France', ['CB', 'LB'], 81, 82, 2018, 25, t(8, 5, 8, 7, 5, 7)),
 ];
 
 // ── Real Madrid, 2014–15 (Ancelotti; the BBC after La Décima) ─────────────────

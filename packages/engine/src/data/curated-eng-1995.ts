@@ -56,6 +56,8 @@ export const LIVERPOOL_1995: CuratedSeed[] = [
   q('liverpool', 'fowler_95', 'Robbie Fowler', 1975, 'England', ['ST'], 84, 89, 2000, 35, t(6, 7, 8, 9, 6, 6), { loyalty: 90 }),
   q('liverpool', 'collymore_95', 'Stan Collymore', 1971, 'England', ['ST'], 82, 85, 1999, 35, t(4, 8, 7, 5, 8, 5)),
   q('liverpool', 'rush_95', 'Ian Rush', 1961, 'Wales', ['ST'], 79, 79, 1996, 30, t(9, 6, 8, 10, 4, 7), { loyalty: 95 }),
+  // Real 1995-96 depth to the era minimum (Matteo, the versatile young defender).
+  q('liverpool', 'matteo_95', 'Dominic Matteo', 1974, 'Scotland', ['CB', 'LB'], 74, 80, 2000, 30, t(8, 4, 7, 7, 4, 7)),
 ];
 
 // ── Newcastle, 1995–96 (Keegan's Entertainers; the twelve-point lead, no Shearer) ─
