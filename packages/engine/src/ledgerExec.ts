@@ -19,6 +19,7 @@ import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
 import { executeTransfer } from './transfers.js';
 import { clubSquadPlayers, playerStarValue, instantiateCuratedSeed, recomputeClubStrength } from './players.js';
+import { effectiveAbility } from './adaptation.js';
 import { appendMemory } from './memory.js';
 import { areDirectRivals } from './agency.js';
 import { applyPrematureMove } from './development.js';
@@ -309,21 +310,44 @@ function offerUserLedgerMove(state: GameState, entry: RealTransferLedgerEntry, k
   const realizedTag = `ledger:${key}`;
 
   if (entry.to === state.playerClub) {
-    // Incoming real signing the user is expected to make.
+    // Incoming real signing the user is expected to make. If he is no longer at
+    // his real club, an earlier move (often a knock-on of the user's OWN business)
+    // took him — surface WHERE he went and, where the divergence log recorded it,
+    // WHY, so the Director hears the ripple ("you signed X, so Y went elsewhere")
+    // rather than a bare "unavailable".
     if (!player || player.club !== entry.from) {
+      const nowAt = player?.club ? state.clubs[player.club]?.name : undefined;
+      const cause = player
+        ? [...state.timeline.divergenceLog].reverse().find((d) => d.detail.includes(player.name))
+        : undefined;
+      const whereTo = nowAt ? ` — he went to ${nowAt} instead` : '';
+      const because = cause ? ` ${cause.detail}` : '';
       logEvent(state, {
         category: 'transfer',
         code: 'ledger.unavailable',
-        message: `A real target (${player?.name ?? entry.playerId}) is no longer available — an earlier move took him elsewhere`,
-        data: { playerId: entry.playerId, to: entry.to },
+        message: `A real signing you'd have been offered, ${player?.name ?? entry.playerId}, is off the table${whereTo}.${because}`,
+        data: { playerId: entry.playerId, to: entry.to, nowAt: player?.club ?? null },
       });
       return;
     }
     const fromName = entry.from ? state.clubs[entry.from]?.name ?? entry.from : 'a free transfer';
+    const clubName = state.clubs[state.playerClub]!.name;
+    // Does the Director actually NEED him? If he already has two clearly better
+    // players in the position (he built his own strength there), the coach frames
+    // it as a signing for the record books, not the squad — the "bought Lampard and
+    // Essien, so I don't need Carrick" case, told rather than silently offered.
+    const grp = positionGroupOf(player);
+    const ahead = clubSquadPlayers(state, state.playerClub)
+      .filter((p) => p.id !== player.id && positionGroupOf(p) === grp && effectiveAbility(p) >= player.ability + 2)
+      .sort((a, b) => effectiveAbility(b) - effectiveAbility(a));
+    const description =
+      ahead.length >= 2
+        ? `This is the window ${player.name} really joined ${clubName} — but you are already well stocked here (${ahead[0]!.name} and ${ahead[1]!.name} are ahead of him), so this is one for the record books more than the squad. Complete it anyway, or pass and let history diverge.`
+        : `This is the window ${player.name} really joined ${clubName}. Complete the deal, or pass and let history diverge.`;
     state.pendingDecisions.push({
       id: `real-in:${key}`,
       title: `Real signing available: ${player.name} (${fromName}, £${feeM}m)`,
-      description: `This is the window ${player.name} really joined ${state.clubs[state.playerClub]!.name}. Complete the deal, or pass and let history diverge.`,
+      description,
       interrupt: false,
       clubId: state.playerClub,
       category: 'transfer',

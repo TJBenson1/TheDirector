@@ -6,8 +6,8 @@
  * invariants (no negative budgets, one club per player).
  */
 
-import type { ClubId, GameState, PlayerId, PlayerState } from './types.js';
-import { parseYearMonth } from './clock.js';
+import type { ClubId, ClubState, GameState, PlayerId, PlayerState } from './types.js';
+import { parseYearMonth, transferWindowOrdinal } from './clock.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer, suggestWage } from './finance.js';
 import { recomputeClubStrength, computeWageBill, clubSquadPlayers, clubStarPremium } from './players.js';
@@ -15,7 +15,7 @@ import { rollAdaptation } from './adaptation.js';
 import { Rng } from './rng.js';
 import { evaluateApproach, type ApproachVerdict } from './agency.js';
 import { coachFit } from './coaches.js';
-import { isProcedural } from './ledger.js';
+import { isProcedural, ERA_REALITY, eraForScenario, entryKey } from './ledger.js';
 
 export interface TransferRequest {
   playerId: PlayerId;
@@ -179,10 +179,81 @@ export function executeTransfer(
         message: `${seller.name} raided by ${buyer.name} for ${player.name}`,
         data: { clubId: seller.id, playerId: player.id, fee },
       });
+      // Ripple: a raided club may reach for a replacement — and it can be a real
+      // signing the DIRECTOR himself was due to be offered, so his own raid puts
+      // that target out of his reach (the traceable "you took Berbatov, so Spurs
+      // moved for Adebayor" chain).
+      rippleReplacement(state, seller, player);
     }
   }
 
   return { ok: true, playerId: player.id, from: fromClubId, to: req.toClub, fee };
+}
+
+/** Position bucket for the replacement match (mirrors the ledger executor's
+ *  grouping: a holding/central mid is MID; an attacking mid groups with the
+ *  forward line). */
+function positionGroup(p: PlayerState): string {
+  const pos = p.positions[0] ?? 'CM';
+  if (pos === 'GK') return 'GK';
+  if (pos === 'CB' || pos === 'LB' || pos === 'RB') return 'DEF';
+  if (pos === 'DM' || pos === 'CM') return 'MID';
+  return 'ATT';
+}
+
+/**
+ * A club the user just raided reaches into the market for a replacement — and,
+ * for narrative richness (§9f), it may take a player the Director was himself due
+ * to be OFFERED as a real signing, consuming that offer with a traceable
+ * butterfly. It looks only at the user's own upcoming real-in ledger entries at
+ * the position the raid just weakened, so the displaced target is always one the
+ * Director would otherwise have signed. Fires only on a live user raid, so a
+ * passive/reality world (and the calibration harness's zero-divergence careers)
+ * is never touched.
+ */
+function rippleReplacement(state: GameState, raidedClub: ClubState, lost: PlayerState): void {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack) return;
+  const group = positionGroup(lost);
+  const now = state.clock.date;
+  const nowOrd = transferWindowOrdinal(now);
+  const nowYear = Number(now.slice(0, 4));
+
+  // The soonest upcoming real signing the USER would have been offered, at the
+  // weakened position, whose subject is still available at his real club.
+  let best: { entry: (typeof pack.realTransferLedger)[number]; p: PlayerState } | undefined;
+  for (const e of pack.realTransferLedger) {
+    if (e.to !== state.playerClub) continue; // a signing the DIRECTOR would make
+    if (e.from === raidedClub.id || e.to === raidedClub.id) continue;
+    if (state.meta.executedLedger.includes(entryKey(e))) continue;
+    if (transferWindowOrdinal(e.window) <= nowOrd) continue; // must be a FUTURE offer
+    if (Number(e.window.slice(0, 4)) - nowYear > 2) continue; // within ~2 years
+    const p = state.players[e.playerId];
+    if (!p || p.club !== e.from) continue; // available at his real club
+    if (p.injury || p.resistance.hardBlocks.length > 0) continue;
+    if (positionGroup(p) !== group) continue; // fills the hole the raid opened
+    if (!best || e.window < best.entry.window) best = { entry: e, p };
+  }
+  if (!best) return;
+
+  const { entry, p } = best;
+  const repFee = valuePlayer(p, currentYear(state));
+  raidedClub.finances.transferBudget = Math.max(raidedClub.finances.transferBudget, repFee);
+  const res = executeTransfer(state, { playerId: p.id, toClub: raidedClub.id, fee: repFee });
+  if (!res.ok) return;
+  // Consume the user's would-be offer so it is never separately presented.
+  state.meta.executedLedger.push(entryKey(entry));
+  state.timeline.divergenceLog.push({
+    date: now,
+    kind: 'butterfly',
+    detail: `${raidedClub.name}, needing a replacement after you signed ${lost.name}, moved for ${p.name} — the real signing you would have been offered is now off your table.`,
+  });
+  logEvent(state, {
+    category: 'transfer',
+    code: 'ledger.displaced',
+    message: `${raidedClub.name} replace ${lost.name} with ${p.name} — a real target of yours, now gone`,
+    data: { clubId: raidedClub.id, playerId: p.id, lost: lost.id, consumed: entryKey(entry) },
+  });
 }
 
 /** The coach's reaction to a Director signing: relationship swing + a misfit
