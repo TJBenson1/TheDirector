@@ -80,6 +80,19 @@ export function reviewBoard(state: GameState, rng: Rng): void {
 
   state.board.patience = Math.max(0, Math.min(100, state.board.patience + delta));
 
+  // Always record the season's verdict — the narration layer turns this into the
+  // end-of-season review (position, board mood, and, enriched API-side, top scorer
+  // and the European run). Pure narration metadata; the sim never reads it back.
+  const points = league.standings[state.playerClub]?.points ?? 0;
+  logEvent(state, {
+    category: 'system',
+    code: 'board.season-review',
+    message: wonTitle
+      ? `Season review: ${state.clubs[state.playerClub]?.name} are CHAMPIONS.`
+      : `Season review: finished ${finish}${ordinal(finish)} (the board expected top ${expected}).`,
+    data: { finish, expected, points, wonTitle, patience: state.board.patience, season: Number(state.clock.date.slice(0, 4)) - 1 },
+  });
+
   // Ruthless owners warn earlier and swing the axe from a higher perch (and can do
   // it after a single warning); a patient board needs the meter nearly empty twice.
   const warnAt = 35 + Math.round(18 * (r - 1));

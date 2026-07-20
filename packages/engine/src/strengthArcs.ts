@@ -29,6 +29,7 @@ import type { GameState } from './types.js';
 import { eraForScenario } from './ledger.js';
 import { reanchorClubStrength } from './players.js';
 import { parseYearMonth } from './clock.js';
+import { divergenceFactor } from './divergence.js';
 
 type Waypoint = readonly [year: number, strength: number];
 
@@ -247,8 +248,17 @@ export function applyStrengthArcs(state: GameState): void {
   const arcs = ARCS[eraForScenario(state.meta.scenarioId)];
   if (!arcs) return;
   const year = parseYearMonth(state.clock.date).year;
+  // Once the Director has begun reshaping his own club, it is no longer pinned to
+  // its real decline — the squad HE builds sets its trajectory, so his signings
+  // actually move the club up (or down) the table. Reanchoring it to history every
+  // summer would absorb those signings into the anchor and net them to zero, which
+  // is exactly the "my signings had no impact" bug. A passive, reality-default world
+  // (the calibration run, userAggression 0) keeps the arc, so calibration is
+  // byte-identical; rivals always follow their real arcs.
+  const releaseUserClub = divergenceFactor(state) > 0;
   for (const [clubId, waypoints] of Object.entries(arcs)) {
     if (!state.clubs[clubId]) continue;
+    if (releaseUserClub && clubId === state.playerClub) continue;
     const target = valueAt(waypoints, year);
     if (target != null) reanchorClubStrength(state, clubId, target);
   }
