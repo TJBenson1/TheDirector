@@ -232,8 +232,10 @@ describe('2013 post-Ferguson era pack (§4 data)', () => {
     let s = cloneState(createNewGame({ scenarioId: 'juventus-1995', seed: 'ronaldo95' }));
     // Reality: at PSV in 1995-96, NOT Barcelona (he only joined Barça in 1996).
     expect(s.players.cur_ronaldo_r?.club).toBe('psv');
-    // Let the ledger run his real PSV → Barça (1996) move through.
-    s = play(s, 4);
+    // Let the ledger run his real PSV → Barça (1996) move through. The 1996 European
+    // Cup final set-piece interrupts the May-1996 advance, so the summer move lands
+    // one window later than a clean run — five advances reach it.
+    s = play(s, 5);
     expect(s.players.cur_ronaldo_r?.club).toBe('barcelona');
   });
 

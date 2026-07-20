@@ -772,6 +772,403 @@ const BARCELONA_2003_PACK: ScriptedEvent[] = [
   },
 ];
 
+const ARSENAL_1996_PACK: ScriptedEvent[] = [
+  {
+    id: 'anelka-real',
+    date: '1999-07',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => playerAt(s, 'cur_anelka_a96', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:anelka-real', title: 'Real Madrid come for the young Anelka',
+      description: 'The teenager Wenger picked over Ian Wright is the most wanted forward in Europe, and Real Madrid have come calling with a fortune. Reality banked a ~£22m profit and reinvested it in Overmars-money and a training ground. Cash in on the prodigy, or build the side around him?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Cash in — a record profit (£22m)', successProbability: 0.9, onSuccess: [{ kind: 'transferOut', playerId: 'cur_anelka_a96', clubId: 'real_madrid', amount: 22_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Anelka to Real for a fortune — as Arsenal really did.' }], onFailure: [] },
+        { id: 'keep', label: 'Keep him — build around the prodigy', successProbability: 0.5, onSuccess: [{ kind: 'morale', playerId: 'cur_anelka_a96', amount: 10 }, { kind: 'ability', playerId: 'cur_anelka_a96', amount: 2 }], onFailure: [{ kind: 'agitation', playerId: 'cur_anelka_a96', amount: 16 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'transferOut', playerId: 'cur_anelka_a96', clubId: 'real_madrid', amount: 22_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Anelka joins Real Madrid — the profit reshaped the club, as it did.' }],
+      memoryTags: ['transfer', 'cur_anelka_a96'],
+    }),
+  },
+];
+
+const MILAN_1995_PACK: ScriptedEvent[] = [
+  {
+    id: 'baresi-farewell',
+    date: '1997-04',
+    scenarios: ['milan-1995'],
+    requires: (s) => playerAt(s, 'cur_baresi', 'milan') && s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:baresi-farewell', title: 'Franco Baresi’s last stand',
+      description: 'Il Capitano, the greatest libero of them all, is 36 and his body is finally failing him. Reality gave him a farewell season and a retired No.6. Hand him one more year as the emblem, or let him bow out now with the whole San Siro on its feet?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'one-more', label: 'One more year — the captain plays on', onSuccess: [{ kind: 'renewContract', playerId: 'cur_baresi', amount: 1 }, { kind: 'morale', clubId: 'milan', amount: 6 }, { kind: 'memory', tag: 'legend', text: 'Baresi given a farewell season — the San Siro roars.' }] },
+        { id: 'retire', label: 'Retire the No.6 with honour', onSuccess: [{ kind: 'letContractLapse', playerId: 'cur_baresi' }, { kind: 'morale', clubId: 'milan', amount: 4 }, { kind: 'memory', tag: 'legend', text: 'Baresi retires a Milan immortal — the shirt goes up into the rafters.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'letContractLapse', playerId: 'cur_baresi' }, { kind: 'memory', tag: 'legend', text: 'Baresi’s era quietly ends.' }],
+      memoryTags: ['legend', 'cur_baresi'],
+    }),
+  },
+];
+
+const JUVENTUS_1995_PACK: ScriptedEvent[] = [
+  {
+    id: 'juve-1996-final',
+    date: '1996-05',
+    scenarios: ['juventus-1995'],
+    requires: (s) => playerAt(s, 'cur_delpiero_j', 'juventus') && s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:juve-1996-final', title: 'The European Cup final — Ajax await in Rome',
+      description: 'Lippi’s Juventus have reached the final against the young champions of Ajax. Reality settled it on penalties, and the trophy came back to Turin. How do you set them up for the biggest night — go for the throat, or strangle the game and trust your nerve from the spot?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'attack', label: 'Go for the throat', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 8 }, { kind: 'morale', clubId: 'juventus', amount: 10 }, { kind: 'memory', tag: 'europe', text: 'Juventus attack Ajax and are crowned kings of Europe.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -6 }] },
+        { id: 'control', label: 'Control it, trust the shootout', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 8 }, { kind: 'morale', clubId: 'juventus', amount: 8 }, { kind: 'memory', tag: 'europe', text: 'Juventus hold their nerve and win the European Cup on penalties — as reality had it.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'europe', text: 'The European Cup final comes and goes.' }],
+      memoryTags: ['europe'],
+    }),
+  },
+];
+
+const LIVERPOOL_1995_PACK: ScriptedEvent[] = [
+  {
+    id: 'spice-boys-final',
+    date: '1996-05',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => playerAt(s, 'cur_mcmanaman_95', 'liverpool') && s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:spice-boys-final', title: 'The Cup final — and the white Armani suits',
+      description: 'Evans’ gifted young side reach the FA Cup final against Manchester United — but the story before kickoff is the cream Armani suits they wore up the Wembley steps, and the "Spice Boys" tag hardening around them. Reality: they looked the part and lost the game. Rein in the image and lock in, or let them be who they are?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'focus', label: 'Rein it in — all business', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'morale', clubId: 'liverpool', amount: 6 }, { kind: 'memory', tag: 'culture', text: 'Cut the circus and focused the Spice Boys — a different Wembley.' }], onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -4 }] },
+        { id: 'let-be', label: 'Let them be the Spice Boys', successProbability: 0.35, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 4 }], onFailure: [{ kind: 'boardPatience', amount: -5 }, { kind: 'memory', tag: 'culture', text: 'The suits, the swagger, the defeat — the Spice Boys legend written, as it was.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'culture', text: 'The Spice Boys have their Wembley day.' }],
+      memoryTags: ['culture'],
+    }),
+  },
+];
+
+const CHELSEA_1996_PACK: ScriptedEvent[] = [
+  {
+    id: 'gullit-vialli',
+    date: '1998-02',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => playerAt(s, 'cur_vialli_c96', 'chelsea') && s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:gullit-vialli', title: 'Vialli frozen out by player-manager Gullit',
+      description: 'Ruud Gullit is barely picking Gianluca Vialli, and the dressing room is split. Reality: the board sacked Gullit and Vialli took charge — and promptly won the Cup Winners’ Cup. Back your manager, or side with the striker the players adore?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'back-gullit', label: 'Back Gullit — hold the line', successProbability: 0.45, onSuccess: [{ kind: 'managerRelationship', amount: 8 }], onFailure: [{ kind: 'morale', clubId: 'chelsea', amount: -6 }, { kind: 'agitation', playerId: 'cur_vialli_c96', amount: 10 }] },
+        { id: 'back-vialli', label: 'Side with Vialli and the players', successProbability: 0.7, onSuccess: [{ kind: 'morale', playerId: 'cur_vialli_c96', amount: 12 }, { kind: 'morale', clubId: 'chelsea', amount: 5 }, { kind: 'managerRelationship', amount: -10 }, { kind: 'memory', tag: 'dressing-room', text: 'Sided with Vialli over Gullit — the room’s mood lifts, the manager fumes.' }], onFailure: [{ kind: 'managerRelationship', amount: -12 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_vialli_c96', amount: 8 }, { kind: 'memory', tag: 'dressing-room', text: 'The Gullit–Vialli standoff festers.' }],
+      memoryTags: ['dressing-room', 'cur_vialli_c96'],
+    }),
+  },
+];
+
+const CHELSEA_2003_PACK: ScriptedEvent[] = [
+  {
+    id: 'abramovich-warchest',
+    date: '2003-08',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:abramovich-warchest', title: 'Abramovich hands you a bottomless war chest',
+      description: 'The Russian has bought the club and money is suddenly no object. Reality was a scattergun £100m+ splurge — Verón, Crespo, Mutu, Duff, Makélélé — that took a year and Mourinho to knit together. Blow the lot on marquee names now, or build with a plan?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'splurge', label: 'Spend it all now — announce yourselves', successProbability: 0.85, onSuccess: [{ kind: 'money', clubId: 'chelsea', amount: 60_000_000 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'takeover', text: 'The Roman revolution begins with a spending spree.' }], onFailure: [] },
+        { id: 'plan', label: 'Build with a plan — quality over noise', successProbability: 0.75, onSuccess: [{ kind: 'money', clubId: 'chelsea', amount: 70_000_000 }, { kind: 'memory', tag: 'takeover', text: 'Held the nerve — a smarter build than reality managed.' }], onFailure: [{ kind: 'money', clubId: 'chelsea', amount: 55_000_000 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'money', clubId: 'chelsea', amount: 60_000_000 }, { kind: 'memory', tag: 'takeover', text: 'The Abramovich billions arrive.' }],
+      memoryTags: ['takeover'],
+    }),
+  },
+  {
+    id: 'mutu-scandal',
+    date: '2004-09',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => playerAt(s, 'cur_mutu_c3', 'chelsea') && s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:mutu-scandal', title: 'Adrian Mutu fails a drugs test',
+      description: 'Your Romanian forward has tested positive for cocaine. Reality: Chelsea tore up his contract, sacked him and pursued him for damages. Cut him loose to protect the club, or stand by a troubled talent and try to save him?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'sack', label: 'Tear up his contract — protect the club', successProbability: 0.9, onSuccess: [{ kind: 'letContractLapse', playerId: 'cur_mutu_c3' }, { kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'scandal', text: 'Mutu sacked over the failed test — as reality had it.' }], onFailure: [] },
+        { id: 'stand-by', label: 'Stand by him — rehab and a second chance', successProbability: 0.4, onSuccess: [{ kind: 'morale', playerId: 'cur_mutu_c3', amount: 10 }, { kind: 'memory', tag: 'scandal', text: 'Stood by Mutu through his ban — a road not taken in reality.' }], onFailure: [{ kind: 'boardPatience', amount: -6 }, { kind: 'agitation', playerId: 'cur_mutu_c3', amount: 10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'letContractLapse', playerId: 'cur_mutu_c3' }, { kind: 'memory', tag: 'scandal', text: 'The Mutu affair ends his Chelsea career.' }],
+      memoryTags: ['scandal', 'cur_mutu_c3'],
+    }),
+  },
+];
+
+const DORTMUND_1997_PACK: ScriptedEvent[] = [
+  {
+    id: 'sammer-knee',
+    date: '1998-01',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => playerAt(s, 'cur_sammer_97', 'dortmund') && s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:sammer-knee', title: 'Matthias Sammer’s knee gives way',
+      description: 'The reigning Ballon d’Or, the libero who drives your European champions, has broken down again — chronic cartilage damage. Reality: the knee never healed and it ended his career at 30. Push him through cortisone and comebacks, or shut him down to save the man?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'push', label: 'Push him back — you need him now', successProbability: 0.3, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 6 }], onFailure: [{ kind: 'ban', playerId: 'cur_sammer_97', months: 10 }, { kind: 'ability', playerId: 'cur_sammer_97', amount: -6 }, { kind: 'memory', tag: 'injury', text: 'Rushed Sammer back and the knee gave out for good — the tragedy history remembers.' }] },
+        { id: 'protect', label: 'Shut him down — save the man', successProbability: 0.5, onSuccess: [{ kind: 'ability', playerId: 'cur_sammer_97', amount: -2 }, { kind: 'memory', tag: 'injury', text: 'Protected Sammer — a slim hope the great libero plays on.' }], onFailure: [{ kind: 'ban', playerId: 'cur_sammer_97', months: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'ban', playerId: 'cur_sammer_97', months: 10 }, { kind: 'memory', tag: 'injury', text: 'Sammer’s knee ends a glittering career at 30.' }],
+      memoryTags: ['injury', 'cur_sammer_97'],
+    }),
+  },
+];
+
+const INTER_1998_PACK: ScriptedEvent[] = [
+  {
+    id: 'ronaldo-knee',
+    date: '1999-11',
+    scenarios: ['inter-1998'],
+    requires: (s) => playerAt(s, 'cur_ronaldo_r9', 'inter') && s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:ronaldo-knee', title: 'Ronaldo’s knee ruptures — Il Fenomeno in ruins',
+      description: 'The greatest striker on earth, at 23, has ruptured the tendon in his right knee. Reality was catastrophic: he rushed a comeback in April and it went again in six minutes, costing him three years. Rush the Phenomenon back for the run-in, or lock him away for a full, patient rehabilitation?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'rush', label: 'Rush him back — you need him', successProbability: 0.2, onSuccess: [{ kind: 'morale', clubId: 'inter', amount: 8 }], onFailure: [{ kind: 'ban', playerId: 'cur_ronaldo_r9', months: 18 }, { kind: 'ability', playerId: 'cur_ronaldo_r9', amount: -5 }, { kind: 'memory', tag: 'injury', text: 'Ronaldo broke down again on his comeback — the six-minute tragedy, as it happened.' }] },
+        { id: 'patient', label: 'A full, patient rehab — protect the miracle', successProbability: 0.7, onSuccess: [{ kind: 'ability', playerId: 'cur_ronaldo_r9', amount: -2 }, { kind: 'memory', tag: 'injury', text: 'Held Ronaldo out for a proper rehab — sparing him the second rupture reality inflicted.' }], onFailure: [{ kind: 'ban', playerId: 'cur_ronaldo_r9', months: 12 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'ban', playerId: 'cur_ronaldo_r9', months: 14 }, { kind: 'ability', playerId: 'cur_ronaldo_r9', amount: -3 }, { kind: 'memory', tag: 'injury', text: 'Ronaldo’s knee robs the game of its phenomenon for years.' }],
+      memoryTags: ['injury', 'cur_ronaldo_r9'],
+    }),
+  },
+];
+
+const INTER_2004_PACK: ScriptedEvent[] = [
+  {
+    id: 'adriano-grief',
+    date: '2005-08',
+    scenarios: ['inter-2004'],
+    requires: (s) => playerAt(s, 'cur_adriano_04', 'inter') && s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:adriano-grief', title: 'The Emperor is grieving',
+      description: 'Adriano — the most fearsome forward in Italy, a man who once seemed unstoppable — has lost his father, and those close to him say he is slipping away from the game into drink and depression. Reality watched one of football’s great talents fade. Wrap the club around him and fight for him, or accept the decline and move on?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'support', label: 'Fight for him — the club as a family', successProbability: 0.4, onSuccess: [{ kind: 'morale', playerId: 'cur_adriano_04', amount: 14 }, { kind: 'ability', playerId: 'cur_adriano_04', amount: 3 }, { kind: 'memory', tag: 'human', text: 'Rallied around Adriano — a chance to save the Emperor reality never took.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_adriano_04', amount: 8 }] },
+        { id: 'move-on', label: 'Accept the decline — plan without him', successProbability: 0.8, onSuccess: [{ kind: 'memory', tag: 'human', text: 'Let Adriano drift — the fall of the Emperor, as it sadly went.' }], onFailure: [] },
+      ],
+      falloutIfIgnored: [{ kind: 'ability', playerId: 'cur_adriano_04', amount: -4 }, { kind: 'memory', tag: 'human', text: 'Adriano fades from the game.' }],
+      memoryTags: ['human', 'cur_adriano_04'],
+    }),
+  },
+];
+
+const JUVENTUS_2006_PACK: ScriptedEvent[] = [
+  {
+    id: 'juve-loyalists',
+    date: '2006-08',
+    scenarios: ['juventus-2006'],
+    requires: (s) => playerAt(s, 'cur_delpiero_06', 'juventus') && s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:juve-loyalists', title: 'Serie B — the loyalists who stayed',
+      description: 'Calciopoli has stripped the titles and cast the Old Lady into Serie B. The mercenaries fled — but Del Piero, Buffon, Trezeguet and Nedvěd chose to go down with the club and win their way back. Make heroes of the men who stayed and build the promotion push around them, or treat it as a fire-sale rebuild?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'honour', label: 'Build around the loyalists — win it back together', successProbability: 0.8, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 12 }, { kind: 'boardPatience', amount: 8 }, { kind: 'memory', tag: 'loyalty', text: 'Made icons of the men who stayed — the Old Lady marches back up together.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: 4 }] },
+        { id: 'rebuild', label: 'Cold rebuild — cash in and start over', successProbability: 0.6, onSuccess: [{ kind: 'money', clubId: 'juventus', amount: 20_000_000 }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -8 }, { kind: 'agitation', playerId: 'cur_delpiero_06', amount: 10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'juventus', amount: 4 }, { kind: 'memory', tag: 'loyalty', text: 'The loyalists drag Juventus back to Serie A.' }],
+      memoryTags: ['loyalty', 'cur_delpiero_06'],
+    }),
+  },
+];
+
+const MILAN_2007_PACK: ScriptedEvent[] = [
+  {
+    id: 'kaka-100m',
+    date: '2009-01',
+    scenarios: ['milan-2007'],
+    requires: (s) => playerAt(s, 'cur_kaka_07', 'milan') && s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:kaka-100m', title: 'Manchester City offer £100m for Kaká',
+      description: 'The newly-rich City have put a world-record, life-changing £100m on the table for your Ballon d’Or talisman. Reality: Milan agonised, the Curva revolted, and Berlusconi turned it down — only to sell him to Real that summer. Take the staggering money now, or keep your golden boy and face the same call in the summer?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'take', label: 'Cash in — no player is worth turning that money down', successProbability: 0.9, onSuccess: [{ kind: 'transferOut', playerId: 'cur_kaka_07', clubId: 'real_madrid', amount: 100_000_000 }, { kind: 'morale', clubId: 'milan', amount: -8 }, { kind: 'memory', tag: 'transfer', text: 'City’s £100m forced the issue and Kaká was sold — the golden boy gone, a year before reality let him leave for Madrid.' }], onFailure: [] },
+        { id: 'refuse', label: 'Refuse — Kaká is not for sale', successProbability: 0.85, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 10 }, { kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Turned City down and kept Kaká — the Curva sing, as they did.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_kaka_07', amount: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'milan', amount: 6 }, { kind: 'memory', tag: 'transfer', text: 'Milan reject City’s £100m for Kaká.' }],
+      memoryTags: ['transfer', 'cur_kaka_07'],
+    }),
+  },
+];
+
+const REAL_MADRID_2006_PACK: ScriptedEvent[] = [
+  {
+    id: 'beckham-exile',
+    date: '2007-01',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => playerAt(s, 'cur_beckham_r6', 'real_madrid') && s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:beckham-exile', title: 'Beckham signs for LA Galaxy — freeze him out, or bring him back?',
+      description: 'David Beckham has announced he’ll join LA Galaxy at season’s end, and Capello has declared he’ll never play for Real again. Reality: Capello swallowed his words, reintegrated him, and Beckham drove Madrid to a stunning late title. Hold the hard line, or bring the Englishman back in from the cold?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'reintegrate', label: 'Bring him back in — swallow the pride', successProbability: 0.7, onSuccess: [{ kind: 'morale', playerId: 'cur_beckham_r6', amount: 12 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'redemption', text: 'Brought Beckham back from exile — and he dragged Madrid to the title, as reality had it.' }], onFailure: [{ kind: 'managerRelationship', amount: -6 }] },
+        { id: 'exile', label: 'Hold the line — he’s finished here', successProbability: 0.4, onSuccess: [{ kind: 'managerRelationship', amount: 4 }], onFailure: [{ kind: 'morale', clubId: 'real_madrid', amount: -6 }, { kind: 'agitation', playerId: 'cur_beckham_r6', amount: 10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_beckham_r6', amount: 8 }, { kind: 'memory', tag: 'redemption', text: 'Beckham forces his way back and fires the title run.' }],
+      memoryTags: ['redemption', 'cur_beckham_r6'],
+    }),
+  },
+];
+
+const LIVERPOOL_2010_PACK: ScriptedEvent[] = [
+  {
+    id: 'torres-chelsea',
+    date: '2011-01',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => playerAt(s, 'cur_torres_lv10', 'liverpool') && s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:torres-chelsea', title: 'Torres hands in a transfer request — Chelsea bid £50m',
+      description: 'El Niño, the idol of the Kop, wants out — and Chelsea have tabled a British-record £50m on deadline day. Reality: Liverpool took the money and spent it on Carroll and Suárez. Cash in on the talisman at a staggering price, or refuse to sell to a rival and hold him to his contract?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Take the £50m — reinvest it', successProbability: 0.9, onSuccess: [{ kind: 'transferOut', playerId: 'cur_torres_lv10', clubId: 'chelsea', amount: 50_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Torres to Chelsea for a British record — the money that bought Suárez, as it did.' }], onFailure: [] },
+        { id: 'keep', label: 'Refuse — no sale to a rival', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 6 }, { kind: 'agitation', playerId: 'cur_torres_lv10', amount: -10 }, { kind: 'memory', tag: 'transfer', text: 'Kept Torres against his wishes — a defiance reality didn’t risk.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_torres_lv10', amount: 16 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'transferOut', playerId: 'cur_torres_lv10', clubId: 'chelsea', amount: 50_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Torres joins Chelsea on deadline day.' }],
+      memoryTags: ['transfer', 'cur_torres_lv10'],
+    }),
+  },
+];
+
+const MAN_UTD_2013_PACK: ScriptedEvent[] = [
+  {
+    id: 'rooney-request',
+    date: '2013-08',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => playerAt(s, 'cur_rooney', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:rooney-request', title: 'Rooney wants out — Chelsea are circling',
+      description: 'Wayne Rooney, unsettled and stung at being framed as van Persie’s back-up, has agitated for a move and Chelsea have tested you with two bids. Reality: Moyes dug in, kept him, and Rooney stayed to become captain. Sell your unsettled star to a rival, or convince him his future is here?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Dig in — convince him to stay', successProbability: 0.65, onSuccess: [{ kind: 'morale', playerId: 'cur_rooney', amount: 10 }, { kind: 'agitation', playerId: 'cur_rooney', amount: -14 }, { kind: 'memory', tag: 'saga', text: 'Kept Rooney and won him back — as United really did.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_rooney', amount: 12 }] },
+        { id: 'sell', label: 'Cash in — sell to Chelsea (£28m)', successProbability: 0.85, onSuccess: [{ kind: 'transferOut', playerId: 'cur_rooney', clubId: 'chelsea', amount: 28_000_000 }, { kind: 'memory', tag: 'saga', text: 'Sold Rooney to Chelsea — a divergence United never dared.' }], onFailure: [] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_rooney', amount: 6 }, { kind: 'agitation', playerId: 'cur_rooney', amount: -8 }, { kind: 'memory', tag: 'saga', text: 'Rooney stays and knuckles down.' }],
+      memoryTags: ['saga', 'cur_rooney'],
+    }),
+  },
+];
+
+const SPURS_2001_PACK: ScriptedEvent[] = [
+  {
+    id: 'worthington-final',
+    date: '2002-02',
+    scenarios: ['spurs-2001'],
+    requires: (s) => playerAt(s, 'cur_king01', 'spurs') && s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:worthington-final', title: 'A cup final — Spurs’ shot at silverware',
+      description: 'Hoddle’s Tottenham have battled to the League Cup final and a first trophy in a decade is within reach. Reality: they froze against unfancied Blackburn and lost 2-1. This is the club’s day — throw everything at it, or manage the nerves of a side unused to finals?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'go', label: 'Throw everything at it', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 10 }, { kind: 'morale', clubId: 'spurs', amount: 12 }, { kind: 'memory', tag: 'cup', text: 'Spurs seize the day and lift the cup — beating the ghost of reality.' }], onFailure: [{ kind: 'morale', clubId: 'spurs', amount: -6 }] },
+        { id: 'manage', label: 'Steady the nerves, play it tight', successProbability: 0.45, onSuccess: [{ kind: 'boardPatience', amount: 8 }, { kind: 'memory', tag: 'cup', text: 'Nervelessly saw out a final Spurs had waited a decade for.' }], onFailure: [{ kind: 'morale', clubId: 'spurs', amount: -6 }, { kind: 'memory', tag: 'cup', text: 'Froze on the big day, as reality did.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'cup', text: 'The cup final comes and goes.' }],
+      memoryTags: ['cup'],
+    }),
+  },
+];
+
+const SPURS_2013_PACK: ScriptedEvent[] = [
+  {
+    id: 'bale-money',
+    date: '2013-08',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:bale-money', title: 'The Bale money — £85m to reshape the club',
+      description: 'Gareth Bale has gone to Real for a world record, and the £85m is burning a hole in the club’s pocket. Reality: Levy spread it across SEVEN signings — Soldado, Eriksen, Lamela, Chadli, Paulinho, Capoue, Chiriches — and none replaced the one who left. Spend it on a single galáctico to fill Bale’s boots, or spread it wide as reality did?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'marquee', label: 'One galáctico to replace him', successProbability: 0.6, onSuccess: [{ kind: 'money', clubId: 'spurs', amount: 30_000_000 }, { kind: 'morale', clubId: 'spurs', amount: 6 }, { kind: 'memory', tag: 'bale-money', text: 'Backed one star with the Bale money — the bet Spurs never made.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'spread', label: 'Spread it across seven (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'spurs', amount: 20_000_000 }, { kind: 'memory', tag: 'bale-money', text: 'Spread the Bale money wide — quantity over a talisman, as it went.' }], onFailure: [{ kind: 'morale', clubId: 'spurs', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'money', clubId: 'spurs', amount: 20_000_000 }, { kind: 'memory', tag: 'bale-money', text: 'The Bale money is spread across a magnificent seven.' }],
+      memoryTags: ['bale-money'],
+    }),
+  },
+];
+
+const BARCELONA_2014_PACK: ScriptedEvent[] = [
+  {
+    id: 'xavi-farewell',
+    date: '2015-05',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => playerAt(s, 'cur_xavi_b14', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:xavi-farewell', title: 'Xavi’s last dance',
+      description: 'The metronome of the greatest side in history, the heartbeat of tiki-taka, is 35 and ready to bow out for Al Sadd. Reality gave him a treble-winning send-off and a guard of honour. Persuade him to stay one more year as the on-pitch conductor, or let a legend leave at the very top?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'stay', label: 'One more year — the conductor plays on', successProbability: 0.5, onSuccess: [{ kind: 'renewContract', playerId: 'cur_xavi_b14', amount: 1 }, { kind: 'morale', clubId: 'barcelona', amount: 6 }, { kind: 'memory', tag: 'legend', text: 'Talked Xavi into one more season — the maestro conducts on.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_xavi_b14', amount: 8 }] },
+        { id: 'farewell', label: 'A champion’s send-off to Al Sadd', onSuccess: [{ kind: 'letContractLapse', playerId: 'cur_xavi_b14' }, { kind: 'morale', clubId: 'barcelona', amount: 5 }, { kind: 'memory', tag: 'legend', text: 'Xavi bows out a treble winner — a guard of honour, as reality gave him.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'letContractLapse', playerId: 'cur_xavi_b14' }, { kind: 'memory', tag: 'legend', text: 'Xavi leaves for Al Sadd, a Barça immortal.' }],
+      memoryTags: ['legend', 'cur_xavi_b14'],
+    }),
+  },
+];
+
+const BAYERN_1998_PACK: ScriptedEvent[] = [
+  {
+    id: 'bayern-1999-final',
+    date: '1999-05',
+    scenarios: ['bayern-1998'],
+    requires: (s) => playerAt(s, 'cur_kahn_98', 'bayern') && s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:bayern-1999-final', title: 'The Champions League final — 90 minutes from glory',
+      description: 'Hitzfeld’s Bayern have reached the final against Manchester United and lead through Basler. Reality is the cruellest in the competition’s history: two injury-time corners, Sheringham, Solskjær, and the cup ripped away. Sit deep and protect the lead, or keep playing and kill the game off?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'kill', label: 'Keep playing — get the second goal', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 8 }, { kind: 'morale', clubId: 'bayern', amount: 12 }, { kind: 'memory', tag: 'europe', text: 'Bayern got the second and lifted the cup — rewriting the cruelest night of all.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -8 }] },
+        { id: 'defend', label: 'Sit deep and hold the lead', successProbability: 0.4, onSuccess: [{ kind: 'boardPatience', amount: 8 }, { kind: 'memory', tag: 'europe', text: 'Held on for the European Cup — the ninety-plus-two nightmare averted.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -12 }, { kind: 'memory', tag: 'europe', text: 'Two injury-time corners and it was gone — as it truly, agonisingly was.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'bayern', amount: -8 }, { kind: 'memory', tag: 'europe', text: 'The 1999 final slips away in stoppage time.' }],
+      memoryTags: ['europe'],
+    }),
+  },
+];
+
+const BAYERN_2009_PACK: ScriptedEvent[] = [
+  {
+    id: 'muller-breakthrough',
+    date: '2009-09',
+    scenarios: ['bayern-2009'],
+    requires: (s) => playerAt(s, 'cur_muller_09', 'bayern') && s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:muller-breakthrough', title: 'Van Gaal stakes his job on a 19-year-old',
+      description: 'Louis van Gaal has taken a shine to a gangly, unheralded academy forward named Thomas Müller and wants to throw him straight into the side ahead of established names. Reality: he was right, spectacularly — Müller became a World Cup Golden Boot winner within a year. Fast-track the kid, or protect him with a slower path?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'promote', label: 'Throw him in — trust the coach', successProbability: 0.8, onSuccess: [{ kind: 'ability', playerId: 'cur_muller_09', amount: 4 }, { kind: 'morale', playerId: 'cur_muller_09', amount: 10 }, { kind: 'memory', tag: 'academy', text: 'Fast-tracked Müller — van Gaal’s hunch pays off, as history proved.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_muller_09', amount: 6 }] },
+        { id: 'patient', label: 'A slower path — don’t rush him', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'academy', text: 'Held Müller back a while — the Raumdeuter will keep.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_muller_09', amount: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'ability', playerId: 'cur_muller_09', amount: 3 }, { kind: 'memory', tag: 'academy', text: 'Müller breaks through regardless — some talents will not be denied.' }],
+      memoryTags: ['academy', 'cur_muller_09'],
+    }),
+  },
+];
+
 const ALL_SCRIPTED: ScriptedEvent[] = [
   ...MAN_UTD_1999_PACK,
   ...LIVERPOOL_2001_PACK,
@@ -780,6 +1177,25 @@ const ALL_SCRIPTED: ScriptedEvent[] = [
   ...DORTMUND_2012_PACK,
   ...MAN_CITY_2008_PACK,
   ...BARCELONA_2003_PACK,
+  ...ARSENAL_1996_PACK,
+  ...MILAN_1995_PACK,
+  ...JUVENTUS_1995_PACK,
+  ...LIVERPOOL_1995_PACK,
+  ...CHELSEA_1996_PACK,
+  ...CHELSEA_2003_PACK,
+  ...DORTMUND_1997_PACK,
+  ...INTER_1998_PACK,
+  ...INTER_2004_PACK,
+  ...JUVENTUS_2006_PACK,
+  ...MILAN_2007_PACK,
+  ...REAL_MADRID_2006_PACK,
+  ...LIVERPOOL_2010_PACK,
+  ...MAN_UTD_2013_PACK,
+  ...SPURS_2001_PACK,
+  ...SPURS_2013_PACK,
+  ...BARCELONA_2014_PACK,
+  ...BAYERN_1998_PACK,
+  ...BAYERN_2009_PACK,
 ];
 
 function fireScriptedEvents(state: GameState): void {
