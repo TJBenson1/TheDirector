@@ -219,7 +219,11 @@ export const BORDEAUX_1995: CuratedSeed[] = [
   q('bordeaux', 'dugarry', 'Christophe Dugarry', 1972, 'France', ['ST'], 79, 82, 1998, 30, t(6, 7, 7, 6, 6, 6)),
   q('bordeaux', 'lizarazu_b', 'Bixente Lizarazu', 1969, 'France', ['LB'], 82, 83, 1997, 25, t(8, 5, 7, 7, 4, 7)),
 ];
+// Ajax, 1995 — reigning European champions (beat Milan in the '95 final). The young
+// spine that conquered Europe and would soon scatter across the giants of Serie A.
 export const AJAX_1995: CuratedSeed[] = [
+  // Van der Sar — the CL-winning keeper, a future great; a glaring one to have missed.
+  q('ajax', 'van_der_sar_aj', 'Edwin van der Sar', 1970, 'Netherlands', ['GK'], 83, 89, 1999, 15, t(9, 5, 8, 8, 3, 8)),
   q('ajax', 'kluivert_aj', 'Patrick Kluivert', 1976, 'Netherlands', ['ST'], 78, 88, 1998, 30, t(6, 7, 7, 6, 6, 7)),
   q('ajax', 'davids_aj', 'Edgar Davids', 1973, 'Netherlands', ['DM', 'CM'], 82, 86, 1997, 35, t(7, 6, 8, 6, 6, 7)),
   q('ajax', 'litmanen', 'Jari Litmanen', 1971, 'Finland', ['AM'], 84, 87, 1998, 30, t(8, 6, 8, 7, 4, 7)),
@@ -227,6 +231,8 @@ export const AJAX_1995: CuratedSeed[] = [
   q('ajax', 'overmars_aj', 'Marc Overmars', 1973, 'Netherlands', ['LW'], 82, 86, 1997, 45, t(8, 6, 8, 6, 4, 7)),
   q('ajax', 'f_de_boer', 'Frank de Boer', 1970, 'Netherlands', ['CB'], 82, 84, 1998, 25, t(8, 5, 7, 6, 3, 7)),
   q('ajax', 'bogarde', 'Winston Bogarde', 1970, 'Netherlands', ['CB', 'LB'], 78, 80, 1997, 30, t(6, 6, 6, 5, 6, 6)),
+  // Reiziger — the CL-winning right-back, off to Milan then Barça.
+  q('ajax', 'reiziger_aj', 'Michael Reiziger', 1973, 'Netherlands', ['RB'], 79, 84, 1997, 25, t(8, 5, 7, 6, 4, 8)),
 ];
 export const REAL_1995: CuratedSeed[] = [
   q('real_madrid', 'raul_95', 'Raúl', 1977, 'Spain', ['ST', 'AM'], 80, 90, 2000, 20, t(9, 6, 9, 10, 3, 7), { loyalty: 92 }),

@@ -196,7 +196,28 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
         };
       }
       const verdict = evaluateApproach(s, { playerId: p.id, toClub: s.playerClub });
-      return { state: s, result: { found: true, playerId: p.id, name: p.name, club: p.club ? s.clubs[p.club]?.name : 'Free agent', age: currentYear(s) - p.birthYear, positions: p.positions, askingPrice: m(askingPrice(s, p.id)), willing: verdict.willing, resistanceReason: verdict.reason, coach: `${fit.verdict}: ${fit.reason}` } };
+      const age = currentYear(s) - p.birthYear;
+      const clubName = p.club ? s.clubs[p.club]?.name ?? p.club : 'Free agent';
+      const rising = p.potentialCeiling - p.ability >= 5 && age <= 23;
+      return {
+        state: s,
+        result: {
+          found: true,
+          // He IS on our radar — the scouts know exactly where he is and what he'd
+          // take. Report this; never say there's "no file" on a player we found.
+          onRadar: true,
+          summary: `${p.name}, ${age}, ${clubName}${rising ? ' — a rising talent' : ''}. ${verdict.reason}`,
+          playerId: p.id,
+          name: p.name,
+          club: clubName,
+          age,
+          positions: p.positions,
+          askingPrice: m(askingPrice(s, p.id)),
+          willing: verdict.willing,
+          resistanceReason: verdict.reason,
+          coach: `${fit.verdict}: ${fit.reason}`,
+        },
+      };
     }
 
     case 'scout': {
