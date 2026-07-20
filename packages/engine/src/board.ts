@@ -34,12 +34,14 @@ import { appendMemory } from './memory.js';
 export function boardRuthlessness(state: GameState): number {
   let r = 1.0;
   const ownership = state.clubs[state.playerClub]?.finances.ownership;
-  if (ownership === 'sugar-daddy') r += 0.45; // trophies-now money (Abramovich, takeovers)
-  else if (ownership === 'debt') r -= 0.1; // a club living within a squeeze is more forgiving
+  if (ownership === 'sugar-daddy') r += 0.35; // trophies-now money (Abramovich, takeovers)
+  else if (ownership === 'debt') r -= 0.12; // a club living within a squeeze is more forgiving
   const expected = state.board.expectedFinish;
-  if (expected <= 1) r += 0.25; // title-or-bust (Pérez's Real, Ferguson's United)
-  else if (expected >= 5) r -= 0.25; // a rebuild / overachiever mandate is patient
-  return Math.max(0.7, Math.min(1.7, r));
+  if (expected <= 1) r += 0.18; // title-or-bust (Pérez's Real, Ferguson's United)
+  else if (expected >= 5) r -= 0.28; // a rebuild / overachiever mandate is patient
+  // The Director is given real time to build a project (a forgiving board, by
+  // design): even the most demanding owner does not swing the axe on a season or two.
+  return Math.max(0.65, Math.min(1.5, r));
 }
 
 export function reviewBoard(state: GameState, rng: Rng): void {
@@ -57,24 +59,23 @@ export function reviewBoard(state: GameState, rng: Rng): void {
 
   let delta: number;
   if (wonTitle) {
-    delta = 10;
+    delta = 14;
     state.board.consecutiveMisses = 0;
   } else if (finish <= expected) {
-    delta = 4;
+    delta = 7; // meeting the brief buys real goodwill — a project is being backed
     state.board.consecutiveMisses = 0;
   } else {
-    // Softened, CAPPED base penalty: one realistic off-season (a strong club
-    // finishing behind the era's superpower) can no longer wipe the meter. 1 place
-    // short ≈ −4, 2 ≈ −9, 3 ≈ −14, capped at −16 before temperament.
+    // Softened, CAPPED base penalty (a FORGIVING board, by design): one realistic
+    // off-season — a strong club finishing behind the era's superpower — barely moves
+    // the meter. 1 place short ≈ −3, 2 ≈ −7, 3 ≈ −11, capped at −12 before temperament.
     const miss = finish - expected;
-    const base = Math.min(16, 4 + (miss - 1) * 5);
+    const base = Math.min(12, 3 + (miss - 1) * 4);
     delta = -Math.round(base * r);
     state.board.consecutiveMisses += 1;
-    // The Pérez rule: an impatient board escalates hard on a RUN of near-misses —
-    // it won't sit through 2nd-to-Barça (or 3rd-behind-Bayern under Abramovich money)
-    // season after season. A patient project board (low r) is exempt.
-    if (state.board.consecutiveMisses >= 2 && r >= 1.15) {
-      delta -= Math.round(8 * r * (state.board.consecutiveMisses - 1));
+    // The Pérez rule, softened: even an impatient board gives a project two full
+    // seasons; only a SUSTAINED run (3+) of misses under demanding ownership escalates.
+    if (state.board.consecutiveMisses >= 3 && r >= 1.3) {
+      delta -= Math.round(6 * r * (state.board.consecutiveMisses - 2));
     }
   }
 
@@ -93,12 +94,13 @@ export function reviewBoard(state: GameState, rng: Rng): void {
     data: { finish, expected, points, wonTitle, patience: state.board.patience, season: Number(state.clock.date.slice(0, 4)) - 1 },
   });
 
-  // Ruthless owners warn earlier and swing the axe from a higher perch (and can do
-  // it after a single warning); a patient board needs the meter nearly empty twice.
-  const warnAt = 35 + Math.round(18 * (r - 1));
-  const dismissPatience = 22 + Math.round(16 * (r - 1));
-  const dismissWarnings = r >= 1.35 ? 1 : 2;
-  const dismissChance = Math.min(0.92, 0.5 + 0.28 * r);
+  // A FORGIVING board (by design): warnings still come, but the axe needs a genuine,
+  // SUSTAINED collapse — several warnings AND a floored meter — and even then it is
+  // far from certain. A demanding owner is quicker to grumble, never quick to sack.
+  const warnAt = 32 + Math.round(16 * (r - 1));
+  const dismissPatience = 15 + Math.round(12 * (r - 1));
+  const dismissWarnings = r >= 1.45 ? 2 : 3;
+  const dismissChance = Math.min(0.62, 0.28 + 0.18 * r);
 
   if (delta < 0 && state.board.patience < warnAt) {
     state.board.warnings += 1;
@@ -110,8 +112,8 @@ export function reviewBoard(state: GameState, rng: Rng): void {
     });
     appendMemory(state, 'board', `Warning after a ${finish}${ordinal(finish)}-place finish.`);
 
-    // Dismissal: sustained failure. A little variance keeps it from being a
-    // deterministic cliff, but the job is genuinely at risk.
+    // Dismissal: only a sustained failure, and even then not a certainty — the board
+    // would rather back the project through a rough patch than swing the axe.
     if (state.board.warnings >= dismissWarnings && state.board.patience < dismissPatience && rng.chance(dismissChance)) {
       state.board.dismissed = true;
       logEvent(state, {
@@ -121,7 +123,9 @@ export function reviewBoard(state: GameState, rng: Rng): void {
         data: { finish },
       });
     }
-  } else if (delta > 0 && state.board.patience > 55) {
+  } else if (delta > 0) {
+    // A season that meets or beats the brief buys the Director back credit — any
+    // warning on the books is eased, so a good year genuinely resets the pressure.
     state.board.warnings = Math.max(0, state.board.warnings - 1);
   }
 }
