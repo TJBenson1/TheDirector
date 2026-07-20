@@ -9,11 +9,35 @@
  */
 
 import type { ClubId, OwnershipModel, ScenarioId, YearMonth } from './types.js';
+import { SCENARIO_OPENINGS } from './data/openings.js';
 
 export interface ClubSeed {
   id: ClubId;
   name: string;
   prestige: number;
+}
+
+/** A curated, historically-grounded opening briefing for a scenario. The
+ *  narration layer renders THIS instead of deriving a generic "best XI" from raw
+ *  ability — which mis-frames the real subplots (it would list Baggio in Lippi's
+ *  1995 XI when the story of that summer was Lippi freezing him out). Every field
+ *  is real history, researched per scenario, so no two openings read alike. */
+export interface ScenarioOpening {
+  /** The real head coach inherited at kickoff and the shape he actually used. */
+  coach: string;
+  formation: string;
+  /** His genuine first-choice XI at the START of this season, in positional
+   *  order (GK → forwards). Rendered verbatim, so frozen-out or sold stars do
+   *  not wrongly appear just because their ability is high. */
+  firstEleven: string[];
+  /** The men who are NOT nailed on — frozen out, up for sale, wantaway, injured,
+   *  or a wonderkid on the fringe — each with the real reason. This is the
+   *  texture: "Roberto Baggio — frozen out by Lippi, on his way to Milan." */
+  fringe?: string[];
+  /** 2–4 authored, historically-accurate sentences: the true state of the club,
+   *  the mood in the building, and the subplot behind the mandate. Distinct per
+   *  scenario — never a fill-in-the-blank template. */
+  briefing: string;
 }
 
 export interface ScenarioSeed {
@@ -22,6 +46,9 @@ export interface ScenarioSeed {
   startDate: YearMonth;
   playerClub: ClubId;
   mandate: string;
+  /** Curated historical opening briefing (§ narration). Optional so a scenario
+   *  without one falls back to the generic derivation. */
+  opening?: ScenarioOpening;
   boardPatience: number;
   /** League position the board expects the user to hit (1 = title). */
   boardExpectedFinish: number;
@@ -1085,6 +1112,13 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     domesticLeagueId: 'ger-1998',
   },
 };
+
+// Attach curated, historically-accurate opening briefings (data over code; see
+// data/openings.ts). A scenario without one falls back to generic derivation.
+for (const [id, opening] of Object.entries(SCENARIO_OPENINGS)) {
+  const seed = SCENARIOS[id as ScenarioId];
+  if (seed) seed.opening = opening;
+}
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = 'man-utd-1999';
 

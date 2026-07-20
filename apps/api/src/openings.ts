@@ -9,15 +9,29 @@
  *
  * It comes in TWO beats, so the Director isn't met with a wall of text: first the
  * SCENE (the club, the season, the brief) closing on "the manager's here for your
- * first meeting"; then, as a secondary reply, the MANAGER MEETING itself — his
- * mood, his plan, his best XI, his concerns and the names he's floated.
+ * first meeting"; then, as a secondary reply, the MANAGER MEETING itself.
+ *
+ * Where a scenario carries a curated `ScenarioOpening` (data/openings.ts — the real
+ * head coach, his genuine first-choice XI, the men on the fringe with real reasons,
+ * and 2–4 sentences of authored history), we render THAT: the true story of that
+ * summer, not a "best XI" derived from raw ability. Scenarios without one fall back
+ * to the generic derivation.
  */
 
-import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, type GameState } from '@director/engine';
+import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, type GameState, type ScenarioOpening } from '@director/engine';
 
 type Group = 'GK' | 'DEF' | 'MID' | 'ATT';
 const GROUP: Record<string, Group> = {
   GK: 'GK', CB: 'DEF', LB: 'DEF', RB: 'DEF', DM: 'MID', CM: 'MID', AM: 'ATT', LW: 'ATT', RW: 'ATT', ST: 'ATT',
+};
+
+// A readable superset of the engine positions used by curated first-XI display
+// strings (LWB/RWB/RM/LM/CF/SS/…). Maps each to the unit it belongs to.
+const UNIT: Record<string, Group> = {
+  GK: 'GK',
+  RB: 'DEF', LB: 'DEF', CB: 'DEF', RWB: 'DEF', LWB: 'DEF', WB: 'DEF', SW: 'DEF',
+  DM: 'MID', CDM: 'MID', CM: 'MID', RM: 'MID', LM: 'MID', WM: 'MID',
+  AM: 'ATT', CAM: 'ATT', RW: 'ATT', LW: 'ATT', ST: 'ATT', CF: 'ATT', SS: 'ATT', RF: 'ATT', LF: 'ATT',
 };
 
 const POSITION_LABEL: Record<string, string> = {
@@ -46,34 +60,86 @@ export interface Opening {
   meeting: string;
 }
 
-/** Build the two-beat opening for a freshly-created game — pure prose over the
- *  engine facts, no model call. */
-export function scriptedOpening(state: GameState): Opening {
-  const b = coachBriefing(state);
+/** Render a curated first XI ("GK Peruzzi", "CB Ferrara", …) as prose by unit. */
+function renderXI(firstEleven: string[]): string {
+  const byUnit: Record<Group, string[]> = { GK: [], DEF: [], MID: [], ATT: [] };
+  for (const entry of firstEleven) {
+    const sp = entry.indexOf(' ');
+    const pos = sp === -1 ? '' : entry.slice(0, sp).toUpperCase();
+    const name = sp === -1 ? entry : entry.slice(sp + 1);
+    byUnit[UNIT[pos] ?? 'MID'].push(name);
+  }
+  const keeper = byUnit.GK[0] ?? 'the keeper';
+  const parts: string[] = [];
+  if (byUnit.DEF.length) parts.push(`a back line of ${joinNames(byUnit.DEF)}`);
+  if (byUnit.MID.length) parts.push(`${joinNames(byUnit.MID)} in midfield`);
+  if (byUnit.ATT.length) parts.push(`${joinNames(byUnit.ATT)} to lead the line`);
+  return `${keeper} in goal, ${parts.join(', ')}.`;
+}
+
+/** The rich, historically-grounded opening — the true story of this exact summer. */
+function curatedOpening(state: GameState, o: ScenarioOpening): Opening {
+  const club = state.clubs[state.playerClub]!;
+  const season = Number(state.clock.date.slice(0, 4));
+  const seasonLabel = `${season}–${String((season + 1) % 100).padStart(2, '0')}`;
   const sc = getScenario(state.meta.scenarioId);
+
+  // The headline real signing already on the table — the deal the club really made
+  // on day one. Naming it gives the "push it through or veto it" hook.
+  const marquee = realInboundThisWindow(state)[0];
+  const marqueeLine = marquee
+    ? `There's already a deal on the table: ${marquee.name}, ${fee(marquee.fee)} from ${marquee.fromClub} — the signing history remembers. It's yours to push through or to walk away from.`
+    : '';
+
+  // ── Beat one: the scene, carrying the authored history ──
+  const scene = [
+    `${club.name}, ${seasonLabel}. You've taken the Director's chair — the boardroom power above the manager — and the board's brief is not complicated: ${sc.mandate}`,
+    o.briefing,
+    marqueeLine,
+    `${o.coach} is here for your first meeting.`,
+  ].filter((p) => p && p.length).join('\n\n');
+
+  // ── Beat two: the manager meeting — his real shape, his real XI, the fringe ──
+  const meetingParts: string[] = [
+    `You take your seat opposite ${o.coach}. He'll set up in a ${o.formation}, and he names the side he trusts: ${renderXI(o.firstEleven)}`,
+  ];
+  if (o.fringe && o.fringe.length) {
+    meetingParts.push(
+      `But the squad isn't settled, and the real decisions live around the edges:\n${o.fringe.map((f) => `• ${f}`).join('\n')}`,
+    );
+  }
+  meetingParts.push(
+    `The transfer window is open and the squad is yours to shape. Renew the men worth keeping, back the coach or overrule him, correct the history or let it ride — where do you want to start?`,
+  );
+
+  return { scene, meeting: meetingParts.join('\n\n') };
+}
+
+/** Build the two-beat opening for a freshly-created game — pure prose over the
+ *  engine facts, no model call. Uses the curated historical opening when present. */
+export function scriptedOpening(state: GameState): Opening {
+  const sc = getScenario(state.meta.scenarioId);
+  if (sc.opening) return curatedOpening(state, sc.opening);
+
+  // ── Fallback: the generic derivation (scenarios without a curated opening) ──
+  const b = coachBriefing(state);
   const club = state.clubs[state.playerClub]!;
   const season = Number(state.clock.date.slice(0, 4));
   const seasonLabel = `${season}–${String((season + 1) % 100).padStart(2, '0')}`;
 
-  // The marquee man you've inherited, for a line of colour in the scene.
   const star = [...clubSquadPlayers(state, state.playerClub)].sort((a, b) => b.ability - a.ability)[0];
 
-  // The headline real signing already on the table this window — the deal history
-  // says the club made on day one (Figo → Real Madrid, 2000). Naming it gives the
-  // opening its "sign the deal Pérez really did, or veto it" hook.
   const marquee = realInboundThisWindow(state)[0];
   const marqueeLine = marquee
     ? `And there's already a deal on the table: ${marquee.name}, ${fee(marquee.fee)} from ${marquee.fromClub} — the signing history remembers. It's yours to push through or to walk away from.`
     : '';
 
-  // ── Beat one: the scene ──
   const scene = [
     `${club.name}, ${seasonLabel}. You've taken the Director's chair — the boardroom power above the manager — and the board's brief is not complicated: ${sc.mandate}`,
     `${star ? `It's a squad with ${star.name} at its heart, and it's yours to shape.` : ''}${marqueeLine ? `${star ? ' ' : ''}${marqueeLine}` : ''}`.trim(),
     `${b.coach} is here for your first meeting.`,
   ].filter((p) => p.length).join('\n\n');
 
-  // ── Beat two: the manager meeting ──
   const byGroup: Record<Group, string[]> = { GK: [], DEF: [], MID: [], ATT: [] };
   for (const x of b.bestXI) byGroup[GROUP[x.slot] ?? 'MID'].push(x.name);
   const keeper = byGroup.GK[0] ?? 'the keeper';

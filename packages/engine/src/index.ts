@@ -39,6 +39,7 @@ export {
   DEFAULT_SCENARIO_ID,
   getScenario,
   type ScenarioSeed,
+  type ScenarioOpening,
   type ClubSeed,
 } from './scenarios.js';
 export { LEAGUES, ENGLAND_1999, type LeagueSeed, type LeagueClubSeed } from './leagues.js';
