@@ -54,6 +54,7 @@ import {
 } from '@director/engine';
 import { buildView } from './view.js';
 import { scriptedOpening } from './openings.js';
+import { scriptedSeasonReview, scriptedMidSeasonNote } from './seasonReview.js';
 
 const PORT = Number(process.env.PORT ?? 8787);
 // Lock this to your Lovable app's origin in production; '*' is fine for dev.
@@ -92,7 +93,14 @@ const routes: Record<string, Handler> = {
 
   '/games/advance': ({ state, perStep }) => {
     const { state: next, events } = advanceWindow(state as GameState, { pausePerStep: perStep ?? true });
-    return { state: next, view: buildView(next), events };
+    // Turn the terse feed into a story: if a season just closed, the engine emitted a
+    // season-review event — enrich it into a real end-of-season review; otherwise, on
+    // a mid-campaign step, drop in a lighter form note. Token-free, scripted.
+    let narration: string | undefined;
+    const review = events.find((e) => e.code === 'board.season-review');
+    if (review) narration = scriptedSeasonReview(next, review.data as any);
+    else narration = scriptedMidSeasonNote(next) ?? undefined;
+    return { state: next, view: buildView(next), events, narration };
   },
 
   '/games/decision': ({ state, decisionId, choiceId }) => {

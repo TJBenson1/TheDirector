@@ -162,7 +162,9 @@ async function advance(){
       const head = st ? `${st.date} · ${st.window||'in season'}` : 'Advanced';
       const body = msgs.length ? msgs.slice(0,10).join('\n') : 'The month passes quietly.';
       bubble(head + '\n' + body, 'narrator');
-      noteTurn('Advance.', head+' — '+(msgs.slice(0,6).join('; ')||'quiet'));
+      // A scripted season review (or mid-season note) lands as its own story bubble.
+      if (d.narration) bubble(d.narration, 'narrator');
+      noteTurn('Advance.', (d.narration ? d.narration+' ' : '')+head+' — '+(msgs.slice(0,6).join('; ')||'quiet'));
       renderPendingDecisions();
       saveLocal(); renderStatus(); refreshPanelIfOpen();
     }
