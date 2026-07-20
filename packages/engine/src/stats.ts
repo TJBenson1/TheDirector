@@ -85,6 +85,29 @@ export function liveRoleEstimate(
 }
 
 /**
+ * A deterministic mid-season projection of a player's goals & assists SO FAR,
+ * from how many league rounds have actually been played this season — a live
+ * snapshot for the stats panel ("who's scoring right now"), not the banked
+ * end-of-season figure. No RNG, so it doesn't churn window to window.
+ */
+export function liveSeasonProjection(
+  state: GameState,
+  club: ClubState,
+  player: PlayerState,
+): { goals: number; assists: number; appearances: number } {
+  const league = club.leagueId ? state.leagues[club.leagueId] : undefined;
+  const roundsPlayed = Math.min(TOTAL_ROUNDS, league?.roundsPlayed ?? 0);
+  const share = estimateMinutesShare(state, club, player);
+  const availableFraction = Math.max(0, (10 - Math.min(10, player.seasonMonthsInjured)) / 10);
+  const appearances = Math.round(roundsPlayed * share * availableFraction);
+  const abilityScale = Math.max(0, (effectiveAbility(player) - 50) / 40);
+  const pos = primary(player);
+  const goals = Math.round(GOAL_RATE[pos] * appearances * (0.6 + abilityScale));
+  const assists = Math.round(ASSIST_RATE[pos] * appearances * (0.6 + abilityScale));
+  return { goals, assists, appearances };
+}
+
+/**
  * Write `lastSeason` for every simulated-club player from the season just
  * completed, then reset the injury-month counter for the new season.
  */

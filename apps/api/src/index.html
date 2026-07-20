@@ -342,7 +342,15 @@ function renderPanel(tab){
       `<div class="card"><h3>Commercial heft</h3><div>${esc(f.commercialHeft)}</div></div>`+
       `<div class="card"><h3>Liabilities &amp; ownership</h3><div>${esc(f.liabilities)} · ${esc(f.ownership)} · health: ${esc(f.financialHealth)}</div></div>`;
   } else if(tab==='table'){
-    panel.innerHTML = p.table.map(r=>`<div class="prow ${r.isYou?'you':''}"><div>${r.pos}. ${esc(r.club)}</div><div class="sub">P${r.played} · ${r.points} pts</div></div>`).join('');
+    const st = p.stats || {};
+    const tableHtml = `<div class="card"><h3>League table</h3>${p.table.map(r=>`<div class="prow ${r.isYou?'you':''}"><div>${r.pos}. ${esc(r.club)}</div><div class="sub">P${r.played} · ${r.points} pts</div></div>`).join('')}</div>`;
+    const scorers = (st.scorers&&st.scorers.length) ? `<div class="card"><h3>Top scorers <span class="sub">this season so far</span></h3>${st.scorers.map((s,i)=>`<div class="prow ${s.isYou?'you':''}"><div>${i+1}. ${esc(s.name)} <span class="sub">${esc(s.club)}</span></div><div class="sub">${s.goals} ⚽</div></div>`).join('')}</div>` : '';
+    const assists = (st.assisters&&st.assisters.length) ? `<div class="card"><h3>Top assists <span class="sub">this season so far</span></h3>${st.assisters.map((s,i)=>`<div class="prow ${s.isYou?'you':''}"><div>${i+1}. ${esc(s.name)} <span class="sub">${esc(s.club)}</span></div><div class="sub">${s.assists} 🅰</div></div>`).join('')}</div>` : '';
+    let euro = '';
+    if(st.europe){ const e=st.europe; const lf=e.lastFinal;
+      euro = `<div class="card"><h3>${esc(e.name)}</h3><div class="sub">${esc(e.inProgress)}</div>${lf?`<div style="margin-top:6px">Last final (${lf.season}): <b>${esc(lf.winner)}</b> beat ${esc(lf.runnerUp)}${lf.youWon?' — you lifted it 🏆':lf.youLost?' — you were runners-up':''}</div>`:''}</div>`;
+    }
+    panel.innerHTML = tableHtml + scorers + assists + euro;
   } else if(tab==='inbox'){
     panel.innerHTML = p.inbox.length ? p.inbox.map(i=>`<div class="ibx"><span class="tag">${esc(i.kind)}</span>${esc(i.text)}</div>`).join('') : '<div class="sys">Nothing pressing.</div>';
   } else if(tab==='manager'){

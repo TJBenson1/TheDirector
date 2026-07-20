@@ -43,6 +43,7 @@ import {
   valuePlayer,
   suggestWage,
   liveRoleEstimate,
+  liveSeasonProjection,
   currentYear,
   Rng,
   SCENARIOS,
@@ -425,6 +426,30 @@ function buildPanels(state: GameState) {
       }))
     : [];
 
+  // League scoring charts (a live mid-season projection) + the European Cup state,
+  // so the Table view answers "who's scoring, who's assisting, how's Europe going".
+  const leagueClubs = league ? league.clubIds : [];
+  const leaguePlayers = leagueClubs.flatMap((cid: string) => {
+    const c = s.clubs[cid];
+    return c ? clubSquadPlayers(s, cid).map((p) => ({ p, c })) : [];
+  });
+  const withProj = leaguePlayers
+    .map(({ p, c }) => ({ name: p.name, club: c.name, isYou: c.id === s.playerClub, ...liveSeasonProjection(s, c, p) }))
+    .filter((r) => r.appearances > 0);
+  const scorers = [...withProj].sort((a, b) => b.goals - a.goals || b.appearances - a.appearances).slice(0, 8).filter((r) => r.goals > 0)
+    .map((r) => ({ name: r.name, club: r.club, isYou: r.isYou, goals: r.goals }));
+  const assisters = [...withProj].sort((a, b) => b.assists - a.assists || b.appearances - a.appearances).slice(0, 6).filter((r) => r.assists > 0)
+    .map((r) => ({ name: r.name, club: r.club, isYou: r.isYou, assists: r.assists }));
+  const lastFinal = s.europeanCup?.titleHistory.at(-1);
+  const europe = {
+    name: s.europeanCup?.name ?? 'European Cup',
+    inProgress: 'This season’s campaign is still being contested — the final is settled at the season’s end.',
+    lastFinal: lastFinal
+      ? { season: lastFinal.seasonYear, winner: s.clubs[lastFinal.winnerId]?.name ?? lastFinal.winnerId, runnerUp: s.clubs[lastFinal.runnerUpId]?.name ?? lastFinal.runnerUpId, youWon: lastFinal.winnerId === s.playerClub, youLost: lastFinal.runnerUpId === s.playerClub }
+      : null,
+  };
+  const stats = { scorers, assisters, europe };
+
   const ctx = narrativeContext(s);
   const inbox: { kind: string; text: string }[] = [];
   for (const d of s.pendingDecisions) inbox.push({ kind: 'decision', text: d.title });
@@ -435,7 +460,7 @@ function buildPanels(state: GameState) {
   inbox.push({ kind: 'board', text: `Board ${ctx.board.mood} (patience ${ctx.board.patience})` });
   for (const t of ctx.threads.slice(0, 3)) inbox.push({ kind: 'story', text: t });
 
-  return { squad, finances, table, inbox, manager: managerRoom(s) };
+  return { squad, finances, table, stats, inbox, manager: managerRoom(s) };
 }
 
 server.listen(PORT, () => {
