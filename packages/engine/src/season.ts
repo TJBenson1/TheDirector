@@ -331,6 +331,16 @@ export function stepLeagueMonth(state: GameState, rng: Rng): void {
       // window, then is cleared only when the next campaign kicks off.
       if (league.seasonYear !== owningSeasonYear) {
         initLeagueSeason(league, owningSeasonYear);
+        // Signal the Director's own league kicking off a new campaign — the API turns
+        // this into the rich start-of-season preview. Pure narration metadata.
+        if (state.clubs[state.playerClub]?.leagueId === league.id) {
+          logEvent(state, {
+            category: 'system',
+            code: 'season.kickoff',
+            message: `${league.name}: the ${owningSeasonYear}–${String((owningSeasonYear + 1) % 100).padStart(2, '0')} season kicks off.`,
+            data: { leagueId: league.id, season: owningSeasonYear },
+          });
+        }
       }
       const target = Math.round((roundsFor(league) * idx) / PLAYING_MONTHS);
       const played = playRoundsUpTo(state, league, target, leagueRng);

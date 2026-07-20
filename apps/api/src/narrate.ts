@@ -246,3 +246,63 @@ export async function narrate(opts: {
 
   return { narration: finalText || '…', secondary, state, situation: state ? situationOf(state) : null, history: nextHistory };
 }
+
+// ── Season beats (§ stories, not a results engine) ───────────────────────────
+
+export type BeatKind = 'mid-season' | 'end-of-season' | 'season-start';
+
+const BEAT_SYSTEM = `You are the narrator of "The Director", a counterfactual football story. This is a SET-PIECE beat — a moment that earns real writing. A deterministic engine owns every fact; you own the voice.
+
+You are handed a FACTS object: the club, the date, the table, form, the European run, the board's mood, the squad, and how this counterfactual world is diverging from the real history of that season. Write a rich, textured passage — a great football writer's column, not a match-ticker.
+
+RULES:
+- Ground EVERY concrete fact (positions, points, names, finishes, who won Europe, the real-history mapping) in the FACTS object. Never invent a number, a result, a transfer or a player's whereabouts. If a fact isn't in FACTS, don't state it.
+- This game is about STORIES and COUNTERFACTUALS. Lean into the divergence from real history when FACTS gives it (the 'reality' mapping, the divergence note, signings that never happened): a faithful-but-modest season is history holding its course, not failure; beating the club's real finish is a genuine counterfactual triumph; a star kept who really left, or bought who never came, is the whole point — make the reader feel the alternate timeline.
+- Voice: the dressing room, the press, the tifosi, the rival's reaction, the weight of the club's history, the human detail of the players named. Characterful, never generic.
+- Length: two to four paragraphs. Enough to breathe; never padded.
+- Stay entirely in character as a football man. Never mention tools, engines, systems, "the facts object", or JSON.
+- End by turning the Director's eye to what comes next — the run-in, the window, the decision looming.`;
+
+const BEAT_FRAMING: Record<BeatKind, string> = {
+  'mid-season':
+    'It is the turn of the year — the January window is open and the season is half-run. Take stock: where the club sits and how the campaign feels, who is carrying it and who is struggling, the European picture, and the fork in the road ahead.',
+  'end-of-season':
+    "The season is done. Deliver the verdict: where they finished and what it means against the club's real history that year, the board's reaction, the men who defined the campaign, and how the European story ended.",
+  'season-start':
+    'A new campaign is about to kick off. Survey the side the Director has built over the summer — who has come in, who has gone, how it compares to the real history — set the board\'s expectation, name the threats, and frame the story to watch.',
+};
+
+/**
+ * Narrate one season beat as rich, model-written prose grounded in the engine facts.
+ * Opus by default (a set-piece worth the best writing), with the same graceful
+ * Sonnet fallback; on any failure it returns the deterministic `fallback` so the
+ * Advance feed never crackles. Token-free advances never call this — only the three
+ * beats do.
+ */
+export async function narrateBeat(opts: {
+  state: GameState;
+  kind: BeatKind;
+  facts: unknown;
+  fallback: string;
+}): Promise<string> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return opts.fallback;
+  const client = new Anthropic({ apiKey, timeout: 40_000, maxRetries: 1 });
+  let activeModel = OPUS_MODEL;
+  const prompt = `${BEAT_FRAMING[opts.kind]}\n\nFACTS:\n${JSON.stringify(opts.facts)}`;
+  try {
+    let res: Anthropic.Message;
+    try {
+      res = await client.messages.create({ model: activeModel, max_tokens: 900, system: BEAT_SYSTEM, messages: [{ role: 'user', content: prompt }] });
+    } catch (err) {
+      console.error(`[narrateBeat] model "${activeModel}" failed:`, err instanceof Error ? err.message : err);
+      activeModel = SONNET_MODEL;
+      res = await client.messages.create({ model: activeModel, max_tokens: 900, system: BEAT_SYSTEM, messages: [{ role: 'user', content: prompt }] });
+    }
+    const text = res.content.filter((b): b is Anthropic.TextBlock => b.type === 'text').map((b) => b.text).join('\n').trim();
+    return text || opts.fallback;
+  } catch (err) {
+    console.error('[narrateBeat] both models failed — serving scripted fallback.', err instanceof Error ? err.message : err);
+    return opts.fallback;
+  }
+}

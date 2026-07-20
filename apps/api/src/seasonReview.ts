@@ -9,7 +9,16 @@
  * not a bare "38 rounds played". No model call.
  */
 
-import { clubSquadPlayers, europeanCampaign, midSeasonForm, standingsOrder, type GameState } from '@director/engine';
+import {
+  clubSquadPlayers,
+  europeanCampaign,
+  midSeasonForm,
+  standingsOrder,
+  narrativeContext,
+  divergenceFactor,
+  type GameState,
+} from '@director/engine';
+import type { BeatKind } from './narrate.js';
 
 interface ReviewData {
   finish: number;
@@ -45,6 +54,89 @@ function boardVerdict(d: ReviewData, club: string): string {
   if (d.patience < 25) return `The board wanted ${exp}, and falling short has their patience close to breaking — your position is under real threat.`;
   if (miss <= 1) return `The board wanted ${exp}; a near-miss is tolerated, but they'll want to see progress next season.`;
   return `Well short of ${exp} the board demanded — the mood in the boardroom has soured, and questions are being asked.`;
+}
+
+interface ReviewDataMaybe { finish: number; expected: number; points: number; wonTitle: boolean; patience: number; season: number }
+
+/** The strongest clubs in the Director's league — the season's title threats. */
+function leagueFavourites(state: GameState): { name: string; strength: number }[] {
+  const club = state.clubs[state.playerClub];
+  return Object.values(state.clubs)
+    .filter((c) => c.leagueId && c.leagueId === club?.leagueId && c.id !== state.playerClub)
+    .sort((a, b) => b.strength - a.strength)
+    .slice(0, 4)
+    .map((c) => ({ name: c.name, strength: Math.round(c.strength) }));
+}
+
+function safeEuro(state: GameState) {
+  try {
+    const e = europeanCampaign(state);
+    return { inCompetition: e.inCompetition, phase: e.phase, note: e.note, groupSummary: e.groupSummary };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Assemble the deterministic FACTS the model narrates for a season beat, plus a
+ * scripted `fallback` used verbatim if the model is unavailable. The engine owns
+ * every fact here; the model only supplies the voice.
+ */
+export function beatFacts(
+  state: GameState,
+  kind: BeatKind,
+  reviewData?: ReviewDataMaybe,
+): { facts: unknown; fallback: string } {
+  const ctx = narrativeContext(state);
+  const common = {
+    club: ctx.club,
+    date: ctx.date,
+    season: ctx.season,
+    board: { mandate: ctx.board.mandate, mood: ctx.board.mood, patience: ctx.board.patience, warnings: ctx.board.warnings },
+    coach: { identity: ctx.coach.identity, relationship: ctx.coach.relationship, mood: ctx.coach.mood, style: ctx.coach.archetype },
+    realHistoryMapping: ctx.reality, // how this counterfactual maps to what really happened
+    hasReshapedFromReality: divergenceFactor(state) > 0,
+    threads: ctx.threads,
+  };
+
+  if (kind === 'mid-season') {
+    const form = midSeasonForm(state);
+    const facts = {
+      ...common,
+      table: ctx.league,
+      momentum: ctx.form.momentum,
+      inForm: form.players.filter((p) => p.flag === 'flying' || p.goals + p.assists >= 6).slice(0, 4).map((p) => ({ name: p.name, goals: p.goals, assists: p.assists, note: p.note })),
+      struggling: form.players.filter((p) => ['struggling', 'misfit', 'adapting', 'fringe', 'injured'].includes(p.flag)).slice(0, 3).map((p) => ({ name: p.name, situation: p.flag, note: p.note })),
+      europe: safeEuro(state),
+      unsettled: ctx.squad.unsettled,
+    };
+    return { facts, fallback: scriptedMidSeasonNote(state) ?? `Mid-season at ${ctx.club}.` };
+  }
+
+  if (kind === 'end-of-season') {
+    const scorer = topScorer(state);
+    const facts = {
+      ...common,
+      finish: reviewData ?? null,
+      europe: ctx.europe, // the most recent Champions League final and the club's part
+      topScorer: scorer,
+      keyMen: ctx.squad.talismen,
+      unsettled: ctx.squad.unsettled,
+    };
+    return { facts, fallback: reviewData ? scriptedSeasonReview(state, reviewData) : `The season ends at ${ctx.club}.` };
+  }
+
+  // season-start
+  const facts = {
+    ...common,
+    boardExpectation: ctx.board.mandate,
+    spine: ctx.squad.talismen, // the side the Director will field
+    emerging: ctx.squad.emerging,
+    expiring: ctx.squad.expiring,
+    titleThreats: leagueFavourites(state),
+    europe: safeEuro(state),
+  };
+  return { facts, fallback: `A new season kicks off at ${ctx.club}. The squad the Director has built is set; the campaign begins.` };
 }
 
 /** Build the end-of-season review narrative from the engine's season-review data. */

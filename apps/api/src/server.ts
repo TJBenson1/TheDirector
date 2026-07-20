@@ -17,7 +17,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { narrate } from './narrate.js';
+import { narrate, narrateBeat, type BeatKind } from './narrate.js';
 import {
   createNewGame,
   advanceWindow,
@@ -54,7 +54,7 @@ import {
 } from '@director/engine';
 import { buildView } from './view.js';
 import { scriptedOpening } from './openings.js';
-import { scriptedSeasonReview, scriptedMidSeasonNote } from './seasonReview.js';
+import { beatFacts } from './seasonReview.js';
 
 const PORT = Number(process.env.PORT ?? 8787);
 // Lock this to your Lovable app's origin in production; '*' is fine for dev.
@@ -91,16 +91,28 @@ const routes: Record<string, Handler> = {
     };
   },
 
-  '/games/advance': ({ state, perStep }) => {
+  '/games/advance': async ({ state, perStep }) => {
     const { state: next, events } = advanceWindow(state as GameState, { pausePerStep: perStep ?? true });
-    // Turn the terse feed into a story: if a season just closed, the engine emitted a
-    // season-review event — enrich it into a real end-of-season review; otherwise, on
-    // a mid-campaign step, drop in a lighter form note. Token-free, scripted.
+    // The three season beats — the January turn, the season's verdict, and the kickoff
+    // of the next campaign — are RICH, model-written narrative (stories, not a results
+    // engine). Everything else stays token-free. Each beat is grounded in deterministic
+    // engine facts and degrades to a scripted line if the model is unavailable.
     let narration: string | undefined;
     const review = events.find((e) => e.code === 'board.season-review');
-    if (review) narration = scriptedSeasonReview(next, review.data as any);
-    else narration = scriptedMidSeasonNote(next) ?? undefined;
-    return { state: next, view: buildView(next), events, narration };
+    const kickoff = events.find((e) => e.code === 'season.kickoff');
+    // The winter window OPENING (step 2 of 4) is the once-per-season January turn —
+    // gate on it so the mid-season beat fires once, not on every winter sub-step.
+    const winterOpens = events.find((e) => e.code === 'window.step' && (e.data as any)?.window === 'winter' && (e.data as any)?.step === 2);
+    let beat: BeatKind | null = null;
+    if (review) beat = 'end-of-season';
+    else if (kickoff) beat = 'season-start';
+    else if (winterOpens && midSeasonForm(next).underway) beat = 'mid-season';
+
+    if (beat) {
+      const { facts, fallback } = beatFacts(next, beat, review ? (review.data as any) : undefined);
+      narration = await narrateBeat({ state: next, kind: beat, facts, fallback });
+    }
+    return { state: next, view: buildView(next), events, narration, beat };
   },
 
   '/games/decision': ({ state, decisionId, choiceId }) => {
