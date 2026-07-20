@@ -188,12 +188,13 @@ const WANTS_AT = 9;
  * flexible coach grumbles where a dogmatic one digs in and vetoes).
  */
 export function coachFit(coach: ManagerState, player: PlayerState): CoachFit {
-  if (coach.favourites.includes(player.name)) {
+  // Default the lists so a game saved before these fields existed still loads.
+  if ((coach.favourites ?? []).includes(player.name)) {
     return { score: 100, verdict: 'wants', reason: `${player.name} is one of ${coach.identity}'s own — he wants him back.` };
   }
   // A documented real falling-out overrides any stylistic read: the coach has made
   // up his mind and wants the player moved on (Lippi and Baggio).
-  if (coach.castoffs.includes(player.name)) {
+  if ((coach.castoffs ?? []).includes(player.name)) {
     return { score: -100, verdict: 'veto', reason: `${coach.identity} has made it clear he wants ${player.name} moved on — he is not part of his plans.` };
   }
   const lean = coach.traitLean;

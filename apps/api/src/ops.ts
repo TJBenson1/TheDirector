@@ -180,10 +180,10 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
                     sellBanks: m(dep.fee),
                     // A coach-castoff (Lippi/Baggio) is the COACH's call, not the
                     // player agitating to leave — keeping him overrules the coach.
-                    keepCost: s.managerRelations.castoffs.includes(p.name)
+                    keepCost: (s.managerRelations.castoffs ?? []).includes(p.name)
                       ? `nothing — keeping him costs NO transfer fee; you simply block the move. But this is a sale ${s.managerRelations.identity} wants: keep ${p.name} and you overrule your coach and strain that relationship.`
                       : 'nothing — keeping your own player costs NO transfer fee; you simply block the move. He wanted to go, so expect him to be unsettled.',
-                    note: s.managerRelations.castoffs.includes(p.name)
+                    note: (s.managerRelations.castoffs ?? []).includes(p.name)
                       ? `This is the window ${p.name} really left for ${dep.toClub} — a sale ${s.managerRelations.identity} pushed for. Sanction it to bank ${m(dep.fee)}, or overrule your coach and keep him (no fee, but the friction festers).`
                       : `This is the window ${p.name} really left for ${dep.toClub}. Sanction the sale to bank ${m(dep.fee)}, or keep him for free (he sulks, since he wanted the move).`,
                     ...(pending

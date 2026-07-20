@@ -143,7 +143,7 @@ export function runReviewPhase(state: GameState): void {
   // to sign him. Backing the request warms the relationship; overruling it erodes
   // it. Reality-default (ignore) lets the request lapse — no world change, so a
   // passive run is untouched.
-  const wanted = coach.favourites
+  const wanted = (coach.favourites ?? [])
     .map((name) => Object.values(state.players).find((p) => p.name === name && !p.retired && p.club !== state.playerClub))
     .find((p): p is NonNullable<typeof p> => !!p);
   if (wanted) {

@@ -374,7 +374,7 @@ function offerUserLedgerMove(state: GameState, entry: RealTransferLedgerEntry, k
   // from a player agitating to leave: keeping him overrules the coach and strains
   // that relationship, rather than merely unsettling the player.
   const coach = state.managerRelations;
-  const isCastoff = coach.castoffs.includes(player.name);
+  const isCastoff = (coach.castoffs ?? []).includes(player.name);
   const description = isCastoff
     ? `This is the window ${player.name} really left for ${buyer?.name ?? entry.to} — a sale ${coach.identity} pushed for; he wants him moved on. Cash in as reality had it, or overrule your coach and keep him, and expect the friction to fester.`
     : `This is the window ${player.name} really left for ${buyer?.name ?? entry.to}. Sanction the sale, or keep him — he wanted the move, so refusing will unsettle him.`;
