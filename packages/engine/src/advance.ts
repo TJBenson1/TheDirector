@@ -26,6 +26,7 @@ import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow, executeAcademyIntakes } from './ledgerExec.js';
 import { runReviewPhase } from './review.js';
+import { rollSquadFrictionEvents } from './squadFriction.js';
 import { resolveCoachFriction } from './coaches.js';
 import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli, promoteJuventus } from './italyEvents.js';
@@ -160,6 +161,10 @@ function runWindowStep(state: GameState, rng: Rng, step: number): void {
   if (state.clock.window === 'summer' && !state.meta.reviewedWindows.includes(state.clock.date)) {
     state.meta.reviewedWindows.push(state.clock.date);
     runReviewPhase(state);
+    // The consequences of the squad the Director has built come back as forks in
+    // the road (a misfit, a glut, a signing that isn't settling). Gated on
+    // divergence + forked RNG, so a passive/reality world raises none of them.
+    rollSquadFrictionEvents(state, rng.fork(`friction:${state.clock.date}`));
   }
   // Phase 2 (§3, real free agency): from the MARKET phase on, the user club's
   // contract lifecycle settles — deals left untouched are renewed (reality-default,
