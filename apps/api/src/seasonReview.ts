@@ -88,6 +88,19 @@ export function beatFacts(
   reviewData?: ReviewDataMaybe,
 ): { facts: unknown; fallback: string } {
   const ctx = narrativeContext(state);
+  const userLeague = state.clubs[state.playerClub]?.leagueId;
+  // The arms race the Director is running against the world: rivals he has SUPPRESSED
+  // (bought their signings, so they've slipped) and how hard the world is now fighting
+  // back (worldDefiance). Lets the model narrate a living, reacting league.
+  const suppressed = Object.values(state.clubs)
+    .filter((c) => c.leagueId === userLeague && c.id !== state.playerClub && (c.suppressionPenalty ?? 0) >= 0.6)
+    .sort((a, b) => (b.suppressionPenalty ?? 0) - (a.suppressionPenalty ?? 0))
+    .slice(0, 3)
+    .map((c) => c.name);
+  const armsRace = {
+    suppressedRivals: suppressed, // rivals you've weakened by taking their targets
+    worldFightingBack: state.worldDefiance >= 40, // your dominance has stiffened the league
+  };
   const common = {
     club: ctx.club,
     date: ctx.date,
@@ -96,6 +109,7 @@ export function beatFacts(
     coach: { identity: ctx.coach.identity, relationship: ctx.coach.relationship, mood: ctx.coach.mood, style: ctx.coach.archetype },
     realHistoryMapping: ctx.reality, // how this counterfactual maps to what really happened
     hasReshapedFromReality: divergenceFactor(state) > 0,
+    armsRace,
     threads: ctx.threads,
   };
 
