@@ -136,3 +136,33 @@ export function sportingRewriteOdds(
 
   return clamp01(p) * 0.9 + 0.05;
 }
+
+/**
+ * The probability a talent FULFILS himself from here — the career near-miss. A
+ * wonderkid reality wasted (Reyes, Robinho, Pato, Bojinov) can still kick on under a
+ * Director who gives him minutes, keeps him happy and builds around him; a talent
+ * reality made good can stall if he's benched, unsettled and badly handled. Anchored
+ * on what really became of him, moved by the levers the Director actually controls.
+ */
+export function careerFulfilmentOdds(
+  state: GameState,
+  player: PlayerState,
+  opts: { realFulfilled: boolean },
+): number {
+  let p = opts.realFulfilled ? 0.62 : 0.34;
+
+  // Minutes: the biggest developmental lever. Benched development seasons plateau a
+  // young player; morale stands in for how involved and valued he feels.
+  p -= Math.min(0.24, player.benchedDevSeasons * 0.08);
+  p += ((player.morale - 55) / 45) * 0.16;
+
+  // Character: a professional squeezes his ceiling; a volatile one squanders it.
+  p += ((player.personality.professionalism - 5) / 5) * 0.1;
+  p -= ((player.personality.volatility - 5) / 5) * 0.08;
+
+  // Headroom left to grow — a player already at his ceiling has little to fulfil.
+  const gap = Math.max(0, player.potentialCeiling - player.ability);
+  p += Math.min(0.08, gap * 0.01);
+
+  return clamp01(p) * 0.9 + 0.05;
+}

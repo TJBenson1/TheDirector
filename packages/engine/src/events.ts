@@ -33,7 +33,7 @@ import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 import { executeTransfer } from './transfers.js';
 import { clubSquadPlayers, recomputeClubStrength } from './players.js';
 import { valuePlayer, suggestWage } from './finance.js';
-import { contractRetentionOdds, sagaFee, feeMillions } from './realityRegister.js';
+import { contractRetentionOdds, sagaFee, feeMillions, sportingRewriteOdds, careerFulfilmentOdds } from './realityRegister.js';
 
 /**
  * Dressing-room wage parity (§ internal friction). Football wages only ratchet
@@ -1371,7 +1371,264 @@ const CONTRACT_SAGA_PACK: ScriptedEvent[] = [
   }),
 ];
 
+// ── The sporting near-miss register: the almost-glory the Director can rewrite ──
+// The famous inches — a title lost by a point, a final lost in stoppage time, a
+// last-day escape or a shock drop. `sportingRewriteOdds` reads how good the side
+// actually is now (its strength percentile in the league), its mood and the board's
+// backing, so a juggernaut rewrites the heartbreak more often than a fragile side —
+// but never as a certainty, because these moments never were.
+
+interface SportingNearMissCfg {
+  id: string;
+  scenario: string;
+  club: ClubState['id'];
+  date: string;
+  realWon?: boolean; // reality turned this one into glory at the death (hold it, or blow it)
+  requiresPlayer?: string; // a key figure who must still be at the club for it to land
+  title: string;
+  blurb: string;
+  goLabel: string;
+  holdLabel: string;
+  winMemory: string; // the outcome that beats history's near-miss
+  loseMemory: string; // history's heartbreak, relived
+}
+
+/** Build a near-miss beat whose outcome turns on how good the side really is now. */
+function sportingNearMiss(cfg: SportingNearMissCfg): ScriptedEvent {
+  return {
+    id: cfg.id,
+    date: cfg.date,
+    scenarios: [cfg.scenario],
+    requires: (s) =>
+      s.playerClub === cfg.club && (!cfg.requiresPlayer || playerAt(s, cfg.requiresPlayer, cfg.club)),
+    build: (s) => {
+      const odds = sportingRewriteOdds(s, { realWon: cfg.realWon });
+      const win = [
+        { kind: 'boardPatience' as const, amount: 12 },
+        { kind: 'morale' as const, clubId: cfg.club, amount: 12 },
+        { kind: 'memory' as const, tag: 'near-miss', text: cfg.winMemory },
+      ];
+      const lose = [
+        { kind: 'morale' as const, clubId: cfg.club, amount: -8 },
+        { kind: 'boardPatience' as const, amount: -3 },
+        { kind: 'memory' as const, tag: 'near-miss', text: cfg.loseMemory },
+      ];
+      return {
+        id: `register:${cfg.id}`,
+        title: cfg.title,
+        description: cfg.blurb,
+        interrupt: true,
+        clubId: cfg.club,
+        category: 'event',
+        choices: [
+          { id: 'go', label: cfg.goLabel, successProbability: Math.min(0.9, odds + 0.05), onSuccess: win, onFailure: lose },
+          {
+            id: 'hold',
+            label: cfg.holdLabel,
+            successProbability: odds,
+            onSuccess: win,
+            onFailure: [{ kind: 'morale', clubId: cfg.club, amount: -5 }, { kind: 'memory', tag: 'near-miss', text: cfg.loseMemory }],
+          },
+        ],
+        falloutIfIgnored: odds >= 0.5 ? win : lose,
+        memoryTags: ['near-miss'],
+      };
+    },
+  };
+}
+
+const SPORTING_NEAR_MISS_PACK: ScriptedEvent[] = [
+  sportingNearMiss({
+    id: 'nearmiss-gerrard-slip-2014', scenario: 'liverpool-2010', club: 'liverpool', date: '2014-04',
+    requiresPlayer: 'cur_gerrard_lv10',
+    title: 'The title in your hands — and a slip away',
+    blurb: 'Liverpool lead the title race with weeks to go, Chelsea at Anfield the last true test. Reality is the cruellest of images: Gerrard’s slip, Demba Ba, the dream gone by two points. Throw caution to the wind, or manage the biggest game of a generation?',
+    goLabel: 'Go for the throat — win it outright', holdLabel: 'Control it — nerveless and tight',
+    winMemory: 'No slip, no collapse — Liverpool are champions at last, the ghost of 2014 exorcised.',
+    loseMemory: 'The slip, the two points, the agony — the title lost exactly as it was.',
+  }),
+  sportingNearMiss({
+    id: 'nearmiss-invincibles-run-2004', scenario: 'arsenal-2004', club: 'arsenal', date: '2004-10',
+    requiresPlayer: 'cur_henry',
+    title: '49 unbeaten — and Old Trafford await',
+    blurb: 'The Invincibles have stretched their unbeaten league run to a record 49 games, and only Manchester United and a hostile Old Trafford stand in the way. Reality ended it in the "Battle of the Buffet" — a disputed penalty, a pizza thrown, the streak over. Protect the record, or go and win it in their backyard?',
+    goLabel: 'Attack — win at Old Trafford', holdLabel: 'Stay disciplined — do not lose it',
+    winMemory: 'The run rolls on past Old Trafford — the Invincibles’ streak becomes untouchable.',
+    loseMemory: 'The streak dies at Old Trafford amid the pizza and the fury, as it really did.',
+  }),
+  sportingNearMiss({
+    id: 'nearmiss-liverpool-title-2002', scenario: 'liverpool-2001', club: 'liverpool', date: '2002-04',
+    title: 'Houllier’s Liverpool close on the title',
+    blurb: 'Liverpool are chasing a first league title since 1990, Arsenal just ahead. Reality: they finished a strong second, seven points back, the drought going on. This is the run-in — chase Arsenal down, or bank the Champions League place?',
+    goLabel: 'Chase the title — all or nothing', holdLabel: 'Lock down second and Europe',
+    winMemory: 'Liverpool run Arsenal down and end the long wait — champions, decades early.',
+    loseMemory: 'Second again, the title drought unbroken — as it went.',
+  }),
+  sportingNearMiss({
+    id: 'nearmiss-lasagne-2006', scenario: 'spurs-2001', club: 'spurs', date: '2006-05',
+    title: 'The final day — Champions League on the line',
+    blurb: 'Tottenham need only match Arsenal on the last day to seize fourth and the Champions League. Reality: half the squad went down with food poisoning at the team hotel the night before — "Lasagne-gate" — and they lost at West Ham, the dream snatched away. Steady the ship, or throw everything forward?',
+    goLabel: 'Attack — take it into your own hands', holdLabel: 'Keep calm — a point may be enough',
+    winMemory: 'Spurs hold their nerve and take fourth — the Champions League reached, the lasagne curse beaten.',
+    loseMemory: 'Struck down on the final morning, beaten at West Ham — fourth surrendered, as it was.',
+  }),
+  sportingNearMiss({
+    id: 'nearmiss-aguero-2012', scenario: 'man-city-2008', club: 'man_city', date: '2012-05', realWon: true,
+    title: '93:20 — the title on the final kick',
+    blurb: 'The last day, the title decided on goal difference, and City somehow losing to ten-man QPR deep into stoppage time as United celebrate up the road. Reality produced the most famous moment in Premier League history — Agüerooooo. Do you hold your nerve for the miracle, or does the pressure tell?',
+    goLabel: 'Throw everyone forward — force the winner', holdLabel: 'Trust the players — keep believing',
+    winMemory: 'Agüero, 93:20 — City are champions in the maddest finish of all, exactly as it happened.',
+    loseMemory: 'The winner never comes — City fall agonisingly short and United take the title, a miracle undone.',
+  }),
+  sportingNearMiss({
+    id: 'nearmiss-moscow-2008', scenario: 'chelsea-2003', club: 'chelsea', date: '2008-05',
+    requiresPlayer: 'cur_terry_c',
+    title: 'Moscow — one kick from the European Cup',
+    blurb: 'Chelsea’s first Champions League final, United the opponents, and it comes down to penalties in the Moscow rain. Reality: Terry slipped taking the kick that would have won it, and the trophy slipped away with him. Steel your men for the shootout, or go for the win in normal time?',
+    goLabel: 'Win it before penalties', holdLabel: 'Hold firm — trust the shootout',
+    winMemory: 'No slip in the rain — Chelsea are kings of Europe years ahead of schedule.',
+    loseMemory: 'Terry slips, the kick misses, and the European Cup is lost in Moscow — as it truly was.',
+  }),
+  sportingNearMiss({
+    id: 'nearmiss-barca-title-2004', scenario: 'barcelona-2003', club: 'barcelona', date: '2004-04',
+    requiresPlayer: 'cur_ronaldinho_b3',
+    title: 'Rijkaard’s revival closes on the title',
+    blurb: 'After a dismal first half of the season, Ronaldinho and a reborn Barcelona have surged up the table. Reality: they fell just short in second and won the title the following year. Push for it now, or trust the project to bloom on schedule?',
+    goLabel: 'Seize it a year early', holdLabel: 'Build steadily — second is progress',
+    winMemory: 'Barça complete the surge and take the title a year early — the revival crowned ahead of time.',
+    loseMemory: 'A strong second, the title one year away — the Rijkaard revival on its real timeline.',
+  }),
+  sportingNearMiss({
+    id: 'nearmiss-juve-final-1998', scenario: 'juventus-1995', club: 'juventus', date: '1998-05',
+    requiresPlayer: 'cur_delpiero_j',
+    title: 'A third European final in a row — Real await',
+    blurb: 'Lippi’s Juventus have reached yet another Champions League final, this time against Real Madrid. Reality: a lone Mijatović goal beat them, a third final in a row that ended in defeat — the great nearly-side of the age. Can you finally get it right on the grandest night?',
+    goLabel: 'Go for the win — end the final curse', holdLabel: 'Control it — do not lose another',
+    winMemory: 'Juventus finally win the big one — the serial finalists crowned, rewriting three years of hurt.',
+    loseMemory: 'Beaten by Real, a third straight final lost — the nearly-men of Europe once more, as it was.',
+  }),
+];
+
+// ── The career near-miss register: the talents who almost were ────────────────
+// Wonderkids reality wasted, offered a road not taken. `careerFulfilmentOdds` turns
+// on the levers the Director actually controls — minutes, mood, how he's handled —
+// so a Reyes or a Pato can kick on under the right care, or stall exactly as he did.
+
+interface CareerNearMissCfg {
+  id: string;
+  scenario: string;
+  club: ClubState['id'];
+  playerId: string;
+  date: string;
+  realFulfilled: boolean; // did he fulfil his talent, in reality?
+  title: string;
+  blurb: string;
+  fulfilMemory: string;
+  stallMemory: string;
+}
+
+/** Build a talent-crossroads beat whose outcome bends with how he's been handled. */
+function careerNearMiss(cfg: CareerNearMissCfg): ScriptedEvent {
+  return {
+    id: cfg.id,
+    date: cfg.date,
+    scenarios: [cfg.scenario],
+    requires: (s) => playerAt(s, cfg.playerId, cfg.club) && s.playerClub === cfg.club,
+    build: (s) => {
+      const p = s.players[cfg.playerId]!;
+      const odds = careerFulfilmentOdds(s, p, { realFulfilled: cfg.realFulfilled });
+      const fulfil = [
+        { kind: 'ability' as const, playerId: cfg.playerId, amount: 3 },
+        { kind: 'morale' as const, playerId: cfg.playerId, amount: 10 },
+        { kind: 'memory' as const, tag: 'career-arc', text: cfg.fulfilMemory },
+      ];
+      const stall = [
+        { kind: 'ability' as const, playerId: cfg.playerId, amount: -2 },
+        { kind: 'memory' as const, tag: 'career-arc', text: cfg.stallMemory },
+      ];
+      return {
+        id: `register:${cfg.id}`,
+        title: cfg.title,
+        description: cfg.blurb,
+        interrupt: true,
+        clubId: cfg.club,
+        category: 'event',
+        choices: [
+          {
+            id: 'invest',
+            label: 'Build him in — guaranteed minutes and faith',
+            successProbability: Math.min(0.92, odds + 0.12),
+            onSuccess: fulfil,
+            onFailure: [{ kind: 'memory', tag: 'career-arc', text: cfg.stallMemory }],
+          },
+          {
+            id: 'patient',
+            label: 'Bring him slowly — protect him from the hype',
+            successProbability: odds,
+            onSuccess: fulfil,
+            onFailure: stall,
+          },
+        ],
+        falloutIfIgnored: odds >= 0.5 ? fulfil : stall,
+        memoryTags: ['career-arc', cfg.playerId],
+      };
+    },
+  };
+}
+
+const CAREER_NEAR_MISS_PACK: ScriptedEvent[] = [
+  careerNearMiss({
+    id: 'career-reyes-2005', scenario: 'arsenal-2004', club: 'arsenal', playerId: 'cur_reyes',
+    date: '2005-09', realFulfilled: false,
+    title: 'Reyes — the flair that faded',
+    blurb: 'José Antonio Reyes has the gifts to be Arsenal’s next great forward, but the English winters and the physical battering are grinding him down. Reality: he wilted, wanted home, and drifted back to Spain a shadow of the prospect.',
+    fulfilMemory: 'Reyes settles and blooms in England — the star his talent always promised, unlike reality.',
+    stallMemory: 'Reyes wilts and drifts home — the gifted forward who never was, as it went.',
+  }),
+  careerNearMiss({
+    id: 'career-robinho-2007', scenario: 'real-madrid-2006', club: 'real_madrid', playerId: 'cur_robinho_r6',
+    date: '2007-09', realFulfilled: false,
+    title: 'Robinho — the next Pelé?',
+    blurb: 'Anointed the heir to Pelé, Robinho has the tricks but not yet the end product or the discipline. Reality: the promise dissolved into stepovers and unfulfilled talent across a nomadic career.',
+    fulfilMemory: 'Robinho adds substance to the samba — he becomes the superstar Brazil crowned him, defying his real fade.',
+    stallMemory: 'Robinho stays all trick and no end product — the great unfulfilled talent, as reality had it.',
+  }),
+  careerNearMiss({
+    id: 'career-pato-2009', scenario: 'milan-2007', club: 'milan', playerId: 'cur_pato_07',
+    date: '2009-09', realFulfilled: false,
+    title: 'Pato — the Duck before the injuries',
+    blurb: 'Alexandre Pato is the most exciting teenager in Europe, electric and fearless. Reality: a relentless run of muscle injuries — some say rushed back too often — wrecked the career before it peaked.',
+    fulfilMemory: 'Managed carefully, Pato stays fit and fulfils the hype — the world-beater his talent promised.',
+    stallMemory: 'The muscle injuries pile up and break Pato’s rhythm — the wonderkid who never peaked, as it was.',
+  }),
+  careerNearMiss({
+    id: 'career-bojinov-2007', scenario: 'juventus-2006', club: 'juventus', playerId: 'cur_bojinov',
+    date: '2007-09', realFulfilled: false,
+    title: 'Bojinov — the boy wonder',
+    blurb: 'Valeri Bojinov arrived billed as a generational striker. Reality: injuries and temperament turned one of the era’s great hype stories into a cautionary tale.',
+    fulfilMemory: 'Bojinov knuckles down and delivers — the striker the hype promised, against all of reality.',
+    stallMemory: 'Bojinov’s career unravels in injuries and frustration — the cautionary tale, as it went.',
+  }),
+  careerNearMiss({
+    id: 'career-martins-2006', scenario: 'inter-2004', club: 'inter', playerId: 'cur_martins_04',
+    date: '2006-09', realFulfilled: false,
+    title: 'Martins — pace to burn',
+    blurb: 'Obafemi Martins is one of the quickest, most explosive forwards in Serie A, but raw and inconsistent. Reality: a solid career, but never quite the superstar the athleticism promised.',
+    fulfilMemory: 'Martins adds the polish to the power — he kicks on into a genuine star, beyond his real ceiling.',
+    stallMemory: 'Martins stays thrillingly raw but never quite elite — the near-miss reality settled for.',
+  }),
+  careerNearMiss({
+    id: 'career-townsend-2014', scenario: 'spurs-2013', club: 'spurs', playerId: 'cur_townsend_13',
+    date: '2014-09', realFulfilled: false,
+    title: 'Townsend — the burst of promise',
+    blurb: 'Andros Townsend has exploded onto the scene with fearless, direct wing play. Reality: the level dipped, the end product wavered, and he settled into a journeyman’s career.',
+    fulfilMemory: 'Townsend sharpens his end product and pushes on — the winger the early burst promised.',
+    stallMemory: 'Townsend’s level dips back — the flash of promise settling into the journeyman he became.',
+  }),
+];
+
 const ALL_SCRIPTED: ScriptedEvent[] = [
+  ...MAN_UTD_1999_PACK,
   ...MAN_UTD_1999_PACK,
   ...LIVERPOOL_2001_PACK,
   ...ARSENAL_2004_PACK,
@@ -1399,6 +1656,8 @@ const ALL_SCRIPTED: ScriptedEvent[] = [
   ...BAYERN_1998_PACK,
   ...BAYERN_2009_PACK,
   ...CONTRACT_SAGA_PACK,
+  ...SPORTING_NEAR_MISS_PACK,
+  ...CAREER_NEAR_MISS_PACK,
 ];
 
 function fireScriptedEvents(state: GameState): void {
