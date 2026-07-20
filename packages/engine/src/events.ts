@@ -33,6 +33,7 @@ import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 import { executeTransfer } from './transfers.js';
 import { clubSquadPlayers, recomputeClubStrength } from './players.js';
 import { valuePlayer, suggestWage } from './finance.js';
+import { contractRetentionOdds, sagaFee, feeMillions } from './realityRegister.js';
 
 /**
  * Dressing-room wage parity (§ internal friction). Football wages only ratchet
@@ -1169,6 +1170,207 @@ const BAYERN_2009_PACK: ScriptedEvent[] = [
   },
 ];
 
+// ── The contract-saga register: tense will-they-won't-they renewals ──────────
+// Curated real sagas of the era, resolved by FACTORS so they can go the other way
+// than history: a star reality kept walks if he's underpaid, unhappy and courted;
+// a star reality sold can be talked into staying if the wages and mood are right.
+// `contractRetentionOdds` reads the live squad, so the same beat plays differently
+// depending on how the Director has run the club. See realityRegister.ts.
+
+interface ContractSagaCfg {
+  id: string;
+  scenario: string;
+  club: ClubState['id'];
+  playerId: string;
+  date: string;
+  realStayed: boolean; // did he actually stay, in reality?
+  suitor?: ClubState['id']; // the club that came for him (must exist in that world)
+  title: string;
+  blurb: string; // the drama, minus the outcome
+  stayMemory: string;
+  leaveMemory: string;
+}
+
+/** Build a will-they-won't-they contract beat whose outcome bends with the factors. */
+function contractSaga(cfg: ContractSagaCfg): ScriptedEvent {
+  return {
+    id: cfg.id,
+    date: cfg.date,
+    scenarios: [cfg.scenario],
+    requires: (s) => playerAt(s, cfg.playerId, cfg.club) && s.playerClub === cfg.club,
+    build: (s) => {
+      const p = s.players[cfg.playerId]!;
+      const stay = contractRetentionOdds(s, p, { realStayed: cfg.realStayed, suitor: cfg.suitor });
+      const fee = sagaFee(s, p);
+      const feeM = feeMillions(fee);
+      const year = parseYearMonth(s.clock.date).year;
+      const suitorExists = cfg.suitor ? !!s.clubs[cfg.suitor] : false;
+      const suitorName = cfg.suitor ? s.clubs[cfg.suitor]?.name ?? 'a rival' : 'a rival';
+      const unhappy = p.morale < 45 || p.agitation > 40;
+      const mood = unhappy
+        ? 'The mood around him is sour — he feels undervalued and the noise is growing.'
+        : stay >= 0.6
+          ? 'He is settled and happy here, which strengthens your hand.'
+          : 'It is finely balanced — he could be persuaded either way.';
+      // The IGNORE path resolves on the factors, and it can diverge from history.
+      const leaveFallout = suitorExists
+        ? [
+            { kind: 'transferOut' as const, playerId: cfg.playerId, clubId: cfg.suitor!, amount: fee },
+            { kind: 'memory' as const, tag: 'contract-saga', text: cfg.leaveMemory },
+          ]
+        : [
+            { kind: 'letContractLapse' as const, playerId: cfg.playerId },
+            { kind: 'agitation' as const, playerId: cfg.playerId, amount: 12 },
+            { kind: 'memory' as const, tag: 'contract-saga', text: cfg.leaveMemory },
+          ];
+      const staysFallout = [
+        { kind: 'morale' as const, playerId: cfg.playerId, amount: 4 },
+        { kind: 'memory' as const, tag: 'contract-saga', text: cfg.stayMemory },
+      ];
+      const choices: Decision['choices'] = [
+        {
+          id: 'renew',
+          label: 'Open the vault — bumper new terms to end it',
+          successProbability: Math.min(0.96, stay + 0.28),
+          onSuccess: [
+            { kind: 'renewContract', playerId: cfg.playerId, amount: Math.max(3, p.contractUntil - year + 3) },
+            { kind: 'morale', playerId: cfg.playerId, amount: 8 },
+            { kind: 'memory', tag: 'contract-saga', text: cfg.stayMemory },
+          ],
+          onFailure: [
+            { kind: 'agitation', playerId: cfg.playerId, amount: 14 },
+            { kind: 'memory', tag: 'contract-saga', text: `${p.name} rebuffs the offer — his head has been turned.` },
+          ],
+        },
+        {
+          id: 'structure',
+          label: 'Hold the wage structure — call his bluff',
+          successProbability: stay,
+          onSuccess: [
+            { kind: 'morale', playerId: cfg.playerId, amount: 2 },
+            { kind: 'memory', tag: 'contract-saga', text: `${p.name} stays on his existing deal — the structure holds.` },
+          ],
+          onFailure: [{ kind: 'agitation', playerId: cfg.playerId, amount: 16 }, ...leaveFallout],
+        },
+      ];
+      if (suitorExists) {
+        choices.push({
+          id: 'sell',
+          label: `Cash in now — take ${suitorName}'s £${feeM}m`,
+          successProbability: 0.9,
+          onSuccess: [
+            { kind: 'transferOut', playerId: cfg.playerId, clubId: cfg.suitor!, amount: fee },
+            { kind: 'memory', tag: 'contract-saga', text: cfg.leaveMemory },
+          ],
+          onFailure: [],
+        });
+      }
+      return {
+        id: `register:${cfg.id}`,
+        title: cfg.title,
+        description: `${cfg.blurb} ${mood}`,
+        interrupt: true,
+        clubId: cfg.club,
+        category: 'event',
+        choices,
+        falloutIfIgnored: stay >= 0.5 ? staysFallout : leaveFallout,
+        memoryTags: ['contract-saga', cfg.playerId],
+      };
+    },
+  };
+}
+
+const CONTRACT_SAGA_PACK: ScriptedEvent[] = [
+  contractSaga({
+    id: 'saga-gerrard-2005', scenario: 'liverpool-2001', club: 'liverpool', playerId: 'cur_gerrard01',
+    date: '2005-07', realStayed: true, suitor: 'chelsea',
+    title: 'Gerrard and Chelsea — the captain on the brink',
+    blurb: 'Fresh from a European Cup, Chelsea have come with a fortune and Steven Gerrard has all but gone — reality had him hand in a request, then perform a stunning overnight u-turn to stay.',
+    stayMemory: 'Gerrard u-turns and stays a Liverpool man — as he really did, on the finest of margins.',
+    leaveMemory: 'Gerrard goes to Chelsea — the request never withdrawn, the icon lost, a wound reality was spared.',
+  }),
+  contractSaga({
+    id: 'saga-cole-2006', scenario: 'arsenal-2004', club: 'arsenal', playerId: 'cur_acole',
+    date: '2006-05', realStayed: false, suitor: 'chelsea',
+    title: 'Ashley Cole — the tapping-up saga',
+    blurb: 'A secret meeting with Mourinho, a row over £5k a week, and a left-back who feels disrespected — reality ended with "Cashley" crossing London to Chelsea.',
+    stayMemory: 'Talked Ashley Cole down and kept him — the defection reality never healed, undone.',
+    leaveMemory: 'Cole crosses London to Chelsea — the bridge burned, exactly as it was.',
+  }),
+  contractSaga({
+    id: 'saga-henry-2007', scenario: 'arsenal-2004', club: 'arsenal', playerId: 'cur_henry',
+    date: '2007-06', realStayed: false, suitor: 'barcelona',
+    title: "Henry's heart is in Barcelona",
+    blurb: 'The greatest player in the club’s history, 29 and drawn to Barcelona and Guardiola’s coming revolution. Reality: he left for Camp Nou and won a treble a season later.',
+    stayMemory: 'Persuaded Henry to stay and lead on — the talisman kept, against the pull of Barcelona.',
+    leaveMemory: 'Henry joins Barcelona — the king leaves for Catalonia, as he truly did.',
+  }),
+  contractSaga({
+    id: 'saga-vnistelrooy-2009', scenario: 'real-madrid-2006', club: 'real_madrid', playerId: 'cur_van_nistelrooy_r6',
+    date: '2009-12', realStayed: false,
+    title: 'Van Nistelrooy frozen out',
+    blurb: 'A serial scorer reduced to the bench as the galácticos gather again — reality saw him pushed out to Hamburg in the January, his knee and his standing both gone.',
+    stayMemory: 'Kept faith with Van Nistelrooy and got him firing again — a scrapheap exit averted.',
+    leaveMemory: 'Van Nistelrooy is moved on for a pittance — the finisher discarded, as reality had it.',
+  }),
+  contractSaga({
+    id: 'saga-pirlo-2011', scenario: 'milan-2007', club: 'milan', playerId: 'cur_pirlo_07',
+    date: '2011-06', realStayed: false, suitor: 'juventus',
+    title: 'Pirlo — the regista they let walk',
+    blurb: 'Andrea Pirlo’s deal is expiring and Milan, chasing younger legs, are minded to let him leave on a free. Reality: he joined Juventus and defined a dynasty — the greatest free transfer in Serie A history.',
+    stayMemory: 'Tied Pirlo down — the regista stays, and Juventus never get their dynasty-maker for free.',
+    leaveMemory: 'Pirlo walks to Juventus on a free — Milan’s catastrophic gift, made all over again.',
+  }),
+  contractSaga({
+    id: 'saga-drogba-2008', scenario: 'chelsea-2003', club: 'chelsea', playerId: 'cur_drogba_c',
+    date: '2008-08', realStayed: true, suitor: 'inter',
+    title: '"Sometimes I feel alone" — Drogba unsettled',
+    blurb: 'Didier Drogba, unhappy and courted from Italy, has openly mused about leaving. Reality: he stayed, and two years later scored the penalty that won Chelsea the Champions League.',
+    stayMemory: 'Kept Drogba through his wobble — the man who would win the European Cup, retained.',
+    leaveMemory: 'Drogba leaves for Serie A — and is not there for the night Chelsea are finally crowned kings of Europe.',
+  }),
+  contractSaga({
+    id: 'saga-ribery-2010', scenario: 'bayern-2009', club: 'bayern', playerId: 'cur_ribery_09',
+    date: '2010-06', realStayed: true, suitor: 'real_madrid',
+    title: 'Ribéry courted by the giants',
+    blurb: 'Real Madrid and Barcelona both want Franck Ribéry after his brilliant season. Reality: Bayern held firm, kept their difference-maker, and built a Champions League winner around him.',
+    stayMemory: 'Held firm and kept Ribéry — the spine of a European champion stays in Munich.',
+    leaveMemory: 'Ribéry is sold to the Spanish giants — Bayern cash in and lose their talisman, a road not taken.',
+  }),
+  contractSaga({
+    id: 'saga-robinho-2009', scenario: 'man-city-2008', club: 'man_city', playerId: 'cur_robinho_c8',
+    date: '2009-08', realStayed: false,
+    title: 'Robinho already wants out',
+    blurb: 'The marquee statement of the takeover is homesick and unconvinced by the project, and Milan are circling. Reality: the Robinho experiment fizzled and he drifted back to Italy on loan.',
+    stayMemory: 'Convinced Robinho to buy into the project — the statement signing kicks on rather than fading.',
+    leaveMemory: 'Robinho drifts back to Milan — the flagship of the takeover a flop, as it was.',
+  }),
+  contractSaga({
+    id: 'saga-ronaldinho-2008', scenario: 'barcelona-2003', club: 'barcelona', playerId: 'cur_ronaldinho_b3',
+    date: '2008-06', realStayed: false, suitor: 'milan',
+    title: "Ronaldinho's fade — time to cash in?",
+    blurb: 'The magician who lit up Camp Nou has let his fitness and focus slip as Messi rises. Reality: Barcelona sold him to Milan and handed the club to the young Argentine.',
+    stayMemory: 'Reignited Ronaldinho’s fire and kept him — the magician defies his real decline.',
+    leaveMemory: 'Ronaldinho is sold to Milan — the torch passed to Messi, exactly as it happened.',
+  }),
+  contractSaga({
+    id: 'saga-neymar-2017', scenario: 'barcelona-2014', club: 'barcelona', playerId: 'cur_neymar_b14',
+    date: '2017-07', realStayed: false, suitor: 'psg',
+    title: 'Neymar and the £198m clause',
+    blurb: 'PSG are ready to trigger the buy-out clause and make Neymar the most expensive player in history, out from Messi’s shadow to lead his own project. Reality: he went, and the £198m reshaped the market forever.',
+    stayMemory: 'Convinced Neymar to stay in Messi’s orbit — the record-breaking exit never happens.',
+    leaveMemory: 'Neymar joins PSG for £198m — the transfer that broke the market, made all over again.',
+  }),
+  contractSaga({
+    id: 'saga-suarez-2013', scenario: 'liverpool-2010', club: 'liverpool', playerId: 'cur_suarez_lv10',
+    date: '2013-07', realStayed: true, suitor: 'arsenal',
+    title: 'Suárez and the £40,000,001 bid',
+    blurb: 'Arsenal have tested a release-clause myth with a famous £40m-and-a-pound bid, and Luis Suárez wants Champions League football. Reality: Liverpool dug in, kept him, and he almost won them the title.',
+    stayMemory: 'Held Suárez against his wishes — and he stays to fire the title charge, as reality had it.',
+    leaveMemory: 'Suárez forces his move — Liverpool lose their talisman a year before they meant to.',
+  }),
+];
+
 const ALL_SCRIPTED: ScriptedEvent[] = [
   ...MAN_UTD_1999_PACK,
   ...LIVERPOOL_2001_PACK,
@@ -1196,6 +1398,7 @@ const ALL_SCRIPTED: ScriptedEvent[] = [
   ...BARCELONA_2014_PACK,
   ...BAYERN_1998_PACK,
   ...BAYERN_2009_PACK,
+  ...CONTRACT_SAGA_PACK,
 ];
 
 function fireScriptedEvents(state: GameState): void {
