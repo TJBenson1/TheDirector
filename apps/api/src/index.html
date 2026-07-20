@@ -264,7 +264,16 @@ async function extendFlow(id, name){
   try {
     const r = await fetch('/games/renew', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ state, playerId:id, years }) });
     const d = await r.json();
-    if(d.result && d.result.ok){ state=d.state; noteTurn(`Extend ${name}'s contract`, `${name} signs on until ${d.result.contractUntil}.`); bubble(`✓ ${name} extended to ${d.result.contractUntil}.`, 'sys'); saveLocal(); renderStatus(); showTab('squad'); }
+    if(d.result && d.result.ok){
+      state=d.state;
+      const rz = d.result;
+      const rise = (rz.wageWeekly!=null && rz.wageWeeklyBefore!=null)
+        ? ` — wages up to £${rz.wageWeekly}k/wk from £${rz.wageWeeklyBefore}k/wk (+${rz.raisePct}%)`
+        : '';
+      noteTurn(`Extend ${name}'s contract`, `${name} signs on until ${rz.contractUntil}${rise}.`);
+      bubble(`✓ ${name} signs to ${rz.contractUntil}${rise}. A new deal is never free — he's earned the rise.`, 'sys');
+      saveLocal(); renderStatus(); showTab('squad');
+    }
     else bubble('('+((d.result&&d.result.reason)||d.error||'could not extend')+')', 'sys');
   } catch(e){ bubble('(could not extend — try again)', 'sys'); }
 }

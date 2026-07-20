@@ -20,6 +20,7 @@ import {
   evaluateApproach,
   coachFit,
   currentYear,
+  suggestWage,
   narrativeContext,
   coachBriefing,
   managerRoom,
@@ -307,8 +308,21 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
       const p = s.players[String(input.playerId)];
       if (!p || p.club !== s.playerClub) return { state: s, result: { ok: false, reason: 'Not your player.' } };
       const n = Math.max(1, Math.min(5, Math.round(Number(input.years ?? 3))));
+      const wageBefore = p.wage;
       applyConsequence(s, { kind: 'renewContract', playerId: p.id, amount: n });
-      return { state: s, result: { ok: true, player: p.name, contractUntil: s.players[p.id]?.contractUntil } };
+      // A new deal is never free: the market rate for his ability, and a status rise
+      // that grows with the length of the deal (see the /games/renew endpoint).
+      const statusRise = Math.round(wageBefore * (1 + 0.06 * n));
+      p.wage = Math.max(p.wage, statusRise, suggestWage(p, currentYear(s)));
+      const wk = (annual: number) => Math.round(annual / 52 / 1000);
+      return {
+        state: s,
+        result: {
+          ok: true, player: p.name, contractUntil: s.players[p.id]?.contractUntil,
+          newWageWeekly: `£${wk(p.wage)}k/wk`, previousWageWeekly: `£${wk(wageBefore)}k/wk`,
+          note: `A new deal costs a rise — ${p.name} moves to £${wk(p.wage)}k/wk (from £${wk(wageBefore)}k/wk).`,
+        },
+      };
     }
 
     case 'let_lapse': {

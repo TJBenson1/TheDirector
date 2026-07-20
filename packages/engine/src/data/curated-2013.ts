@@ -80,6 +80,12 @@ export const MAN_UTD_2013: CuratedSeed[] = [
   q('man_utd', 'vanpersie', 'Robin van Persie', 1983, 'Netherlands', ['ST'], 87, 88, 2016, 60, t(8, 7, 9, 6, 5, 7)),
   q('man_utd', 'welbeck', 'Danny Welbeck', 1990, 'England', ['ST', 'LW'], 76, 84, 2015, 35, t(8, 4, 8, 8, 4, 7)),
   q('man_utd', 'chicharito', 'Javier Hernández', 1988, 'Mexico', ['ST'], 78, 82, 2016, 30, t(8, 5, 8, 6, 4, 7)),
+  // The academy kid about to break through — the one genuine bright spot of Moyes's
+  // season, an 18-year-old on a short deal United would race to tie down that autumn.
+  q('man_utd', 'januzaj', 'Adnan Januzaj', 1995, 'Belgium', ['LW', 'AM'], 71, 85, 2015, 20, t(6, 6, 8, 6, 6, 7)),
+  // Signed from Crystal Palace in Jan 2013 (~£15m) and folded in for 2013–14 before a
+  // January loan back to Cardiff — a wing talent who never got a look-in under Moyes.
+  q('man_utd', 'zaha', 'Wilfried Zaha', 1992, 'England', ['RW', 'LW'], 74, 84, 2018, 25, t(6, 7, 8, 6, 6, 6)),
 ];
 
 /** Manchester City, 2013–14 — Pellegrini's champions-to-be. */

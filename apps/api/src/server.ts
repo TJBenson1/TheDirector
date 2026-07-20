@@ -246,14 +246,35 @@ const routes: Record<string, Handler> = {
     return { state: s, view: buildView(s), result: result.ok ? { ...result, sated: sated?.cancelled ?? null } : result };
   },
 
-  // Renew a squad player for a chosen number of years (1–5).
+  // Renew a squad player for a chosen number of years (1–5). A new deal is never
+  // free: the player commands a rise. The engine's `renewContract` gives the
+  // calibration-safe +10% (the passive world keeps its real wage history); here, on
+  // a USER-initiated extension (never touched by the sim), we cost it properly — at
+  // least the going market rate for his ability, and a status rise that grows with
+  // the length of the deal, so tying down a marquee man is a real commitment.
   '/games/renew': ({ state, playerId, years }) => {
     const s = state as GameState;
     const p = s.players[playerId];
     if (!p || p.club !== s.playerClub) return { state: s, view: buildView(s), result: { ok: false, reason: 'Not your player.' } };
     const n = Math.max(1, Math.min(5, Math.round(Number(years ?? 3))));
+    const wageBefore = p.wage;
     applyConsequence(s, { kind: 'renewContract', playerId, amount: n });
-    return { state: s, view: buildView(s), result: { ok: true, playerId, years: n, contractUntil: s.players[playerId]?.contractUntil } };
+    // The real cost of a new deal: the market rate for his ability today, and a
+    // longer deal commands a bigger rise (roughly +6% per guaranteed year).
+    const year = currentYear(s);
+    const statusRise = Math.round(wageBefore * (1 + 0.06 * n));
+    p.wage = Math.max(p.wage, statusRise, suggestWage(p, year));
+    const wk = (annual: number) => Math.round(annual / 52 / 1000);
+    return {
+      state: s,
+      view: buildView(s),
+      result: {
+        ok: true, playerId, years: n,
+        contractUntil: s.players[playerId]?.contractUntil,
+        wageWeekly: wk(p.wage), wageWeeklyBefore: wk(wageBefore),
+        raisePct: wageBefore > 0 ? Math.round(((p.wage - wageBefore) / wageBefore) * 100) : 0,
+      },
+    };
   },
 
   '/games/scout': ({ state, playerId }) => {
