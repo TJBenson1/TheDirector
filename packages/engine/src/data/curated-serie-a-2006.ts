@@ -37,6 +37,10 @@ function q(
 // ── Juventus, 2006–07 (Serie B; the legends who stayed to rebuild) ────────────
 export const JUVENTUS_2006: CuratedSeed[] = [
   q('juventus', 'buffon_06', 'Gianluigi Buffon', 1978, 'Italy', ['GK'], 90, 90, 2011, 20, t(10, 6, 9, 10, 4, 7), { loyalty: 97, hardBlocks: [{ reason: 'Buffon stayed in Serie B — a captain does not desert the Old Lady.', untilYear: 2008 }] }),
+  // Real 2006–07 Serie B Juventus: the loyalists who stayed down to win promotion.
+  q('juventus', 'legrottaglie06', 'Nicola Legrottaglie', 1976, 'Italy', ['CB'], 78, 79, 2010, 30, t(8, 5, 7, 7, 5, 7)),
+  q('juventus', 'czanetti06', 'Cristiano Zanetti', 1977, 'Italy', ['DM', 'CM'], 78, 79, 2009, 40, t(8, 5, 7, 7, 5, 7)),
+  q('juventus', 'paro06', 'Matteo Paro', 1983, 'Italy', ['CM'], 70, 74, 2009, 25, t(7, 4, 7, 7, 4, 7)),
   q('juventus', 'chimenti', 'Antonio Chimenti', 1970, 'Italy', ['GK'], 72, 72, 2008, 25, t(8, 4, 6, 8, 4, 6)),
   q('juventus', 'zebina_06', 'Jonathan Zebina', 1978, 'France', ['RB', 'CB'], 76, 77, 2009, 25, t(6, 6, 7, 7, 6, 6)),
   q('juventus', 'chiellini_06', 'Giorgio Chiellini', 1984, 'Italy', ['CB', 'LB'], 80, 89, 2012, 20, t(9, 6, 9, 10, 5, 7), { loyalty: 95 }),

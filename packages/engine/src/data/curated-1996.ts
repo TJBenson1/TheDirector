@@ -89,6 +89,8 @@ export const LIVERPOOL_1996: CuratedSeed[] = [
 // ── Chelsea, 1996–97 (Gullit player-manager; FA Cup winners) ──────────────────
 export const CHELSEA_1996: CuratedSeed[] = [
   q('chelsea', 'grodas_c96', 'Frode Grodås', 1964, 'Norway', ['GK'], 76, 76, 1998, 25, t(7, 5, 6, 7, 5, 6)),
+  // Real 1996–97 Chelsea: the Russian who was first-choice keeper before injury.
+  q('chelsea', 'kharine96', 'Dmitri Kharine', 1968, 'Russia', ['GK'], 75, 76, 1998, 40, t(6, 4, 5, 7, 4, 6)),
   q('chelsea', 'petrescu_c96', 'Dan Petrescu', 1967, 'Romania', ['RB', 'RW'], 79, 80, 2000, 25, t(8, 5, 7, 6, 5, 7)),
   q('chelsea', 'leboeuf_c96', 'Frank Leboeuf', 1968, 'France', ['CB'], 81, 82, 2000, 25, t(8, 6, 7, 7, 5, 7)),
   q('chelsea', 'sinclair_c96', 'Frank Sinclair', 1971, 'Jamaica', ['CB', 'RB'], 76, 78, 1999, 25, t(7, 5, 7, 7, 5, 7)),

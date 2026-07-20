@@ -86,6 +86,8 @@ export const MAN_UTD_2013: CuratedSeed[] = [
   // Signed from Crystal Palace in Jan 2013 (~£15m) and folded in for 2013–14 before a
   // January loan back to Cardiff — a wing talent who never got a look-in under Moyes.
   q('man_utd', 'zaha', 'Wilfried Zaha', 1992, 'England', ['RW', 'LW'], 74, 84, 2018, 25, t(6, 7, 8, 6, 6, 6)),
+  // The window's only signing — the chaotic £27.5m deadline-day scramble from Everton.
+  q('man_utd', 'fellaini', 'Marouane Fellaini', 1987, 'Belgium', ['CM', 'DM'], 78, 80, 2018, 25, t(7, 6, 7, 6, 6, 6)),
 ];
 
 /** Manchester City, 2013–14 — Pellegrini's champions-to-be. */
@@ -165,6 +167,9 @@ export const LIVERPOOL_2013: CuratedSeed[] = [
 /** Tottenham, 2013–14 — Bale is the marquee target (else he leaves via the ledger). */
 export const SPURS_2013: CuratedSeed[] = [
   q('spurs', 'lloris', 'Hugo Lloris', 1986, 'France', ['GK'], 84, 87, 2017, 20, t(9, 5, 8, 8, 4, 7)),
+  // The "Bale money" marquee arrivals of summer 2013 — the creator and the No.9 AVB built around.
+  q('spurs', 'eriksen13', 'Christian Eriksen', 1992, 'Denmark', ['AM', 'CM'], 79, 88, 2018, 20, t(8, 5, 8, 6, 4, 7)),
+  q('spurs', 'soldado13', 'Roberto Soldado', 1985, 'Spain', ['ST'], 79, 81, 2017, 25, t(7, 5, 7, 6, 5, 6)),
   q('spurs', 'kwalker', 'Kyle Walker', 1990, 'England', ['RB'], 80, 86, 2016, 30, t(7, 6, 8, 7, 5, 7)),
   q('spurs', 'vertonghen', 'Jan Vertonghen', 1987, 'Belgium', ['CB', 'LB'], 83, 85, 2018, 25, t(8, 5, 8, 7, 4, 7)),
   q('spurs', 'dawson', 'Michael Dawson', 1983, 'England', ['CB'], 79, 80, 2015, 35, t(8, 5, 8, 8, 4, 6)),

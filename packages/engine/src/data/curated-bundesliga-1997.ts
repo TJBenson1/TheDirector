@@ -45,6 +45,10 @@ function q(
 // ── Borussia Dortmund, 1996–97 (Hitzfeld; the reigning European champions, ageing) ─
 export const DORTMUND_1997: CuratedSeed[] = [
   q('dortmund', 'klos_97', 'Stefan Klos', 1971, 'Germany', ['GK'], 80, 82, 2001, 20, t(8, 6, 8, 8, 5, 7)),
+  // Real 1997 CL-winning Dortmund: the Brazilian stopper and the Portuguese metronome
+  // (signed from Juventus in 1996) at the heart of the European Cup side.
+  q('dortmund', 'juliocesar97', 'Júlio César', 1963, 'Brazil', ['CB'], 80, 80, 1999, 30, t(8, 4, 7, 7, 4, 6)),
+  q('dortmund', 'sousa_d97', 'Paulo Sousa', 1970, 'Portugal', ['DM', 'CM'], 82, 82, 1999, 30, t(9, 5, 8, 6, 4, 7)),
   q('dortmund', 'reuter_97', 'Stefan Reuter', 1966, 'Germany', ['RB', 'RW'], 80, 80, 2000, 20, t(9, 5, 8, 9, 4, 7), { loyalty: 90 }),
   q('dortmund', 'kohler_97', 'Jürgen Kohler', 1965, 'Germany', ['CB'], 83, 83, 2000, 25, t(9, 6, 8, 9, 5, 6), { loyalty: 90 }),
   q('dortmund', 'sammer_97', 'Matthias Sammer', 1967, 'Germany', ['CB', 'DM'], 86, 86, 2000, 35, t(9, 7, 9, 9, 5, 7), { loyalty: 90 }),

@@ -6,7 +6,12 @@
 import { describe, it, expect } from 'vitest';
 import { SCENARIOS, getScenario } from './scenarios.js';
 import { createNewGame, hashState } from './state.js';
+import { clubSquadPlayers } from './players.js';
+import { realInboundThisWindow } from './recommend.js';
 import type { ScenarioId } from './types.js';
+
+const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[ðđ]/g, 'd').replace(/þ/g, 'th').toLowerCase().replace(/[^a-z ]/g, '').trim();
+const xiName = (entry: string) => { const sp = entry.indexOf(' '); return sp === -1 ? entry : entry.slice(sp + 1); };
 
 const POS = new Set([
   'GK', 'RB', 'LB', 'CB', 'RWB', 'LWB', 'WB', 'SW',
@@ -32,6 +37,24 @@ describe('curated opening briefings', () => {
       for (const entry of o.firstEleven) {
         const pos = entry.slice(0, entry.indexOf(' ')).toUpperCase();
         expect(POS.has(pos), `${id}: bad position "${pos}" in "${entry}"`).toBe(true);
+      }
+    }
+  });
+
+  it('every opening XI player exists in the squad or arrives via the real ledger', () => {
+    // A shipped opening must not name a starter the squad data doesn't have (the risk
+    // when the XIs assume a differently-built squad). Guards the openings↔squads join.
+    for (const id of Object.keys(SCENARIOS) as ScenarioId[]) {
+      const o = getScenario(id).opening!;
+      const s = createNewGame({ scenarioId: id, seed: 'xi' });
+      const available = new Set(
+        [...clubSquadPlayers(s, s.playerClub).map((p) => p.name), ...realInboundThisWindow(s).map((r) => r.name)].map(norm),
+      );
+      const surnames = new Set([...available].map((n) => n.split(' ').slice(-1)[0]));
+      for (const entry of o.firstEleven) {
+        const n = norm(xiName(entry));
+        const ok = available.has(n) || surnames.has(n.split(' ').slice(-1)[0]);
+        expect(ok, `${id}: XI names "${xiName(entry)}" but no such player in squad/inbound`).toBe(true);
       }
     }
   });

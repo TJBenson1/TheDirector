@@ -29,6 +29,8 @@ function q(
 /** Liverpool, 2001–02 — the treble winners, with Anelka on loan. */
 export const LIVERPOOL_2001: CuratedSeed[] = [
   q('liverpool', 'dudek', 'Jerzy Dudek', 1973, 'Poland', ['GK'], 80, 82, 2006, 25, t(7, 5, 7, 7, 5, 7)),
+  // Real 2001–02 Liverpool: the incumbent keeper who started the season as No.1.
+  q('liverpool', 'westerveld01', 'Sander Westerveld', 1974, 'Netherlands', ['GK'], 78, 80, 2004, 25, t(7, 6, 7, 6, 6, 7)),
   q('liverpool', 'babbel', 'Markus Babbel', 1972, 'Germany', ['RB', 'CB'], 81, 82, 2005, 40, t(8, 5, 8, 7, 4, 7)),
   q('liverpool', 'henchoz', 'Stéphane Henchoz', 1974, 'Switzerland', ['CB'], 80, 81, 2005, 30, t(8, 4, 7, 7, 4, 6)),
   q('liverpool', 'hyypia01', 'Sami Hyypiä', 1973, 'Finland', ['CB'], 83, 84, 2006, 20, t(9, 4, 7, 8, 3, 7)),

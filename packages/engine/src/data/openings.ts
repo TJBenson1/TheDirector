@@ -259,7 +259,7 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     firstEleven: [
       'GK Carlo Cudicini', 'RB Mario Melchiot', 'CB John Terry', 'CB William Gallas',
       'LB Wayne Bridge', 'RM Damien Duff', 'CM Claude Makélélé', 'CM Frank Lampard',
-      'LM Joe Cole', 'ST Hernán Crespo', 'ST Eidur Gudjohnsen',
+      'LM Joe Cole', 'ST Hernán Crespo', 'ST Eiður Guðjohnsen',
     ],
     fringe: [
       'Claude Makélélé — the £16m capture from Real Madrid, the pivot who’d define the era.',
@@ -276,7 +276,7 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     formation: '4-3-3',
     firstEleven: [
       'GK Víctor Valdés', 'RB Michael Reiziger', 'CB Carles Puyol', 'CB Rafael Márquez',
-      'LB Giovanni van Bronckhorst', 'CM Xavi Hernández', 'CM Phillip Cocu', 'CM Gerard López',
+      'LB Giovanni van Bronckhorst', 'CM Xavi', 'CM Phillip Cocu', 'CM Gerard López',
       'RW Javier Saviola', 'CF Patrick Kluivert', 'LW Ronaldinho',
     ],
     fringe: [
@@ -509,7 +509,7 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     coach: 'David Moyes',
     formation: '4-2-3-1 / 4-4-2',
     firstEleven: [
-      'GK David de Gea', 'RB Rafael', 'CB Rio Ferdinand', 'CB Nemanja Vidić',
+      'GK David de Gea', 'RB Rafael da Silva', 'CB Rio Ferdinand', 'CB Nemanja Vidić',
       'LB Patrice Evra', 'RM Antonio Valencia', 'CM Michael Carrick', 'CM Marouane Fellaini',
       'LM Shinji Kagawa', 'ST Wayne Rooney', 'ST Robin van Persie',
     ],

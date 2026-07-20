@@ -37,6 +37,9 @@ function q(
 // ── Manchester City, 2008–09 (the takeover; a mid-table club made rich overnight) ─
 export const MANCITY_2008: CuratedSeed[] = [
   q('man_city', 'given_c8', 'Shay Given', 1976, 'Ireland', ['GK'], 83, 83, 2012, 20, t(9, 5, 8, 8, 5, 7)),
+  // Real 2008–09 Man City (pre-takeover Mark Hughes side): the full-back pairing.
+  q('man_city', 'benhaim08', 'Tal Ben Haim', 1982, 'Israel', ['CB'], 73, 75, 2011, 28, t(7, 6, 7, 6, 6, 6)),
+  q('man_city', 'garrido08', 'Javier Garrido', 1985, 'Spain', ['LB'], 72, 76, 2012, 25, t(7, 5, 7, 7, 5, 7)),
   q('man_city', 'hart_c8', 'Joe Hart', 1987, 'England', ['GK'], 76, 87, 2013, 15, t(8, 6, 8, 8, 5, 7)),
   q('man_city', 'richards_c8', 'Micah Richards', 1988, 'England', ['RB', 'CB'], 79, 85, 2013, 25, t(7, 6, 8, 8, 6, 7)),
   q('man_city', 'dunne_c8', 'Richard Dunne', 1979, 'Ireland', ['CB'], 80, 80, 2011, 25, t(8, 5, 8, 9, 5, 7), { loyalty: 88 }),
@@ -49,6 +52,8 @@ export const MANCITY_2008: CuratedSeed[] = [
   q('man_city', 'petrov_c8', 'Martin Petrov', 1979, 'Bulgaria', ['LW'], 78, 79, 2011, 25, t(7, 6, 8, 7, 5, 7)),
   q('man_city', 'wright_phillips', 'Shaun Wright-Phillips', 1981, 'England', ['RW'], 79, 81, 2012, 20, t(7, 6, 8, 8, 5, 7)),
   q('man_city', 'robinho_c8', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 84, 86, 2013, 25, t(5, 8, 8, 5, 6, 7)),
+  // Real 2008–09 Man City: the £19m CSKA Moscow striker who led the line beside Robinho.
+  q('man_city', 'jo_c8', 'Jô', 1987, 'Brazil', ['ST'], 74, 80, 2012, 25, t(6, 6, 7, 6, 6, 6)),
   q('man_city', 'caicedo', 'Felipe Caicedo', 1988, 'Ecuador', ['ST'], 74, 80, 2013, 20, t(6, 6, 8, 7, 6, 7)),
   q('man_city', 'sturridge_c8', 'Daniel Sturridge', 1989, 'England', ['ST'], 74, 86, 2012, 25, t(6, 7, 8, 6, 6, 8)),
   // Real 2008-09 depth to the era minimum (Elano's creativity, Ćorluka's defensive

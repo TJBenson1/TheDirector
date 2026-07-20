@@ -37,6 +37,8 @@ function q(
 // ── Internazionale, 2004–05 (Mancini; Adriano's peak; the nearly-men) ─────────
 export const INTER_2004: CuratedSeed[] = [
   q('inter', 'toldo_04', 'Francesco Toldo', 1971, 'Italy', ['GK'], 84, 84, 2008, 20, t(8, 5, 8, 8, 4, 6)),
+  // Real 2004–05 Inter: the Argentine defender who filled in across the back line.
+  q('inter', 'burdisso04i', 'Nicolás Burdisso', 1981, 'Argentina', ['CB', 'RB'], 78, 83, 2009, 30, t(8, 5, 7, 7, 6, 7)),
   q('inter', 'cesar_04', 'Júlio César', 1979, 'Brazil', ['GK'], 80, 88, 2010, 20, t(9, 5, 8, 8, 4, 7)),
   q('inter', 'zanetti_04', 'Javier Zanetti', 1973, 'Argentina', ['RB', 'CM'], 87, 87, 2009, 15, t(10, 5, 9, 10, 3, 8), { loyalty: 97 }),
   q('inter', 'cordoba_04', 'Iván Córdoba', 1976, 'Colombia', ['CB'], 82, 83, 2009, 25, t(8, 5, 8, 8, 5, 7)),

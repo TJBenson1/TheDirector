@@ -42,6 +42,8 @@ function q(
 // ── Liverpool, 1995–96 (Roy Evans; the Spice Boys — talent and swagger) ───────
 export const LIVERPOOL_1995: CuratedSeed[] = [
   q('liverpool', 'james_95', 'David James', 1970, 'England', ['GK'], 79, 82, 1999, 30, t(6, 6, 7, 7, 6, 6)),
+  // Real 1995–96 Liverpool: Roy Evans's attacking left wing-back in the 3-5-2.
+  q('liverpool', 'harkness_95', 'Steve Harkness', 1971, 'England', ['LB', 'CB'], 72, 74, 1999, 40, t(6, 5, 5, 7, 5, 6)),
   q('liverpool', 'mcateer_95', 'Jason McAteer', 1971, 'Ireland', ['RB', 'CM'], 76, 79, 1999, 30, t(7, 6, 7, 6, 5, 7)),
   q('liverpool', 'rjones_95', 'Rob Jones', 1971, 'England', ['RB'], 77, 80, 1998, 45, t(8, 4, 7, 9, 4, 7)),
   q('liverpool', 'scales_95', 'John Scales', 1966, 'England', ['CB'], 77, 78, 1998, 25, t(8, 5, 7, 7, 4, 7)),

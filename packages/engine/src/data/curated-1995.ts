@@ -36,6 +36,8 @@ function q(
 // ── Juventus, 1995–96 (Lippi; reigning champions, European Cup to come) ───────
 export const JUVENTUS_1995: CuratedSeed[] = [
   q('juventus', 'peruzzi', 'Angelo Peruzzi', 1970, 'Italy', ['GK'], 85, 86, 1999, 25, t(8, 6, 8, 8, 5, 6)),
+  // Real 1995–96 Juventus: the veteran Sampdoria libero who anchored the CL-winning back line.
+  q('juventus', 'vierchowod95', 'Pietro Vierchowod', 1959, 'Italy', ['CB'], 80, 80, 1997, 38, t(9, 4, 6, 8, 4, 6)),
   q('juventus', 'rampulla', 'Michelangelo Rampulla', 1962, 'Italy', ['GK'], 74, 74, 1998, 25, t(8, 4, 5, 8, 4, 6)),
   q('juventus', 'ferrara', 'Ciro Ferrara', 1967, 'Italy', ['CB'], 85, 86, 1999, 25, t(9, 5, 8, 8, 4, 7)),
   q('juventus', 'kohler', 'Jürgen Kohler', 1965, 'Germany', ['CB'], 84, 84, 1998, 30, t(8, 5, 8, 6, 5, 7)),
