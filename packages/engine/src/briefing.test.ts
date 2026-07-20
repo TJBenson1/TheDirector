@@ -18,6 +18,17 @@ describe('coachBriefing', () => {
     expect(b.priority.length).toBeGreaterThan(0);
   });
 
+  it('benches a coach castoff behind a viable alternative but keeps him in the squad', () => {
+    // Lippi wants Baggio gone: Del Piero starts up front, Baggio drops out of the
+    // XI — yet he is still on the books (a castoff is demoted, not deleted).
+    const s = createNewGame({ scenarioId: 'juventus-1995', seed: 'bench' });
+    const b = coachBriefing(s);
+    expect(b.bestXI.some((x) => x.name === 'Alessandro Del Piero')).toBe(true);
+    expect(b.bestXI.some((x) => x.name === 'Roberto Baggio')).toBe(false);
+    // Still in the world, not dropped from the squad.
+    expect(Object.values(s.players).some((p) => p.name === 'Roberto Baggio' && p.club === s.playerClub)).toBe(true);
+  });
+
   it('starts a specialist in his own position, not out wide', () => {
     // Inter 1998: Ronaldo is a striker and must appear at ST, never shunted to a
     // wing by slot ordering.

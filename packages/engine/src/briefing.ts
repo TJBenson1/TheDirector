@@ -84,20 +84,37 @@ function priorityFor(state: GameState): string {
   return prestige >= 84 ? 'silverware on both fronts' : 'a strong, competitive league campaign';
 }
 
+/** How the coach's read of a player nudges his place in the pecking order. A man
+ *  he covets edges ahead of a like-for-like; one he has doubts about slips; and a
+ *  documented castoff he wants gone (Lippi's Baggio) drops far enough to sit behind
+ *  any viable alternative — yet still starts if he is genuinely the only option, as
+ *  a coach fields who he has. Ability still leads; this only breaks close calls. */
+function coachPecking(coach: GameState['managerRelations'], player: PlayerState): number {
+  switch (coachFit(coach, player).verdict) {
+    case 'wants': return 3;
+    case 'fine': return 0;
+    case 'reluctant': return -4;
+    case 'veto': return -14; // benched behind any comparable option
+  }
+}
+
 /** Pick a best XI for the coach's shape. Two passes so a specialist lands in his
  *  own slot before a like-for-like grabs him: pass one fills each slot with the
  *  best NATURAL fit (a striker to a striker's slot), pass two fills what's left
- *  with the best remaining cover — so Ronaldo starts up front, not out on a wing. */
+ *  with the best remaining cover — so Ronaldo starts up front, not out on a wing.
+ *  Ordering folds in the coach's preference (a castoff he wants sold drops down the
+ *  pecking order) while the displayed rating stays the player's true ability. */
 function bestEleven(state: GameState, formation: Formation): BriefingXI[] {
   const slots = FORMATION_SLOTS[formation] ?? FORMATION_SLOTS['4-4-2'];
+  const coach = state.managerRelations;
   const squad = clubSquadPlayers(state, state.playerClub)
     .filter((p) => !p.injury)
-    .map((p) => ({ p, eff: effectiveAbility(p) }))
-    .sort((a, b) => b.eff - a.eff);
+    .map((p) => ({ p, eff: effectiveAbility(p), rank: effectiveAbility(p) + coachPecking(coach, p) }))
+    .sort((a, b) => b.rank - a.rank);
   const used = new Set<string>();
   const filled: Array<BriefingXI | null> = slots.map(() => null);
 
-  // Pass 1: natural fits only, highest-rated first.
+  // Pass 1: natural fits only, highest-ranked first.
   slots.forEach((slot, i) => {
     const pick = squad.find((r) => !used.has(r.p.id) && r.p.positions.includes(slot));
     if (pick) {
