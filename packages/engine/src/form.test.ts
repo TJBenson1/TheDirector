@@ -25,7 +25,7 @@ describe('mid-season form report', () => {
     expect(f.players.length).toBeGreaterThan(10);
     for (const p of f.players) {
       expect(p.note.length).toBeGreaterThan(0);
-      expect(['flying', 'solid', 'struggling', 'adapting', 'fringe', 'injured']).toContain(p.flag);
+      expect(['flying', 'solid', 'struggling', 'adapting', 'misfit', 'logjam', 'fringe', 'injured']).toContain(p.flag);
       expect(p.minutesPct).toBeGreaterThanOrEqual(0);
     }
     // A first-choice striker at a strong side is banging them in — flagged flying.

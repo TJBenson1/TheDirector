@@ -332,7 +332,7 @@ function renderPanel(tab){
   if(tab==='squad'){
     const fm = p.form; let formCard = '';
     if(fm && fm.underway){
-      const icon = { flying:'🔥', struggling:'⚠️', adapting:'🌱', fringe:'🪑', injured:'🩹' };
+      const icon = { flying:'🔥', misfit:'🧩', adapting:'🌱', logjam:'⛔', struggling:'⚠️', fringe:'🪑', injured:'🩹' };
       const notable = fm.players.filter(x=>x.flag!=='solid');
       formCard = `<div class="card"><h3>Form <span class="sub">${fm.roundsPlayed} games in</span></h3>` +
         (notable.length ? notable.slice(0,10).map(x=>`<div class="ibx"><b>${icon[x.flag]||''} ${esc(x.name)}</b> <span class="sub">${x.goals}g/${x.assists}a · ${x.minutesPct}% mins</span><div class="sub">${esc(x.note)}</div></div>`).join('')
