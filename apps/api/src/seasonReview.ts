@@ -16,9 +16,32 @@ import {
   standingsOrder,
   narrativeContext,
   divergenceFactor,
+  memoriesWithTag,
   type GameState,
 } from '@director/engine';
 import type { BeatKind } from './narrate.js';
+
+/**
+ * The Reality Register beats that have landed recently — the contract sagas,
+ * near-misses, career forks and injuries the Director has lived through, and how each
+ * resolved against history. Threaded into every season beat so these are a MAJOR part
+ * of the story the narrator tells, not silent log lines. Most recent first.
+ */
+function recentRegisterBeats(state: GameState, sinceMonths = 14): string[] {
+  const tags = ['contract-saga', 'near-miss', 'career-arc', 'injury', 'transfer-near-miss'];
+  const nowIdx = Number(state.clock.date.slice(0, 4)) * 12 + Number(state.clock.date.slice(5, 7));
+  const beats: { date: string; detail: string }[] = [];
+  for (const tag of tags) {
+    for (const m of memoriesWithTag(state, tag)) {
+      const idx = Number(m.date.slice(0, 4)) * 12 + Number(m.date.slice(5, 7));
+      if (nowIdx - idx <= sinceMonths) beats.push({ date: m.date, detail: m.detail });
+    }
+  }
+  return beats
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .slice(0, 6)
+    .map((b) => b.detail);
+}
 
 interface ReviewData {
   finish: number;
@@ -110,6 +133,10 @@ export function beatFacts(
     realHistoryMapping: ctx.reality, // how this counterfactual maps to what really happened
     hasReshapedFromReality: divergenceFactor(state) > 0,
     armsRace,
+    // The Reality Register beats lived through lately — the will-they-won't-they
+    // renewals, near-misses, career forks and injuries, each resolved with or against
+    // history. A headline seam of the story, so the narrator leans on it.
+    realityRegister: recentRegisterBeats(state),
     threads: ctx.threads,
   };
 

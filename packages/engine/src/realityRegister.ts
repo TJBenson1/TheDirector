@@ -166,3 +166,39 @@ export function careerFulfilmentOdds(
 
   return clamp01(p) * 0.9 + 0.05;
 }
+
+// Note: the "swoop first, or the rival lands the man they missed" transfer near-miss
+// is already served by the live opening-window gazump (M12A/C) — real ledger deals
+// (Thiago→Bayern, Ronaldinho→Barça, …) are offered for the Director to hijack as they
+// open, which a date-fired scripted beat can't do (the deal has already resolved by
+// the time a later month fires). So there is no separate transfer-near-miss factor.
+
+/**
+ * The probability a real career-altering injury is SEEN OFF cleanly — the injury
+ * register going the other way. History rushed men back to break down for good
+ * (Ronaldo's six minutes, Sammer's knee, Owen's hamstrings); a Director with a big
+ * club's medical resources, a squad deep enough not to rush him, and the sense to
+ * protect a young or fragile body gives him a real chance the damage never sticks.
+ * Push a fragile, injury-prone veteran through it and the odds collapse, as they did.
+ */
+export function injuryRecoveryOdds(
+  state: GameState,
+  player: PlayerState,
+  opts: { rushed?: boolean } = {},
+): number {
+  const club = player.club ? state.clubs[player.club] : undefined;
+  let p = 0.5;
+
+  // A bigger, richer club's medicine and sports science — the strongest lever.
+  if (club) p += ((club.strength - 80) / 20) * 0.16;
+
+  // Body and history: age and a proneness to breaking down both erode the odds.
+  const age = yearOf(state) - player.birthYear;
+  p -= age >= 32 ? 0.16 : age >= 29 ? 0.08 : age <= 21 ? 0.04 : 0; // the young heal, the old don't
+  p -= Math.min(0.2, (player.injuryProneness / 100) * 0.28);
+
+  // Rushing him back for a run-in is how the great ones were wrecked.
+  if (opts.rushed) p -= 0.22;
+
+  return clamp01(p) * 0.9 + 0.05;
+}

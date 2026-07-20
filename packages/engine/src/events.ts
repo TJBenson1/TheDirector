@@ -33,7 +33,7 @@ import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 import { executeTransfer } from './transfers.js';
 import { clubSquadPlayers, recomputeClubStrength } from './players.js';
 import { valuePlayer, suggestWage } from './finance.js';
-import { contractRetentionOdds, sagaFee, feeMillions, sportingRewriteOdds, careerFulfilmentOdds } from './realityRegister.js';
+import { contractRetentionOdds, sagaFee, feeMillions, sportingRewriteOdds, careerFulfilmentOdds, injuryRecoveryOdds } from './realityRegister.js';
 
 /**
  * Dressing-room wage parity (§ internal friction). Football wages only ratchet
@@ -204,6 +204,20 @@ export function applyConsequence(state: GameState, c: Consequence): void {
       const league = club?.leagueId ? state.leagues[club.leagueId] : undefined;
       const rec = league && c.clubId ? league.standings[c.clubId] : undefined;
       if (rec) rec.points = Math.max(0, rec.points - (c.amount ?? 0));
+      break;
+    }
+    case 'ban': {
+      // A player sidelined for N months (an injury-class absence, or a suspension).
+      // Modelled as an injury so the squad actually loses him — his strength drops out
+      // and he's unavailable — rather than the consequence silently doing nothing.
+      const p = c.playerId ? state.players[c.playerId] : undefined;
+      if (p) {
+        const months = Math.max(1, c.months ?? 1);
+        const kind = months >= 6 ? 'serious' : months >= 2 ? 'moderate' : 'minor';
+        p.injury = { kind, monthsRemaining: months, since: state.clock.date };
+        if (kind === 'serious') p.injuryHistory += 1;
+        if (p.club) recomputeClubStrength(state, p.club);
+      }
       break;
     }
     case 'memory':
@@ -1627,6 +1641,114 @@ const CAREER_NEAR_MISS_PACK: ScriptedEvent[] = [
   }),
 ];
 
+// ── The marquee injury register: the injuries that can go the other way ───────
+// The career-altering injuries of the era, staged as a rush-or-protect fork whose
+// outcome the factors decide. `injuryRecoveryOdds` reads the club's medical muscle,
+// the man's age and how injury-prone he is, and whether you're rushing him back — so
+// a big club that protects a young body can spare him the fate reality dealt, while a
+// fragile veteran forced back for a run-in breaks down for good, exactly as he did.
+// (These sit alongside the raw real-injury register in ledger.ts, which fires the
+// smaller, background injuries of each era on their true dates.)
+
+interface InjuryBeatCfg {
+  id: string;
+  scenario: string;
+  club: ClubState['id'];
+  playerId: string;
+  date: string;
+  outMonths: number; // the initial lay-off before the rush-or-protect call
+  title: string;
+  blurb: string;
+  sparedMemory: string;
+  wreckedMemory: string;
+}
+
+/** Build an injury beat: rush him back and risk the career, or protect the man. */
+function injuryBeat(cfg: InjuryBeatCfg): ScriptedEvent {
+  return {
+    id: cfg.id,
+    date: cfg.date,
+    scenarios: [cfg.scenario],
+    requires: (s) => playerAt(s, cfg.playerId, cfg.club) && s.playerClub === cfg.club,
+    build: (s) => {
+      const p = s.players[cfg.playerId]!;
+      const rushOdds = injuryRecoveryOdds(s, p, { rushed: true });
+      const protectOdds = injuryRecoveryOdds(s, p, { rushed: false });
+      const spared = [
+        { kind: 'ability' as const, playerId: cfg.playerId, amount: -1 },
+        { kind: 'ban' as const, playerId: cfg.playerId, months: Math.max(1, Math.round(cfg.outMonths / 2)) },
+        { kind: 'memory' as const, tag: 'injury', text: cfg.sparedMemory },
+      ];
+      const wrecked = [
+        { kind: 'ban' as const, playerId: cfg.playerId, months: cfg.outMonths + 4 },
+        { kind: 'ability' as const, playerId: cfg.playerId, amount: -6 },
+        { kind: 'memory' as const, tag: 'injury', text: cfg.wreckedMemory },
+      ];
+      return {
+        id: `register:${cfg.id}`,
+        title: cfg.title,
+        description: cfg.blurb,
+        interrupt: true,
+        clubId: cfg.club,
+        category: 'event',
+        choices: [
+          {
+            id: 'rush',
+            label: 'Rush him back — you need him now',
+            successProbability: rushOdds,
+            onSuccess: [{ kind: 'ban', playerId: cfg.playerId, months: Math.max(1, Math.round(cfg.outMonths / 2)) }, { kind: 'memory', tag: 'injury', text: cfg.sparedMemory }],
+            onFailure: wrecked,
+          },
+          {
+            id: 'protect',
+            label: 'Protect him — best specialists, a full rehab',
+            successProbability: protectOdds,
+            onSuccess: spared,
+            onFailure: [{ kind: 'ban', playerId: cfg.playerId, months: cfg.outMonths }, { kind: 'ability', playerId: cfg.playerId, amount: -3 }, { kind: 'memory', tag: 'injury', text: cfg.wreckedMemory }],
+          },
+        ],
+        falloutIfIgnored: protectOdds >= 0.5 ? spared : wrecked,
+        memoryTags: ['injury', cfg.playerId],
+      };
+    },
+  };
+}
+
+const INJURY_BEAT_PACK: ScriptedEvent[] = [
+  injuryBeat({
+    id: 'injury-owen-2003', scenario: 'liverpool-2001', club: 'liverpool', playerId: 'cur_owen01',
+    date: '2003-02', outMonths: 3,
+    title: 'Owen’s hamstring — the pace under threat',
+    blurb: 'Michael Owen’s explosive pace is his whole game, and a recurring hamstring has flared again. Reality: the tears kept coming and the blistering acceleration was never quite the same. Manage his load and protect the burst, or push the goalscorer straight back in?',
+    sparedMemory: 'Managed Owen’s hamstrings carefully — the explosive pace preserved, unlike reality’s slow erosion.',
+    wreckedMemory: 'Owen’s hamstrings keep tearing and the blistering pace fades — the striker diminished, as it went.',
+  }),
+  injuryBeat({
+    id: 'injury-rvp-2006', scenario: 'arsenal-2004', club: 'arsenal', playerId: 'cur_rvp',
+    date: '2006-01', outMonths: 4,
+    title: 'Van Persie’s fragile years',
+    blurb: 'Robin van Persie has all the talent in the world but a body that keeps letting him down — another injury has struck. Reality: years of stop-start seasons before he finally stayed fit and became prolific. Wrap him in cotton wool, or trust him to play through it?',
+    sparedMemory: 'Nursed Van Persie through his fragile years — he stays fit and delivers early, sparing the lost seasons.',
+    wreckedMemory: 'Van Persie breaks down again — the brilliant talent lost to the treatment table for years, as it was.',
+  }),
+  injuryBeat({
+    id: 'injury-robben-2010', scenario: 'bayern-2009', club: 'bayern', playerId: 'cur_robben_09',
+    date: '2010-03', outMonths: 2,
+    title: 'Robben’s hamstrings before the big games',
+    blurb: 'Arjen Robben is unplayable when fit, but his hamstrings have a habit of going at the worst moments — one has tightened again with the season’s biggest games looming. Reality: he pulled up in finals and deciders time and again. Rest him and miss him now, or risk him for the run-in?',
+    sparedMemory: 'Rested Robben and kept him whole for the finals — the difference-maker fit when it mattered most.',
+    wreckedMemory: 'Robben’s hamstring goes again at the worst time — brilliance undone by fitness, as it so often was.',
+  }),
+  injuryBeat({
+    id: 'injury-king-2004', scenario: 'spurs-2001', club: 'spurs', playerId: 'cur_king01',
+    date: '2004-01', outMonths: 3,
+    title: 'Ledley King’s knee — no cartilage left',
+    blurb: 'Ledley King, the most gifted defender in England, has a knee so damaged he can barely train on it. Reality: he managed it match-to-match without training and had a truncated, heartbreaking career. Do you find a way to preserve him, or lean on him as your rock?',
+    sparedMemory: 'Managed King’s knee like porcelain — the great defender gets the fuller career reality denied him.',
+    wreckedMemory: 'King’s knee gives way under the load — a magnificent career cut short, exactly as it happened.',
+  }),
+];
+
 const ALL_SCRIPTED: ScriptedEvent[] = [
   ...MAN_UTD_1999_PACK,
   ...MAN_UTD_1999_PACK,
@@ -1658,6 +1780,7 @@ const ALL_SCRIPTED: ScriptedEvent[] = [
   ...CONTRACT_SAGA_PACK,
   ...SPORTING_NEAR_MISS_PACK,
   ...CAREER_NEAR_MISS_PACK,
+  ...INJURY_BEAT_PACK,
 ];
 
 function fireScriptedEvents(state: GameState): void {
