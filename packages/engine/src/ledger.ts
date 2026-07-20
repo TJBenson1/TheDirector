@@ -297,19 +297,19 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   // so intercepting one is a butterfly and a deprived Chelsea buys an alternative.
   { playerId: 'cur_drogba', from: 'marseille', to: 'chelsea', window: '2004-07', fee: 24_000_000, id: 'drogba-chelsea-2004' },
   { playerId: 'cur_robben2', from: 'psv', to: 'chelsea', window: '2004-07', fee: 12_000_000, id: 'robben-chelsea-2004' },
-  { playerId: 'cur_vieira2', from: 'arsenal', to: 'juventus', window: '2005-07', fee: 20_000_000, id: 'vieira-juve-2005' },
+  { playerId: 'cur_vieira2', from: 'arsenal', to: 'juventus', window: '2005-07', fee: 13_750_000, id: 'vieira-juve-2005' },
   { playerId: 'cur_acole', from: 'arsenal', to: 'chelsea', window: '2006-07', fee: 16_000_000, id: 'cole-chelsea-2006' },
   // The Gallas move was the OTHER HALF of the Cole deal — a swap. If the user
   // keeps Cole, the swap never happens, so Gallas never arrives.
   { playerId: 'cur_gallas2', from: 'chelsea', to: 'arsenal', window: '2006-08', fee: 5_000_000, id: 'gallas-arsenal-2006', enabledBy: 'cole-chelsea-2006' },
-  { playerId: 'cur_henry', from: 'arsenal', to: 'barcelona', window: '2007-07', fee: 24_000_000, id: 'henry-barca-2007' },
+  { playerId: 'cur_henry', from: 'arsenal', to: 'barcelona', window: '2007-07', fee: 16_100_000, id: 'henry-barca-2007' },
   { playerId: 'cur_cristiano2', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cr7b-real-2009' },
 
   // United's real rebuild — the reason they, not Arsenal, dominated 2007-09.
   { playerId: 'cur_vidic', from: 'spartak_moscow', to: 'man_utd', window: '2006-01', fee: 7_000_000, id: 'vidic-utd-2006' },
   { playerId: 'cur_evra', from: 'monaco', to: 'man_utd', window: '2006-01', fee: 5_500_000, id: 'evra-utd-2006' },
   { playerId: 'cur_carrick2', from: 'spurs', to: 'man_utd', window: '2006-07', fee: 18_600_000, id: 'carrick-utd-2006' },
-  { playerId: 'cur_vannistelrooy2', from: 'man_utd', to: 'real_madrid', window: '2006-07', fee: 14_000_000, id: 'ruud-real-2006' },
+  { playerId: 'cur_vannistelrooy2', from: 'man_utd', to: 'real_madrid', window: '2006-07', fee: 10_000_000, id: 'ruud-real-2006' },
   { playerId: 'cur_hargreaves', from: 'bayern', to: 'man_utd', window: '2007-07', fee: 17_000_000, id: 'hargreaves-utd-2007' },
   { playerId: 'cur_tevez', from: 'west_ham', to: 'man_utd', window: '2007-07', fee: 20_000_000, id: 'tevez-utd-2007' },
   { playerId: 'cur_anderson_p', from: 'porto', to: 'man_utd', window: '2007-07', fee: 20_000_000, id: 'anderson-utd-2007' },
@@ -325,7 +325,7 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_alonso', from: 'liverpool', to: 'real_madrid', window: '2009-07', fee: 30_000_000, id: 'alonso-real-2009' },
   // Barça sign Eto'o (2004): a settled, happy star — so he is NOT a soft
   // fallback for an English club later; Villa is the more available option.
-  { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 24_000_000, id: 'etoo-barca-2004' },
+  { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 16_000_000, id: 'etoo-barca-2004' },
   // Arsenal's real replacements — OFFERED to the user (their club), declinable.
   { playerId: 'cur_adebayor', from: 'monaco', to: 'arsenal', window: '2006-01', fee: 7_000_000, id: 'adebayor-arsenal-2006' },
   { playerId: 'cur_rosicky', from: 'dortmund', to: 'arsenal', window: '2006-07', fee: 6_800_000, id: 'rosicky-arsenal-2006' },
@@ -424,15 +424,15 @@ const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
   // ── Barça's real rebuild (context) ──
   { playerId: 'cur_saviola', from: 'river_plate', to: 'barcelona', window: '2001-07', fee: 15_000_000, id: 'saviola-barca-2001' },
   { playerId: 'cur_ronaldinho', from: 'psg', to: 'barcelona', window: '2003-07', fee: 30_000_000, id: 'ronaldinho-barca-2003' },
-  { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 24_000_000, id: 'etoo-barca-2004' },
-  { playerId: 'cur_deco', from: 'porto', to: 'barcelona', window: '2004-07', fee: 21_000_000, id: 'deco-barca-2004' },
+  { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 16_000_000, id: 'etoo-barca-2004' },
+  { playerId: 'cur_deco', from: 'porto', to: 'barcelona', window: '2004-07', fee: 14_000_000, id: 'deco-barca-2004' },
   { playerId: 'cur_giuly', from: 'monaco', to: 'barcelona', window: '2004-07', fee: 8_000_000, id: 'giuly-barca-2004' },
   { playerId: 'cur_kluivert', from: 'barcelona', to: 'newcastle', window: '2004-07', fee: 5_000_000, id: 'kluivert-newcastle-2004' },
   // ── Valencia / Deportivo / Sociedad (context: title rivals' real business) ──
   { playerId: 'cur_mendieta', from: 'valencia', to: 'lazio', window: '2001-07', fee: 48_000_000, id: 'mendieta-lazio-2001' },
   { playerId: 'cur_makaay', from: 'deportivo', to: 'bayern', window: '2003-07', fee: 19_000_000, id: 'makaay-bayern-2003' },
   { playerId: 'cur_xabi_alonso', from: 'real_sociedad', to: 'liverpool', window: '2004-07', fee: 11_000_000, id: 'xabi-liverpool-2004' },
-  { playerId: 'cur_villa', from: 'zaragoza', to: 'valencia', window: '2005-07', fee: 12_000_000, id: 'villa-valencia-2005' },
+  { playerId: 'cur_villa', from: 'zaragoza', to: 'valencia', window: '2005-07', fee: 8_000_000, id: 'villa-valencia-2005' },
   // ── Italy/England context that colours the wider world ──
   { playerId: 'cur_veron', from: 'lazio', to: 'man_utd', window: '2001-07', fee: 28_000_000, id: 'veron-utd-2001' },
   { playerId: 'cur_nesta', from: 'lazio', to: 'milan', window: '2002-07', fee: 30_000_000, id: 'nesta-milan-2002' },
@@ -507,7 +507,7 @@ const LEDGER_1995_2001: RealTransferLedgerEntry[] = [
   //    if they are Juventus (the legends — Del Piero, Buffon, Nedvěd — stay). ──
   { playerId: 'cur_cannavaro_p', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },
   { playerId: 'cur_thuram_p', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 5_000_000, id: 'thuram-barca-2006' },
-  { playerId: 'cur_zambrotta_j', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 14_000_000, id: 'zambrotta-barca-2006' },
+  { playerId: 'cur_zambrotta_j', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 10_000_000, id: 'zambrotta-barca-2006' },
 ];
 
 /** Real Galácticos-era injuries — fire only if the player is at his real club. */
@@ -530,8 +530,8 @@ const LEDGER_2003_2011: RealTransferLedgerEntry[] = [
   { playerId: 'cur_cristiano', from: 'sporting', to: 'man_utd', window: '2003-07', fee: 12_200_000, id: 'cristiano-utd-2003' },
   { playerId: 'cur_beckham_u', from: 'man_utd', to: 'real_madrid', window: '2003-07', fee: 25_000_000, id: 'beckham-real-2003' },
   // ── Barça's bought spine arrives (2004) — divertible by the user ──
-  { playerId: 'cur_deco', from: 'porto', to: 'barcelona', window: '2004-07', fee: 21_000_000, id: 'deco-barca-2004' },
-  { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 24_000_000, id: 'etoo-barca-2004' },
+  { playerId: 'cur_deco', from: 'porto', to: 'barcelona', window: '2004-07', fee: 14_000_000, id: 'deco-barca-2004' },
+  { playerId: 'cur_etoo', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 16_000_000, id: 'etoo-barca-2004' },
   // Piqué to United (2004) then home to Barça (2008) — the "keep Piqué" decision.
   { playerId: 'cur_pique_b', from: 'barcelona', to: 'man_utd', window: '2004-07', fee: 5_000_000, id: 'pique-utd-2004' },
   { playerId: 'cur_pique_b', from: 'man_utd', to: 'barcelona', window: '2008-07', fee: 5_000_000, id: 'pique-barca-2008' },
@@ -539,7 +539,7 @@ const LEDGER_2003_2011: RealTransferLedgerEntry[] = [
   { playerId: 'cur_reyes_s', from: 'sevilla', to: 'arsenal', window: '2004-01', fee: 17_000_000, id: 'reyes-arsenal-2004' },
   { playerId: 'cur_owen_l', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 8_000_000, id: 'owen-real-2004' },
   { playerId: 'cur_baptista_s', from: 'sevilla', to: 'real_madrid', window: '2005-07', fee: 20_000_000, id: 'baptista-real-2005' },
-  { playerId: 'cur_henry_a', from: 'arsenal', to: 'barcelona', window: '2007-07', fee: 24_000_000, id: 'henry-barca-2007' },
+  { playerId: 'cur_henry_a', from: 'arsenal', to: 'barcelona', window: '2007-07', fee: 16_100_000, id: 'henry-barca-2007' },
   { playerId: 'cur_alonso_l', from: 'liverpool', to: 'real_madrid', window: '2009-07', fee: 30_000_000, id: 'alonso-real-2009' },
   { playerId: 'cur_kaka_m', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
   { playerId: 'cur_cristiano', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cristiano-real-2009' },
@@ -608,7 +608,7 @@ const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
   { playerId: 'cur_milner_av', from: 'aston_villa', to: 'man_city', window: '2010-08', fee: 26_000_000, id: 'milner-city-2010' },
   { playerId: 'cur_nasri_a8', from: 'arsenal', to: 'man_city', window: '2011-08', fee: 24_000_000, id: 'nasri-city-2011' },
   // ── The rest of the market moves as reality ──
-  { playerId: 'cur_cristiano_u8', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 94_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_cristiano_u8', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cr7-real-2009' },
   { playerId: 'cur_alonso_l8', from: 'liverpool', to: 'real_madrid', window: '2009-08', fee: 30_000_000, id: 'alonso-real-2009' },
   { playerId: 'cur_mascherano_l8', from: 'liverpool', to: 'barcelona', window: '2010-08', fee: 24_000_000, id: 'masche-barca-2010' },
   { playerId: 'cur_modric_sp', from: 'spurs', to: 'real_madrid', window: '2012-08', fee: 33_000_000, id: 'modric-real-2012' },
@@ -655,7 +655,7 @@ const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
   // ── Liverpool's departures (the user's stars leaving, if they are Liverpool) ──
   { playerId: 'cur_torres_lv10', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
   { playerId: 'cur_meireles_lv10', from: 'liverpool', to: 'chelsea', window: '2011-08', fee: 12_000_000, id: 'meireles-chelsea-2011' },
-  { playerId: 'cur_suarez_lv10', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 75_000_000, id: 'suarez-barca-2014' },
+  { playerId: 'cur_suarez_lv10', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000, id: 'suarez-barca-2014' },
   // ── The elite market moves as reality ──
   { playerId: 'cur_fabregas_10', from: 'arsenal', to: 'barcelona', window: '2011-08', fee: 29_000_000, id: 'cesc-barca-2011' },
   { playerId: 'cur_nasri_10', from: 'arsenal', to: 'man_city', window: '2011-08', fee: 24_000_000, id: 'nasri-city-2011' },
@@ -704,7 +704,7 @@ const LEDGER_BUNDESLIGA_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_kroos_09', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
   { playerId: 'cur_torres_lv10', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
   { playerId: 'cur_di_maria_rm10', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000, id: 'dimaria-utd-2014' },
-  { playerId: 'cur_suarez_lv10', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 75_000_000, id: 'suarez-barca-2014' },
+  { playerId: 'cur_suarez_lv10', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000, id: 'suarez-barca-2014' },
   // Gap-sweep: Neuer's move from Schalke to Bayern (2011).
   { playerId: 'cur_neuer_sc10', from: 'schalke', to: 'bayern', window: '2011-07', fee: 22_000_000 },
 ];
@@ -728,7 +728,7 @@ const LEDGER_BUNDESLIGA_2012: RealTransferLedgerEntry[] = [
   { playerId: 'cur_gomez_12', from: 'bayern', to: 'juventus', window: '2013-07', fee: 15_500_000, id: 'gomez-fiorentina-2013' },
   // ── The elite market around them ──
   { playerId: 'cur_di_maria_rm12', from: 'real_madrid', to: 'man_utd', window: '2014-08', fee: 59_700_000, id: 'dimaria-utd-2014' },
-  { playerId: 'cur_suarez_lv12', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 75_000_000, id: 'suarez-barca-2014' },
+  { playerId: 'cur_suarez_lv12', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000, id: 'suarez-barca-2014' },
   { playerId: 'cur_villa_bc12', from: 'barcelona', to: 'atletico', window: '2013-07', fee: 5_100_000, id: 'villa-atletico-2013' },
   { playerId: 'cur_pogba_ju12', from: 'juventus', to: 'man_utd', window: '2016-08', fee: 105_000_000, id: 'pogba-utd-2016' },
   { playerId: 'cur_ibrahimovic_pg12', from: 'psg', to: 'man_utd', window: '2016-07', fee: 0, id: 'ibra-utd-2016' },
@@ -767,7 +767,7 @@ const LEDGER_LA_LIGA_2006: RealTransferLedgerEntry[] = [
   // ── Real's business: the old guard out, the 2009 galácticos in ──
   { playerId: 'cur_ronaldo_r6', from: 'real_madrid', to: 'milan', window: '2007-01', fee: 7_500_000, id: 'ronaldo-milan-2007' },
   { playerId: 'cur_cannavaro_r6', from: 'real_madrid', to: 'juventus', window: '2009-07', fee: 0, id: 'cannavaro-juve-2009' },
-  { playerId: 'cur_cristiano_07', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 94_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_cristiano_07', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cr7-real-2009' },
   { playerId: 'cur_kaka_07', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
   { playerId: 'cur_alonso_l6', from: 'liverpool', to: 'real_madrid', window: '2009-08', fee: 30_000_000, id: 'alonso-real-2009' },
   // ── Barça's dynasty recruitment ──
@@ -785,17 +785,17 @@ const LEDGER_LA_LIGA_2006: RealTransferLedgerEntry[] = [
 
 const LEDGER_LA_LIGA_2003: RealTransferLedgerEntry[] = [
   // ── Barça's title-winning recruitment (the user's, if they are Barça) ──
-  { playerId: 'cur_etoo_m3', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 24_000_000, id: 'etoo-barca-2004' },
-  { playerId: 'cur_deco_p3', from: 'porto', to: 'barcelona', window: '2004-07', fee: 21_000_000, id: 'deco-barca-2004' },
+  { playerId: 'cur_etoo_m3', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 16_000_000, id: 'etoo-barca-2004' },
+  { playerId: 'cur_deco_p3', from: 'porto', to: 'barcelona', window: '2004-07', fee: 14_000_000, id: 'deco-barca-2004' },
   { playerId: 'cur_daniel_alves', from: 'sevilla', to: 'barcelona', window: '2008-07', fee: 32_500_000, id: 'alves-barca-2008' },
   // ── Real's galáctico churn: Morientes loaned out, then Owen and the 2009 marquees ──
   { playerId: 'cur_morientes_r3', from: 'real_madrid', to: 'monaco', window: '2003-08', fee: 0, id: 'morientes-monaco-2003' },
   { playerId: 'cur_owen_l3', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 12_000_000, id: 'owen-real-2004' },
-  { playerId: 'cur_cristiano_u3', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 94_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_cristiano_u3', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cr7-real-2009' },
   { playerId: 'cur_kaka_m3', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
   // ── Chelsea's spine, and Fernando Torres's move that built Liverpool's ──
   { playerId: 'cur_shevchenko_m3', from: 'milan', to: 'chelsea', window: '2006-07', fee: 43_800_000, id: 'sheva-chelsea-2006' },
-  { playerId: 'cur_carvalho_p3', from: 'porto', to: 'chelsea', window: '2004-07', fee: 30_000_000, id: 'carvalho-chelsea-2004' },
+  { playerId: 'cur_carvalho_p3', from: 'porto', to: 'chelsea', window: '2004-07', fee: 20_000_000, id: 'carvalho-chelsea-2004' },
   { playerId: 'cur_fernando_torres_a3', from: 'atletico', to: 'liverpool', window: '2007-07', fee: 26_500_000, id: 'torres-liverpool-2007' },
   // Gap-sweep: Barça's own era business — a declining Ronaldinho sold to Milan, and
   // David Villa arriving (the MSN forerunner).
@@ -814,10 +814,10 @@ const LEDGER_1998_2004: RealTransferLedgerEntry[] = [
   // ── Inter's business (the user's, if they are Inter) ──
   { playerId: 'cur_vieri_l', from: 'lazio', to: 'inter', window: '1999-07', fee: 46_000_000, id: 'vieri-inter-1999' },
   { playerId: 'cur_cannavaro_p8', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000, id: 'cannavaro-inter-2002' },
-  { playerId: 'cur_ronaldo_r9', from: 'inter', to: 'real_madrid', window: '2002-08', fee: 45_000_000, id: 'ronaldo-real-2002' },
+  { playerId: 'cur_ronaldo_r9', from: 'inter', to: 'real_madrid', window: '2002-08', fee: 30_000_000, id: 'ronaldo-real-2002' },
   // ── The galáctico moves ──
   { playerId: 'cur_figo_b', from: 'barcelona', to: 'real_madrid', window: '2000-07', fee: 60_000_000, id: 'figo-real-2000' },
-  { playerId: 'cur_zidane_j8', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 75_000_000, id: 'zidane-real-2001' },
+  { playerId: 'cur_zidane_j8', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 46_000_000, id: 'zidane-real-2001' },
   // ── Seedorf's real path: Real → Inter → Milan ──
   { playerId: 'cur_seedorf_r', from: 'real_madrid', to: 'inter', window: '2000-07', fee: 20_000_000, id: 'seedorf-inter-2000' },
   { playerId: 'cur_seedorf_r', from: 'inter', to: 'milan', window: '2002-07', fee: 18_000_000, id: 'seedorf-milan-2002' },
@@ -850,7 +850,7 @@ const LEDGER_2007_2013: RealTransferLedgerEntry[] = [
   { playerId: 'cur_pirlo_07', from: 'milan', to: 'juventus', window: '2011-07', fee: 0, id: 'pirlo-juve-2011' },
   { playerId: 'cur_ibrahimovic_07', from: 'barcelona', to: 'milan', window: '2010-08', fee: 24_000_000, id: 'ibra-milan-2010', enabledBy: 'ibra-barca-2009' },
   // ── The 2009 galáctico churn ──
-  { playerId: 'cur_cristiano_07', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 94_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_cristiano_07', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cr7-real-2009' },
   { playerId: 'cur_robben_07', from: 'real_madrid', to: 'bayern', window: '2009-08', fee: 25_000_000, id: 'robben-bayern-2009', enabledBy: 'cr7-real-2009' },
   { playerId: 'cur_sneijder_07', from: 'real_madrid', to: 'inter', window: '2009-08', fee: 15_000_000, id: 'sneijder-inter-2009', enabledBy: 'cr7-real-2009' },
   { playerId: 'cur_ibrahimovic_07', from: 'inter', to: 'barcelona', window: '2009-07', fee: 46_000_000, id: 'ibra-barca-2009' },
@@ -874,11 +874,11 @@ const LEDGER_2007_2013: RealTransferLedgerEntry[] = [
  */
 const LEDGER_SERIE_A_2004: RealTransferLedgerEntry[] = [
   // ── The Calciopoli exodus feeds Inter (the user) and the giants ──
-  { playerId: 'cur_ibrahimovic_04', from: 'juventus', to: 'inter', window: '2006-07', fee: 24_800_000, id: 'ibra-inter-2006' },
+  { playerId: 'cur_ibrahimovic_04', from: 'juventus', to: 'inter', window: '2006-07', fee: 16_600_000, id: 'ibra-inter-2006' },
   { playerId: 'cur_cannavaro_f04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },
   { playerId: 'cur_emerson_04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 13_000_000, id: 'emerson-real-2006' },
   { playerId: 'cur_thuram_04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 5_000_000, id: 'thuram-barca-2006' },
-  { playerId: 'cur_zambrotta_04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 14_000_000, id: 'zambrotta-barca-2006' },
+  { playerId: 'cur_zambrotta_04', from: 'juventus', to: 'barcelona', window: '2006-07', fee: 10_000_000, id: 'zambrotta-barca-2006' },
   // ── Inter's own business ──
   { playerId: 'cur_vieri_04', from: 'inter', to: 'milan', window: '2005-01', fee: 0, id: 'vieri-milan-2005' },
   // ── Milan's business (Sheva out, Ronaldinho in) ──
@@ -887,7 +887,7 @@ const LEDGER_SERIE_A_2004: RealTransferLedgerEntry[] = [
   // ── Roma cash in on Cassano ──
   { playerId: 'cur_cassano_04', from: 'roma', to: 'real_madrid', window: '2006-01', fee: 5_000_000, id: 'cassano-real-2006' },
   // ── The 2009 galáctico churn + the Ibra/Eto'o swap ──
-  { playerId: 'cur_cristiano_04', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 94_000_000, id: 'cr7-real-2009' },
+  { playerId: 'cur_cristiano_04', from: 'man_utd', to: 'real_madrid', window: '2009-07', fee: 80_000_000, id: 'cr7-real-2009' },
   { playerId: 'cur_kaka_04', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
   { playerId: 'cur_alonso_04', from: 'liverpool', to: 'real_madrid', window: '2009-08', fee: 30_000_000, id: 'alonso-real-2009' },
   { playerId: 'cur_ibrahimovic_04', from: 'inter', to: 'barcelona', window: '2009-07', fee: 46_000_000, id: 'ibra-barca-2009' },
