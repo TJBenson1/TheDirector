@@ -19,6 +19,7 @@ import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { standingsOrder } from './season.js';
 import { eraForScenario } from './ledger.js';
+import { clubSquadPlayers } from './players.js';
 /**
  * The club's strength through the CONTINENTAL lens (§ butterfly showcase): the
  * domestic `strength` PLUS the star premium a BUTTERFLY has added or stripped
@@ -684,4 +685,83 @@ export function simulateChampionsLeague(state: GameState, rng: Rng, seasonYear: 
     bracket = next;
   }
   record(bracket[0]!, runnerUp, false, real?.w);
+}
+
+// ── Mid-season European campaign narrative (read-only) ───────────────────────
+
+export interface EuropeanFavourite {
+  club: string;
+  reason: string;
+}
+
+export interface EuropeanCampaign {
+  name: string;
+  /** Whether the user's club is in this season's competition. */
+  inCompetition: boolean;
+  phase: 'not-in' | 'group-stage' | 'knockouts' | 'off-season';
+  /** The group-stage story so far (how they qualified), once it has concluded. */
+  groupSummary: string;
+  favourites: EuropeanFavourite[];
+  note: string;
+}
+
+/**
+ * A read-only narrative snapshot of the continental cup this season: whether the
+ * Director's club is in it, how their group stage went (they are in the knockout
+ * FIELD, so being in it means they came through — the margin varies with their
+ * strength relative to the field), and who the favourites are and why. Pure and
+ * deterministic — no RNG, no state change — so it never touches the sim or the
+ * calibration-locked winner produced at the season's end.
+ */
+export function europeanCampaign(state: GameState): EuropeanCampaign {
+  const name = state.europeanCup?.name ?? 'European Cup';
+  const field = buildField(state);
+  const inCompetition = field.includes(state.playerClub);
+  const month = Number(state.clock.date.slice(5, 7));
+  // Group stage runs the autumn; the knockouts the spring. By winter the groups
+  // are done, so a mid-season update can tell the qualification story.
+  const groupsConcluded = month === 12 || month <= 5;
+  const phase: EuropeanCampaign['phase'] = !inCompetition
+    ? 'not-in'
+    : month >= 6 && month <= 7
+      ? 'off-season'
+      : groupsConcluded
+        ? 'knockouts'
+        : 'group-stage';
+
+  // Favourites: the strongest squads in the field, each with a talisman named.
+  const ranked = [...field].sort((a, b) => clStrength(state, b) - clStrength(state, a));
+  const favourites: EuropeanFavourite[] = ranked.slice(0, 3).map((id, i) => {
+    const club = state.clubs[id]!;
+    const star = clubSquadPlayers(state, id).sort((a, b) => b.ability - a.ability)[0];
+    const reason =
+      i === 0
+        ? `the team to beat — the deepest, strongest squad in the field${star ? `, with ${star.name} their talisman` : ''}`
+        : `a serious contender${star ? `, ${star.name} the danger` : ''}`;
+    return { club: club.name, reason };
+  });
+
+  let groupSummary = '';
+  let note: string;
+  if (!inCompetition) {
+    note = `${state.clubs[state.playerClub]?.name ?? 'You'} are not in the ${name} this season — the continental nights belong to others.`;
+  } else if (phase === 'group-stage') {
+    note = `The ${name} group stage is being contested — the qualifiers are settled by the winter.`;
+  } else {
+    // In the knockout field ⇒ they came through the group. The MARGIN reflects how
+    // strong they are relative to the field, so a giant cruises and a plucky
+    // qualifier survives a scare — but they are through either way.
+    const strengths = field.map((id) => clStrength(state, id));
+    const avg = strengths.reduce((s, v) => s + v, 0) / Math.max(1, strengths.length);
+    const edge = clStrength(state, state.playerClub) - avg;
+    groupSummary =
+      edge >= 6
+        ? `You cruised through the group as winners — barely troubled, a statement of intent.`
+        : edge >= 1
+          ? `Comfortably through to the knockouts, job done without much fuss.`
+          : `Through — but only after a real close shave, squeaking out of the group on the final matchday.`;
+    note = `${groupSummary} Now the knockouts, where the margins are cruel.`;
+  }
+
+  return { name, inCompetition, phase, groupSummary, favourites, note };
 }

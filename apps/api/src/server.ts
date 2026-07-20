@@ -35,6 +35,8 @@ import {
   narrativeContext,
   coachBriefing,
   managerRoom,
+  midSeasonForm,
+  europeanCampaign,
   appointCoach,
   coachArchetypes,
   rippleSaleSatesNeed,
@@ -441,9 +443,9 @@ function buildPanels(state: GameState) {
   const assisters = [...withProj].sort((a, b) => b.assists - a.assists || b.appearances - a.appearances).slice(0, 6).filter((r) => r.assists > 0)
     .map((r) => ({ name: r.name, club: r.club, isYou: r.isYou, assists: r.assists }));
   const lastFinal = s.europeanCup?.titleHistory.at(-1);
+  const campaign = europeanCampaign(s);
   const europe = {
-    name: s.europeanCup?.name ?? 'European Cup',
-    inProgress: 'This season’s campaign is still being contested — the final is settled at the season’s end.',
+    ...campaign,
     lastFinal: lastFinal
       ? { season: lastFinal.seasonYear, winner: s.clubs[lastFinal.winnerId]?.name ?? lastFinal.winnerId, runnerUp: s.clubs[lastFinal.runnerUpId]?.name ?? lastFinal.runnerUpId, youWon: lastFinal.winnerId === s.playerClub, youLost: lastFinal.runnerUpId === s.playerClub }
       : null,
@@ -460,7 +462,7 @@ function buildPanels(state: GameState) {
   inbox.push({ kind: 'board', text: `Board ${ctx.board.mood} (patience ${ctx.board.patience})` });
   for (const t of ctx.threads.slice(0, 3)) inbox.push({ kind: 'story', text: t });
 
-  return { squad, finances, table, stats, inbox, manager: managerRoom(s) };
+  return { squad, finances, table, stats, form: midSeasonForm(s), inbox, manager: managerRoom(s) };
 }
 
 server.listen(PORT, () => {

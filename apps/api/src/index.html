@@ -330,8 +330,16 @@ function esc(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;',
 function renderPanel(tab){
   const p = panelsCache; if(!p) return;
   if(tab==='squad'){
+    const fm = p.form; let formCard = '';
+    if(fm && fm.underway){
+      const icon = { flying:'🔥', struggling:'⚠️', adapting:'🌱', fringe:'🪑', injured:'🩹' };
+      const notable = fm.players.filter(x=>x.flag!=='solid');
+      formCard = `<div class="card"><h3>Form <span class="sub">${fm.roundsPlayed} games in</span></h3>` +
+        (notable.length ? notable.slice(0,10).map(x=>`<div class="ibx"><b>${icon[x.flag]||''} ${esc(x.name)}</b> <span class="sub">${x.goals}g/${x.assists}a · ${x.minutesPct}% mins</span><div class="sub">${esc(x.note)}</div></div>`).join('')
+          : '<div class="sub">A settled squad ticking over — no dramatic ups or downs so far.</div>') + `</div>`;
+    }
     const legend = `<div class="sub" style="padding:2px 4px 8px">value · wage · happiness (bar) · mins% · impact — ⚠ = behind the market, will want a new deal. Tap Extend or Sell to act without spending a chat message</div>`;
-    panel.innerHTML = legend + p.squad.map(pl=>`<div class="prow" data-player="${esc(pl.id)}"><div style="flex:1"><div>${esc(pl.name)}${pl.injured?' 🩹':''}</div><div class="sub">${esc(pl.position)} · ${pl.age}y · abi ${pl.ability} · to ${pl.contractUntil}</div><div class="bar"><i style="width:${pl.happiness}%"></i></div></div><div style="text-align:right"><div>${esc(pl.value)}</div><div class="sub">${esc(pl.wage||'')}${pl.underMarket?` <span class="warn" title="Market rate ${esc(pl.marketWage)}">⚠ under market</span>`:''}</div><div class="sub">${esc(pl.minutes)} · ${esc(pl.impact)}</div><div class="act"><button data-ext="${esc(pl.id)}" data-name="${esc(pl.name)}">Extend</button><button class="sell" data-sell="${esc(pl.id)}" data-name="${esc(pl.name)}">Sell</button></div></div></div>`).join('');
+    panel.innerHTML = formCard + legend + p.squad.map(pl=>`<div class="prow" data-player="${esc(pl.id)}"><div style="flex:1"><div>${esc(pl.name)}${pl.injured?' 🩹':''}</div><div class="sub">${esc(pl.position)} · ${pl.age}y · abi ${pl.ability} · to ${pl.contractUntil}</div><div class="bar"><i style="width:${pl.happiness}%"></i></div></div><div style="text-align:right"><div>${esc(pl.value)}</div><div class="sub">${esc(pl.wage||'')}${pl.underMarket?` <span class="warn" title="Market rate ${esc(pl.marketWage)}">⚠ under market</span>`:''}</div><div class="sub">${esc(pl.minutes)} · ${esc(pl.impact)}</div><div class="act"><button data-ext="${esc(pl.id)}" data-name="${esc(pl.name)}">Extend</button><button class="sell" data-sell="${esc(pl.id)}" data-name="${esc(pl.name)}">Sell</button></div></div></div>`).join('');
     panel.querySelectorAll('[data-ext]').forEach(b=>b.onclick=()=>extendFlow(b.dataset.ext, b.dataset.name));
     panel.querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>sellFlow(b.dataset.sell, b.dataset.name));
   } else if(tab==='finances'){
@@ -348,7 +356,11 @@ function renderPanel(tab){
     const assists = (st.assisters&&st.assisters.length) ? `<div class="card"><h3>Top assists <span class="sub">this season so far</span></h3>${st.assisters.map((s,i)=>`<div class="prow ${s.isYou?'you':''}"><div>${i+1}. ${esc(s.name)} <span class="sub">${esc(s.club)}</span></div><div class="sub">${s.assists} 🅰</div></div>`).join('')}</div>` : '';
     let euro = '';
     if(st.europe){ const e=st.europe; const lf=e.lastFinal;
-      euro = `<div class="card"><h3>${esc(e.name)}</h3><div class="sub">${esc(e.inProgress)}</div>${lf?`<div style="margin-top:6px">Last final (${lf.season}): <b>${esc(lf.winner)}</b> beat ${esc(lf.runnerUp)}${lf.youWon?' — you lifted it 🏆':lf.youLost?' — you were runners-up':''}</div>`:''}</div>`;
+      const favs = (e.favourites||[]).map(f=>`<div class="sub">★ <b>${esc(f.club)}</b> — ${esc(f.reason)}</div>`).join('');
+      euro = `<div class="card"><h3>${esc(e.name)}</h3><div>${esc(e.note)}</div>`+
+        (favs?`<div class="sub" style="margin:8px 0 4px">Favourites</div>${favs}`:'')+
+        (lf?`<div class="sub" style="margin-top:8px">Last final (${lf.season}): <b>${esc(lf.winner)}</b> beat ${esc(lf.runnerUp)}${lf.youWon?' — you lifted it 🏆':lf.youLost?' — you were runners-up':''}</div>`:'')+
+        `</div>`;
     }
     panel.innerHTML = tableHtml + scorers + assists + euro;
   } else if(tab==='inbox'){

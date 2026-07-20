@@ -23,6 +23,8 @@ import {
   narrativeContext,
   coachBriefing,
   managerRoom,
+  midSeasonForm,
+  europeanCampaign,
   appointCoach,
   coachArchetypes,
   standingsOrder,
@@ -91,6 +93,12 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
 
     case 'manager_room':
       return { state: s, result: managerRoom(s) };
+
+    case 'squad_form':
+      return { state: s, result: midSeasonForm(s) };
+
+    case 'europe':
+      return { state: s, result: europeanCampaign(s) };
 
     case 'change_coach': {
       const styles = coachArchetypes();
@@ -337,6 +345,8 @@ export const TOOL_SCHEMAS = [
   { name: 'situation', description: 'Current story: club, board mood, coach, squad tensions, open decisions.', input_schema: { type: 'object', properties: {} } },
   { name: 'manager_meeting', description: "The head coach's briefing: his mood, the club's priority (league/Europe/both), the shape he wants, his best XI, players he isn't sold on, positions to strengthen, and concrete targets. Use it for the opening manager meeting and whenever the Director asks the coach's view.", input_schema: { type: 'object', properties: {} } },
   { name: 'manager_room', description: "The head coach's full dashboard: his happiness, playing style and formation, first-choice XI (top performers marked), position-by-position depth chart, rising stars and whether they're getting minutes to develop, concerns (age/form/happiness/injury/contract), and his transfer wishlist in and out. Use when the Director asks about the squad, the coach's plans, who's developing, who to sell, or the state of the dressing room.", input_schema: { type: 'object', properties: {} } },
+  { name: 'squad_form', description: "A MID-SEASON form report on the Director's own players: each man's minutes%, projected goals & assists so far, an impact rating, whether he's a starter, and a flag/note (flying, solid, struggling, fringe/barely playing, still ADAPTING to a new league, or injured). Use whenever the Director asks how his players/signings are performing this season — who's scoring, getting assists, getting minutes, struggling to adapt or settle.", input_schema: { type: 'object', properties: {} } },
+  { name: 'europe', description: "The continental cup (Champions League / European Cup) this season: whether the club is in it, how the group stage went (cruised through / a close shave), the phase, and the tournament favourites with reasons. Use whenever the Director asks how Europe / the Champions League is going.", input_schema: { type: 'object', properties: {} } },
   { name: 'change_coach', description: "Appoint a new head coach — the Director's prerogative, so it always goes through. Call with no arguments to list the playing styles to choose from; then call again with a style (and optionally a name and formation) to make the change. Never refuse a coach change.", input_schema: { type: 'object', properties: { style: { type: 'string', description: 'possession | gegenpress | pragmatic-counter | defensive-block | man-manager | balanced' }, name: { type: 'string', description: "the new coach's name (optional)" }, formation: { type: 'string' } }, required: [] } },
   { name: 'advance', description: 'Move time forward one step (window phase or month). Returns what happened + new decisions.', input_schema: { type: 'object', properties: {} } },
   { name: 'squad', description: 'Your full squad with age, ability, morale, contract, wages.', input_schema: { type: 'object', properties: {} } },
