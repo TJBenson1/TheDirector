@@ -606,7 +606,181 @@ const ARSENAL_2004_PACK: ScriptedEvent[] = [
   },
 ];
 
-const ALL_SCRIPTED: ScriptedEvent[] = [...MAN_UTD_1999_PACK, ...LIVERPOOL_2001_PACK, ...ARSENAL_2004_PACK];
+// ── Set-piece high-drama packs (§ stories) — the defining forks of each era, richest
+//    in the near-reality early seasons. Each gated on its curated player still being
+//    at his club (reality hasn't already diverged that thread away). ──────────────
+
+const REAL_MADRID_2000_PACK: ScriptedEvent[] = [
+  {
+    // The substance-vs-spectacle heart of the Galácticos: Makélélé, the engine that
+    // makes the show work, wants parity with the stars. Pérez let him go to Chelsea.
+    id: 'makelele-raise',
+    date: '2003-07',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => playerAt(s, 'cur_makelele', 'real_madrid') && s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:makelele-raise',
+      title: 'Makélélé wants to be paid like a Galáctico',
+      description: 'The one who does the running while Zidane and Raúl take the glory wants his worth recognised — a real raise, or he goes. Pérez famously refused and sold him to Chelsea, and the balance never recovered. Break the galáctico wage order to keep your engine, or let the spectacle roll on without him?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'pay', label: 'Pay him what he is worth — keep the balance', successProbability: 0.85,
+          onSuccess: [{ kind: 'renewContract', playerId: 'cur_makelele', amount: 4 }, { kind: 'morale', clubId: 'real_madrid', amount: 6 }, { kind: 'memory', tag: 'galactico', text: 'Kept Makélélé — the engine stays, the balance holds.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -4 }],
+        },
+        {
+          id: 'sell', label: 'Hold the wage line — cash in (£16m)', successProbability: 0.9,
+          onSuccess: [{ kind: 'transferOut', playerId: 'cur_makelele', clubId: 'chelsea', amount: 16_000_000 }, { kind: 'morale', clubId: 'real_madrid', amount: -8 }, { kind: 'memory', tag: 'galactico', text: 'Sold Makélélé to Chelsea — as reality did; the midfield lost its balance.' }],
+          onFailure: [],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'transferOut', playerId: 'cur_makelele', clubId: 'chelsea', amount: 16_000_000 }, { kind: 'morale', clubId: 'real_madrid', amount: -6 }],
+      memoryTags: ['galactico', 'cur_makelele'],
+    }),
+  },
+];
+
+const DORTMUND_2012_PACK: ScriptedEvent[] = [
+  {
+    // The defining Dortmund heartbreak: Bayern trigger Götze's release clause and
+    // take the jewel of Klopp's side — the ultimate rival raid.
+    id: 'gotze-bayern',
+    date: '2013-04',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => playerAt(s, 'cur_gotze_12', 'dortmund') && s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:gotze-bayern',
+      title: 'Bayern trigger Götze’s release clause',
+      description: 'Your golden boy — the face of Klopp’s revolution — and your greatest rival has met his €37m buy-out clause in secret. Reality: he went to Munich and it broke Dortmund hearts. Move heaven and earth to keep him, or take the money and let the rival strengthen at your expense?',
+      interrupt: true,
+      clubId: 'dortmund',
+      category: 'event',
+      choices: [
+        {
+          id: 'fight', label: 'Fight to keep him — a new deal above the clause', successProbability: 0.4,
+          onSuccess: [{ kind: 'renewContract', playerId: 'cur_gotze_12', amount: 4 }, { kind: 'morale', clubId: 'dortmund', amount: 10 }, { kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'rivalry', text: 'Kept Götze from Bayern’s clutches — the Yellow Wall roars.' }],
+          onFailure: [{ kind: 'transferOut', playerId: 'cur_gotze_12', clubId: 'bayern', amount: 37_000_000 }, { kind: 'morale', clubId: 'dortmund', amount: -8 }],
+        },
+        {
+          id: 'sell', label: 'Let him go to Bayern (£31m) — as reality did', successProbability: 0.95,
+          onSuccess: [{ kind: 'transferOut', playerId: 'cur_gotze_12', clubId: 'bayern', amount: 31_000_000 }, { kind: 'morale', clubId: 'dortmund', amount: -6 }, { kind: 'memory', tag: 'rivalry', text: 'Götze joins Bayern — the rival is armed with your own jewel.' }],
+          onFailure: [],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'transferOut', playerId: 'cur_gotze_12', clubId: 'bayern', amount: 31_000_000 }, { kind: 'morale', clubId: 'dortmund', amount: -6 }],
+      memoryTags: ['rivalry', 'cur_gotze_12'],
+    }),
+  },
+  {
+    // A year on, the same story: Lewandowski runs his deal down and leaves for Bayern
+    // on a free. Sell now for a fee, or watch the rival take him for nothing.
+    id: 'lewandowski-bayern',
+    date: '2013-08',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => playerAt(s, 'cur_lewandowski_12', 'dortmund') && s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:lewandowski-bayern',
+      title: 'Lewandowski runs his contract down — Bayern wait',
+      description: 'Your talisman striker has one year left and his heart is set on Munich; reality let him leave on a FREE. Cash in now while he has value, or hold him for one last charge and lose him for nothing to the rival?',
+      interrupt: true,
+      clubId: 'dortmund',
+      category: 'event',
+      choices: [
+        {
+          id: 'cash-in', label: 'Sell now for a real fee (£22m)', successProbability: 0.85,
+          onSuccess: [{ kind: 'transferOut', playerId: 'cur_lewandowski_12', clubId: 'bayern', amount: 22_000_000 }, { kind: 'memory', tag: 'rivalry', text: 'Banked a fee on Lewandowski rather than lose him for free — smarter than reality.' }],
+          onFailure: [],
+        },
+        {
+          id: 'hold', label: 'Hold him for one last charge (he leaves free in 2014)', successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 6 }, { kind: 'letContractLapse', playerId: 'cur_lewandowski_12' }, { kind: 'memory', tag: 'rivalry', text: 'Kept Lewandowski for a final season — glory now, a free exit to Bayern later.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_lewandowski_12', amount: 12 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'letContractLapse', playerId: 'cur_lewandowski_12' }, { kind: 'memory', tag: 'rivalry', text: 'Let Lewandowski run his deal down — Bayern get him for free, as they did.' }],
+      memoryTags: ['rivalry', 'cur_lewandowski_12'],
+    }),
+  },
+];
+
+const MAN_CITY_2008_PACK: ScriptedEvent[] = [
+  {
+    // The moment everything changed: the Abu Dhabi takeover on deadline day 2008,
+    // and Robinho hijacked from under Chelsea's nose — the birth of modern City.
+    id: 'city-takeover',
+    date: '2008-08',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:city-takeover',
+      title: 'The Abu Dhabi group buy the club — a fortune arrives overnight',
+      description: 'On deadline day the takeover completes and the richest owners in football hand you a war chest. Reality’s statement was to hijack Robinho from under Chelsea. Make the marquee statement now, or bank the power and strike in January?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'statement', label: 'Make the statement signing now', successProbability: 0.9,
+          onSuccess: [{ kind: 'money', clubId: 'man_city', amount: 40_000_000 }, { kind: 'morale', clubId: 'man_city', amount: 8 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'takeover', text: 'The takeover lands — City announce themselves to the world.' }],
+          onFailure: [],
+        },
+        {
+          id: 'patient', label: 'Bank the power, plan a bigger January', successProbability: 0.8,
+          onSuccess: [{ kind: 'money', clubId: 'man_city', amount: 55_000_000 }, { kind: 'memory', tag: 'takeover', text: 'Held fire on deadline day — a colossal January is being planned.' }],
+          onFailure: [{ kind: 'money', clubId: 'man_city', amount: 40_000_000 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'money', clubId: 'man_city', amount: 40_000_000 }, { kind: 'memory', tag: 'takeover', text: 'The Abu Dhabi era begins — the money is here.' }],
+      memoryTags: ['takeover'],
+    }),
+  },
+];
+
+const BARCELONA_2003_PACK: ScriptedEvent[] = [
+  {
+    // La Masia's crown jewel knocks on the first-team door: promote the 17-year-old
+    // Messi, or send him out to toughen up. History fast-tracked him.
+    id: 'messi-debut',
+    date: '2004-08',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => playerAt(s, 'cur_messi_b3', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:messi-debut',
+      title: 'A 17-year-old from La Masia is ready — his name is Messi',
+      description: 'Rijkaard says the boy cannot wait any longer. Reality threw him straight into the first team and the rest is history. Fast-track him into the side now, or protect him with a patient path?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'promote', label: 'Throw him in — the future is now', successProbability: 0.85,
+          onSuccess: [{ kind: 'ability', playerId: 'cur_messi_b3', amount: 3 }, { kind: 'morale', playerId: 'cur_messi_b3', amount: 10 }, { kind: 'memory', tag: 'la-masia', text: 'Handed Messi his stage at 17 — as history did.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_messi_b3', amount: 6 }],
+        },
+        {
+          id: 'patient', label: 'A patient path — protect the jewel', successProbability: 0.7,
+          onSuccess: [{ kind: 'memory', tag: 'la-masia', text: 'Held Messi back a little longer — the phenomenon will keep.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_messi_b3', amount: 8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'ability', playerId: 'cur_messi_b3', amount: 2 }, { kind: 'memory', tag: 'la-masia', text: 'Messi breaks through regardless — some things history insists upon.' }],
+      memoryTags: ['la-masia', 'cur_messi_b3'],
+    }),
+  },
+];
+
+const ALL_SCRIPTED: ScriptedEvent[] = [
+  ...MAN_UTD_1999_PACK,
+  ...LIVERPOOL_2001_PACK,
+  ...ARSENAL_2004_PACK,
+  ...REAL_MADRID_2000_PACK,
+  ...DORTMUND_2012_PACK,
+  ...MAN_CITY_2008_PACK,
+  ...BARCELONA_2003_PACK,
+];
 
 function fireScriptedEvents(state: GameState): void {
   for (const ev of ALL_SCRIPTED) {
