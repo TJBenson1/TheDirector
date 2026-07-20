@@ -255,11 +255,30 @@ export function applyStrengthArcs(state: GameState): void {
   // is exactly the "my signings had no impact" bug. A passive, reality-default world
   // (the calibration run, userAggression 0) keeps the arc, so calibration is
   // byte-identical; rivals always follow their real arcs.
-  const releaseUserClub = divergenceFactor(state) > 0;
+  const diverged = divergenceFactor(state) > 0;
+  const userLeague = state.clubs[state.playerClub]?.leagueId;
+  // RUBBER-BAND / the AI fights back (§9a #5, worldDefiance): once the Director has
+  // reshaped the world and is DOMINATING it, his domestic rivals dig in — they invest
+  // and rebuild, rising above their historical arc to make his dominance hard-won.
+  // Gated on divergence, so the passive calibration world (where a real giant wins its
+  // real titles) is untouched. Capped so it's a headwind, not a wall.
+  const defianceBoost = diverged ? Math.min(3, state.worldDefiance * 0.03) : 0;
   for (const [clubId, waypoints] of Object.entries(arcs)) {
-    if (!state.clubs[clubId]) continue;
-    if (releaseUserClub && clubId === state.playerClub) continue;
+    const club = state.clubs[clubId];
+    if (!club) continue;
+    if (diverged && clubId === state.playerClub) continue;
     const target = valueAt(waypoints, year);
-    if (target != null) reanchorClubStrength(state, clubId, target);
+    if (target != null) {
+      // A rival the Director has SUPPRESSED (bought their real signings) is pinned
+      // BELOW its historical arc — suppression that actually shows up in the table.
+      const penalty = club.suppressionPenalty ?? 0;
+      // A domestic rival stiffened by the Director's dominance (the rubber-band).
+      const boost = club.leagueId === userLeague ? defianceBoost : 0;
+      reanchorClubStrength(state, clubId, target - penalty + boost);
+      // …and a suppressed club adapts: the drag halves each summer, so it climbs back
+      // unless the Director keeps denying them (the arms race the vision asks for).
+      if (penalty > 0.05) club.suppressionPenalty = penalty * 0.5;
+      else club.suppressionPenalty = 0;
+    }
   }
 }

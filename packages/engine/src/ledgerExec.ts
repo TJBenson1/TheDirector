@@ -281,6 +281,14 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
     const cause: InvalidationCause =
       player?.club === state.playerClub ? 'user-signed-target' : 'chain-broken-by-user';
     const tier = fallbackForLedger(state, entry, player, r, futureByPlayer);
+    // SUPPRESSION BITES: the Director bought the man this rival was about to sign, so
+    // they slip below their historical trajectory — a drag scaled by the calibre
+    // denied (a marquee target hurts, a squad man barely). It halves each summer as
+    // they adapt, so it must be renewed to keep a rival down (the arms race).
+    if (cause === 'user-signed-target' && player && dest) {
+      const bite = Math.max(0.5, Math.min(4, (player.ability - 72) * 0.28));
+      dest.suppressionPenalty = (dest.suppressionPenalty ?? 0) + bite;
+    }
     state.timeline.divergenceLog.push({
       date: now,
       kind: 'butterfly',

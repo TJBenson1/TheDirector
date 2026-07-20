@@ -100,6 +100,13 @@ export interface ClubState {
    *  plays BELOW its raw talent (the post-2003 Madrid / Messi-Mbappé-Neymar PSG
    *  effect). Zero for a balanced squad, so real sides are untouched. */
   chemistryPenalty: number;
+  /** Strength drag from the Director SUPPRESSING this rival — buying the real
+   *  signings they were about to make, so they fall back to lesser men and slip
+   *  BELOW their historical trajectory. Accumulates as targets are denied (scaled
+   *  by the calibre taken) and HALVES each summer as the club adapts and recovers —
+   *  so suppression bites, but the AI claws back unless the Director keeps at it (an
+   *  arms race). Zero in a passive world (the Director denies nothing). */
+  suppressionPenalty?: number;
   /** Rolling form modifier, roughly -6..+6, drifting toward 0. */
   form: number;
   /** The simulated league this club plays in, or null if not simulated yet. */
