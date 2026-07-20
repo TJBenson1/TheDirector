@@ -7,6 +7,7 @@ import { describe, it, expect } from 'vitest';
 import { createNewGame } from './state.js';
 import { clubSquadPlayers } from './players.js';
 import { coachFit } from './coaches.js';
+import { applyDecision } from './events.js';
 import { rollSquadFrictionEvents } from './squadFriction.js';
 import { Rng } from './rng.js';
 import type { GameState } from './types.js';
@@ -87,6 +88,11 @@ describe('emergent squad-friction dilemmas', () => {
     expect(d).toBeDefined();
     expect(d!.choices.some((ch) => ch.id === 'farewell')).toBe(true);
     expect(d!.choices.some((ch) => ch.id === 'dignified-exit')).toBe(true);
+    // A farewell year must genuinely extend his deal BEYOND its current expiry — not
+    // silently no-op when a season already remains (regression guard).
+    const r = applyDecision(s, d!.id, 'farewell');
+    expect(r.state.players[great.id]!.contractUntil).toBeGreaterThan(1996);
+    expect(r.state.players[great.id]!.letLapse).not.toBe(true);
   });
 
   it('raises a wonderkid pathway demand when a kid is starved of minutes', () => {

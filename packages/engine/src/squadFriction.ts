@@ -100,6 +100,24 @@ function plausibleBuyer(state: GameState, player: PlayerState): { id: ClubId; fe
   return { id: buyer.id, fee: Math.round(Math.min(buyer.finances.transferBudget, value)) };
 }
 
+/** Where an ageing great goes for a final move — a lateral or step-DOWN switch to a
+ *  club at or below his level (a veteran drops down for a last run of games), never a
+ *  step up to a giant. The fee carries a commercial floor: clubs pay for a marquee
+ *  name beyond his declined sporting value. Null if no realistic home exists. */
+function plausibleFarewellDestination(state: GameState, player: PlayerState): { id: ClubId; fee: number } | null {
+  const value = valuePlayer(player, year(state));
+  const floor = 2_000_000; // a legend still shifts shirts — a nominal fee, never derisory
+  const cands = Object.values(state.clubs)
+    .filter((c) => c.id !== state.playerClub && !c.id.startsWith('promoted_'))
+    .filter((c) => !areDirectRivals(state, c.id, state.playerClub))
+    .filter((c) => c.strength <= player.ability && c.strength >= player.ability - 16)
+    .filter((c) => c.finances.transferBudget >= floor * 0.5)
+    .sort((a, b) => b.strength - a.strength);
+  const buyer = cands[0];
+  if (!buyer) return null;
+  return { id: buyer.id, fee: Math.round(Math.min(buyer.finances.transferBudget, Math.max(value, floor))) };
+}
+
 /** A genuine step up — the giant that comes calling for an unsettled star. Unlike
  *  a plausible buyer this CAN be a direct rival (rivals poach), and it must be a
  *  bigger stage (strength above the player), able to pay a premium. */
@@ -209,6 +227,11 @@ function buildFrictionDecision(state: GameState, c: FrictionCase): Decision {
   }
 
   if (c.kind === 'legend') {
+    const farewell = plausibleFarewellDestination(state, p);
+    const farewellClub = farewell ? state.clubs[farewell.id] : undefined;
+    // A farewell year must add a season BEYOND his current deal — one guaranteed last
+    // run in these colours — not silently no-op when a year already remains.
+    const farewellYears = Math.max(1, p.contractUntil - year(state) + 1);
     return {
       ...base,
       title: `${p.name}'s last act — a decision on a club great`,
@@ -216,16 +239,16 @@ function buildFrictionDecision(state: GameState, c: FrictionCase): Decision {
       choices: [
         {
           id: 'farewell', label: 'Offer a farewell year — he retires in these colours',
-          onSuccess: [{ kind: 'renewContract' as const, playerId: p.id, amount: 1 }, { kind: 'morale', clubId: state.playerClub, amount: 5 }, { kind: 'boardPatience', amount: 3 }, { kind: 'memory' as const, tag: 'squad-friction', text: `Gave ${p.name} a farewell year — the fans will sing his name to the end.` }],
+          onSuccess: [{ kind: 'renewContract' as const, playerId: p.id, amount: farewellYears }, { kind: 'morale', clubId: state.playerClub, amount: 5 }, { kind: 'boardPatience', amount: 3 }, { kind: 'memory' as const, tag: 'squad-friction', text: `Gave ${p.name} a farewell year — the fans will sing his name to the end.` }],
         },
         {
           id: 'dignified-exit', label: 'Let him go with a testimonial — a dignified goodbye',
           onSuccess: [{ kind: 'letContractLapse' as const, playerId: p.id }, { kind: 'morale', clubId: state.playerClub, amount: 4 }, { kind: 'memory' as const, tag: 'squad-friction', text: `Sent ${p.name} off with a testimonial and the club's gratitude — a legend leaves on his own terms.` }],
         },
-        ...(buyer ? [{
-          id: 'one-last-fee', label: `Take one last fee — sell to ${buyerClub?.name} (${m(buyer.fee)})`, successProbability: 0.55,
-          onSuccess: [{ kind: 'transferOut' as const, playerId: p.id, clubId: buyer.id, amount: buyer.fee }, { kind: 'memory' as const, tag: 'squad-friction', text: `Cashed in on ${p.name} one last time — the pragmatist's call, and not one every fan forgave.` }],
-          onFailure: [{ kind: 'morale' as const, clubId: state.playerClub, amount: -6, text: `Selling a club great for a fee didn't sit right in the dressing room.` }],
+        ...(farewell ? [{
+          id: 'one-last-fee', label: `Take one last fee — a final move to ${farewellClub?.name} (${m(farewell.fee)})`, successProbability: 0.55,
+          onSuccess: [{ kind: 'transferOut' as const, playerId: p.id, clubId: farewell.id, amount: farewell.fee }, { kind: 'memory' as const, tag: 'squad-friction', text: `Let ${p.name} go to ${farewellClub?.name} for a final payday — the pragmatist's call, and not one every fan forgave.` }],
+          onFailure: [{ kind: 'morale' as const, clubId: state.playerClub, amount: -6, text: `Selling a club great didn't sit right in the dressing room.` }],
         }] : []),
       ],
       falloutIfIgnored: [{ kind: 'letContractLapse', playerId: p.id }, { kind: 'morale', clubId: state.playerClub, amount: -4 }, { kind: 'memory', tag: 'squad-friction', text: `Let ${p.name}'s deal lapse without a word — a club great slipped away unmarked.` }],
