@@ -130,6 +130,7 @@ export { runRivalWindow, updateWorldDefiance } from './rival.js';
 export { simulateChampionsLeague, europeanCampaign, type EuropeanCampaign, type EuropeanFavourite } from './champions.js';
 export { midSeasonForm, type MidSeasonForm, type PlayerForm } from './form.js';
 export { rollSquadFrictionEvents } from './squadFriction.js';
+export { rollBoardUltimatum } from './boardUltimatum.js';
 export { relegateClub, restoreRelegatedClubs } from './relegation.js';
 export { resolveParmalat, resolveCalciopoli } from './italyEvents.js';
 export { reviewBoard, rollInternalCrisis, boardRuthlessness } from './board.js';

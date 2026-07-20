@@ -27,6 +27,7 @@ import { divergenceFactor } from './divergence.js';
 import { executeLedgerWindow, executeAcademyIntakes } from './ledgerExec.js';
 import { runReviewPhase } from './review.js';
 import { rollSquadFrictionEvents } from './squadFriction.js';
+import { rollBoardUltimatum } from './boardUltimatum.js';
 import { resolveCoachFriction } from './coaches.js';
 import { resolveAbramovich } from './takeover.js';
 import { resolveParmalat, resolveCalciopoli, promoteJuventus } from './italyEvents.js';
@@ -165,6 +166,9 @@ function runWindowStep(state: GameState, rng: Rng, step: number): void {
     // the road (a misfit, a glut, a signing that isn't settling). Gated on
     // divergence + forked RNG, so a passive/reality world raises none of them.
     rollSquadFrictionEvents(state, rng.fork(`friction:${state.clock.date}`));
+    // A board whose patience has run down stops nudging the meter and puts a demand
+    // on the desk — deliver, balance the books, or defy them. Same gates.
+    rollBoardUltimatum(state, rng.fork(`ultimatum:${state.clock.date}`));
   }
   // Phase 2 (§3, real free agency): from the MARKET phase on, the user club's
   // contract lifecycle settles — deals left untouched are renewed (reality-default,
