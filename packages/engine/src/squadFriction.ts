@@ -65,10 +65,10 @@ function detectFriction(state: GameState): FrictionCase[] {
     } else if (overstocked.has(p.id) && p.agitation >= 24) {
       // A good player buried in a glut the Director stockpiled, agitating for games.
       cases.push({ player: p, kind: 'overstock', severity: 50 + p.agitation * 0.4 });
-    } else if (coachFit(coach, p).verdict === 'veto' && p.ability >= 76 && p.agitation >= 18) {
+    } else if (coachFit(coach, p).verdict === 'veto' && p.ability >= 76 && p.agitation >= 14) {
       // A talent the coach cannot fit into how he plays — great player, wrong system.
       cases.push({ player: p, kind: 'misfit', severity: 44 + p.agitation * 0.3 });
-    } else if (p.ability >= 80 && p.agitation >= 30 && plausibleSuitor(state, p)) {
+    } else if (p.ability >= 80 && p.agitation >= 24 && plausibleSuitor(state, p)) {
       // An unsettled star of yours with a giant circling — cash in, or make it a
       // loyalty test. (Distinct from the forced departures in rival.ts, which fire
       // at agitation ≥ 40; this fork does NOT itself move the player, so the two
@@ -125,7 +125,10 @@ function plausibleSuitor(state: GameState, player: PlayerState): { id: ClubId; f
   const value = valuePlayer(player, year(state));
   const cands = Object.values(state.clubs)
     .filter((c) => c.id !== state.playerClub && !c.id.startsWith('promoted_'))
-    .filter((c) => c.strength >= player.ability + 2)
+    // A genuine giant: at least the player's equal (for a star at a superclub, a
+    // domestic "step up" may not exist, but an equal rival or a foreign power still
+    // comes calling), and able to pay a premium.
+    .filter((c) => c.strength >= player.ability - 2)
     .filter((c) => c.finances.transferBudget >= value * 0.9)
     .sort((a, b) => b.strength - a.strength);
   const suitor = cands[0];

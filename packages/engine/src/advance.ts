@@ -170,6 +170,13 @@ function runWindowStep(state: GameState, rng: Rng, step: number): void {
     // on the desk — deliver, balance the books, or defy them. Same gates.
     rollBoardUltimatum(state, rng.fork(`ultimatum:${state.clock.date}`));
   }
+  // The emergent squad forks also surface at the WINTER turn (the January window), so
+  // "decisions to make" is a steady seam across the year, not a once-a-summer event.
+  // Same divergence + forked-RNG gates, so a passive/reality world raises none.
+  if (state.clock.window === 'winter' && !(state.meta.frictionWindows ?? []).includes(state.clock.date)) {
+    (state.meta.frictionWindows ??= []).push(state.clock.date);
+    rollSquadFrictionEvents(state, rng.fork(`friction:winter:${state.clock.date}`));
+  }
   // Phase 2 (§3, real free agency): from the MARKET phase on, the user club's
   // contract lifecycle settles — deals left untouched are renewed (reality-default,
   // so a passive run holds its squad), and any the Director chose to let lapse walk

@@ -509,6 +509,9 @@ export interface GameStateMeta {
   /** Summer-window dates whose contract lifecycle (renewals + free-agent
    *  departures) has already settled, so it fires once per window (§3 phase 2). */
   contractsSettledWindows?: string[];
+  /** Winter-window dates whose emergent squad-friction roll has fired, so the
+   *  mid-season fork surfaces once per January (a steadier "decisions" seam). */
+  frictionWindows?: string[];
 }
 
 export interface GameClock {
