@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { coachForScenario, coachFit, resolveCoachFriction, playerStyleProfile } from './coaches.js';
+import { coachBriefing } from './briefing.js';
 import { createNewGame } from './state.js';
 import { runReviewPhase } from './review.js';
 import { executeTransfer } from './transfers.js';
@@ -32,6 +33,16 @@ describe('coach recruitment fit (M13b)', () => {
     const p = anExternalPlayer(s);
     p.name = 'Robert Lewandowski';
     expect(coachFit(klopp, p).verdict).toBe('wants');
+  });
+
+  it('a documented castoff is vetoed and named — Lippi wants Baggio moved on', () => {
+    const s = createNewGame({ scenarioId: 'juventus-1995', seed: 'castoff' });
+    const baggio = Object.values(s.players).find((p) => p.name === 'Roberto Baggio')!;
+    const fit = coachFit(s.managerRelations, baggio);
+    expect(fit.verdict).toBe('veto');
+    expect(fit.reason).toContain('moved on');
+    // He surfaces as the man the coach isn't sold on in the opening briefing.
+    expect(coachBriefing(s).notKeenOn.some((n) => n.name === 'Roberto Baggio')).toBe(true);
   });
 });
 

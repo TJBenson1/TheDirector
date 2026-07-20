@@ -351,6 +351,10 @@ export interface ManagerState {
   /** Player NAMES the coach would push to sign (favourites from former clubs),
    *  matched to whoever is actually in the world. */
   favourites: string[];
+  /** Player NAMES the coach specifically wants MOVED ON — a documented real
+   *  falling-out (Lippi and Baggio), not a mere stylistic doubt. He vetoes them
+   *  and keeping one against his wishes strains the relationship. */
+  castoffs: string[];
   /** 0..10 — propensity to accept the Director's suggestions and tolerate
    *  signings made against their wishes. */
   adaptability: number;

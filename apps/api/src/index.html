@@ -179,6 +179,14 @@ function renderPendingDecisions(){
     const t=document.createElement('div'); t.className='t'; t.textContent=d.title; wrap.appendChild(t);
     const ch=document.createElement('div'); ch.className='choices';
     (d.choices||[]).forEach(c=>{ const b=document.createElement('button'); b.textContent=c.label; b.onclick=()=>resolveDecision(d.id, c.id, d.title, c.label); ch.appendChild(b); });
+    // For a contract running down, offer the third road reality's "renew or lose him
+    // for free" pair leaves out: cash in NOW while he still carries a fee.
+    if (d.id.startsWith('renew:')) {
+      const pid = d.id.slice('renew:'.length);
+      const nm = d.title.split("'s contract")[0];
+      const b=document.createElement('button'); b.className='sell'; b.textContent='💰 See his market (cash in)';
+      b.onclick=()=>sellFlow(pid, nm); ch.appendChild(b);
+    }
     wrap.appendChild(ch); log.appendChild(wrap); log.scrollTop=log.scrollHeight;
   }
 }
@@ -266,19 +274,20 @@ async function sellFlow(id, name){
     const r = await fetch('/games/offers', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ state, playerId:id }) });
     const d = await r.json();
     const offers = d.offers||[];
-    if(!offers.length){ bubble(`No club is in the market for ${name} right now (value ~£${((d.marketValue||0)/1e6).toFixed(1)}m).`, 'sys'); return; }
-    // Replace the row's action area with the concrete offers.
-    const row = document.querySelector('[data-player="'+CSS.escape(id)+'"] .act');
     const gbp = f=>'£'+(f/1e6).toFixed(1)+'m';
-    if(row){
-      row.innerHTML = `<span class="sub" style="align-self:center">Sell to:</span>` +
-        offers.map(o=>`<button class="sell" data-club="${esc(o.clubId)}" data-fee="${o.fee}">${esc(o.clubName)} ${gbp(o.fee)}</button>`).join('') +
-        `<button data-cancel="1">Cancel</button>`;
-      row.querySelectorAll('button').forEach(b=>{
-        if(b.dataset.cancel){ b.onclick=()=>showTab('squad'); return; }
-        b.onclick=()=>doSell(id, name, b.dataset.club, b.textContent, Number(b.dataset.fee));
-      });
-    }
+    if(!offers.length){ bubble(`No club is in the market for ${name} right now (value ~${gbp(d.marketValue||0)}). Let his deal run and he leaves on a free, or hold him.`, 'sys'); return; }
+    const html = `<span class="sub" style="align-self:center">Cash in on ${esc(name)} (value ${gbp(d.marketValue||0)}) — sell to:</span>` +
+      offers.map(o=>`<button class="sell" data-club="${esc(o.clubId)}" data-fee="${o.fee}">${esc(o.clubName)} ${gbp(o.fee)}</button>`).join('') +
+      `<button data-cancel="1">Cancel</button>`;
+    // From the Squad tab, show the offers inline on the player's row; from a chat
+    // decision card (a contract running down) there's no row — use a bubble.
+    const row = document.querySelector('[data-player="'+CSS.escape(id)+'"] .act');
+    const host = row || (()=>{ const el=document.createElement('div'); el.className='msg decision'; const c=document.createElement('div'); c.className='choices'; el.appendChild(c); log.appendChild(el); log.scrollTop=log.scrollHeight; return c; })();
+    host.innerHTML = html;
+    host.querySelectorAll('button').forEach(b=>{
+      if(b.dataset.cancel){ b.onclick=()=>{ if(row) showTab('squad'); else host.closest('.decision').remove(); }; return; }
+      b.onclick=()=>doSell(id, name, b.dataset.club, b.textContent, Number(b.dataset.fee));
+    });
   } catch(e){ bubble('(could not fetch offers — try again)', 'sys'); }
 }
 

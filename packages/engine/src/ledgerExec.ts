@@ -370,19 +370,41 @@ function offerUserLedgerMove(state: GameState, entry: RealTransferLedgerEntry, k
   // there, and it remains the ignore fallout; the interrupt just guarantees you SEE
   // it.) A squad player's real move stays a soft, ignore-to-reality decision.
   const isStar = player.ability >= 85;
+  // A departure the COACH pushed for (Lippi selling Baggio) is a different story
+  // from a player agitating to leave: keeping him overrules the coach and strains
+  // that relationship, rather than merely unsettling the player.
+  const coach = state.managerRelations;
+  const isCastoff = coach.castoffs.includes(player.name);
+  const description = isCastoff
+    ? `This is the window ${player.name} really left for ${buyer?.name ?? entry.to} — a sale ${coach.identity} pushed for; he wants him moved on. Cash in as reality had it, or overrule your coach and keep him, and expect the friction to fester.`
+    : `This is the window ${player.name} really left for ${buyer?.name ?? entry.to}. Sanction the sale, or keep him — he wanted the move, so refusing will unsettle him.`;
+  const keepChoice = isCastoff
+    ? {
+        id: 'keep',
+        label: `Overrule ${coach.identity} and keep ${player.name}`,
+        onSuccess: [
+          { kind: 'agitation' as const, playerId: entry.playerId, amount: 24, text: `kept against ${coach.identity}'s wishes` },
+          { kind: 'managerRelationship' as const, amount: -14, text: `You overruled ${coach.identity} and kept ${player.name}, whom he wanted sold.` },
+        ],
+      }
+    : {
+        id: 'keep',
+        // You can always keep a player (§ "money talks, but you can refuse") — the
+        // cost is unrest (38 sits just below the forced-exit threshold, so he stays
+        // but sulks), not a guaranteed exit like a rejected poach bid.
+        label: `Keep ${player.name} (he wanted the move — unrest)`,
+        onSuccess: [{ kind: 'agitation' as const, playerId: entry.playerId, amount: 38, text: `wanted the move to ${buyer?.name ?? entry.to} that you blocked` }],
+      };
   state.pendingDecisions.push({
     id: `real-out:${key}`,
     title: `${buyer?.name ?? entry.to} bid £${feeM}m for ${player.name} (his real move)`,
-    description: `This is the window ${player.name} really left for ${buyer?.name ?? entry.to}. Sanction the sale, or keep him — he wanted the move, so refusing will unsettle him.`,
+    description,
     interrupt: isStar,
     clubId: state.playerClub,
     category: 'transfer',
     choices: [
       { id: 'sell', label: `Sanction the £${feeM}m sale (as in reality)`, onSuccess: [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.to, amount: entry.fee, tag: realizedTag }] },
-      // You can always keep a player (§ "money talks, but you can refuse") — the
-      // cost is unrest (38 sits just below the forced-exit threshold, so he stays
-      // but sulks), not a guaranteed exit like a rejected poach bid.
-      { id: 'keep', label: `Keep ${player.name} (he wanted the move — unrest)`, onSuccess: [{ kind: 'agitation', playerId: entry.playerId, amount: 38, text: `wanted the move to ${buyer?.name ?? entry.to} that you blocked` }] },
+      keepChoice,
     ],
     falloutIfIgnored: [{ kind: 'transferOut', playerId: entry.playerId, clubId: entry.to, amount: entry.fee, tag: realizedTag }],
     memoryTags: ['real-move', entry.playerId],

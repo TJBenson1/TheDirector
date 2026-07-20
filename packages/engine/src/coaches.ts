@@ -70,6 +70,9 @@ interface RealCoach {
   archetype: CoachArchetype;
   formation?: Formation; // override the archetype's default shape
   favourites?: string[];
+  /** Players this coach had a documented real falling-out with and wanted moved
+   *  on (Lippi wanted rid of Baggio to build around Del Piero). */
+  castoffs?: string[];
 }
 
 /** Real managers by scenario. Formation overrides where the real coach played a
@@ -87,7 +90,9 @@ const REAL_COACHES: Record<string, RealCoach> = {
   'spurs-2013': { identity: 'André Villas-Boas', archetype: 'pragmatic-counter', formation: '4-2-3-1' },
   'chelsea-1996': { identity: 'Ruud Gullit', archetype: 'possession', formation: '3-5-2' },
   'man-city-2008': { identity: 'Mark Hughes', archetype: 'pragmatic-counter', formation: '4-4-2' },
-  'juventus-1995': { identity: 'Marcello Lippi', archetype: 'defensive-block', formation: '4-3-3' },
+  // Lippi arrived in 1994 set on building around a young Del Piero and pushed the
+  // reigning Ballon d'Or, Roberto Baggio, out to Milan — the era's defining feud.
+  'juventus-1995': { identity: 'Marcello Lippi', archetype: 'defensive-block', formation: '4-3-3', castoffs: ['Roberto Baggio'] },
   'juventus-2006': { identity: 'Didier Deschamps', archetype: 'balanced', formation: '4-4-2' },
   'milan-1995': { identity: 'Fabio Capello', archetype: 'defensive-block', formation: '4-4-2' },
   'milan-2007': { identity: 'Carlo Ancelotti', archetype: 'man-manager', formation: '4-2-3-1', favourites: ['Kaká'] },
@@ -186,6 +191,11 @@ export function coachFit(coach: ManagerState, player: PlayerState): CoachFit {
   if (coach.favourites.includes(player.name)) {
     return { score: 100, verdict: 'wants', reason: `${player.name} is one of ${coach.identity}'s own — he wants him back.` };
   }
+  // A documented real falling-out overrides any stylistic read: the coach has made
+  // up his mind and wants the player moved on (Lippi and Baggio).
+  if (coach.castoffs.includes(player.name)) {
+    return { score: -100, verdict: 'veto', reason: `${coach.identity} has made it clear he wants ${player.name} moved on — he is not part of his plans.` };
+  }
   const lean = coach.traitLean;
   const per = player.personality;
   const raw =
@@ -242,6 +252,7 @@ export function coachForScenario(scenarioId: string, startYear: number): Manager
     activeFormation: formation,
     traitLean: { ...base.traitLean },
     favourites: real?.favourites ?? [],
+    castoffs: real?.castoffs ?? [],
     adaptability: base.adaptability,
   };
 }
@@ -299,6 +310,7 @@ export function appointCoach(
     activeFormation: formation,
     traitLean: { ...base.traitLean },
     favourites: [],
+    castoffs: [], // a new appointment arrives without inherited feuds
     adaptability: base.adaptability,
   };
   logEvent(state, {
