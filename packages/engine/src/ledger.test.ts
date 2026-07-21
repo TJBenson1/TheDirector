@@ -156,7 +156,13 @@ describe('more start points (§4 data)', () => {
         s = advanceWindow(s).state;
       }
       expect(resolvePlayer(s, 'Cristiano Ronaldo')?.club).toBe('man_utd'); // never hijacked
-      const alt = s.eventLog.find((e) => e.code === 'ledger.alternative' && e.data?.to === 'chelsea');
+      // Chelsea replaces the lost striker with a real, named man — either a curated
+      // near-miss (Rooney, whom they really bid for) or a generic real alternative.
+      const alt = s.eventLog.find(
+        (e) =>
+          (e.code === 'ledger.alternative' && e.data?.to === 'chelsea') ||
+          (e.code === 'ledger.nearmiss' && e.data?.clubId === 'chelsea'),
+      );
       if (alt) {
         sawAlternative = true;
         const altPlayer = s.players[String(alt.data!.playerId)]!;

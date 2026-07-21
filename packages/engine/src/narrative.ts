@@ -76,7 +76,7 @@ function coachMood(rel: number): string {
 
 /** Only recent, story-worthy events — not procedural filler churn. */
 function isNotable(code: string): boolean {
-  return /scripted|coach|transfer\.completed|window\.review|board|scandal|injury\.(serious|real)|season\.complete|crisis|takeover|retire|ucl\.final/.test(code);
+  return /scripted|coach|transfer\.completed|window\.review|board|scandal|injury\.(serious|real)|season\.complete|crisis|takeover|retire|ucl\.final|ledger\.nearmiss|rival\.escalate/.test(code);
 }
 
 export function narrativeContext(state: GameState, opts: { recent?: number } = {}): NarrativeContext {

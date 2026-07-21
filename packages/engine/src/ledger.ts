@@ -134,12 +134,27 @@ const NEAR_MISS_2004: NearMissEntry[] = [
   { playerId: 'cur_gerrard3', to: 'chelsea', window: '2004-07', note: 'Chelsea pursued Gerrard; he stayed at Liverpool' },
   // Essien nearly joined Liverpool before Mourinho's Chelsea landed him.
   { playerId: 'cur_essien', to: 'liverpool', window: '2005-07', note: 'Liverpool were in for Essien before Chelsea' },
+  // Chelsea's £30m bid for Rooney in 2004 was real; he chose United instead.
+  { playerId: 'cur_rooney2', to: 'chelsea', window: '2004-07', note: 'Chelsea bid £30m for Rooney; he chose United' },
+  // Both Real and Chelsea chased Robben out of PSV in 2004; Chelsea won the race.
+  { playerId: 'cur_robben2', to: 'real_madrid', window: '2004-07', note: 'Real were in for Robben before Chelsea landed him' },
 ];
 
 /** Near-misses of 2003: the summer the game turns on. */
 const NEAR_MISS_2003: NearMissEntry[] = [
   // Laporta campaigned on signing Beckham for Barcelona; he chose Real Madrid.
   { playerId: 'cur_beckham_u', to: 'barcelona', window: '2003-07', note: "Barça's Laporta courted Beckham; he chose Real" },
+];
+
+/**
+ * Near-misses of the early-2010s English boom (eng-2010, played from Liverpool's chair).
+ * The user's own example: deny a rival its striker and it turns to the man it nearly
+ * signed anyway — sign Agüero out from under City in 2011 and they go for Van Persie,
+ * whom they circled before he chose United. (Agüero's real 2011 move to City is seeded
+ * in LEDGER_ENG_2010 so there is a real signing for the Director to butterfly away.)
+ */
+const NEAR_MISS_ENG_2010: NearMissEntry[] = [
+  { playerId: 'cur_van_persie_10', to: 'man_city', window: '2011-07', note: 'City circled Van Persie before he chose United' },
 ];
 
 /**
@@ -659,6 +674,10 @@ const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
   // ── The elite market moves as reality ──
   { playerId: 'cur_fabregas_10', from: 'arsenal', to: 'barcelona', window: '2011-08', fee: 29_000_000, id: 'cesc-barca-2011' },
   { playerId: 'cur_nasri_10', from: 'arsenal', to: 'man_city', window: '2011-08', fee: 24_000_000, id: 'nasri-city-2011' },
+  // Agüero's real 2011 move to City — seeded so the takeover-era striker signing is
+  // modelled, and so a Director who signs him first leaves City chasing their Plan-B
+  // (Van Persie, in NEAR_MISS_ENG_2010).
+  { playerId: 'cur_aguero_10', from: 'atletico', to: 'man_city', window: '2011-07', fee: 38_000_000, id: 'aguero-city-2011' },
   { playerId: 'cur_van_persie_10', from: 'arsenal', to: 'man_utd', window: '2012-08', fee: 24_000_000, id: 'rvp-utd-2012' },
   { playerId: 'cur_ozil_rm10', from: 'real_madrid', to: 'arsenal', window: '2013-09', fee: 42_500_000, id: 'ozil-arsenal-2013' },
   { playerId: 'cur_modric_10', from: 'spurs', to: 'real_madrid', window: '2012-08', fee: 33_000_000, id: 'modric-real-2012' },
@@ -927,7 +946,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-la-liga-2006': { realTransferLedger: LEDGER_LA_LIGA_2006, academyIntakes: INTAKES_ESP, realInjuries: [], academyGraduates: GRADUATES_ESP },
   'era-la-liga-2014': { realTransferLedger: LEDGER_LA_LIGA_2014, academyIntakes: INTAKES_ESP, realInjuries: [], academyGraduates: GRADUATES_ESP },
   'era-eng-2008': { realTransferLedger: LEDGER_ENG_2008, academyIntakes: INTAKES_1999, realInjuries: [], academyGraduates: GRADUATES_1999 },
-  'era-eng-2010': { realTransferLedger: LEDGER_ENG_2010, academyIntakes: INTAKES_1999, realInjuries: [], academyGraduates: GRADUATES_1999 },
+  'era-eng-2010': { realTransferLedger: LEDGER_ENG_2010, academyIntakes: INTAKES_1999, realInjuries: [], nearMissLedger: NEAR_MISS_ENG_2010, academyGraduates: GRADUATES_1999 },
   'era-eng-1995': { realTransferLedger: LEDGER_ENG_1995, academyIntakes: INTAKES_1999, realInjuries: [], academyGraduates: GRADUATES_1999 },
   'era-bundesliga-1997': { realTransferLedger: LEDGER_BUNDESLIGA_1997, academyIntakes: INTAKES_GER, realInjuries: [], academyGraduates: GRADUATES_GER },
   'era-bundesliga-1998': { realTransferLedger: LEDGER_BUNDESLIGA_1997, academyIntakes: INTAKES_GER, realInjuries: [], academyGraduates: GRADUATES_GER },

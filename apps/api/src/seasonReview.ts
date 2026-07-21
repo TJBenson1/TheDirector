@@ -43,6 +43,26 @@ function recentRegisterBeats(state: GameState, sinceMonths = 14): string[] {
     .map((b) => b.detail);
 }
 
+/**
+ * The butterfly COUNTERPUNCHES the Director's business has caused lately — a rival
+ * denied a real signing turning to the man it nearly landed anyway (City, denied
+ * Agüero, going for Van Persie). The most satisfying kind of consequence: the world
+ * reshaping itself in traceable, real-history-grained ways around what the Director
+ * did. Pulled from the divergence log so the narrator can tell the causal story.
+ */
+function recentCounterpunches(state: GameState, sinceMonths = 14): string[] {
+  const nowIdx = Number(state.clock.date.slice(0, 4)) * 12 + Number(state.clock.date.slice(5, 7));
+  return state.timeline.divergenceLog
+    .filter((d) => {
+      if (d.kind !== 'butterfly') return false;
+      const idx = Number(d.date.slice(0, 4)) * 12 + Number(d.date.slice(5, 7));
+      return nowIdx - idx <= sinceMonths && /\binstead\b|denied|no longer strong/i.test(d.detail);
+    })
+    .slice(-4)
+    .reverse()
+    .map((d) => d.detail);
+}
+
 interface ReviewData {
   finish: number;
   expected: number;
@@ -137,6 +157,9 @@ export function beatFacts(
     // renewals, near-misses, career forks and injuries, each resolved with or against
     // history. A headline seam of the story, so the narrator leans on it.
     realityRegister: recentRegisterBeats(state),
+    // Butterfly counterpunches: rivals reshaping their business around the Director's —
+    // a denied club turning to the man it nearly signed anyway.
+    counterpunches: recentCounterpunches(state),
     threads: ctx.threads,
   };
 
