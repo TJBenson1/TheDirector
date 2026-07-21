@@ -167,11 +167,34 @@ export function careerFulfilmentOdds(
   return clamp01(p) * 0.9 + 0.05;
 }
 
-// Note: the "swoop first, or the rival lands the man they missed" transfer near-miss
-// is already served by the live opening-window gazump (M12A/C) — real ledger deals
-// (Thiago→Bayern, Ronaldinho→Barça, …) are offered for the Director to hijack as they
-// open, which a date-fired scripted beat can't do (the deal has already resolved by
-// the time a later month fires). So there is no separate transfer-near-miss factor.
+/**
+ * The probability the Director WINS the race for a real near-miss target — the deal
+ * that almost happened, landed this time. Turns on the club's pull (its strength) and
+ * the money it can put on the table against the calibre of the man. Lose the roll and
+ * the target goes where he really went: the rival lands the man they historically got.
+ *
+ * (This drives the mid-save "swoop for a chased target who stayed put" beats. A target
+ * whose real move happens in the OPENING window is handled instead by the live gazump,
+ * M12A/C — a date-fired beat can't reach it, the deal has already resolved.)
+ */
+export function transferLandsOdds(
+  state: GameState,
+  opts: { targetAbility: number },
+): number {
+  const user = state.clubs[state.playerClub];
+  if (!user) return 0.5;
+  let p = 0.5;
+
+  // A bigger club turns more heads.
+  p += ((user.strength - 80) / 20) * 0.16;
+
+  // Money on the table against the calibre of the target.
+  const budget = user.finances.transferBudget;
+  const priceish = 1_000_000 * Math.exp(0.11 * (opts.targetAbility - 70)); // rises steeply with ability
+  p += budget >= priceish * 1.5 ? 0.12 : budget >= priceish ? 0.04 : budget >= priceish * 0.6 ? -0.06 : -0.2;
+
+  return clamp01(p) * 0.9 + 0.05;
+}
 
 /**
  * The probability a real career-altering injury is SEEN OFF cleanly — the injury

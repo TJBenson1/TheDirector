@@ -33,7 +33,7 @@ import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 import { executeTransfer } from './transfers.js';
 import { clubSquadPlayers, recomputeClubStrength } from './players.js';
 import { valuePlayer, suggestWage } from './finance.js';
-import { contractRetentionOdds, sagaFee, feeMillions, sportingRewriteOdds, careerFulfilmentOdds, injuryRecoveryOdds } from './realityRegister.js';
+import { contractRetentionOdds, sagaFee, feeMillions, sportingRewriteOdds, careerFulfilmentOdds, injuryRecoveryOdds, transferLandsOdds } from './realityRegister.js';
 
 /**
  * Dressing-room wage parity (§ internal friction). Football wages only ratchet
@@ -1639,6 +1639,86 @@ const CAREER_NEAR_MISS_PACK: ScriptedEvent[] = [
     fulfilMemory: 'Townsend sharpens his end product and pushes on — the winger the early burst promised.',
     stallMemory: 'Townsend’s level dips back — the flash of promise settling into the journeyman he became.',
   }),
+  careerNearMiss({
+    id: 'career-januzaj-2014', scenario: 'man-utd-2013', club: 'man_utd', playerId: 'cur_januzaj',
+    date: '2014-09', realFulfilled: false,
+    title: 'Januzaj — the boy who lit up a grim season',
+    blurb: 'Adnan Januzaj is the one bright spark of the post-Ferguson gloom, a two-footed teenager the whole country is raving about. Reality: the hype curdled, the loans piled up, and he faded from view.',
+    fulfilMemory: 'Januzaj builds on the dazzling start — the star United thought they had, made real.',
+    stallMemory: 'Januzaj drifts into loans and irrelevance — the wonderkid who wasn’t, as it went.',
+  }),
+  careerNearMiss({
+    id: 'career-zaha-2014', scenario: 'man-utd-2013', club: 'man_utd', playerId: 'cur_zaha',
+    date: '2014-01', realFulfilled: false,
+    title: 'Zaha — frozen out at Old Trafford',
+    blurb: 'Wilfried Zaha, Ferguson’s last signing, cannot get near the team under the new regime and the confidence is draining out of him. Reality: he flopped at United and only rediscovered himself back at Palace.',
+    fulfilMemory: 'Backed Zaha and unlocked him at United — the electric winger Palace later enjoyed, kept here.',
+    stallMemory: 'Zaha withers on the United bench — a talent wasted before it bloomed elsewhere, as it did.',
+  }),
+  careerNearMiss({
+    id: 'career-jones-2015', scenario: 'man-utd-2013', club: 'man_utd', playerId: 'cur_jones',
+    date: '2015-01', realFulfilled: false,
+    title: 'Phil Jones — “our best player ever”?',
+    blurb: 'Ferguson swore Phil Jones could become United’s greatest ever, able to play anywhere. Reality: a relentless run of injuries and the odd calamity turned the prophecy into a punchline.',
+    fulfilMemory: 'Jones stays fit and grows into the colossus Ferguson foresaw — the prophecy fulfilled.',
+    stallMemory: 'Jones is ground down by injury and error — the great prediction that never came true, as it was.',
+  }),
+  careerNearMiss({
+    id: 'career-sturridge-2009', scenario: 'man-city-2008', club: 'man_city', playerId: 'cur_sturridge_c8',
+    date: '2009-09', realFulfilled: false,
+    title: 'Sturridge — the finisher City let slip',
+    blurb: 'Daniel Sturridge is a natural goalscorer stuck behind the takeover’s marquee names and starved of minutes. Reality: he left for nothing and became prolific elsewhere — a finisher City waved away.',
+    fulfilMemory: 'Gave Sturridge his platform and kept him — the prolific striker City really let walk for free.',
+    stallMemory: 'Sturridge is squeezed out and blooms elsewhere — the one that got away, as it happened.',
+  }),
+  careerNearMiss({
+    id: 'career-joecole-2005', scenario: 'chelsea-2003', club: 'chelsea', playerId: 'cur_joecole_c3',
+    date: '2005-01', realFulfilled: false,
+    title: 'Joe Cole — flair in a machine',
+    blurb: 'Joe Cole is England’s most gifted improviser, but Mourinho wants discipline and running before magic. Reality: he added the graft, had some fine years, then injuries and a fade robbed him of the very top.',
+    fulfilMemory: 'Cole marries the flair to the discipline and reaches the top tier — the maverick fulfilled.',
+    stallMemory: 'Cole’s magic is coached down and then injury bites — the gifted one who fell just short, as it went.',
+  }),
+  careerNearMiss({
+    id: 'career-saviola-2004', scenario: 'barcelona-2003', club: 'barcelona', playerId: 'cur_saviola_b3',
+    date: '2004-08', realFulfilled: false,
+    title: 'Saviola — El Conejo’s crossroads',
+    blurb: 'Javier Saviola arrived billed as the next great Argentine forward, but the goals have slowed and the new regime is not convinced. Reality: he was loaned out and never fulfilled the enormous promise.',
+    fulfilMemory: 'Kept faith with Saviola and reignited him — the great Argentine forward his talent promised.',
+    stallMemory: 'Saviola is loaned out and fades — the wonderkid who never quite was, exactly as it went.',
+  }),
+  careerNearMiss({
+    id: 'career-gago-2007', scenario: 'real-madrid-2006', club: 'real_madrid', playerId: 'cur_gago_r6',
+    date: '2007-09', realFulfilled: false,
+    title: 'Gago — the next Redondo?',
+    blurb: 'Fernando Gago has been anointed the heir to Redondo, an elegant metronome in Madrid’s midfield. Reality: injuries and inconsistency meant the comparison quietly faded away.',
+    fulfilMemory: 'Gago grows into the midfield conductor Madrid dreamed of — the Redondo heir, fulfilled.',
+    stallMemory: 'Gago’s promise dissolves in injury and drift — the comparison abandoned, as it was.',
+  }),
+  careerNearMiss({
+    id: 'career-redknapp-1996', scenario: 'liverpool-1995', club: 'liverpool', playerId: 'cur_redknapp_95',
+    date: '1996-11', realFulfilled: false,
+    title: 'Redknapp — the elegance and the fragility',
+    blurb: 'Jamie Redknapp is a cultured playmaker tipped to run England’s midfield for a decade. Reality: a catalogue of injuries hollowed out a career that promised so much more.',
+    fulfilMemory: 'Managed Redknapp’s body and kept him whole — the cultured midfield general England awaited.',
+    stallMemory: 'Redknapp’s injuries mount and the promise leaks away — the nearly-great, as it truly went.',
+  }),
+  careerNearMiss({
+    id: 'career-ricken-1998', scenario: 'dortmund-1997', club: 'dortmund', playerId: 'cur_ricken_97',
+    date: '1998-09', realFulfilled: false,
+    title: 'Ricken — the golden boy of the final',
+    blurb: 'Lars Ricken chipped the European Cup final winner as a 20-year-old substitute and looked destined for greatness. Reality: injuries and the weight of expectation meant he never truly kicked on.',
+    fulfilMemory: 'Ricken builds on his final-night immortality — the golden boy who became a great, at last.',
+    stallMemory: 'Ricken never escapes the shadow of that one perfect chip — the promise unfulfilled, as it was.',
+  }),
+  careerNearMiss({
+    id: 'career-ventola-1999', scenario: 'inter-1998', club: 'inter', playerId: 'cur_ventola',
+    date: '1999-09', realFulfilled: false,
+    title: 'Ventola — the spark behind Ronaldo',
+    blurb: 'Nicola Ventola is a quick, fearless young forward pressing for a place in a star-studded Inter attack. Reality: knee injuries wrecked his rhythm and a bright career petered out.',
+    fulfilMemory: 'Ventola stays fit and forces his way in — the striker Inter’s academy always believed in.',
+    stallMemory: 'Ventola’s knees betray him and the spark dies out — the nearly-man, as it really went.',
+  }),
 ];
 
 // ── The marquee injury register: the injuries that can go the other way ───────
@@ -1749,6 +1829,110 @@ const INJURY_BEAT_PACK: ScriptedEvent[] = [
   }),
 ];
 
+// ── The transfer near-miss register: the deals that almost happened ───────────
+// A real target the club historically chased and missed, offered mid-save as a swoop.
+// Win the factor roll (`transferLandsOdds` — the club's pull and its budget vs the
+// calibre) and you land the man reality let slip; lose it, or wave it away, and he
+// stays put (or goes where he went — the ledger completes any real move on the miss
+// path). Only targets still at their club when the beat fires qualify: a deal that
+// resolves in the OPENING window is handled by the live gazump (M12A/C) instead.
+
+interface TransferNearMissCfg {
+  id: string;
+  scenario: string;
+  club: ClubState['id']; // the user's club (the historical near-miss suitor)
+  targetId: string;
+  fromClub: ClubState['id']; // where the target sits when the chance comes
+  date: string;
+  title: string;
+  blurb: string;
+  landMemory: string;
+  missMemory: string;
+}
+
+/** Build a swoop beat: land a real near-miss target, or watch him stay where he was. */
+function transferNearMiss(cfg: TransferNearMissCfg): ScriptedEvent {
+  return {
+    id: cfg.id,
+    date: cfg.date,
+    scenarios: [cfg.scenario],
+    requires: (s) =>
+      s.playerClub === cfg.club && playerAt(s, cfg.targetId, cfg.fromClub) && !!s.clubs[cfg.club],
+    build: (s) => {
+      const target = s.players[cfg.targetId]!;
+      const odds = transferLandsOdds(s, { targetAbility: target.ability });
+      const fee = sagaFee(s, target);
+      const feeM = feeMillions(fee);
+      const land = [
+        { kind: 'transferOut' as const, playerId: cfg.targetId, clubId: cfg.club, amount: fee },
+        { kind: 'memory' as const, tag: 'transfer-near-miss', text: cfg.landMemory },
+      ];
+      return {
+        id: `register:${cfg.id}`,
+        title: cfg.title,
+        description: `${cfg.blurb} (~£${feeM}m).`,
+        interrupt: true,
+        clubId: cfg.club,
+        category: 'event',
+        choices: [
+          {
+            id: 'swoop',
+            label: `Go all in — land him (£${feeM}m)`,
+            successProbability: odds,
+            onSuccess: land,
+            // Lose the race and he goes where he really went (the ledger completes it).
+            onFailure: [{ kind: 'memory', tag: 'transfer-near-miss', text: cfg.missMemory }],
+          },
+          {
+            id: 'pass',
+            label: 'Stay disciplined — walk away',
+            successProbability: 1,
+            onSuccess: [{ kind: 'memory', tag: 'transfer-near-miss', text: cfg.missMemory }],
+            onFailure: [],
+          },
+        ],
+        falloutIfIgnored: [{ kind: 'memory', tag: 'transfer-near-miss', text: cfg.missMemory }],
+        memoryTags: ['transfer-near-miss', cfg.targetId],
+      };
+    },
+  };
+}
+
+const TRANSFER_NEAR_MISS_PACK: ScriptedEvent[] = [
+  transferNearMiss({
+    id: 'swoop-terry-2009', scenario: 'man-city-2008', club: 'man_city', targetId: 'cur_terry_c8', fromClub: 'chelsea',
+    date: '2009-07',
+    title: 'The world-record bid for John Terry',
+    blurb: 'The takeover’s money makes the impossible possible: prise Chelsea’s captain and heartbeat, John Terry, across London with a British-record offer. Reality: City tried, and Terry stayed at the Bridge',
+    landMemory: 'City stun football and land John Terry — the captain of Chelsea, prised away by the petrodollars.',
+    missMemory: 'Terry stays at Chelsea — the captain rebuffs the money, exactly as he did.',
+  }),
+  transferNearMiss({
+    id: 'swoop-ronaldo-city-2009', scenario: 'man-city-2008', club: 'man_city', targetId: 'cur_cristiano_u8', fromClub: 'man_utd',
+    date: '2009-01',
+    title: 'The £100m question — Cristiano Ronaldo',
+    blurb: 'The most audacious move in the game: test Manchester United with a world-shattering offer for Cristiano Ronaldo and announce City as the new superpower. Reality: he went to Madrid instead',
+    landMemory: 'City land Cristiano Ronaldo — the statement to end all statements, the balance of power ripped up.',
+    missMemory: 'Ronaldo chooses Madrid over the City project — the Galáctico dream, as reality had it.',
+  }),
+  transferNearMiss({
+    id: 'swoop-villa-2009', scenario: 'real-madrid-2006', club: 'real_madrid', targetId: 'cur_villa_v6', fromClub: 'valencia',
+    date: '2009-07',
+    title: 'David Villa — beat Barça to El Guaje',
+    blurb: 'Spain’s deadliest finisher is prised loose by Valencia’s money troubles, and both Madrid and Barcelona want him. Reality: he chose Barça and won a treble',
+    landMemory: 'Madrid land David Villa ahead of Barça — El Guaje’s goals turned white, not blaugrana.',
+    missMemory: 'Villa joins Barcelona — the finisher goes to the enemy, exactly as he did.',
+  }),
+  transferNearMiss({
+    id: 'swoop-gerrard-chelsea-2005', scenario: 'chelsea-2003', club: 'chelsea', targetId: 'cur_gerrard_l', fromClub: 'liverpool',
+    date: '2005-07',
+    title: 'Gerrard — £32m to break the Kop’s heart',
+    blurb: 'Fresh from Istanbul, Steven Gerrard has all but agreed to join Mourinho’s Chelsea, and a British-record bid is on the table. Reality: he performed a dramatic overnight u-turn and stayed at Liverpool',
+    landMemory: 'Chelsea land Gerrard — the u-turn that never comes, the Kop’s captain in blue.',
+    missMemory: 'Gerrard performs his famous u-turn and stays at Liverpool — the deal that got away, as it did.',
+  }),
+];
+
 const ALL_SCRIPTED: ScriptedEvent[] = [
   ...MAN_UTD_1999_PACK,
   ...MAN_UTD_1999_PACK,
@@ -1781,6 +1965,7 @@ const ALL_SCRIPTED: ScriptedEvent[] = [
   ...SPORTING_NEAR_MISS_PACK,
   ...CAREER_NEAR_MISS_PACK,
   ...INJURY_BEAT_PACK,
+  ...TRANSFER_NEAR_MISS_PACK,
 ];
 
 function fireScriptedEvents(state: GameState): void {
