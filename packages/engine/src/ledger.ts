@@ -633,6 +633,14 @@ const INJURIES_2000: RealInjuryEntry[] = [
  * at United past 2008, and the Champions League board from 2006 rearranges.
  */
 const LEDGER_2003_2011: RealTransferLedgerEntry[] = [
+  // ── Abramovich's first spree, live for a Chelsea Director (the whole point of the
+  //    scenario): each marquee arrival with a seller in this world is a sign/veto
+  //    decision, not a done deal. (Duff, Mutu, Joe Cole and Bridge came from clubs
+  //    outside this world, so they stay in the inherited squad.) ──
+  { playerId: 'cur_makelele_c', from: 'real_madrid', to: 'chelsea', window: '2003-07', fee: 16_000_000, id: 'makelele-chelsea-2003c' },
+  { playerId: 'cur_crespo_c3', from: 'inter', to: 'chelsea', window: '2003-07', fee: 16_800_000, id: 'crespo-chelsea-2003c' },
+  { playerId: 'cur_veron_c3', from: 'man_utd', to: 'chelsea', window: '2003-07', fee: 15_000_000, id: 'veron-chelsea-2003c' },
+  { playerId: 'cur_geremi_c3', from: 'real_madrid', to: 'chelsea', window: '2003-07', fee: 7_000_000, id: 'geremi-chelsea-2003c' },
   // ── The live 2003 window — the counterfactual's launch point ──
   { playerId: 'cur_ronaldinho', from: 'psg', to: 'barcelona', window: '2003-07', fee: 30_000_000, id: 'ronaldinho-barca-2003' },
   { playerId: 'cur_cristiano', from: 'sporting', to: 'man_utd', window: '2003-07', fee: 12_200_000, id: 'cristiano-utd-2003' },
@@ -691,6 +699,7 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
   { playerId: 'cur_ronaldo_b96', from: 'psv', to: 'barcelona', window: '1996-07', fee: 13_200_000, id: 'ronaldo-barca-1996' },
   { playerId: 'cur_vieira_a96', from: 'milan', to: 'arsenal', window: '1996-07', fee: 3_500_000, id: 'vieira-arsenal-1996' },
   { playerId: 'cur_dimatteo_c96', from: 'lazio', to: 'chelsea', window: '1996-07', fee: 4_900_000, id: 'dimatteo-chelsea-1996' },
+  { playerId: 'cur_vialli_c96', from: 'juventus', to: 'chelsea', window: '1996-07', fee: 0, id: 'vialli-chelsea-1996b' },
   { playerId: 'cur_sheringham_s96', from: 'spurs', to: 'man_utd', window: '1997-07', fee: 3_500_000, id: 'sheringham-utd-1997' },
   { playerId: 'cur_ronaldo_b96', from: 'barcelona', to: 'inter', window: '1997-07', fee: 27_000_000, id: 'ronaldo-inter-1997' },
   { playerId: 'cur_anelka_a96', from: 'arsenal', to: 'real_madrid', window: '1999-07', fee: 22_500_000, id: 'anelka-real-1999' },
@@ -791,6 +800,8 @@ const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
   { playerId: 'cur_van_der_vaart', from: 'real_madrid', to: 'spurs', window: '2010-08', fee: 8_000_000, id: 'vdv-spurs-2010' },
   { playerId: 'cur_joecole_lv10', from: 'chelsea', to: 'liverpool', window: '2010-07', fee: 0, id: 'joecole-lfc-2010' },
   { playerId: 'cur_meireles_lv10', from: 'porto', to: 'liverpool', window: '2010-07', fee: 11_500_000, id: 'meireles-lfc-2010' },
+  { playerId: 'cur_poulsen_lv10', from: 'juventus', to: 'liverpool', window: '2010-07', fee: 4_500_000, id: 'poulsen-lfc-2010' },
+  { playerId: 'cur_konchesky_lv10', from: 'fulham', to: 'liverpool', window: '2010-07', fee: 4_000_000, id: 'konchesky-lfc-2010' },
   // ── Liverpool's departures (the user's stars leaving, if they are Liverpool) ──
   { playerId: 'cur_torres_lv10', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
   { playerId: 'cur_meireles_lv10', from: 'liverpool', to: 'chelsea', window: '2011-08', fee: 12_000_000, id: 'meireles-chelsea-2011' },
@@ -901,6 +912,7 @@ const LEDGER_BUNDESLIGA_2012: RealTransferLedgerEntry[] = [
 const LEDGER_LA_LIGA_2014: RealTransferLedgerEntry[] = [
   // ── The LIVE opening window (summer 2014) — Luis Enrique's midfield rebuild
   //    (Rakitić, Mathieu) and Real's marquee Kroos are live decisions. ──
+  { playerId: 'cur_suarez_b14', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000, id: 'suarez-barca-2014b' },
   { playerId: 'cur_rakitic_b14', from: 'sevilla', to: 'barcelona', window: '2014-07', fee: 15_000_000, id: 'rakitic-barca-2014' },
   { playerId: 'cur_mathieu_b14', from: 'valencia', to: 'barcelona', window: '2014-07', fee: 16_000_000, id: 'mathieu-barca-2014' },
   { playerId: 'cur_kroos_r14', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
@@ -958,6 +970,7 @@ const LEDGER_LA_LIGA_2003: RealTransferLedgerEntry[] = [
   //    business a Director can try to derail. ──
   { playerId: 'cur_ronaldinho_b3', from: 'psg', to: 'barcelona', window: '2003-07', fee: 30_000_000, id: 'ronaldinho-barca-2003' },
   { playerId: 'cur_beckham_r3', from: 'man_utd', to: 'real_madrid', window: '2003-07', fee: 25_000_000, id: 'beckham-real-2003b' },
+  { playerId: 'cur_marquez_b3', from: 'monaco', to: 'barcelona', window: '2003-07', fee: 5_000_000, id: 'marquez-barca-2003' },
   // ── Barça's title-winning recruitment (the user's, if they are Barça) ──
   { playerId: 'cur_etoo_m3', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 16_000_000, id: 'etoo-barca-2004' },
   { playerId: 'cur_deco_p3', from: 'porto', to: 'barcelona', window: '2004-07', fee: 14_000_000, id: 'deco-barca-2004' },
@@ -1067,6 +1080,8 @@ const LEDGER_SERIE_A_2004: RealTransferLedgerEntry[] = [
   // live business a Director can intercept before the champions strengthen.
   { playerId: 'cur_emerson_04', from: 'roma', to: 'juventus', window: '2004-07', fee: 28_000_000, id: 'emerson-juve-2004' },
   { playerId: 'cur_ibrahimovic_04', from: 'ajax', to: 'juventus', window: '2004-07', fee: 16_000_000, id: 'ibra-juve-2004' },
+  // Cambiasso's free arrival at Inter (the user) — a real-in decision, not a done deal.
+  { playerId: 'cur_cambiasso_04', from: 'real_madrid', to: 'inter', window: '2004-07', fee: 0, id: 'cambiasso-inter-2004' },
   // ── The Calciopoli exodus feeds Inter (the user) and the giants ──
   { playerId: 'cur_ibrahimovic_04', from: 'juventus', to: 'inter', window: '2006-07', fee: 16_600_000, id: 'ibra-inter-2006' },
   { playerId: 'cur_cannavaro_f04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },
