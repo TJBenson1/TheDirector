@@ -108,6 +108,31 @@ function curatedOpening(state: GameState, o: ScenarioOpening): Opening {
       `But the squad isn't settled, and the real decisions live around the edges:\n${o.fringe.map((f) => `• ${f}`).join('\n')}`,
     );
   }
+
+  // ── The coach's own wish-list: the positions he wants strengthened, and the
+  // concrete names he'd move for. Prefer the real deals the club actually chased
+  // this summer (the marquee is already named in the scene, so skip it); fall
+  // back to the engine's derived targets when the ledger has nothing more. ──
+  const brief = coachBriefing(state);
+  const spots = [...new Set(brief.strengthen.map((s) => POSITION_LABEL[s.position] ?? s.position))];
+  if (spots.length) {
+    meetingParts.push(`Pressed on where the side needs work, ${o.coach} doesn't hedge: he wants it strengthened at ${joinNames(spots)}.`);
+  }
+
+  const inbound = realInboundThisWindow(state).slice(1); // drop the marquee (already named)
+  if (inbound.length) {
+    const named = inbound.map((r) => {
+      const pos = state.players[r.playerId]?.positions?.[0];
+      const posLabel = pos ? POSITION_LABEL[pos] ?? pos.toLowerCase() : '';
+      const detail = [posLabel, `${fee(r.fee)} from ${r.fromClub}`].filter((x) => x).join(', ');
+      return `${r.name} (${detail})`;
+    });
+    meetingParts.push(`And he's put names on the table — the men the club really went for that summer: ${joinNames(named)}. Back the moves, redirect the money, or hold your fire.`);
+  } else if (brief.targets.length) {
+    const named = brief.targets.map((t) => `${t.name} (${t.club})`);
+    meetingParts.push(`And he's put a name or two in front of you — the sort who'd move the needle: ${joinNames(named)}.`);
+  }
+
   meetingParts.push(
     `The transfer window is open and the squad is yours to shape. Renew the men worth keeping, back the coach or overrule him, correct the history or let it ride — where do you want to start?`,
   );
