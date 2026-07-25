@@ -124,7 +124,7 @@ export function suggestTargets(
 ): TargetSuggestion[] {
   const max = opts.maxResults ?? 8;
   const group = GROUP[position];
-  const rows: Array<{ s: TargetSuggestion; score: number }> = [];
+  const rows: Array<{ s: TargetSuggestion; score: number; exact: boolean }> = [];
   for (const p of Object.values(state.players)) {
     if (isProcedural(p)) continue; // real players only
     if (p.retired) continue; // hung up his boots
@@ -136,7 +136,12 @@ export function suggestTargets(
     // On loan (owned elsewhere) or a returning villain — never a real target.
     if (isOnLoan(p.id)) continue;
     if (isPersonaNonGrata(state.playerClub, p)) continue;
-    const inPosition = p.positions.includes(position) || p.positions.some((pos) => GROUP[pos] === group);
+    // A true specialist in the EXACT position (an actual right-back for an RB
+    // query) versus a positional-group cousin (a centre-back, who shares the DEF
+    // group). Both are eligible, but exact matches are ranked first below so a
+    // request for a right-back returns right-backs, not the best available CB.
+    const exact = p.positions.includes(position);
+    const inPosition = exact || p.positions.some((pos) => GROUP[pos] === group);
     if (!inPosition) continue;
 
     const price = askingPrice(state, p.id);
@@ -176,6 +181,7 @@ export function suggestTargets(
     const score = base + availability;
     rows.push({
       score,
+      exact,
       s: {
         playerId: p.id,
         name: p.name,
@@ -192,7 +198,10 @@ export function suggestTargets(
       },
     });
   }
-  rows.sort((a, b) => b.score - a.score);
+  // Exact-position specialists first, then by score; positional-group cousins only
+  // fill the remaining slots when true specialists are scarce. So an RB query lists
+  // right-backs and drops to centre-backs only if there aren't enough real RBs.
+  rows.sort((a, b) => Number(b.exact) - Number(a.exact) || b.score - a.score);
   return rows.slice(0, max).map((r) => r.s);
 }
 
