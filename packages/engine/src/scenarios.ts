@@ -715,6 +715,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'mallorca', name: 'RCD Mallorca', prestige: 58 },
       { id: 'porto', name: 'FC Porto', prestige: 82 },
       { id: 'monaco', name: 'AS Monaco', prestige: 78 },
+      // PSG — the selling club for Ronaldinho's 2003 move to Barça (the dawn of the
+      // scenario), so his signing is a live opening-window decision.
+      { id: 'psg', name: 'Paris Saint-Germain', prestige: 68 },
       // European selling clubs (M12A rollout) — the Mourinho-Porto-era pipeline.
       { id: 'ajax', name: 'Ajax', prestige: 76 },
       { id: 'psv', name: 'PSV Eindhoven', prestige: 78 },

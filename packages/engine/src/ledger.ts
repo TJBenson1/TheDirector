@@ -491,6 +491,12 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
  */
 const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
   { playerId: 'cur_vieri', from: 'inter', to: 'milan', window: '2005-07', fee: 8_000_000, id: 'vieri-milan-2005' },
+  // ── The LIVE opening window (summer 2000) — beyond Figo's galáctico, the summer's
+  //    other business (Arsenal's double exit to Barça, Crespo's world-record move to
+  //    Lazio) is live and interceptable. ──
+  { playerId: 'cur_overmars', from: 'arsenal', to: 'barcelona', window: '2000-07', fee: 25_000_000, id: 'overmars-barca-2000' },
+  { playerId: 'cur_petit', from: 'arsenal', to: 'barcelona', window: '2000-07', fee: 7_000_000, id: 'petit-barca-2000' },
+  { playerId: 'cur_crespo', from: 'parma', to: 'lazio', window: '2000-07', fee: 35_000_000, id: 'crespo-lazio-2000' },
   // ── Real Madrid's galácticos — each a real-in decision for the user ──
   // The opening galáctico: Figo's move from Barça is the first decision — sign
   // the deal Pérez really did, or veto it and let him stay a rival.
@@ -737,6 +743,13 @@ const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
  * Figo and Zidane make their real moves — the last two to Real.
  */
 const LEDGER_ENG_1995: RealTransferLedgerEntry[] = [
+  // ── The LIVE opening window (summer 1995) — auto-rewound to their sellers, so
+  //    Bergkamp's arrival, Collymore's British-record move to Anfield and the rest
+  //    are live decisions. ──
+  { playerId: 'cur_bergkamp_a96', from: 'inter', to: 'arsenal', window: '1995-07', fee: 7_500_000, id: 'bergkamp-arsenal-1995' },
+  { playerId: 'cur_collymore_95', from: 'nottm_forest', to: 'liverpool', window: '1995-07', fee: 8_500_000, id: 'collymore-lfc-1995' },
+  { playerId: 'cur_ferdinand_95', from: 'qpr', to: 'newcastle', window: '1995-07', fee: 6_000_000, id: 'lesferdinand-newcastle-1995' },
+  { playerId: 'cur_klinsmann_b96', from: 'spurs', to: 'bayern', window: '1995-07', fee: 3_000_000, id: 'klinsmann-bayern-1995' },
   // ── Shearer's £15m record move home (and the correct home for him from 1996) ──
   { playerId: 'cur_shearer_95', from: 'blackburn', to: 'newcastle', window: '1996-07', fee: 15_000_000, id: 'shearer-newcastle-1996' },
   // ── The Spice Boys picked apart (the user's stars leaving, if they are Liverpool) ──
@@ -758,6 +771,15 @@ const LEDGER_ENG_1995: RealTransferLedgerEntry[] = [
  * Madrid, RVP to United — plays out as it really did.
  */
 const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
+  // ── The LIVE opening window (summer 2010) — auto-rewound to their selling clubs.
+  //    City's project signings (Yaya, Balotelli), Chelsea and Spurs' business, and
+  //    Liverpool's own arrivals become live decisions. ──
+  { playerId: 'cur_yaya_ci10', from: 'barcelona', to: 'man_city', window: '2010-07', fee: 24_000_000, id: 'yaya-city-2010' },
+  { playerId: 'cur_balotelli_ci10', from: 'inter', to: 'man_city', window: '2010-08', fee: 24_000_000, id: 'balotelli-city-2010' },
+  { playerId: 'cur_ramires_ch10', from: 'benfica', to: 'chelsea', window: '2010-07', fee: 18_000_000, id: 'ramires-chelsea-2010' },
+  { playerId: 'cur_van_der_vaart', from: 'real_madrid', to: 'spurs', window: '2010-08', fee: 8_000_000, id: 'vdv-spurs-2010' },
+  { playerId: 'cur_joecole_lv10', from: 'chelsea', to: 'liverpool', window: '2010-07', fee: 0, id: 'joecole-lfc-2010' },
+  { playerId: 'cur_meireles_lv10', from: 'porto', to: 'liverpool', window: '2010-07', fee: 11_500_000, id: 'meireles-lfc-2010' },
   // ── Liverpool's departures (the user's stars leaving, if they are Liverpool) ──
   { playerId: 'cur_torres_lv10', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
   { playerId: 'cur_meireles_lv10', from: 'liverpool', to: 'chelsea', window: '2011-08', fee: 12_000_000, id: 'meireles-chelsea-2011' },
@@ -894,6 +916,11 @@ const LEDGER_LA_LIGA_2006: RealTransferLedgerEntry[] = [
 ];
 
 const LEDGER_LA_LIGA_2003: RealTransferLedgerEntry[] = [
+  // ── The LIVE opening window (summer 2003) — the dawn: Ronaldinho's move from PSG
+  //    is the user's signature signing, and Beckham's galáctico switch is the rival
+  //    business a Director can try to derail. ──
+  { playerId: 'cur_ronaldinho_b3', from: 'psg', to: 'barcelona', window: '2003-07', fee: 30_000_000, id: 'ronaldinho-barca-2003' },
+  { playerId: 'cur_beckham_r3', from: 'man_utd', to: 'real_madrid', window: '2003-07', fee: 25_000_000, id: 'beckham-real-2003b' },
   // ── Barça's title-winning recruitment (the user's, if they are Barça) ──
   { playerId: 'cur_etoo_m3', from: 'mallorca', to: 'barcelona', window: '2004-07', fee: 16_000_000, id: 'etoo-barca-2004' },
   { playerId: 'cur_deco_p3', from: 'porto', to: 'barcelona', window: '2004-07', fee: 14_000_000, id: 'deco-barca-2004' },
