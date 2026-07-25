@@ -680,6 +680,11 @@ const INJURIES_1995: RealInjuryEntry[] = [
  * and Anelka's cash-out (Arsenal is the user, so his sale is theirs to sanction).
  */
 const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
+  // ── The LIVE opening window (summer 1996) — Ronaldo's move to Barça (his one
+  //    Camp Nou season), Wenger's Vieira, and Chelsea's Italians, all interceptable. ──
+  { playerId: 'cur_ronaldo_b96', from: 'psv', to: 'barcelona', window: '1996-07', fee: 13_200_000, id: 'ronaldo-barca-1996' },
+  { playerId: 'cur_vieira_a96', from: 'milan', to: 'arsenal', window: '1996-07', fee: 3_500_000, id: 'vieira-arsenal-1996' },
+  { playerId: 'cur_dimatteo_c96', from: 'lazio', to: 'chelsea', window: '1996-07', fee: 4_900_000, id: 'dimatteo-chelsea-1996' },
   { playerId: 'cur_sheringham_s96', from: 'spurs', to: 'man_utd', window: '1997-07', fee: 3_500_000, id: 'sheringham-utd-1997' },
   { playerId: 'cur_ronaldo_b96', from: 'barcelona', to: 'inter', window: '1997-07', fee: 27_000_000, id: 'ronaldo-inter-1997' },
   { playerId: 'cur_anelka_a96', from: 'arsenal', to: 'real_madrid', window: '1999-07', fee: 22_500_000, id: 'anelka-real-1999' },
@@ -831,6 +836,9 @@ const LEDGER_BUNDESLIGA_1997: RealTransferLedgerEntry[] = [
  * elite market churns around them.
  */
 const LEDGER_BUNDESLIGA_2009: RealTransferLedgerEntry[] = [
+  // The LIVE opening window (summer 2009): Robben's move from Real is the Van Gaal
+  // reset's cornerstone — a Director signs, or a rival hijacks, the deal.
+  { playerId: 'cur_robben_09', from: 'real_madrid', to: 'bayern', window: '2009-07', fee: 24_000_000, id: 'robben-bayern-2009' },
   { playerId: 'cur_sahin_09', from: 'dortmund', to: 'real_madrid', window: '2011-07', fee: 10_000_000, id: 'sahin-real-2011' },
   { playerId: 'cur_gotze_09', from: 'dortmund', to: 'bayern', window: '2013-07', fee: 37_000_000, id: 'gotze-bayern-2013' },
   { playerId: 'cur_kroos_09', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
@@ -848,6 +856,10 @@ const LEDGER_BUNDESLIGA_2009: RealTransferLedgerEntry[] = [
  * are their stars being prised away one by one.
  */
 const LEDGER_BUNDESLIGA_2012: RealTransferLedgerEntry[] = [
+  // ── The LIVE opening window (summer 2012) — Reus comes home to Dortmund; Kagawa
+  //    is cashed in to United (the user's own sale to sanction or block). ──
+  { playerId: 'cur_reus_12', from: 'gladbach', to: 'dortmund', window: '2012-07', fee: 17_000_000, id: 'reus-dortmund-2012' },
+  { playerId: 'cur_kagawa_u12', from: 'dortmund', to: 'man_utd', window: '2012-07', fee: 12_000_000, id: 'kagawa-utd-2012' },
   // ── The picking-apart of Dortmund's golden generation ──
   { playerId: 'cur_gotze_12', from: 'dortmund', to: 'bayern', window: '2013-07', fee: 37_000_000, id: 'gotze-bayern-2013' },
   { playerId: 'cur_lewandowski_12', from: 'dortmund', to: 'bayern', window: '2014-07', fee: 0, id: 'lewa-bayern-2014' },
@@ -873,6 +885,11 @@ const LEDGER_BUNDESLIGA_2012: RealTransferLedgerEntry[] = [
  * together and the decline never comes. Around it, the modern market churns.
  */
 const LEDGER_LA_LIGA_2014: RealTransferLedgerEntry[] = [
+  // ── The LIVE opening window (summer 2014) — Luis Enrique's midfield rebuild
+  //    (Rakitić, Mathieu) and Real's marquee Kroos are live decisions. ──
+  { playerId: 'cur_rakitic_b14', from: 'sevilla', to: 'barcelona', window: '2014-07', fee: 15_000_000, id: 'rakitic-barca-2014' },
+  { playerId: 'cur_mathieu_b14', from: 'valencia', to: 'barcelona', window: '2014-07', fee: 16_000_000, id: 'mathieu-barca-2014' },
+  { playerId: 'cur_kroos_r14', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
   // ── The hinge: Neymar out, the wasted-money signing in ──
   { playerId: 'cur_neymar_b14', from: 'barcelona', to: 'psg', window: '2017-08', fee: 222_000_000, id: 'neymar-psg-2017' },
   { playerId: 'cur_coutinho_l14', from: 'liverpool', to: 'barcelona', window: '2018-01', fee: 142_000_000, id: 'coutinho-barca-2018', enabledBy: 'neymar-psg-2017' },
@@ -896,6 +913,12 @@ const LEDGER_LA_LIGA_2014: RealTransferLedgerEntry[] = [
  * are Real) — while Barça build their own dynasty around Villa and Alves.
  */
 const LEDGER_LA_LIGA_2006: RealTransferLedgerEntry[] = [
+  // ── The LIVE opening window (summer 2006) — Capello's post-galáctico rebuild:
+  //    the World-Cup-winning Cannavaro, Emerson and Van Nistelrooy arrive as the
+  //    user's real-in decisions. ──
+  { playerId: 'cur_cannavaro_r6', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },
+  { playerId: 'cur_emerson_r6', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_500_000, id: 'emerson-real-2006' },
+  { playerId: 'cur_van_nistelrooy_r6', from: 'man_utd', to: 'real_madrid', window: '2006-07', fee: 10_000_000, id: 'ruud-real-2006' },
   // ── Real's business: the old guard out, the 2009 galácticos in ──
   { playerId: 'cur_ronaldo_r6', from: 'real_madrid', to: 'milan', window: '2007-01', fee: 7_500_000, id: 'ronaldo-milan-2007' },
   { playerId: 'cur_cannavaro_r6', from: 'real_madrid', to: 'juventus', window: '2009-07', fee: 0, id: 'cannavaro-juve-2009' },
@@ -948,6 +971,9 @@ const LEDGER_LA_LIGA_2003: RealTransferLedgerEntry[] = [
  * Inter, Crespo/Verón to Lazio), and Sheva's leap from Kyiv to Milan.
  */
 const LEDGER_1998_2004: RealTransferLedgerEntry[] = [
+  // The LIVE opening window (summer 1998): Vieri's world-record move to Lazio — the
+  // prelude to his real 1999 switch to Inter (the user) — is live and interceptable.
+  { playerId: 'cur_vieri_l', from: 'atletico', to: 'lazio', window: '1998-07', fee: 28_000_000, id: 'vieri-lazio-1998' },
   // ── Inter's business (the user's, if they are Inter) ──
   { playerId: 'cur_vieri_l', from: 'lazio', to: 'inter', window: '1999-07', fee: 46_000_000, id: 'vieri-inter-1999' },
   { playerId: 'cur_cannavaro_p8', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000, id: 'cannavaro-inter-2002' },
@@ -982,6 +1008,9 @@ const LEDGER_1998_2004: RealTransferLedgerEntry[] = [
  * Liverpool spine cashed in).
  */
 const LEDGER_2007_2013: RealTransferLedgerEntry[] = [
+  // The LIVE opening window (summer 2007, milan-2007): Emerson's move from Real is
+  // Milan's real-in decision as the champions try to hold off the fall.
+  { playerId: 'cur_emerson_07', from: 'real_madrid', to: 'milan', window: '2007-07', fee: 4_000_000, id: 'emerson-milan-2007' },
   // ── Milan's business (the user's, if they are Milan) ──
   { playerId: 'cur_kaka_07', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
   { playerId: 'cur_pirlo_07', from: 'milan', to: 'juventus', window: '2011-07', fee: 0, id: 'pirlo-juve-2011' },
@@ -1010,6 +1039,9 @@ const LEDGER_2007_2013: RealTransferLedgerEntry[] = [
  * the era.
  */
 const LEDGER_SERIE_A_2004: RealTransferLedgerEntry[] = [
+  // The LIVE opening window (summer 2004): Emerson's move from Roma to Juventus is
+  // live business a Director can intercept before the champions strengthen.
+  { playerId: 'cur_emerson_04', from: 'roma', to: 'juventus', window: '2004-07', fee: 28_000_000, id: 'emerson-juve-2004' },
   // ── The Calciopoli exodus feeds Inter (the user) and the giants ──
   { playerId: 'cur_ibrahimovic_04', from: 'juventus', to: 'inter', window: '2006-07', fee: 16_600_000, id: 'ibra-inter-2006' },
   { playerId: 'cur_cannavaro_f04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },

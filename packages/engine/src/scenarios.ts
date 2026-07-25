@@ -521,6 +521,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 74 },
       { id: 'monaco', name: 'AS Monaco', prestige: 74 },
       { id: 'dynamo_kyiv', name: 'Dynamo Kyiv', prestige: 72 },
+      // Atlético — the selling club for Vieri's 1998 world-record move to Lazio,
+      // so that opening-window transfer is live.
+      { id: 'atletico', name: 'Atlético Madrid', prestige: 78 },
       // European selling clubs (M12A rollout) — the late-90s foreign pipeline.
       { id: 'ajax', name: 'Ajax', prestige: 78 },
       { id: 'psv', name: 'PSV Eindhoven', prestige: 74 },
