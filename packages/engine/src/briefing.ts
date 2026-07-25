@@ -17,6 +17,7 @@ import { coachFit } from './coaches.js';
 import { estimateMinutesShare } from './development.js';
 import { suggestTargets } from './recommend.js';
 import { getScenario } from './scenarios.js';
+import { ERA_REALITY, eraForScenario } from './ledger.js';
 
 export interface BriefingXI {
   slot: Position;
@@ -104,10 +105,32 @@ function coachPecking(coach: GameState['managerRelations'], player: PlayerState)
  *  with the best remaining cover — so Ronaldo starts up front, not out on a wing.
  *  Ordering folds in the coach's preference (a castoff he wants sold drops down the
  *  pecking order) while the displayed rating stays the player's true ability. */
+/** Real players due to arrive at the user's club in the opening summer window.
+ *  The live opening window (M12C) seeds these movers at their selling clubs at
+ *  kickoff, so they are absent from clubSquadPlayers — but they ARE the men the
+ *  coach will field this season, so his projected best XI must consider them (a
+ *  club whose spree is all still "incoming", like pre-window Chelsea 2003, would
+ *  otherwise name a threadbare side). Pure ledger read, no RNG. */
+function openingInboundPlayers(state: GameState): PlayerState[] {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack) return [];
+  const openYear = Number(state.clock.date.slice(0, 4));
+  const out: PlayerState[] = [];
+  for (const e of pack.realTransferLedger) {
+    if (e.to !== state.playerClub) continue;
+    const wy = Number(e.window.slice(0, 4));
+    const wm = Number(e.window.slice(5, 7));
+    if (wy !== openYear || wm < 6 || wm > 9) continue;
+    const p = state.players[e.playerId];
+    if (p && !p.retired && p.club !== state.playerClub) out.push(p);
+  }
+  return out;
+}
+
 function bestEleven(state: GameState, formation: Formation): BriefingXI[] {
   const slots = FORMATION_SLOTS[formation] ?? FORMATION_SLOTS['4-4-2'];
   const coach = state.managerRelations;
-  const squad = clubSquadPlayers(state, state.playerClub)
+  const squad = [...clubSquadPlayers(state, state.playerClub), ...openingInboundPlayers(state)]
     .filter((p) => !p.injury)
     .map((p) => ({ p, eff: effectiveAbility(p), rank: effectiveAbility(p) + coachPecking(coach, p) }))
     .sort((a, b) => b.rank - a.rank);

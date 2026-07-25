@@ -179,6 +179,10 @@ const ERA_2003_CONTEXT: ClubSeed[] = [
   { id: 'mallorca', name: 'RCD Mallorca', prestige: 62 },
   { id: 'sevilla', name: 'Sevilla', prestige: 72 },
   { id: 'monaco', name: 'AS Monaco', prestige: 72 },
+  // Thin selling clubs for the 2003 opening window — the sources of Chelsea's
+  // Abramovich spree that came from outside the elite (Mutu, Joe Cole).
+  { id: 'parma', name: 'Parma', prestige: 70 },
+  { id: 'west_ham', name: 'West Ham United', prestige: 64 },
 ];
 
 // era-2013: the continental context sides for the post-Ferguson Premier League.
@@ -197,6 +201,12 @@ const ERA_2013_CONTEXT: ClubSeed[] = [
   { id: 'lyon', name: 'Olympique Lyonnais', prestige: 74 },
   { id: 'schalke', name: 'Schalke 04', prestige: 74 },
   { id: 'fiorentina', name: 'Fiorentina', prestige: 74 },
+  // Thin selling clubs for the 2013 opening window — the sources of Spurs'
+  // "Magnificent Seven" Bale-money spree.
+  { id: 'twente', name: 'FC Twente', prestige: 66 },
+  { id: 'toulouse', name: 'Toulouse', prestige: 62 },
+  { id: 'corinthians', name: 'Corinthians', prestige: 66 },
+  { id: 'steaua', name: 'Steaua Bucharest', prestige: 60 },
 ];
 
 // era-serie-a-1995: Serie A is the simulated league; the elite European clubs
@@ -290,6 +300,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     contextExtra: [
       { id: 'marseille', name: 'Olympique de Marseille', prestige: 74 },
       { id: 'psv', name: 'PSV Eindhoven', prestige: 72 },
+      // Feyenoord — the selling club for Van Persie's 2004 move to Arsenal.
+      { id: 'feyenoord', name: 'Feyenoord', prestige: 68 },
       { id: 'mallorca', name: 'RCD Mallorca', prestige: 62 },
       { id: 'valencia', name: 'Valencia', prestige: 78 },
       { id: 'spartak_moscow', name: 'Spartak Moscow', prestige: 64 },

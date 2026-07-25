@@ -347,6 +347,11 @@ const LEDGER_2013_2016: RealTransferLedgerEntry[] = [
   { playerId: 'cur_lamela', from: 'roma', to: 'spurs', window: '2013-08', fee: 26_000_000 },
   { playerId: 'cur_soldado', from: 'valencia', to: 'spurs', window: '2013-08', fee: 26_000_000 },
   { playerId: 'cur_eriksen', from: 'ajax', to: 'spurs', window: '2013-08', fee: 11_500_000 },
+  // The rest of the Magnificent Seven, from their (thin) selling clubs — all live.
+  { playerId: 'cur_paulinho_13', from: 'corinthians', to: 'spurs', window: '2013-07', fee: 17_000_000, id: 'paulinho-spurs-2013' },
+  { playerId: 'cur_capoue_13', from: 'toulouse', to: 'spurs', window: '2013-08', fee: 9_000_000, id: 'capoue-spurs-2013' },
+  { playerId: 'cur_chadli_13', from: 'twente', to: 'spurs', window: '2013-07', fee: 7_000_000, id: 'chadli-spurs-2013' },
+  { playerId: 'cur_chiriches_13', from: 'steaua', to: 'spurs', window: '2013-08', fee: 8_500_000, id: 'chiriches-spurs-2013' },
   { playerId: 'cur_suarez', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000, id: 'suarez-barca-2014' },
   // Barça part-funded Suárez by selling Sánchez — no Suárez, no Sánchez sale.
   { playerId: 'cur_alexis', from: 'barcelona', to: 'arsenal', window: '2014-07', fee: 35_000_000, enabledBy: 'suarez-barca-2014' },
@@ -378,6 +383,9 @@ const INJURIES_2013: RealInjuryEntry[] = [
  * the rest of the world (the Cole↔Gallas swap; United cashing in on Ronaldo).
  */
 const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
+  // Arsenal's real 2004 arrival — Van Persie from Feyenoord (a live signing for an
+  // Arsenal Director).
+  { playerId: 'cur_rvp', from: 'feyenoord', to: 'arsenal', window: '2004-07', fee: 2_750_000, id: 'rvp-arsenal-2004' },
   // Chelsea's real 2004 arrivals — at their source clubs, joining via the ledger,
   // so intercepting one is a butterfly and a deprived Chelsea buys an alternative.
   { playerId: 'cur_drogba', from: 'marseille', to: 'chelsea', window: '2004-07', fee: 24_000_000, id: 'drogba-chelsea-2004' },
@@ -498,6 +506,9 @@ const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
   { playerId: 'cur_overmars', from: 'arsenal', to: 'barcelona', window: '2000-07', fee: 25_000_000, id: 'overmars-barca-2000' },
   { playerId: 'cur_petit', from: 'arsenal', to: 'barcelona', window: '2000-07', fee: 7_000_000, id: 'petit-barca-2000' },
   { playerId: 'cur_crespo', from: 'parma', to: 'lazio', window: '2000-07', fee: 35_000_000, id: 'crespo-lazio-2000' },
+  // Real's own summer-2000 midfield rebuild alongside Figo — live for the Director.
+  { playerId: 'cur_makelele', from: 'celta', to: 'real_madrid', window: '2000-07', fee: 15_000_000, id: 'makelele-real-2000' },
+  { playerId: 'cur_flavio', from: 'deportivo', to: 'real_madrid', window: '2000-07', fee: 15_000_000, id: 'flavio-real-2000' },
   // ── Real Madrid's galácticos — each a real-in decision for the user ──
   // The opening galáctico: Figo's move from Barça is the first decision — sign
   // the deal Pérez really did, or veto it and let him stay a rival.
@@ -634,10 +645,13 @@ const INJURIES_2000: RealInjuryEntry[] = [
  */
 const LEDGER_2003_2011: RealTransferLedgerEntry[] = [
   // ── Abramovich's first spree, live for a Chelsea Director (the whole point of the
-  //    scenario): each marquee arrival with a seller in this world is a sign/veto
-  //    decision, not a done deal. (Duff, Mutu, Joe Cole and Bridge came from clubs
-  //    outside this world, so they stay in the inherited squad.) ──
+  //    scenario): every marquee arrival is a sign/veto decision, not a done deal —
+  //    their selling clubs are seeded into this world so the deals are all live. ──
   { playerId: 'cur_makelele_c', from: 'real_madrid', to: 'chelsea', window: '2003-07', fee: 16_000_000, id: 'makelele-chelsea-2003c' },
+  { playerId: 'cur_duff_c', from: 'blackburn', to: 'chelsea', window: '2003-07', fee: 17_000_000, id: 'duff-chelsea-2003c' },
+  { playerId: 'cur_mutu_c3', from: 'parma', to: 'chelsea', window: '2003-07', fee: 15_800_000, id: 'mutu-chelsea-2003c' },
+  { playerId: 'cur_joecole_c3', from: 'west_ham', to: 'chelsea', window: '2003-07', fee: 6_600_000, id: 'joecole-chelsea-2003c' },
+  { playerId: 'cur_bridge_c3', from: 'southampton', to: 'chelsea', window: '2003-07', fee: 7_000_000, id: 'bridge-chelsea-2003c' },
   { playerId: 'cur_crespo_c3', from: 'inter', to: 'chelsea', window: '2003-07', fee: 16_800_000, id: 'crespo-chelsea-2003c' },
   { playerId: 'cur_veron_c3', from: 'man_utd', to: 'chelsea', window: '2003-07', fee: 15_000_000, id: 'veron-chelsea-2003c' },
   { playerId: 'cur_geremi_c3', from: 'real_madrid', to: 'chelsea', window: '2003-07', fee: 7_000_000, id: 'geremi-chelsea-2003c' },
