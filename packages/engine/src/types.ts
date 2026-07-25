@@ -428,6 +428,7 @@ export interface Consequence {
     | 'letContractLapse' // flag a player to leave on a free when his deal expires
     | 'changeFormation' // switch the coach's active shape (M13)
     | 'deductPoints' // dock `amount` league points from `clubId` (governance sanction)
+    | 'rivalReplace' // a rival (`clubId`) denied `playerId` reacts by signing a real alternative
     | 'memory' // append a narrative-memory entry (§10)
     | 'log'; // purely informational log line
   playerId?: PlayerId;

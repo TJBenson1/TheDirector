@@ -173,25 +173,19 @@ export function executeTransfer(
     if (seller && seller.leagueId !== null && seller.id !== state.playerClub) {
       seller.pendingCounterPunch = 2;
       seller.grudge = Math.min(100, seller.grudge + 20);
-      // Taking a rival's real player drags them BELOW their historical strength arc —
-      // a suppression penalty so the raid actually shows in the TABLE, not just for a
-      // month before `applyStrengthArcs` reanchors them back to reality. Scaled by the
-      // calibre taken (a star bites, a squad body barely) and it halves each summer, so
-      // a one-off raid is a season's wound while a sustained campaign keeps them down —
-      // the arms race. Only bites once the world has diverged (a raid IS divergence);
-      // a passive world never raids, so the real table is still reproduced exactly.
-      seller.suppressionPenalty = (seller.suppressionPenalty ?? 0) + Math.max(0, Math.min(4, (player.ability - 72) * 0.28));
       logEvent(state, {
         category: 'transfer',
         code: 'raid.suffered',
         message: `${seller.name} raided by ${buyer.name} for ${player.name}`,
         data: { clubId: seller.id, playerId: player.id, fee },
       });
-      // Ripple: a raided club may reach for a replacement — and it can be a real
-      // signing the DIRECTOR himself was due to be offered, so his own raid puts
-      // that target out of his reach (the traceable "you took Berbatov, so Spurs
-      // moved for Adebayor" chain).
-      rippleReplacement(state, seller, player);
+      // The raided club goes to the FINITE MARKET for the best available real
+      // alternative — a step down (never an upgrade), so they recover MOST of the way
+      // but settle a notch below their real arc, EXPLICABLY (they signed a lesser man,
+      // and he's now off the market for whoever really wanted him). Keep raiding and
+      // denying their replacements and the pool thins until they truly fall — the
+      // finite-talent arms race, not a flat fudge or a reattach-by-default.
+      reactToLoss(state, seller, player);
     }
   }
 
@@ -209,58 +203,122 @@ function positionGroup(p: PlayerState): string {
   return 'ATT';
 }
 
-/**
- * A club the user just raided reaches into the market for a replacement — and,
- * for narrative richness (§9f), it may take a player the Director was himself due
- * to be OFFERED as a real signing, consuming that offer with a traceable
- * butterfly. It looks only at the user's own upcoming real-in ledger entries at
- * the position the raid just weakened, so the displaced target is always one the
- * Director would otherwise have signed. Fires only on a live user raid, so a
- * passive/reality world (and the calibration harness's zero-divergence careers)
- * is never touched.
- */
-function rippleReplacement(state: GameState, raidedClub: ClubState, lost: PlayerState): void {
-  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
-  if (!pack) return;
+/** How much a one-ability-point shortfall in a replacement drags the raided club
+ *  below its real arc (in strength units). Signing a like-for-like (gap 0) costs
+ *  nothing; a clear step down bites; an unfilled hole (pool exhausted) costs the
+ *  full loss. Deliberately modest per point — the finite-pool arms race is won by
+ *  draining the market over several windows, not by one raid. */
+const SUPPRESSION_PER_GAP = 0.4;
+
+/** The best available REAL alternative for a raided-out player — a step down, never
+ *  an upgrade, from a club that would realistically sell (not another happy giant's
+ *  key man). The finite elite pool: once the closest names are gone, the next raid
+ *  gets a worse fit. Prefers a real target the DIRECTOR was himself due to sign (the
+ *  sharpest ripple — his raid puts his own future target out of reach). */
+function bestAvailableReplacement(
+  state: GameState,
+  raidedClub: ClubState,
+  lost: PlayerState,
+): { p: PlayerState; consumedKey?: string } | null {
   const group = positionGroup(lost);
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   const now = state.clock.date;
   const nowOrd = transferWindowOrdinal(now);
   const nowYear = Number(now.slice(0, 4));
 
-  // The soonest upcoming real signing the USER would have been offered, at the
-  // weakened position, whose subject is still available at his real club.
-  let best: { entry: (typeof pack.realTransferLedger)[number]; p: PlayerState } | undefined;
-  for (const e of pack.realTransferLedger) {
-    if (e.to !== state.playerClub) continue; // a signing the DIRECTOR would make
-    if (e.from === raidedClub.id || e.to === raidedClub.id) continue;
-    if (state.meta.executedLedger.includes(entryKey(e))) continue;
-    if (transferWindowOrdinal(e.window) <= nowOrd) continue; // must be a FUTURE offer
-    if (Number(e.window.slice(0, 4)) - nowYear > 2) continue; // within ~2 years
-    const p = state.players[e.playerId];
-    if (!p || p.club !== e.from) continue; // available at his real club
-    if (p.injury || p.resistance.hardBlocks.length > 0) continue;
-    if (positionGroup(p) !== group) continue; // fills the hole the raid opened
-    if (!best || e.window < best.entry.window) best = { entry: e, p };
+  // 1) Preferred: hijack a real signing the DIRECTOR himself was due to be offered.
+  if (pack) {
+    let best: { entry: (typeof pack.realTransferLedger)[number]; p: PlayerState } | undefined;
+    for (const e of pack.realTransferLedger) {
+      if (e.to !== state.playerClub || e.from === raidedClub.id) continue;
+      if (state.meta.executedLedger.includes(entryKey(e))) continue;
+      if (transferWindowOrdinal(e.window) <= nowOrd) continue;
+      if (Number(e.window.slice(0, 4)) - nowYear > 2) continue;
+      const p = state.players[e.playerId];
+      if (!p || p.club !== e.from || p.injury || p.resistance.hardBlocks.length > 0) continue;
+      if (positionGroup(p) !== group) continue;
+      if (p.ability > lost.ability || lost.ability - p.ability > 8) continue; // a plausible like-for-like, not a plunge
+      if (!best || e.window < best.entry.window) best = { entry: e, p };
+    }
+    if (best) return { p: best.p, consumedKey: entryKey(best.entry) };
   }
-  if (!best) return;
 
-  const { entry, p } = best;
-  const repFee = valuePlayer(p, currentYear(state));
-  raidedClub.finances.transferBudget = Math.max(raidedClub.finances.transferBudget, repFee);
-  const res = executeTransfer(state, { playerId: p.id, toClub: raidedClub.id, fee: repFee });
-  if (!res.ok) return;
-  // Consume the user's would-be offer so it is never separately presented.
-  state.meta.executedLedger.push(entryKey(entry));
+  // 2) Else the best available man from the finite pool: closest calibre from BELOW,
+  //    from a club that would sell — never an upgrade, never gutting another happy
+  //    elite side of a key player (that would just cascade the raid onward).
+  let pick: PlayerState | undefined;
+  for (const p of Object.values(state.players)) {
+    if (!p.curated || p.retired || p.injury || p.resistance.hardBlocks.length > 0) continue;
+    if (!p.club || p.club === raidedClub.id || p.club === state.playerClub) continue;
+    if (positionGroup(p) !== group) continue;
+    if (p.ability > lost.ability || lost.ability - p.ability > 8) continue; // a step down, not a plunge
+    const seller = state.clubs[p.club];
+    if (!seller) continue;
+    // The elite pool is CONTESTED: a happy giant (home or abroad) won't sell you their
+    // star as a casual replacement, so you can't just swap Silva for another 86. You get
+    // a genuinely-available, usually-lesser man (a Mata/Cazorla for a Silva) — which is
+    // why a raided club recovers MOST of the way but settles a notch below reality.
+    if (seller.prestige >= 82 && seller.financialHealth === 'healthy' && p.ability >= 82) continue;
+    if (!pick || p.ability > pick.ability || (p.ability === pick.ability && p.id < pick.id)) pick = p;
+  }
+  return pick ? { p: pick } : null;
+}
+
+/**
+ * A club the Director has DEPRIVED of a real player — by raiding them, or by keeping
+ * a man they were due to sign — reacts EXPLICABLY: it goes to the finite market for
+ * the best available real alternative. It recovers most of its strength but settles a
+ * notch below its historical arc, scaled by the QUALITY GAP to the man it actually
+ * signed (Silva → Mata is a small drop; an unfilled hole is a big one). That
+ * replacement is then off the market for whoever really wanted him — the onward
+ * ripple. Sustained raiding drains the pool, so each further loss is patched worse
+ * and the drag grows: the finite-talent arms race, not a reattach-by-default.
+ *
+ * Fires only under a live user divergence (a raid / a kept target), so a passive,
+ * zero-divergence world (and the calibration harness) is never touched.
+ */
+export function reactToLoss(state: GameState, deprived: ClubState, lost: PlayerState): void {
+  const rep = bestAvailableReplacement(state, deprived, lost);
+  const now = state.clock.date;
+  if (!rep) {
+    // The market has no like-for-like: the hole stays open — the full cost of the loss.
+    deprived.suppressionPenalty = (deprived.suppressionPenalty ?? 0) + Math.max(0.5, Math.min(4, (lost.ability - 72) * 0.28));
+    state.timeline.divergenceLog.push({
+      date: now, kind: 'butterfly',
+      detail: `${deprived.name} could find no like-for-like for ${lost.name} — the hole stays open and they slip below their real level.`,
+    });
+    return;
+  }
+  const { p, consumedKey } = rep;
+  const gap = Math.max(0, lost.ability - p.ability);
+  const fee = valuePlayer(p, currentYear(state));
+  // The reaction is a ROSTER/strength abstraction, not a finance sim: a club that
+  // loses a man reinvests the proceeds into the replacement, net-neutral on its war
+  // chest. Restore the budget after so a raid never bankrupts the field or breaks the
+  // transfer primitive's fee accounting.
+  const budgetBefore = deprived.finances.transferBudget;
+  deprived.finances.transferBudget = Math.max(deprived.finances.transferBudget, fee);
+  const res = executeTransfer(state, { playerId: p.id, toClub: deprived.id, fee });
+  if (!res.ok) {
+    deprived.finances.transferBudget = budgetBefore;
+    deprived.suppressionPenalty = (deprived.suppressionPenalty ?? 0) + Math.max(0.5, Math.min(4, (lost.ability - 72) * 0.28));
+    return;
+  }
+  deprived.finances.transferBudget = budgetBefore;
+  if (consumedKey && !state.meta.executedLedger.includes(consumedKey)) state.meta.executedLedger.push(consumedKey);
+  // A step down leaves them a notch below reality — explicable, and it only closes as
+  // the replacement develops (the decay in applyStrengthArcs), not by fiat.
+  deprived.suppressionPenalty = (deprived.suppressionPenalty ?? 0) + gap * SUPPRESSION_PER_GAP;
   state.timeline.divergenceLog.push({
-    date: now,
-    kind: 'butterfly',
-    detail: `${raidedClub.name}, needing a replacement after you signed ${lost.name}, moved for ${p.name} — the real signing you would have been offered is now off your table.`,
+    date: now, kind: 'butterfly',
+    detail: consumedKey
+      ? `${deprived.name}, robbed of ${lost.name}, moved for ${p.name} instead — the real signing you would have been offered is now off your table.`
+      : `${deprived.name}, robbed of ${lost.name}, signed ${p.name} instead${gap > 0 ? ` — a step down` : ''}, and a name now off the market.`,
   });
   logEvent(state, {
-    category: 'transfer',
-    code: 'ledger.displaced',
-    message: `${raidedClub.name} replace ${lost.name} with ${p.name} — a real target of yours, now gone`,
-    data: { clubId: raidedClub.id, playerId: p.id, lost: lost.id, consumed: entryKey(entry) },
+    category: 'transfer', code: 'raid.replaced',
+    message: `${deprived.name} replace ${lost.name} with ${p.name}${gap > 0 ? ` (a ${gap}-point drop)` : ' (a like-for-like)'}`,
+    data: { clubId: deprived.id, in: p.id, out: lost.id, gap, consumed: consumedKey },
   });
 }
 

@@ -275,9 +275,11 @@ export function applyStrengthArcs(state: GameState): void {
       // A domestic rival stiffened by the Director's dominance (the rubber-band).
       const boost = club.leagueId === userLeague ? defianceBoost : 0;
       reanchorClubStrength(state, clubId, target - penalty + boost);
-      // …and a suppressed club adapts: the drag halves each summer, so it climbs back
-      // unless the Director keeps denying them (the arms race the vision asks for).
-      if (penalty > 0.05) club.suppressionPenalty = penalty * 0.5;
+      // …and a suppressed club slowly adapts: the drag eases each summer as the lesser
+      // replacement develops, but it does NOT snap back to reality — a real quality gap
+      // persists for years unless the club invests its way out, and keeps GROWING if the
+      // Director goes on denying them (the finite-talent arms race the vision asks for).
+      if (penalty > 0.05) club.suppressionPenalty = penalty * 0.72;
       else club.suppressionPenalty = 0;
     }
   }

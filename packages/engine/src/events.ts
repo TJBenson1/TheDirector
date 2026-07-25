@@ -30,7 +30,7 @@ import { cloneState } from './state.js';
 import { eventsSince } from './eventLog.js';
 import { appendMemory } from './memory.js';
 import { divergenceFactor, rollDivergentStoryline } from './divergence.js';
-import { executeTransfer } from './transfers.js';
+import { executeTransfer, reactToLoss } from './transfers.js';
 import { clubSquadPlayers, recomputeClubStrength } from './players.js';
 import { valuePlayer, suggestWage } from './finance.js';
 import { contractRetentionOdds, sagaFee, feeMillions, sportingRewriteOdds, careerFulfilmentOdds, injuryRecoveryOdds, transferLandsOdds } from './realityRegister.js';
@@ -218,6 +218,15 @@ export function applyConsequence(state: GameState, c: Consequence): void {
         if (kind === 'serious') p.injuryHistory += 1;
         if (p.club) recomputeClubStrength(state, p.club);
       }
+      break;
+    }
+    case 'rivalReplace': {
+      // A rival the Director denied a real signing (he KEPT the man they were due to
+      // buy) reacts like any deprived club: to the finite market for the best available
+      // alternative, a notch below — explicable, not a reattach-by-default.
+      const club = c.clubId ? state.clubs[c.clubId] : undefined;
+      const lost = c.playerId ? state.players[c.playerId] : undefined;
+      if (club && lost) reactToLoss(state, club, lost);
       break;
     }
     case 'memory':

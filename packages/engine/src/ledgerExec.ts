@@ -12,7 +12,7 @@
  * ledger alone and Anelka goes to Madrid, Crespo to Chelsea, on schedule.
  */
 
-import type { ClubId, Decision, GameState, PlayerState } from './types.js';
+import type { ClubId, Consequence, Decision, GameState, PlayerState } from './types.js';
 import { Rng, hashStringToU32 } from './rng.js';
 import { WINDOW_STEPS, WINDOW_PHASE_REVIEW, transferWindowOrdinal } from './clock.js';
 import { logEvent } from './eventLog.js';
@@ -403,6 +403,13 @@ function offerUserLedgerMove(state: GameState, entry: RealTransferLedgerEntry, k
         label: `Keep ${player.name} (he wanted the move — unrest)`,
         onSuccess: [{ kind: 'agitation' as const, playerId: entry.playerId, amount: 38, text: `wanted the move to ${buyer?.name ?? entry.to} that you blocked` }],
       };
+  // Keeping a man a RIVAL was due to sign DENIES them that signing — so they react
+  // like any deprived club: to the finite market for the best available alternative,
+  // a step down. (Reality-default — sanction the sale, or do nothing — lets the move
+  // go through, so nothing fires for the passive Director.)
+  if (buyer && buyer.leagueId !== null && entry.to !== state.playerClub) {
+    (keepChoice.onSuccess as Consequence[]).push({ kind: 'rivalReplace', clubId: entry.to, playerId: entry.playerId });
+  }
   state.pendingDecisions.push({
     id: `real-out:${key}`,
     title: `${buyer?.name ?? entry.to} bid £${feeM}m for ${player.name} (his real move)`,
