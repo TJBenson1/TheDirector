@@ -233,6 +233,10 @@ const ERA_1995_CONTEXT: ClubSeed[] = [
   { id: 'celtic', name: 'Celtic', prestige: 70 },
   { id: 'deportivo', name: 'Deportivo La Coruña', prestige: 76 },
   { id: 'valencia', name: 'Valencia', prestige: 76 },
+  // Selling clubs for the 1995 opening window: PSG (Weah to Milan) and Palmeiras
+  // (Roberto Carlos to Inter), so those real moves are live.
+  { id: 'psg', name: 'Paris Saint-Germain', prestige: 72 },
+  { id: 'palmeiras', name: 'Palmeiras', prestige: 66 },
 ];
 
 export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
@@ -524,6 +528,10 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       // Atlético — the selling club for Vieri's 1998 world-record move to Lazio,
       // so that opening-window transfer is live.
       { id: 'atletico', name: 'Atlético Madrid', prestige: 78 },
+      // Bologna (Roberto Baggio to Inter) and River Plate (Salas to Lazio) — the
+      // selling clubs for the 1998 opening window's marquee arrivals.
+      { id: 'bologna', name: 'Bologna', prestige: 62 },
+      { id: 'river_plate', name: 'River Plate', prestige: 70 },
       // European selling clubs (M12A rollout) — the late-90s foreign pipeline.
       { id: 'ajax', name: 'Ajax', prestige: 78 },
       { id: 'psv', name: 'PSV Eindhoven', prestige: 74 },
@@ -844,6 +852,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'schalke', name: 'Schalke 04', prestige: 72 },
       { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 72 },
       { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 62 },
+      // Athletic Bilbao — the selling club for Javi Martínez's 2012 move to Bayern.
+      { id: 'athletic', name: 'Athletic Bilbao', prestige: 74 },
       // European selling clubs (M12A rollout) — the early-2010s foreign pipeline.
       { id: 'porto', name: 'FC Porto', prestige: 80 },
       { id: 'napoli', name: 'Napoli', prestige: 80 },
@@ -889,6 +899,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 70 },
       { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 64 },
       { id: 'hamburg', name: 'Hamburger SV', prestige: 66 },
+      // Stuttgart — the selling club for Mario Gómez's 2009 move to Bayern.
+      { id: 'stuttgart', name: 'VfB Stuttgart', prestige: 68 },
     ],
     domesticLeagueId: 'ger-2009',
   },

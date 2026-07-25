@@ -556,6 +556,11 @@ const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
  * summer-1995 arrivals already in the squads are recognised as reality.
  */
 const LEDGER_1995_2001: RealTransferLedgerEntry[] = [
+  // ── The LIVE opening window (summer 1995) — the great Serie A reshuffle: Weah to
+  //    Milan, Ince and Roberto Carlos to Inter, all live and interceptable. ──
+  { playerId: 'cur_weah', from: 'psg', to: 'milan', window: '1995-07', fee: 4_000_000, id: 'weah-milan-1995' },
+  { playerId: 'cur_ince', from: 'man_utd', to: 'inter', window: '1995-07', fee: 6_000_000, id: 'ince-inter-1995' },
+  { playerId: 'cur_roberto_carlos_i', from: 'palmeiras', to: 'inter', window: '1995-07', fee: 5_000_000, id: 'robertocarlos-inter-1995' },
   // ── Juventus depart (real-out decisions for the user) ──
   { playerId: 'cur_baggio_r', from: 'juventus', to: 'milan', window: '1995-07', fee: 6_500_000, id: 'baggio-milan-1995' },
   { playerId: 'cur_vialli', from: 'juventus', to: 'chelsea', window: '1996-07', fee: 0, id: 'vialli-chelsea-1996' },
@@ -842,6 +847,8 @@ const LEDGER_BUNDESLIGA_2009: RealTransferLedgerEntry[] = [
   // The LIVE opening window (summer 2009): Robben's move from Real is the Van Gaal
   // reset's cornerstone — a Director signs, or a rival hijacks, the deal.
   { playerId: 'cur_robben_09', from: 'real_madrid', to: 'bayern', window: '2009-07', fee: 24_000_000, id: 'robben-bayern-2009' },
+  { playerId: 'cur_gomez_09', from: 'stuttgart', to: 'bayern', window: '2009-07', fee: 30_000_000, id: 'gomez-bayern-2009' },
+  { playerId: 'cur_olic_09', from: 'hamburg', to: 'bayern', window: '2009-07', fee: 0, id: 'olic-bayern-2009' },
   { playerId: 'cur_sahin_09', from: 'dortmund', to: 'real_madrid', window: '2011-07', fee: 10_000_000, id: 'sahin-real-2011' },
   { playerId: 'cur_gotze_09', from: 'dortmund', to: 'bayern', window: '2013-07', fee: 37_000_000, id: 'gotze-bayern-2013' },
   { playerId: 'cur_kroos_09', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
@@ -863,6 +870,9 @@ const LEDGER_BUNDESLIGA_2012: RealTransferLedgerEntry[] = [
   //    is cashed in to United (the user's own sale to sanction or block). ──
   { playerId: 'cur_reus_12', from: 'gladbach', to: 'dortmund', window: '2012-07', fee: 17_000_000, id: 'reus-dortmund-2012' },
   { playerId: 'cur_kagawa_u12', from: 'dortmund', to: 'man_utd', window: '2012-07', fee: 12_000_000, id: 'kagawa-utd-2012' },
+  // Bayern's response to losing the 2012 final — Mandžukić and Javi Martínez arrive.
+  { playerId: 'cur_mandzukic_12', from: 'wolfsburg', to: 'bayern', window: '2012-07', fee: 13_000_000, id: 'mandzukic-bayern-2012' },
+  { playerId: 'cur_martinez_12', from: 'athletic', to: 'bayern', window: '2012-08', fee: 40_000_000, id: 'javimartinez-bayern-2012' },
   // ── The picking-apart of Dortmund's golden generation ──
   { playerId: 'cur_gotze_12', from: 'dortmund', to: 'bayern', window: '2013-07', fee: 37_000_000, id: 'gotze-bayern-2013' },
   { playerId: 'cur_lewandowski_12', from: 'dortmund', to: 'bayern', window: '2014-07', fee: 0, id: 'lewa-bayern-2014' },
@@ -977,6 +987,10 @@ const LEDGER_1998_2004: RealTransferLedgerEntry[] = [
   // The LIVE opening window (summer 1998): Vieri's world-record move to Lazio — the
   // prelude to his real 1999 switch to Inter (the user) — is live and interceptable.
   { playerId: 'cur_vieri_l', from: 'atletico', to: 'lazio', window: '1998-07', fee: 28_000_000, id: 'vieri-lazio-1998' },
+  // Roberto Baggio's move to Inter (the user's own marquee arrival) and Salas's to
+  // Lazio round out the live 1998 window.
+  { playerId: 'cur_baggio_i', from: 'bologna', to: 'inter', window: '1998-07', fee: 6_500_000, id: 'baggio-inter-1998' },
+  { playerId: 'cur_salas', from: 'river_plate', to: 'lazio', window: '1998-07', fee: 12_000_000, id: 'salas-lazio-1998' },
   // ── Inter's business (the user's, if they are Inter) ──
   { playerId: 'cur_vieri_l', from: 'lazio', to: 'inter', window: '1999-07', fee: 46_000_000, id: 'vieri-inter-1999' },
   { playerId: 'cur_cannavaro_p8', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000, id: 'cannavaro-inter-2002' },
@@ -1014,10 +1028,12 @@ const LEDGER_2007_2013: RealTransferLedgerEntry[] = [
   // The LIVE opening window (summer 2007, milan-2007): Emerson's move from Real is
   // Milan's real-in decision as the champions try to hold off the fall.
   { playerId: 'cur_emerson_07', from: 'real_madrid', to: 'milan', window: '2007-07', fee: 4_000_000, id: 'emerson-milan-2007' },
+  { playerId: 'cur_oddo', from: 'lazio', to: 'milan', window: '2007-07', fee: 6_500_000, id: 'oddo-milan-2007' },
   // The Calciopoli exodus (juventus-2006, summer 2006): the mercenaries flee Serie B
   // — a Juventus Director sanctions the fire-sale or keeps them for the fight back up.
   { playerId: 'cur_vieira_07', from: 'juventus', to: 'inter', window: '2006-07', fee: 9_500_000, id: 'vieira-inter-2006' },
   { playerId: 'cur_cannavaro_f07', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006b' },
+  { playerId: 'cur_ibrahimovic_07', from: 'juventus', to: 'inter', window: '2006-07', fee: 24_800_000, id: 'ibra-inter-2006' },
   // ── Milan's business (the user's, if they are Milan) ──
   { playerId: 'cur_kaka_07', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
   { playerId: 'cur_pirlo_07', from: 'milan', to: 'juventus', window: '2011-07', fee: 0, id: 'pirlo-juve-2011' },
@@ -1049,6 +1065,7 @@ const LEDGER_SERIE_A_2004: RealTransferLedgerEntry[] = [
   // The LIVE opening window (summer 2004): Emerson's move from Roma to Juventus is
   // live business a Director can intercept before the champions strengthen.
   { playerId: 'cur_emerson_04', from: 'roma', to: 'juventus', window: '2004-07', fee: 28_000_000, id: 'emerson-juve-2004' },
+  { playerId: 'cur_ibrahimovic_04', from: 'ajax', to: 'juventus', window: '2004-07', fee: 16_000_000, id: 'ibra-juve-2004' },
   // ── The Calciopoli exodus feeds Inter (the user) and the giants ──
   { playerId: 'cur_ibrahimovic_04', from: 'juventus', to: 'inter', window: '2006-07', fee: 16_600_000, id: 'ibra-inter-2006' },
   { playerId: 'cur_cannavaro_f04', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006' },
