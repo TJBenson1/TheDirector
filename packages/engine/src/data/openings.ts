@@ -30,11 +30,11 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     fringe: [
       'Roberto Baggio — OUT of Lippi’s plans: the Divine Ponytail was deemed surplus with Del Piero anointed as his heir, and sold to arch-rivals AC Milan in July 1995 for around 18 billion lire (~£6.8m).',
       'Alessandro Del Piero — the 20-year-old inheriting Baggio’s No.10 and the whole creative burden with it.',
-      'Vladimir Jugović — summer-1995 arrival from Sampdoria, first rotation option in the midfield three (he’d score the winning penalty in the 1996 European Cup final).',
+      'Vladimir Jugović — summer-1995 arrival from Sampdoria, first rotation option in the midfield three.',
       'Attilio Lombardo & Michele Padovano — summer signings adding width and forward depth.',
       'Gianluca Vialli — the captain leading the line, though quietly in his final Juve season before a free move to Chelsea in 1996.',
     ],
-    briefing: `Reigning Serie A and Coppa Italia champions, Lippi begins the defence by taking a scalpel to his own title-winners: Roberto Baggio, the biggest name in Italian football, is judged surplus to requirements and sold to Milan, the whole project reshaped around the 20-year-old Alessandro Del Piero who inherits his No.10. A Sampdoria-flavoured rebuild lands Vierchowod, Jugović and Lombardo, and Pessotto is prised from rivals Torino. Vialli captains a fearsome front three, but it is an open secret this is his last dance in Turin — his contract expires in 1996 and Chelsea await. The mood is unmistakably European: this side would go on to win the 1996 Champions League.`,
+    briefing: `Reigning Serie A and Coppa Italia champions, Lippi begins the defence by taking a scalpel to his own title-winners: Roberto Baggio, the biggest name in Italian football, is judged surplus to requirements and sold to Milan, the whole project reshaped around the 20-year-old Alessandro Del Piero who inherits his No.10. A Sampdoria-flavoured rebuild lands Vierchowod, Jugović and Lombardo, and Pessotto is prised from rivals Torino. Vialli captains a fearsome front three, but it is an open secret this is his last dance in Turin — his contract expires in 1996 and Chelsea await. The mood is unmistakably European: a squad built to conquer the continent, if you can keep it together.`,
   },
 
   'milan-1995': {
@@ -49,10 +49,10 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'George Weah — the marquee capture from Paris Saint-Germain who’d be crowned 1995 Ballon d’Or winner that winter.',
       'Roberto Baggio — signed from arch-rivals Juventus the same summer, a second superstar to squeeze into an already crowded creative pool.',
       'Marco Simone — the incumbent forward now rotating behind the glamour arrivals.',
-      'Franco Baresi — the 35-year-old captain and libero, the emblem of an ageing dynasty in its final title season.',
+      'Franco Baresi — the 35-year-old captain and libero, the emblem of an ageing dynasty nearing the end of its run.',
       'Mauro Tassotti & Filippo Galli — the veteran squad men holding the fort as the great side runs down.',
     ],
-    briefing: `This is the last stand of the great Milan machine: an ageing spine of Baresi (35), Costacurta, Maldini, Albertini, Boban and Savićević, refuelled by the glamour summer arrivals of George Weah from PSG and Roberto Baggio from Juventus. Marco van Basten had formally retired that August, closing one chapter, and Capello — bound for Real Madrid at season’s end — would squeeze one final Scudetto from the group, wrapping it up as early as April. Two of the world’s finest attackers, an immovable rearguard, and the distinct sense of an era drawing to a close.`,
+    briefing: `This is the last stand of the great Milan machine: an ageing spine of Baresi (35), Costacurta, Maldini, Albertini, Boban and Savićević, refuelled by the glamour summer arrivals of George Weah from PSG and Roberto Baggio from Juventus. Marco van Basten had formally retired that August, closing one chapter, and Capello — already being courted by Real Madrid — drives a group that senses its window closing. Two of the world’s finest attackers, an immovable rearguard, and the distinct sense of an era drawing to a close: is there one more title in the old machine?`,
   },
 
   'newcastle-1995': {
@@ -64,13 +64,13 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'LM David Ginola', 'ST Peter Beardsley', 'ST Les Ferdinand',
     ],
     fringe: [
-      'Les Ferdinand — the £6m summer talisman from QPR who’d plunder 25 league goals.',
+      'Les Ferdinand — the £6m summer talisman from QPR, the focal point up front.',
       'David Ginola — the £2.5m flair merchant signed from PSG, box-office on the left.',
       'Philippe Albert — the cultured Belgian centre-back, but recovering from a cruciate injury at kickoff, so Howey deputises.',
       'Faustino Asprilla — NOT here yet: the mercurial Colombian arrives in February 1996, mid-season, and is often blamed for unbalancing the side.',
       'David Batty — NOT here yet either: he signs from Blackburn in March 1996.',
     ],
-    briefing: `Keegan’s Newcastle set out to entertain and nothing else — an unapologetic, front-foot 4-4-2 with two genuine wingers feeding Ferdinand and Beardsley — and roughly £16m of summer spending on Ferdinand, Ginola and Barton makes them the neutrals’ team. They explode from the blocks and lead the league almost from August, building a commanding cushion of ten-plus points by the new year. The cavalier philosophy that thrills is the same one that leaves them exposed: the lead would famously evaporate in the spring as Manchester United reeled them in, and Keegan’s "I would love it" meltdown still lies months ahead.`,
+    briefing: `Keegan’s Newcastle set out to entertain and nothing else — an unapologetic, front-foot 4-4-2 with two genuine wingers feeding Ferdinand and Beardsley — and roughly £16m of summer spending on Ferdinand, Ginola and Barton makes them the neutrals’ team. They are built to explode from the blocks and thrill the neutrals — but the cavalier philosophy that dazzles is the same one that leaves them exposed at the back. Can a side this open hold its nerve, and a lead, over a full title race?`,
   },
 
   'liverpool-1995': {
@@ -83,12 +83,12 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     ],
     fringe: [
       'Stan Collymore — the £8.5m British-record signing from Nottingham Forest, scorer on his debut.',
-      'Robbie Fowler — begins on the bench but within weeks displaces the ageing Rush, ending the season England’s second-top scorer.',
-      'Ian Rush — the club legend in his final Anfield campaign, first-choice at kickoff before losing his place.',
-      'Steve McManaman — the creative heartbeat, the division’s leading assist-maker.',
+      'Robbie Fowler — the prolific young striker pushing hard behind the ageing Rush for a starting place.',
+      'Ian Rush — the club legend in what looks like his final Anfield campaign, first-choice at kickoff but under pressure.',
+      'Steve McManaman — the creative heartbeat, one of the division’s finest providers.',
       'Jason McAteer — NOT here yet: the £4.5m right wing-back only signs in September 1995.',
     ],
-    briefing: `Roy Evans’ Liverpool open as many pundits’ title favourites, having smashed the English transfer record for Stan Collymore to add to a gifted young core of Fowler, McManaman and Redknapp. Evans plays a patient, passing 3-5-2 that makes them arguably the most watchable side in England — but the flair rarely converts into silverware, and a growing playboy image would harden into the derisive "Spice Boys" tag (the white Armani cup-final suits still nine months away). Brilliant going forward, brittle when it matters: that gap between beauty and end product is the whole story.`,
+    briefing: `Roy Evans’ Liverpool open as many pundits’ title favourites, having smashed the English transfer record for Stan Collymore to add to a gifted young core of Fowler, McManaman and Redknapp. Evans plays a patient, passing 3-5-2 that makes them arguably the most watchable side in England — but the flair has a habit of not converting into silverware, and a playboy image is already gathering around the young core. Brilliant going forward, brittle when it matters: whether that talent finally delivers a trophy is the whole question.`,
   },
 
   'man-utd-1999': {
@@ -102,11 +102,11 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     fringe: [
       'Peter Schmeichel — GONE: the great Dane left after the Treble, and the goalkeeping void is the season’s defining problem.',
       'Mark Bosnich — the free-transfer replacement who never convinced as the No.1.',
-      'Massimo Taibi — NOT here yet: signed in September 1999, his error-strewn cameo (the Southampton howler) becomes autumn infamy.',
+      'Massimo Taibi — NOT here yet: an Italian keeper signed in September 1999 as one answer to the Schmeichel void, though far from a sure thing.',
       'Mikaël Silvestre — arrives 10 September 1999 from Inter, soon a first-choice defender.',
       'Ole Gunnar Solskjær & Teddy Sheringham — the lethal attacking depth behind Yorke and Cole.',
     ],
-    briefing: `United begin life as champions of Europe, the world and England, fresh from the historic 1998–99 Treble — and immediately confront the one hole Ferguson can’t easily fill: Peter Schmeichel has retired, and neither Mark Bosnich nor the September signing Massimo Taibi convinces between the posts. As holders they controversially withdraw from the FA Cup to fly to Brazil for the inaugural Club World Championship, where they flop out in the group stage. The goalkeeping saga rumbles all season, yet the league machine barely notices, romping to the title with a club-record 97 goals.`,
+    briefing: `United begin life as champions of Europe, the world and England, fresh from the historic 1998–99 Treble — and immediately confront the one hole Ferguson can’t easily fill: Peter Schmeichel has retired, and neither Mark Bosnich nor the September signing Massimo Taibi convinces between the posts. As holders they have controversially agreed to withdraw from the FA Cup to fly to Brazil for the inaugural Club World Championship — a distraction the purists resent. The goalkeeping question is the one crack in the machine: whether it undoes the champions, or they simply overwhelm the league regardless, is the season's open thread.`,
   },
 
   'real-madrid-2000': {
@@ -124,7 +124,7 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Fernando Morientes — the incumbent striker beside Raúl, about to be slowly marginalised by the Galáctico policy.',
       'Nicolas Anelka — GONE: the troubled Frenchman was sold back to PSG that summer.',
     ],
-    briefing: `Florentino Pérez has just won the presidency (July 2000) on one audacious promise — to prise Luís Figo out of Barcelona — and he keeps it days later with a world-record fee that Catalans brand the ultimate betrayal, lighting the fuse on the Galácticos. In the same window he engineers Fernando Redondo’s sale to Milan against the player’s will, handing the pivot to new signing Makélélé. Holding the spectacle together is the understated, moustachioed del Bosque, the quiet dressing-room man who’d already won the 2000 Champions League and would deliver La Liga. Zidane, Ronaldo and Beckham are still one, two and three summers away.`,
+    briefing: `Florentino Pérez has just won the presidency (July 2000) on one audacious promise — to prise Luís Figo out of Barcelona — and he keeps it days later with a world-record fee that Catalans brand the ultimate betrayal, lighting the fuse on the Galácticos. In the same window he engineers Fernando Redondo’s sale to Milan against the player’s will, handing the pivot to new signing Makélélé. Holding the spectacle together is the understated, moustachioed del Bosque, the quiet dressing-room man fresh from winning the 2000 Champions League. In reality the Galácticos arrived one a summer — Zidane, Ronaldo and Beckham still to come — but that sequence is yours to accelerate, redirect or resist.`,
   },
 
   'inter-1998': {
@@ -140,9 +140,9 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Roberto Baggio — the marquee summer arrival from Bologna, an extra No.10 crowding an already overloaded attack.',
       'Youri Djorkaeff — a France World Cup winner squeezed out by the forward logjam.',
       'Iván Zamorano — the incumbent striker forced to cede the No.9 to Ronaldo (he’d later wear the famous "1+8").',
-      'Gigi Simoni — the coach himself is fragile: fresh from winning the 1998 UEFA Cup, yet sacked by 30 November.',
+      'Gigi Simoni — the coach himself is fragile: fresh from winning the 1998 UEFA Cup, yet already under pressure at an impatient club where a slow start could prove fatal.',
     ],
-    briefing: `This is Moratti’s blank-cheque Inter at its most dazzling and most volatile: Ronaldo, freshly crowned the world’s best and most expensive player, is the jewel of an expensively assembled galaxy. On top of Zamorano and Djorkaeff, Moratti has just added Roberto Baggio from Bologna, creating a glittering but hopelessly unbalanced forward glut — and enormous pressure to finally end a Scudetto drought stretching to 1989. Gigi Simoni starts as the man who won the UEFA Cup in May, but his seat is already hot; a stuttering start sees him gone by late November, opening a revolving door of coaches. The talent is overwhelming; the coherence is not.`,
+    briefing: `This is Moratti’s blank-cheque Inter at its most dazzling and most volatile: Ronaldo, freshly crowned the world’s best and most expensive player, is the jewel of an expensively assembled galaxy. On top of Zamorano and Djorkaeff, Moratti has just added Roberto Baggio from Bologna, creating a glittering but hopelessly unbalanced forward glut — and enormous pressure to finally end a Scudetto drought stretching to 1989. Gigi Simoni starts as the man who won the UEFA Cup in May, but at a club this impatient his seat is already warm — a slow start would put him under real threat. The talent is overwhelming; the coherence is not.`,
   },
 
   'dortmund-1997': {
@@ -154,13 +154,13 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'AM Andreas Möller', 'ST Heiko Herrlich', 'ST Stéphane Chapuisat',
     ],
     fringe: [
-      'Matthias Sammer — the reigning Ballon d’Or holder, but knee surgery in August 1997 all but ends his career; he’d retire by February.',
+      'Matthias Sammer — the reigning Ballon d’Or holder, but facing knee surgery in August 1997 that puts his whole career in jeopardy.',
       'Karl-Heinz Riedle — GONE: sold to Liverpool that summer, leaving a hole up front.',
-      'Paul Lambert — still here at kickoff, but the Scottish midfielder leaves for Celtic in November 1997.',
+      'Paul Lambert — the Scottish midfielder here at kickoff, though Celtic are circling for a return home.',
       'Lars Ricken — the young matchwinner of the 1997 final, now rotation in attack.',
       'Michael Zorc — the veteran captain marshalling a side in transition.',
     ],
-    briefing: `Dortmund open as reigning champions of Europe — but under new management and with the winning core already fraying. Title-winner Ottmar Hitzfeld has moved upstairs to a director’s role, and the Italian Nevio Scala inherits the dugout; meanwhile Karl-Heinz Riedle has gone to Liverpool, and the great sweeper Matthias Sammer, the Ballon d’Or holder, undergoes knee surgery in August and never truly plays again. Scala’s side would still beat Cruzeiro to lift the Intercontinental Cup in Tokyo and reach the Champions League semi-final, but a domestic slump to 10th would ultimately cost him his job. Kings of Europe, quietly being dismantled.`,
+    briefing: `Dortmund open as reigning champions of Europe — but under new management and with the winning core already fraying. Title-winner Ottmar Hitzfeld has moved upstairs to a director’s role, and the Italian Nevio Scala inherits the dugout; meanwhile Karl-Heinz Riedle has gone to Liverpool, and the great sweeper Matthias Sammer, the Ballon d’Or holder, faces knee surgery in August that threatens his career. Kings of Europe with a title to defend at home and a continent to conquer again — but a winning core that is quietly beginning to fray.`,
   },
 
   'arsenal-1996': {
@@ -192,11 +192,11 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     fringe: [
       'Gianluca Vialli — the marquee free transfer from Juventus, a reigning European Cup-winning captain (though often rotated by Gullit).',
       'Frank Leboeuf & Roberto Di Matteo — the glamorous summer imports who set the cosmopolitan tone.',
-      'Gianfranco Zola — NOT here yet: the little Sardinian magician only arrives in November 1996, then wins Footballer of the Year.',
+      'Gianfranco Zola — NOT here yet: the little Sardinian magician only arrives in November 1996, a mid-season coup in the making.',
       'Kevin Hitchcock — the deputy keeper who becomes the de facto No.1 once Kharine is injured.',
       'Mark Hughes — the streetwise British anchor amid the continental cast.',
     ],
-    briefing: `With Glenn Hoddle gone to manage England, Chelsea hand the reins to their charismatic, dreadlocked Dutch playmaker Ruud Gullit as player-manager, and he uses his continental black book to lure a cosmopolitan cast — Vialli, Leboeuf and Di Matteo that summer, Zola to follow in November. This is the pre-Abramovich gamble: no oligarch billions, just Ken Bates’s ambition and Gullit’s promise of "sexy football" transforming a mid-table London club into the Premier League’s glamour side. It pays off fast — his fluid 3-5-2 would deliver the 1997 FA Cup, Chelsea’s first major trophy in 26 years.`,
+    briefing: `With Glenn Hoddle gone to manage England, Chelsea hand the reins to their charismatic, dreadlocked Dutch playmaker Ruud Gullit as player-manager, and he uses his continental black book to lure a cosmopolitan cast — Vialli, Leboeuf and Di Matteo that summer, Zola to follow in November. This is the pre-Abramovich gamble: no oligarch billions, just Ken Bates’s ambition and Gullit’s promise of "sexy football" to transform a mid-table London club into the Premier League’s glamour side. Chelsea have not won a major trophy in 26 years — can the cosmopolitan cast and the fluid 3-5-2 finally end that wait?`,
   },
 
   'bayern-1998': {
@@ -214,7 +214,7 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Dietmar Hamann — GONE: sold to Newcastle that summer, the fee helping fund the rebuild.',
       'Giovane Élber — the Brazilian striker (a 1997 arrival, not new) leading the line.',
     ],
-    briefing: `Ottmar Hitzfeld arrives in the summer of 1998 after a year’s sabbatical, restoring calm to a formidable German-led spine of Kahn, Babbel, Effenberg, Scholl and the veteran Matthäus. Domestically it is a procession — the title won by fifteen points — but this campaign would be forever known as "The Treble Denied": Bayern lead the 1999 Champions League final at Camp Nou through Basler’s free-kick, only for Sheringham and Solskjær to strike in stoppage time, and weeks later they lose the DFB-Pokal final on penalties too. A crown won, two cups agonisingly surrendered in the cruellest of springs.`,
+    briefing: `Ottmar Hitzfeld arrives in the summer of 1998 after a year’s sabbatical, restoring calm to a formidable German-led spine of Kahn, Babbel, Effenberg, Scholl and the veteran Matthäus. They are overwhelming favourites to stroll the Bundesliga, and Hitzfeld's expertise on the big European nights makes them genuine contenders for the Champions League. A formidable German-led machine at the peak of its powers, chasing a domestic crown and a first European Cup in a generation — how far it goes is now on you.`,
   },
 
   'spurs-2001': {
@@ -232,7 +232,7 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Sergei Rebrov — the £11m club-record signing frozen out by Hoddle in favour of Sheringham; the expensive misfit.',
       'Christian Ziege — the summer signing from Liverpool, a goal threat down the left.',
     ],
-    briefing: `Glenn Hoddle, a White Hart Lane legend as a player, returns as coach preaching cultured, possession football — and then has the ground cut from under him in July when captain Sol Campbell, who’d publicly sworn he’d never do it, walks out on a free to Arsenal. Hoddle answers by bringing club icon Teddy Sheringham home from Manchester United and rebuilding the defence around emerging homegrown centre-half Ledley King. Ambitions are honest — mid-table with a cup run — and the season delivers a League Cup final (lost to Blackburn) and ninth place, all of it played under the long shadow of the ultimate betrayal.`,
+    briefing: `Glenn Hoddle, a White Hart Lane legend as a player, returns as coach preaching cultured, possession football — and then has the ground cut from under him in July when captain Sol Campbell, who’d publicly sworn he’d never do it, walks out on a free to Arsenal. Hoddle answers by bringing club icon Teddy Sheringham home from Manchester United and rebuilding the defence around emerging homegrown centre-half Ledley King. Ambitions are honest — steady the ship, climb the table, chase a cup run — but it all plays out under the long shadow of the ultimate betrayal, and it's on you to prove Spurs can be more than mid-table.`,
   },
 
   'liverpool-2001': {
@@ -246,11 +246,11 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     fringe: [
       'Michael Owen — about to be crowned the 2001 Ballon d’Or winner, the jewel of the treble side.',
       'John Arne Riise — the first summer signing, a £4m thunderbolt from Monaco, quickly nailing down left-back.',
-      'Robbie Fowler — the cult hero now out of favour behind Owen and Heskey; he’d be sold to Leeds that November.',
-      'Sander Westerveld — the incumbent keeper, but a costly error against Bolton (27 Aug) ends his Anfield career within weeks.',
+      'Robbie Fowler — the cult hero now out of favour behind Owen and Heskey, and increasingly linked with a move away.',
+      'Sander Westerveld — the incumbent keeper, but shaky enough that his place looks vulnerable early on.',
       'Jerzy Dudek & Chris Kirkland — NOT here yet: both signed at the end of August to solve the goalkeeping crisis.',
     ],
-    briefing: `Liverpool begin basking in the afterglow of an unprecedented cup treble — FA Cup, League Cup and UEFA Cup — and Houllier’s methodical, defensively rigorous project looks ready for the final step: a genuine tilt at the title, powered by 2001 Ballon d’Or winner Michael Owen. Houllier reinforces cautiously, adding Riise and, by late August, two new goalkeepers. Two storm clouds gather: Westerveld’s costly error will upend the goalkeeping department, and Houllier himself will collapse with a heart condition against Leeds in October. They’d push Arsenal all the way, finishing a club-best runners-up on 80 points.`,
+    briefing: `Liverpool begin basking in the afterglow of an unprecedented cup treble — FA Cup, League Cup and UEFA Cup — and Houllier’s methodical, defensively rigorous project looks ready for the final step: a genuine tilt at the title, powered by 2001 Ballon d’Or winner Michael Owen. Houllier reinforces cautiously, adding Riise and, by late August, two new goalkeepers. Two storm clouds gather: the goalkeeping department looks unsettled, and Houllier is driving himself at a punishing pace. With Owen at his peak and the treble momentum behind them, this is the best chance in a decade to turn cups into a genuine title challenge — can you deliver the one trophy that matters?`,
   },
 
   'chelsea-2003': {
@@ -263,12 +263,12 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     ],
     fringe: [
       'Claude Makélélé — the £16m capture from Real Madrid, the pivot who’d define the era.',
-      'Juan Sebastián Verón & Adrian Mutu — the marquee summer gambles (~£15m each) that would both flop.',
+      'Juan Sebastián Verón & Adrian Mutu — the marquee summer gambles (~£15m each), big reputations that must justify the outlay.',
       'Claudio Ranieri — managing as a dead man walking, widely tipped for the sack whatever the results.',
       'Jimmy Floyd Hasselbaink — the incumbent striker now jostling with the new arrivals.',
       'Petr Čech, Didier Drogba & Arjen Robben — NOT here yet: all arrive with Mourinho in 2004.',
     ],
-    briefing: `Roman Abramovich completes his takeover in July 2003 and turns an already good Chelsea into a billionaire’s plaything overnight, funding a £100m-plus spree — Makélélé, Crespo, Duff, Joe Cole, Bridge, Verón, Mutu, Geremi. Overnight the expectation flips from a top-four scrap to the title itself. Claudio Ranieri, the affable "Tinkerman", inherits the riches but manages knowing he is being auditioned to be replaced. He’d deliver a club-record second place and a Champions League semi-final — and still be sacked in May 2004 to make way for José Mourinho.`,
+    briefing: `Roman Abramovich completes his takeover in July 2003 and turns an already good Chelsea into a billionaire’s plaything overnight, funding a £100m-plus spree — Makélélé, Crespo, Duff, Joe Cole, Bridge, Verón, Mutu, Geremi. Overnight the expectation flips from a top-four scrap to the title itself. Claudio Ranieri, the affable "Tinkerman", inherits the riches but manages knowing he is being auditioned — every result weighed against a suspicion he will be replaced whatever he achieves. The money is there and the expectation is the title; whether that buys silverware, or just pressure, is the season's question.`,
   },
 
   'barcelona-2003': {
@@ -284,9 +284,9 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Lionel Messi — a 16-year-old in La Masia, NOT yet a first-team player; his competitive debut is still over a year away (October 2004).',
       'Luis Enrique, Phillip Cocu & Patrick Kluivert — the veteran core being gradually phased out.',
       'Andrés Iniesta — a fringe teenager, only occasional first-team minutes.',
-      'Edgar Davids — NOT here yet: the loan arrival in January 2004 that would spark the second-half turnaround.',
+      'Edgar Davids — NOT here yet: a possible January 2004 loan arrival to add midfield bite if the season needs a jolt.',
     ],
-    briefing: `Summer 2003 is the dawn of the Laporta revolution: Joan Laporta wins the presidency vowing to end years of decline, appoints Frank Rijkaard, and — after very publicly failing to land David Beckham — lands Ronaldinho instead, whose flair comes to symbolise Barcelona’s reawakening. It is a shaky start: the side flirts with the drop and Rijkaard is nearly sacked in early 2004 before a stunning turnaround drives them to runners-up. This is the golden generation taking shape around Xavi, Puyol and Valdés — one season before Eto’o, Deco and a teenage Messi complete the transformation.`,
+    briefing: `Summer 2003 is the dawn of the Laporta revolution: Joan Laporta wins the presidency vowing to end years of decline, appoints Frank Rijkaard, and — after very publicly failing to land David Beckham — lands Ronaldinho instead, whose flair comes to symbolise Barcelona’s reawakening. It is a shaky, pressured start, with the coach's job far from secure and the demand for an immediate return to the summit. This is the golden generation taking shape around Xavi, Puyol and Valdés — with a teenage Messi in La Masia and the whole rebuild still to prove itself.`,
   },
 
   'real-madrid-2006': {
@@ -298,13 +298,13 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'LM Guti', 'ST Raúl', 'ST Ruud van Nistelrooy',
     ],
     fringe: [
-      'David Beckham — THE subplot: frozen out by Capello in January 2007 and told he’d never play again after agreeing an LA Galaxy move, then dramatically reintegrated to become pivotal in the title run-in.',
-      'Fabio Cannavaro — the summer arrival from a relegated Juventus who’d win the 2006 Ballon d’Or as reigning World Cup-winning captain.',
-      'Ruud van Nistelrooy — the marquee signing from Manchester United who top-scored with 25 league goals.',
-      'Ronaldo — the Brazilian, frozen out by Capello for indiscipline and sold to Milan in January 2007.',
+      'David Beckham — THE subplot: his relationship with Capello is combustible, and an LA Galaxy move looms — will he be frozen out, or fight his way back into the side?',
+      'Fabio Cannavaro — the summer arrival from a relegated Juventus, reigning World Cup-winning captain and the new steel at the back.',
+      'Ruud van Nistelrooy — the marquee signing from Manchester United, brought in to be the goalscorer the rebuild is built around.',
+      'Ronaldo — the Brazilian, already at odds with Capello over fitness and discipline; his place is far from secure.',
       'Antonio Cassano — the wayward Italian marginalised and largely frozen out.',
     ],
-    briefing: `Appointed months after Florentino Pérez’s resignation, Capello is brought back to bury the galáctico circus and impose defensive rigour — an unglamorous, pragmatic 4-4-2 built on van Nistelrooy’s goals and Cannavaro’s steel rather than showmanship. His abrasive discipline defines the year: Ronaldo frozen out and sold, Cassano marginalised, and Beckham publicly told he was finished before an extraordinary reintegration. That grinding, joyless run would snatch Real’s 30th title on the final day — after which the board sacked Capello anyway. Zidane has retired, Figo is long gone; this is the morning after the party.`,
+    briefing: `Appointed months after Florentino Pérez’s resignation, Capello is brought back to bury the galáctico circus and impose defensive rigour — an unglamorous, pragmatic 4-4-2 built on van Nistelrooy’s goals and Cannavaro’s steel rather than showmanship. His abrasive discipline sets the tone: Ronaldo's future in doubt, Cassano marginalised, and a dressing room bracing for a colder, harder regime. Zidane has retired, Figo is long gone; this is the morning after the party, and the mandate is to win Spain back without the showmen — an unglamorous rebuild you must make work.`,
   },
 
   'arsenal-2004': {
@@ -320,9 +320,9 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Cesc Fàbregas — a 17-year-old about to force his way into central midfield, helped by a Gilberto injury.',
       'José Antonio Reyes — the January 2004 signing now rotating heavily into the front line.',
       'Robin van Persie — the summer arrival from Feyenoord, a promising squad option.',
-      'The 49-game unbeaten run — carried in from last season, about to end in the bad-tempered "Battle of the Buffet" at Old Trafford that October.',
+      'The 49-game unbeaten run — carried in from last season, a record streak the whole league is desperate to end.',
     ],
-    briefing: `Arsenal begin as the untouchable "Invincibles", having gone the entire previous league season unbeaten, and they carry that aura into a run that would stretch to a record 49 games without defeat. Wenger’s side plays arguably the most beautiful football in the club’s history — Henry’s brilliance, Bergkamp’s craft, the Vieira–Gilberto engine — but the dominant off-field story is captain Vieira’s flirtation with Real Madrid before he chooses to stay. The invincibility ends dramatically on 24 October at Old Trafford, a fractious 2–0 defeat remembered for the pizza that flew in the tunnel afterwards.`,
+    briefing: `Arsenal begin as the untouchable "Invincibles", having gone the entire previous league season unbeaten, and they carry a record unbeaten run into the new campaign. Wenger’s side plays arguably the most beautiful football in the club’s history — Henry’s brilliance, Bergkamp’s craft, the Vieira–Gilberto engine — but the dominant off-field story is captain Vieira’s flirtation with Real Madrid before he commits to stay. How long the invincibility can last, and whether the dynasty holds off Chelsea's billions, is the whole story ahead.`,
   },
 
   'inter-2004': {
@@ -340,7 +340,7 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Christian Vieri — "Bobo" in his final full Inter season alongside Adriano.',
       'Fabio Cannavaro — GONE: he left for Juventus that very summer, so he is not part of this side.',
     ],
-    briefing: `Moratti’s endless spending has made Inter perennial big-name buyers yet perennial bridesmaids, the Scudetto drought stretching back to 1989 and curdling into a psychological weight that undoes better sides. New coach Roberto Mancini, arriving from Lazio, inherits that burden and builds around the great hope: Adriano, a physically overwhelming striker at the absolute zenith of his powers. Backed by the free signing Cambiasso and loanee Verón, Mancini’s side would win the Coppa Italia but finish only third — the title still out of reach until Calciopoli handed it over in 2006.`,
+    briefing: `Moratti’s endless spending has made Inter perennial big-name buyers yet perennial bridesmaids, the Scudetto drought stretching back to 1989 and curdling into a psychological weight that undoes better sides. New coach Roberto Mancini, arriving from Lazio, inherits that burden and builds around the great hope: Adriano, a physically overwhelming striker at the absolute zenith of his powers. Backed by the free signing Cambiasso and loanee Verón, this is a side assembled to finally end the wait — the question is whether Mancini can carry the weight of nearly two decades and land the Scudetto on merit.`,
   },
 
   'milan-2007': {
@@ -353,12 +353,12 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     ],
     fringe: [
       'Andriy Shevchenko — GONE: sold to Chelsea that summer, and the void up front is the very reason the Christmas Tree exists.',
-      'Kaká — the peak-form talisman who’d win the 2007 Ballon d’Or on the back of this campaign.',
+      'Kaká — the peak-form talisman and creative heartbeat, the man the whole side is built to serve.',
       'Paolo Maldini (38) & Alessandro Costacurta (40) — the ageing aristocrats in their European swansong.',
       'Alberto Gilardino — the rotation striker sharing the lone-forward duties with Inzaghi.',
       'Ronaldo — NOT here yet: the Brazilian arrives in January 2007 as extra firepower.',
     ],
-    briefing: `Milan open as an ageing European aristocracy under Ancelotti, spearheaded by a peak-form Kaká and anchored by a veteran spine — Maldini at 38, the 40-year-old Costacurta — chasing redemption for the traumatic Istanbul collapse of 2005. The Calciopoli scandal casts a heavy shadow: they begin the league with an eight-point deduction and must enter the Champions League through a late-August qualifier against Red Star Belgrade. Shevchenko’s summer sale to Chelsea gutted the attack and pushed Ancelotti to crystallise his 4-3-2-1, with Inzaghi alone up top fed by Kaká and Seedorf. This last dance would end in glory: a 2–1 revenge over Liverpool in Athens for a seventh European Cup.`,
+    briefing: `Milan open as an ageing European aristocracy under Ancelotti, spearheaded by a peak-form Kaká and anchored by a veteran spine — Maldini at 38, the 40-year-old Costacurta — chasing redemption for the traumatic Istanbul collapse of 2005. The Calciopoli scandal casts a heavy shadow: they begin the league with an eight-point deduction and must enter the Champions League through a late-August qualifier against Red Star Belgrade. Shevchenko’s summer sale to Chelsea gutted the attack and pushed Ancelotti to crystallise his 4-3-2-1, with Inzaghi alone up top fed by Kaká and Seedorf. An ageing side carrying a points penalty and a thirst for revenge after Istanbul — is there one last European Cup left in this last dance, and can you rebuild before the fall?`,
   },
 
   'atletico-2013': {
@@ -372,11 +372,11 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     fringe: [
       'Radamel Falcao — GONE: the talismanic striker sold to Monaco for a club-record ~€60m, the loss everyone assumed would sink the project.',
       'David Villa — the veteran arrival from Barcelona (~€5m), the cut-price answer to Falcao’s departure.',
-      'Diego Costa — exploding into one of Europe’s most feared strikers (27 league goals) before his summer-2014 move to Chelsea.',
+      'Diego Costa — erupting into one of Europe’s most feared strikers, the spearhead of the counter-attack (and already coveted by the giants).',
       'Thibaut Courtois — the Belgian keeper on a multi-year loan from Chelsea, anchoring a miserly defence.',
-      'The wage bill — a fraction of Barça’s and Real’s, yet about to win the lot.',
+      'The wage bill — a fraction of Barça’s and Real’s, the underdog economics behind everything Simeone builds.',
     ],
-    briefing: `Atlético open having just cashed in their star — Falcao sold to Monaco — a departure most expected to unravel Simeone’s side. Instead they got stronger: David Villa arrived cheaply, Diego Costa erupted into a monster, and Courtois anchored a defence built on Godín and Miranda. Simeone forged a siege-mentality machine, a disciplined low block with relentless pressing and lethal counters, running on a wage bill dwarfed by the giants. Against every expectation they’d seize La Liga on the final day at the Camp Nou and reach the Champions League final — breaking the Barça–Real duopoly that had swallowed Spanish football.`,
+    briefing: `Atlético open having just cashed in their star — Falcao sold to Monaco — a departure most expected to unravel Simeone’s side. Instead they got stronger: David Villa arrived cheaply, Diego Costa erupted into a monster, and Courtois anchored a defence built on Godín and Miranda. Simeone has forged a siege-mentality machine, a disciplined low block with relentless pressing and lethal counters, running on a wage bill dwarfed by the giants. Nobody expects them to sustain it — but if any side can break the Barça–Real duopoly that has swallowed Spanish football, it is this one, and it's on you to prove the doubters wrong.`,
   },
 
   'barcelona-2014': {
@@ -389,12 +389,12 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     ],
     fringe: [
       'Luis Suárez — signed for ~€81m but banned: serving a four-month suspension for the World Cup bite, he can’t debut until the El Clásico of 25 October 2014, so the early XI runs without him.',
-      'The goalkeeping split — Claudio Bravo takes the league goal, Marc-André ter Stegen the cups and Champions League (he’d start the final); there is no single No.1.',
+      'The goalkeeping split — Claudio Bravo for the league, Marc-André ter Stegen for the cups and Champions League; there is no single No.1, a rotation to manage.',
       'Xavi Hernández — the club captain in a reduced, farewell role, his midfield place ceded to the new arrival Rakitić.',
       'Ivan Rakitić — the summer signing from Sevilla, immediately first-choice on the right of the three.',
       'The transfer ban — a looming FIFA sanction that would bar Barça from registering new signings across both 2015 windows.',
     ],
-    briefing: `Newly appointed Luis Enrique is handed a rebuilt front line and assembles, in his 4-3-3, arguably the greatest attacking trident ever seen — Messi, Suárez and Neymar, the "MSN". But the full trio can’t start together until Suárez serves out his four-month World Cup biting ban, debuting at the Bernabéu in late October, after which the attack becomes unstoppable. Luis Enrique’s early tenure is tense — a reported rift with Messi and a poor January loss at Real Sociedad put his job in doubt — before the team surges. They’d sweep La Liga, the Copa del Rey and the Champions League for a historic second continental treble, with a farewell-season Xavi passing the torch.`,
+    briefing: `Newly appointed Luis Enrique is handed a rebuilt front line and assembles, in his 4-3-3, arguably the greatest attacking trident ever seen — Messi, Suárez and Neymar, the "MSN". But the full trio can’t start together until Suárez serves out his four-month World Cup biting ban, debuting at the Bernabéu in late October, after which the attack becomes unstoppable. Luis Enrique’s early tenure is tense — a reported rift with Messi and doubts over whether the new-look side will click put his job under early scrutiny. But with MSN about to come online and a farewell-season Xavi passing the torch, this is a squad with the ceiling to win everything — if you don't squander the greatest attack you'll ever have.`,
   },
 
   'juventus-2006': {
@@ -412,7 +412,7 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Zlatan Ibrahimović & Patrick Vieira — GONE to Inter.',
       'Gianluca Zambrotta & Lilian Thuram — GONE to Barcelona.',
     ],
-    briefing: `The 2006 Calciopoli scandal strips Juventus of two Scudetti and forces them into Serie B for the first time in their history, starting the campaign with a points deduction. A mass exodus follows — Cannavaro and Emerson to Real, Ibrahimović and Vieira to Inter, Zambrotta and Thuram to Barcelona — yet a core of icons refuses to jump ship: Buffon, Del Piero, Nedvěd, Trezeguet and Camoranesi all stay to drag the club back up. Under new coach Didier Deschamps they’d canter to the Serie B title with the division’s meanest defence, turning humiliation into a romance of loyalty and rebirth.`,
+    briefing: `The 2006 Calciopoli scandal strips Juventus of two Scudetti and forces them into Serie B for the first time in their history, starting the campaign with a points deduction. A mass exodus follows — Cannavaro and Emerson to Real, Ibrahimović and Vieira to Inter, Zambrotta and Thuram to Barcelona — yet a core of icons refuses to jump ship: Buffon, Del Piero, Nedvěd, Trezeguet and Camoranesi all stay to try to drag the club back up. Under new coach Didier Deschamps the task is stark — win Serie B at the first attempt, return to the top flight, and turn humiliation into a romance of loyalty and rebirth.`,
   },
 
   'spurs-2013': {
@@ -426,11 +426,11 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     fringe: [
       'Gareth Bale — GONE, and his exit funds everything: sold to Real Madrid for a world-record ~£85m in September 2013.',
       'The "Magnificent Seven" — Soldado, Lamela, Eriksen, Paulinho, Capoue, Chadli and Chiricheș, ~£100m of Bale money spread across seven arrivals.',
-      'Erik Lamela — the £30m club-record buy billed as Bale’s replacement, but injury and adaptation wreck his debut season.',
+      'Erik Lamela — the £30m club-record buy billed as Bale’s replacement, with all the adaptation risk that price and billing carry.',
       'Michael Dawson — the club captain still partnering Vertonghen as Kaboul returns from injury.',
-      'André Villas-Boas — under immense pressure, and sacked by December after heavy home defeats.',
+      'André Villas-Boas — under immense pressure from day one, his job riding on making the seven-signing gamble work fast.',
     ],
-    briefing: `Tottenham cash in their one world-class talent — Bale to Real Madrid for a world record — and reinvest the fortune across seven new faces, the so-called Magnificent Seven. It is the classic gamble: can squad depth and a structured high-line 4-2-3-1 replace a single match-winning genius? The pressure on AVB is immense, tasked with integrating seven players at once while the board expects a top-four leap and no Bale to rescue flat afternoons. The experiment unravels fast — 6–0 at City, 5–0 at home to Liverpool — and Villas-Boas is gone by mid-December.`,
+    briefing: `Tottenham cash in their one world-class talent — Bale to Real Madrid for a world record — and reinvest the fortune across seven new faces, the so-called Magnificent Seven. It is the classic gamble: can squad depth and a structured high-line 4-2-3-1 replace a single match-winning genius? The pressure on AVB is immense, tasked with integrating seven players at once while the board expects a top-four leap and no Bale to rescue flat afternoons. Can squad depth replace a single genius, or does bolting on seven new faces at once simply break the team's spine? That gamble is now yours to run.`,
   },
 
   'bayern-2009': {
@@ -446,9 +446,9 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Bastian Schweinsteiger — converted by van Gaal from a wide player into a world-class central midfielder.',
       'Arjen Robben — the €24m marquee arrival from Real Madrid who transforms the attack.',
       'Mario Gómez — the club-record €30m signing who can’t fit the system, largely benched behind Olić.',
-      'Luca Toni — frozen out by van Gaal and shipped to Roma on loan in January 2010; David Alaba, 17, debuts that February.',
+      'Luca Toni — the veteran striker who doesn’t fit van Gaal’s system, his future in Munich already in doubt; teenage prospect David Alaba waits in the wings.',
     ],
-    briefing: `The abrasive Dutch disciplinarian Louis van Gaal arrives to replace Klinsmann and immediately resets Bayern around youth — handing regular starts to academy gems Müller and Badstuber, blooding a teenage David Alaba, and converting Schweinsteiger into a world-class midfielder. The €24m capture of Robben from Real Madrid transforms the attack, while the record buy Mario Gómez struggles to fit and Luca Toni is frozen out entirely. Van Gaal would become the first Dutchman to win the Bundesliga, complete a domestic double, and drive Bayern all the way to the 2010 Champions League final — where Mourinho’s Inter awaited. Neuer and Götze are still years away.`,
+    briefing: `The abrasive Dutch disciplinarian Louis van Gaal arrives to replace Klinsmann and immediately resets Bayern around youth — handing regular starts to academy gems Müller and Badstuber, blooding a teenage David Alaba, and converting Schweinsteiger into a world-class midfielder. The €24m capture of Robben from Real Madrid is meant to transform the attack, while the record buy Mario Gómez must prove he fits the system. This is the reset that lays a dynasty's foundations — the mandate is to fend off Klopp's emerging Dortmund at home and finish the job in Europe. Neuer and Götze are still years away.`,
   },
 
   'dortmund-2012': {
@@ -462,11 +462,11 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     fringe: [
       'Marco Reus — the headline summer signing (~€17m), the local boy coming home to a hero’s welcome.',
       'Shinji Kagawa — GONE: sold to Manchester United that summer.',
-      'Mario Götze — still here at kickoff, but Bayern would trigger his €37m release clause in April 2013, announced days before the Champions League final.',
-      'Robert Lewandowski — still here too, but bound for Bayern on a free in 2014; the crown jewels are being picked off one by one.',
+      'Mario Götze — the jewel of the academy, and exactly the sort of talent Bayern’s release-clause chequebook is built to prise away.',
+      'Robert Lewandowski — the world-class spearhead, coveted across Europe and a constant flight risk; holding onto the crown jewels is the fight.',
       'Sebastian Kehl — the veteran captain, experienced cover in the double pivot.',
     ],
-    briefing: `Klopp’s Dortmund enter as back-to-back Bundesliga champions, a thrilling, young, homegrown side playing ferocious Gegenpressing on a fraction of Bayern’s budget — Hummels, Gündoğan, Götze, Reus and Lewandowski among the most exciting names in Europe, with hometown returnee Reus embodying the romance. But the existential threat is Bayern’s chequebook, poised to prise the crown jewels away: Götze would agree a move to Munich in April 2013, days before the final, with Lewandowski to follow. The season peaks at the all-German 2013 final — a 2–1 defeat to Bayern at Wembley — the wall holding, for now.`,
+    briefing: `Klopp’s Dortmund enter as back-to-back Bundesliga champions, a thrilling, young, homegrown side playing ferocious Gegenpressing on a fraction of Bayern’s budget — Hummels, Gündoğan, Götze, Reus and Lewandowski among the most exciting names in Europe, with hometown returnee Reus embodying the romance. But the existential threat is Bayern’s chequebook, poised to prise the crown jewels away — Götze and Lewandowski are exactly the kind of talent Munich covets, and holding this golden generation together is the fight that defines the era. Can the wall hold, and can a Wembley run be turned into a European Cup?`,
   },
 
   'man-city-2008': {
@@ -484,7 +484,7 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Jô — the £19m pre-takeover striker signing who never delivered.',
       'Tévez, Adebayor & Kolo Touré — NOT here yet: the big-money reshaping waits until summer 2009 (with Given and Bridge arriving in January).',
     ],
-    briefing: `Mark Hughes was hired in June 2008 to rebuild a mid-table, cash-strapped side under Thaksin Shinawatra’s crumbling ownership — and then, on 1 September, the Abu Dhabi United Group completed a takeover that made Manchester City the richest club on the planet overnight. Minutes before the window shut, the new owners announced themselves by hijacking Real Madrid’s Robinho from under Chelsea’s nose for a British record. Overnight the club went from also-rans to a place with no spending ceiling, Robinho the emblem of it all, while Hughes was left to fuse a chaotic inherited squad with sudden limitless ambition. Year one yielded only 10th place — the revolution had money, not yet a team.`,
+    briefing: `Mark Hughes was hired in June 2008 to rebuild a mid-table, cash-strapped side under Thaksin Shinawatra’s crumbling ownership — and then, on 1 September, the Abu Dhabi United Group completed a takeover that made Manchester City the richest club on the planet overnight. Minutes before the window shut, the new owners announced themselves by hijacking Real Madrid’s Robinho from under Chelsea’s nose for a British record. Overnight the club went from also-rans to a place with no spending ceiling, Robinho the emblem of it all, while Hughes is left to fuse a chaotic inherited squad with sudden limitless ambition. The revolution has money — but not yet a team, and turning the billions into titles without wasting years is the whole challenge.`,
   },
 
   'liverpool-2010': {
@@ -497,12 +497,12 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
     ],
     fringe: [
       'Javier Mascherano — GONE: the captain-grade midfielder agitates his way out to Barcelona for ~£17m on 30 August 2010.',
-      'Fernando Torres — the nominal first-choice striker, deeply unsettled; he’d force a British-record £50m move to Chelsea in January.',
+      'Fernando Torres — the nominal first-choice striker, but deeply unsettled and a real flight risk with the club in turmoil.',
       'Steven Gerrard — the loyal talisman anchoring the side through the storm.',
       'Joe Cole — the high-profile free signing from Chelsea, sent off on debut, who never settled.',
       'Luis Suárez & Andy Carroll — NOT here yet: the January 2011 deadline-day arrivals after Torres’s exit.',
     ],
-    briefing: `Liverpool begin as a fallen giant in financial freefall: Tom Hicks and George Gillett’s debt-laden ownership has pushed one of England’s great institutions to the brink of administration, the club effectively for sale and unable to compete. Rafael Benítez has gone to Inter, and the cautious Roy Hodgson has been appointed — a safe pair of hands whose modest signings and compact 4-4-2 prove a jarring mismatch for Anfield’s expectation and turmoil. The overriding fight is to hold the squad together while the boardroom burns: Mascherano is already agitating out, Torres is eyeing the exit, and only Gerrard’s loyalty holds firm. Relief comes in October with the NESV/FSG takeover — but results collapse, and Hodgson is sacked in January for the returning Kenny Dalglish.`,
+    briefing: `Liverpool begin as a fallen giant in financial freefall: Tom Hicks and George Gillett’s debt-laden ownership has pushed one of England’s great institutions to the brink of administration, the club effectively for sale and unable to compete. Rafael Benítez has gone to Inter, and the cautious Roy Hodgson has been appointed — a safe pair of hands whose modest signings and compact 4-4-2 prove a jarring mismatch for Anfield’s expectation and turmoil. The overriding fight is to hold the squad together while the boardroom burns: Mascherano is already agitating out, Torres is eyeing the exit, and only Gerrard’s loyalty holds firm. A takeover may yet steady the finances — but the immediate task is to arrest the slide, keep the stars, and prove Anfield can climb back toward the summit.`,
   },
 
   'man-utd-2013': {
@@ -518,10 +518,10 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Wayne Rooney — future in genuine doubt: a transfer request revealed, two Chelsea bids rejected, angered at being framed as van Persie’s back-up — but he stays.',
       'Robin van Persie — last season’s 26-goal title-winner, whose form and fitness fade badly under Moyes.',
       'Rio Ferdinand, Nemanja Vidić & Patrice Evra — the ageing champions’ spine, all visibly past their peak.',
-      'Adnan Januzaj — the 18-year-old academy gem about to force his way in and become the season’s one bright spark, still on a short deal United must race to tie down.',
-      'Wilfried Zaha — the £15m January arrival from Crystal Palace, integrated for the new season but frozen out by Moyes and loaned back out by January.',
+      'Adnan Januzaj — the 18-year-old academy gem knocking on the first-team door, still on a short deal United must race to tie down.',
+      'Wilfried Zaha — the £15m arrival from Crystal Palace, a winger with plenty to prove and an uncertain place in the manager’s plans.',
       'Fàbregas, Herrera & Baines — the summer targets chased and MISSED, the failures that defined a shambolic window; Juan Mata doesn’t arrive until January 2014.',
     ],
-    briefing: `Sir Alex Ferguson retired in May 2013 having just won a 20th league title, hand-picking fellow Scot David Moyes as his successor — an almost impossible act to follow. Moyes inherits the champions but an ageing spine and a shambolic window that, after chasing and failing on Fàbregas, Herrera and Baines, lands only Marouane Fellaini in a frantic deadline-day scramble. Wayne Rooney’s future hangs in the balance amid a transfer request and Chelsea interest before he stays, while van Persie’s title-winning form fades. A 4–1 opening win at Swansea flatters the reality: the Ferguson aura evaporates fast, and Moyes would be sacked by April with United out of the top four.`,
+    briefing: `Sir Alex Ferguson retired in May 2013 having just won a 20th league title, hand-picking fellow Scot David Moyes as his successor — an almost impossible act to follow. Moyes inherits the champions but an ageing spine and a shambolic window that, after chasing and failing on Fàbregas, Herrera and Baines, lands only Marouane Fellaini in a frantic deadline-day scramble. Wayne Rooney’s future hangs in the balance amid a transfer request and Chelsea interest before he commits to stay, while questions gather over whether van Persie can repeat his title-winning form. Following Ferguson is an almost impossible act — the mandate is to defend the title and prove the dynasty outlives its architect, and it starts the moment you take the chair.`,
   },
 };

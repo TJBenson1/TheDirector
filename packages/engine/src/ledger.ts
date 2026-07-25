@@ -451,6 +451,7 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   { playerId: 'cur_thuram_ju01', from: 'parma', to: 'juventus', window: '2001-07', fee: 22_000_000, id: 'thuram-juve-2001' },
   { playerId: 'cur_riise01', from: 'monaco', to: 'liverpool', window: '2001-07', fee: 4_000_000, id: 'riise-liverpool-2001' },
   { playerId: 'cur_sheringham01', from: 'man_utd', to: 'spurs', window: '2001-07', fee: 0, id: 'sheringham-spurs-2001' },
+  { playerId: 'cur_ziege_s01', from: 'liverpool', to: 'spurs', window: '2001-07', fee: 4_000_000, id: 'ziege-spurs-2001' },
   // The Leeds fire-sale — O'Leary's over-leveraged side broke up piece by piece.
   // Seeding the real departures makes their historical collapse happen by default:
   // stripped of its spine, Leeds' anchored strength falls and they stop being a
