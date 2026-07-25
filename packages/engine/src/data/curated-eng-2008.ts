@@ -51,7 +51,10 @@ export const MANCITY_2008: CuratedSeed[] = [
   q('man_city', 'de_jong_c8', 'Nigel de Jong', 1984, 'Netherlands', ['DM'], 80, 83, 2013, 20, t(8, 6, 8, 7, 6, 8)),
   q('man_city', 'petrov_c8', 'Martin Petrov', 1979, 'Bulgaria', ['LW'], 78, 79, 2011, 25, t(7, 6, 8, 7, 5, 7)),
   q('man_city', 'wright_phillips', 'Shaun Wright-Phillips', 1981, 'England', ['RW'], 79, 81, 2012, 20, t(7, 6, 8, 8, 5, 7)),
-  q('man_city', 'robinho_c8', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 84, 86, 2013, 25, t(5, 8, 8, 5, 6, 7)),
+  // Robinho is pre-parked at Real Madrid: his deadline-day switch to City — the
+  // defining statement of the takeover — is a LIVE opening-window move (M12C), so a
+  // City Director signs it as the real-in it was, not a fait accompli. See
+  // LEDGER_ENG_2008 (robinho-city-2008).
   // Real 2008–09 Man City: the £19m CSKA Moscow striker who led the line beside Robinho.
   q('man_city', 'jo_c8', 'Jô', 1987, 'Brazil', ['ST'], 74, 80, 2012, 25, t(6, 6, 7, 6, 6, 6)),
   q('man_city', 'caicedo', 'Felipe Caicedo', 1988, 'Ecuador', ['ST'], 74, 80, 2013, 20, t(6, 6, 8, 7, 6, 7)),
@@ -79,7 +82,8 @@ export const MANUTD_2008: CuratedSeed[] = [
   q('man_utd', 'nani_u8', 'Nani', 1986, 'Portugal', ['RW', 'LW'], 80, 86, 2013, 20, t(6, 7, 8, 7, 6, 8)),
   q('man_utd', 'cristiano_u8', 'Cristiano Ronaldo', 1985, 'Portugal', ['RW', 'LW', 'ST'], 92, 95, 2012, 15, t(10, 9, 10, 7, 4, 8)),
   q('man_utd', 'rooney_u8', 'Wayne Rooney', 1985, 'England', ['ST', 'AM'], 87, 91, 2012, 25, t(8, 7, 9, 8, 7, 8)),
-  q('man_utd', 'berbatov_u8', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST'], 84, 85, 2013, 20, t(7, 7, 8, 7, 5, 8)),
+  // Berbatov is pre-parked at Spurs (see TOTTENHAM_2008): his deadline-day switch to
+  // United is a LIVE opening-window move (see LEDGER_ENG_2008), not a fait accompli.
   q('man_utd', 'tevez_u8', 'Carlos Tévez', 1984, 'Argentina', ['ST', 'AM'], 85, 87, 2009, 20, t(8, 8, 10, 6, 6, 8)),
 ];
 
@@ -112,7 +116,8 @@ export const CHELSEA_2008: CuratedSeed[] = [
   q('chelsea', 'essien_c8', 'Michael Essien', 1982, 'Ghana', ['DM', 'CM'], 86, 87, 2013, 25, t(9, 6, 9, 8, 6, 7)),
   q('chelsea', 'lampard_c8', 'Frank Lampard', 1978, 'England', ['CM', 'AM'], 88, 88, 2013, 15, t(10, 6, 9, 9, 4, 7), { loyalty: 92 }),
   q('chelsea', 'mikel_c8', 'John Obi Mikel', 1987, 'Nigeria', ['DM'], 79, 83, 2013, 20, t(8, 5, 8, 8, 5, 7)),
-  q('chelsea', 'deco_c8', 'Deco', 1977, 'Portugal', ['AM', 'CM'], 84, 84, 2011, 20, t(7, 6, 8, 7, 5, 8)),
+  // Deco is pre-parked at Barça (see BARCELONA_E8): his 2008 move to Chelsea is a
+  // LIVE opening-window move (see LEDGER_ENG_2008), not a fait accompli.
   q('chelsea', 'malouda_c8', 'Florent Malouda', 1980, 'France', ['LW', 'AM'], 82, 84, 2013, 20, t(8, 6, 8, 7, 5, 8)),
   q('chelsea', 'j_cole_c8', 'Joe Cole', 1981, 'England', ['AM', 'LW'], 82, 84, 2012, 25, t(7, 6, 8, 8, 5, 8)),
   q('chelsea', 'drogba_c8', 'Didier Drogba', 1978, 'Ivory Coast', ['ST'], 87, 88, 2012, 25, t(8, 7, 9, 8, 6, 7)),
@@ -149,6 +154,9 @@ export const BARCELONA_E8: CuratedSeed[] = [
   q('barcelona', 'xavi_e8', 'Xavi', 1980, 'Spain', ['CM'], 89, 90, 2014, 15, t(10, 5, 9, 10, 3, 8), { loyalty: 96 }),
   q('barcelona', 'iniesta_e8', 'Andrés Iniesta', 1984, 'Spain', ['CM', 'AM'], 87, 90, 2014, 20, t(10, 5, 9, 10, 3, 8), { loyalty: 96 }),
   q('barcelona', 'keita_e8', 'Seydou Keita', 1980, 'Mali', ['CM', 'DM'], 81, 82, 2012, 20, t(9, 5, 8, 8, 5, 8)),
+  // Deco's real club until Guardiola's summer-2008 clearout sent him to Chelsea
+  // (a LIVE opening-window move; keeps his events id cur_deco_c8).
+  q('barcelona', 'deco_c8', 'Deco', 1977, 'Portugal', ['AM', 'CM'], 84, 84, 2011, 20, t(7, 6, 8, 7, 5, 8)),
   q('barcelona', 'messi_e8', 'Lionel Messi', 1987, 'Argentina', ['RW', 'AM', 'ST'], 90, 99, 2016, 15, t(10, 6, 10, 10, 3, 8), { loyalty: 95 }),
   q('barcelona', 'etoo_e8', 'Samuel Eto’o', 1981, 'Cameroon', ['ST'], 88, 88, 2012, 20, t(7, 8, 9, 6, 6, 7)),
   q('barcelona', 'henry_e8', 'Thierry Henry', 1977, 'France', ['LW', 'ST'], 84, 85, 2012, 20, t(9, 7, 9, 7, 4, 8)),
@@ -170,6 +178,9 @@ export const REAL_MADRID_E8: CuratedSeed[] = [
   q('real_madrid', 'raul_e8', 'Raúl', 1977, 'Spain', ['ST', 'AM'], 84, 84, 2010, 20, t(9, 6, 9, 10, 4, 7), { loyalty: 96 }),
   q('real_madrid', 'higuain_e8', 'Gonzalo Higuaín', 1987, 'Argentina', ['ST'], 82, 88, 2013, 20, t(8, 6, 9, 8, 5, 8)),
   q('real_madrid', 'van_nistelrooy_e8', 'Ruud van Nistelrooy', 1976, 'Netherlands', ['ST'], 84, 84, 2010, 25, t(9, 7, 9, 7, 4, 7)),
+  // Robinho starts here — his real club until deadline day, when City's takeover
+  // money prised him away (a LIVE opening-window move; see LEDGER_ENG_2008).
+  q('real_madrid', 'robinho_c8', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 84, 86, 2013, 25, t(5, 8, 8, 5, 6, 7)),
 ];
 
 export const BAYERN_E8: CuratedSeed[] = [
@@ -246,6 +257,9 @@ export const TOTTENHAM_2008: CuratedSeed[] = [
   q('spurs', 'king_sp', 'Ledley King', 1980, 'England', ['CB'], 83, 84, 2012, 40, t(9, 5, 8, 10, 3, 7), { loyalty: 92 }),
   q('spurs', 'huddlestone', 'Tom Huddlestone', 1986, 'England', ['DM', 'CM'], 78, 82, 2013, 20, t(8, 5, 7, 8, 5, 7)),
   q('spurs', 'defoe_sp', 'Jermain Defoe', 1982, 'England', ['ST'], 82, 83, 2013, 20, t(8, 6, 8, 8, 5, 8)),
+  // Berbatov's real club until the 2008 deadline day, when United paid £30.75m for
+  // him (a LIVE opening-window move; keeps his events-saga id cur_berbatov_u8).
+  q('spurs', 'berbatov_u8', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST'], 84, 85, 2013, 20, t(7, 7, 8, 7, 5, 8)),
   q('spurs', 'bale_sp', 'Gareth Bale', 1989, 'Wales', ['LB', 'LW'], 76, 91, 2014, 25, t(8, 6, 9, 8, 5, 8)),
   q('spurs', 'woodgate_sp', 'Jonathan Woodgate', 1980, 'England', ['CB'], 81, 82, 2012, 35, t(8, 5, 8, 8, 5, 7)),
   q('spurs', 'corluka_sp', 'Vedran Ćorluka', 1986, 'Croatia', ['CB', 'RB'], 79, 82, 2013, 20, t(8, 5, 8, 8, 5, 7)),

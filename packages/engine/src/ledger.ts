@@ -617,6 +617,12 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
  * stars move as they really did.
  */
 const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
+  // ── The LIVE opening window (summer 2008) — the takeover-summer moves, seeded at
+  //    their selling clubs so a Director signs/intercepts them rather than inheriting
+  //    a done deal (M12C). Robinho's deadline-day switch is the takeover's statement. ──
+  { playerId: 'cur_robinho_c8', from: 'real_madrid', to: 'man_city', window: '2008-07', fee: 32_500_000, id: 'robinho-city-2008' },
+  { playerId: 'cur_berbatov_u8', from: 'spurs', to: 'man_utd', window: '2008-08', fee: 30_750_000, id: 'berbatov-utd-2008' },
+  { playerId: 'cur_deco_c8', from: 'barcelona', to: 'chelsea', window: '2008-07', fee: 8_000_000, id: 'deco-chelsea-2008' },
   // The era's other defining moves (rival business the Director can intercept):
   { playerId: 'cur_torres_l8', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
   { playerId: 'cur_suarez_aj08', from: 'ajax', to: 'liverpool', window: '2011-01', fee: 22_800_000, id: 'suarez-lfc-2011' },
