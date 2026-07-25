@@ -185,11 +185,21 @@ function synthRecord(points: number, rank0: number, n: number, salt: number, gam
  * target is pro-rated to games actually played. Mutates `league.standings`.
  */
 /** How much accumulated strength-shift (|starButterfly| + suppressionPenalty, in the
- *  ~0.2/star strength units) fully unanchors a rival from its real finish, and the
- *  ceiling on that release. A marquee suppression (~3 shift) ≈ half-released; gutting a
- *  club's spine (~6+) ≈ fully released to its merit result. */
+ *  ~0.2/star strength units) fully unanchors a rival from its real finish. A marquee
+ *  suppression (~3 shift) ≈ half-released; gutting a club's spine (~6+) ≈ fully released
+ *  to its merit result — an affected rival's fate is decided by its (post-counter-punch)
+ *  squad, not a fiat pin. Only UNTOUCHED clubs stay anchored to reality. */
 const FIELD_RELAX_SCALE = 6;
-const FIELD_RELAX_CAP = 0.85;
+const FIELD_RELAX_CAP = 1;
+
+/** How fast the USER'S OWN club sheds its real-finish anchor as he reshapes the world.
+ *  The anchor is NOT the governor on the Director's success — his SQUAD is, and the
+ *  RIVALS' intelligence (the finite-pool counter-punch) is what makes domination hard.
+ *  So a committed campaign reaches PURE MERIT (relax → 1): build the best side in the
+ *  league and you can win it; a perfect game can dominate, but only a genuinely
+ *  transformative one gets fully off the leash, so it stays rare. Passive (div 0) → 0,
+ *  so a do-nothing Director still reproduces his real finish (calibration untouched). */
+const USER_RELAX_K = 1.6;
 
 export function anchorSeasonToReality(state: GameState, league: LeagueState, progress = 1): void {
   const key = leagueKey(league);
@@ -219,7 +229,7 @@ export function anchorSeasonToReality(state: GameState, league: LeagueState, pro
     //     table is still reproduced exactly and the calibration is untouched.
     let relax: number;
     if (clubId === state.playerClub) {
-      relax = div;
+      relax = Math.min(1, div * USER_RELAX_K); // his fate is his squad's merit, not a pin
     } else if (div <= 0) {
       relax = 0; // passive → field fully anchored (byte-identical reality)
     } else {
