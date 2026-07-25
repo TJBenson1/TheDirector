@@ -816,6 +816,9 @@ const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
  * Figo and Zidane make their real transfers, the last three to Madrid.
  */
 const LEDGER_BUNDESLIGA_1997: RealTransferLedgerEntry[] = [
+  // The LIVE opening window for bayern-1998 (summer 1998): Effenberg's return to
+  // Bayern from Gladbach — the midfield general who drove the treble run.
+  { playerId: 'cur_effenberg_98', from: 'gladbach', to: 'bayern', window: '1998-07', fee: 5_000_000, id: 'effenberg-bayern-1998' },
   // ── Dortmund's champions dispersed (the user's stars, if they are Dortmund) ──
   { playerId: 'cur_riedle_97', from: 'dortmund', to: 'liverpool', window: '1997-07', fee: 2_000_000, id: 'riedle-liverpool-1997' },
   { playerId: 'cur_moller_97', from: 'dortmund', to: 'schalke', window: '2000-07', fee: 0, id: 'moller-schalke-2000' },
@@ -1011,6 +1014,10 @@ const LEDGER_2007_2013: RealTransferLedgerEntry[] = [
   // The LIVE opening window (summer 2007, milan-2007): Emerson's move from Real is
   // Milan's real-in decision as the champions try to hold off the fall.
   { playerId: 'cur_emerson_07', from: 'real_madrid', to: 'milan', window: '2007-07', fee: 4_000_000, id: 'emerson-milan-2007' },
+  // The Calciopoli exodus (juventus-2006, summer 2006): the mercenaries flee Serie B
+  // — a Juventus Director sanctions the fire-sale or keeps them for the fight back up.
+  { playerId: 'cur_vieira_07', from: 'juventus', to: 'inter', window: '2006-07', fee: 9_500_000, id: 'vieira-inter-2006' },
+  { playerId: 'cur_cannavaro_f07', from: 'juventus', to: 'real_madrid', window: '2006-07', fee: 7_000_000, id: 'cannavaro-real-2006b' },
   // ── Milan's business (the user's, if they are Milan) ──
   { playerId: 'cur_kaka_07', from: 'milan', to: 'real_madrid', window: '2009-07', fee: 65_000_000, id: 'kaka-real-2009' },
   { playerId: 'cur_pirlo_07', from: 'milan', to: 'juventus', window: '2011-07', fee: 0, id: 'pirlo-juve-2011' },
