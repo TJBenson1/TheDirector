@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createNewGame, cloneState } from './state.js';
 import { evaluateApproach, wouldAcceptMove, areRivals, areDirectRivals, magnetPull } from './agency.js';
 import { attemptSigning, executeTransfer } from './transfers.js';
+import { pendingPreAgreedMove } from './ledger.js';
 import type { GameState } from './types.js';
 
 function find(state: GameState, name: string) {
@@ -38,7 +39,11 @@ describe('player agency & resistance (§6)', () => {
 
   it('a direct-rival move meets near-absolute resistance', () => {
     const state = createNewGame({ seed: 'rival' });
-    const lfc = Object.values(state.players).find((p) => p.club === 'liverpool' && p.ability >= 65)!;
+    // Not McManaman — his pre-agreed Bosman to Real is a done deal, blocked by a
+    // different (earlier) rule; we want a player gated purely by the rivalry.
+    const lfc = Object.values(state.players).find(
+      (p) => p.club === 'liverpool' && p.ability >= 65 && !pendingPreAgreedMove(state, p.id),
+    )!;
     const verdict = evaluateApproach(state, {
       playerId: lfc.id,
       toClub: 'man_utd',
@@ -67,6 +72,21 @@ describe('player agency & resistance (§6)', () => {
     expect(blocked.willing).toBe(false);
     expect(blocked.hardBlocked).toBe(true);
     expect(blocked.reason).toMatch(/direct rival/i);
+  });
+
+  it('a pre-agreed Bosman is a done deal — not hijackable by anyone, even the user', () => {
+    // McManaman's free to Real (agreed the previous January) is locked. Approaching
+    // him — from a rival OR a neutral — is hard-blocked as a done deal, and he still
+    // reaches Real passively (reality holds). Campbell's contested Bosman, by
+    // contrast, stays a live, winnable target.
+    const s = createNewGame({ seed: 'preagreed' });
+    expect(s.players['cur_mcmanaman']!.club).toBe('liverpool');
+    expect(pendingPreAgreedMove(s, 'cur_mcmanaman')).toBe('real_madrid');
+    const chase = evaluateApproach(s, { playerId: 'cur_mcmanaman', toClub: 'man_city', wageOffer: 999_999 });
+    expect(chase.hardBlocked).toBe(true);
+    expect(chase.reason).toMatch(/pre-contract|done|hijack/i);
+    // Campbell (a genuinely contested free) is NOT locked — still winnable.
+    expect(pendingPreAgreedMove(s, 'cur_campbell')).toBeNull();
   });
 
   it('hijacking the same player from his neutral source club IS legitimate', () => {

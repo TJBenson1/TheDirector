@@ -14,7 +14,7 @@
  * scouting, academy and narrative.
  */
 
-import type { ClubId, PlayerId, YearMonth } from './types.js';
+import type { ClubId, GameState, PlayerId, YearMonth } from './types.js';
 import type { CuratedSeed } from './data/curated-1999.js';
 import { GRADUATES_1999, INTAKES_1999 } from './data/curated-graduates-1999.js';
 import { GRADUATES_ESP, INTAKES_ESP } from './data/curated-graduates-esp.js';
@@ -55,11 +55,74 @@ export interface RealTransferLedgerEntry {
    * certainly cancels their fringe depth signings.
    */
   cancelChance?: number;
+  /**
+   * A LOCKED move: a Bosman or otherwise pre-agreed deal that was done months in
+   * advance (McManaman's 1999 free to Real, agreed the previous January). It is
+   * NOT contestable — no rival can hijack the player, the user cannot intercept or
+   * block him, and a Bosman OUT of the user's own club cannot be kept (the
+   * contract has already expired). It simply EXECUTES to its real destination.
+   * Distinguishes these from genuinely live summer business a Director can gazump.
+   */
+  preAgreed?: boolean;
+}
+
+/**
+ * A real LOAN — a TEMPORARY move that reverts to the parent club (Coutinho to
+ * Bayern 2019-20, the Chelsea loan army). Kept as a SEPARATE record from the
+ * permanent-transfer ledger because a loan must never be treated as a permanent
+ * transfer: the player belongs to `parent`, plays at `to` for the loan spell, and
+ * returns at `until`. Squad-fidelity and "at real club" checks judge a loanee by
+ * his PARENT club, not the temporary host.
+ *
+ * NOTE: the record exists so later loan-heavy eras have somewhere accurate to put
+ * this data; execution semantics (temporary move + scheduled return, judged by
+ * parent) are wired when the first such era is seeded, against real data to verify.
+ */
+export interface RealLoanEntry {
+  /** Curated player id (real player). */
+  playerId: PlayerId;
+  /** The club that OWNS him (he returns here). */
+  parent: ClubId;
+  /** The club he is loaned TO for the spell. */
+  to: ClubId;
+  /** When the loan begins. */
+  window: YearMonth;
+  /** When he reverts to `parent`. */
+  until: YearMonth;
+  /** Loan fee (0 for most). */
+  fee?: number;
+  /** A loan carrying an obligation/option that reality exercised — becomes a
+   *  permanent transfer to `to` at `until` rather than a return to `parent`. */
+  buyPermanent?: boolean;
 }
 
 /** The key an entry is tracked by (supports multiple moves per player). */
 export function entryKey(e: RealTransferLedgerEntry): string {
   return e.id ?? `${e.playerId}@${e.window}->${e.to}`;
+}
+
+/**
+ * If a player has a still-pending PRE-AGREED move away from his current club (a
+ * Bosman/pre-contract done months ahead), return where he is bound. Such a player
+ * is off the market — no one, the user included, can hijack a done deal — so this
+ * gates every acquisition path (recommend/find/sign). Returns null for a normal,
+ * genuinely contestable ledger subject (those stay hijackable — the whole point of
+ * the counterfactual game). Import kept lightweight: reads only the era ledger and
+ * the executed set.
+ */
+export function pendingPreAgreedMove(state: GameState, playerId: PlayerId): ClubId | null {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack) return null;
+  const p = state.players[playerId];
+  if (!p) return null;
+  for (const e of pack.realTransferLedger) {
+    if (!e.preAgreed) continue;
+    if (e.playerId !== playerId) continue;
+    if (e.from !== p.club) continue; // he has already moved on / not from here
+    if (state.meta.executedLedger.includes(entryKey(e))) continue; // already done
+    return e.to;
+  }
+  return null;
 }
 
 /** Which tier satisfied an invalidated ledger entry (recorded for audit). */
@@ -117,6 +180,10 @@ export interface EraRealityPack {
   /** Moves that ALMOST happened — preferred targets when a butterfly deprives
    *  their club of a real signing (§ butterfly showcase). Optional. */
   nearMissLedger?: NearMissEntry[];
+  /** Real LOANS (temporary moves that revert to the parent club). Kept separate
+   *  from the permanent ledger so a loanee is never mistaken for a real transfer.
+   *  Optional; execution wired when the first loan-heavy era is seeded. */
+  realLoans?: RealLoanEntry[];
   /** The real next generation — curated seeds for players who break through
    *  mid-timeline (a Rooney in a 1999 start), instantiated at their debut window by
    *  `academyIntakes` so a long save is repopulated by real names, not just
@@ -174,7 +241,9 @@ const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
   // anyone) can gazump in the opening window, not a fait accompli (M12A/C).
   { playerId: 'cur_vandersar', from: 'ajax', to: 'juventus', window: '1999-08', fee: 5_000_000 },
   { playerId: 'cur_anelka', from: 'arsenal', to: 'real_madrid', window: '1999-08', fee: 22_000_000 },
-  { playerId: 'cur_mcmanaman', from: 'liverpool', to: 'real_madrid', window: '1999-08', fee: 0 },
+  // McManaman's free to Real was agreed the previous January, with no English club
+  // in the race — a done deal, not live summer business. Locked: not hijackable.
+  { playerId: 'cur_mcmanaman', from: 'liverpool', to: 'real_madrid', window: '1999-08', fee: 0, preAgreed: true },
   { playerId: 'cur_overmars', from: 'arsenal', to: 'barcelona', window: '2000-07', fee: 25_000_000 },
   { playerId: 'cur_figo', from: 'barcelona', to: 'real_madrid', window: '2000-07', fee: 37_000_000 },
   { playerId: 'cur_redondo', from: 'real_madrid', to: 'milan', window: '2000-08', fee: 0 },
@@ -662,7 +731,8 @@ const LEDGER_ENG_1995: RealTransferLedgerEntry[] = [
   { playerId: 'cur_shearer_95', from: 'blackburn', to: 'newcastle', window: '1996-07', fee: 15_000_000, id: 'shearer-newcastle-1996' },
   // ── The Spice Boys picked apart (the user's stars leaving, if they are Liverpool) ──
   { playerId: 'cur_collymore_95', from: 'liverpool', to: 'aston_villa', window: '1997-07', fee: 7_000_000, id: 'collymore-villa-1997' },
-  { playerId: 'cur_mcmanaman_95', from: 'liverpool', to: 'real_madrid', window: '1999-07', fee: 0, id: 'mcmanaman-real-1999' },
+  // A pre-agreed Bosman (see LEDGER_1999_2004) — locked, not hijackable.
+  { playerId: 'cur_mcmanaman_95', from: 'liverpool', to: 'real_madrid', window: '1999-07', fee: 0, id: 'mcmanaman-real-1999', preAgreed: true },
   // ── The continental market moves as reality ──
   { playerId: 'cur_ronaldo_b96', from: 'barcelona', to: 'inter', window: '1997-07', fee: 27_000_000, id: 'ronaldo-inter-1997' },
   { playerId: 'cur_anelka_a96', from: 'arsenal', to: 'real_madrid', window: '1999-07', fee: 22_500_000, id: 'anelka-real-1999' },

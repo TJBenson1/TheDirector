@@ -122,15 +122,27 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
   // Players whose real move is still ahead — used to let a deprived club hijack
   // a player reality was already moving IMMINENTLY (Arsenal → Ferdinand, whose
   // move was a year away). Only moves within ~1 year count: you can't pull a
-  // striker's 2007 transfer forward to 2004 to plug a gap now.
+  // striker's 2007 transfer forward to 2004 to plug a gap now. A pre-agreed
+  // deal (a Bosman done months ahead — McManaman → Real) is NEVER hijackable: it
+  // is off the market, so it is excluded from the pool entirely.
   const futureByPlayer = new Map<string, string[]>();
   for (const e of pack.realTransferLedger) {
+    if (e.preAgreed) continue;
     if (transferWindowOrdinal(e.window) > nowOrd && Number(e.window.slice(0, 4)) - nowYear <= 2 && !state.meta.executedLedger.includes(entryKey(e))) {
       const arr = futureByPlayer.get(e.playerId) ?? [];
       arr.push(entryKey(e));
       futureByPlayer.set(e.playerId, arr);
     }
   }
+
+  // A player moves AT MOST ONCE per window: once he has been signed/moved this
+  // window (by his real move, a hijack, or a fallback), he is off the market for
+  // the rest of it — a rival denied elsewhere cannot then come back and pull the
+  // same man again in the same window ("if you don't get him in time, you don't
+  // get him this window"). Transient to this window pass, so it never touches
+  // hashed state and passive worlds (which never reach the divergence paths that
+  // read it) stay byte-identical.
+  const movedThisWindow = new Set<string>();
 
   // Everything due this window (a real window spans Jul–Aug, so -07/-08/-09 all
   // resolve in the summer window — see transferWindowOrdinal). Execute them in a
@@ -246,6 +258,29 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
       }
     }
 
+    // A LOCKED pre-agreed / Bosman move: not contestable by anyone. It executes to
+    // its real destination even when it involves the user's own club — a free
+    // transfer whose contract has already expired cannot be blocked or kept — so no
+    // decision is surfaced and no butterfly is logged.
+    if (entry.preAgreed) {
+      if (player && dest && player.club === entry.from) {
+        dest.finances.transferBudget = Math.max(dest.finances.transferBudget, entry.fee);
+        const res = executeTransfer(state, { playerId: entry.playerId, toClub: entry.to, fee: entry.fee }, { reality: true });
+        if (res.ok) {
+          movedThisWindow.add(entry.playerId);
+          state.meta.realizedLedger.push(key);
+          const how = entry.fee === 0 ? ' on a free (pre-agreed — cannot be blocked)' : ' (a pre-agreed deal)';
+          logEvent(state, {
+            category: 'transfer',
+            code: 'ledger.preagreed',
+            message: `Pre-agreed: ${player.name} → ${dest.name}${how}`,
+            data: { playerId: entry.playerId, from: entry.from, to: entry.to },
+          });
+        }
+      }
+      continue;
+    }
+
     // A move involving the USER's club is the user's own call — present it as a
     // reality-default decision (sign it / sanction it, or diverge), rather than
     // auto-executing or silently skipping. Reality holds if the user does nothing.
@@ -266,6 +301,7 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
       dest.finances.transferBudget = Math.max(dest.finances.transferBudget, entry.fee);
       const res = executeTransfer(state, { playerId: entry.playerId, toClub: entry.to, fee: entry.fee }, { reality: true });
       if (res.ok) {
+        movedThisWindow.add(entry.playerId); // locked for the rest of this window
         state.meta.realizedLedger.push(key); // funders for dependents
         logEvent(state, {
           category: 'transfer',
@@ -280,7 +316,7 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
     // Invalidated → traceable butterfly + fallback.
     const cause: InvalidationCause =
       player?.club === state.playerClub ? 'user-signed-target' : 'chain-broken-by-user';
-    const tier = fallbackForLedger(state, entry, player, r, futureByPlayer);
+    const tier = fallbackForLedger(state, entry, player, r, futureByPlayer, movedThisWindow);
     // SUPPRESSION BITES: the Director bought the man this rival was about to sign, so
     // they slip below their historical trajectory — a drag scaled by the calibre
     // denied (a marquee target hurts, a squad man barely). It halves each summer as
@@ -445,6 +481,7 @@ function fallbackForLedger(
   original: PlayerState | undefined,
   rng: Rng,
   futureByPlayer: Map<string, string[]>,
+  movedThisWindow: Set<string>,
 ): FallbackTier {
   const dest = state.clubs[entry.to];
   if (!dest || !original) return 'generic-needs';
@@ -489,12 +526,14 @@ function fallbackForLedger(
     if (Math.abs(Number(nm.window.slice(0, 4)) - year) > 2) continue; // roughly the right era
     const p = state.players[nm.playerId];
     if (!p || p.club === entry.to || p.injury || p.resistance.hardBlocks.length > 0) continue;
+    if (movedThisWindow.has(p.id)) continue; // already moved this window — off the market
     if (positionGroupOf(p) !== group) continue; // fills the same slot as the man they missed
     if (!state.clubs[p.club ?? '']) continue;
     const fee = valuePlayer(p, year);
     dest.finances.transferBudget = Math.max(dest.finances.transferBudget, fee);
     const res = executeTransfer(state, { playerId: p.id, toClub: entry.to, fee });
     if (!res.ok) continue;
+    movedThisWindow.add(p.id);
     for (const k of futureByPlayer.get(p.id) ?? []) {
       if (!state.meta.executedLedger.includes(k)) state.meta.executedLedger.push(k);
     }
@@ -521,6 +560,7 @@ function fallbackForLedger(
   const eligible = (p: PlayerState): boolean => {
     if (p.retired) return false; // hung up his boots
     if (!p.curated) return false; // a named narrative signing must be a real player (Principle 2)
+    if (movedThisWindow.has(p.id)) return false; // already moved this window — off the market
     if (p.id === entry.playerId || p.club === entry.to) return false;
     if (positionGroupOf(p) !== group) return false;
     if (p.resistance.hardBlocks.length > 0 || p.injury) return false;
@@ -591,6 +631,7 @@ function fallbackForLedger(
     dest.finances.transferBudget = Math.max(dest.finances.transferBudget, fee);
     const res = executeTransfer(state, { playerId: bestAlt.id, toClub: entry.to, fee });
     if (res.ok) {
+      movedThisWindow.add(bestAlt.id); // locked for the rest of this window
       // Hijacking a future ledger subject consumes his onward move (no cascade
       // of misses — his later transfer simply never comes up).
       const consumed = futureByPlayer.get(bestAlt.id);

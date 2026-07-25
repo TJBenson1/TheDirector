@@ -15,6 +15,7 @@ import { styleKeyForClub } from './leaguestyle.js';
 import { poleMoveFor } from './wooing.js';
 import { clubSquadPlayers } from './players.js';
 import { loanParent, isPersonaNonGrata } from './restrictions.js';
+import { pendingPreAgreedMove } from './ledger.js';
 
 /** Willingness at/above which a player will consider a move at a fair package. */
 export const WILLINGNESS_THRESHOLD = 50;
@@ -127,6 +128,20 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
       willingness: 0,
       hardBlocked: true,
       reason: `${player.name} is only on loan at ${fromClub?.name ?? 'his club'} — ${owner?.name ?? 'his parent club'} own him and control his future.`,
+    };
+  }
+
+  // 1a-i) Pre-agreed / Bosman: a done deal signed months ago cannot be gazumped by
+  //       anyone, the user included (McManaman → Real, agreed the previous January).
+  //       A genuinely contestable ledger subject is NOT gated here — only locked ones.
+  const boundTo = pendingPreAgreedMove(state, player.id);
+  if (boundTo && boundTo !== buyer.id) {
+    const dest = state.clubs[boundTo];
+    return {
+      willing: false,
+      willingness: 0,
+      hardBlocked: true,
+      reason: `${player.name} has already agreed a pre-contract move to ${dest?.name ?? 'another club'} — the deal is done and cannot be hijacked.`,
     };
   }
 
