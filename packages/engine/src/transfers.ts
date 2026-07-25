@@ -173,6 +173,14 @@ export function executeTransfer(
     if (seller && seller.leagueId !== null && seller.id !== state.playerClub) {
       seller.pendingCounterPunch = 2;
       seller.grudge = Math.min(100, seller.grudge + 20);
+      // Taking a rival's real player drags them BELOW their historical strength arc —
+      // a suppression penalty so the raid actually shows in the TABLE, not just for a
+      // month before `applyStrengthArcs` reanchors them back to reality. Scaled by the
+      // calibre taken (a star bites, a squad body barely) and it halves each summer, so
+      // a one-off raid is a season's wound while a sustained campaign keeps them down —
+      // the arms race. Only bites once the world has diverged (a raid IS divergence);
+      // a passive world never raids, so the real table is still reproduced exactly.
+      seller.suppressionPenalty = (seller.suppressionPenalty ?? 0) + Math.max(0, Math.min(4, (player.ability - 72) * 0.28));
       logEvent(state, {
         category: 'transfer',
         code: 'raid.suffered',

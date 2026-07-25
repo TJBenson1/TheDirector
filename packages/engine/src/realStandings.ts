@@ -184,6 +184,13 @@ function synthRecord(points: number, rank0: number, n: number, salt: number, gam
  * before, so the crowned champion and end-of-season table are unchanged). The real
  * target is pro-rated to games actually played. Mutates `league.standings`.
  */
+/** How much accumulated strength-shift (|starButterfly| + suppressionPenalty, in the
+ *  ~0.2/star strength units) fully unanchors a rival from its real finish, and the
+ *  ceiling on that release. A marquee suppression (~3 shift) ≈ half-released; gutting a
+ *  club's spine (~6+) ≈ fully released to its merit result. */
+const FIELD_RELAX_SCALE = 6;
+const FIELD_RELAX_CAP = 0.85;
+
 export function anchorSeasonToReality(state: GameState, league: LeagueState, progress = 1): void {
   const key = leagueKey(league);
   if (!key) return;
@@ -199,13 +206,28 @@ export function anchorSeasonToReality(state: GameState, league: LeagueState, pro
   order.forEach((clubId, rank0) => {
     const rec = league.standings[clubId];
     if (!rec || rec.played === 0) return; // not simulated / not started
-    // The FIELD stays anchored to reality however far the Director has pushed the
-    // world — buying players for YOUR club must not free-fall Man Utd to 8th or
-    // Newcastle to 7th. Only the user's OWN club floats off its real result,
-    // scaled by divergence (passive = fully anchored, so passive reproduces the
-    // real table exactly; a title-builder rises as far as his real squad warrants,
-    // displacing the field minimally rather than scrambling it).
-    const weight = (clubId === state.playerClub ? 1 - div : 1) * prog;
+    // How far the DIRECTOR has actually shifted a club's fortunes decides how far it
+    // floats off its real finish — so DECISIONS RIPPLE INTO THE TABLE:
+    //   • the user's OWN club floats with global divergence (a superclub climbs);
+    //   • a RIVAL the Director has moved floats in proportion to that shift — one he
+    //     gutted by suppression (negative starButterfly / suppressionPenalty) slides
+    //     down to its weaker merit result; one lifted by the rubber-band (worldDefiance)
+    //     climbs above its real finish as reality fights back;
+    //   • an UNTOUCHED club stays fully anchored — buying players for your club never
+    //     free-falls an unrelated Man Utd to 8th (the old fear), because nothing moved
+    //     THEM. A passive world (divergence 0) leaves every club anchored, so the real
+    //     table is still reproduced exactly and the calibration is untouched.
+    let relax: number;
+    if (clubId === state.playerClub) {
+      relax = div;
+    } else if (div <= 0) {
+      relax = 0; // passive → field fully anchored (byte-identical reality)
+    } else {
+      const c = state.clubs[clubId];
+      const shift = Math.abs(c?.starButterfly ?? 0) + (c?.suppressionPenalty ?? 0);
+      relax = Math.min(FIELD_RELAX_CAP, shift / FIELD_RELAX_SCALE);
+    }
+    const weight = (1 - relax) * prog;
     if (weight <= 0) return;
     // The real full-season points, pro-rated to the games played so far.
     const realPts = pointsForRank(rank0, n, key) * (full > 0 ? rec.played / full : 1);
