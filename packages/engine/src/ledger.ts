@@ -268,6 +268,7 @@ const INJURIES_1999: RealInjuryEntry[] = [
  */
 const LEDGER_2013_2016: RealTransferLedgerEntry[] = [
   { playerId: 'cur_bale', from: 'spurs', to: 'real_madrid', window: '2013-08', fee: 85_000_000, id: 'bale-real-2013' },
+  { playerId: 'cur_james_13', from: 'monaco', to: 'real_madrid', window: '2014-07', fee: 63_000_000, id: 'james-real-2014' },
   { playerId: 'cur_thiago', from: 'barcelona', to: 'bayern', window: '2013-07', fee: 22_000_000 },
   // Madrid only sold Özil to raise/clear the Bale money — no Bale, no Özil sale.
   { playerId: 'cur_ozil', from: 'real_madrid', to: 'arsenal', window: '2013-08', fee: 42_000_000, enabledBy: 'bale-real-2013' },
@@ -410,6 +411,7 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
  * the ledger runs from 2001.
  */
 const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
+  { playerId: 'cur_vieri', from: 'inter', to: 'milan', window: '2005-07', fee: 8_000_000, id: 'vieri-milan-2005' },
   // ── Real Madrid's galácticos — each a real-in decision for the user ──
   // The opening galáctico: Figo's move from Barça is the first decision — sign
   // the deal Pérez really did, or veto it and let him stay a rival.
@@ -615,6 +617,9 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
  * stars move as they really did.
  */
 const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
+  // The era's other defining moves (rival business the Director can intercept):
+  { playerId: 'cur_torres_l8', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
+  { playerId: 'cur_suarez_aj08', from: 'ajax', to: 'liverpool', window: '2011-01', fee: 22_800_000, id: 'suarez-lfc-2011' },
   // ── City's takeover spending (the user's, if they are City) ──
   { playerId: 'cur_tevez_u8', from: 'man_utd', to: 'man_city', window: '2009-07', fee: 25_500_000, id: 'tevez-city-2009' },
   { playerId: 'cur_barry_av', from: 'aston_villa', to: 'man_city', window: '2009-07', fee: 12_000_000, id: 'barry-city-2009' },
