@@ -29,6 +29,7 @@ import {
 import { initialFinances, suggestWage } from './finance.js';
 import { CURATED_SQUADS } from './data/curated-1999.js';
 import { coachForScenario } from './coaches.js';
+import { ERA_REALITY, eraForScenario } from './ledger.js';
 
 /** Calibrated defaults (§13): 1 = the §12 realism bands. */
 export const DEFAULT_SETTINGS: DifficultySettings = {
@@ -229,32 +230,66 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
 function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, rng: Rng): void {
   const curatedForScenario = CURATED_SQUADS[scenarioId] ?? {};
 
+  // Pass 1 — place every club's curated spine (real squads at real clubs).
+  // REAL PLAYERS ONLY: squad depth below the named spine is modelled abstractly in
+  // the strength calc (clubDepthPad), never as procedural filler (§4, no regens);
+  // real next-gen players arrive over the save via authored academyIntakes.
   for (const club of Object.values(state.clubs)) {
     const clubRng = rng.fork(`squad:${club.id}`);
     const seeds = curatedForScenario[club.id] ?? [];
-
-    // Curated marquee real players first (real squads at real clubs).
     for (const seed of seeds) {
       const player = instantiateCuratedSeed(seed, year, clubRng);
       state.players[player.id] = player;
       club.squad.push(player.id);
     }
+  }
 
-    // REAL PLAYERS ONLY — every club holds only its curated, named spine (Principle:
-    // no regens, real youth only). The squad depth a reserve/academy side would
-    // provide is modelled ABSTRACTLY in the strength calc (clubDepthPad), not as
-    // procedural filler in the world, so no invented name ever appears anywhere —
-    // whichever club the Director inspects reads true, name by name. Real next-gen
-    // players arrive over the save via authored academyIntakes.
+  // Pass 1.5 — LIVE OPENING WINDOW (M12C, generalised to every era). Any real move
+  // due in the scenario's opening summer whose subject is currently baked at his
+  // DESTINATION is rewound to his SELLING club, so the move becomes a live,
+  // interceptable decision rather than a fait accompli — bringing every era up to
+  // the man-utd-1999 standard. A player already at his selling club (man-utd-1999's
+  // own opening movers) is a no-op, so calibration is untouched. Runs before the
+  // anchors so each club's baseline reflects its true pre-window squad.
+  rewindOpeningWindow(state);
 
-    // Anchor strength so it equals baseStrength now (abstract depth padding makes a
-    // thin real spine field a coherent XI at its level), then let it float later.
+  // Pass 2 — anchor each club's live strength to its pre-window baseline (abstract
+  // depth padding makes a thin real spine a coherent XI at its level), then float;
+  // and derive finances from prestige, era and wage bill.
+  for (const club of Object.values(state.clubs)) {
     club.squadStrengthAnchor = clubAnchorRaw(state, club.id);
     recomputeClubStrength(state, club.id);
-
-    // Finances from prestige, era and current wage bill.
     const wageBill = computeWageBill(state, club.id);
     club.finances = initialFinances(club.prestige, year, club.finances.ownership, wageBill);
+  }
+}
+
+/**
+ * Rewind the opening summer: seed each of the window's real movers at his SELLING
+ * club so his transfer is a live decision the Director can complete, intercept or
+ * divert (the man-utd-1999 pattern, applied everywhere). Only a player currently at
+ * his real DESTINATION is moved (a pre-window pack that already seeds him at the
+ * selling club is left exactly as authored — hence a no-op for man-utd-1999). The
+ * selling club must exist in this world; academy/free arrivals (no `from`) are
+ * skipped. Pure relocation — no RNG, no finances — so it cannot perturb determinism.
+ */
+function rewindOpeningWindow(state: GameState): void {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack) return;
+  const openYear = Number(state.clock.date.slice(0, 4));
+  for (const e of pack.realTransferLedger) {
+    const wy = Number(e.window.slice(0, 4));
+    const wm = Number(e.window.slice(5, 7));
+    if (wy !== openYear || wm < 6 || wm > 9) continue; // only the opening summer
+    if (!e.from) continue; // academy / free arrival — nothing to rewind
+    const player = state.players[e.playerId];
+    if (!player || player.club !== e.to) continue; // only a destination-baked subject
+    const fromClub = state.clubs[e.from];
+    const toClub = state.clubs[e.to];
+    if (!fromClub || !toClub) continue; // selling club must exist in the world
+    toClub.squad = toClub.squad.filter((id) => id !== player.id);
+    fromClub.squad.push(player.id);
+    player.club = e.from;
   }
 }
 

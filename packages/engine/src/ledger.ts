@@ -441,6 +441,16 @@ const INJURIES_2001: RealInjuryEntry[] = [
  * Champions-League place in 2003 and the takeover — and the splurge — may vanish.
  */
 const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
+  // ── The LIVE opening window (summer 2001) — the movers are auto-rewound to their
+  //    selling clubs at kickoff, so a Director completes, intercepts or diverts each.
+  //    Zidane's £46m switch is the galáctico a rival can try to derail. ──
+  { playerId: 'cur_zidane01', from: 'juventus', to: 'real_madrid', window: '2001-07', fee: 46_000_000, id: 'zidane-real-2001' },
+  { playerId: 'cur_ruud01', from: 'psv', to: 'man_utd', window: '2001-07', fee: 19_000_000, id: 'ruud-utd-2001' },
+  { playerId: 'cur_veron01', from: 'lazio', to: 'man_utd', window: '2001-07', fee: 28_100_000, id: 'veron-utd-2001' },
+  { playerId: 'cur_buffon_ju01', from: 'parma', to: 'juventus', window: '2001-07', fee: 32_000_000, id: 'buffon-juve-2001' },
+  { playerId: 'cur_thuram_ju01', from: 'parma', to: 'juventus', window: '2001-07', fee: 22_000_000, id: 'thuram-juve-2001' },
+  { playerId: 'cur_riise01', from: 'monaco', to: 'liverpool', window: '2001-07', fee: 4_000_000, id: 'riise-liverpool-2001' },
+  { playerId: 'cur_sheringham01', from: 'man_utd', to: 'spurs', window: '2001-07', fee: 0, id: 'sheringham-spurs-2001' },
   // The Leeds fire-sale — O'Leary's over-leveraged side broke up piece by piece.
   // Seeding the real departures makes their historical collapse happen by default:
   // stripped of its spine, Leeds' anchored strength falls and they stop being a

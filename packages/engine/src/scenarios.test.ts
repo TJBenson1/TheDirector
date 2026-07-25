@@ -4,7 +4,25 @@ import { createNewGame } from './state.js';
 import { advanceWindow } from './advance.js';
 import { applyDecision } from './events.js';
 import { standingsOrder } from './season.js';
+import { ERA_REALITY, eraForScenario } from './ledger.js';
 import type { GameState } from './types.js';
+
+/** Real players who arrive at `club` in the scenario's opening summer. The live
+ *  opening window (M12C) seeds these movers at their selling clubs at kickoff, so
+ *  they are the club's squad for the season even though they aren't on its roster
+ *  in July — count them toward the "real, playable side" minimum. */
+function openingInbound(s: GameState, club: string): Set<string> {
+  const pack = ERA_REALITY[eraForScenario(s.meta.scenarioId)];
+  const openYear = Number(s.clock.date.slice(0, 4));
+  const ids = new Set<string>();
+  for (const e of pack?.realTransferLedger ?? []) {
+    if (e.to !== club) continue;
+    const wy = Number(e.window.slice(0, 4));
+    const wm = Number(e.window.slice(5, 7));
+    if (wy === openYear && wm >= 6 && wm <= 9) ids.add(e.playerId);
+  }
+  return ids;
+}
 
 function playASeason(state: GameState): GameState {
   let s = state;
@@ -89,7 +107,12 @@ describe('every playable club is featured with a real squad (§4, §14)', () => 
       for (const club of PLAYABLE) {
         const c = s.clubs[club];
         if (!c) continue; // a club can be absent from a scenario; presence is what's tested
-        const curated = c.squad.map((id) => s.players[id]!).filter((p) => p.curated).length;
+        // Count the club's real spine PLUS its opening-window arrivals (rewound to
+        // their selling clubs at kickoff, they are still the club's men this season).
+        const inbound = openingInbound(s, club);
+        const atClub = c.squad.map((id) => s.players[id]!).filter((p) => p.curated);
+        for (const id of atClub.map((p) => p.id)) inbound.delete(id); // no double-count
+        const curated = atClub.length + inbound.size;
         expect(curated, `${club} in ${scenarioId}`).toBeGreaterThanOrEqual(MIN_SQUAD);
       }
     }
