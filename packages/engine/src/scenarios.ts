@@ -201,6 +201,7 @@ const ERA_2013_CONTEXT: ClubSeed[] = [
   { id: 'lyon', name: 'Olympique Lyonnais', prestige: 74 },
   { id: 'schalke', name: 'Schalke 04', prestige: 74 },
   { id: 'sporting', name: 'Sporting CP', prestige: 74 },
+  { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 74 },
   { id: 'fiorentina', name: 'Fiorentina', prestige: 74 },
   // Thin selling clubs for the 2013 opening window — the sources of Spurs'
   // "Magnificent Seven" Bale-money spree.

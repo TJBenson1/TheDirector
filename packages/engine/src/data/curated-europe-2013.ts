@@ -194,6 +194,21 @@ const SPORTING_2013: CuratedSeed[] = [
   q('sporting', 'bruno_f_13', 'Bruno Fernandes', 1994, 'Portugal', ['AM', 'CM'], 68, 89, 2018, 10, t(9, 7, 9, 8, 5, 9)),
 ];
 
+// ── Bayer Leverkusen, 2013-14 (Son's launch pad before North London) ───────────
+const LEVERKUSEN_2013: CuratedSeed[] = [
+  q('leverkusen', 'leno_13', 'Bernd Leno', 1992, 'Germany', ['GK'], 80, 86, 2017, 15, t(8, 6, 8, 8, 5, 8)),
+  q('leverkusen', 'toprak_13', 'Ömer Toprak', 1989, 'Turkey', ['CB'], 79, 83, 2017, 20, t(8, 5, 8, 8, 5, 8)),
+  q('leverkusen', 'spahic_13', 'Emir Spahić', 1980, 'Bosnia', ['CB'], 78, 79, 2015, 20, t(7, 6, 8, 7, 6, 8)),
+  q('leverkusen', 'donati_13', 'Giulio Donati', 1990, 'Italy', ['RB'], 75, 80, 2017, 20, t(8, 5, 8, 7, 5, 8)),
+  q('leverkusen', 'rolfes_13', 'Simon Rolfes', 1982, 'Germany', ['DM', 'CM'], 79, 80, 2015, 20, t(9, 5, 8, 9, 5, 8), { loyalty: 90 }),
+  q('leverkusen', 'castro_13', 'Gonzalo Castro', 1987, 'Germany', ['CM', 'RB'], 79, 82, 2017, 15, t(8, 5, 8, 8, 5, 8)),
+  q('leverkusen', 'sam_13', 'Sidney Sam', 1988, 'Germany', ['RW', 'AM'], 78, 82, 2014, 20, t(7, 6, 8, 6, 6, 8)),
+  q('leverkusen', 'kiessling_13', 'Stefan Kießling', 1984, 'Germany', ['ST'], 81, 83, 2017, 20, t(8, 6, 8, 9, 5, 8), { loyalty: 88 }),
+  // Son Heung-min — seeded (21) at the club where he became a European name, for his
+  // real 2015 Leverkusen→Spurs move, the wide forward of the Pochettino front line.
+  q('leverkusen', 'son_13', 'Son Heung-min', 1992, 'South Korea', ['LW', 'RW', 'ST'], 76, 89, 2016, 10, t(9, 6, 9, 8, 4, 9)),
+];
+
 export const EUROPE_2013_SQUADS: Record<string, CuratedSeed[]> = {
   atletico: ATLETICO_2013,
   dortmund: DORTMUND_2013,
@@ -201,6 +216,7 @@ export const EUROPE_2013_SQUADS: Record<string, CuratedSeed[]> = {
   porto: PORTO_2013,
   monaco: MONACO_2013,
   sporting: SPORTING_2013,
+  leverkusen: LEVERKUSEN_2013,
   sevilla: SEVILLA_2013,
   lyon: LYON_2013,
   schalke: SCHALKE_2013,

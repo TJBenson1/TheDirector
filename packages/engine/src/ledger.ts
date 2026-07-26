@@ -377,6 +377,9 @@ const LEDGER_2013_2016: RealTransferLedgerEntry[] = [
   //    grow them into the players who actually rebuilt United. ──
   { playerId: 'cur_martial_13', from: 'monaco', to: 'man_utd', window: '2015-09', fee: 36_000_000, id: 'martial-utd-2015' },
   { playerId: 'cur_bruno_f_13', from: 'sporting', to: 'man_utd', window: '2020-01', fee: 47_000_000, id: 'bruno-utd-2020' },
+  // ── Son Heung-min, seeded young at Leverkusen, follows his real 2015 move to Spurs
+  //    — the wide forward of Pochettino's front line. ──
+  { playerId: 'cur_son_13', from: 'leverkusen', to: 'spurs', window: '2015-08', fee: 22_000_000, id: 'son-spurs-2015' },
 ];
 
 /** Real 2013–14 injuries — fire only if the player is at his real club. */
