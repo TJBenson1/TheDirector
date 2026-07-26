@@ -294,3 +294,17 @@ export const MANCITY_2008_SQUADS: Record<string, CuratedSeed[]> = {
 for (const [club, seeds] of Object.entries(ENG_DOMESTIC_2008_SQUADS)) {
   MANCITY_2008_SQUADS[club] = [...(MANCITY_2008_SQUADS[club] ?? []), ...seeds];
 }
+
+// Established 2008 players who really joined City in the takeover-era rebuild —
+// added at their real selling clubs so the mid-decade summers carry live
+// "bless the signing?" calls (see LEDGER_ENG_2008). Only players already senior
+// in 2008 are modelled here; the wave's teenagers (De Bruyne, Sterling, Sané,
+// Stones, Gündoğan) were children at this anchor and can't be seeded accurately.
+export const CITY_FUTURE_TARGETS_2008: CuratedSeed[] = [
+  q('sevilla', 'negredo_08', 'Álvaro Negredo', 1985, 'Spain', ['ST'], 80, 82, 2013, 20, t(7, 6, 8, 7, 6, 7)),
+  q('porto', 'fernando_re08', 'Fernando', 1987, 'Brazil', ['DM', 'CM'], 80, 82, 2014, 15, t(8, 6, 8, 7, 5, 7)),
+  q('fiorentina', 'jovetic_08', 'Stevan Jovetić', 1989, 'Montenegro', ['ST', 'AM'], 80, 85, 2013, 32, t(7, 7, 8, 6, 6, 7)),
+];
+for (const seed of CITY_FUTURE_TARGETS_2008) {
+  MANCITY_2008_SQUADS[seed.club] = [...(MANCITY_2008_SQUADS[seed.club] ?? []), seed];
+}

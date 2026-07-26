@@ -782,7 +782,10 @@ const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
   { playerId: 'cur_aguero_08', from: 'atletico', to: 'man_city', window: '2011-07', fee: 38_000_000 },
   // City's post-title rebuild — real arrivals that fill the mid-decade summers.
   { playerId: 'cur_navas_08', from: 'sevilla', to: 'man_city', window: '2013-07', fee: 14_900_000, id: 'navas-city-2013' },
+  { playerId: 'cur_negredo_08', from: 'sevilla', to: 'man_city', window: '2013-07', fee: 16_400_000, id: 'negredo-city-2013' },
+  { playerId: 'cur_jovetic_08', from: 'fiorentina', to: 'man_city', window: '2013-07', fee: 22_000_000, id: 'jovetic-city-2013' },
   { playerId: 'cur_sagna_a8', from: 'arsenal', to: 'man_city', window: '2014-07', fee: 0, id: 'sagna-city-2014' },
+  { playerId: 'cur_fernando_re08', from: 'porto', to: 'man_city', window: '2014-07', fee: 12_000_000, id: 'fernando-city-2014' },
 ];
 
 /**
