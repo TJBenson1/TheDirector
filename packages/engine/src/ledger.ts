@@ -780,6 +780,9 @@ const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
   { playerId: 'cur_etoo_e8', from: 'barcelona', to: 'inter', window: '2009-07', fee: 20_000_000, id: 'etoo-inter-2009', enabledBy: 'ibra-barca-2009' },
   // Gap-sweep: Agüero's statement arrival at City (2011).
   { playerId: 'cur_aguero_08', from: 'atletico', to: 'man_city', window: '2011-07', fee: 38_000_000 },
+  // City's post-title rebuild — real arrivals that fill the mid-decade summers.
+  { playerId: 'cur_navas_08', from: 'sevilla', to: 'man_city', window: '2013-07', fee: 14_900_000, id: 'navas-city-2013' },
+  { playerId: 'cur_sagna_a8', from: 'arsenal', to: 'man_city', window: '2014-07', fee: 0, id: 'sagna-city-2014' },
 ];
 
 /**
@@ -850,6 +853,7 @@ const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
   { playerId: 'cur_henderson_su10', from: 'sunderland', to: 'liverpool', window: '2011-07', fee: 16_000_000 },
   { playerId: 'cur_coutinho_in10', from: 'inter', to: 'liverpool', window: '2013-01', fee: 8_500_000 },
   { playerId: 'cur_sturridge_ch10', from: 'chelsea', to: 'liverpool', window: '2013-01', fee: 12_000_000 },
+  { playerId: 'cur_mignolet_su10', from: 'sunderland', to: 'liverpool', window: '2013-07', fee: 9_000_000, id: 'mignolet-lfc-2013' },
 ];
 
 /**
@@ -957,6 +961,8 @@ const LEDGER_LA_LIGA_2014: RealTransferLedgerEntry[] = [
   { playerId: 'cur_james_r14', from: 'real_madrid', to: 'bayern', window: '2017-07', fee: 0, id: 'james-bayern-2017' },
   { playerId: 'cur_sterling_l14', from: 'liverpool', to: 'man_city', window: '2015-07', fee: 49_000_000, id: 'sterling-city-2015' },
   { playerId: 'cur_costa_c14', from: 'chelsea', to: 'atletico', window: '2017-08', fee: 60_000_000, id: 'costa-atletico-2017' },
+  // Barça's real 2016 striker signing — fills the mid-cycle summer.
+  { playerId: 'cur_paco_alcacer', from: 'valencia', to: 'barcelona', window: '2016-07', fee: 27_000_000, id: 'alcacer-barca-2016' },
 ];
 
 /**
