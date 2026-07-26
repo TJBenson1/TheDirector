@@ -83,10 +83,16 @@ export interface Opening {
   beats: OpeningBeat[];
 }
 
-/** Surname for a compact chip caption ("Luís Figo" → "Figo"). */
+/** Surname for a compact chip caption ("Luís Figo" → "Figo", "Kevin De Bruyne" →
+ *  "De Bruyne", "Edwin van der Sar" → "van der Sar"). Keeps trailing name
+ *  particles so multi-word surnames read right. */
 function surname(name: string): string {
   const parts = name.trim().split(/\s+/);
-  return parts[parts.length - 1] || name;
+  if (parts.length <= 1) return name;
+  const particles = new Set(['de', 'da', 'del', 'della', 'di', 'van', 'von', 'der', 'den', 'ten', 'ter', 'dos', 'do', 'la', 'le', 'al']);
+  let i = parts.length - 1;
+  while (i > 1 && particles.has(parts[i - 1]!.toLowerCase())) i -= 1;
+  return parts.slice(i).join(' ');
 }
 
 /**

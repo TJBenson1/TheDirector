@@ -165,9 +165,30 @@ const WERDER_2008: CuratedSeed[] = [
   q('werder', 'wiese_we08', 'Tim Wiese', 1981, 'Germany', ['GK'], 78, 81, 2012, 20, t(7, 6, 8, 7, 6, 7)),
 ];
 
+// ── VfL Wolfsburg, 2008-09 (surprise Bundesliga champions — Grafite & Džeko up
+//    front) — the selling club for two real future City men: Džeko (Jan 2011) and,
+//    seeded here at his eventual selling club, a young Kevin De Bruyne who develops
+//    into the £55m signing of 2015. His pre-City path (Genk → Chelsea → Wolfsburg)
+//    is elided to the pipeline the game models; the move that matters is accurate. ─
+const WOLFSBURG_2008: CuratedSeed[] = [
+  q('wolfsburg', 'benaglio_08', 'Diego Benaglio', 1983, 'Switzerland', ['GK'], 80, 82, 2013, 15, t(8, 5, 8, 8, 5, 7)),
+  q('wolfsburg', 'riether_08', 'Sascha Riether', 1983, 'Germany', ['RB'], 76, 78, 2012, 18, t(8, 5, 8, 8, 5, 7)),
+  q('wolfsburg', 'barzagli_08', 'Andrea Barzagli', 1981, 'Italy', ['CB'], 80, 83, 2012, 15, t(9, 5, 8, 8, 4, 7)),
+  q('wolfsburg', 'schafer_08', 'Marcel Schäfer', 1984, 'Germany', ['LB'], 75, 78, 2013, 18, t(8, 5, 8, 8, 5, 7)),
+  q('wolfsburg', 'josue_08', 'Josué', 1979, 'Brazil', ['DM', 'CM'], 78, 80, 2012, 18, t(8, 6, 8, 7, 5, 7)),
+  q('wolfsburg', 'hasebe_08', 'Makoto Hasebe', 1984, 'Japan', ['DM', 'CM'], 76, 81, 2013, 15, t(9, 5, 8, 8, 4, 8)),
+  q('wolfsburg', 'misimovic_08', 'Zvjezdan Misimović', 1982, 'Bosnia', ['AM'], 80, 82, 2012, 18, t(7, 6, 8, 7, 6, 7)),
+  q('wolfsburg', 'gentner_08', 'Christian Gentner', 1985, 'Germany', ['CM'], 75, 79, 2013, 15, t(8, 5, 8, 8, 5, 7)),
+  q('wolfsburg', 'grafite_08', 'Grafite', 1979, 'Brazil', ['ST'], 82, 83, 2011, 20, t(7, 6, 8, 7, 6, 7)),
+  q('wolfsburg', 'dzeko_08', 'Edin Džeko', 1986, 'Bosnia', ['ST'], 81, 88, 2013, 15, t(8, 6, 9, 7, 5, 8)),
+  // Seeded at his eventual selling club as a 17-year-old; develops into a star.
+  q('wolfsburg', 'debruyne_08', 'Kevin De Bruyne', 1991, 'Belgium', ['AM', 'CM'], 64, 89, 2016, 12, t(9, 6, 9, 7, 5, 8)),
+];
+
 /** The European selling clubs of the 2008-09 world, merged into the
  *  man-city-2008 universe (all whole new clubs). */
 export const EUROPE_2008_SQUADS: Record<string, CuratedSeed[]> = {
+  wolfsburg: WOLFSBURG_2008,
   ajax: AJAX_2008,
   psv: PSV_2008,
   porto: PORTO_2008,

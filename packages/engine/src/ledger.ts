@@ -786,6 +786,10 @@ const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
   { playerId: 'cur_jovetic_08', from: 'fiorentina', to: 'man_city', window: '2013-07', fee: 22_000_000, id: 'jovetic-city-2013' },
   { playerId: 'cur_sagna_a8', from: 'arsenal', to: 'man_city', window: '2014-07', fee: 0, id: 'sagna-city-2014' },
   { playerId: 'cur_fernando_re08', from: 'porto', to: 'man_city', window: '2014-07', fee: 12_000_000, id: 'fernando-city-2014' },
+  // Džeko's real Wolfsburg→City move (Jan 2011), and De Bruyne's £55m arrival in
+  // 2015 — the young Wolfsburg seed grown into the marquee signing.
+  { playerId: 'cur_dzeko_08', from: 'wolfsburg', to: 'man_city', window: '2011-01', fee: 27_000_000, id: 'dzeko-city-2011' },
+  { playerId: 'cur_debruyne_08', from: 'wolfsburg', to: 'man_city', window: '2015-07', fee: 55_000_000, id: 'debruyne-city-2015' },
 ];
 
 /**
