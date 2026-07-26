@@ -92,8 +92,11 @@ const routes: Record<string, Handler> = {
     return {
       state,
       view: buildView(state),
-      narration: opening.scene, // beat one
-      secondary: opening.meeting, // beat two — the manager meeting
+      narration: opening.scene, // beat one (back-compat)
+      secondary: opening.meeting, // beat two — the manager meeting (back-compat)
+      // The staged, interactive opening: prose beats the client reveals one tap
+      // at a time, ending on the summer's live decisions as tappable prompts.
+      opening: { beats: opening.beats },
       situation: narrativeContext(state),
     };
   },

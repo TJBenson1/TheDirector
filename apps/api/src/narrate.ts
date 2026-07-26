@@ -9,7 +9,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { runOp, situationOf, TOOL_SCHEMAS } from './ops.js';
-import { scriptedOpening } from './openings.js';
+import { scriptedOpening, type OpeningBeat } from './openings.js';
 import { getScenario, type GameState } from '@director/engine';
 
 // Two-model routing (below). Opus writes the set-pieces worth the best prose — the
@@ -86,6 +86,9 @@ export interface NarrateResult {
   narration: string;
   /** A pre-scripted follow-up bubble (the manager meeting after a new game). */
   secondary?: string;
+  /** On a fresh game, the staged interactive opening (beats + tappable calls),
+   *  so a typed "take the X job" gets the same lived-through opening as a button. */
+  opening?: { beats: OpeningBeat[] };
   state: GameState | null;
   situation: unknown;
   history: Anthropic.MessageParam[];
@@ -153,6 +156,7 @@ export async function narrate(opts: {
 
   let finalText = '';
   let secondary: string | undefined;
+  let openingBeats: OpeningBeat[] | undefined;
   try {
     for (let hop = 0; hop < MAX_TOOL_HOPS; hop++) {
       if (Date.now() - started > BUDGET_MS) break;
@@ -194,6 +198,7 @@ export async function narrate(opts: {
         const opening = scriptedOpening(state);
         finalText = opening.scene;
         secondary = opening.meeting;
+        openingBeats = opening.beats;
         break;
       }
       working.push({ role: 'user', content: results });
@@ -245,7 +250,7 @@ export async function narrate(opts: {
     { role: 'assistant' as const, content: assistantTurn },
   ].slice(-24); // cap history length
 
-  return { narration: finalText || '…', secondary, state, situation: state ? situationOf(state) : null, history: nextHistory };
+  return { narration: finalText || '…', secondary, opening: openingBeats ? { beats: openingBeats } : undefined, state, situation: state ? situationOf(state) : null, history: nextHistory };
 }
 
 // ── Season beats (§ stories, not a results engine) ───────────────────────────

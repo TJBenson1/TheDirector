@@ -509,6 +509,12 @@ const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
   // Real's own summer-2000 midfield rebuild alongside Figo — live for the Director.
   { playerId: 'cur_makelele', from: 'celta', to: 'real_madrid', window: '2000-07', fee: 15_000_000, id: 'makelele-real-2000' },
   { playerId: 'cur_flavio', from: 'deportivo', to: 'real_madrid', window: '2000-07', fee: 15_000_000, id: 'flavio-real-2000' },
+  // Real's summer-2000 EXITS — live "fight to keep" calls: Redondo forced out to
+  // Milan against his will (fans protested outside the Bernabéu), and Anelka sold
+  // back to PSG after one turbulent season. Do nothing and both leave, as history;
+  // intervene and the Director keeps them.
+  { playerId: 'cur_redondo', from: 'real_madrid', to: 'milan', window: '2000-07', fee: 8_000_000, id: 'redondo-milan-2000' },
+  { playerId: 'cur_anelka', from: 'real_madrid', to: 'psg', window: '2000-07', fee: 20_000_000, id: 'anelka-psg-2000' },
   // ── Real Madrid's galácticos — each a real-in decision for the user ──
   // The opening galáctico: Figo's move from Barça is the first decision — sign
   // the deal Pérez really did, or veto it and let him stay a rival.

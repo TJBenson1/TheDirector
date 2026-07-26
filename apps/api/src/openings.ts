@@ -18,7 +18,7 @@
  * to the generic derivation.
  */
 
-import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, type GameState, type ScenarioOpening } from '@director/engine';
+import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, realDepartureThisWindow, type GameState, type ScenarioOpening } from '@director/engine';
 
 type Group = 'GK' | 'DEF' | 'MID' | 'ATT';
 const GROUP: Record<string, Group> = {
@@ -53,11 +53,96 @@ function joinNames(names: string[]): string {
   return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
 }
 
+export interface OpeningChip {
+  /** The button caption (short — a surname, a call). */
+  label: string;
+  /** The message sent to the narrator when the chip is tapped. */
+  message: string;
+}
+
+export interface OpeningBeat {
+  /** The prose for this beat. */
+  text: string;
+  /** If set, a "continue" chip with this caption reveals the NEXT beat —
+   *  client-side, no model call (the free "meet the manager" step the Director
+   *  taps through, so the summer arrives one message at a time). */
+  reveal?: string;
+  /** The summer's live decisions as tappable prompts — each opens the
+   *  conversation with the narrator. Present on the final beat. */
+  actions?: OpeningChip[];
+}
+
 export interface Opening {
-  /** Beat one: the context-setting scene, closing on the meeting hook. */
+  /** Beat-one prose (the scene) — kept for the typed-narrator opening path. */
   scene: string;
-  /** Beat two: the head coach's first-meeting briefing (a secondary reply). */
+  /** The head coach's first-meeting briefing — kept for the narrator path. */
   meeting: string;
+  /** The staged, interactive opening: prose beats the Director taps through one
+   *  at a time, ending on the summer's live calls as tappable prompts. This is
+   *  what makes the opening feel lived-through rather than read at. */
+  beats: OpeningBeat[];
+}
+
+/** Surname for a compact chip caption ("Luís Figo" → "Figo"). */
+function surname(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  return parts[parts.length - 1] || name;
+}
+
+/**
+ * The summer's live opening-window calls, as tappable prompts that open the
+ * conversation with the narrator: the marquee signing to bless (or walk from),
+ * the choice between the other arrivals, the departing man to fight for, and the
+ * door to the wider market. Derived from the live ledger, so every scenario
+ * surfaces its own real decisions — Figo/Makélélé/Flávio for Madrid 2000, and
+ * so on — with no per-scenario authoring.
+ */
+function openingActions(state: GameState): OpeningChip[] {
+  const inbound = realInboundThisWindow(state); // biggest fee first
+  const out = [...realDepartureThisWindow(state)].sort((a, b) => b.fee - a.fee); // biggest exit first
+
+  // A prioritised list: the marquee arrival, the biggest exit to fight for, and
+  // the choice between the other arrivals. "Review the market" is always appended,
+  // so it survives the cap even when the summer is busy.
+  const ranked: OpeningChip[] = [];
+
+  if (inbound[0]) {
+    const m = inbound[0];
+    ranked.push({
+      label: `Bless the ${surname(m.name)} signing?`,
+      message: `Give my blessing to the ${m.name} signing — ${fee(m.fee)} from ${m.fromClub} — or should I walk away? Talk me through it.`,
+    });
+  }
+  if (out[0]) {
+    ranked.push({
+      label: `Fight to keep ${surname(out[0].name)}?`,
+      message: `Do I fight to keep ${out[0].name}, or let the sale go through? Talk me through it.`,
+    });
+  }
+  const rest = inbound.slice(1, 3);
+  if (rest.length === 2) {
+    ranked.push({
+      label: `${surname(rest[0]!.name)} or ${surname(rest[1]!.name)} — or both?`,
+      message: `${rest[0]!.name} or ${rest[1]!.name} this summer — or both? Talk me through them and what each would cost.`,
+    });
+  } else if (rest.length === 1) {
+    ranked.push({
+      label: `Back the ${surname(rest[0]!.name)} deal?`,
+      message: `Should I back the ${rest[0]!.name} signing? Talk me through it.`,
+    });
+  }
+  // A second exit, if the summer has one and there's still room.
+  if (out[1]) {
+    ranked.push({
+      label: `Fight to keep ${surname(out[1].name)}?`,
+      message: `And ${out[1].name} — do I fight to keep him too, or let him go? Talk me through it.`,
+    });
+  }
+
+  return [
+    ...ranked.slice(0, 3),
+    { label: 'Review the wider market', message: 'Show me the wider market — who else could we go for this summer?' },
+  ];
 }
 
 /** Render a curated first XI ("GK Peruzzi", "CB Ferrara", …) as prose by unit. */
@@ -88,18 +173,22 @@ function curatedOpening(state: GameState, o: ScenarioOpening): Opening {
   // on day one. Naming it gives the "push it through or veto it" hook.
   const marquee = realInboundThisWindow(state)[0];
   const marqueeLine = marquee
-    ? `There's already a deal on the table: ${marquee.name}, ${fee(marquee.fee)} from ${marquee.fromClub} — the signing history remembers. It's yours to push through or to walk away from.`
+    ? `Word is there's already a deal on the table: ${marquee.name}, ${fee(marquee.fee)} from ${marquee.fromClub}. It's yours to push through or to walk away from.`
     : '';
 
-  // ── Beat one: the scene, carrying the authored history ──
-  const scene = [
-    `${club.name}, ${seasonLabel}. You've taken the Director's chair — the boardroom power above the manager — and the board's brief is not complicated: ${sc.mandate}`,
-    o.briefing,
+  // ── Beat one: the chair and the brief — short, so it lands rather than reads
+  // as a wall. The Director taps through from here. ──
+  const opener = [
+    `${club.name}, ${seasonLabel}. You've taken the Director's chair — the boardroom power above the manager. The board's brief is not complicated: ${sc.mandate}`,
     marqueeLine,
-    `${o.coach} is here for your first meeting.`,
   ].filter((p) => p && p.length).join('\n\n');
 
-  // ── Beat two: the manager meeting — his real shape, his real XI, the fringe ──
+  // ── Beat two: the summer's story (the authored history of that window). ──
+  const backstory = o.briefing;
+
+  // ── Beat three: the manager meeting — his real shape, his real XI, the fringe,
+  // and where he wants the side strengthened. The named deals become tappable
+  // decisions below (openingActions), so the prose ends on the hook, not a list. ──
   const meetingParts: string[] = [
     `You take your seat opposite ${o.coach}. He'll set up in a ${o.formation}, and he names the side he trusts: ${renderXI(o.firstEleven)}`,
   ];
@@ -108,36 +197,25 @@ function curatedOpening(state: GameState, o: ScenarioOpening): Opening {
       `But the squad isn't settled, and the real decisions live around the edges:\n${o.fringe.map((f) => `• ${f}`).join('\n')}`,
     );
   }
-
-  // ── The coach's own wish-list: the positions he wants strengthened, and the
-  // concrete names he'd move for. Prefer the real deals the club actually chased
-  // this summer (the marquee is already named in the scene, so skip it); fall
-  // back to the engine's derived targets when the ledger has nothing more. ──
   const brief = coachBriefing(state);
   const spots = [...new Set(brief.strengthen.map((s) => POSITION_LABEL[s.position] ?? s.position))];
   if (spots.length) {
     meetingParts.push(`Pressed on where the side needs work, ${o.coach} doesn't hedge: he wants it strengthened at ${joinNames(spots)}.`);
   }
+  const meetingBeat = [...meetingParts, `The window is open, and the summer's first calls are already on your desk.`].join('\n\n');
 
-  const inbound = realInboundThisWindow(state).slice(1); // drop the marquee (already named)
-  if (inbound.length) {
-    const named = inbound.map((r) => {
-      const pos = state.players[r.playerId]?.positions?.[0];
-      const posLabel = pos ? POSITION_LABEL[pos] ?? pos.toLowerCase() : '';
-      const detail = [posLabel, `${fee(r.fee)} from ${r.fromClub}`].filter((x) => x).join(', ');
-      return `${r.name} (${detail})`;
-    });
-    meetingParts.push(`And he's put names on the table — the men the club really went for that summer: ${joinNames(named)}. Back the moves, redirect the money, or hold your fire.`);
-  } else if (brief.targets.length) {
-    const named = brief.targets.map((t) => `${t.name} (${t.club})`);
-    meetingParts.push(`And he's put a name or two in front of you — the sort who'd move the needle: ${joinNames(named)}.`);
-  }
+  const beats: OpeningBeat[] = [
+    { text: opener, reveal: `What's the story this summer?` },
+    { text: backstory, reveal: `Meet ${o.coach}` },
+    { text: meetingBeat, actions: openingActions(state) },
+  ];
 
-  meetingParts.push(
-    `The transfer window is open and the squad is yours to shape. Renew the men worth keeping, back the coach or overrule him, correct the history or let it ride — where do you want to start?`,
-  );
+  // Back-compat prose for the typed-narrator opening path (no chip UI there):
+  // scene = the first two beats, meeting = the manager meeting.
+  const scene = [opener, backstory, `${o.coach} is here for your first meeting.`].join('\n\n');
+  const meeting = [...meetingParts, `The transfer window is open and the squad is yours to shape. Where do you want to start?`].join('\n\n');
 
-  return { scene, meeting: meetingParts.join('\n\n') };
+  return { scene, meeting, beats };
 }
 
 /** Build the two-beat opening for a freshly-created game — pure prose over the
@@ -196,5 +274,10 @@ export function scriptedOpening(state: GameState): Opening {
     `The transfer window is open and the squad is yours to shape. Renew the men worth keeping, back the coach or overrule him, chase a marquee signing, or simply take stock. Where do you want to start?`,
   );
 
-  return { scene, meeting: meetingParts.join('\n\n') };
+  const meeting = meetingParts.join('\n\n');
+  const beats: OpeningBeat[] = [
+    { text: scene, reveal: `Meet ${b.coach}` },
+    { text: meeting, actions: openingActions(state) },
+  ];
+  return { scene, meeting, beats };
 }

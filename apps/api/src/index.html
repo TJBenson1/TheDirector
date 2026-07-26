@@ -114,6 +114,29 @@ function loadLocal(){ try { const d = JSON.parse(localStorage.getItem(KEY)||'nul
 
 function bubble(text, cls){ const el=document.createElement('div'); el.className='msg '+cls; el.textContent=text; log.appendChild(el); log.scrollTop=log.scrollHeight; return el; }
 
+// Reveal the staged opening one beat at a time. Each beat is a prose bubble; a
+// "reveal" chip advances to the next beat CLIENT-SIDE (free, no model call — the
+// "meet the manager" step), and the final beat's "action" chips send the summer's
+// live calls to the narrator. This is what makes the opening feel lived-through.
+function renderOpeningBeat(beats, i){
+  const b = beats && beats[i];
+  if (!b) return;
+  bubble(b.text, 'narrator');
+  const hasReveal = b.reveal && (i+1) < beats.length;
+  const acts = (b.actions||[]).filter(Boolean);
+  if (!hasReveal && !acts.length) return;
+  const wrap=document.createElement('div'); wrap.className='msg decision';
+  if (acts.length){ const t=document.createElement('div'); t.className='t'; t.textContent='The summer’s first calls:'; wrap.appendChild(t); }
+  const ch=document.createElement('div'); ch.className='choices';
+  if (hasReveal){
+    const btn=document.createElement('button'); btn.textContent=b.reveal+' →';
+    btn.onclick=()=>{ wrap.remove(); renderOpeningBeat(beats, i+1); };
+    ch.appendChild(btn);
+  }
+  acts.forEach(a=>{ const btn=document.createElement('button'); btn.textContent=a.label; btn.onclick=()=>{ wrap.remove(); send(a.message); }; ch.appendChild(btn); });
+  wrap.appendChild(ch); log.appendChild(wrap); log.scrollTop=log.scrollHeight;
+}
+
 function renderStatus(){
   const st = state && stFrom(state);
   statusEl.textContent = st ? `${st.club} · ${st.date} · ${st.window||'in season'} · ${st.budget}` : 'A counterfactual football story · 1995–2025';
@@ -132,9 +155,15 @@ async function send(message){
     if (d.error){ bubble('('+d.error+')', 'sys'); }
     else {
       state = d.state; history = d.history || history;
-      bubble(d.narration, 'narrator');
-      // A pre-scripted follow-up beat (e.g. the manager meeting after a new game).
-      if (d.secondary){ const m=d.secondary; setTimeout(()=>bubble(m, 'narrator'), 650); }
+      const beats = d.opening && d.opening.beats;
+      if (beats && beats.length){
+        // A fresh game started by typing — same staged, tap-through opening.
+        renderOpeningBeat(beats, 0);
+      } else {
+        bubble(d.narration, 'narrator');
+        // A pre-scripted follow-up beat (e.g. the manager meeting after a new game).
+        if (d.secondary){ const m=d.secondary; setTimeout(()=>bubble(m, 'narrator'), 650); }
+      }
       saveLocal(); renderStatus(); refreshPanelIfOpen(); renderPendingDecisions();
     }
   } catch(e){ thinking.remove(); bubble('(the line went dead — try again)', 'sys'); }
@@ -234,12 +263,18 @@ async function startGame(scenarioId, name){
     if (d.error){ bubble('('+d.error+')', 'sys'); }
     else {
       state = d.state;
-      const full = d.secondary ? d.narration+'\n\n'+d.secondary : d.narration;
-      // Seed the chat history with the whole opening so the narrator has context next turn.
-      history = [{ role:'user', content:'Take the '+name+' job.' }, { role:'assistant', content:full }];
-      bubble(d.narration, 'narrator');
-      // The manager sits down for the first meeting — a beat later, as a second reply.
-      if (d.secondary){ const m=d.secondary; setTimeout(()=>bubble(m, 'narrator'), 650); }
+      const beats = d.opening && d.opening.beats;
+      if (beats && beats.length){
+        // Seed history with the whole opening so the narrator has full context next turn.
+        history = [{ role:'user', content:'Take the '+name+' job.' }, { role:'assistant', content: beats.map(x=>x.text).join('\n\n') }];
+        renderOpeningBeat(beats, 0); // staged, tap-through, ending on the live calls
+      } else {
+        // Back-compat: an older server without staged beats.
+        const full = d.secondary ? d.narration+'\n\n'+d.secondary : d.narration;
+        history = [{ role:'user', content:'Take the '+name+' job.' }, { role:'assistant', content:full }];
+        bubble(d.narration, 'narrator');
+        if (d.secondary){ const m=d.secondary; setTimeout(()=>bubble(m, 'narrator'), 650); }
+      }
       saveLocal(); renderStatus(); refreshPanelIfOpen();
     }
   } catch(e){ thinking.remove(); bubble('(could not start — try again)', 'sys'); }
