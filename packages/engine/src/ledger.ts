@@ -790,6 +790,12 @@ const LEDGER_ENG_2008: RealTransferLedgerEntry[] = [
   // 2015 — the young Wolfsburg seed grown into the marquee signing.
   { playerId: 'cur_dzeko_08', from: 'wolfsburg', to: 'man_city', window: '2011-01', fee: 27_000_000, id: 'dzeko-city-2011' },
   { playerId: 'cur_debruyne_08', from: 'wolfsburg', to: 'man_city', window: '2015-07', fee: 55_000_000, id: 'debruyne-city-2015' },
+  // Dortmund's young core scatters as it really did: Gündoğan grown into City's
+  // 2016 signing, plus Şahin to Real (2011) and Hummels to Bayern (2016) as the
+  // market's real business around it.
+  { playerId: 'cur_gundogan_08', from: 'dortmund', to: 'man_city', window: '2016-07', fee: 20_000_000, id: 'gundogan-city-2016' },
+  { playerId: 'cur_sahin_08', from: 'dortmund', to: 'real_madrid', window: '2011-07', fee: 8_000_000, id: 'sahin-real-2011' },
+  { playerId: 'cur_hummels_08', from: 'dortmund', to: 'bayern', window: '2016-07', fee: 35_000_000, id: 'hummels-bayern-2016' },
 ];
 
 /**

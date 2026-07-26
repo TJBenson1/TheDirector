@@ -185,10 +185,30 @@ const WOLFSBURG_2008: CuratedSeed[] = [
   q('wolfsburg', 'debruyne_08', 'Kevin De Bruyne', 1991, 'Belgium', ['AM', 'CM'], 64, 89, 2016, 12, t(9, 6, 9, 7, 5, 8)),
 ];
 
+// ── Borussia Dortmund, 2008-09 (Klopp's first season) — a talent factory whose
+//    young core really scattered to the giants: Şahin to Real (2011), Hummels to
+//    Bayern (2016), and — seeded here young at his eventual selling club — İlkay
+//    Gündoğan, who develops into City's 2016 signing. ──
+const DORTMUND_2008: CuratedSeed[] = [
+  q('dortmund', 'weidenfeller_08', 'Roman Weidenfeller', 1980, 'Germany', ['GK'], 80, 82, 2013, 15, t(8, 5, 8, 9, 5, 7)),
+  q('dortmund', 'owomoyela_08', 'Patrick Owomoyela', 1979, 'Germany', ['RB'], 74, 76, 2012, 18, t(8, 5, 7, 8, 5, 7)),
+  q('dortmund', 'subotic_08', 'Neven Subotić', 1988, 'Serbia', ['CB'], 76, 84, 2013, 15, t(8, 6, 8, 8, 5, 8)),
+  q('dortmund', 'hummels_08', 'Mats Hummels', 1988, 'Germany', ['CB'], 70, 88, 2013, 15, t(8, 6, 9, 8, 5, 8)),
+  q('dortmund', 'schmelzer_08', 'Marcel Schmelzer', 1988, 'Germany', ['LB'], 72, 82, 2013, 15, t(8, 5, 8, 9, 5, 7)),
+  q('dortmund', 'kehl_08', 'Sebastian Kehl', 1980, 'Germany', ['DM'], 79, 81, 2012, 18, t(9, 5, 8, 9, 5, 7)),
+  q('dortmund', 'sahin_08', 'Nuri Şahin', 1988, 'Turkey', ['CM', 'DM'], 74, 85, 2013, 18, t(8, 6, 8, 7, 5, 8)),
+  q('dortmund', 'hajnal_08', 'Tamás Hajnal', 1981, 'Hungary', ['AM'], 76, 79, 2012, 18, t(8, 5, 8, 8, 5, 7)),
+  q('dortmund', 'blaszczykowski_08', 'Jakub Błaszczykowski', 1985, 'Poland', ['RW'], 77, 83, 2013, 18, t(9, 5, 8, 8, 5, 8)),
+  q('dortmund', 'frei_08', 'Alexander Frei', 1979, 'Switzerland', ['ST'], 80, 82, 2011, 20, t(8, 6, 8, 8, 5, 7)),
+  // Seeded at his eventual selling club as an 18-year-old; develops into a star.
+  q('dortmund', 'gundogan_08', 'İlkay Gündoğan', 1990, 'Germany', ['CM', 'DM'], 62, 86, 2016, 15, t(9, 6, 8, 7, 5, 8)),
+];
+
 /** The European selling clubs of the 2008-09 world, merged into the
  *  man-city-2008 universe (all whole new clubs). */
 export const EUROPE_2008_SQUADS: Record<string, CuratedSeed[]> = {
   wolfsburg: WOLFSBURG_2008,
+  dortmund: DORTMUND_2008,
   ajax: AJAX_2008,
   psv: PSV_2008,
   porto: PORTO_2008,

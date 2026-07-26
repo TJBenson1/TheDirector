@@ -963,6 +963,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'fiorentina', name: 'Fiorentina', prestige: 74 },
       { id: 'werder', name: 'Werder Bremen', prestige: 74 },
       { id: 'wolfsburg', name: 'VfL Wolfsburg', prestige: 72 },
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 76 },
     ],
     domesticLeagueId: 'eng-2008',
   },
