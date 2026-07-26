@@ -248,6 +248,13 @@ const LEDGER_1999_2004: RealTransferLedgerEntry[] = [
   { playerId: 'cur_figo', from: 'barcelona', to: 'real_madrid', window: '2000-07', fee: 37_000_000 },
   { playerId: 'cur_redondo', from: 'real_madrid', to: 'milan', window: '2000-08', fee: 0 },
   { playerId: 'cur_campbell', from: 'spurs', to: 'arsenal', window: '2001-07', fee: 0 },
+  // ── United's own real summer business 2000–2001 — live calls for the Director ──
+  // Barthez was Ferguson's real answer to the post-Schmeichel keeper void (2000);
+  // Verón the record British buy of 2001. Do nothing and each follows history.
+  // (Stam's shock 2001 sale to Lazio is NOT a ledger move — it's the richer
+  // `scripted:stam-exit` interrupt, the "back the boss or overrule him" decision.)
+  { playerId: 'cur_barthez', from: 'monaco', to: 'man_utd', window: '2000-07', fee: 7_800_000, id: 'barthez-utd-2000' },
+  { playerId: 'cur_veron', from: 'lazio', to: 'man_utd', window: '2001-07', fee: 28_100_000, id: 'veron-utd-2001' },
   { playerId: 'cur_rkeane', from: 'leeds', to: 'spurs', window: '2002-07', fee: 7_000_000 },
   { playerId: 'cur_ferdinand', from: 'leeds', to: 'man_utd', window: '2002-07', fee: 30_000_000 },
   { playerId: 'cur_woodgate', from: 'leeds', to: 'newcastle', window: '2003-01', fee: 9_000_000 },
