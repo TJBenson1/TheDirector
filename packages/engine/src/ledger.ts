@@ -373,6 +373,10 @@ const LEDGER_2013_2016: RealTransferLedgerEntry[] = [
   { playerId: 'cur_lukaku', from: 'everton', to: 'man_utd', window: '2017-07', fee: 75_000_000 },
   { playerId: 'cur_rooney', from: 'man_utd', to: 'everton', window: '2017-07', fee: 0 },
   { playerId: 'cur_kwalker', from: 'spurs', to: 'man_city', window: '2017-07', fee: 50_000_000 },
+  // ── Post-Ferguson youth, seeded at their real selling clubs so the engine can
+  //    grow them into the players who actually rebuilt United. ──
+  { playerId: 'cur_martial_13', from: 'monaco', to: 'man_utd', window: '2015-09', fee: 36_000_000, id: 'martial-utd-2015' },
+  { playerId: 'cur_bruno_f_13', from: 'sporting', to: 'man_utd', window: '2020-01', fee: 47_000_000, id: 'bruno-utd-2020' },
 ];
 
 /** Real 2013–14 injuries — fire only if the player is at his real club. */

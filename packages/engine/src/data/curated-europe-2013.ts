@@ -100,6 +100,9 @@ const MONACO_2013: CuratedSeed[] = [
   q('monaco', 'toulalan_13', 'Jérémy Toulalan', 1983, 'France', ['DM', 'CB'], 81, 82, 2016, 20, t(9, 5, 8, 8, 4, 8)),
   q('monaco', 'kondogbia_13', 'Geoffrey Kondogbia', 1993, 'France', ['DM', 'CM'], 78, 85, 2018, 20, t(7, 6, 8, 7, 5, 8)),
   q('monaco', 'riviere_13', 'Emmanuel Rivière', 1990, 'France', ['ST'], 76, 80, 2017, 20, t(7, 6, 8, 7, 5, 8)),
+  // Anthony Martial — seeded young (17, just arrived from Lyon) for his real 2015
+  // Monaco→United move, the club-record fee for a teenager Van Gaal gambled on.
+  q('monaco', 'martial_13', 'Anthony Martial', 1995, 'France', ['ST', 'LW'], 62, 87, 2019, 15, t(8, 7, 9, 7, 6, 8)),
 ];
 
 // ── Sevilla, 2013-14 (Emery's cup kings; Rakitić the metronome) ────────────────
@@ -175,12 +178,29 @@ const VALENCIA_2013_EXTRA: CuratedSeed[] = [
 /** The European selling clubs of the 2013-14 world — new clubs plus the
  *  augmentations of the pack's existing thin sellers. Merged by CONCATENATION
  *  into the man-utd-2013 universe. */
+// ── Sporting CP, 2013-14 (the academy that never stops exporting) ───────────────
+const SPORTING_2013: CuratedSeed[] = [
+  q('sporting', 'rui_patricio_13', 'Rui Patrício', 1988, 'Portugal', ['GK'], 82, 85, 2017, 15, t(9, 5, 8, 9, 4, 8), { loyalty: 88 }),
+  q('sporting', 'cedric_13', 'Cédric Soares', 1991, 'Portugal', ['RB'], 76, 82, 2016, 15, t(8, 5, 8, 8, 5, 8)),
+  q('sporting', 'rojo_13', 'Marcos Rojo', 1990, 'Argentina', ['CB', 'LB'], 78, 83, 2016, 20, t(7, 6, 8, 7, 6, 8)),
+  q('sporting', 'w_carvalho_13', 'William Carvalho', 1992, 'Portugal', ['DM'], 78, 86, 2018, 15, t(8, 6, 9, 7, 5, 8)),
+  q('sporting', 'adrien_silva_13', 'Adrien Silva', 1989, 'Portugal', ['CM', 'AM'], 78, 82, 2016, 20, t(8, 6, 8, 8, 5, 8)),
+  q('sporting', 'carrillo_13', 'André Carrillo', 1991, 'Peru', ['RW', 'LW'], 76, 82, 2017, 20, t(7, 6, 8, 7, 6, 8)),
+  q('sporting', 'capel_13', 'Diego Capel', 1988, 'Spain', ['LW'], 75, 80, 2016, 25, t(7, 6, 8, 7, 6, 8)),
+  q('sporting', 'slimani_13', 'Islam Slimani', 1988, 'Algeria', ['ST'], 77, 82, 2017, 20, t(7, 6, 8, 7, 6, 8)),
+  q('sporting', 'montero_13', 'Fredy Montero', 1987, 'Colombia', ['ST'], 76, 79, 2016, 20, t(7, 6, 8, 7, 6, 8)),
+  // Bruno Fernandes — seeded young (19) at Sporting, the launch pad for his real
+  // January-2020 move to United, the goal-and-assist engine of the Solskjær rebuild.
+  q('sporting', 'bruno_f_13', 'Bruno Fernandes', 1994, 'Portugal', ['AM', 'CM'], 68, 89, 2018, 10, t(9, 7, 9, 8, 5, 9)),
+];
+
 export const EUROPE_2013_SQUADS: Record<string, CuratedSeed[]> = {
   atletico: ATLETICO_2013,
   dortmund: DORTMUND_2013,
   napoli: NAPOLI_2013,
   porto: PORTO_2013,
   monaco: MONACO_2013,
+  sporting: SPORTING_2013,
   sevilla: SEVILLA_2013,
   lyon: LYON_2013,
   schalke: SCHALKE_2013,
