@@ -91,6 +91,9 @@ export const BARCELONA_B10: CuratedSeed[] = [
   q('barcelona', 'pedro_bc10', 'Pedro', 1987, 'Spain', ['RW', 'ST'], 83, 85, 2015, 20, t(9, 5, 8, 9, 4, 8)),
   q('barcelona', 'afellay', 'Ibrahim Afellay', 1986, 'Netherlands', ['AM', 'LW'], 80, 83, 2015, 25, t(8, 6, 8, 7, 5, 8)),
   q('barcelona', 'keita_bc10', 'Seydou Keita', 1980, 'Mali', ['CM', 'DM'], 82, 82, 2013, 20, t(9, 5, 8, 8, 5, 8)),
+  // Thiago Alcântara — seeded young (18, breaking into the first team) for his real
+  // 2013 Barcelona→Bayern move, Guardiola's first signing at his new club.
+  q('barcelona', 'thiago_bc10', 'Thiago Alcântara', 1991, 'Spain', ['CM', 'AM'], 72, 88, 2015, 15, t(9, 6, 9, 8, 5, 9)),
 ];
 
 export const REAL_MADRID_B10: CuratedSeed[] = [

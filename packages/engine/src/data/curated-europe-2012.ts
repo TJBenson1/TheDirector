@@ -128,6 +128,28 @@ const MARSEILLE_2012: CuratedSeed[] = [
   q('marseille', 'nkoulou_12', 'Nicolas Nkoulou', 1990, 'Cameroon', ['CB'], 78, 84, 2015, 20, t(8, 5, 8, 8, 5, 8)),
 ];
 
+// ── AS Saint-Étienne, 2011-12 (the club that sold Dortmund its next No.9) ───────
+const ST_ETIENNE_2012: CuratedSeed[] = [
+  q('st_etienne', 'ruffier_12', 'Stéphane Ruffier', 1986, 'France', ['GK'], 81, 84, 2016, 15, t(8, 6, 8, 8, 5, 8)),
+  q('st_etienne', 'perrin_12', 'Loïc Perrin', 1985, 'France', ['CB', 'DM'], 78, 80, 2015, 20, t(9, 5, 8, 10, 5, 8), { loyalty: 95 }),
+  q('st_etienne', 'clerc_12', 'François Clerc', 1983, 'France', ['RB'], 76, 78, 2014, 20, t(8, 5, 8, 8, 5, 8)),
+  q('st_etienne', 'brandao_12', 'Brandão', 1980, 'Brazil', ['ST'], 76, 78, 2013, 20, t(7, 6, 8, 7, 6, 8)),
+  q('st_etienne', 'guilavogui_12', 'Josuha Guilavogui', 1990, 'France', ['DM', 'CM'], 76, 83, 2015, 20, t(8, 5, 8, 7, 5, 8)),
+  q('st_etienne', 'aubameyang_12', 'Pierre-Emerick Aubameyang', 1989, 'Gabon', ['ST', 'LW'], 79, 88, 2014, 15, t(8, 7, 9, 7, 5, 8)),
+];
+
+// ── Shakhtar Donetsk, 2011-12 (Lucescu's Brazilian samba; Mkhitaryan the jewel) ─
+const SHAKHTAR_2012: CuratedSeed[] = [
+  q('shakhtar', 'pyatov_12', 'Andriy Pyatov', 1984, 'Ukraine', ['GK'], 80, 82, 2015, 15, t(8, 5, 8, 9, 5, 8), { loyalty: 88 }),
+  q('shakhtar', 'rakitskiy_12', 'Yaroslav Rakitskiy', 1989, 'Ukraine', ['CB'], 79, 84, 2016, 20, t(8, 6, 8, 8, 6, 8)),
+  q('shakhtar', 'srna_12', 'Darijo Srna', 1982, 'Croatia', ['RB'], 82, 84, 2015, 15, t(9, 6, 9, 9, 5, 8), { loyalty: 90 }),
+  q('shakhtar', 'fernandinho_12', 'Fernandinho', 1985, 'Brazil', ['DM', 'CM'], 82, 86, 2014, 15, t(9, 5, 9, 8, 5, 8)),
+  q('shakhtar', 'willian_12', 'Willian', 1988, 'Brazil', ['RW', 'LW', 'AM'], 82, 87, 2014, 20, t(8, 6, 9, 7, 5, 8)),
+  q('shakhtar', 'douglas_costa_12', 'Douglas Costa', 1990, 'Brazil', ['RW', 'LW'], 79, 87, 2015, 20, t(7, 7, 9, 7, 6, 8)),
+  q('shakhtar', 'teixeira_12', 'Alex Teixeira', 1990, 'Brazil', ['AM', 'ST'], 78, 86, 2016, 20, t(7, 6, 9, 7, 5, 8)),
+  q('shakhtar', 'mkhitaryan_12', 'Henrikh Mkhitaryan', 1989, 'Armenia', ['AM', 'RW'], 81, 87, 2015, 15, t(8, 6, 9, 8, 5, 8)),
+];
+
 /** The European selling clubs of the 2011-12 world, merged into the dortmund-2012
  *  universe (all whole new clubs). */
 export const EUROPE_2012_SQUADS: Record<string, CuratedSeed[]> = {
@@ -140,4 +162,6 @@ export const EUROPE_2012_SQUADS: Record<string, CuratedSeed[]> = {
   lyon: LYON_2012,
   benfica: BENFICA_2012,
   marseille: MARSEILLE_2012,
+  st_etienne: ST_ETIENNE_2012,
+  shakhtar: SHAKHTAR_2012,
 };

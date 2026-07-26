@@ -829,6 +829,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'valencia', name: 'Valencia', prestige: 72 },
       { id: 'psg', name: 'Paris Saint-Germain', prestige: 84 },
       { id: 'dortmund', name: 'Borussia Dortmund', prestige: 82 },
+      { id: 'ajax', name: 'Ajax', prestige: 74 },
     ],
     domesticLeagueId: 'esp-2014',
   },
@@ -877,6 +878,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'lyon', name: 'Olympique Lyonnais', prestige: 76 },
       { id: 'benfica', name: 'Benfica', prestige: 78 },
       { id: 'marseille', name: 'Olympique de Marseille', prestige: 76 },
+      // The clubs Klopp's rebuild raided after Wembley — Aubameyang and Mkhitaryan.
+      { id: 'st_etienne', name: 'AS Saint-Étienne', prestige: 66 },
+      { id: 'shakhtar', name: 'Shakhtar Donetsk', prestige: 74 },
     ],
     domesticLeagueId: 'ger-2012',
   },

@@ -925,6 +925,9 @@ const LEDGER_BUNDESLIGA_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_suarez_lv10', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000, id: 'suarez-barca-2014' },
   // Gap-sweep: Neuer's move from Schalke to Bayern (2011).
   { playerId: 'cur_neuer_sc10', from: 'schalke', to: 'bayern', window: '2011-07', fee: 22_000_000 },
+  // Thiago, seeded young at Barcelona, follows Guardiola to Bayern on his real 2013
+  // window — "Thiago oder nichts", the midfielder the reset was built around.
+  { playerId: 'cur_thiago_bc10', from: 'barcelona', to: 'bayern', window: '2013-07', fee: 22_000_000, id: 'thiago-bayern-2013' },
 ];
 
 /**
@@ -957,6 +960,9 @@ const LEDGER_BUNDESLIGA_2012: RealTransferLedgerEntry[] = [
   { playerId: 'cur_villa_bc12', from: 'barcelona', to: 'atletico', window: '2013-07', fee: 5_100_000, id: 'villa-atletico-2013' },
   { playerId: 'cur_pogba_ju12', from: 'juventus', to: 'man_utd', window: '2016-08', fee: 105_000_000, id: 'pogba-utd-2016' },
   { playerId: 'cur_ibrahimovic_pg12', from: 'psg', to: 'man_utd', window: '2016-07', fee: 0, id: 'ibra-utd-2016' },
+  // ── Klopp's rebuild: the replacements bought as the golden generation was sold. ──
+  { playerId: 'cur_aubameyang_12', from: 'st_etienne', to: 'dortmund', window: '2013-07', fee: 13_000_000, id: 'auba-dortmund-2013' },
+  { playerId: 'cur_mkhitaryan_12', from: 'shakhtar', to: 'dortmund', window: '2013-07', fee: 27_500_000, id: 'mkhitaryan-dortmund-2013' },
 ];
 
 /**
@@ -988,6 +994,9 @@ const LEDGER_LA_LIGA_2014: RealTransferLedgerEntry[] = [
   { playerId: 'cur_costa_c14', from: 'chelsea', to: 'atletico', window: '2017-08', fee: 60_000_000, id: 'costa-atletico-2017' },
   // Barça's real 2016 striker signing — fills the mid-cycle summer.
   { playerId: 'cur_paco_alcacer', from: 'valencia', to: 'barcelona', window: '2016-07', fee: 27_000_000, id: 'alcacer-barca-2016' },
+  // Frenkie de Jong, seeded young at Ajax, arrives on his real 2019 window — the
+  // heir to the midfield the Director must decide whether to build around.
+  { playerId: 'cur_de_jong_f14', from: 'ajax', to: 'barcelona', window: '2019-07', fee: 75_000_000, id: 'dejong-barca-2019' },
 ];
 
 /**

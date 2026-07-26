@@ -256,6 +256,23 @@ export const DORTMUND_2014: CuratedSeed[] = [
   q('dortmund', 'immobile_d14', 'Ciro Immobile', 1990, 'Italy', ['ST'], 80, 87, 2018, 20, t(8, 6, 8, 8, 5, 7)),
 ];
 
+// ── Ajax, 2014-15 (the academy that fed Barça's next midfield) ─────────────────
+export const AJAX_2014: CuratedSeed[] = [
+  q('ajax', 'cillessen_a14', 'Jasper Cillessen', 1989, 'Netherlands', ['GK'], 81, 85, 2018, 15, t(8, 6, 8, 8, 5, 8)),
+  q('ajax', 'veltman_a14', 'Joël Veltman', 1992, 'Netherlands', ['CB', 'RB'], 77, 82, 2018, 15, t(8, 5, 8, 8, 5, 8)),
+  q('ajax', 'moisander_a14', 'Niklas Moisander', 1985, 'Finland', ['CB'], 78, 80, 2016, 20, t(8, 5, 8, 8, 5, 8)),
+  q('ajax', 'boilesen_a14', 'Nicolai Boilesen', 1992, 'Denmark', ['LB'], 75, 80, 2017, 25, t(8, 5, 8, 8, 5, 8)),
+  q('ajax', 'schone_a14', 'Lasse Schöne', 1986, 'Denmark', ['CM', 'AM'], 79, 82, 2018, 15, t(8, 6, 8, 8, 5, 8)),
+  q('ajax', 'klaassen_a14', 'Davy Klaassen', 1993, 'Netherlands', ['AM', 'CM'], 77, 85, 2018, 15, t(9, 6, 9, 8, 4, 8)),
+  q('ajax', 'fischer_a14', 'Viktor Fischer', 1994, 'Denmark', ['LW', 'RW'], 74, 84, 2017, 25, t(7, 6, 8, 7, 6, 8)),
+  q('ajax', 'el_ghazi_a14', 'Anwar El Ghazi', 1995, 'Netherlands', ['RW', 'ST'], 72, 83, 2018, 20, t(7, 7, 8, 6, 6, 8)),
+  q('ajax', 'milik_a14', 'Arkadiusz Milik', 1994, 'Poland', ['ST'], 76, 86, 2018, 20, t(8, 6, 9, 7, 5, 8)),
+  q('ajax', 'riedewald_a14', 'Jaïro Riedewald', 1996, 'Netherlands', ['CB', 'DM'], 70, 82, 2018, 15, t(8, 6, 8, 7, 5, 8)),
+  // Frenkie de Jong — seeded young (17) for his real 2019 Ajax→Barcelona move,
+  // the €75m heir to Iniesta and Busquets bought straight out of the academy run.
+  q('ajax', 'de_jong_f14', 'Frenkie de Jong', 1997, 'Netherlands', ['CM', 'DM'], 60, 90, 2020, 10, t(9, 6, 9, 8, 4, 9)),
+];
+
 /** The full Barcelona-2014 curated universe. */
 export const BARCELONA_2014_SQUADS: Record<string, CuratedSeed[]> = {
   barcelona: BARCELONA_2014,
@@ -271,6 +288,7 @@ export const BARCELONA_2014_SQUADS: Record<string, CuratedSeed[]> = {
   inter: INTER_2014,
   psg: PSG_2014,
   dortmund: DORTMUND_2014,
+  ajax: AJAX_2014,
 };
 
 // Domestic mid-tier of the 2014-15 La Liga (M12 shortlist supply) — real squad
