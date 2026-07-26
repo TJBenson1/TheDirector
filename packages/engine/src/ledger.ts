@@ -867,6 +867,14 @@ const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
   { playerId: 'cur_coutinho_in10', from: 'inter', to: 'liverpool', window: '2013-01', fee: 8_500_000 },
   { playerId: 'cur_sturridge_ch10', from: 'chelsea', to: 'liverpool', window: '2013-01', fee: 12_000_000 },
   { playerId: 'cur_mignolet_su10', from: 'sunderland', to: 'liverpool', window: '2013-07', fee: 9_000_000, id: 'mignolet-lfc-2013' },
+  // ── The Klopp-era spine, seeded young at their real selling clubs so the engine
+  //    grows them into the 2019/2020 champions the Director can pre-empt or divert. ──
+  { playerId: 'cur_lovren_so10', from: 'southampton', to: 'liverpool', window: '2014-07', fee: 20_000_000, id: 'lovren-lfc-2014' },
+  { playerId: 'cur_clyne_so10', from: 'southampton', to: 'liverpool', window: '2015-07', fee: 12_500_000, id: 'clyne-lfc-2015' },
+  { playerId: 'cur_firmino_ho10', from: 'hoffenheim', to: 'liverpool', window: '2015-07', fee: 29_000_000, id: 'firmino-lfc-2015' },
+  { playerId: 'cur_mane_so10', from: 'southampton', to: 'liverpool', window: '2016-07', fee: 34_000_000, id: 'mane-lfc-2016' },
+  { playerId: 'cur_wijnaldum_10', from: 'psv', to: 'liverpool', window: '2016-07', fee: 25_000_000, id: 'wijnaldum-lfc-2016' },
+  { playerId: 'cur_salah_ro10', from: 'roma', to: 'liverpool', window: '2017-07', fee: 36_900_000, id: 'salah-lfc-2017' },
 ];
 
 /**

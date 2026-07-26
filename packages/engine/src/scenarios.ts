@@ -1010,6 +1010,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'atletico', name: 'Atlético Madrid', prestige: 80 },
       { id: 'roma', name: 'AS Roma', prestige: 78 },
       { id: 'napoli', name: 'Napoli', prestige: 76 },
+      { id: 'hoffenheim', name: 'TSG Hoffenheim', prestige: 68 },
+      { id: 'southampton', name: 'Southampton', prestige: 62 },
     ],
     domesticLeagueId: 'eng-2010',
   },

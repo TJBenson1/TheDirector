@@ -143,6 +143,10 @@ const ROMA_2010: CuratedSeed[] = [
   q('roma', 'burdisso_10', 'Nicolás Burdisso', 1981, 'Argentina', ['CB'], 78, 80, 2014, 20, t(8, 5, 8, 8, 6, 7)),
   q('roma', 'pizarro_d_10', 'David Pizarro', 1979, 'Chile', ['CM', 'DM'], 80, 81, 2013, 20, t(8, 6, 8, 7, 5, 8)),
   q('roma', 'borriello_10', 'Marco Borriello', 1982, 'Italy', ['ST'], 78, 80, 2014, 25, t(6, 6, 8, 7, 6, 7)),
+  // Mohamed Salah — seeded young (18 in 2010) so the engine can grow him toward his
+  // real 2017 Roma→Liverpool move (LEDGER_ENG_2010). At the anchor he is a raw
+  // Egyptian teenager; the taper does the rest.
+  q('roma', 'salah_ro10', 'Mohamed Salah', 1992, 'Egypt', ['RW', 'LW', 'ST'], 62, 90, 2018, 10, t(9, 6, 9, 7, 4, 9)),
 ];
 
 // ── Napoli, 2010-11 (the Lavezzi–Hamšík–Cavani front) ──────────────────────────
@@ -154,6 +158,38 @@ const NAPOLI_2010: CuratedSeed[] = [
   q('napoli', 'maggio_10', 'Christian Maggio', 1982, 'Italy', ['RB', 'RW'], 79, 81, 2014, 20, t(8, 5, 8, 8, 5, 8)),
   q('napoli', 'gargano_10', 'Walter Gargano', 1984, 'Uruguay', ['DM', 'CM'], 78, 80, 2014, 20, t(8, 5, 8, 7, 5, 8)),
   q('napoli', 'cannavaro_p_10', 'Paolo Cannavaro', 1981, 'Italy', ['CB'], 78, 79, 2014, 20, t(8, 5, 8, 8, 5, 7)),
+];
+
+// ── TSG Hoffenheim, 2010-11 (Rangnick's side; Firmino's launch pad) ─────────────
+const HOFFENHEIM_2010: CuratedSeed[] = [
+  q('hoffenheim', 'starke_ho10', 'Tom Starke', 1981, 'Germany', ['GK'], 78, 80, 2013, 20, t(8, 5, 8, 8, 5, 7)),
+  q('hoffenheim', 'beck_ho10', 'Andreas Beck', 1987, 'Germany', ['RB'], 77, 81, 2014, 15, t(8, 5, 8, 8, 5, 8)),
+  q('hoffenheim', 'compper_ho10', 'Marvin Compper', 1985, 'Germany', ['CB'], 76, 79, 2013, 20, t(8, 5, 8, 8, 5, 7)),
+  q('hoffenheim', 'simunic_ho10', 'Josip Šimunić', 1978, 'Croatia', ['CB'], 78, 79, 2012, 20, t(7, 6, 8, 7, 6, 7)),
+  q('hoffenheim', 'salihovic_ho10', 'Sejad Salihović', 1984, 'Bosnia', ['LB'], 76, 79, 2014, 20, t(7, 6, 8, 7, 6, 8)),
+  q('hoffenheim', 'luiz_gustavo_ho10', 'Luiz Gustavo', 1987, 'Brazil', ['DM'], 79, 85, 2014, 15, t(9, 5, 9, 7, 4, 8)),
+  q('hoffenheim', 'sigurdsson_ho10', 'Gylfi Sigurðsson', 1989, 'Iceland', ['AM', 'CM'], 74, 84, 2014, 15, t(9, 6, 8, 8, 4, 8)),
+  q('hoffenheim', 'obasi_ho10', 'Chinedu Obasi', 1986, 'Nigeria', ['LW', 'ST'], 75, 79, 2013, 20, t(7, 6, 8, 7, 6, 8)),
+  q('hoffenheim', 'ba_ho10', 'Demba Ba', 1985, 'Senegal', ['ST'], 79, 83, 2013, 20, t(7, 6, 9, 6, 6, 8)),
+  q('hoffenheim', 'ibisevic_ho10', 'Vedad Ibišević', 1984, 'Bosnia', ['ST'], 79, 82, 2014, 20, t(8, 5, 8, 8, 5, 8)),
+  // Roberto Firmino — seeded young (19 in 2010) for his real 2015 Hoffenheim→
+  // Liverpool move. The false-nine engine Klopp built out of a Bundesliga forward.
+  q('hoffenheim', 'firmino_ho10', 'Roberto Firmino', 1991, 'Brazil', ['AM', 'ST'], 64, 88, 2016, 10, t(9, 6, 9, 8, 4, 9)),
+];
+
+// ── Southampton, 2010-11 (the League One rebuild that became a talent factory) ───
+const SOUTHAMPTON_2010: CuratedSeed[] = [
+  q('southampton', 'k_davis_so10', 'Kelvin Davis', 1976, 'England', ['GK'], 72, 74, 2013, 20, t(8, 5, 8, 9, 5, 7)),
+  q('southampton', 'fonte_so10', 'José Fonte', 1983, 'Portugal', ['CB'], 72, 82, 2014, 15, t(9, 5, 8, 8, 4, 8)),
+  q('southampton', 'hammond_so10', 'Dean Hammond', 1983, 'England', ['CM'], 70, 74, 2013, 20, t(8, 5, 8, 8, 5, 7)),
+  q('southampton', 'lallana_so10', 'Adam Lallana', 1988, 'England', ['AM', 'CM'], 73, 85, 2014, 15, t(9, 5, 8, 9, 4, 8), { loyalty: 88 }),
+  q('southampton', 'schneiderlin_so10', 'Morgan Schneiderlin', 1989, 'France', ['DM', 'CM'], 71, 84, 2014, 15, t(9, 5, 8, 8, 4, 8)),
+  q('southampton', 'lambert_so10', 'Rickie Lambert', 1982, 'England', ['ST'], 74, 79, 2014, 20, t(8, 5, 8, 9, 5, 8)),
+  // Southampton's future-Liverpool trio — seeded young for their real Anfield moves
+  // (Lovren 2014, Clyne 2015, Mané 2016). All three cross the M27 pipeline.
+  q('southampton', 'lovren_so10', 'Dejan Lovren', 1989, 'Croatia', ['CB'], 70, 84, 2015, 15, t(8, 6, 8, 7, 6, 8)),
+  q('southampton', 'clyne_so10', 'Nathaniel Clyne', 1991, 'England', ['RB'], 66, 83, 2016, 15, t(9, 5, 8, 8, 4, 8)),
+  q('southampton', 'mane_so10', 'Sadio Mané', 1992, 'Senegal', ['RW', 'LW', 'ST'], 60, 90, 2017, 10, t(9, 6, 9, 8, 4, 9)),
 ];
 
 /** The European selling clubs of the 2010-11 world, merged into the
@@ -170,4 +206,6 @@ export const EUROPE_2010_SQUADS: Record<string, CuratedSeed[]> = {
   atletico: ATLETICO_2010,
   roma: ROMA_2010,
   napoli: NAPOLI_2010,
+  hoffenheim: HOFFENHEIM_2010,
+  southampton: SOUTHAMPTON_2010,
 };
