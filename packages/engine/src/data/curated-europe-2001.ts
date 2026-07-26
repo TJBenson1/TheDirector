@@ -209,6 +209,34 @@ const LYON_2001: CuratedSeed[] = [
   q('lyon', 'cris_01', 'Cris', 1977, 'Brazil', ['CB'], 78, 82, 2005, 20, t(8, 6, 8, 8, 6, 7)),
 ];
 
+// ── Real Sociedad, 2001-02 (the club that sold Liverpool its metronome) ─────────
+const REAL_SOCIEDAD_2001: CuratedSeed[] = [
+  q('real_sociedad', 'westerveld_rs01', 'Sander Westerveld', 1974, 'Netherlands', ['GK'], 79, 81, 2005, 15, t(8, 5, 8, 8, 5, 8)),
+  q('real_sociedad', 'kvarme_rs01', 'Bjørn Tore Kvarme', 1972, 'Norway', ['CB', 'RB'], 76, 78, 2004, 20, t(8, 5, 8, 8, 5, 8)),
+  q('real_sociedad', 'aranzabal_rs01', 'Agustín Aranzábal', 1973, 'Spain', ['LB'], 77, 79, 2004, 20, t(8, 5, 8, 9, 5, 8), { loyalty: 90 }),
+  q('real_sociedad', 'de_pedro_rs01', 'Javier de Pedro', 1973, 'Spain', ['LW', 'AM'], 79, 81, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('real_sociedad', 'karpin_rs01', 'Valeri Karpin', 1969, 'Russia', ['RW', 'CM'], 79, 80, 2004, 20, t(8, 6, 8, 8, 5, 8)),
+  q('real_sociedad', 'kovacevic_rs01', 'Darko Kovačević', 1973, 'Serbia', ['ST'], 81, 83, 2005, 20, t(8, 6, 8, 7, 5, 8)),
+  q('real_sociedad', 'nihat_rs01', 'Nihat Kahveci', 1979, 'Turkey', ['ST', 'RW'], 78, 84, 2005, 20, t(7, 6, 8, 7, 6, 8)),
+  // Xabi Alonso — seeded young (19, the captain-in-waiting) for his real 2004 move to
+  // Liverpool, the deep-lying passer around whom Rafa built the Istanbul side.
+  q('real_sociedad', 'xabi_rs01', 'Xabi Alonso', 1981, 'Spain', ['CM', 'DM'], 72, 89, 2005, 10, t(9, 6, 9, 8, 4, 9)),
+];
+
+// ── Atlético Madrid, 2001-02 (Segunda years — but El Niño is coming through) ─────
+const ATLETICO_2001: CuratedSeed[] = [
+  q('atletico', 'burgos_at01', 'Germán Burgos', 1969, 'Argentina', ['GK'], 78, 79, 2004, 20, t(7, 6, 8, 8, 6, 8)),
+  q('atletico', 'santi_denia_at01', 'Santi Denia', 1975, 'Spain', ['CB'], 76, 78, 2004, 20, t(8, 5, 8, 9, 5, 8), { loyalty: 90 }),
+  q('atletico', 'hibic_at01', 'Mario Hibić', 1975, 'Croatia', ['CB'], 74, 77, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('atletico', 'aguilera_at01', 'Carlos Aguilera', 1969, 'Spain', ['RB', 'RW'], 75, 77, 2003, 20, t(8, 5, 8, 8, 5, 8)),
+  q('atletico', 'jorge_at01', 'Jorge Otero', 1969, 'Spain', ['LB'], 74, 76, 2003, 20, t(8, 5, 8, 8, 5, 8)),
+  q('atletico', 'correa_at01', 'José Mari', 1978, 'Spain', ['ST'], 76, 80, 2004, 20, t(7, 6, 8, 7, 6, 8)),
+  q('atletico', 'luis_garcia_at01', 'Luis García', 1978, 'Spain', ['AM', 'RW'], 76, 84, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  // Fernando Torres — the 17-year-old academy jewel, seeded young for his real 2007
+  // move to Liverpool, El Niño who defined Rafa's attack.
+  q('atletico', 'torres_at01', 'Fernando Torres', 1984, 'Spain', ['ST'], 62, 90, 2008, 15, t(9, 6, 9, 8, 4, 9)),
+];
+
 /** The European selling clubs of the 2001-02 world, merged into the
  *  liverpool-2001 universe (all whole new clubs). */
 export const EUROPE_2001_SQUADS: Record<string, CuratedSeed[]> = {
@@ -226,4 +254,6 @@ export const EUROPE_2001_SQUADS: Record<string, CuratedSeed[]> = {
   galatasaray: GALATASARAY_2001,
   fenerbahce: FENERBAHCE_2001,
   lyon: LYON_2001,
+  real_sociedad: REAL_SOCIEDAD_2001,
+  atletico: ATLETICO_2001,
 };

@@ -157,6 +157,9 @@ const ERA_2001_CONTEXT: ClubSeed[] = [
   { id: 'galatasaray', name: 'Galatasaray', prestige: 70 },
   { id: 'fenerbahce', name: 'Fenerbahçe', prestige: 68 },
   { id: 'lyon', name: 'Olympique Lyonnais', prestige: 76 },
+  // The clubs that sold Rafa's Liverpool its spine — Xabi Alonso and Torres.
+  { id: 'real_sociedad', name: 'Real Sociedad', prestige: 72 },
+  { id: 'atletico', name: 'Atlético Madrid', prestige: 66 },
 ];
 
 // era-2003: the continental powers plus the Barça-counterfactual source clubs.

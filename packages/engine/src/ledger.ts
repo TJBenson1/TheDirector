@@ -498,6 +498,10 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   // Gap-sweep: Liverpool's real exits in the era — Fowler to Leeds, Owen to Madrid.
   { playerId: 'cur_fowler01', from: 'liverpool', to: 'leeds', window: '2001-08', fee: 11_000_000 },
   { playerId: 'cur_owen01', from: 'liverpool', to: 'real_madrid', window: '2004-07', fee: 8_000_000 },
+  // ── Rafa's spine, seeded young at their real selling clubs — the players who
+  //    turned Houllier's cup side into the 2005 European champions. ──
+  { playerId: 'cur_xabi_rs01', from: 'real_sociedad', to: 'liverpool', window: '2004-08', fee: 10_500_000, id: 'xabi-liverpool-2004' },
+  { playerId: 'cur_torres_at01', from: 'atletico', to: 'liverpool', window: '2007-07', fee: 26_500_000, id: 'torres-liverpool-2007' },
 ];
 
 /**
