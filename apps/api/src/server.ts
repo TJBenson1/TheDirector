@@ -55,6 +55,13 @@ import {
 import { buildView } from './view.js';
 import { scriptedOpening } from './openings.js';
 import { beatFacts } from './seasonReview.js';
+import { peekRateLimit, recordRateLimit, clientIp, throttleMessage } from './rateLimit.js';
+
+// The endpoints that spend Claude API credits: the narrator always does, and
+// `/games/advance` does on the three season beats. These are rate-limited per
+// client IP as a spend backstop — every other route is a pure engine call and
+// stays unmetered. See rateLimit.ts.
+const METERED = new Set(['/games/narrate', '/games/advance']);
 
 const PORT = Number(process.env.PORT ?? 8787);
 // Lock this to your Lovable app's origin in production; '*' is fine for dev.
@@ -388,8 +395,31 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (req.method === 'POST' && routes[path]) {
+      const metered = METERED.has(path);
+      let ip = '';
+      if (metered) {
+        ip = clientIp(req);
+        const decision = peekRateLimit(ip);
+        if (!decision.ok && decision.scope) {
+          // The chat client reads `error` and shows it as an in-world line, so a
+          // throttle degrades to a quiet "come back later" rather than breaking.
+          res.setHeader('Retry-After', String(decision.retryAfterSec));
+          send(res, 429, {
+            error: throttleMessage(decision.scope),
+            rateLimited: true,
+            scope: decision.scope,
+            retryAfterSec: decision.retryAfterSec,
+          });
+          return;
+        }
+      }
       const body = await readBody(req);
-      send(res, 200, await routes[path]!(body));
+      const result = await routes[path]!(body);
+      // Charge the budget only for calls that actually cost credits: the narrator
+      // always does; an advance only when a season beat fired (token-free advances
+      // don't consume the cap).
+      if (metered && (path === '/games/narrate' || (result as any)?.beat)) recordRateLimit(ip);
+      send(res, 200, result);
       return;
     }
     send(res, 404, { error: `No route ${req.method} ${path}` });
