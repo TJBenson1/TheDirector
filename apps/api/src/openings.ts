@@ -138,11 +138,67 @@ function openingActions(state: GameState): OpeningChip[] {
       message: `And ${out[1].name} — do I fight to keep him too, or let him go? Talk me through it.`,
     });
   }
+  // The coach's own recommended targets (real players the recommender surfaces) —
+  // so even a quiet summer with no real inbound still offers a concrete, named
+  // signing to chase. Real business always ranks ahead of these; they fill the gap.
+  const brief = coachBriefing(state);
+  const inboundNames = new Set(inbound.map((i) => i.name));
+  for (const t of brief.targets.filter((t) => !inboundNames.has(t.name)).slice(0, 2)) {
+    ranked.push({
+      label: `Go for ${surname(t.name)}?`,
+      message: `${brief.coach} rates ${t.name} at ${t.club} — should we go for him this summer? Talk me through it.`,
+    });
+  }
 
   return [
     ...ranked.slice(0, 3),
     { label: 'Review the wider market', message: 'Show me the wider market — who else could we go for this summer?' },
   ];
+}
+
+/**
+ * The story of world football that summer — the era-defining macro-beat every
+ * scenario lives through when its clock reaches that year, named explicitly so a
+ * takeover, a world-record fee or a market earthquake reads as a live story in any
+ * save (Abramovich in a Man Utd 1999 play, the Bosman ruling in a Serie A 1995
+ * one). Calendar-keyed, real history — pure narration, no bearing on the sim.
+ */
+const WORLD_HEADLINES: Record<number, string> = {
+  1995: `The Bosman ruling is about to tear up the rulebook — out-of-contract players will soon move for nothing, and the transfer market will never be the same.`,
+  1996: `Bosman's free transfers arrive, and Alan Shearer's world-record £15m move to Newcastle sets the tone: English money is beginning to talk.`,
+  1997: `Ronaldo joins Inter for a world-record £19.5m — Serie A is the richest, most glamorous league on earth, and everyone wants in.`,
+  1998: `Fresh off France '98, the game's biggest names are on the move, and the record fees keep climbing across Italy and Spain.`,
+  1999: `Christian Vieri's £32m move to Inter smashes the world record again — Serie A's spending arms race is at its peak.`,
+  2000: `Florentino Pérez wins the Real Madrid presidency on a promise to sign Luís Figo from Barcelona, and does — a world-record £37m that lights the fuse on the Galácticos.`,
+  2001: `Zinedine Zidane joins Real Madrid for a world-record £46m — the Galácticos are in full flow, and the rest of Europe scrambles to keep up.`,
+  2002: `Rio Ferdinand becomes the world's most expensive defender at £30m, and Ronaldo joins the Galácticos — the post-World Cup market is booming.`,
+  2003: `Roman Abramovich buys Chelsea and turns the market upside down overnight — his billions rewrite what's possible, and every rival feels the ground shift.`,
+  2004: `José Mourinho arrives at Abramovich's Chelsea and declares himself the Special One — the balance of power in England is tilting.`,
+  2005: `Chelsea's money machine rolls on after back-to-back title assaults, and the rest of the Premier League races to respond.`,
+  2006: `Post-Germany '06, Chelsea land Shevchenko and Ballack, and the transfer market's centre of gravity is firmly in the Premier League.`,
+  2007: `Fernando Torres joins Liverpool and Kaká reigns as the world's best — the elite are separating from the pack.`,
+  2008: `Abu Dhabi's takeover makes Manchester City the richest club on the planet overnight, hijacking Robinho on deadline day — a new superpower is born.`,
+  2009: `Cristiano Ronaldo joins Real Madrid for a world-record £80m and Kaká arrives too — Florentino's second Galácticos, as City start spending to match.`,
+  2010: `Post-South Africa 2010, Real and Barça pull clear at the top while Manchester City's project accelerates with every window.`,
+  2011: `Sergio Agüero joins City and Cesc Fàbregas returns to Barça — the money at the top of the game keeps concentrating.`,
+  2012: `Eden Hazard picks Chelsea and Robin van Persie joins United — the Premier League's spending power is drawing the world's best.`,
+  2013: `Gareth Bale joins Real Madrid for a world-record £86m and Neymar lands at Barça — and in Manchester, Guardiola-era football looms as the giants rearm.`,
+  2014: `Luis Suárez joins Barça and James Rodríguez lights up Real after the World Cup — the superclubs are hoarding the game's brightest talents.`,
+  2015: `Financial Fair Play bites, but the elite keep spending — De Bruyne and Sterling head to City as the arms race rolls on.`,
+  2016: `Paul Pogba returns to United for a world-record £89m, and Guardiola and Mourinho arrive in Manchester on the same summer — the stakes have never been higher.`,
+  2017: `Neymar joins PSG for £198m — more than double the old record. The market has shattered, and no valuation feels safe again.`,
+  2018: `Cristiano Ronaldo stuns Madrid by joining Juventus, and goalkeepers go for record fees — the post-Russia market has no ceiling.`,
+  2019: `Eden Hazard finally gets his Real move and João Félix commands £113m — the game's inflation shows no sign of slowing.`,
+  2020: `Covid empties the stadiums and squeezes the market — even the giants tighten their belts, and Messi's future at Barça is suddenly in doubt.`,
+  2021: `Lionel Messi leaves a broke Barcelona for PSG and Ronaldo returns to United — the Super League collapses in days, but the financial fault lines it exposed remain.`,
+  2022: `Erling Haaland joins City and the post-Qatar market roars back — the Premier League's spending dwarfs the rest of Europe.`,
+  2023: `Saudi Arabia's PIF pours billions into its Pro League — Ronaldo, Benzema and Neymar head east — while Bellingham lights up Real and Kane joins Bayern.`,
+  2024: `Kylian Mbappé finally joins Real Madrid on a free, and the Saudi spending wave keeps reshaping the game's economics.`,
+};
+
+/** The world's story this summer, if history recorded a defining one. */
+function worldHeadline(year: number): string | null {
+  return WORLD_HEADLINES[year] ?? null;
 }
 
 /** 1st, 2nd, 3rd, … */
@@ -251,10 +307,15 @@ export function generatedSummerOpening(
   const realityLine = ctx.reality?.note ? ` ${ctx.reality.note}` : '';
   const opener = `${club.name}, summer ${year}. ${standing}${boardLine}${realityLine}`.trim();
 
-  // ── Beat two: the story of the summer — the world moving, and any macro shock. ──
+  // ── Beat two: the story of the summer — the world's defining beat, the rivals
+  //    moving, and any macro shock from the sim. ──
   const storyParts: string[] = [];
   const macro = (opts.worldStory ?? []).filter(Boolean);
   if (macro.length) storyParts.push(macro.join(' '));
+  // The era-defining story of world football that summer — named explicitly, so
+  // every scenario lives the takeover / world-record / market shock of its year.
+  const headline = worldHeadline(year);
+  if (headline && !macro.length) storyParts.push(headline);
   // A rival throwing its weight around — the summer's big spender (a club stacking
   // up arrivals, e.g. Abramovich's Chelsea in 2003). Surfaces a spree as a live
   // story from the ledger, no per-scenario authoring, true even off history's path.
