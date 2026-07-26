@@ -18,7 +18,7 @@
  * to the generic derivation.
  */
 
-import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, realDepartureThisWindow, type GameState, type ScenarioOpening } from '@director/engine';
+import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, realDepartureThisWindow, narrativeContext, divergenceFactor, ERA_REALITY, eraForScenario, type GameState, type ScenarioOpening } from '@director/engine';
 
 type Group = 'GK' | 'DEF' | 'MID' | 'ATT';
 const GROUP: Record<string, Group> = {
@@ -143,6 +143,204 @@ function openingActions(state: GameState): OpeningChip[] {
     ...ranked.slice(0, 3),
     { label: 'Review the wider market', message: 'Show me the wider market — who else could we go for this summer?' },
   ];
+}
+
+/** 1st, 2nd, 3rd, … */
+function ordinalSuffix(n: number): string {
+  const v = n % 100;
+  if (v >= 11 && v <= 13) return `${n}th`;
+  return `${n}${['th', 'st', 'nd', 'rd'][n % 10] ?? 'th'}`;
+}
+
+/** The last season the club just played (finish, points, whether it won the title),
+ *  the shape a summer set-piece opens on. */
+export interface SeasonReviewFacts {
+  finish: number;
+  expected: number;
+  points: number;
+  wonTitle: boolean;
+  patience: number;
+  season: number;
+}
+
+/**
+ * The biggest moves ELSEWHERE this window — the galácticos, the Bosmans, the
+ * record fees that set the scene the Director is operating against. The summer's
+ * backdrop, drawn straight from the era ledger so it needs no authoring and stays
+ * true even as the Director's own play veers away from history.
+ */
+function worldMovesThisWindow(state: GameState, max = 3): string[] {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack?.realTransferLedger) return [];
+  const now = state.clock.date;
+  return pack.realTransferLedger
+    .filter((e) => e.window === now && e.to !== state.playerClub && e.from !== state.playerClub)
+    .map((e) => {
+      const p = state.players[e.playerId];
+      if (!p || p.retired) return null;
+      const to = state.clubs[e.to]?.name ?? e.to;
+      const from = e.from ? state.clubs[e.from]?.name ?? e.from : null;
+      const fromPart = from ? ` from ${from}` : '';
+      const feePart = e.fee ? ` for ${fee(e.fee)}` : from ? ' on a free' : '';
+      return { fee: e.fee, line: `${p.name} to ${to}${fromPart}${feePart}` };
+    })
+    .filter((x): x is { fee: number; line: string } => !!x)
+    .sort((a, b) => b.fee - a.fee)
+    .slice(0, max)
+    .map((x) => x.line);
+}
+
+/**
+ * The summer's big spender, if one club is stacking up arrivals this window — a
+ * rival's spree as a live story (Abramovich's Chelsea in 2003, PIF-era Newcastle,
+ * a galáctico Madrid). Drawn from the ledger, so it needs no authoring and holds
+ * even when the Director's play has bent the world off its real course.
+ */
+function bigSpenderThisWindow(state: GameState): string | null {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack?.realTransferLedger) return null;
+  const now = state.clock.date;
+  const byClub = new Map<string, { names: string[]; spend: number }>();
+  for (const e of pack.realTransferLedger) {
+    if (e.window !== now || e.to === state.playerClub || !e.fee) continue;
+    const p = state.players[e.playerId];
+    if (!p || p.retired) continue;
+    const agg = byClub.get(e.to) ?? { names: [], spend: 0 };
+    agg.names.push(p.name);
+    agg.spend += e.fee;
+    byClub.set(e.to, agg);
+  }
+  let best: { club: string; names: string[]; spend: number } | null = null;
+  for (const [club, agg] of byClub) {
+    if (agg.names.length < 2) continue; // a spree is two or more marquee arrivals
+    if (!best || agg.spend > best.spend) best = { club, names: agg.names, spend: agg.spend };
+  }
+  if (!best) return null;
+  const clubName = state.clubs[best.club]?.name ?? best.club;
+  return `${clubName} are the summer's big spenders, landing ${joinNames(best.names)} — a statement of intent the whole league can read.`;
+}
+
+/**
+ * A GENERATED summer set-piece for any window past the game's opening — the same
+ * lived-through, tap-through shape as the curated opening, but assembled from the
+ * live facts of that summer: where the club sits after the season just gone, the
+ * world moving around it (and any macro shock like the Abramovich takeover, passed
+ * in from the advance), the coach's read, and the summer's real calls as tappable
+ * prompts. Deterministic — a passive, reality-default play costs no tokens; the
+ * model can refine the prose later as divergence makes the scripted line stale.
+ */
+export function generatedSummerOpening(
+  state: GameState,
+  opts: { review?: SeasonReviewFacts; worldStory?: string[] } = {},
+): Opening {
+  const club = state.clubs[state.playerClub]!;
+  const year = Number(state.clock.date.slice(0, 4));
+  const ctx = narrativeContext(state);
+  const coach = coachBriefing(state);
+
+  // ── Beat one: where the club stands after the season just gone. ──
+  const r = opts.review;
+  let standing = '';
+  if (r) {
+    const label = `${r.season}–${String((r.season + 1) % 100).padStart(2, '0')}`;
+    standing = r.wonTitle
+      ? `You finished ${label} as champions — ${r.points} points and the title in the cabinet. `
+      : `You finished ${label} ${ordinalSuffix(r.finish)} on ${r.points} points. `;
+  }
+  const boardLine = `The board are ${ctx.board.mood}${ctx.board.mandate ? `; the brief is unchanged — ${ctx.board.mandate.replace(/\.$/, '')}` : ''}.`;
+  const realityLine = ctx.reality?.note ? ` ${ctx.reality.note}` : '';
+  const opener = `${club.name}, summer ${year}. ${standing}${boardLine}${realityLine}`.trim();
+
+  // ── Beat two: the story of the summer — the world moving, and any macro shock. ──
+  const storyParts: string[] = [];
+  const macro = (opts.worldStory ?? []).filter(Boolean);
+  if (macro.length) storyParts.push(macro.join(' '));
+  // A rival throwing its weight around — the summer's big spender (a club stacking
+  // up arrivals, e.g. Abramovich's Chelsea in 2003). Surfaces a spree as a live
+  // story from the ledger, no per-scenario authoring, true even off history's path.
+  const spender = bigSpenderThisWindow(state);
+  if (spender) storyParts.push(spender);
+  const world = worldMovesThisWindow(state);
+  if (world.length) storyParts.push(`The summer's big business is being done elsewhere too: ${joinNames(world)}.`);
+  if (divergenceFactor(state) > 0) {
+    storyParts.push(`And this is no longer history's script — the world you've bent is writing its own summer now.`);
+  }
+  if (!storyParts.length) {
+    storyParts.push(`It's a quieter window across the game — the noise this summer, if there's to be any, will be of your making.`);
+  }
+  const story = storyParts.join('\n\n');
+
+  // ── Beat three: the coach's read and the summer's live calls. ──
+  const spine = coach.bestXI.slice(0, 5).map((x) => x.name);
+  const spots = [...new Set(coach.strengthen.map((s) => POSITION_LABEL[s.position] ?? s.position))];
+  const meetParts = [
+    `You sit down with ${coach.coach}. He'll line up in a ${coach.formation}, built around ${joinNames(spine)}.`,
+  ];
+  if (spots.length) meetParts.push(`Pressed on where the side still needs work, he wants it strengthened at ${joinNames(spots)}.`);
+  meetParts.push(`The window is open, and the summer's first calls are on your desk.`);
+  const meeting = meetParts.join('\n\n');
+
+  const beats: OpeningBeat[] = [
+    { text: opener, reveal: `What's the story this summer?` },
+    { text: story, reveal: `Meet ${coach.coach}` },
+    { text: meeting, actions: openingActions(state) },
+  ];
+  return { scene: [opener, story].join('\n\n'), meeting, beats };
+}
+
+/**
+ * A GENERATED winter set-piece — the January window as a moment, but only when
+ * there's a crisis worth pausing on (a contract running down, an unsettled man, an
+ * injury pile-up, or form gone sour). No crisis → returns null and the Advance feed
+ * keeps its lighter mid-season note. Summer is the set-piece every time; winter
+ * earns it. Deterministic; no tokens.
+ */
+export function generatedWinterOpening(state: GameState): Opening | null {
+  const ctx = narrativeContext(state);
+  const year = Number(state.clock.date.slice(0, 4));
+  const injured = ctx.squad.injured ?? [];
+  const unsettled = ctx.squad.unsettled ?? [];
+  const expiring = ctx.squad.expiring ?? [];
+  const badForm = ctx.form?.momentum === 'slumping';
+  const crisis = unsettled.length > 0 || injured.length >= 2 || expiring.length > 0 || badForm;
+  if (!crisis) return null;
+
+  const club = state.clubs[state.playerClub]!;
+  const coach = coachBriefing(state);
+
+  // ── Beat one: name the crisis. ──
+  const lines: string[] = [];
+  if (badForm) lines.push(`the run of results has the mood turning`);
+  if (injured.length >= 2) lines.push(`the treatment room is filling up (${joinNames(injured.slice(0, 3).map((i) => i.name))})`);
+  if (unsettled.length) lines.push(`${joinNames(unsettled.slice(0, 2).map((u) => u.name))} ${unsettled.length === 1 ? 'is' : 'are'} unsettled`);
+  if (expiring.length) lines.push(`contracts are running down (${joinNames(expiring.slice(0, 3).map((e) => e.name))})`);
+  const opener = `Midwinter at ${club.name}, January ${year}. The window's open at the season's turn, and it isn't quiet: ${joinNames(lines)}.`;
+
+  // ── Beat two: the calls. ──
+  const actions: OpeningChip[] = [];
+  if (expiring.length) {
+    const nm = expiring[0]!.name;
+    actions.push({ label: `Sort out ${surname(nm)}'s deal?`, message: `${nm}'s contract is running down — do I tie him to a new deal now, or let it run? Talk me through it.` });
+  }
+  if (unsettled.length) {
+    const nm = unsettled[0]!.name;
+    actions.push({ label: `Settle ${surname(nm)}?`, message: `${nm} is unsettled — how do I handle it before it festers?` });
+  }
+  if (injured.length >= 2) {
+    actions.push({ label: 'Bring in cover?', message: 'We are short with these injuries — should I bring in cover this January, and who?' });
+  }
+  actions.push({ label: 'Review the January market', message: 'Show me who is realistically available this January.' });
+
+  const meetParts = [
+    `${coach.coach} wants a word before the window shuts. The side is his; the calls at the edges are yours.`,
+    `Where do you want to start?`,
+  ];
+
+  const beats: OpeningBeat[] = [
+    { text: opener, reveal: `What are my options?` },
+    { text: meetParts.join('\n\n'), actions: actions.slice(0, 4) },
+  ];
+  return { scene: opener, meeting: meetParts.join('\n\n'), beats };
 }
 
 /** Render a curated first XI ("GK Peruzzi", "CB Ferrara", …) as prose by unit. */

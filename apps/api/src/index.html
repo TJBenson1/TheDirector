@@ -186,16 +186,22 @@ async function advance(){
     if (d.error){ bubble('('+d.error+')', 'sys'); }
     else {
       state = d.state;
-      // At a season beat the rich narration IS the story — drop the terse marker
-      // lines it supersedes so they don't read as a duplicate.
-      const msgs = (d.events||[]).filter(e=>e.code!=='board.season-review'&&e.code!=='season.kickoff').map(e=>e.message).filter(Boolean);
       const st = stFrom(state);
       const head = st ? `${st.date} · ${st.window||'in season'}` : 'Advanced';
-      const body = msgs.length ? msgs.slice(0,10).join('\n') : 'The month passes quietly.';
-      bubble(head + '\n' + body, 'narrator');
-      // The three season beats land as their own rich, model-written story bubble.
-      if (d.narration) bubble(d.narration, 'narrator');
-      noteTurn('Advance.', (d.narration ? d.narration+' ' : '')+head+' — '+(msgs.slice(0,6).join('; ')||'quiet'));
+      const beats = d.opening && d.opening.beats;
+      if (beats && beats.length){
+        // A summer (or a winter crisis) — the staged, tap-through set-piece. The
+        // deterministic beats ARE the story, so skip the terse month feed.
+        renderOpeningBeat(beats, 0);
+        noteTurn('Advance to '+head+'.', beats.map(x=>x.text).join(' '));
+      } else {
+        // A routine advance — the terse month feed, plus any model-written beat.
+        const msgs = (d.events||[]).filter(e=>e.code!=='board.season-review'&&e.code!=='season.kickoff').map(e=>e.message).filter(Boolean);
+        const body = msgs.length ? msgs.slice(0,10).join('\n') : 'The month passes quietly.';
+        bubble(head + '\n' + body, 'narrator');
+        if (d.narration) bubble(d.narration, 'narrator');
+        noteTurn('Advance.', (d.narration ? d.narration+' ' : '')+head+' — '+(msgs.slice(0,6).join('; ')||'quiet'));
+      }
       renderPendingDecisions();
       saveLocal(); renderStatus(); refreshPanelIfOpen();
     }

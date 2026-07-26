@@ -53,7 +53,7 @@ import {
   type Position,
 } from '@director/engine';
 import { buildView } from './view.js';
-import { scriptedOpening } from './openings.js';
+import { scriptedOpening, generatedSummerOpening, generatedWinterOpening } from './openings.js';
 import { beatFacts } from './seasonReview.js';
 import { peekRateLimit, recordRateLimit, clientIp, throttleMessage } from './rateLimit.js';
 
@@ -103,26 +103,51 @@ const routes: Record<string, Handler> = {
 
   '/games/advance': async ({ state, perStep }) => {
     const { state: next, events } = advanceWindow(state as GameState, { pausePerStep: perStep ?? true });
-    // The three season beats — the January turn, the season's verdict, and the kickoff
-    // of the next campaign — are RICH, model-written narrative (stories, not a results
-    // engine). Everything else stays token-free. Each beat is grounded in deterministic
-    // engine facts and degrades to a scripted line if the model is unavailable.
+    // Every SUMMER is a set-piece: when the season's verdict lands (the review step,
+    // where the summer window opens with the contract warnings and the summer's real
+    // ledger), we serve a staged, tap-through opening — the same lived-through shape
+    // as the game's opening, generated from that summer's live facts. WINTER earns
+    // the same treatment, but only when there's a crisis; otherwise it keeps its
+    // lighter mid-season note. Both are deterministic (token-free) for a passive,
+    // reality-default play — the model can refine the prose later as divergence bites.
     let narration: string | undefined;
+    let opening: { beats: import('./openings.js').OpeningBeat[] } | undefined;
     const review = events.find((e) => e.code === 'board.season-review');
     const kickoff = events.find((e) => e.code === 'season.kickoff');
     // The winter window OPENING (step 2 of 4) is the once-per-season January turn —
-    // gate on it so the mid-season beat fires once, not on every winter sub-step.
+    // gate on it so the winter beat fires once, not on every winter sub-step.
     const winterOpens = events.find((e) => e.code === 'window.step' && (e.data as any)?.window === 'winter' && (e.data as any)?.step === 2);
     let beat: BeatKind | null = null;
-    if (review) beat = 'end-of-season';
-    else if (kickoff) beat = 'season-start';
-    else if (winterOpens && midSeasonForm(next).underway) beat = 'mid-season';
 
-    if (beat) {
-      const { facts, fallback } = beatFacts(next, beat, review ? (review.data as any) : undefined);
+    if (review) {
+      // ── SUMMER set-piece (every year). The season just gone + the world moving +
+      //    the coach + this summer's real calls, revealed one tap at a time. Any
+      //    macro shock fired this window (a takeover, a league-wide event) becomes
+      //    the summer's headline story. ──
+      beat = 'season-start';
+      const worldStory = events
+        .filter((e) => /takeover|abramovich|super.?league|covid|charge|macro|pif|saudi/i.test(e.code))
+        .map((e) => e.message)
+        .filter((m): m is string => !!m);
+      opening = { beats: generatedSummerOpening(next, { review: review.data as any, worldStory }).beats };
+    } else if (winterOpens && midSeasonForm(next).underway) {
+      // ── WINTER: a set-piece only when there's a crisis (contract/injury/unrest/
+      //    form); otherwise the lighter, model-written mid-season note. ──
+      beat = 'mid-season';
+      const winter = generatedWinterOpening(next);
+      if (winter) {
+        opening = { beats: winter.beats };
+      } else {
+        const { facts, fallback } = beatFacts(next, beat);
+        narration = await narrateBeat({ state: next, kind: beat, facts, fallback });
+      }
+    } else if (kickoff) {
+      // The league kickoff (a lighter, model-written survey — not the summer window).
+      beat = 'season-start';
+      const { facts, fallback } = beatFacts(next, beat);
       narration = await narrateBeat({ state: next, kind: beat, facts, fallback });
     }
-    return { state: next, view: buildView(next), events, narration, beat };
+    return { state: next, view: buildView(next), events, narration, beat, opening };
   },
 
   '/games/decision': ({ state, decisionId, choiceId }) => {
