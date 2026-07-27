@@ -175,6 +175,7 @@ export function executeTransfer(
     const seller = state.clubs[fromClubId];
     if (seller && seller.leagueId !== null && seller.id !== state.playerClub) {
       seller.pendingCounterPunch = 2;
+      seller.counterPunchNeed = player.positions;
       seller.grudge = Math.min(100, seller.grudge + 20);
       logEvent(state, {
         category: 'transfer',

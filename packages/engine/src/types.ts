@@ -114,6 +114,9 @@ export interface ClubState {
   finances: ClubFinances;
   /** Windows remaining to counter-punch after being raided (§9a). 0 = settled. */
   pendingCounterPunch: number;
+  /** Positions of the player the user raided — the counter-punch replacement must
+   *  fill the same role (a raided keeper is replaced by a keeper, not a striker). */
+  counterPunchNeed?: Position[];
   /** Grudge toward the user after being raided/gazumped (§9a #4). 0..100. */
   grudge: number;
   /** Financial state — distress means a fire-sale (cheaper fees, willing sellers). */

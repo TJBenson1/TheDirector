@@ -17,7 +17,7 @@
  *    director turns hostile; a cruising user makes the world fight harder.
  */
 
-import type { ClubId, ClubState, GameState, PlayerState } from './types.js';
+import type { ClubId, ClubState, GameState, PlayerState, Position } from './types.js';
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
@@ -62,6 +62,15 @@ function richRivals(state: GameState): ClubState[] {
   );
 }
 
+/** Broad role for position matching: a keeper is only ever replaced by a keeper,
+ *  and a like-for-like replacement is preferred within the outfield lines. */
+function roleGroup(pos: Position): 'GK' | 'DEF' | 'MID' | 'ATT' {
+  if (pos === 'GK') return 'GK';
+  if (pos === 'RB' || pos === 'LB' || pos === 'CB') return 'DEF';
+  if (pos === 'DM' || pos === 'CM' || pos === 'AM') return 'MID';
+  return 'ATT'; // LW, RW, ST
+}
+
 /** Sign a replacement for a raided club from a foreign/context club (no cascade). */
 function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean {
   const budget = club.finances.transferBudget;
@@ -70,12 +79,31 @@ function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean 
   const tracked = ledgerSubjectIds(state);
   const hijackable = hijackableSubjects(state);
 
+  // The raided player's role — the replacement must fill it. A keeper is replaced
+  // ONLY by a keeper (never a striker for a goalkeeper); an outfielder is never
+  // replaced by a keeper; and, where possible, the same line is preferred.
+  const need = club.counterPunchNeed ?? [];
+  const needIsGK = need.some((pos) => pos === 'GK');
+  const needGroups = new Set(need.map(roleGroup));
+  const roleMatch = (p: PlayerState): { ok: boolean; sameLine: boolean } => {
+    const isGK = p.positions.includes('GK');
+    if (need.length === 0) return { ok: true, sameLine: false }; // no record — no constraint
+    if (isGK !== needIsGK) return { ok: false, sameLine: false }; // hard GK boundary
+    const sameLine = p.positions.some((pos) => needGroups.has(roleGroup(pos)));
+    return { ok: true, sameLine };
+  };
+
   // Prefer genuine depth (a player reality isn't tracking). A tracked ledger
   // subject is only ever an option if he is still EN ROUTE (a future move to
   // pull forward) — never one settled at his real destination — and even then
   // only if no untracked option fits, so the deviation is a logical minority.
+  // Within each pool a same-line replacement always beats an off-line one.
   let bestDepth: PlayerState | undefined;
+  let bestDepthLine = false;
   let bestHijack: PlayerState | undefined;
+  let bestHijackLine = false;
+  const better = (p: PlayerState, cur: PlayerState | undefined, curLine: boolean, line: boolean): boolean =>
+    !cur || (line && !curLine) || (line === curLine && p.ability > cur.ability);
   for (const p of Object.values(state.players)) {
     if (p.retired) continue; // hung up his boots
     const seller = p.club ? state.clubs[p.club] : undefined;
@@ -83,11 +111,13 @@ function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean 
     if (p.ability < target - 10 || p.ability > target + 5) continue;
     if (p.resistance.hardBlocks.length > 0) continue;
     if (valuePlayer(p, year) > budget) continue;
+    const match = roleMatch(p);
+    if (!match.ok) continue; // wrong role (a keeper for an outfielder, or vice versa)
     if (tracked.has(p.id)) {
       if (!hijackable.has(p.id)) continue; // settled real star — off limits (illogical)
-      if (!bestHijack || p.ability > bestHijack.ability) bestHijack = p;
-    } else if (!bestDepth || p.ability > bestDepth.ability) {
-      bestDepth = p;
+      if (better(p, bestHijack, bestHijackLine, match.sameLine)) { bestHijack = p; bestHijackLine = match.sameLine; }
+    } else if (better(p, bestDepth, bestDepthLine, match.sameLine)) {
+      bestDepth = p; bestDepthLine = match.sameLine;
     }
   }
   // Depth wins outright; a real subject is pulled forward only when nothing else
@@ -181,6 +211,7 @@ export function runRivalWindow(state: GameState, rng: Rng): void {
     }
     if (counterPunchSign(state, club, r)) {
       club.pendingCounterPunch = 0;
+      club.counterPunchNeed = undefined;
     } else {
       club.pendingCounterPunch -= 1; // ran out of options this window
     }
