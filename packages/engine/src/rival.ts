@@ -37,13 +37,20 @@ function ledgerSubjectIds(state: GameState): Set<string> {
 }
 
 /** Ledger subjects with a real move still AHEAD (hijackable — reality was moving
- *  them anyway), mapped to their remaining unprocessed entry keys. */
+ *  them anyway), mapped to their remaining unprocessed entry keys. Only IMMINENT
+ *  moves (this year or next) qualify: a club denied a target can pull forward a
+ *  deal reality was about to make, but it cannot snipe a long-horizon arc — a
+ *  teenager seeded years before his real marquee move (Xabi Alonso to Liverpool in
+ *  2004, De Bruyne to City in 2015) must never be dragged to a random mid-table
+ *  club the moment someone gets raided. */
 function hijackableSubjects(state: GameState): Map<string, string[]> {
   const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   const now = state.clock.date;
+  const nowYear = Number(now.slice(0, 4));
   const out = new Map<string, string[]>();
   for (const e of pack?.realTransferLedger ?? []) {
     if (e.window <= now) continue; // already due/processed — not a future move
+    if (Number(e.window.slice(0, 4)) - nowYear > 1) continue; // long-horizon arc — not snipeable
     const key = entryKey(e);
     if (state.meta.executedLedger.includes(key)) continue;
     (out.get(e.playerId) ?? out.set(e.playerId, []).get(e.playerId)!).push(key);
