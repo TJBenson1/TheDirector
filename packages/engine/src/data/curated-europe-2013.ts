@@ -43,6 +43,7 @@ const ATLETICO_2013: CuratedSeed[] = [
   q('atletico', 'diego_costa_13', 'Diego Costa', 1988, 'Spain', ['ST'], 84, 87, 2016, 25, t(6, 8, 9, 6, 7, 8)),
   q('atletico', 'villa_13', 'David Villa', 1981, 'Spain', ['ST'], 83, 84, 2015, 20, t(8, 6, 8, 8, 5, 8)),
   q('atletico', 'raul_garcia_13', 'Raúl García', 1986, 'Spain', ['CM', 'AM'], 79, 81, 2016, 20, t(8, 5, 8, 8, 5, 8)),
+  q('atletico', 'alderweireld_13', 'Toby Alderweireld', 1989, 'Belgium', ['CB', 'RB'], 80, 86, 2016, 20, t(9, 5, 8, 7, 4, 8)),
   // Depth of Simeone's title side — the rotation and the bench that made the run.
   q('atletico', 'tiago_13', 'Tiago', 1981, 'Portugal', ['DM', 'CM'], 80, 80, 2015, 25, t(9, 5, 8, 8, 5, 8)),
   q('atletico', 'mario_suarez_13', 'Mario Suárez', 1987, 'Spain', ['DM'], 79, 80, 2016, 20, t(8, 5, 8, 8, 6, 8)),

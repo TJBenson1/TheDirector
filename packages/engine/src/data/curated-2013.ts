@@ -302,7 +302,6 @@ export const VALENCIA_2013: CuratedSeed[] = [
 ];
 export const AJAX_2013: CuratedSeed[] = [
   q('ajax', 'eriksen', 'Christian Eriksen', 1992, 'Denmark', ['AM', 'CM'], 81, 88, 2016, 25, t(8, 5, 8, 6, 4, 8)),
-  q('ajax', 'alderweireld', 'Toby Alderweireld', 1989, 'Belgium', ['CB'], 80, 86, 2016, 25, t(8, 5, 8, 7, 4, 7)),
 ];
 
 /** PSG, 2013–14 — Ibrahimović-era context for cross-European realism/queries. */
