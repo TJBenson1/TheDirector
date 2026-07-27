@@ -36,26 +36,75 @@ function ledgerSubjectIds(state: GameState): Set<string> {
   return new Set((pack?.realTransferLedger ?? []).map((e) => e.playerId));
 }
 
+interface Hijackable {
+  keys: string[];
+  /** Prestige of the club reality was actually sending him to — the plausibility
+   *  bar. A move can be pulled forward, but only by a buyer of comparable stature:
+   *  a Liverpool-bound teenager doesn't drop to Ipswich two years early. */
+  destPrestige: number;
+}
+
 /** Ledger subjects with a real move still AHEAD (hijackable — reality was moving
- *  them anyway), mapped to their remaining unprocessed entry keys. Only IMMINENT
- *  moves (this year or next) qualify: a club denied a target can pull forward a
- *  deal reality was about to make, but it cannot snipe a long-horizon arc — a
- *  teenager seeded years before his real marquee move (Xabi Alonso to Liverpool in
- *  2004, De Bruyne to City in 2015) must never be dragged to a random mid-table
- *  club the moment someone gets raided. */
-function hijackableSubjects(state: GameState): Map<string, string[]> {
+ *  them anyway), mapped to their remaining unprocessed entry keys plus the stature
+ *  of their real destination. A generous ~2-year horizon keeps an early move
+ *  POSSIBLE when the market drives it (Xabi Alonso could leave Sociedad in 2002
+ *  rather than 2004) — but the plausibility bar, applied at selection, keeps it
+ *  EXPLICABLE: only a club of the right tier, in an era where that profile is a
+ *  realistic import, can actually pull it forward. */
+function hijackableSubjects(state: GameState): Map<string, Hijackable> {
   const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   const now = state.clock.date;
   const nowYear = Number(now.slice(0, 4));
-  const out = new Map<string, string[]>();
+  const out = new Map<string, Hijackable>();
   for (const e of pack?.realTransferLedger ?? []) {
     if (e.window <= now) continue; // already due/processed — not a future move
-    if (Number(e.window.slice(0, 4)) - nowYear > 1) continue; // long-horizon arc — not snipeable
+    if (Number(e.window.slice(0, 4)) - nowYear > 2) continue; // too raw/far — not yet snipeable
     const key = entryKey(e);
     if (state.meta.executedLedger.includes(key)) continue;
-    (out.get(e.playerId) ?? out.set(e.playerId, []).get(e.playerId)!).push(key);
+    const destPrestige = state.clubs[e.to]?.prestige ?? 60;
+    const cur = out.get(e.playerId);
+    if (cur) { cur.keys.push(key); cur.destPrestige = Math.max(cur.destPrestige, destPrestige); }
+    else out.set(e.playerId, { keys: [key], destPrestige });
   }
   return out;
+}
+
+/** League nationality, for era import-culture. Prefix-matched off the league id. */
+function leagueCountry(leagueId: string | null): string | null {
+  if (!leagueId) return null;
+  if (leagueId.startsWith('eng')) return 'England';
+  if (leagueId.startsWith('esp') || leagueId.includes('la-liga')) return 'Spain';
+  if (leagueId.startsWith('ita') || leagueId.includes('serie-a')) return 'Italy';
+  if (leagueId.startsWith('ger') || leagueId.includes('bundesliga')) return 'Germany';
+  if (leagueId.startsWith('fra')) return 'France';
+  return null;
+}
+
+/** Nationalities a league drew on comfortably even in the pre-globalised game —
+ *  its traditional import pipelines. Everyone else is a "distant" market that only
+ *  opens up as the sport globalises. */
+const IMPORT_PARTNERS: Record<string, string[]> = {
+  England: ['Ireland', 'Scotland', 'Wales', 'Northern Ireland', 'France', 'Netherlands', 'Norway', 'Sweden', 'Denmark', 'Australia', 'United States'],
+  Spain: ['Argentina', 'Brazil', 'Uruguay', 'Portugal', 'France', 'Netherlands'],
+  Italy: ['Argentina', 'Brazil', 'Uruguay', 'France', 'Netherlands', 'Germany', 'Denmark'],
+  Germany: ['Austria', 'Switzerland', 'Poland', 'Czechia', 'Turkey', 'Brazil', 'Serbia', 'Croatia'],
+  France: ['Senegal', 'Ivory Coast', 'Mali', 'Cameroon', 'Algeria', 'Morocco', 'Argentina', 'Brazil'],
+};
+
+/**
+ * How era-appropriate it is for a club in `leagueId` to sign a player of a given
+ * nationality in `year` (0..1). A native is always a 1; a traditional-pipeline
+ * import starts high; a distant market starts low and opens up as the game
+ * globalises (~1995 → 2010). This is why a young Spanish midfielder joining an
+ * English club reads as odd in 2001 but ordinary by 2014.
+ */
+function eraImportAffinity(leagueId: string | null, year: number, nationality: string): number {
+  const country = leagueCountry(leagueId);
+  if (!country) return 1; // unmodelled league — no cultural constraint
+  if (nationality === country) return 1;
+  const open = Math.max(0, Math.min(1, (year - 1995) / 15)); // 0 in 1995 → 1 by 2010
+  const base = (IMPORT_PARTNERS[country] ?? []).includes(nationality) ? 0.7 : 0.3;
+  return base + (1 - base) * open;
 }
 
 const STAR_ABILITY = 82;
@@ -104,13 +153,19 @@ function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean 
   // subject is only ever an option if he is still EN ROUTE (a future move to
   // pull forward) — never one settled at his real destination — and even then
   // only if no untracked option fits, so the deviation is a logical minority.
-  // Within each pool a same-line replacement always beats an off-line one.
+  // Within each pool a same-line replacement beats an off-line one; then the
+  // score (ability weighted by era import-culture) decides, so a club reaches
+  // for an era-plausible profile (a Briton in 2001, anyone by 2014) before an
+  // exotic one. A hijack is additionally gated on stature — see below.
   let bestDepth: PlayerState | undefined;
   let bestDepthLine = false;
+  let bestDepthScore = -1;
   let bestHijack: PlayerState | undefined;
   let bestHijackLine = false;
-  const better = (p: PlayerState, cur: PlayerState | undefined, curLine: boolean, line: boolean): boolean =>
-    !cur || (line && !curLine) || (line === curLine && p.ability > cur.ability);
+  let bestHijackScore = -1;
+  const better = (score: number, line: boolean, curScore: number, curLine: boolean): boolean =>
+    curScore < 0 || (line && !curLine) || (line === curLine && score > curScore);
+  const PLAUSIBLE_STATURE_GAP = 10; // a hijacker must be within this of the real buyer
   for (const p of Object.values(state.players)) {
     if (p.retired) continue; // hung up his boots
     const seller = p.club ? state.clubs[p.club] : undefined;
@@ -120,11 +175,17 @@ function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean 
     if (valuePlayer(p, year) > budget) continue;
     const match = roleMatch(p);
     if (!match.ok) continue; // wrong role (a keeper for an outfielder, or vice versa)
+    const affinity = eraImportAffinity(club.leagueId, year, p.nationality);
+    const score = p.ability * (0.5 + 0.5 * affinity); // era-culture-weighted attractiveness
     if (tracked.has(p.id)) {
-      if (!hijackable.has(p.id)) continue; // settled real star — off limits (illogical)
-      if (better(p, bestHijack, bestHijackLine, match.sameLine)) { bestHijack = p; bestHijackLine = match.sameLine; }
-    } else if (better(p, bestDepth, bestDepthLine, match.sameLine)) {
-      bestDepth = p; bestDepthLine = match.sameLine;
+      const hj = hijackable.get(p.id);
+      if (!hj) continue; // settled real star — off limits (illogical)
+      // Stature bar: a mid-table club cannot pull forward a move reality was making
+      // to a far bigger club (a Liverpool-bound teenager doesn't drop to Ipswich).
+      if (club.prestige < hj.destPrestige - PLAUSIBLE_STATURE_GAP) continue;
+      if (better(score, match.sameLine, bestHijackScore, bestHijackLine)) { bestHijack = p; bestHijackLine = match.sameLine; bestHijackScore = score; }
+    } else if (better(score, match.sameLine, bestDepthScore, bestDepthLine)) {
+      bestDepth = p; bestDepthLine = match.sameLine; bestDepthScore = score;
     }
   }
   // Depth wins outright; a real subject is pulled forward only when nothing else
@@ -138,7 +199,7 @@ function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean 
   if (!res.ok) return false;
 
   if (isHijack) {
-    for (const key of hijackable.get(best.id) ?? []) {
+    for (const key of hijackable.get(best.id)?.keys ?? []) {
       if (!state.meta.executedLedger.includes(key)) state.meta.executedLedger.push(key);
     }
     state.timeline.divergenceLog.push({

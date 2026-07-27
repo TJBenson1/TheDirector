@@ -190,7 +190,7 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
   const futureByPlayer = new Map<string, string[]>();
   for (const e of pack.realTransferLedger) {
     if (e.preAgreed) continue;
-    if (transferWindowOrdinal(e.window) > nowOrd && Number(e.window.slice(0, 4)) - nowYear <= 1 && !state.meta.executedLedger.includes(entryKey(e))) {
+    if (transferWindowOrdinal(e.window) > nowOrd && Number(e.window.slice(0, 4)) - nowYear <= 2 && !state.meta.executedLedger.includes(entryKey(e))) {
       const arr = futureByPlayer.get(e.playerId) ?? [];
       arr.push(entryKey(e));
       futureByPlayer.set(e.playerId, arr);
