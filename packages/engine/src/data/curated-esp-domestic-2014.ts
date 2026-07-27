@@ -121,6 +121,17 @@ const GETAFE_14: CuratedSeed[] = [
 
 /** The domestic mid-tier of the 2014-15 La Liga. Merged by CONCATENATION into
  *  BARCELONA_2014_SQUADS. */
+const EIBAR_14: CuratedSeed[] = [
+  q('eibar', 'dani_garcia_ei14', 'Dani García', 1990, 'Spain', ['DM', 'CM'], 74, 80, 2017, 30, t(9, 5, 8, 9, 4, 8), { loyalty: 88 }),
+  q('eibar', 'saul_berjon_ei14', 'Saúl Berjón', 1986, 'Spain', ['AM', 'RW'], 74, 76, 2016, 30, t(8, 5, 8, 8, 5, 8)),
+  q('eibar', 'capa_ei14', 'Ander Capa', 1992, 'Spain', ['RB', 'RW'], 72, 79, 2017, 30, t(8, 5, 8, 8, 5, 8)),
+];
+
+const LEVANTE_14: CuratedSeed[] = [
+  q('levante', 'morales_le14', 'José Luis Morales', 1987, 'Spain', ['RW', 'ST'], 76, 80, 2017, 30, t(8, 6, 8, 8, 5, 8)),
+  q('levante', 'elzhar_le14', 'Nabil El Zhar', 1986, 'Morocco', ['RW', 'AM'], 72, 74, 2016, 30, t(7, 6, 8, 7, 5, 8)),
+];
+
 export const ESP_DOMESTIC_2014_SQUADS: Record<string, CuratedSeed[]> = {
   villarreal: VILLARREAL_14,
   athletic: ATHLETIC_14,
@@ -134,4 +145,6 @@ export const ESP_DOMESTIC_2014_SQUADS: Record<string, CuratedSeed[]> = {
   elche: ELCHE_14,
   rayo: RAYO_14,
   getafe: GETAFE_14,
+  eibar: EIBAR_14,
+  levante: LEVANTE_14,
 };

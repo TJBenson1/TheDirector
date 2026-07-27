@@ -95,6 +95,16 @@ const OSASUNA_03: CuratedSeed[] = [
   q('osasuna', 'moha_os03', 'Moha', 1975, 'Spain', ['LW', 'RW'], 72, 74, 2005, 30, t(7, 6, 8, 7, 5, 8)),
 ];
 
+const RACING_03: CuratedSeed[] = [
+  q('racing', 'munitis_ra03', 'Pedro Munitis', 1975, 'Spain', ['RW', 'AM'], 77, 79, 2006, 30, t(8, 5, 8, 8, 5, 8)),
+  q('racing', 'colsa_ra03', 'Gonzalo Colsa', 1976, 'Spain', ['DM', 'CM'], 74, 76, 2006, 30, t(8, 5, 8, 8, 5, 8)),
+];
+
+const ALBACETE_03: CuratedSeed[] = [
+  q('albacete', 'santi_denia_al03', 'Santi Denia', 1975, 'Spain', ['CB'], 75, 77, 2005, 30, t(8, 5, 8, 9, 5, 8), { loyalty: 88 }),
+  q('albacete', 'antonio_hidalgo_al03', 'Antonio Hidalgo', 1975, 'Spain', ['CM', 'DM'], 73, 75, 2006, 30, t(8, 5, 8, 8, 5, 8)),
+];
+
 /** The domestic mid-tier of the 2003-04 La Liga. Merged by CONCATENATION into
  *  BARCELONA_2003_SQUADS. */
 export const ESP_DOMESTIC_2003_SQUADS: Record<string, CuratedSeed[]> = {
@@ -107,4 +117,6 @@ export const ESP_DOMESTIC_2003_SQUADS: Record<string, CuratedSeed[]> = {
   espanyol: ESPANYOL_03,
   malaga: MALAGA_03,
   osasuna: OSASUNA_03,
+  racing: RACING_03,
+  albacete: ALBACETE_03,
 };

@@ -67,7 +67,7 @@ const SAMPDORIA_04: CuratedSeed[] = [
   q('sampdoria', 'falcone_sa04', 'Fabio Falcone', 1977, 'Italy', ['CB'], 72, 74, 2007, 30, t(8, 5, 8, 8, 5, 7)),
   q('sampdoria', 'diana_sa04', 'Aimo Diana', 1978, 'Italy', ['RB', 'RW'], 73, 76, 2007, 30, t(8, 5, 8, 8, 5, 8)),
   q('sampdoria', 'volpi_sa04', 'Sergio Volpi', 1973, 'Italy', ['DM', 'CM'], 74, 75, 2006, 30, t(8, 5, 8, 8, 5, 7)),
-  q('sampdoria', 'doni_c_sa04', 'Cristiano Doni', 1973, 'Italy', ['AM'], 76, 77, 2006, 30, t(7, 6, 8, 7, 5, 8)),
+  q('sampdoria', 'flachi_sa04', 'Francesco Flachi', 1975, 'Italy', ['ST', 'AM'], 76, 78, 2007, 30, t(6, 6, 8, 8, 6, 8)),
   q('sampdoria', 'quagliarella_sa04', 'Fabio Quagliarella', 1983, 'Italy', ['ST', 'AM'], 74, 83, 2008, 30, t(8, 6, 8, 8, 5, 8)),
 ];
 
@@ -120,6 +120,27 @@ const BRESCIA_04: CuratedSeed[] = [
   q('brescia', 'caracciolo_br04', 'Andrea Caracciolo', 1981, 'Italy', ['ST'], 73, 78, 2008, 30, t(7, 6, 8, 8, 5, 8)),
 ];
 
+const MESSINA_04: CuratedSeed[] = [
+  q('messina', 'rossi_g_me04', 'Generoso Rossi', 1979, 'Italy', ['GK'], 73, 76, 2007, 30, t(8, 5, 8, 8, 5, 7)),
+  q('messina', 'modesto_me04', 'Francesco Modesto', 1982, 'Italy', ['RB', 'RW'], 72, 78, 2008, 30, t(8, 5, 8, 8, 5, 8)),
+  q('messina', 'di_napoli_me04', 'Arturo Di Napoli', 1974, 'Italy', ['ST', 'AM'], 75, 77, 2006, 30, t(6, 7, 8, 7, 6, 8)),
+  q('messina', 'rigano_me04', 'Christian Riganò', 1974, 'Italy', ['ST'], 76, 78, 2007, 30, t(7, 6, 8, 8, 5, 8)),
+];
+
+const SIENA_04: CuratedSeed[] = [
+  q('siena', 'taibi_si04', 'Massimo Taibi', 1970, 'Italy', ['GK'], 74, 75, 2006, 30, t(8, 5, 8, 8, 5, 7)),
+  q('siena', 'vergassola_si04', 'Simone Vergassola', 1976, 'Italy', ['CM', 'RB'], 74, 76, 2007, 30, t(8, 5, 8, 9, 5, 8), { loyalty: 88 }),
+  q('siena', 'chiesa_si04', 'Enrico Chiesa', 1970, 'Italy', ['ST', 'AM'], 78, 79, 2006, 30, t(8, 6, 8, 8, 5, 8)),
+  q('siena', 'bogdani_si04', 'Erjon Bogdani', 1977, 'Albania', ['ST'], 73, 75, 2007, 30, t(7, 6, 8, 7, 5, 8)),
+];
+
+const ATALANTA_04: CuratedSeed[] = [
+  q('atalanta', 'coppola_at04', 'Ferdinando Coppola', 1978, 'Italy', ['GK'], 73, 76, 2007, 30, t(8, 5, 8, 8, 5, 7)),
+  q('atalanta', 'bellini_at04', 'Gianpaolo Bellini', 1980, 'Italy', ['CB', 'RB'], 73, 76, 2008, 30, t(8, 5, 8, 9, 5, 7), { loyalty: 90 }),
+  q('atalanta', 'zenoni_d_at04', 'Damiano Zenoni', 1977, 'Italy', ['RB', 'RW'], 73, 75, 2007, 30, t(8, 5, 8, 8, 5, 8)),
+  q('atalanta', 'doni_c_at04', 'Cristiano Doni', 1973, 'Italy', ['AM'], 77, 78, 2007, 30, t(7, 6, 8, 9, 5, 8), { loyalty: 90 }),
+];
+
 /** The domestic mid-tier of the 2004-05 Serie A. Merged by CONCATENATION into
  *  INTER_2004_SQUADS. */
 export const ITA_DOMESTIC_2004_SQUADS: Record<string, CuratedSeed[]> = {
@@ -134,4 +155,7 @@ export const ITA_DOMESTIC_2004_SQUADS: Record<string, CuratedSeed[]> = {
   reggina: REGGINA_04,
   chievo: CHIEVO_04,
   brescia: BRESCIA_04,
+  messina: MESSINA_04,
+  siena: SIENA_04,
+  atalanta: ATALANTA_04,
 };
