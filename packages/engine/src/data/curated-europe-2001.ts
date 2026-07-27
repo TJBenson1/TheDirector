@@ -211,7 +211,7 @@ const LYON_2001: CuratedSeed[] = [
 
 // ── Real Sociedad, 2001-02 (the club that sold Liverpool its metronome) ─────────
 const REAL_SOCIEDAD_2001: CuratedSeed[] = [
-  q('real_sociedad', 'westerveld_rs01', 'Sander Westerveld', 1974, 'Netherlands', ['GK'], 79, 81, 2005, 15, t(8, 5, 8, 8, 5, 8)),
+  q('real_sociedad', 'riesgo_rs01', 'Asier Riesgo', 1983, 'Spain', ['GK'], 71, 80, 2006, 15, t(8, 5, 8, 9, 5, 7), { loyalty: 88 }),
   q('real_sociedad', 'kvarme_rs01', 'Bjørn Tore Kvarme', 1972, 'Norway', ['CB', 'RB'], 76, 78, 2004, 20, t(8, 5, 8, 8, 5, 8)),
   q('real_sociedad', 'aranzabal_rs01', 'Agustín Aranzábal', 1973, 'Spain', ['LB'], 77, 79, 2004, 20, t(8, 5, 8, 9, 5, 8), { loyalty: 90 }),
   q('real_sociedad', 'de_pedro_rs01', 'Javier de Pedro', 1973, 'Spain', ['LW', 'AM'], 79, 81, 2004, 20, t(7, 6, 8, 7, 5, 8)),
