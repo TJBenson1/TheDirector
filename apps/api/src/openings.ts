@@ -291,6 +291,43 @@ function bigSpenderThisWindow(state: GameState): string | null {
  * prompts. Deterministic — a passive, reality-default play costs no tokens; the
  * model can refine the prose later as divergence makes the scripted line stale.
  */
+/** Your squad's own story from the season just gone — the standout who carried
+ *  the side (top scorer, or the highest-rated regular for a non-scorer), and,
+ *  only when you finished below the board's expectation, the marquee man who
+ *  flattered to deceive. Read from each player's completed lastSeason, so it is
+ *  true to what happened and needs no authoring. Trailing space so it slots into
+ *  the opener sentence run; empty string when there's nothing worth telling. */
+function seasonPlayerStory(state: GameState, r: SeasonReviewFacts): string {
+  const squad = clubSquadPlayers(state, state.playerClub)
+    .map((p) => ({ p, s: p.lastSeason }))
+    .filter((x): x is { p: typeof x.p; s: NonNullable<typeof x.s> } => !!x.s && x.s.appearances >= 5);
+  if (!squad.length) return '';
+  const regulars = squad.filter((x) => x.s.minutesShare >= 0.45);
+  const pool = regulars.length ? regulars : squad;
+  const standout = [...pool].sort(
+    (a, b) => b.s.rating + b.s.goals * 0.12 + b.s.assists * 0.06 - (a.s.rating + a.s.goals * 0.12 + a.s.assists * 0.06),
+  )[0];
+  const bits: string[] = [];
+  if (standout) {
+    const st = standout.s;
+    const returns = st.goals >= 8
+      ? `${st.goals} goals${st.assists >= 4 ? ` and ${st.assists} assists` : ''}`
+      : st.assists >= 8
+        ? `${st.assists} assists`
+        : `a season rating of ${st.rating.toFixed(1)}`;
+    bits.push(`${standout.p.name} carried the side — ${returns}.`);
+  }
+  // A disappointment only lands when the season itself did — a higher finish
+  //  number than expected means below the board's line.
+  if (r.finish > r.expected) {
+    const flop = squad
+      .filter((x) => x.p.ability >= 80 && x.s.rating <= 6.6 && x.p.id !== standout?.p.id)
+      .sort((a, b) => a.s.rating - b.s.rating)[0];
+    if (flop) bits.push(`${flop.p.name} never got going.`);
+  }
+  return bits.length ? `${bits.join(' ')} ` : '';
+}
+
 export function generatedSummerOpening(
   state: GameState,
   opts: { review?: SeasonReviewFacts; worldStory?: string[] } = {},
@@ -309,9 +346,13 @@ export function generatedSummerOpening(
       ? `You finished ${label} as champions — ${r.points} points and the title in the cabinet. `
       : `You finished ${label} ${ordinalSuffix(r.finish)} on ${r.points} points. `;
   }
+  // Your own squad's season — the standout who carried you, and (only when you
+  //  fell short of the board's expectation) the man who never got going. Mirrors
+  //  the winter form beat, so summer also tells YOUR story, not just the world's.
+  const seasonLine = r ? seasonPlayerStory(state, r) : '';
   const boardLine = `The board are ${ctx.board.mood}${ctx.board.mandate ? `; the brief is unchanged — ${ctx.board.mandate.replace(/\.$/, '')}` : ''}.`;
   const realityLine = ctx.reality?.note ? ` ${ctx.reality.note}` : '';
-  const opener = `${club.name}, summer ${year}. ${standing}${boardLine}${realityLine}`.trim();
+  const opener = `${club.name}, summer ${year}. ${standing}${seasonLine}${boardLine}${realityLine}`.trim();
 
   // ── Beat two: the story of the summer — the world's defining beat, the rivals
   //    moving, and any macro shock from the sim. ──
