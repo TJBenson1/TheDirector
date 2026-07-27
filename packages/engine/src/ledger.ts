@@ -727,6 +727,10 @@ const LEDGER_2003_2011: RealTransferLedgerEntry[] = [
   { playerId: 'cur_robben_ps3', from: 'psv', to: 'chelsea', window: '2004-07', fee: 12_000_000, id: 'robben-chelsea-2004c' },
   { playerId: 'cur_kezman_ps3', from: 'psv', to: 'chelsea', window: '2004-07', fee: 5_000_000, id: 'kezman-chelsea-2004c' },
   { playerId: 'cur_ferreira_p', from: 'porto', to: 'chelsea', window: '2004-07', fee: 13_200_000, id: 'ferreira-chelsea-2004c' },
+  // Drogba (Marseille) and Čech (Rennes) — the Mourinho striker and keeper who,
+  // like Robben and Carvalho above, arrive from their real 2003-04 clubs in 2004.
+  { playerId: 'cur_drogba_c', from: 'marseille', to: 'chelsea', window: '2004-07', fee: 24_000_000, id: 'drogba-chelsea-2004c' },
+  { playerId: 'cur_cech_c', from: 'rennes', to: 'chelsea', window: '2004-07', fee: 7_000_000, id: 'cech-chelsea-2004c' },
   { playerId: 'cur_essien_ly3', from: 'lyon', to: 'chelsea', window: '2005-08', fee: 24_400_000, id: 'essien-chelsea-2005c' },
   { playerId: 'cur_swp_mc3', from: 'man_city', to: 'chelsea', window: '2005-07', fee: 21_000_000, id: 'swp-chelsea-2005c' },
   // The Cole↔Gallas swap of 2006 — Ashley Cole in, William Gallas the makeweight out.

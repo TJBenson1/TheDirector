@@ -194,6 +194,10 @@ const ERA_2003_CONTEXT: ClubSeed[] = [
   // from Lyon (both live sign-or-veto decisions for a Chelsea Director).
   { id: 'psv', name: 'PSV Eindhoven', prestige: 76 },
   { id: 'lyon', name: 'Olympique Lyonnais', prestige: 78 },
+  // Drogba's (Marseille) and Čech's (Rennes) real 2003-04 homes — the Mourinho
+  // keeper and striker who arrive in the summer-2004 window, not at kickoff.
+  { id: 'marseille', name: 'Olympique de Marseille', prestige: 74 },
+  { id: 'rennes', name: 'Stade Rennais', prestige: 64 },
 ];
 
 // era-2013: the continental context sides for the post-Ferguson Premier League.

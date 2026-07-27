@@ -122,13 +122,29 @@ export const REAL_2003: CuratedSeed[] = [
   q('real_madrid', 'guti_r', 'Guti', 1976, 'Spain', ['AM', 'CM'], 82, 84, 2007, 30, t(6, 7, 6, 8, 6, 7)),
 ];
 export const CHELSEA_2003: CuratedSeed[] = [
-  q('chelsea', 'cech_c', 'Petr Čech', 1982, 'Czech Republic', ['GK'], 84, 89, 2008, 25, t(9, 5, 8, 8, 3, 7)),
+  // NB Petr Čech (Rennes) and Didier Drogba (Marseille) are NOT here in 2003-04 —
+  // both joined in summer 2004 with Mourinho, and the scenario briefing says so.
+  // They live at their real 2003-04 clubs below and arrive via the 2004 ledger,
+  // exactly like Carvalho/Ferreira (Porto) and Robben/Kežman (PSV). Chelsea's real
+  // 2003-04 keeper, Carlo Cudicini, is already seeded further down this file.
   q('chelsea', 'terry_c', 'John Terry', 1980, 'England', ['CB'], 84, 88, 2008, 30, t(8, 7, 9, 9, 5, 6)),
   q('chelsea', 'lampard_c', 'Frank Lampard', 1978, 'England', ['CM'], 85, 88, 2008, 20, t(9, 6, 9, 8, 3, 7)),
   q('chelsea', 'makelele_c', 'Claude Makélélé', 1973, 'France', ['DM'], 85, 86, 2007, 25, t(9, 4, 8, 7, 3, 7)),
-  q('chelsea', 'drogba_c', 'Didier Drogba', 1978, 'Ivory Coast', ['ST'], 82, 88, 2008, 30, t(8, 7, 9, 7, 5, 7)),
   q('chelsea', 'duff_c', 'Damien Duff', 1979, 'Ireland', ['LW', 'RW'], 82, 84, 2007, 35, t(8, 5, 7, 7, 4, 7)),
   q('chelsea', 'gudjohnsen_c', 'Eiður Guðjohnsen', 1978, 'Iceland', ['ST', 'AM'], 81, 83, 2006, 30, t(8, 5, 7, 6, 4, 7)),
+];
+
+/** Petr Čech's real 2003-04 club (Rennes) and Didier Drogba's (Marseille), so
+ *  the chelsea-2003 world starts true to that season and both arrive at Chelsea
+ *  in summer 2004 via the ledger. A couple of genuine 2003-04 team-mates give
+ *  each side a little real depth as a selling club. */
+export const RENNES_2003: CuratedSeed[] = [
+  q('rennes', 'cech_c', 'Petr Čech', 1982, 'Czech Republic', ['GK'], 84, 89, 2008, 25, t(9, 5, 8, 8, 3, 7)),
+  q('rennes', 'frei_re03', 'Alexander Frei', 1979, 'Switzerland', ['ST'], 80, 82, 2006, 30, t(8, 6, 8, 7, 5, 8)),
+];
+export const MARSEILLE_2003: CuratedSeed[] = [
+  q('marseille', 'drogba_c', 'Didier Drogba', 1978, 'Ivory Coast', ['ST'], 82, 88, 2008, 30, t(8, 7, 9, 7, 5, 7)),
+  q('marseille', 'meriem_ma03', 'Camel Meriem', 1979, 'France', ['AM', 'LW'], 76, 78, 2006, 30, t(7, 6, 8, 7, 5, 8)),
 ];
 export const ARSENAL_2003: CuratedSeed[] = [
   q('arsenal', 'henry_a', 'Thierry Henry', 1977, 'France', ['ST', 'LW'], 90, 92, 2007, 25, t(9, 7, 9, 8, 4, 8)),
@@ -343,6 +359,8 @@ export const CURATED_2003: Record<string, CuratedSeed[]> = {
   spurs: SPURS_2003,
   psv: PSV_2003_SELL,
   lyon: LYON_2003_SELL,
+  rennes: RENNES_2003,
+  marseille: MARSEILLE_2003,
 };
 
 export const MANUTD_2003_SQUADS: Record<string, CuratedSeed[]> = { ...CURATED_2003 };
