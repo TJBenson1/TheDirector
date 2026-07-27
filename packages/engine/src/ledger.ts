@@ -711,6 +711,17 @@ const LEDGER_2003_2011: RealTransferLedgerEntry[] = [
   { playerId: 'cur_shevchenko_m', from: 'milan', to: 'chelsea', window: '2006-07', fee: 30_000_000 },
   { playerId: 'cur_veron_c3', from: 'chelsea', to: 'inter', window: '2004-08', fee: 0 },
   { playerId: 'cur_duff_c', from: 'chelsea', to: 'newcastle', window: '2006-07', fee: 5_000_000 },
+  // ── The rest of the Mourinho double-winning spine, live from their real selling
+  //    clubs (PSV, Lyon, Porto) — plus the 2005-06 English reinforcements. ──
+  { playerId: 'cur_robben_ps3', from: 'psv', to: 'chelsea', window: '2004-07', fee: 12_000_000, id: 'robben-chelsea-2004c' },
+  { playerId: 'cur_kezman_ps3', from: 'psv', to: 'chelsea', window: '2004-07', fee: 5_000_000, id: 'kezman-chelsea-2004c' },
+  { playerId: 'cur_ferreira_p', from: 'porto', to: 'chelsea', window: '2004-07', fee: 13_200_000, id: 'ferreira-chelsea-2004c' },
+  { playerId: 'cur_essien_ly3', from: 'lyon', to: 'chelsea', window: '2005-08', fee: 24_400_000, id: 'essien-chelsea-2005c' },
+  { playerId: 'cur_swp_mc3', from: 'man_city', to: 'chelsea', window: '2005-07', fee: 21_000_000, id: 'swp-chelsea-2005c' },
+  // The Cole↔Gallas swap of 2006 — Ashley Cole in, William Gallas the makeweight out.
+  { playerId: 'cur_cole_a', from: 'arsenal', to: 'chelsea', window: '2006-08', fee: 5_000_000, id: 'cole-chelsea-2006c' },
+  { playerId: 'cur_gallas_c3', from: 'chelsea', to: 'arsenal', window: '2006-08', fee: 0, id: 'gallas-arsenal-2006c' },
+  { playerId: 'cur_malouda_ly3', from: 'lyon', to: 'chelsea', window: '2007-07', fee: 13_500_000, id: 'malouda-chelsea-2007c' },
 ];
 
 /** Real 2003-era injuries — fire only if the player is at his real club. */

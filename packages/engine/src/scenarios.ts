@@ -186,6 +186,10 @@ const ERA_2003_CONTEXT: ClubSeed[] = [
   // Abramovich spree that came from outside the elite (Mutu, Joe Cole).
   { id: 'parma', name: 'Parma', prestige: 70 },
   { id: 'west_ham', name: 'West Ham United', prestige: 64 },
+  // The clubs that fed the Mourinho spine — Robben/Kežman from PSV, Essien/Malouda
+  // from Lyon (both live sign-or-veto decisions for a Chelsea Director).
+  { id: 'psv', name: 'PSV Eindhoven', prestige: 76 },
+  { id: 'lyon', name: 'Olympique Lyonnais', prestige: 78 },
 ];
 
 // era-2013: the continental context sides for the post-Ferguson Premier League.

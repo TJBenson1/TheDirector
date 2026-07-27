@@ -93,6 +93,8 @@ export const PORTO_2003: CuratedSeed[] = [
   q('porto', 'maniche_p', 'Maniche', 1977, 'Portugal', ['CM', 'DM'], 80, 82, 2006, 30, t(7, 6, 8, 6, 6, 7)),
   q('porto', 'baia', 'Vítor Baía', 1969, 'Portugal', ['GK'], 82, 82, 2005, 25, t(8, 6, 7, 9, 5, 6)),
   q('porto', 'derlei_p', 'Derlei', 1975, 'Brazil', ['ST'], 78, 80, 2005, 30, t(7, 6, 8, 6, 5, 7)),
+  // Paulo Ferreira — Mourinho's right-back, sold to Chelsea alongside Carvalho in 2004.
+  q('porto', 'ferreira_p', 'Paulo Ferreira', 1979, 'Portugal', ['RB'], 80, 82, 2006, 20, t(9, 5, 8, 8, 5, 7)),
 ];
 export const SEVILLA_2003: CuratedSeed[] = [
   q('sevilla', 'dani_alves', 'Dani Alves', 1983, 'Brazil', ['RB'], 74, 88, 2008, 20, t(8, 6, 9, 7, 5, 8)),
@@ -288,6 +290,38 @@ const SPURS_2003: CuratedSeed[] = [
   q('spurs', 'poyet_s3', 'Gustavo Poyet', 1967, 'Uruguay', ['CM', 'AM'], 78, 79, 2004, 35, t(8, 6, 8, 7, 5, 7)),
 ];
 
+// ── PSV Eindhoven, 2003-04 (the Robben/Kežman side Chelsea raided) ─────────────
+const PSV_2003_SELL: CuratedSeed[] = [
+  q('psv', 'waterreus_ps3', 'Ronald Waterreus', 1970, 'Netherlands', ['GK'], 79, 80, 2005, 20, t(8, 5, 8, 8, 5, 7)),
+  q('psv', 'hofland_ps3', 'Kevin Hofland', 1979, 'Netherlands', ['CB'], 77, 80, 2006, 20, t(8, 5, 8, 8, 5, 7)),
+  q('psv', 'alex_ps3', 'Alex', 1982, 'Brazil', ['CB'], 78, 85, 2007, 20, t(8, 5, 8, 7, 5, 8)),
+  q('psv', 'ooijer_ps3', 'André Ooijer', 1974, 'Netherlands', ['CB', 'RB'], 78, 80, 2006, 20, t(8, 5, 8, 8, 5, 7)),
+  q('psv', 'lee_yp_ps3', 'Lee Young-pyo', 1977, 'South Korea', ['LB'], 77, 80, 2005, 15, t(9, 5, 8, 8, 4, 8)),
+  q('psv', 'van_bommel_ps3', 'Mark van Bommel', 1977, 'Netherlands', ['CM', 'DM'], 82, 85, 2005, 20, t(8, 7, 9, 7, 6, 7)),
+  q('psv', 'vogel_ps3', 'Johann Vogel', 1977, 'Switzerland', ['DM'], 79, 81, 2005, 15, t(9, 5, 8, 8, 5, 8)),
+  q('psv', 'park_ps3', 'Park Ji-sung', 1981, 'South Korea', ['RW', 'CM'], 78, 85, 2005, 15, t(9, 5, 9, 8, 4, 8)),
+  q('psv', 'rommedahl_ps3', 'Dennis Rommedahl', 1978, 'Denmark', ['RW'], 78, 82, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('psv', 'kezman_ps3', 'Mateja Kežman', 1979, 'Serbia', ['ST'], 80, 84, 2004, 20, t(6, 7, 8, 6, 6, 7)),
+  // Arjen Robben — the 19-year-old flying winger Chelsea signed in 2004.
+  q('psv', 'robben_ps3', 'Arjen Robben', 1984, 'Netherlands', ['LW', 'RW'], 80, 90, 2005, 45, t(8, 7, 9, 7, 6, 8)),
+];
+
+// ── Olympique Lyonnais, 2003-04 (Ligue 1 kings; Essien & Malouda would follow) ──
+const LYON_2003_SELL: CuratedSeed[] = [
+  q('lyon', 'coupet_ly3', 'Grégory Coupet', 1972, 'France', ['GK'], 83, 85, 2006, 15, t(9, 5, 8, 9, 5, 7), { loyalty: 88 }),
+  q('lyon', 'cris_ly3', 'Cris', 1977, 'Brazil', ['CB'], 81, 83, 2007, 20, t(8, 6, 8, 8, 6, 7)),
+  q('lyon', 'cacapa_ly3', 'Cláudio Caçapa', 1976, 'Brazil', ['CB'], 79, 81, 2006, 20, t(8, 5, 8, 8, 5, 7)),
+  q('lyon', 'edmilson_ly3', 'Edmílson', 1976, 'Brazil', ['DM', 'CB'], 81, 83, 2004, 20, t(9, 5, 8, 8, 5, 8)),
+  q('lyon', 'diarra_ly3', 'Mahamadou Diarra', 1981, 'Mali', ['DM', 'CM'], 80, 85, 2006, 20, t(8, 5, 9, 7, 5, 8)),
+  q('lyon', 'juninho_ly3', 'Juninho Pernambucano', 1975, 'Brazil', ['AM', 'CM'], 85, 87, 2006, 20, t(9, 6, 9, 9, 5, 8), { loyalty: 90 }),
+  q('lyon', 'govou_ly3', 'Sidney Govou', 1979, 'France', ['RW', 'ST'], 79, 82, 2006, 20, t(7, 6, 8, 8, 5, 8)),
+  q('lyon', 'elber_ly3', 'Giovane Élber', 1972, 'Brazil', ['ST'], 80, 81, 2005, 20, t(8, 6, 8, 8, 5, 8)),
+  q('lyon', 'luyindula_ly3', 'Péguy Luyindula', 1979, 'France', ['ST'], 77, 80, 2005, 20, t(7, 6, 8, 7, 5, 8)),
+  q('lyon', 'malouda_ly3', 'Florent Malouda', 1980, 'France', ['LW', 'AM'], 81, 86, 2007, 20, t(8, 6, 8, 7, 5, 8)),
+  // Michael Essien — the destroyer Lyon sold to Chelsea for a British record in 2005.
+  q('lyon', 'essien_ly3', 'Michael Essien', 1982, 'Ghana', ['DM', 'CM'], 80, 88, 2006, 20, t(8, 6, 9, 7, 5, 8)),
+];
+
 export const CURATED_2003: Record<string, CuratedSeed[]> = {
   man_utd: MANUTD_2003,
   barcelona: BARCELONA_2003,
@@ -307,6 +341,8 @@ export const CURATED_2003: Record<string, CuratedSeed[]> = {
   bayern: [...BAYERN_2003, ...BAYERN_2003_EXTRA],
   man_city: MAN_CITY_2003,
   spurs: SPURS_2003,
+  psv: PSV_2003_SELL,
+  lyon: LYON_2003_SELL,
 };
 
 export const MANUTD_2003_SQUADS: Record<string, CuratedSeed[]> = { ...CURATED_2003 };
