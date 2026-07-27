@@ -162,6 +162,8 @@ const ERA_2001_CONTEXT: ClubSeed[] = [
   { id: 'atletico', name: 'Atlético Madrid', prestige: 66 },
   // Coventry City — relegated in 2001, the club Liverpool bought Kirkland from.
   { id: 'coventry', name: 'Coventry City', prestige: 52 },
+  // PSG — Anelka's parent club (his January loan to Liverpool), and a young Ronaldinho.
+  { id: 'psg', name: 'Paris Saint-Germain', prestige: 70 },
 ];
 
 // era-2003: the continental powers plus the Barça-counterfactual source clubs.

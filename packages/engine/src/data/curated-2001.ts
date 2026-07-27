@@ -45,8 +45,9 @@ export const LIVERPOOL_2001: CuratedSeed[] = [
   q('liverpool', 'fowler01', 'Robbie Fowler', 1975, 'England', ['ST'], 82, 84, 2004, 45, t(6, 7, 7, 8, 6, 7)),
   q('liverpool', 'litmanen', 'Jari Litmanen', 1971, 'Finland', ['AM'], 82, 83, 2003, 40, t(8, 5, 7, 6, 4, 7)),
   q('liverpool', 'smicer', 'Vladimír Šmicer', 1973, 'Czech Republic', ['RW', 'AM'], 77, 79, 2005, 45, t(7, 5, 7, 6, 5, 7)),
-  // On loan from PSG — the sign-him-permanently call (real Liverpool passed).
-  q('liverpool', 'anelka01', 'Nicolas Anelka', 1979, 'France', ['ST'], 84, 87, 2002, 30, t(5, 8, 8, 4, 6, 6)),
+  // Anelka is NOT here at kickoff — he is a PSG player who arrives on loan in the
+  // January window (see PSG_2001 + the era-2001 realLoans entry). Signing him
+  // permanently is the real Liverpool call (they passed; he went to City).
   // Real 2001-02 depth to the era minimum (Kirkland, the young deputy keeper;
   // Barmby in the wide/attacking-midfield rotation).
   q('liverpool', 'kirkland01', 'Chris Kirkland', 1981, 'England', ['GK'], 74, 82, 2006, 40, t(8, 4, 7, 7, 4, 7)),

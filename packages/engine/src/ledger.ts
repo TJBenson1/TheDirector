@@ -462,6 +462,13 @@ const INJURIES_2001: RealInjuryEntry[] = [
  * actually happens (see the Abramovich check in season rollover). Deny Chelsea a
  * Champions-League place in 2003 and the takeover — and the splurge — may vanish.
  */
+/** Real loans of the 2001-02 world. Anelka's January loan to Liverpool from PSG —
+ *  he plays at Anfield for the spring, then reverts to PSG (who sell him to City),
+ *  unless the Director signs him permanently while he is on loan. */
+const LOANS_2001: RealLoanEntry[] = [
+  { playerId: 'cur_anelka01', parent: 'psg', to: 'liverpool', window: '2002-01', until: '2002-06' },
+];
+
 const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   // ── The LIVE opening window (summer 2001) — the movers are auto-rewound to their
   //    selling clubs at kickoff, so a Director completes, intercepts or diverts each.
@@ -488,9 +495,9 @@ const LEDGER_2001_2005: RealTransferLedgerEntry[] = [
   { playerId: 'cur_kewell01', from: 'leeds', to: 'liverpool', window: '2003-07', fee: 5_000_000, id: 'kewell-liverpool-2003' },
   { playerId: 'cur_smith01', from: 'leeds', to: 'man_utd', window: '2004-07', fee: 7_000_000, id: 'smith-utd-2004' },
   { playerId: 'cur_viduka01', from: 'leeds', to: 'middlesbrough', window: '2004-07', fee: 4_500_000, id: 'viduka-boro-2004' },
-  // Anelka's loan ends and he really left in 2002 — offered as the user's call
-  // (keep him permanently, the counterfactual, or let him go, as reality did).
-  { playerId: 'cur_anelka01', from: 'liverpool', to: 'man_city', window: '2002-07', fee: 13_000_000, id: 'anelka-out-2002' },
+  // Anelka's loan reverts to PSG at its end (2002-06), and PSG sell him to City that
+  // summer — the real outcome after Liverpool passed on making the loan permanent.
+  { playerId: 'cur_anelka01', from: 'psg', to: 'man_city', window: '2002-07', fee: 13_000_000, id: 'anelka-out-2002' },
   { playerId: 'cur_diouf', from: 'lens', to: 'liverpool', window: '2002-07', fee: 10_000_000, id: 'diouf-liverpool-2002' },
   { playerId: 'cur_cheyrou', from: 'lille', to: 'liverpool', window: '2002-07', fee: 4_000_000, id: 'cheyrou-liverpool-2002' },
   // Abramovich's Chelsea — only if the takeover completes.
@@ -1217,7 +1224,7 @@ export const ERA_REALITY: Record<string, EraRealityPack> = {
   'era-1995-2005': { realTransferLedger: LEDGER_1999_2004, academyIntakes: INTAKES_1999, realInjuries: INJURIES_1999, academyGraduates: GRADUATES_1999 },
   'era-2013': { realTransferLedger: LEDGER_2013_2016, academyIntakes: INTAKES_1999, realInjuries: INJURIES_2013, academyGraduates: GRADUATES_1999 },
   'era-2004': { realTransferLedger: LEDGER_2004_2009, academyIntakes: INTAKES_1999, realInjuries: INJURIES_2004, nearMissLedger: NEAR_MISS_2004, academyGraduates: GRADUATES_1999 },
-  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: INTAKES_1999, realInjuries: INJURIES_2001, academyGraduates: GRADUATES_1999 },
+  'era-2001': { realTransferLedger: LEDGER_2001_2005, academyIntakes: INTAKES_1999, realInjuries: INJURIES_2001, academyGraduates: GRADUATES_1999, realLoans: LOANS_2001 },
   'era-2000': { realTransferLedger: LEDGER_2000_2006, academyIntakes: INTAKES_ESP, realInjuries: INJURIES_2000, academyGraduates: GRADUATES_ESP },
   'era-serie-a-1995': { realTransferLedger: LEDGER_1995_2001, academyIntakes: INTAKES_ITA, realInjuries: INJURIES_1995, academyGraduates: GRADUATES_ITA },
   'era-serie-a-1998': { realTransferLedger: LEDGER_1998_2004, academyIntakes: INTAKES_ITA, realInjuries: INJURIES_1998, academyGraduates: GRADUATES_ITA },

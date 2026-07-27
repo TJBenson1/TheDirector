@@ -103,6 +103,9 @@ export function executeTransfer(
   player.club = req.toClub;
   player.contractUntil = year + Math.max(1, req.contractYears ?? 4);
   player.wage = req.wage ?? suggestWage(player, year);
+  // A permanent transfer ends any loan spell — an on-loan player who is signed
+  // outright (by his host or anyone) is no longer owed back to his parent.
+  player.loan = undefined;
 
   // Roll a hidden adaptation outcome for the move (§3). Deterministic stream,
   // forked so it doesn't perturb the main RNG cursor.

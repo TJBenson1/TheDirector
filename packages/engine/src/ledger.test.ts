@@ -261,4 +261,23 @@ describe('2013 post-Ferguson era pack (§4 data)', () => {
     // But Spurs still bank a huge fee (from you) and still rebuild.
     expect(s.players.cur_lamela?.club).toBe('spurs');
   });
+
+  it('Anelka arrives on loan in January and reverts to PSG at the loan end', () => {
+    let s = cloneState(createNewGame({ scenarioId: 'liverpool-2001', seed: 'anelka-loan' }));
+    // At kickoff he is a PSG player, NOT baked into the Liverpool squad.
+    expect(s.players.cur_anelka01?.club).toBe('psg');
+    expect(s.players.cur_anelka01?.loan).toBeUndefined();
+    expect(s.clubs.liverpool!.squad).not.toContain('cur_anelka01');
+    // Into the season: he joins Liverpool on loan in the January window, owned by PSG.
+    let onLoan = false;
+    for (let i = 0; i < 3; i++) {
+      s = advanceWindow(s).state;
+      if (s.players.cur_anelka01?.club === 'liverpool' && s.players.cur_anelka01?.loan?.parent === 'psg') onLoan = true;
+    }
+    expect(onLoan).toBe(true);
+    // Reality-default: Liverpool pass, he reverts to PSG and is sold on to City.
+    s = play(s, 4);
+    expect(s.players.cur_anelka01?.club).toBe('man_city');
+    expect(s.players.cur_anelka01?.loan).toBeUndefined();
+  });
 });

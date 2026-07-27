@@ -250,6 +250,22 @@ const COVENTRY_2001: CuratedSeed[] = [
   q('coventry', 'hughes_cv01', 'Lee Hughes', 1976, 'England', ['ST'], 72, 74, 2003, 25, t(7, 6, 8, 7, 6, 7)),
 ];
 
+// ── Paris Saint-Germain, 2001-02 (Anelka's parent club; a young Ronaldinho) ─────
+const PSG_2001: CuratedSeed[] = [
+  q('psg', 'letizi_pg01', 'Lionel Letizi', 1973, 'France', ['GK'], 78, 80, 2005, 20, t(8, 5, 8, 8, 5, 7)),
+  q('psg', 'pochettino_pg01', 'Mauricio Pochettino', 1972, 'Argentina', ['CB'], 79, 80, 2003, 20, t(9, 5, 8, 8, 5, 7)),
+  q('psg', 'heinze_pg01', 'Gabriel Heinze', 1978, 'Argentina', ['LB', 'CB'], 78, 84, 2004, 20, t(8, 6, 9, 7, 6, 7)),
+  q('psg', 'mendy_pg01', 'Bernard Mendy', 1981, 'France', ['RB', 'RW'], 74, 79, 2005, 20, t(7, 5, 8, 7, 5, 8)),
+  q('psg', 'distin_pg01', 'Sylvain Distin', 1977, 'France', ['CB'], 78, 82, 2004, 20, t(8, 5, 8, 7, 4, 7)),
+  q('psg', 'arteta_pg01', 'Mikel Arteta', 1982, 'Spain', ['CM', 'AM'], 73, 85, 2003, 15, t(9, 5, 8, 7, 4, 8)),
+  q('psg', 'leroy_pg01', 'Jérôme Leroy', 1974, 'France', ['AM', 'CM'], 76, 79, 2004, 20, t(7, 6, 8, 7, 5, 7)),
+  q('psg', 'ronaldinho_pg01', 'Ronaldinho', 1980, 'Brazil', ['AM', 'LW'], 84, 95, 2003, 20, t(8, 7, 9, 6, 5, 9)),
+  q('psg', 'okocha_pg01', 'Jay-Jay Okocha', 1973, 'Nigeria', ['AM', 'RW'], 81, 83, 2002, 20, t(7, 7, 8, 6, 6, 8)),
+  q('psg', 'aloisio_pg01', 'Aloísio', 1975, 'Brazil', ['ST'], 74, 76, 2003, 20, t(7, 6, 8, 6, 6, 7)),
+  // Nicolas Anelka — PSG own him; he goes to Liverpool on loan in January 2002.
+  q('psg', 'anelka01', 'Nicolas Anelka', 1979, 'France', ['ST'], 84, 87, 2002, 30, t(5, 8, 8, 4, 6, 6)),
+];
+
 /** The European selling clubs of the 2001-02 world, merged into the
  *  liverpool-2001 universe (all whole new clubs). */
 export const EUROPE_2001_SQUADS: Record<string, CuratedSeed[]> = {
@@ -270,4 +286,5 @@ export const EUROPE_2001_SQUADS: Record<string, CuratedSeed[]> = {
   real_sociedad: REAL_SOCIEDAD_2001,
   atletico: ATLETICO_2001,
   coventry: COVENTRY_2001,
+  psg: PSG_2001,
 };

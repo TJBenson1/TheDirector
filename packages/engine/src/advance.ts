@@ -24,7 +24,7 @@ import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from 
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
-import { executeLedgerWindow, executeAcademyIntakes } from './ledgerExec.js';
+import { executeLedgerWindow, executeAcademyIntakes, executeLoanWindow } from './ledgerExec.js';
 import { runReviewPhase } from './review.js';
 import { rollSquadFrictionEvents } from './squadFriction.js';
 import { rollBoardUltimatum } from './boardUltimatum.js';
@@ -190,6 +190,10 @@ function runWindowStep(state: GameState, rng: Rng, step: number): void {
     (state.meta.contractsSettledWindows ??= []).push(state.clock.date);
     processContractLifecycle(state);
   }
+  // Real loans (Anelka's January move to Liverpool from PSG) resolve before the
+  // transfer ledger, so a loanee reverting to his parent is back home before any
+  // same-window sale of him fires. No-op for loan-free eras.
+  executeLoanWindow(state);
   // M10: proactive AI transfers follow the REAL ledger by default (§9f) — this
   // step's slice of it (or the whole window, on a final-step sweep).
   executeLedgerWindow(state, rng, step);

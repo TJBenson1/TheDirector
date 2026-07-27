@@ -33,6 +33,68 @@ import { ERA_REALITY, eraForScenario, entryKey, type RealTransferLedgerEntry, ty
  * academy filler. Idempotent: a graduate already present (or already graduated) is
  * skipped, and an intake whose club has vanished is ignored.
  */
+/** Move a player between two clubs' squads and set his club (a lightweight, fee-free
+ *  squad move — used by loan out/return, not a market transfer). */
+function moveSquad(state: GameState, player: PlayerState, from: ClubId, to: ClubId): void {
+  const f = state.clubs[from];
+  const t = state.clubs[to];
+  if (f) f.squad = f.squad.filter((id) => id !== player.id);
+  if (t && !t.squad.includes(player.id)) t.squad.push(player.id);
+  player.club = to;
+  if (f && f.leagueId !== null) recomputeClubStrength(state, from);
+  if (t && t.leagueId !== null) recomputeClubStrength(state, to);
+}
+
+/**
+ * Execute the era's real LOANS (§ reality-default). A loan is a TEMPORARY move: at
+ * its `window` the player crosses from his PARENT to the host club and is marked
+ * on-loan; at `until` he reverts to the parent (or, if the loan carried a real
+ * buy obligation, converts to a permanent stay). A permanent transfer of the
+ * player in the meantime clears the marker (see executeTransfer), so a Director
+ * who signs the loanee outright is never dragged back to the parent. Guarded on
+ * `pack.realLoans`, so every loan-free era is a no-op. Runs BEFORE the transfer
+ * ledger each window, so a revert precedes any same-window sale of the returnee.
+ */
+export function executeLoanWindow(state: GameState): void {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack?.realLoans?.length) return;
+  const nowOrd = transferWindowOrdinal(state.clock.date);
+  for (const loan of pack.realLoans) {
+    const player = state.players[loan.playerId];
+    if (!player || player.retired) continue;
+    if (!state.clubs[loan.parent] || !state.clubs[loan.to]) continue;
+    const backOrd = transferWindowOrdinal(loan.until);
+    // Loan-end: revert to parent (or convert to permanent) once `until` is reached.
+    if (player.loan && player.loan.parent === loan.parent && nowOrd >= backOrd) {
+      if (!loan.buyPermanent && player.club === loan.to) moveSquad(state, player, loan.to, loan.parent);
+      player.loan = undefined;
+      logEvent(state, {
+        category: 'transfer',
+        code: 'loan.end',
+        message: loan.buyPermanent
+          ? `${player.name}'s loan at ${state.clubs[loan.to]?.name} is made permanent`
+          : `${player.name} returns to ${state.clubs[loan.parent]?.name} as his loan ends`,
+        data: { playerId: player.id, parent: loan.parent, to: loan.to },
+      });
+      continue;
+    }
+    // Loan-start: the player crosses on loan once `window` is reached — but only if
+    // he is still his parent's player (a Director who has already signed him
+    // permanently, or a rival who poached him, leaves nothing to loan out).
+    const outOrd = transferWindowOrdinal(loan.window);
+    if (!player.loan && player.club === loan.parent && nowOrd >= outOrd && nowOrd < backOrd) {
+      moveSquad(state, player, loan.parent, loan.to);
+      player.loan = { parent: loan.parent, until: loan.until };
+      logEvent(state, {
+        category: 'transfer',
+        code: 'loan.start',
+        message: `${player.name} joins ${state.clubs[loan.to]?.name} on loan from ${state.clubs[loan.parent]?.name}`,
+        data: { playerId: player.id, parent: loan.parent, to: loan.to },
+      });
+    }
+  }
+}
+
 export function executeAcademyIntakes(state: GameState): void {
   const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
   if (!pack?.academyIntakes?.length || !pack.academyGraduates?.length) return;

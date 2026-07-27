@@ -498,6 +498,7 @@ function buildPanels(state: GameState) {
         minutes: `${mins}%`,
         impact: rating >= 7.2 ? 'key' : rating >= 6.4 ? 'regular' : 'squad',
         injured: !!p.injury,
+        onLoan: p.loan ? (s.clubs[p.loan.parent]?.name ?? 'parent club') : null,
       };
     });
 

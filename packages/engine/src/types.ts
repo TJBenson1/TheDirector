@@ -259,6 +259,12 @@ export interface PlayerState {
    *  squad, but `club` is preserved as his final destination — his last real move
    *  still reads true — and he is filtered out of the live market and selection. */
   retired?: boolean;
+
+  /** On loan from another club: he plays for `club` but is OWNED by `loan.parent`,
+   *  and reverts there at `loan.until` unless the host signs him permanently (which
+   *  costs a fee to the parent). Set when a real loan executes; cleared on a
+   *  permanent transfer or when the loan reverts. */
+  loan?: { parent: ClubId; until: YearMonth };
 }
 
 export type CareerStagePull = 'prove' | 'peak' | 'legacy' | 'payday';

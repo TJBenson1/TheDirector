@@ -119,15 +119,20 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
   const fromClub = player.club ? state.clubs[player.club] : undefined;
 
   // 1a) On loan: the parent club controls his future — you can't buy him from the
-  //     club he's playing for (Courtois is Chelsea's, not Atlético's to sell).
-  const parent = loanParent(player.id);
-  if (parent && parent !== buyer.id) {
+  //     club he's playing for (Courtois is Chelsea's, not Atlético's to sell). The
+  //     parent is either a static real-world loan (Courtois) or a live loan spell
+  //     the engine executed this save (Anelka at Liverpool from PSG). A third party
+  //     is hard-blocked; only the parent (a recall) gets past here — the loan HOST
+  //     buying him permanently is handled as a normal approach to the parent below.
+  const parent = loanParent(player.id) ?? player.loan?.parent;
+  const host = player.loan ? player.club : undefined;
+  if (parent && parent !== buyer.id && buyer.id !== host) {
     const owner = state.clubs[parent];
     return {
       willing: false,
       willingness: 0,
       hardBlocked: true,
-      reason: `${player.name} is only on loan at ${fromClub?.name ?? 'his club'} — ${owner?.name ?? 'his parent club'} own him and control his future.`,
+      reason: `${player.name} is only on loan at ${(host ? state.clubs[host]?.name : fromClub?.name) ?? 'his club'} — ${owner?.name ?? 'his parent club'} own him and control his future.`,
     };
   }
 
