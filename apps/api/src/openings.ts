@@ -18,7 +18,7 @@
  * to the generic derivation.
  */
 
-import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, realDepartureThisWindow, narrativeContext, divergenceFactor, ERA_REALITY, eraForScenario, type GameState, type ScenarioOpening } from '@director/engine';
+import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, realDepartureThisWindow, narrativeContext, divergenceFactor, standingsOrder, ERA_REALITY, eraForScenario, type GameState, type ScenarioOpening } from '@director/engine';
 
 type Group = 'GK' | 'DEF' | 'MID' | 'ATT';
 const GROUP: Record<string, Group> = {
@@ -362,6 +362,50 @@ export function generatedSummerOpening(
  * keeps its lighter mid-season note. Summer is the set-piece every time; winter
  * earns it. Deterministic; no tokens.
  */
+/** Where the club's league campaign sits — leader/gap or the lead they hold. */
+function titleRaceLine(state: GameState): string | null {
+  const club = state.clubs[state.playerClub]!;
+  const league = club.leagueId ? state.leagues[club.leagueId] : undefined;
+  if (!league || league.roundsPlayed === 0) return null;
+  const order = standingsOrder(league);
+  const pos = order.indexOf(state.playerClub) + 1;
+  if (pos === 0) return null;
+  const myPts = league.standings[state.playerClub]?.points ?? 0;
+  if (pos === 1) {
+    const second = order[1];
+    const gap = myPts - (second ? league.standings[second]?.points ?? 0 : 0);
+    return `You sit top of the table${second ? `, ${gap === 0 ? 'level on points with' : `${gap} clear of`} ${state.clubs[second]?.name}` : ''}`;
+  }
+  const leader = order[0]!;
+  const gap = (league.standings[leader]?.points ?? 0) - myPts;
+  return `You sit ${ordinalSuffix(pos)}, ${gap === 0 ? 'level with' : `${gap} ${gap === 1 ? 'point' : 'points'} behind`} leaders ${state.clubs[leader]?.name}`;
+}
+
+/** One standout and one struggler in the current side — "the form of his life"
+ *  vs "lost on the fringes" — read from live form and game-time. */
+function formStoryLines(state: GameState): string[] {
+  const squad = clubSquadPlayers(state, state.playerClub).filter((p) => !p.injury);
+  const out: string[] = [];
+  const flying = [...squad].filter((p) => p.form >= 3).sort((a, b) => b.form + b.ability - (a.form + a.ability))[0];
+  if (flying) out.push(`${flying.name} is in the form of his life`);
+  const struggling = [...squad]
+    .filter((p) => p.form <= -2 && (p.lastSeason ? p.lastSeason.minutesShare < 0.4 : p.morale < 45) && p.ability >= 72)
+    .sort((a, b) => a.form - b.form)[0];
+  if (struggling) out.push(`${struggling.name} is struggling for a rhythm, drifting to the fringes`);
+  return out;
+}
+
+/** If defenders/keeper are in the treatment room while results slide, name the
+ *  cause-and-effect the Director will feel — the leaking-at-the-back story. */
+function injuryConsequenceLine(state: GameState): string | null {
+  const squad = clubSquadPlayers(state, state.playerClub);
+  const backOut = squad.filter((p) => p.injury && p.injury.monthsRemaining > 0 && p.positions.some((pos) => ['GK', 'CB', 'RB', 'LB'].includes(pos)));
+  if (backOut.length && narrativeContext(state).form?.momentum === 'slumping') {
+    return `with ${joinNames(backOut.slice(0, 2).map((p) => p.name))} out at the back, you've been leaking goals`;
+  }
+  return null;
+}
+
 export function generatedWinterOpening(state: GameState): Opening | null {
   const ctx = narrativeContext(state);
   const year = Number(state.clock.date.slice(0, 4));
@@ -369,21 +413,46 @@ export function generatedWinterOpening(state: GameState): Opening | null {
   const unsettled = ctx.squad.unsettled ?? [];
   const expiring = ctx.squad.expiring ?? [];
   const badForm = ctx.form?.momentum === 'slumping';
-  const crisis = unsettled.length > 0 || injured.length >= 2 || expiring.length > 0 || badForm;
-  if (!crisis) return null;
+  // The season has to be underway to have a story; before that there's nothing yet.
+  if (!ctx.league || ctx.league.position === null) return null;
 
   const club = state.clubs[state.playerClub]!;
   const coach = coachBriefing(state);
 
-  // ── Beat one: name the crisis. ──
-  const lines: string[] = [];
-  if (badForm) lines.push(`the run of results has the mood turning`);
-  if (injured.length >= 2) lines.push(`the treatment room is filling up (${joinNames(injured.slice(0, 3).map((i) => i.name))})`);
-  if (unsettled.length) lines.push(`${joinNames(unsettled.slice(0, 2).map((u) => u.name))} ${unsettled.length === 1 ? 'is' : 'are'} unsettled`);
-  if (expiring.length) lines.push(`contracts are running down (${joinNames(expiring.slice(0, 3).map((e) => e.name))})`);
-  const opener = `Midwinter at ${club.name}, January ${year}. The window's open at the season's turn, and it isn't quiet: ${joinNames(lines)}.`;
+  // ── Beat one: the state of the season — the title race, the form, Europe. ──
+  const race = titleRaceLine(state);
+  let lead = `Midwinter at ${club.name}, January ${year}.`;
+  if (race) {
+    lead += ` ${race}`;
+    if (ctx.form?.momentum === 'surging') lead += ` — and the side is flying`;
+    else if (badForm) lead += ` — but the run of results has the mood turning`;
+    lead += '.';
+  } else if (ctx.form?.momentum === 'surging') lead += ` The side is flying.`;
+  else if (badForm) lead += ` The run of results has the mood turning.`;
+  const sentences = [lead];
+  if (ctx.reality?.note) sentences.push(ctx.reality.note.trim().replace(/\.?$/, '.'));
+  if (ctx.europe && (ctx.europe.youWon || ctx.europe.youReachedFinal)) {
+    sentences.push(ctx.europe.youWon
+      ? `In Europe you are the reigning champions, having beaten ${ctx.europe.runnerUp} in the final.`
+      : `In Europe you reached the final, beaten by ${ctx.europe.winner}.`);
+  }
+  const opener = sentences.join(' ');
 
-  // ── Beat two: the calls. ──
+  // ── Beat two: your fingerprints on the half-season — form, injuries, the fans. ──
+  const storyBits: string[] = [...formStoryLines(state)];
+  const injLine = injuryConsequenceLine(state);
+  if (injLine) storyBits.push(injLine);
+  const saleMemory = ctx.threads.find((tdetail) => /still coming to terms with the sale/i.test(tdetail));
+  const storyPara = storyBits.length
+    ? `Around the squad: ${joinNames(storyBits)}.${saleMemory ? ` And ${saleMemory.replace(/^The /, 'the ')}` : ''}`
+    : saleMemory ?? '';
+
+  // ── Beat three: the calls at the edges. ──
+  const crisisBits: string[] = [];
+  if (injured.length >= 2) crisisBits.push(`the treatment room is filling up (${joinNames(injured.slice(0, 3).map((i) => i.name))})`);
+  if (unsettled.length) crisisBits.push(`${joinNames(unsettled.slice(0, 2).map((u) => u.name))} ${unsettled.length === 1 ? 'is' : 'are'} unsettled`);
+  if (expiring.length) crisisBits.push(`contracts are running down (${joinNames(expiring.slice(0, 3).map((e) => e.name))})`);
+
   const actions: OpeningChip[] = [];
   if (expiring.length) {
     const nm = expiring[0]!.name;
@@ -399,15 +468,22 @@ export function generatedWinterOpening(state: GameState): Opening | null {
   actions.push({ label: 'Review the January market', message: 'Show me who is realistically available this January.' });
 
   const meetParts = [
-    `${coach.coach} wants a word before the window shuts. The side is his; the calls at the edges are yours.`,
+    crisisBits.length
+      ? `${coach.coach} wants a word before the window shuts — it isn't quiet: ${joinNames(crisisBits)}. The side is his; the calls at the edges are yours.`
+      : `${coach.coach} wants a word before the window shuts. The side is his; the calls at the edges are yours.`,
     `Where do you want to start?`,
   ];
 
   const beats: OpeningBeat[] = [
-    { text: opener, reveal: `What are my options?` },
-    { text: meetParts.join('\n\n'), actions: actions.slice(0, 4) },
+    { text: opener, reveal: storyPara ? `How's it playing out around the squad?` : `What are my options?` },
   ];
+  if (storyPara) beats.push({ text: storyPara, reveal: `What are my options?` });
+  beats.push({ text: meetParts.join('\n\n'), actions: actions.slice(0, 4) });
   return { scene: opener, meeting: meetParts.join('\n\n'), beats };
+}
+
+function capitalise(s: string): string {
+  return s.length ? s[0]!.toUpperCase() + s.slice(1) : s;
 }
 
 /** Render a curated first XI ("GK Peruzzi", "CB Ferrara", …) as prose by unit. */

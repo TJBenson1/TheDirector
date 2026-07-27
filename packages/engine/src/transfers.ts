@@ -16,6 +16,7 @@ import { Rng } from './rng.js';
 import { evaluateApproach, type ApproachVerdict } from './agency.js';
 import { coachFit } from './coaches.js';
 import { isProcedural, ERA_REALITY, eraForScenario, entryKey } from './ledger.js';
+import { appendMemory } from './memory.js';
 
 export interface TransferRequest {
   playerId: PlayerId;
@@ -190,6 +191,34 @@ export function executeTransfer(
       // denying their replacements and the pool thins until they truly fall — the
       // finite-talent arms race, not a flat fudge or a reattach-by-default.
       reactToLoss(state, seller, player);
+    }
+  }
+
+  // A club legend / fan-favourite leaving the user's OWN club is a real emotional
+  // event — the terraces and the dressing room both react (the Fowler-to-Leeds
+  // kind of sale). Detected by deep loyalty + genuine first-team quality, so a
+  // squad player moving on doesn't trigger it. Narrative always; a morale dip only
+  // on an active (non-reality) sale, so the passive/calibration world is untouched.
+  if (
+    fromClubId === state.playerClub &&
+    player.personality.loyalty >= 8 &&
+    player.ability >= 76 &&
+    req.toClub !== state.playerClub
+  ) {
+    const dest = state.clubs[req.toClub]?.name ?? 'a rival';
+    const home = state.clubs[state.playerClub]?.name ?? 'the club';
+    logEvent(state, {
+      category: 'transfer',
+      code: 'legend.sold',
+      message: `${player.name} — a ${home} favourite — has been sold to ${dest}. The fans are up in arms.`,
+      data: { playerId: player.id, toClub: req.toClub, fee },
+    });
+    appendMemory(state, 'legend-sale', `The ${home} supporters are still coming to terms with the sale of ${player.name} to ${dest}.`);
+    if (!opts.reality) {
+      for (const id of state.clubs[state.playerClub]?.squad ?? []) {
+        const tm = state.players[id];
+        if (tm) tm.morale = Math.max(0, tm.morale - 3);
+      }
     }
   }
 
