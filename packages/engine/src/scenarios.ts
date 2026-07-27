@@ -117,6 +117,8 @@ const ERA_1996_CONTEXT: ClubSeed[] = [
   { id: 'psv', name: 'PSV Eindhoven', prestige: 74 },
   { id: 'fiorentina', name: 'Fiorentina', prestige: 76 },
   { id: 'lazio', name: 'Lazio', prestige: 76 },
+  // Gianfranco Zola's club until his November-1996 move to Chelsea.
+  { id: 'parma', name: 'Parma', prestige: 76 },
 ];
 
 // era-2001: the whole of Europe contests the Cup, not just the English top four.

@@ -100,7 +100,9 @@ export const CHELSEA_1996: CuratedSeed[] = [
   q('chelsea', 'dimatteo_c96', 'Roberto Di Matteo', 1970, 'Italy', ['CM'], 81, 82, 2001, 25, t(8, 5, 8, 7, 4, 7)),
   q('chelsea', 'newton_c96', 'Eddie Newton', 1971, 'England', ['CM', 'DM'], 74, 76, 1999, 30, t(8, 4, 7, 8, 4, 7)),
   q('chelsea', 'gullit_c96', 'Ruud Gullit', 1962, 'Netherlands', ['AM', 'CB'], 80, 80, 1998, 30, t(8, 7, 8, 6, 5, 7)),
-  q('chelsea', 'zola_c96', 'Gianfranco Zola', 1966, 'Italy', ['AM', 'ST'], 86, 87, 2001, 25, t(9, 5, 8, 8, 3, 7)),
+  // NB Gianfranco Zola is NOT here at kickoff — he arrives from Parma in November
+  // 1996, as the briefing says. He lives at Parma (PARMA_1996) and joins via the
+  // 1996 ledger; Gullit's summer cast (Vialli, Leboeuf, Di Matteo) is here already.
   q('chelsea', 'vialli_c96', 'Gianluca Vialli', 1964, 'Italy', ['ST'], 82, 82, 1999, 30, t(9, 7, 9, 7, 5, 7)),
   q('chelsea', 'hughes_c96', 'Mark Hughes', 1963, 'Wales', ['ST'], 79, 79, 1998, 30, t(8, 6, 7, 7, 6, 6)),
   q('chelsea', 'burley_c96', 'Craig Burley', 1971, 'Scotland', ['CM'], 75, 78, 1999, 25, t(8, 5, 7, 7, 5, 7)),
@@ -271,9 +273,19 @@ export const MANCITY_1996: CuratedSeed[] = [
   q('man_city', 'kavelashvili_mc96', 'Mikheil Kavelashvili', 1971, 'Georgia', ['ST'], 68, 70, 1999, 30, t(6, 6, 7, 6, 6, 6)),
 ];
 
+/** Parma, 1996-97 — Gianfranco Zola's club until his November-1996 move to
+ *  Chelsea. A couple of real team-mates from Carlo Ancelotti's side give the
+ *  Gialloblù some depth as a selling club in the era-1996 world. */
+export const PARMA_1996: CuratedSeed[] = [
+  q('parma', 'zola_c96', 'Gianfranco Zola', 1966, 'Italy', ['AM', 'ST'], 86, 87, 2001, 25, t(9, 5, 8, 8, 3, 7)),
+  q('parma', 'dino_baggio_pa96', 'Dino Baggio', 1971, 'Italy', ['CM', 'DM'], 80, 82, 2000, 25, t(8, 5, 8, 8, 5, 7)),
+  q('parma', 'sensini_pa96', 'Néstor Sensini', 1966, 'Argentina', ['CB', 'DM'], 79, 80, 2000, 25, t(8, 5, 8, 8, 5, 7)),
+];
+
 /** Curated squads for the Wenger-arrival Arsenal start, keyed by club. */
 export const ARSENAL_1996_SQUADS: Record<string, CuratedSeed[]> = {
   arsenal: ARSENAL_1996,
+  parma: PARMA_1996,
   man_utd: MANUTD_1996,
   liverpool: LIVERPOOL_1996,
   chelsea: CHELSEA_1996,

@@ -764,6 +764,9 @@ const LEDGER_1996_2001: RealTransferLedgerEntry[] = [
   { playerId: 'cur_vieira_a96', from: 'milan', to: 'arsenal', window: '1996-07', fee: 3_500_000, id: 'vieira-arsenal-1996' },
   { playerId: 'cur_dimatteo_c96', from: 'lazio', to: 'chelsea', window: '1996-07', fee: 4_900_000, id: 'dimatteo-chelsea-1996' },
   { playerId: 'cur_vialli_c96', from: 'juventus', to: 'chelsea', window: '1996-07', fee: 0, id: 'vialli-chelsea-1996b' },
+  // Zola follows the summer cast in November 1996 (modelled as the mid-season
+  // window) — a Parma man at kickoff, not a Chelsea one, as the briefing says.
+  { playerId: 'cur_zola_c96', from: 'parma', to: 'chelsea', window: '1997-01', fee: 4_500_000, id: 'zola-chelsea-1996c' },
   { playerId: 'cur_sheringham_s96', from: 'spurs', to: 'man_utd', window: '1997-07', fee: 3_500_000, id: 'sheringham-utd-1997' },
   { playerId: 'cur_ronaldo_b96', from: 'barcelona', to: 'inter', window: '1997-07', fee: 27_000_000, id: 'ronaldo-inter-1997' },
   { playerId: 'cur_anelka_a96', from: 'arsenal', to: 'real_madrid', window: '1999-07', fee: 22_500_000, id: 'anelka-real-1999' },
