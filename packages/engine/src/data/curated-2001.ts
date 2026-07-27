@@ -124,12 +124,54 @@ export const NEWCASTLE_2001: CuratedSeed[] = [
   q('newcastle', 'dyer', 'Kieron Dyer', 1978, 'England', ['CM', 'RW'], 80, 85, 2006, 55, t(6, 6, 7, 6, 6, 7)),
 ];
 
-/** Source clubs for the Liverpool 2002 decisions + Chelsea's 2003 splurge. */
+/** Source clubs for the Liverpool 2002 decisions + Chelsea's 2003 splurge —
+ *  deepened to their real 2001-02 Ligue 1 squads (Lille were in the Champions
+ *  League that year). */
 export const LENS_2001: CuratedSeed[] = [
   q('lens', 'diouf', 'El-Hadji Diouf', 1981, 'Senegal', ['RW', 'ST'], 78, 84, 2006, 30, t(4, 8, 7, 4, 8, 6)),
+  q('lens', 'warmuz_le01', 'Guillaume Warmuz', 1970, 'France', ['GK'], 78, 79, 2004, 20, t(9, 5, 8, 8, 4, 7)),
+  q('lens', 'bak_le01', 'Jacek Bąk', 1973, 'Poland', ['CB'], 77, 78, 2004, 20, t(8, 5, 8, 8, 5, 8)),
+  q('lens', 'coly_le01', 'Ferdinand Coly', 1973, 'Senegal', ['RB'], 74, 76, 2004, 20, t(7, 5, 8, 7, 6, 8)),
+  q('lens', 'coulibaly_le01', 'Adama Coulibaly', 1980, 'Mali', ['CB'], 73, 79, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('lens', 'rool_le01', 'Cyril Rool', 1975, 'France', ['DM', 'CB'], 74, 76, 2004, 20, t(6, 6, 8, 7, 7, 8)),
+  q('lens', 'bouba_diop_le01', 'Papa Bouba Diop', 1978, 'Senegal', ['DM', 'CM'], 77, 82, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('lens', 'sikora_le01', 'Éric Sikora', 1968, 'France', ['RB', 'DM'], 72, 73, 2003, 20, t(9, 5, 8, 10, 4, 7), { loyalty: 95 }),
+  q('lens', 'moreira_le01', 'Daniel Moreira', 1977, 'France', ['LW', 'ST'], 74, 77, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('lens', 'coridon_le01', 'Charles-Édouard Coridon', 1973, 'France', ['AM', 'LW'], 74, 76, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('lens', 'bakari_le01', 'Dagui Bakari', 1974, 'Ivory Coast', ['ST'], 72, 74, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('lens', 'thomert_le01', 'Frédéric Thomas', 1977, 'France', ['CM'], 71, 73, 2004, 20, t(8, 5, 8, 7, 5, 7)),
 ];
 export const LILLE_2001: CuratedSeed[] = [
   q('lille', 'cheyrou', 'Bruno Cheyrou', 1978, 'France', ['AM', 'LW'], 75, 82, 2006, 35, t(6, 6, 6, 6, 6, 6)),
+  q('lille', 'wimbee_li01', 'Grégory Wimbée', 1969, 'France', ['GK'], 76, 77, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('lille', 'tafforeau_li01', 'Grégory Tafforeau', 1976, 'France', ['LB'], 75, 78, 2005, 20, t(8, 5, 8, 8, 5, 8)),
+  q('lille', 'schmitz_li01', 'Rafael Schmitz', 1980, 'Brazil', ['CB'], 73, 80, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('lille', 'fahmi_li01', 'Abdelilah Fahmi', 1972, 'Morocco', ['CB'], 74, 75, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('lille', 'ecker_li01', 'Johnny Ecker', 1974, 'France', ['RB', 'CB'], 72, 74, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('lille', 'b_cheyrou_li01', 'Benoît Cheyrou', 1981, 'France', ['CM', 'DM'], 72, 81, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('lille', 'ndiaye_li01', 'Sylvain N’Diaye', 1976, 'Senegal', ['DM', 'CM'], 74, 76, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('lille', 'damico_li01', 'Fernando D’Amico', 1975, 'Argentina', ['CM', 'AM'], 74, 76, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('lille', 'pichot_li01', 'Stéphane Pichot', 1976, 'France', ['RB', 'RW'], 72, 74, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('lille', 'boutoille_li01', 'Djezon Boutoille', 1975, 'France', ['ST', 'LW'], 73, 75, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('lille', 'bassir_li01', 'Salaheddine Bassir', 1972, 'Morocco', ['ST'], 73, 75, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('lille', 'malicki_li01', 'Grégory Malicki', 1973, 'France', ['GK'], 71, 72, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+];
+/** Parma, 2001-02 — a strong Serie A side even after selling Buffon & Thuram to
+ *  Juventus (Mutu, their other star, is seeded via CHELSEA_TARGETS_2003). */
+export const PARMA_2001: CuratedSeed[] = [
+  q('parma', 'frey_pa01', 'Sébastien Frey', 1980, 'France', ['GK'], 78, 84, 2005, 20, t(8, 6, 8, 7, 5, 8)),
+  q('parma', 'cannavaro_f_pa01', 'Fabio Cannavaro', 1973, 'Italy', ['CB'], 84, 87, 2005, 20, t(9, 6, 9, 8, 5, 8)),
+  q('parma', 'ferrari_m_pa01', 'Matteo Ferrari', 1979, 'Italy', ['CB'], 76, 82, 2005, 20, t(8, 5, 8, 8, 5, 8)),
+  q('parma', 'bonera_pa01', 'Daniele Bonera', 1981, 'Italy', ['CB', 'RB'], 72, 82, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('parma', 'junior_pa01', 'Júnior', 1973, 'Brazil', ['LB', 'LW'], 79, 81, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('parma', 'lamouchi_pa01', 'Sabri Lamouchi', 1971, 'France', ['CM', 'DM'], 77, 79, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('parma', 'micoud_pa01', 'Johan Micoud', 1973, 'France', ['AM', 'CM'], 81, 83, 2004, 20, t(8, 6, 8, 7, 5, 8)),
+  q('parma', 'morfeo_pa01', 'Domenico Morfeo', 1976, 'Italy', ['AM'], 77, 80, 2004, 20, t(6, 7, 8, 6, 6, 8)),
+  q('parma', 'marchionni_pa01', 'Marco Marchionni', 1980, 'Italy', ['RW', 'AM'], 73, 79, 2005, 20, t(7, 6, 8, 7, 5, 8)),
+  q('parma', 'divaio_pa01', 'Marco Di Vaio', 1976, 'Italy', ['ST'], 81, 84, 2005, 20, t(8, 6, 8, 7, 5, 8)),
+  q('parma', 'gilardino_pa01', 'Alberto Gilardino', 1982, 'Italy', ['ST'], 71, 86, 2006, 20, t(8, 6, 9, 7, 5, 8)),
+  q('parma', 'gobbi_pa01', 'Massimo Gobbi', 1980, 'Italy', ['LB', 'LW'], 72, 78, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('parma', 'torrisi_pa01', 'Stefano Torrisi', 1971, 'Italy', ['CB'], 74, 75, 2003, 20, t(8, 5, 8, 8, 5, 7)),
 ];
 /** Chelsea's real 2003 takeover buys, at their source clubs — they only move if
  *  Abramovich actually completes the purchase (the enabledBy funder). */
@@ -365,7 +407,7 @@ export const LIVERPOOL_2001_SQUADS: Record<string, CuratedSeed[]> = {
   man_city: MAN_CITY_2001,
   spurs: SPURS_2001,
   blackburn: [CHELSEA_TARGETS_2003[1]!],
-  parma: [CHELSEA_TARGETS_2003[3]!],
+  parma: [...PARMA_2001, CHELSEA_TARGETS_2003[3]!],
   southampton: [CHELSEA_TARGETS_2003[4]!],
 };
 

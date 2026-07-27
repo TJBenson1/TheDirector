@@ -37,6 +37,13 @@ const AJAX_2001: CuratedSeed[] = [
   q('ajax', 'maxwell_01', 'Maxwell', 1981, 'Brazil', ['LB'], 75, 84, 2005, 20, t(8, 5, 8, 7, 5, 8)),
   q('ajax', 'van_der_meyde_01', 'Andy van der Meyde', 1979, 'Netherlands', ['RW', 'AM'], 76, 80, 2004, 25, t(6, 6, 8, 6, 6, 8)),
   q('ajax', 'machlas_01', 'Nikos Machlas', 1973, 'Greece', ['ST'], 77, 79, 2003, 25, t(7, 6, 8, 7, 5, 8)),
+  q('ajax', 'lobont_01', 'Bogdan Lobonț', 1978, 'Romania', ['GK'], 75, 79, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('ajax', 'galasek_01', 'Tomáš Galásek', 1973, 'Czechia', ['DM', 'CM'], 77, 79, 2004, 20, t(9, 5, 8, 8, 4, 8)),
+  q('ajax', 'bergdolmo_01', 'André Bergdølmo', 1971, 'Norway', ['CB', 'RB'], 74, 76, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('ajax', 'pasanen_01', 'Petri Pasanen', 1980, 'Finland', ['CB', 'RB'], 72, 80, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('ajax', 'sneijder_01', 'Wesley Sneijder', 1984, 'Netherlands', ['AM', 'CM'], 66, 90, 2006, 20, t(7, 7, 9, 7, 6, 8)),
+  q('ajax', 'anastasiou_01', 'Yannis Anastasiou', 1973, 'Greece', ['ST'], 73, 75, 2004, 25, t(7, 6, 8, 7, 5, 8)),
+  q('ajax', 'wamberto_01', 'Wamberto', 1975, 'Brazil', ['ST', 'RW'], 72, 74, 2003, 25, t(7, 6, 8, 6, 6, 8)),
 ];
 
 // ── PSV, 2001-02 (Kežman's goals, Van Bommel's engine) ─────────────────────────
@@ -48,6 +55,13 @@ const PSV_2001: CuratedSeed[] = [
   q('psv', 'bouma_01', 'Wilfred Bouma', 1978, 'Netherlands', ['LB', 'CB'], 77, 82, 2005, 20, t(9, 5, 8, 8, 5, 8)),
   q('psv', 'vogel_01', 'Johann Vogel', 1977, 'Switzerland', ['DM', 'CM'], 78, 80, 2004, 20, t(9, 5, 8, 8, 4, 8)),
   q('psv', 'rommedahl_01', 'Dennis Rommedahl', 1978, 'Denmark', ['RW'], 77, 80, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('psv', 'waterreus_01', 'Ronald Waterreus', 1970, 'Netherlands', ['GK'], 79, 80, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('psv', 'hofland_01', 'Kevin Hofland', 1979, 'Netherlands', ['CB'], 76, 80, 2005, 20, t(8, 5, 8, 8, 5, 7)),
+  q('psv', 'addo_01', 'Eric Addo', 1978, 'Ghana', ['DM', 'CB'], 74, 78, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('psv', 'faber_e_01', 'Ernest Faber', 1971, 'Netherlands', ['CB', 'RB'], 74, 75, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('psv', 'heintze_01', 'Jan Heintze', 1963, 'Denmark', ['LB'], 74, 74, 2003, 20, t(9, 5, 8, 9, 4, 7), { loyalty: 90 }),
+  q('psv', 'ramzi_01', 'Adil Ramzi', 1977, 'Morocco', ['AM', 'LW'], 73, 76, 2004, 25, t(7, 6, 8, 6, 6, 8)),
+  q('psv', 'bogelund_01', 'Kasper Bøgelund', 1980, 'Denmark', ['RB'], 72, 77, 2005, 20, t(8, 5, 8, 7, 5, 8)),
 ];
 
 // ── Feyenoord, 2001-02 (a 17-year-old Van Persie; UEFA Cup winners in 2002) ─────
@@ -59,6 +73,13 @@ const FEYENOORD_2001: CuratedSeed[] = [
   q('feyenoord', 'emerton_01', 'Brett Emerton', 1979, 'Australia', ['RW', 'RB'], 77, 81, 2004, 20, t(8, 5, 8, 7, 5, 8)),
   q('feyenoord', 'bosvelt_01', 'Paul Bosvelt', 1970, 'Netherlands', ['DM', 'CM'], 77, 79, 2003, 20, t(9, 5, 8, 8, 4, 8)),
   q('feyenoord', 'paauwe_01', 'Jerzy Paauwe', 1978, 'Netherlands', ['RB', 'DM'], 74, 77, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('feyenoord', 'tomasson_01', 'Jon Dahl Tomasson', 1976, 'Denmark', ['ST', 'AM'], 80, 84, 2004, 20, t(8, 6, 8, 7, 5, 8)),
+  q('feyenoord', 'zoetebier_01', 'Edwin Zoetebier', 1970, 'Netherlands', ['GK'], 75, 76, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('feyenoord', 'van_wonderen_01', 'Kees van Wonderen', 1969, 'Netherlands', ['CB'], 75, 76, 2003, 20, t(8, 5, 8, 8, 5, 7)),
+  q('feyenoord', 'gyan_01', 'Christian Gyan', 1978, 'Ghana', ['RB'], 73, 76, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('feyenoord', 'rzasa_01', 'Tomasz Rząsa', 1973, 'Poland', ['LB'], 73, 75, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('feyenoord', 'escude_01', 'Julien Escudé', 1979, 'France', ['CB'], 74, 82, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('feyenoord', 'pardo_01', 'Pavel Pardo', 1976, 'Mexico', ['DM', 'CM'], 74, 77, 2004, 20, t(8, 5, 8, 7, 5, 8)),
 ];
 
 // ── Valencia, 2001-02 (Benítez's La Liga champions) ────────────────────────────
@@ -71,6 +92,13 @@ const VALENCIA_2001: CuratedSeed[] = [
   q('valencia', 'kily_gonzalez_01', 'Kily González', 1974, 'Argentina', ['LW', 'LB'], 79, 81, 2004, 20, t(7, 6, 8, 7, 6, 8)),
   q('valencia', 'mista_01', 'Mista', 1978, 'Spain', ['ST'], 78, 82, 2005, 20, t(8, 5, 8, 7, 5, 8)),
   q('valencia', 'carew_01', 'John Carew', 1979, 'Norway', ['ST'], 79, 83, 2005, 20, t(7, 6, 8, 7, 5, 8)),
+  q('valencia', 'vicente_01', 'Vicente', 1981, 'Spain', ['LW', 'AM'], 79, 86, 2006, 25, t(8, 6, 8, 8, 5, 8)),
+  q('valencia', 'carboni_01', 'Amedeo Carboni', 1965, 'Italy', ['LB', 'CB'], 78, 79, 2003, 20, t(9, 5, 8, 8, 5, 8)),
+  q('valencia', 'pellegrino_01', 'Mauricio Pellegrino', 1971, 'Argentina', ['CB'], 78, 79, 2004, 20, t(9, 5, 8, 8, 5, 8)),
+  q('valencia', 'angloma_01', 'Jocelyn Angloma', 1965, 'France', ['RB', 'CB'], 77, 78, 2003, 20, t(8, 5, 8, 8, 5, 8)),
+  q('valencia', 'rufete_01', 'Rufete', 1975, 'Spain', ['RW', 'AM'], 76, 79, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('valencia', 'aurelio_01', 'Fábio Aurélio', 1979, 'Brazil', ['LB', 'LW'], 76, 82, 2005, 25, t(8, 5, 8, 7, 5, 8)),
+  q('valencia', 'curro_torres_01', 'Curro Torres', 1976, 'Spain', ['RB'], 74, 77, 2005, 20, t(8, 5, 8, 8, 5, 7)),
 ];
 
 // ── Deportivo La Coruña, 2001-02 (SuperDepor: Makaay, Valerón, Tristán) ─────────
@@ -82,6 +110,13 @@ const DEPORTIVO_2001: CuratedSeed[] = [
   q('deportivo', 'mauro_silva_01', 'Mauro Silva', 1968, 'Brazil', ['DM'], 80, 81, 2003, 20, t(9, 5, 8, 9, 4, 8), { loyalty: 90 }),
   q('deportivo', 'naybet_01', 'Noureddine Naybet', 1970, 'Morocco', ['CB'], 80, 81, 2004, 20, t(9, 5, 8, 8, 5, 8)),
   q('deportivo', 'sergio_01', 'Sergio', 1976, 'Spain', ['CM'], 78, 80, 2004, 20, t(8, 5, 8, 8, 5, 8)),
+  q('deportivo', 'molina_dep01', 'José Francisco Molina', 1970, 'Spain', ['GK'], 79, 80, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('deportivo', 'manuel_pablo_01', 'Manuel Pablo', 1976, 'Spain', ['RB'], 78, 81, 2005, 20, t(8, 5, 8, 8, 5, 8)),
+  q('deportivo', 'cesar_martin_01', 'César Martín', 1977, 'Spain', ['CB'], 76, 79, 2005, 20, t(8, 5, 8, 8, 5, 7)),
+  q('deportivo', 'capdevila_01', 'Joan Capdevila', 1978, 'Spain', ['LB', 'LW'], 77, 82, 2005, 20, t(8, 5, 8, 8, 5, 8)),
+  q('deportivo', 'scaloni_01', 'Lionel Scaloni', 1978, 'Argentina', ['RB'], 74, 78, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('deportivo', 'victor_dep01', 'Víctor Sánchez', 1976, 'Spain', ['RW', 'AM'], 76, 79, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('deportivo', 'fran_dep01', 'Fran', 1969, 'Spain', ['AM', 'LW'], 78, 79, 2003, 20, t(9, 5, 8, 10, 5, 8), { loyalty: 95 }),
 ];
 
 // ── Lazio, 2001-02 (the Cragnotti empire's last stand) ─────────────────────────
@@ -93,6 +128,13 @@ const LAZIO_2001: CuratedSeed[] = [
   q('lazio', 'couto_01', 'Fernando Couto', 1969, 'Portugal', ['CB'], 80, 81, 2004, 20, t(8, 6, 8, 8, 6, 8)),
   q('lazio', 'peruzzi_01', 'Angelo Peruzzi', 1970, 'Italy', ['GK'], 81, 82, 2004, 20, t(9, 6, 8, 8, 5, 7)),
   q('lazio', 'stankovic_01', 'Dejan Stanković', 1978, 'Serbia', ['CM', 'AM'], 80, 84, 2005, 20, t(8, 6, 8, 7, 5, 8)),
+  q('lazio', 'inzaghi_s_01', 'Simone Inzaghi', 1976, 'Italy', ['ST'], 76, 78, 2004, 20, t(8, 6, 8, 8, 5, 8)),
+  q('lazio', 'favalli_01', 'Giuseppe Favalli', 1972, 'Italy', ['LB', 'CB'], 78, 80, 2004, 20, t(9, 5, 8, 8, 5, 8)),
+  q('lazio', 'negro_01', 'Paolo Negro', 1972, 'Italy', ['CB', 'RB'], 76, 78, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('lazio', 'pancaro_01', 'Giuseppe Pancaro', 1971, 'Italy', ['LB'], 76, 78, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('lazio', 'liverani_01', 'Fabio Liverani', 1976, 'Italy', ['CM', 'DM'], 76, 80, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('lazio', 'corradi_01', 'Bernardo Corradi', 1976, 'Italy', ['ST'], 75, 78, 2005, 20, t(7, 6, 8, 7, 5, 8)),
+  q('lazio', 'marchegiani_01', 'Luca Marchegiani', 1966, 'Italy', ['GK'], 76, 76, 2003, 20, t(9, 5, 8, 8, 4, 7)),
 ];
 
 // ── AS Roma, 2001-02 (the reigning Scudetto champions) ─────────────────────────
@@ -104,6 +146,14 @@ const ROMA_2001: CuratedSeed[] = [
   q('roma', 'samuel_01', 'Walter Samuel', 1978, 'Argentina', ['CB'], 82, 85, 2005, 20, t(9, 6, 8, 8, 6, 8)),
   q('roma', 'candela_01', 'Vincent Candela', 1973, 'France', ['LB'], 79, 81, 2004, 20, t(8, 5, 8, 8, 5, 8)),
   q('roma', 'cassano_01', 'Antonio Cassano', 1982, 'Italy', ['AM', 'ST'], 74, 87, 2006, 20, t(4, 9, 8, 5, 8, 7)),
+  q('roma', 'antonioli_01', 'Francesco Antonioli', 1969, 'Italy', ['GK'], 78, 79, 2004, 20, t(9, 5, 8, 8, 5, 7)),
+  q('roma', 'aldair_01', 'Aldair', 1965, 'Brazil', ['CB'], 80, 80, 2003, 20, t(9, 5, 8, 9, 4, 8), { loyalty: 90 }),
+  q('roma', 'zago_01', 'Zago', 1969, 'Brazil', ['CB'], 77, 78, 2004, 20, t(8, 5, 8, 8, 5, 8)),
+  q('roma', 'assuncao_01', 'Marcos Assunção', 1976, 'Brazil', ['DM', 'CM'], 78, 80, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('roma', 'tommasi_01', 'Damiano Tommasi', 1974, 'Italy', ['CM', 'DM'], 79, 81, 2004, 20, t(9, 5, 8, 9, 4, 8), { loyalty: 88 }),
+  q('roma', 'nakata_01', 'Hidetoshi Nakata', 1977, 'Japan', ['AM', 'CM'], 80, 83, 2004, 20, t(9, 6, 8, 7, 5, 8)),
+  q('roma', 'montella_01', 'Vincenzo Montella', 1974, 'Italy', ['ST'], 81, 83, 2004, 20, t(8, 6, 8, 8, 5, 8)),
+  q('roma', 'delvecchio_01', 'Marco Delvecchio', 1973, 'Italy', ['ST', 'LW'], 78, 80, 2004, 20, t(8, 6, 8, 8, 5, 8)),
 ];
 
 // ── Bayer Leverkusen, 2001-02 (the treble-runners-up of Ballack & Zé Roberto) ──
@@ -115,6 +165,14 @@ const LEVERKUSEN_2001: CuratedSeed[] = [
   q('leverkusen', 'schneider_01', 'Bernd Schneider', 1973, 'Germany', ['RW', 'AM'], 80, 82, 2005, 20, t(9, 5, 8, 8, 4, 8)),
   q('leverkusen', 'neuville_01', 'Oliver Neuville', 1973, 'Germany', ['ST'], 79, 80, 2004, 20, t(8, 6, 8, 7, 5, 8)),
   q('leverkusen', 'berbatov_01', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST'], 72, 87, 2005, 20, t(7, 7, 8, 6, 5, 8)),
+  q('leverkusen', 'butt_01', 'Hans-Jörg Butt', 1974, 'Germany', ['GK'], 79, 81, 2005, 20, t(9, 5, 8, 8, 4, 8)),
+  q('leverkusen', 'nowotny_01', 'Jens Nowotny', 1974, 'Germany', ['CB'], 81, 83, 2005, 25, t(9, 5, 8, 8, 4, 8)),
+  q('leverkusen', 'placente_01', 'Diego Placente', 1977, 'Argentina', ['LB'], 77, 80, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('leverkusen', 'zivkovic_01', 'Boris Živković', 1975, 'Croatia', ['RB', 'CB'], 76, 78, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('leverkusen', 'ramelow_01', 'Carsten Ramelow', 1974, 'Germany', ['DM', 'CB'], 78, 80, 2005, 20, t(9, 5, 8, 8, 4, 8)),
+  q('leverkusen', 'kirsten_01', 'Ulf Kirsten', 1965, 'Germany', ['ST'], 76, 76, 2003, 25, t(8, 6, 8, 9, 5, 8), { loyalty: 90 }),
+  q('leverkusen', 'brdaric_01', 'Thomas Brdarić', 1975, 'Germany', ['ST'], 73, 76, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('leverkusen', 'babic_01', 'Marko Babić', 1981, 'Croatia', ['LW', 'LB'], 74, 81, 2005, 20, t(7, 6, 8, 7, 5, 8)),
 ];
 
 // ── Borussia Dortmund, 2001-02 (Bundesliga champions) ──────────────────────────
@@ -126,6 +184,13 @@ const DORTMUND_2001: CuratedSeed[] = [
   q('dortmund', 'metzelder_01', 'Christoph Metzelder', 1980, 'Germany', ['CB'], 78, 83, 2005, 25, t(9, 5, 8, 8, 5, 8)),
   q('dortmund', 'dede_01', 'Dedé', 1978, 'Brazil', ['LB'], 78, 81, 2005, 20, t(8, 5, 8, 8, 5, 8)),
   q('dortmund', 'lehmann_01', 'Jens Lehmann', 1969, 'Germany', ['GK'], 81, 83, 2004, 20, t(8, 7, 8, 7, 6, 8)),
+  q('dortmund', 'worns_01', 'Christian Wörns', 1972, 'Germany', ['CB'], 79, 80, 2004, 20, t(9, 5, 8, 8, 4, 8)),
+  q('dortmund', 'evanilson_01', 'Evanílson', 1974, 'Brazil', ['RB', 'CB'], 76, 78, 2004, 20, t(8, 5, 8, 7, 5, 8)),
+  q('dortmund', 'reuter_01', 'Stefan Reuter', 1966, 'Germany', ['RB', 'DM'], 76, 76, 2003, 20, t(9, 5, 8, 9, 4, 8), { loyalty: 90 }),
+  q('dortmund', 'heinrich_01', 'Jörg Heinrich', 1969, 'Germany', ['LB', 'LW'], 75, 76, 2003, 20, t(8, 5, 8, 8, 5, 8)),
+  q('dortmund', 'ricken_01', 'Lars Ricken', 1976, 'Germany', ['AM', 'ST'], 76, 79, 2004, 20, t(8, 5, 8, 9, 5, 8), { loyalty: 88 }),
+  q('dortmund', 'ewerthon_01', 'Ewerthon', 1981, 'Brazil', ['ST', 'RW'], 75, 82, 2005, 20, t(7, 6, 8, 7, 5, 8)),
+  q('dortmund', 'kohler_01', 'Jürgen Kohler', 1965, 'Germany', ['CB'], 76, 76, 2002, 25, t(9, 6, 8, 9, 5, 7), { loyalty: 88 }),
 ];
 
 // ── Celtic, 2001-02 (O'Neill's champions; Larsson the talisman) ────────────────
@@ -137,6 +202,13 @@ const CELTIC_2001: CuratedSeed[] = [
   q('celtic', 'petrov_s_01', 'Stiliyan Petrov', 1979, 'Bulgaria', ['CM', 'DM'], 78, 83, 2005, 20, t(8, 5, 8, 8, 5, 8)),
   q('celtic', 'agathe_01', 'Didier Agathe', 1975, 'France', ['RW', 'RB'], 75, 78, 2005, 20, t(7, 5, 8, 7, 5, 8)),
   q('celtic', 'valgaeren_01', 'Joos Valgaeren', 1976, 'Belgium', ['CB'], 76, 79, 2005, 20, t(8, 5, 8, 8, 5, 7)),
+  q('celtic', 'douglas_01', 'Rab Douglas', 1972, 'Scotland', ['GK'], 75, 77, 2005, 20, t(8, 5, 8, 8, 5, 7)),
+  q('celtic', 'mjallby_01', 'Johan Mjällby', 1971, 'Sweden', ['CB', 'DM'], 77, 78, 2004, 20, t(8, 5, 8, 8, 5, 8)),
+  q('celtic', 'balde_01', 'Bobo Baldé', 1975, 'Guinea', ['CB'], 77, 80, 2005, 20, t(8, 5, 8, 8, 6, 8)),
+  q('celtic', 'thompson_a_01', 'Alan Thompson', 1973, 'England', ['LW', 'CM'], 75, 77, 2005, 20, t(7, 6, 8, 8, 5, 8)),
+  q('celtic', 'lambert_p_01', 'Paul Lambert', 1969, 'Scotland', ['CM', 'DM'], 77, 78, 2004, 20, t(9, 5, 8, 9, 4, 8), { loyalty: 88 }),
+  q('celtic', 'mcnamara_01', 'Jackie McNamara', 1973, 'Scotland', ['RB', 'CM'], 75, 77, 2005, 20, t(8, 5, 8, 9, 5, 8), { loyalty: 88 }),
+  q('celtic', 'petta_01', 'Bobby Petta', 1974, 'Netherlands', ['LW'], 73, 75, 2004, 20, t(7, 5, 8, 7, 5, 8)),
 ];
 
 // ── Rangers, 2001-02 (Advocaat/McLeish; the £12m Flo, De Boer, captain Ferguson) ─
@@ -207,6 +279,13 @@ const LYON_2001: CuratedSeed[] = [
   q('lyon', 'carriere_01', 'Éric Carrière', 1973, 'France', ['AM', 'CM'], 78, 80, 2004, 20, t(8, 5, 8, 8, 5, 8)),
   q('lyon', 'edmilson_01', 'Edmílson', 1976, 'Brazil', ['DM', 'CB'], 80, 83, 2005, 20, t(9, 5, 8, 8, 5, 8)),
   q('lyon', 'cris_01', 'Cris', 1977, 'Brazil', ['CB'], 78, 82, 2005, 20, t(8, 6, 8, 8, 6, 7)),
+  q('lyon', 'muller_p_01', 'Patrick Müller', 1976, 'Switzerland', ['CB', 'DM'], 78, 80, 2004, 20, t(9, 5, 8, 8, 5, 8)),
+  q('lyon', 'brechet_01', 'Jérémie Bréchet', 1979, 'France', ['CB', 'LB'], 75, 80, 2005, 20, t(8, 5, 8, 7, 5, 8)),
+  q('lyon', 'deflandre_01', 'Éric Deflandre', 1973, 'Belgium', ['RB'], 75, 77, 2004, 20, t(8, 5, 8, 8, 5, 8)),
+  q('lyon', 'violeau_01', 'Philippe Violeau', 1973, 'France', ['DM', 'CM'], 74, 76, 2004, 20, t(8, 5, 8, 8, 5, 8)),
+  q('lyon', 'dhorasoo_01', 'Vikash Dhorasoo', 1973, 'France', ['CM', 'AM'], 77, 79, 2004, 20, t(7, 6, 8, 7, 5, 8)),
+  q('lyon', 'laville_01', 'Florent Laville', 1973, 'France', ['CB'], 74, 76, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('lyon', 'luyindula_01', 'Péguy Luyindula', 1979, 'France', ['ST'], 74, 80, 2005, 20, t(7, 6, 8, 7, 5, 8)),
 ];
 
 // ── Real Sociedad, 2001-02 (the club that sold Liverpool its metronome) ─────────
