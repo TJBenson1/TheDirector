@@ -18,7 +18,7 @@
  * to the generic derivation.
  */
 
-import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, realDepartureThisWindow, narrativeContext, divergenceFactor, standingsOrder, ERA_REALITY, eraForScenario, type GameState, type ScenarioOpening } from '@director/engine';
+import { coachBriefing, getScenario, clubSquadPlayers, realInboundThisWindow, realDepartureThisWindow, narrativeContext, divergenceFactor, standingsOrder, midSeasonForm, ERA_REALITY, eraForScenario, type GameState, type ScenarioOpening } from '@director/engine';
 
 type Group = 'GK' | 'DEF' | 'MID' | 'ATT';
 const GROUP: Record<string, Group> = {
@@ -382,16 +382,25 @@ function titleRaceLine(state: GameState): string | null {
 }
 
 /** One standout and one struggler in the current side — "the form of his life"
- *  vs "lost on the fringes" — read from live form and game-time. */
+ *  vs "lost on the fringes" — read from the engine's live mid-season form, which
+ *  writes the authored note per player (goals/assists, why he's off the pace, the
+ *  logjam he's stuck in). Reusing those notes keeps the winter beat true to what
+ *  the squad panel shows and rich without per-scenario authoring. p.form itself is
+ *  a club-tier field that stays 0 mid-season, so it must NOT be read here. */
 function formStoryLines(state: GameState): string[] {
-  const squad = clubSquadPlayers(state, state.playerClub).filter((p) => !p.injury);
+  const form = midSeasonForm(state);
+  if (!form.underway) return [];
   const out: string[] = [];
-  const flying = [...squad].filter((p) => p.form >= 3).sort((a, b) => b.form + b.ability - (a.form + a.ability))[0];
-  if (flying) out.push(`${flying.name} is in the form of his life`);
-  const struggling = [...squad]
-    .filter((p) => p.form <= -2 && (p.lastSeason ? p.lastSeason.minutesShare < 0.4 : p.morale < 45) && p.ability >= 72)
-    .sort((a, b) => a.form - b.form)[0];
-  if (struggling) out.push(`${struggling.name} is struggling for a rhythm, drifting to the fringes`);
+  const flying = form.players.find((p) => p.flag === 'flying');
+  if (flying) out.push(`${flying.name} is ${flying.note}`);
+  // The most telling downside story — a stranded talent or a man off his level.
+  // Ordered by how much of a story it is (misfit/logjam/struggling over a mere
+  // squad-filler on the fringe).
+  const downRank: Record<string, number> = { misfit: 0, logjam: 1, struggling: 2, adapting: 3, fringe: 4 };
+  const struggling = form.players
+    .filter((p) => p.flag in downRank && p.name !== flying?.name)
+    .sort((a, b) => downRank[a.flag]! - downRank[b.flag]!)[0];
+  if (struggling) out.push(`${struggling.name} is ${struggling.note}`);
   return out;
 }
 
@@ -438,14 +447,19 @@ export function generatedWinterOpening(state: GameState): Opening | null {
   }
   const opener = sentences.join(' ');
 
-  // ── Beat two: your fingerprints on the half-season — form, injuries, the fans. ──
-  const storyBits: string[] = [...formStoryLines(state)];
+  // ── Beat two: your fingerprints on the half-season — form, injuries, the fans.
+  //    Each of these is a full clause (the engine's per-player note, the leaking-
+  //    at-the-back line, the fans' unrest over a sale), so they read as their own
+  //    sentences rather than one comma-spliced run-on. ──
+  const forms = formStoryLines(state);
+  const sentenceBits: string[] = [];
+  if (forms[0]) sentenceBits.push(`Around the squad, ${forms[0]}.`);
+  if (forms[1]) sentenceBits.push(`${capitalise(forms[1])}.`);
   const injLine = injuryConsequenceLine(state);
-  if (injLine) storyBits.push(injLine);
+  if (injLine) sentenceBits.push(`At the back, ${injLine}.`);
   const saleMemory = ctx.threads.find((tdetail) => /still coming to terms with the sale/i.test(tdetail));
-  const storyPara = storyBits.length
-    ? `Around the squad: ${joinNames(storyBits)}.${saleMemory ? ` And ${saleMemory.replace(/^The /, 'the ')}` : ''}`
-    : saleMemory ?? '';
+  if (saleMemory) sentenceBits.push(saleMemory.trim().replace(/\.?$/, '.'));
+  const storyPara = sentenceBits.join(' ');
 
   // ── Beat three: the calls at the edges. ──
   const crisisBits: string[] = [];
