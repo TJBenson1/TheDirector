@@ -25,6 +25,7 @@ import { executeTransfer } from './transfers.js';
 import { evaluateApproach } from './agency.js';
 import { standingsOrder } from './season.js';
 import { ERA_REALITY, eraForScenario, entryKey } from './ledger.js';
+import { eraImportAffinity } from './culture.js';
 
 /** Real players reality is tracking in this scenario's era pack. A counter-punch
  *  may deviate one off course, but only LOGICALLY — never a settled star at the
@@ -69,43 +70,6 @@ function hijackableSubjects(state: GameState): Map<string, Hijackable> {
   return out;
 }
 
-/** League nationality, for era import-culture. Prefix-matched off the league id. */
-function leagueCountry(leagueId: string | null): string | null {
-  if (!leagueId) return null;
-  if (leagueId.startsWith('eng')) return 'England';
-  if (leagueId.startsWith('esp') || leagueId.includes('la-liga')) return 'Spain';
-  if (leagueId.startsWith('ita') || leagueId.includes('serie-a')) return 'Italy';
-  if (leagueId.startsWith('ger') || leagueId.includes('bundesliga')) return 'Germany';
-  if (leagueId.startsWith('fra')) return 'France';
-  return null;
-}
-
-/** Nationalities a league drew on comfortably even in the pre-globalised game —
- *  its traditional import pipelines. Everyone else is a "distant" market that only
- *  opens up as the sport globalises. */
-const IMPORT_PARTNERS: Record<string, string[]> = {
-  England: ['Ireland', 'Scotland', 'Wales', 'Northern Ireland', 'France', 'Netherlands', 'Norway', 'Sweden', 'Denmark', 'Australia', 'United States'],
-  Spain: ['Argentina', 'Brazil', 'Uruguay', 'Portugal', 'France', 'Netherlands'],
-  Italy: ['Argentina', 'Brazil', 'Uruguay', 'France', 'Netherlands', 'Germany', 'Denmark'],
-  Germany: ['Austria', 'Switzerland', 'Poland', 'Czechia', 'Turkey', 'Brazil', 'Serbia', 'Croatia'],
-  France: ['Senegal', 'Ivory Coast', 'Mali', 'Cameroon', 'Algeria', 'Morocco', 'Argentina', 'Brazil'],
-};
-
-/**
- * How era-appropriate it is for a club in `leagueId` to sign a player of a given
- * nationality in `year` (0..1). A native is always a 1; a traditional-pipeline
- * import starts high; a distant market starts low and opens up as the game
- * globalises (~1995 → 2010). This is why a young Spanish midfielder joining an
- * English club reads as odd in 2001 but ordinary by 2014.
- */
-function eraImportAffinity(leagueId: string | null, year: number, nationality: string): number {
-  const country = leagueCountry(leagueId);
-  if (!country) return 1; // unmodelled league — no cultural constraint
-  if (nationality === country) return 1;
-  const open = Math.max(0, Math.min(1, (year - 1995) / 15)); // 0 in 1995 → 1 by 2010
-  const base = (IMPORT_PARTNERS[country] ?? []).includes(nationality) ? 0.7 : 0.3;
-  return base + (1 - base) * open;
-}
 
 const STAR_ABILITY = 82;
 

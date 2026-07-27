@@ -17,6 +17,7 @@ import { scoutPlayer, type ScoutReport } from './scouting.js';
 import { evaluateApproach, areDirectRivals } from './agency.js';
 import { isProcedural, ERA_REALITY, eraForScenario } from './ledger.js';
 import { isOnLoan, isPersonaNonGrata } from './restrictions.js';
+import { eraImportAffinity } from './culture.js';
 
 const GROUP: Record<Position, string> = {
   GK: 'GK', CB: 'DEF', LB: 'DEF', RB: 'DEF', DM: 'MID', CM: 'MID', AM: 'MID', LW: 'ATT', RW: 'ATT', ST: 'ATT',
@@ -175,10 +176,18 @@ export function suggestTargets(
     // as all-Premier-League. Keep the signal (willingness is still returned per
     // target) but let ability/upside lead, so real foreign options surface too.
     const availability = tags.length * (opts.favourAvailable ? 9 : 5) + (verdict.willing ? 3 : -3);
+    // Era import-culture (§ market realism): a shortlist for an English club in
+    // 2001 should read British-and-French, not full of exotic teenagers the era
+    // wouldn't touch — but by 2014 the market is global. A soft nudge only (0 for
+    // an era-appropriate profile, down to ~-7 for a distant one), so the signal
+    // never buries a genuinely better player; it just orders the plausible ones.
+    const userLeague = state.clubs[state.playerClub]?.leagueId;
+    const affinity = eraImportAffinity(userLeague, Number(state.clock.date.slice(0, 4)), p.nationality);
+    const cultureNudge = (affinity - 1) * 7;
     // Prospects rank by upside (scouted potential, fog-aware); senior targets by
     // present ability.
     const base = opts.prospects ? (report.potential.low + report.potential.high) / 2 : p.ability;
-    const score = base + availability;
+    const score = base + availability + cultureNudge;
     rows.push({
       score,
       exact,
