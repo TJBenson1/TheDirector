@@ -25,27 +25,26 @@ function q(
   return { id: `cur_${id}`, name, birthYear, nationality, positions, club, contractUntil, ability, potentialCeiling, personality, injuryProneness, ...extra };
 }
 
+// Bierhoff, Helveg (Udinese), Rizzitelli (Torino), Luiso (Vicenza) and Marcolin
+// (Cagliari) are already in the main 1995 pack — this domestic pack only adds the
+// players who AREN'T there, to avoid seeding the same man twice at one club.
 const UDINESE_95: CuratedSeed[] = [
-  q('udinese', 'bierhoff_ud95', 'Oliver Bierhoff', 1968, 'Germany', ['ST'], 79, 83, 1999, 30, t(8, 6, 8, 7, 5, 8)),
-  q('udinese', 'helveg_ud95', 'Thomas Helveg', 1971, 'Denmark', ['RB', 'RW'], 77, 81, 1998, 30, t(8, 5, 8, 8, 5, 8)),
+  q('udinese', 'bertotto_ud95', 'Valerio Bertotto', 1973, 'Italy', ['CB'], 74, 78, 1999, 30, t(8, 5, 8, 8, 5, 8)),
 ];
 
 const TORINO_95: CuratedSeed[] = [
-  q('torino', 'rizzitelli_to95', 'Ruggiero Rizzitelli', 1967, 'Italy', ['ST'], 77, 78, 1998, 30, t(7, 6, 8, 7, 5, 8)),
   q('torino', 'venturin_to95', 'Giorgio Venturin', 1968, 'Italy', ['CM', 'DM'], 74, 75, 1998, 30, t(8, 5, 8, 8, 5, 8)),
 ];
 
 const VICENZA_95: CuratedSeed[] = [
   q('vicenza', 'otero_vi95', 'Marcelo Otero', 1971, 'Uruguay', ['AM', 'ST'], 76, 79, 1999, 30, t(6, 7, 8, 7, 6, 8)),
-  q('vicenza', 'luiso_vi95', 'Pasquale Luiso', 1969, 'Italy', ['ST'], 74, 76, 1998, 30, t(7, 6, 8, 7, 5, 8)),
 ];
 
 const CAGLIARI_95: CuratedSeed[] = [
-  q('cagliari', 'marcolin_ca95', 'Dario Marcolin', 1971, 'Italy', ['CM', 'AM'], 75, 78, 1998, 30, t(8, 5, 8, 8, 5, 8)),
+  q('cagliari', 'pancaro_ca95', 'Giuseppe Pancaro', 1971, 'Italy', ['LB', 'RB'], 75, 79, 1998, 25, t(8, 5, 8, 8, 5, 8)),
 ];
 
 const ATALANTA_95: CuratedSeed[] = [
-  q('atalanta', 'ganz_at95', 'Maurizio Ganz', 1968, 'Italy', ['ST'], 76, 78, 1998, 30, t(6, 7, 8, 7, 6, 8)),
 ];
 
 const PIACENZA_95: CuratedSeed[] = [

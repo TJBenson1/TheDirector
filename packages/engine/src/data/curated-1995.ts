@@ -172,7 +172,6 @@ export const NAPOLI_1995: CuratedSeed[] = [
 // ── Serie A mid/lower table — lighter, still recognisable era faces ───────────
 export const ATALANTA_1995: CuratedSeed[] = [
   q('atalanta', 'vieri_a', 'Christian Vieri', 1973, 'Italy', ['ST'], 82, 88, 1998, 35, t(6, 8, 8, 5, 7, 6)),
-  q('atalanta', 'inzaghi_a', 'Filippo Inzaghi', 1973, 'Italy', ['ST'], 78, 86, 1998, 30, t(7, 6, 8, 6, 5, 6)),
   q('atalanta', 'morfeo', 'Domenico Morfeo', 1976, 'Italy', ['AM'], 74, 82, 1999, 35, t(6, 6, 7, 7, 6, 7)),
 ];
 export const UDINESE_1995: CuratedSeed[] = [

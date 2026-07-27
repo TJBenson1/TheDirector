@@ -100,7 +100,11 @@ export const BLACKBURN_1995: CuratedSeed[] = [
 export const LIVERPOOL_1995_SQUADS: Record<string, CuratedSeed[]> = {
   liverpool: LIVERPOOL_1995,
   man_utd: MANUTD_1996,
-  arsenal: ARSENAL_1996,
+  // The 1996 Arsenal squad is borrowed as the ~1995 base, but John Lukic only
+  // RETURNED to Arsenal in 1996 — in 1995-96 he is Leeds' keeper (see
+  // ENG_DOMESTIC_1995). Drop the anachronistic Arsenal Lukic so he isn't in two
+  // squads at once in the 1995 world.
+  arsenal: ARSENAL_1996.filter((p) => p.id !== 'cur_lukic_a96'),
   chelsea: CHELSEA_1996,
   spurs: SPURS_1996,
   man_city: MANCITY_1996,

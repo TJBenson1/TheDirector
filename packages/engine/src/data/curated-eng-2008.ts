@@ -262,7 +262,7 @@ export const TOTTENHAM_2008: CuratedSeed[] = [
   q('spurs', 'berbatov_u8', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST'], 84, 85, 2013, 20, t(7, 7, 8, 7, 5, 8)),
   q('spurs', 'bale_sp', 'Gareth Bale', 1989, 'Wales', ['LB', 'LW'], 76, 91, 2014, 25, t(8, 6, 9, 8, 5, 8)),
   q('spurs', 'woodgate_sp', 'Jonathan Woodgate', 1980, 'England', ['CB'], 81, 82, 2012, 35, t(8, 5, 8, 8, 5, 7)),
-  q('spurs', 'corluka_sp', 'Vedran Ćorluka', 1986, 'Croatia', ['CB', 'RB'], 79, 82, 2013, 20, t(8, 5, 8, 8, 5, 7)),
+  q('spurs', 'hutton_sp', 'Alan Hutton', 1984, 'Scotland', ['RB'], 76, 79, 2012, 25, t(7, 6, 8, 7, 5, 8)),
   q('spurs', 'assou_ekotto', 'Benoît Assou-Ekotto', 1984, 'Cameroon', ['LB'], 78, 80, 2013, 20, t(6, 6, 7, 8, 6, 7)),
   q('spurs', 'jenas_sp', 'Jermaine Jenas', 1983, 'England', ['CM', 'AM'], 79, 81, 2013, 20, t(8, 5, 8, 7, 5, 8)),
   q('spurs', 'palacios_sp', 'Wilson Palacios', 1984, 'Honduras', ['DM', 'CM'], 79, 82, 2013, 20, t(8, 6, 8, 7, 6, 8)),
