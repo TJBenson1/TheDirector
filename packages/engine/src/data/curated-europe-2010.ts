@@ -38,6 +38,9 @@ const AJAX_2010: CuratedSeed[] = [
   q('ajax', 'eriksen_10', 'Christian Eriksen', 1992, 'Denmark', ['AM', 'CM'], 76, 89, 2014, 15, t(9, 6, 9, 8, 4, 8)),
   q('ajax', 'de_jong_s_10', 'Siem de Jong', 1988, 'Netherlands', ['AM', 'ST'], 77, 83, 2014, 20, t(8, 6, 8, 8, 5, 8)),
   q('ajax', 'sulejmani_10', 'Miralem Sulejmani', 1988, 'Serbia', ['LW', 'ST'], 74, 81, 2013, 20, t(6, 6, 8, 6, 6, 8)),
+  // Ajax's captain and talisman in 2010-11 — sold to Liverpool in the January 2011
+  // window (funded by Torres's exit), which the liverpool-2010 ledger executes.
+  q('ajax', 'suarez_lv10', 'Luis Suárez', 1987, 'Uruguay', ['ST'], 85, 91, 2016, 20, t(8, 8, 10, 8, 8, 8)),
 ];
 
 // ── PSV, 2010-11 ────────────────────────────────────────────────────────────────

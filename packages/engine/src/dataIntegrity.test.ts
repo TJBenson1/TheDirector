@@ -51,6 +51,21 @@ describe('curated data integrity', () => {
     expect(dups, `duplicate players in ${id}`).toEqual([]);
   });
 
+  it.each(scenarioIds)('%s seeds no player twice at the same club', (id) => {
+    // A club can accrete the same real man from two curated packs (a domestic
+    // top-up plus a bespoke seed) — a dup the cross-club check above misses because
+    // both copies sit at one club. Count names per club and flag any that repeat.
+    const s: GameState = createNewGame({ scenarioId: id, seed: 'integrity' });
+    const seen = new Map<string, number>();
+    for (const p of Object.values(s.players)) {
+      if (p.retired) continue;
+      const key = `${p.club}::${p.name}`;
+      seen.set(key, (seen.get(key) ?? 0) + 1);
+    }
+    const dups = [...seen.entries()].filter(([, n]) => n > 1).map(([k]) => k);
+    expect(dups, `same-club duplicate seeds in ${id}`).toEqual([]);
+  });
+
   it.each(scenarioIds)('%s uses only valid position codes', (id) => {
     const s: GameState = createNewGame({ scenarioId: id, seed: 'integrity' });
     const bad: string[] = [];

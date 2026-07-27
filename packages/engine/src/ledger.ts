@@ -885,6 +885,11 @@ const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
   // ── Liverpool's departures (the user's stars leaving, if they are Liverpool) ──
   { playerId: 'cur_torres_lv10', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
   { playerId: 'cur_meireles_lv10', from: 'liverpool', to: 'chelsea', window: '2011-08', fee: 12_000_000, id: 'meireles-chelsea-2011' },
+  // ── The January-2011 deadline-day arrivals Torres's exit funded — Suárez from
+  //    Ajax, Carroll a British-record buy from Newcastle. NOT at Liverpool at
+  //    kickoff; they join here, as the scenario briefing promises. ──
+  { playerId: 'cur_suarez_lv10', from: 'ajax', to: 'liverpool', window: '2011-01', fee: 22_800_000, id: 'suarez-lfc-2011c' },
+  { playerId: 'cur_carroll_lv10', from: 'newcastle', to: 'liverpool', window: '2011-01', fee: 35_000_000, id: 'carroll-lfc-2011c' },
   { playerId: 'cur_suarez_lv10', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000, id: 'suarez-barca-2014' },
   // ── The elite market moves as reality ──
   { playerId: 'cur_fabregas_10', from: 'arsenal', to: 'barcelona', window: '2011-08', fee: 29_000_000, id: 'cesc-barca-2011' },

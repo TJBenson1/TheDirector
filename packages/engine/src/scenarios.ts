@@ -1033,6 +1033,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'napoli', name: 'Napoli', prestige: 76 },
       { id: 'hoffenheim', name: 'TSG Hoffenheim', prestige: 68 },
       { id: 'southampton', name: 'Southampton', prestige: 62 },
+      // Andy Carroll's club until his January-2011 move to Liverpool.
+      { id: 'newcastle', name: 'Newcastle United', prestige: 66 },
     ],
     domesticLeagueId: 'eng-2010',
   },

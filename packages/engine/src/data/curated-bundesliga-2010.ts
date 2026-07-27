@@ -176,8 +176,6 @@ export const LIVERPOOL_B10: CuratedSeed[] = [
   q('liverpool', 'kuyt_lv10', 'Dirk Kuyt', 1980, 'Netherlands', ['RW', 'ST'], 81, 82, 2014, 20, t(9, 5, 8, 9, 4, 7)),
   q('liverpool', 'maxi_lv10', 'Maxi Rodríguez', 1981, 'Argentina', ['RW', 'AM'], 80, 81, 2013, 20, t(8, 6, 8, 7, 5, 8)),
   q('liverpool', 'ngog', 'David N’Gog', 1989, 'France', ['ST'], 76, 81, 2014, 20, t(7, 6, 8, 7, 5, 7)),
-  q('liverpool', 'suarez_lv10', 'Luis Suárez', 1987, 'Uruguay', ['ST'], 85, 91, 2016, 20, t(8, 8, 10, 8, 8, 8)),
-  q('liverpool', 'carroll_lv10', 'Andy Carroll', 1989, 'England', ['ST'], 78, 84, 2016, 30, t(5, 7, 7, 6, 7, 7)),
   q('liverpool', 'torres_lv10', 'Fernando Torres', 1984, 'Spain', ['ST'], 86, 89, 2014, 30, t(8, 6, 9, 7, 5, 8)),
   // Real 2010-11 depth to the era minimum (Jones deputising for Reina; the
   // full-back cover and the summer's midfield/attacking additions).
@@ -187,6 +185,14 @@ export const LIVERPOOL_B10: CuratedSeed[] = [
   q('liverpool', 'kyrgiakos_lv10', 'Sotirios Kyrgiakos', 1979, 'Greece', ['CB'], 76, 77, 2012, 30, t(7, 6, 7, 7, 6, 6)),
   q('liverpool', 'poulsen_lv10', 'Christian Poulsen', 1980, 'Denmark', ['DM'], 76, 77, 2013, 30, t(7, 5, 7, 6, 5, 7)),
   q('liverpool', 'joecole_lv10', 'Joe Cole', 1981, 'England', ['AM', 'LW'], 78, 80, 2014, 30, t(6, 6, 7, 6, 5, 7)),
+];
+
+/** Andy Carroll's club until his January-2011 British-record move to Liverpool.
+ *  The rest of the Newcastle 2010-11 side comes from the domestic pack
+ *  (ENG_DOMESTIC_2010_SQUADS) now that the club is registered — Carroll is the one
+ *  mover it omitted (he had been wrongly pre-seeded at Liverpool). */
+export const NEWCASTLE_B10: CuratedSeed[] = [
+  q('newcastle', 'carroll_lv10', 'Andy Carroll', 1989, 'England', ['ST'], 78, 84, 2016, 30, t(5, 7, 7, 6, 7, 7)),
 ];
 
 export const INTER_B10: CuratedSeed[] = [
