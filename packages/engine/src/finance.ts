@@ -69,9 +69,19 @@ export function valuePlayer(player: PlayerState, year: number): number {
   // (all at the 1995 baseline), scaled by the position premium.
   const abilityValue = 300_000 * Math.exp(0.094 * (player.ability - 50)) * positionValueMult(player.positions);
 
-  // Youngsters below their ceiling carry a premium for the upside.
+  // Youngsters below their ceiling carry a premium for the upside — but the market
+  // pays for PROVEN quality, not a scout's projection. So the premium scales with
+  // how much of himself a prospect has actually shown: minutes played (or, before
+  // any season, how close his current ability already is to a first-team level).
+  // A raw 18-year-old is therefore priced near his current ability and GROWS in
+  // value as he develops and breaks through — never front-loaded to three times
+  // what he'll eventually be sold for years later.
   const gap = Math.max(0, player.potentialCeiling - player.ability);
-  const youthMult = 1 + (age <= 21 ? gap * 0.05 : age <= 24 ? gap * 0.03 : age <= 27 ? gap * 0.01 : 0);
+  const proven = player.lastSeason
+    ? Math.max(0.2, Math.min(1, player.lastSeason.minutesShare / 0.55))
+    : Math.max(0.2, Math.min(1, (player.ability - 66) / 14));
+  const perGap = age <= 21 ? 0.03 : age <= 24 ? 0.02 : age <= 27 ? 0.008 : 0;
+  const youthMult = 1 + gap * perGap * proven;
 
   // Age curve: peak ~24–29, declining after.
   const ageFactor =
