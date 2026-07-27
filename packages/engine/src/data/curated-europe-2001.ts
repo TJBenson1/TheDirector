@@ -237,6 +237,19 @@ const ATLETICO_2001: CuratedSeed[] = [
   q('atletico', 'torres_at01', 'Fernando Torres', 1984, 'Spain', ['ST'], 62, 90, 2008, 15, t(9, 6, 9, 8, 4, 9)),
 ];
 
+// ── Coventry City, 2001-02 (just relegated — the club that sold Kirkland) ───────
+const COVENTRY_2001: CuratedSeed[] = [
+  q('coventry', 'hedman_cv01', 'Magnus Hedman', 1973, 'Sweden', ['GK'], 74, 76, 2004, 20, t(8, 5, 7, 7, 5, 7)),
+  q('coventry', 'hall_cv01', 'Marcus Hall', 1976, 'England', ['LB'], 68, 70, 2003, 20, t(8, 5, 7, 8, 5, 7)),
+  q('coventry', 'konjic_cv01', 'Mohammed Konjić', 1970, 'Bosnia', ['CB'], 72, 73, 2003, 20, t(8, 5, 7, 8, 5, 7)),
+  q('coventry', 'davenport_cv01', 'Calum Davenport', 1983, 'England', ['CB'], 66, 78, 2005, 25, t(7, 5, 7, 7, 5, 7)),
+  q('coventry', 'carsley_cv01', 'Lee Carsley', 1974, 'Ireland', ['DM', 'CM'], 74, 76, 2004, 20, t(8, 5, 8, 8, 5, 7)),
+  q('coventry', 'chippo_cv01', 'Youssef Chippo', 1973, 'Morocco', ['CM', 'AM'], 73, 75, 2003, 20, t(7, 6, 8, 7, 5, 7)),
+  q('coventry', 'eustace_cv01', 'John Eustace', 1979, 'England', ['CM', 'DM'], 67, 74, 2004, 20, t(8, 5, 7, 8, 5, 7)),
+  q('coventry', 'bothroyd_cv01', 'Jay Bothroyd', 1982, 'England', ['ST'], 68, 78, 2004, 25, t(6, 7, 8, 6, 6, 7)),
+  q('coventry', 'hughes_cv01', 'Lee Hughes', 1976, 'England', ['ST'], 72, 74, 2003, 25, t(7, 6, 8, 7, 6, 7)),
+];
+
 /** The European selling clubs of the 2001-02 world, merged into the
  *  liverpool-2001 universe (all whole new clubs). */
 export const EUROPE_2001_SQUADS: Record<string, CuratedSeed[]> = {
@@ -256,4 +269,5 @@ export const EUROPE_2001_SQUADS: Record<string, CuratedSeed[]> = {
   lyon: LYON_2001,
   real_sociedad: REAL_SOCIEDAD_2001,
   atletico: ATLETICO_2001,
+  coventry: COVENTRY_2001,
 };

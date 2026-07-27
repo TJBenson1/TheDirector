@@ -244,13 +244,13 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'LM Danny Murphy', 'ST Michael Owen', 'ST Emile Heskey',
     ],
     fringe: [
-      'Michael Owen — about to be crowned the 2001 Ballon d’Or winner, the jewel of the treble side.',
-      'John Arne Riise — the first summer signing, a £4m thunderbolt from Monaco, quickly nailing down left-back.',
+      'Michael Owen — the jewel of the treble side, the league’s most feared finisher and right at the peak of his powers.',
+      'John Arne Riise — the £4m left-sided thunderbolt from Monaco Houllier is chasing; the deal is there to complete this summer.',
       'Robbie Fowler — the cult hero now out of favour behind Owen and Heskey, and increasingly linked with a move away.',
-      'Sander Westerveld — the incumbent keeper, but shaky enough that his place looks vulnerable early on.',
-      'Jerzy Dudek & Chris Kirkland — NOT here yet: both signed at the end of August to solve the goalkeeping crisis.',
+      'Sander Westerveld — the incumbent keeper, but shaky enough that his place looks vulnerable — the reason Houllier wants a new No.1.',
+      'Jerzy Dudek & Chris Kirkland — NOT here yet: the two goalkeepers Houllier is chasing to end the crisis, from Feyenoord and Coventry.',
     ],
-    briefing: `Liverpool begin basking in the afterglow of an unprecedented cup treble — FA Cup, League Cup and UEFA Cup — and Houllier’s methodical, defensively rigorous project looks ready for the final step: a genuine tilt at the title, powered by 2001 Ballon d’Or winner Michael Owen. Houllier reinforces cautiously, adding Riise and, by late August, two new goalkeepers. Two storm clouds gather: the goalkeeping department looks unsettled, and Houllier is driving himself at a punishing pace. With Owen at his peak and the treble momentum behind them, this is the best chance in a decade to turn cups into a genuine title challenge — can you deliver the one trophy that matters?`,
+    briefing: `Liverpool are basking in the afterglow of an unprecedented cup treble — FA Cup, League Cup and UEFA Cup — and Houllier’s methodical, defensively rigorous project looks ready for its final step: a genuine tilt at the title. Michael Owen is at the peak of his powers, the treble momentum is real, and this is the best chance in a decade to turn the cups into a league challenge. But nothing is settled: the goalkeeping department is unsettled and Houllier wants it fixed, the squad needs shrewd reinforcement while the money lasts, and the manager is driving himself at a punishing pace. Back the right calls this summer and the title is there — can you deliver the one trophy that matters?`,
   },
 
   'chelsea-2003': {
