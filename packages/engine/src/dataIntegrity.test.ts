@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { SCENARIOS } from './scenarios.js';
 import { createNewGame } from './state.js';
 import { currentYear } from './transfers.js';
+import { clubSquadPlayers } from './players.js';
 import type { GameState } from './types.js';
 
 /**
@@ -57,6 +58,14 @@ describe('curated data integrity', () => {
       for (const pos of p.positions) if (!VALID_POS.has(pos)) bad.push(`${p.name}: ${pos}`);
     }
     expect(bad, `invalid positions in ${id}`).toEqual([]);
+  });
+
+  it.each(scenarioIds)('%s fields a goalkeeper in the playable squad', (id) => {
+    // A club with no keeper on the roster is a broken start (the coach can't pick
+    // an XI). Every scenario's own club must carry at least one GK at kickoff.
+    const s: GameState = createNewGame({ scenarioId: id, seed: 'integrity' });
+    const keepers = clubSquadPlayers(s, s.playerClub).filter((p) => p.positions.includes('GK'));
+    expect(keepers.length, `no goalkeeper in ${id} playable squad`).toBeGreaterThan(0);
   });
 
   it.each(scenarioIds)('%s seeds every player at a plausible age', (id) => {

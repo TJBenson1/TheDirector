@@ -38,12 +38,28 @@ const CLUB_STYLE_KEY: Record<ClubId, keyof typeof LEAGUE_STYLES> = {
   bayern: 'germany',
 };
 
+/** A club's league-style key derived from the COUNTRY of its league, so that a
+ *  move within one country (Lazio → Milan, Valencia → Real Madrid) is a
+ *  same-style move and settles seamlessly — the design's stated rule ("same
+ *  country/style ⇒ no adaptation friction"). Previously only the handful of
+ *  elite clubs in CLUB_STYLE_KEY and English clubs were keyed, so every other
+ *  domestic move read as `generic → italy/spain/…` and wrongly triggered a
+ *  "new league" adaptation. League ids are era-suffixed (esp-2003, ita-2004,
+ *  ger-1997), so we match on the country prefix, not an exact id. */
+function styleKeyForLeague(leagueId: string | null | undefined): keyof typeof LEAGUE_STYLES | null {
+  if (!leagueId) return null;
+  if (leagueId.startsWith('eng')) return 'england';
+  if (leagueId.startsWith('esp') || leagueId.includes('la-liga')) return 'spain';
+  if (leagueId.startsWith('ita') || leagueId.includes('serie-a')) return 'italy';
+  if (leagueId.startsWith('ger') || leagueId.includes('bundesliga')) return 'germany';
+  if (leagueId.startsWith('ned') || leagueId.includes('eredivisie')) return 'netherlands';
+  return null;
+}
+
 export function styleKeyForClub(state: GameState, clubId: ClubId | null): keyof typeof LEAGUE_STYLES {
   if (!clubId) return 'generic';
   if (CLUB_STYLE_KEY[clubId]) return CLUB_STYLE_KEY[clubId]!;
-  const club = state.clubs[clubId];
-  if (club?.leagueId === 'eng-1') return 'england';
-  return 'generic';
+  return styleKeyForLeague(state.clubs[clubId]?.leagueId) ?? 'generic';
 }
 
 export function styleForClub(state: GameState, clubId: ClubId | null): LeagueStyle {
