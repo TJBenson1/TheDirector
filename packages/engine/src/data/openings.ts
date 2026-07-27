@@ -352,13 +352,13 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'AM Kaká', 'AM Clarence Seedorf', 'ST Filippo Inzaghi',
     ],
     fringe: [
-      'Andriy Shevchenko — GONE: sold to Chelsea that summer, and the void up front is the very reason the Christmas Tree exists.',
-      'Kaká — the peak-form talisman and creative heartbeat, the man the whole side is built to serve.',
-      'Paolo Maldini (38) & Alessandro Costacurta (40) — the ageing aristocrats in their European swansong.',
-      'Alberto Gilardino — the rotation striker sharing the lone-forward duties with Inzaghi.',
-      'Ronaldo — NOT here yet: the Brazilian arrives in January 2007 as extra firepower.',
+      'Kaká — the reigning Ballon d’Or and the world’s best, the creative heart the whole Christmas Tree is built to serve.',
+      'Paolo Maldini (39) & Cafu (37) — the ageing aristocrats of the back line, magnificent but a season from the fall; Costacurta has just retired.',
+      'Ronaldo — here, but a fitness gamble: the once-unstoppable Brazilian carries the weight and the fragile knees that will end his Milan story by winter.',
+      'Alberto Gilardino — the rotation striker sharing the lone-forward duties with the veteran Inzaghi.',
+      'Massimo Ambrosini & Emerson — the legs Ancelotti leans on to shield an ageing midfield across a relentless four-competition year.',
     ],
-    briefing: `Milan open as an ageing European aristocracy under Ancelotti, spearheaded by a peak-form Kaká and anchored by a veteran spine — Maldini at 38, the 40-year-old Costacurta — chasing redemption for the traumatic Istanbul collapse of 2005. The Calciopoli scandal casts a heavy shadow: they begin the league with an eight-point deduction and must enter the Champions League through a late-August qualifier against Red Star Belgrade. Shevchenko’s summer sale to Chelsea gutted the attack and pushed Ancelotti to crystallise his 4-3-2-1, with Inzaghi alone up top fed by Kaká and Seedorf. An ageing side carrying a points penalty and a thirst for revenge after Istanbul — is there one last European Cup left in this last dance, and can you rebuild before the fall?`,
+    briefing: `Milan open as the reigning champions of Europe — Athens, May 2007, and the ghost of Istanbul finally laid to rest against Liverpool — with Kaká crowned the world’s best. But this is an aristocracy in its last golden light: Maldini is 39, Cafu 37, Costacurta has retired, and the spine that conquered the continent is a year older and a yard slower. Ancelotti’s Christmas Tree still bends the game around Kaká and Seedorf, Inzaghi and Gilardino sharing the lone-striker duty and a fragile Ronaldo a gamble for extra firepower. There are trophies to chase as holders — the Super Cup, the Club World Cup, the Scudetto and another European Cup — but the fixtures are relentless and the decline is coming. Can you win one more before the fall, or begin the rebuild while the great side still has enough left?`,
   },
 
   'atletico-2013': {
