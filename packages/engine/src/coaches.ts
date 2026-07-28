@@ -80,7 +80,10 @@ interface RealCoach {
 const REAL_COACHES: Record<string, RealCoach> = {
   'man-utd-1999': { identity: 'Alex Ferguson', archetype: 'man-manager', formation: '4-4-2' },
   'man-utd-2013': { identity: 'David Moyes', archetype: 'pragmatic-counter', formation: '4-4-2' },
-  'chelsea-2003': { identity: 'José Mourinho', archetype: 'pragmatic-counter', formation: '4-3-3', favourites: ['Ricardo Carvalho', 'Didier Drogba', 'Paulo Ferreira'] },
+  // 2003-04 is Ranieri's season — the "Tinkerman" spending Abramovich's first
+  // war chest; Mourinho only arrives in summer 2004. The opening and squad are
+  // both 2003-04, so the persona must be Ranieri, not his successor.
+  'chelsea-2003': { identity: 'Claudio Ranieri', archetype: 'balanced', formation: '4-4-2', favourites: ['Frank Lampard', 'John Terry', 'Claude Makélélé'] },
   'liverpool-2001': { identity: 'Gérard Houllier', archetype: 'pragmatic-counter', formation: '4-4-2' },
   'liverpool-2010': { identity: 'Roy Hodgson', archetype: 'defensive-block', formation: '4-4-2' },
   'liverpool-1995': { identity: 'Roy Evans', archetype: 'man-manager', formation: '3-5-2' },
@@ -96,7 +99,9 @@ const REAL_COACHES: Record<string, RealCoach> = {
   'juventus-2006': { identity: 'Didier Deschamps', archetype: 'balanced', formation: '4-4-2' },
   'milan-1995': { identity: 'Fabio Capello', archetype: 'defensive-block', formation: '4-4-2' },
   'milan-2007': { identity: 'Carlo Ancelotti', archetype: 'man-manager', formation: '4-2-3-1', favourites: ['Kaká'] },
-  'inter-1998': { identity: 'Mircea Lucescu', archetype: 'pragmatic-counter', formation: '4-4-2' },
+  // Gigi Simoni is the man in the dugout at kickoff (fresh from the 1998 UEFA Cup
+  // with Ronaldo), as the opening says — Lucescu was only his in-season replacement.
+  'inter-1998': { identity: 'Gigi Simoni', archetype: 'pragmatic-counter', formation: '4-4-2', favourites: ['Ronaldo'] },
   'inter-2004': { identity: 'Roberto Mancini', archetype: 'pragmatic-counter', formation: '4-4-2' },
   'real-madrid-2000': { identity: 'Vicente del Bosque', archetype: 'man-manager', formation: '4-4-2' },
   'real-madrid-2006': { identity: 'Fabio Capello', archetype: 'defensive-block', formation: '4-4-2' },
