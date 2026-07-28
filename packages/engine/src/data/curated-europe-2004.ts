@@ -117,6 +117,34 @@ const CELTIC_2004: CuratedSeed[] = [
 /** The non-Italian, non-Spanish European selling clubs of the 2003-04 world,
  *  shared context for the inter-2004 and barcelona-2003 universes. Merged by
  *  CONCATENATION so any club already curated in a pack is augmented. */
+// ── Expansion pass: further real 2003-04 squad men at the European selling clubs,
+//    so the pipeline reads deep for the inter-2004 and barcelona-2003 worlds. Real
+//    names, real clubs; names already curated in the 2003-04 packs are omitted. ──
+const EUROPE_2004_DEPTH: CuratedSeed[] = [
+  q('ajax', 'dejong_n04', 'Nigel de Jong', 1984, 'Netherlands', ['DM', 'CM'], 74, 84, 2007, 20, t(8, 5, 9, 8, 6, 8)),
+  q('ajax', 'escude_04', 'Julien Escudé', 1979, 'France', ['CB'], 78, 81, 2006, 20, t(8, 5, 8, 7, 5, 8)),
+  q('ajax', 'stekelenburg_04', 'Maarten Stekelenburg', 1982, 'Netherlands', ['GK'], 76, 84, 2007, 20, t(8, 5, 8, 8, 5, 8)),
+  q('psv', 'waterreus_04', 'Ronald Waterreus', 1970, 'Netherlands', ['GK'], 79, 80, 2005, 20, t(9, 5, 8, 8, 5, 7)),
+  q('psv', 'ooijer_04', 'André Ooijer', 1974, 'Netherlands', ['CB', 'RB'], 79, 80, 2006, 20, t(9, 5, 8, 8, 5, 7)),
+  q('psv', 'rommedahl_04', 'Dennis Rommedahl', 1978, 'Denmark', ['RW'], 78, 80, 2006, 20, t(8, 5, 8, 7, 5, 8)),
+  q('porto', 'pedro_mendes_04', 'Pedro Mendes', 1979, 'Portugal', ['CM', 'DM'], 78, 81, 2006, 20, t(8, 5, 8, 7, 5, 8)),
+  q('porto', 'ricardo_costa_04', 'Ricardo Costa', 1981, 'Portugal', ['CB'], 76, 81, 2007, 20, t(8, 5, 8, 8, 5, 8)),
+  q('monaco', 'flavio_roma_04', 'Flávio Roma', 1974, 'Brazil', ['GK'], 78, 80, 2006, 20, t(8, 5, 8, 8, 5, 7)),
+  q('monaco', 'julien_rodriguez_04', 'Julien Rodriguez', 1978, 'France', ['CB'], 77, 79, 2006, 20, t(8, 5, 8, 8, 5, 7)),
+  q('lyon', 'cris_04', 'Cris', 1977, 'Brazil', ['CB'], 80, 83, 2007, 20, t(8, 6, 8, 8, 6, 8)),
+  q('lyon', 'cacapa_04', 'Cláudio Caçapa', 1976, 'Brazil', ['CB'], 78, 80, 2006, 20, t(8, 5, 8, 8, 5, 8)),
+  q('lyon', 'dhorasoo_04', 'Vikash Dhorasoo', 1973, 'France', ['AM', 'CM'], 78, 80, 2005, 20, t(7, 6, 8, 7, 5, 8)),
+  q('werder', 'charisteas_04', 'Angelos Charisteas', 1980, 'Greece', ['ST'], 77, 80, 2007, 20, t(7, 6, 8, 7, 5, 8)),
+  q('werder', 'ernst_04', 'Fabian Ernst', 1979, 'Germany', ['DM', 'CM'], 78, 81, 2006, 20, t(8, 5, 8, 8, 5, 8)),
+  q('werder', 'stalteri_04', 'Paul Stalteri', 1977, 'Canada', ['RB'], 76, 78, 2006, 20, t(8, 5, 8, 8, 5, 8)),
+  q('leverkusen', 'butt_lev04', 'Hans-Jörg Butt', 1974, 'Germany', ['GK'], 80, 81, 2006, 20, t(8, 6, 8, 8, 5, 7)),
+  q('leverkusen', 'krzynowek_04', 'Jacek Krzynówek', 1976, 'Poland', ['LW', 'CM'], 78, 80, 2006, 20, t(8, 5, 8, 7, 5, 8)),
+  q('leverkusen', 'babic_04', 'Marko Babić', 1981, 'Croatia', ['LW', 'LB'], 76, 80, 2007, 20, t(7, 5, 8, 7, 5, 8)),
+  q('celtic', 'douglas_04', 'Rab Douglas', 1972, 'Scotland', ['GK'], 76, 77, 2006, 20, t(8, 5, 8, 8, 5, 7)),
+  q('celtic', 'agathe_04', 'Didier Agathe', 1975, 'France', ['RB', 'RW'], 76, 78, 2006, 20, t(8, 5, 8, 8, 5, 8)),
+  q('celtic', 'mcnamara_04', 'Jackie McNamara', 1973, 'Scotland', ['RB', 'CM'], 76, 77, 2006, 20, t(8, 5, 8, 9, 5, 7), { loyalty: 88 }),
+];
+
 export const EUROPE_2004_SQUADS: Record<string, CuratedSeed[]> = {
   ajax: AJAX_2004,
   psv: PSV_2004,
@@ -127,3 +155,6 @@ export const EUROPE_2004_SQUADS: Record<string, CuratedSeed[]> = {
   leverkusen: LEVERKUSEN_2004,
   celtic: CELTIC_2004,
 };
+for (const seed of EUROPE_2004_DEPTH) {
+  (EUROPE_2004_SQUADS[seed.club as ClubId] ??= []).push(seed);
+}
