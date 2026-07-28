@@ -107,6 +107,34 @@ export const GRADUATES_1999: CuratedSeed[] = [
   q('bayern', 'hargreaves_grad', 'Owen Hargreaves', 1981, 'England', ['DM', 'CM'], 72, 84, 2007, 65, t(9, 5, 8, 7, 4, 7)),
   q('spurs', 'berbatov_grad', 'Dimitar Berbatov', 1981, 'Bulgaria', ['ST', 'AM'], 76, 86, 2006, 30, t(7, 7, 7, 6, 5, 7)),
   q('atletico', 'degea_grad', 'David de Gea', 1990, 'Spain', ['GK'], 66, 89, 2011, 15, t(8, 6, 8, 7, 4, 7)),
+
+  // ── The modern generation (2016-2025 breakthroughs) ──
+  // A 1999 save that runs its full 26 years reaches 2025 — and without these the
+  // world ages into 2025 with no Mbappé, no Yamal, no Bellingham. Each debuts as a
+  // teenager at the club he really broke through at, then grows through the normal
+  // development system. Where a player's real youth club isn't in this world
+  // (Rennes for Camavinga, Dortmund for Bellingham), he is seeded at the present
+  // club he genuinely became a star at instead. Downstream moves are emergent (the
+  // ledger/market may carry them on, as reality did). Fire only in eras whose
+  // window reaches them; dedup-safe against any later-start kickoff squad.
+  q('monaco', 'mbappe_grad', 'Kylian Mbappé', 1998, 'France', ['ST', 'LW', 'RW'], 70, 96, 2022, 15, t(8, 8, 10, 6, 4, 8)),
+  q('real_madrid', 'vinicius_grad', 'Vinícius Júnior', 2000, 'Brazil', ['LW'], 64, 92, 2024, 20, t(7, 7, 9, 7, 5, 8)),
+  q('barcelona', 'pedri_grad', 'Pedri', 2002, 'Spain', ['CM', 'AM'], 66, 92, 2026, 25, t(9, 5, 9, 9, 4, 8)),
+  q('barcelona', 'gavi_grad', 'Gavi', 2004, 'Spain', ['CM', 'AM'], 62, 90, 2026, 30, t(8, 6, 9, 9, 6, 8)),
+  q('barcelona', 'yamal_grad', 'Lamine Yamal', 2007, 'Spain', ['RW', 'LW'], 66, 96, 2026, 15, t(8, 7, 10, 8, 4, 8)),
+  q('bayern', 'musiala_grad', 'Jamal Musiala', 2003, 'Germany', ['AM', 'CM'], 64, 93, 2026, 20, t(9, 6, 9, 8, 4, 8)),
+  q('real_madrid', 'camavinga_grad', 'Eduardo Camavinga', 2002, 'France', ['DM', 'CM'], 68, 90, 2027, 20, t(9, 6, 9, 8, 5, 8)),
+  q('real_madrid', 'bellingham_grad', 'Jude Bellingham', 2003, 'England', ['CM', 'AM'], 80, 94, 2029, 15, t(9, 7, 10, 8, 4, 8)),
+
+  // ── The 2010s elite still defining the game in 2025 ──
+  // Seeded at the present club where each genuinely broke through, so the modern
+  // world isn't missing its spine. Their later transfers are emergent — the sim
+  // may move them on as reality did, or keep them, which is the whole point.
+  q('spurs', 'modric_grad', 'Luka Modrić', 1985, 'Croatia', ['CM', 'AM'], 78, 89, 2016, 15, t(10, 5, 9, 8, 3, 8)),
+  q('celtic', 'vandijk_grad', 'Virgil van Dijk', 1991, 'Netherlands', ['CB'], 70, 90, 2017, 15, t(9, 6, 9, 8, 4, 8)),
+  q('southampton', 'mane_grad', 'Sadio Mané', 1992, 'Senegal', ['LW', 'RW'], 72, 88, 2019, 20, t(9, 6, 9, 7, 5, 8)),
+  q('leicester', 'kante_grad', "N'Golo Kanté", 1991, 'France', ['DM', 'CM'], 74, 87, 2019, 15, t(10, 4, 9, 8, 3, 8)),
+  q('sporting', 'bruno_f_grad', 'Bruno Fernandes', 1994, 'Portugal', ['AM', 'CM'], 76, 88, 2022, 15, t(9, 7, 9, 7, 5, 8)),
 ];
 
 /** The debut schedule: which graduate arrives at which club, and when. */
@@ -177,4 +205,19 @@ export const INTAKES_1999: AcademyIntake[] = [
   { clubId: 'spurs', year: 2006, playerId: 'cur_berbatov_grad' },
   { clubId: 'porto', year: 2006, playerId: 'cur_anderson_grad' },
   { clubId: 'atletico', year: 2009, playerId: 'cur_degea_grad' },
+
+  // ── The modern generation, at their real breakthrough year ──
+  { clubId: 'spurs', year: 2008, playerId: 'cur_modric_grad' },
+  { clubId: 'celtic', year: 2013, playerId: 'cur_vandijk_grad' },
+  { clubId: 'southampton', year: 2014, playerId: 'cur_mane_grad' },
+  { clubId: 'leicester', year: 2015, playerId: 'cur_kante_grad' },
+  { clubId: 'monaco', year: 2016, playerId: 'cur_mbappe_grad' },
+  { clubId: 'sporting', year: 2017, playerId: 'cur_bruno_f_grad' },
+  { clubId: 'real_madrid', year: 2018, playerId: 'cur_vinicius_grad' },
+  { clubId: 'barcelona', year: 2020, playerId: 'cur_pedri_grad' },
+  { clubId: 'bayern', year: 2020, playerId: 'cur_musiala_grad' },
+  { clubId: 'barcelona', year: 2021, playerId: 'cur_gavi_grad' },
+  { clubId: 'real_madrid', year: 2021, playerId: 'cur_camavinga_grad' },
+  { clubId: 'real_madrid', year: 2023, playerId: 'cur_bellingham_grad' },
+  { clubId: 'barcelona', year: 2023, playerId: 'cur_yamal_grad' },
 ];
