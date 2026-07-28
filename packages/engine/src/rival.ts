@@ -135,6 +135,12 @@ function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean 
     const seller = p.club ? state.clubs[p.club] : undefined;
     if (!seller || seller.leagueId !== null) continue; // foreign/context only
     if (p.ability < target - 10 || p.ability > target + 5) continue;
+    // A wonderkid a bigger club is grooming (a high ceiling still ahead of him) is
+    // never a realistic counter-punch for a lesser side: his CURRENT ability
+    // undersells him, so the band above would wave a teenage Messi (72 today,
+    // 95 to come) through to Newcastle. Gate on stature — a club won't land a
+    // future world-beater a rung or more above its level as a knee-jerk reaction.
+    if (year - p.birthYear <= 23 && p.potentialCeiling >= club.prestige + 8) continue;
     if (p.resistance.hardBlocks.length > 0) continue;
     if (valuePlayer(p, year) > budget) continue;
     const match = roleMatch(p);

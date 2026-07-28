@@ -271,6 +271,7 @@ function bestAvailableReplacement(
       if (!p || p.club !== e.from || p.injury || p.resistance.hardBlocks.length > 0) continue;
       if (positionGroup(p) !== group) continue;
       if (p.ability > lost.ability || lost.ability - p.ability > 8) continue; // a plausible like-for-like, not a plunge
+      if (nowYear - p.birthYear <= 23 && p.potentialCeiling >= raidedClub.prestige + 8) continue; // no future world-beater parked at a minnow
       if (!best || e.window < best.entry.window) best = { entry: e, p };
     }
     if (best) return { p: best.p, consumedKey: entryKey(best.entry) };
@@ -285,6 +286,7 @@ function bestAvailableReplacement(
     if (!p.club || p.club === raidedClub.id || p.club === state.playerClub) continue;
     if (positionGroup(p) !== group) continue;
     if (p.ability > lost.ability || lost.ability - p.ability > 8) continue; // a step down, not a plunge
+    if (nowYear - p.birthYear <= 23 && p.potentialCeiling >= raidedClub.prestige + 8) continue; // a wonderkid a giant is grooming won't be parked at a minnow to develop
     const seller = state.clubs[p.club];
     if (!seller) continue;
     // The elite pool is CONTESTED: a happy giant (home or abroad) won't sell you their
