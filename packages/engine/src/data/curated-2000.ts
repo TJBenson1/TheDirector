@@ -378,6 +378,28 @@ export const DEPTH_2000: Array<[ClubId, CuratedSeed]> = [
   ['man_utd', q('man_utd', 'g_neville', 'Gary Neville', 1975, 'England', ['RB'], 82, 83, 2005, 25, t(9, 5, 8, 10, 4, 6), { loyalty: 94 })],
   ['porto', q('porto', 'derlei', 'Derlei', 1975, 'Brazil', ['ST'], 78, 80, 2005, 30, t(7, 6, 8, 6, 5, 7))],
   ['monaco', q('monaco', 'squillaci', 'Sébastien Squillaci', 1980, 'France', ['CB'], 76, 81, 2005, 25, t(8, 4, 7, 7, 4, 7))],
+  // ── Expansion pass: further real 2000-01 squad men at the thin European context
+  //    clubs (the giants are already completed via the *_EXTRA arrays below), so the
+  //    scoutable pool reads deep and true at every notable rival. Real names, real
+  //    clubs, HIDDEN designer estimates. ──
+  ['roma', q('roma', 'aldair_r00', 'Aldair', 1965, 'Brazil', ['CB'], 81, 81, 2003, 30, t(9, 5, 8, 9, 4, 6))],
+  ['roma', q('roma', 'tommasi_r00', 'Damiano Tommasi', 1974, 'Italy', ['CM', 'DM'], 80, 81, 2005, 30, t(9, 4, 8, 9, 4, 7))],
+  ['roma', q('roma', 'nakata_r00', 'Hidetoshi Nakata', 1977, 'Japan', ['AM', 'CM'], 82, 84, 2004, 30, t(8, 5, 8, 7, 5, 8))],
+  ['roma', q('roma', 'zago_r00', 'Antônio Carlos Zago', 1969, 'Brazil', ['CB'], 79, 79, 2003, 30, t(8, 5, 7, 8, 5, 6))],
+  ['lazio', q('lazio', 'nedved_z00', 'Pavel Nedvěd', 1972, 'Czech Republic', ['AM', 'CM', 'LW'], 86, 88, 2004, 20, t(9, 6, 9, 8, 5, 7))],
+  ['lazio', q('lazio', 'mihajlovic_z00', 'Siniša Mihajlović', 1969, 'Serbia', ['CB', 'LB'], 82, 82, 2004, 30, t(7, 7, 8, 7, 7, 6))],
+  ['lazio', q('lazio', 'salas_z00', 'Marcelo Salas', 1974, 'Chile', ['ST'], 82, 83, 2003, 35, t(7, 6, 8, 6, 6, 7))],
+  ['lazio', q('lazio', 'stankovic_z00', 'Dejan Stanković', 1978, 'Serbia', ['CM', 'AM'], 80, 84, 2005, 25, t(8, 6, 8, 7, 5, 7))],
+  ['lazio', q('lazio', 'favalli_z00', 'Giuseppe Favalli', 1972, 'Italy', ['LB', 'CB'], 79, 80, 2004, 30, t(8, 5, 7, 8, 4, 7))],
+  ['porto', q('porto', 'vitor_baia_p00', 'Vítor Baía', 1969, 'Portugal', ['GK'], 82, 82, 2005, 25, t(8, 6, 8, 8, 5, 6))],
+  ['porto', q('porto', 'jorge_costa_p00', 'Jorge Costa', 1971, 'Portugal', ['CB'], 80, 81, 2005, 30, t(8, 6, 8, 9, 5, 6))],
+  ['psg', q('psg', 'okocha_p00', 'Jay-Jay Okocha', 1973, 'Nigeria', ['AM'], 83, 84, 2003, 30, t(6, 8, 8, 6, 6, 7))],
+  ['psg', q('psg', 'robert_p00', 'Laurent Robert', 1975, 'France', ['LW'], 79, 81, 2004, 30, t(6, 6, 7, 6, 6, 7))],
+  ['psg', q('psg', 'distin_p00', 'Sylvain Distin', 1977, 'France', ['CB'], 77, 82, 2004, 25, t(8, 5, 8, 7, 5, 7))],
+  ['monaco', q('monaco', 'gallardo_m00', 'Marcelo Gallardo', 1976, 'Argentina', ['AM'], 82, 83, 2004, 30, t(7, 6, 8, 6, 5, 7))],
+  ['monaco', q('monaco', 'nonda_m00', 'Shabani Nonda', 1977, 'DR Congo', ['ST'], 79, 82, 2005, 30, t(7, 6, 8, 6, 6, 7))],
+  ['parma', q('parma', 'amoroso_pa00', 'Márcio Amoroso', 1974, 'Brazil', ['ST'], 83, 84, 2003, 40, t(6, 7, 8, 6, 6, 7))],
+  ['parma', q('parma', 'fuser_pa00', 'Diego Fuser', 1968, 'Italy', ['RW', 'CM'], 79, 80, 2003, 30, t(8, 5, 7, 7, 5, 6))],
 ];
 
 /**
