@@ -151,8 +151,26 @@ const DORTMUND_1999: CuratedSeed[] = [
   q('dortmund', 'ikpeba_do', 'Victor Ikpeba', 1973, 'Nigeria', ['ST', 'RW'], 76, 79, 2002, 30, t(7, 6, 8, 6, 6, 8)),
 ];
 
+// ── Bayer Leverkusen (a genuine Bundesliga power of the era) ────────────────────
+// The "Neverkusen" side taking shape — a young Ballack has just arrived, Zé
+// Roberto and Emerson give it flair, Kirsten and Neuville the goals. The real
+// club a teenage Wirtz later breaks through at (GRADUATES_1999).
+const LEVERKUSEN_1999: CuratedSeed[] = [
+  q('leverkusen', 'butt_le', 'Hans-Jörg Butt', 1974, 'Germany', ['GK'], 78, 82, 2002, 20, t(8, 6, 8, 8, 5, 7)),
+  q('leverkusen', 'nowotny_le', 'Jens Nowotny', 1974, 'Germany', ['CB'], 80, 83, 2003, 25, t(9, 5, 8, 8, 5, 7)),
+  q('leverkusen', 'ramelow_le', 'Carsten Ramelow', 1974, 'Germany', ['DM', 'CB'], 76, 80, 2003, 20, t(9, 5, 8, 8, 5, 7)),
+  q('leverkusen', 'ze_roberto_le', 'Zé Roberto', 1974, 'Brazil', ['LW', 'CM'], 80, 84, 2002, 20, t(8, 6, 8, 7, 5, 8)),
+  q('leverkusen', 'ballack_le', 'Michael Ballack', 1976, 'Germany', ['CM', 'AM'], 76, 89, 2002, 20, t(9, 7, 9, 7, 5, 8)),
+  q('leverkusen', 'schneider_le', 'Bernd Schneider', 1973, 'Germany', ['RW', 'AM'], 78, 82, 2003, 20, t(8, 5, 8, 8, 5, 8)),
+  q('leverkusen', 'kirsten_le', 'Ulf Kirsten', 1965, 'Germany', ['ST'], 78, 79, 2001, 25, t(8, 6, 8, 9, 5, 7), { loyalty: 90 }),
+  q('leverkusen', 'neuville_le', 'Oliver Neuville', 1973, 'Germany', ['ST', 'RW'], 77, 80, 2002, 20, t(8, 6, 8, 7, 5, 8)),
+];
+
 /** All the European selling clubs of the 1999 world, merged into the man-utd-1999
- *  universe (additions for clubs already present; whole new clubs otherwise). */
+ *  universe (additions for clubs already present; whole new clubs otherwise).
+ *  Napoli carries no 1999 squad — at their real nadir (a Serie B side heading
+ *  for bankruptcy) they are rebuilt into the world by the modern arrivals
+ *  (Osimhen, Kvaratskhelia, Di Lorenzo…) seeded in GRADUATES_1999. */
 export const EUROPE_1999_SQUADS: Record<string, CuratedSeed[]> = {
   ajax: AJAX_1999,
   psv: PSV_1999_EURO,
@@ -165,4 +183,5 @@ export const EUROPE_1999_SQUADS: Record<string, CuratedSeed[]> = {
   galatasaray: GALATASARAY_1999,
   feyenoord: FEYENOORD_1999,
   dortmund: DORTMUND_1999,
+  leverkusen: LEVERKUSEN_1999,
 };

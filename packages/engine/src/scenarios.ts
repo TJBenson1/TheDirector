@@ -372,6 +372,11 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       // Reigning German power (the '97 European champions, ageing) — a real
       // transfer partner and the cradle a later Lewandowski breaks through at.
       { id: 'dortmund', name: 'Borussia Dortmund', prestige: 76 },
+      // Two more real European sides that later host the modern elite (Wirtz,
+      // Osimhen) — Leverkusen a strong Bundesliga side even in '99; Napoli at
+      // their real low ebb then, rebuilt by the modern arrivals into the world.
+      { id: 'leverkusen', name: 'Bayer Leverkusen', prestige: 74 },
+      { id: 'napoli', name: 'SSC Napoli', prestige: 60 },
     ],
     domesticLeagueId: 'eng-1',
     // Leeds' overreach and Lazio's Cragnotti crash are the era's fire-sales.

@@ -14,6 +14,7 @@
 import type { ClubId, HardBlock, PlayerState, Position } from '../types.js';
 import type { CuratedSeed } from './curated-1999.js';
 import type { AcademyIntake } from '../ledger.js';
+import { MODERN_GRADS, MODERN_INTAKES } from './curated-graduates-modern.js';
 
 type Trait = PlayerState['personality'];
 const t = (prof: number, ego: number, amb: number, loy: number, vol: number, adapt: number): Trait => ({
@@ -143,6 +144,9 @@ export const GRADUATES_1999: CuratedSeed[] = [
   q('dortmund', 'lewandowski_grad', 'Robert Lewandowski', 1988, 'Poland', ['ST'], 74, 91, 2014, 15, t(9, 7, 10, 7, 4, 8)),
   q('chelsea', 'debruyne_grad', 'Kevin De Bruyne', 1991, 'Belgium', ['AM', 'CM', 'RW'], 68, 91, 2016, 15, t(9, 6, 9, 7, 5, 8)),
   q('chelsea', 'salah_grad', 'Mohamed Salah', 1992, 'Egypt', ['RW', 'ST'], 70, 90, 2018, 15, t(9, 6, 10, 7, 4, 8)),
+
+  // ── The full modern 80+ elite (curated-graduates-modern.ts) ──
+  ...MODERN_GRADS,
 ];
 
 /** The debut schedule: which graduate arrives at which club, and when. */
@@ -231,4 +235,7 @@ export const INTAKES_1999: AcademyIntake[] = [
   { clubId: 'dortmund', year: 2010, playerId: 'cur_lewandowski_grad' },
   { clubId: 'chelsea', year: 2012, playerId: 'cur_debruyne_grad' },
   { clubId: 'chelsea', year: 2014, playerId: 'cur_salah_grad' },
+
+  // ── The full modern 80+ elite, at their real debut years ──
+  ...MODERN_INTAKES,
 ];

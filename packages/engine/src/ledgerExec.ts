@@ -119,11 +119,16 @@ export function executeAcademyIntakes(state: GameState): void {
     state.players[player.id] = player;
     club.squad.push(player.id);
     if (club.leagueId !== null) recomputeClubStrength(state, club.id);
+    const age = year - player.birthYear;
+    // A teenager coming up reads as a breakthrough; a grown player entering the
+    // world at his real club (Rüdiger, Bruno Guimarães) is an arrival, not a
+    // youth-team debut — keep the beat honest to the age.
+    const verb = age <= 21 ? 'breaks through at' : 'arrives at';
     logEvent(state, {
       category: 'development',
       code: 'academy.graduate',
-      message: `${player.name} breaks through at ${club.name} (${year - player.birthYear})`,
-      data: { playerId: player.id, clubId: club.id, age: year - player.birthYear },
+      message: `${player.name} ${verb} ${club.name} (${age})`,
+      data: { playerId: player.id, clubId: club.id, age },
     });
   }
 }
