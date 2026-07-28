@@ -209,6 +209,25 @@ const LEVERKUSEN_2013: CuratedSeed[] = [
   q('leverkusen', 'son_13', 'Son Heung-min', 1992, 'South Korea', ['LW', 'RW', 'ST'], 76, 89, 2016, 10, t(9, 6, 9, 8, 4, 9)),
 ];
 
+// ── Expansion pass: further real 2013-14 squad men at the thin European context
+//    clubs, deepening the pipeline for the man-utd-2013 and spurs-2013 worlds.
+//    Real names, real clubs; marquees already curated are omitted. ──
+const EUROPE_2013_DEPTH: CuratedSeed[] = [
+  q('ajax', 'schone_13', 'Lasse Schöne', 1986, 'Denmark', ['CM', 'AM'], 77, 79, 2017, 20, t(8, 5, 8, 7, 5, 8)),
+  q('ajax', 'van_rhijn_13', 'Ricardo van Rhijn', 1991, 'Netherlands', ['RB'], 74, 80, 2017, 20, t(8, 5, 8, 8, 5, 8)),
+  q('ajax', 'moisander_13', 'Niklas Moisander', 1985, 'Finland', ['CB'], 77, 79, 2016, 20, t(8, 5, 8, 8, 5, 8)),
+  q('ajax', 'sigthorsson_13', 'Kolbeinn Sigþórsson', 1990, 'Iceland', ['ST'], 75, 81, 2016, 25, t(7, 6, 8, 7, 5, 8)),
+  q('napoli', 'ghoulam_n13', 'Faouzi Ghoulam', 1991, 'Algeria', ['LB'], 76, 84, 2017, 20, t(8, 5, 8, 7, 5, 8)),
+  q('napoli', 'inler_n13', 'Gökhan İnler', 1984, 'Switzerland', ['DM', 'CM'], 80, 81, 2016, 20, t(9, 5, 8, 8, 5, 8)),
+  q('sevilla', 'coke_s13', 'Coke', 1987, 'Spain', ['RB', 'CB'], 77, 80, 2016, 20, t(8, 5, 8, 8, 5, 8)),
+  q('lyon', 'jallet_l13', 'Christophe Jallet', 1983, 'France', ['RB'], 77, 78, 2016, 20, t(8, 5, 8, 8, 5, 8)),
+  q('schalke', 'farfan_s13', 'Jefferson Farfán', 1984, 'Peru', ['RW'], 79, 80, 2016, 25, t(7, 6, 8, 7, 5, 8)),
+  q('fiorentina', 'neto_f13', 'Neto', 1989, 'Brazil', ['GK'], 79, 84, 2015, 20, t(9, 5, 8, 8, 5, 8)),
+  q('fiorentina', 'pasqual_f13', 'Manuel Pasqual', 1982, 'Italy', ['LB'], 77, 78, 2016, 20, t(8, 5, 8, 9, 5, 7), { loyalty: 88 }),
+  q('valencia', 'diego_alves_v13', 'Diego Alves', 1985, 'Brazil', ['GK'], 80, 82, 2016, 25, t(8, 5, 8, 8, 5, 7)),
+  q('valencia', 'joao_pereira_v13', 'João Pereira', 1984, 'Portugal', ['RB'], 77, 78, 2016, 20, t(8, 5, 8, 8, 5, 8)),
+];
+
 export const EUROPE_2013_SQUADS: Record<string, CuratedSeed[]> = {
   atletico: ATLETICO_2013,
   dortmund: DORTMUND_2013,
@@ -227,3 +246,6 @@ export const EUROPE_2013_SQUADS: Record<string, CuratedSeed[]> = {
   roma: ROMA_2013_EXTRA,
   valencia: VALENCIA_2013_EXTRA,
 };
+for (const seed of EUROPE_2013_DEPTH) {
+  (EUROPE_2013_SQUADS[seed.club as ClubId] ??= []).push(seed);
+}
