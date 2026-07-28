@@ -133,6 +133,24 @@ const FEYENOORD_1999: CuratedSeed[] = [
   q('feyenoord', 'van_wonderen_fe', 'Kees van Wonderen', 1969, 'Netherlands', ['CB'], 73, 75, 2001, 20, t(8, 5, 8, 8, 5, 7)),
 ];
 
+// ── Borussia Dortmund (the ageing '97 European champions) ──────────────────────
+// A genuine European power the 1999 world was missing — Champions League name,
+// real transfer partner, and the club a teenage Lewandowski later breaks through
+// at (GRADUATES_1999). Klos left for Rangers in '98, so Lehmann is in goal.
+const DORTMUND_1999: CuratedSeed[] = [
+  q('dortmund', 'lehmann_do', 'Jens Lehmann', 1969, 'Germany', ['GK'], 80, 84, 2003, 20, t(8, 7, 8, 7, 6, 7)),
+  q('dortmund', 'kohler_do', 'Jürgen Kohler', 1965, 'Germany', ['CB'], 80, 81, 2001, 20, t(9, 6, 8, 9, 5, 7), { loyalty: 90 }),
+  q('dortmund', 'reuter_do', 'Stefan Reuter', 1966, 'Germany', ['RB', 'CM'], 78, 79, 2001, 20, t(9, 5, 8, 9, 4, 7), { loyalty: 90 }),
+  q('dortmund', 'worns_do', 'Christian Wörns', 1972, 'Germany', ['CB'], 78, 81, 2003, 20, t(9, 5, 8, 8, 5, 7)),
+  q('dortmund', 'dede_do', 'Dedê', 1978, 'Brazil', ['LB'], 72, 83, 2003, 20, t(8, 6, 8, 8, 5, 8)),
+  q('dortmund', 'feiersinger_do', 'Wolfgang Feiersinger', 1965, 'Austria', ['CB', 'DM'], 74, 75, 2000, 25, t(9, 5, 8, 8, 5, 7)),
+  q('dortmund', 'moller_do', 'Andreas Möller', 1967, 'Germany', ['AM'], 80, 82, 2000, 25, t(7, 8, 8, 7, 6, 8)),
+  q('dortmund', 'ricken_do', 'Lars Ricken', 1976, 'Germany', ['AM', 'ST'], 77, 84, 2003, 25, t(8, 6, 8, 9, 5, 8), { loyalty: 90 }),
+  q('dortmund', 'bobic_do', 'Fredi Bobic', 1971, 'Germany', ['ST'], 77, 80, 2002, 25, t(8, 6, 8, 7, 5, 8)),
+  q('dortmund', 'herrlich_do', 'Heiko Herrlich', 1971, 'Germany', ['ST', 'AM'], 77, 79, 2002, 30, t(8, 6, 8, 7, 5, 7)),
+  q('dortmund', 'ikpeba_do', 'Victor Ikpeba', 1973, 'Nigeria', ['ST', 'RW'], 76, 79, 2002, 30, t(7, 6, 8, 6, 6, 8)),
+];
+
 /** All the European selling clubs of the 1999 world, merged into the man-utd-1999
  *  universe (additions for clubs already present; whole new clubs otherwise). */
 export const EUROPE_1999_SQUADS: Record<string, CuratedSeed[]> = {
@@ -146,4 +164,5 @@ export const EUROPE_1999_SQUADS: Record<string, CuratedSeed[]> = {
   rangers: RANGERS_1999,
   galatasaray: GALATASARAY_1999,
   feyenoord: FEYENOORD_1999,
+  dortmund: DORTMUND_1999,
 };

@@ -369,6 +369,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'celtic', name: 'Celtic', prestige: 68 },
       { id: 'rangers', name: 'Rangers', prestige: 68 },
       { id: 'galatasaray', name: 'Galatasaray', prestige: 66 },
+      // Reigning German power (the '97 European champions, ageing) — a real
+      // transfer partner and the cradle a later Lewandowski breaks through at.
+      { id: 'dortmund', name: 'Borussia Dortmund', prestige: 76 },
     ],
     domesticLeagueId: 'eng-1',
     // Leeds' overreach and Lazio's Cragnotti crash are the era's fire-sales.

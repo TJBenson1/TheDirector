@@ -39,7 +39,7 @@ describe('createNewGame', () => {
     // Universe = 12 European context clubs ∪ 20 PL clubs (5 overlap) + context
     // selling clubs (Monaco/Lazio/PSV/Marseille/Sporting/PSG/Wigan) — PSG holds the
     // young Ronaldinho for the gambit (see PSG_1999).
-    expect(Object.keys(state.clubs)).toHaveLength(42); // +7 European selling clubs (M12A) +1 Atlético (Fortune's club)
+    expect(Object.keys(state.clubs)).toHaveLength(43); // +7 European selling clubs (M12A) +1 Atlético (Fortune's club) +1 Dortmund (Lewandowski's cradle)
     expect(state.clubs.man_utd?.name).toBe('Manchester United');
     // The domestic league is initialised and ready to play.
     expect(state.leagues['eng-1']?.clubIds).toHaveLength(20);

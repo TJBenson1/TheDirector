@@ -135,6 +135,14 @@ export const GRADUATES_1999: CuratedSeed[] = [
   q('southampton', 'mane_grad', 'Sadio Mané', 1992, 'Senegal', ['LW', 'RW'], 72, 88, 2019, 20, t(9, 6, 9, 7, 5, 8)),
   q('leicester', 'kante_grad', "N'Golo Kanté", 1991, 'France', ['DM', 'CM'], 74, 87, 2019, 15, t(10, 4, 9, 8, 3, 8)),
   q('sporting', 'bruno_f_grad', 'Bruno Fernandes', 1994, 'Portugal', ['AM', 'CM'], 76, 88, 2022, 15, t(9, 7, 9, 7, 5, 8)),
+  // Lewandowski broke through at Dortmund (age 22) before the Bayern years — now
+  // that Dortmund is in the world, he emerges at his real club. De Bruyne and
+  // Salah were both genuinely young Chelsea players (2012 / 2014) before their
+  // real breakout clubs (Genk, Basel) sold them on — seeded at Chelsea, where
+  // "the one that got away" instead becomes an emergent counterfactual.
+  q('dortmund', 'lewandowski_grad', 'Robert Lewandowski', 1988, 'Poland', ['ST'], 74, 91, 2014, 15, t(9, 7, 10, 7, 4, 8)),
+  q('chelsea', 'debruyne_grad', 'Kevin De Bruyne', 1991, 'Belgium', ['AM', 'CM', 'RW'], 68, 91, 2016, 15, t(9, 6, 9, 7, 5, 8)),
+  q('chelsea', 'salah_grad', 'Mohamed Salah', 1992, 'Egypt', ['RW', 'ST'], 70, 90, 2018, 15, t(9, 6, 10, 7, 4, 8)),
 ];
 
 /** The debut schedule: which graduate arrives at which club, and when. */
@@ -220,4 +228,7 @@ export const INTAKES_1999: AcademyIntake[] = [
   { clubId: 'real_madrid', year: 2021, playerId: 'cur_camavinga_grad' },
   { clubId: 'real_madrid', year: 2023, playerId: 'cur_bellingham_grad' },
   { clubId: 'barcelona', year: 2023, playerId: 'cur_yamal_grad' },
+  { clubId: 'dortmund', year: 2010, playerId: 'cur_lewandowski_grad' },
+  { clubId: 'chelsea', year: 2012, playerId: 'cur_debruyne_grad' },
+  { clubId: 'chelsea', year: 2014, playerId: 'cur_salah_grad' },
 ];
