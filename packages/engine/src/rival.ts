@@ -21,7 +21,7 @@ import type { ClubId, ClubState, GameState, PlayerState, Position } from './type
 import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { valuePlayer } from './finance.js';
-import { executeTransfer } from './transfers.js';
+import { executeTransfer, REPLACEMENT_STATURE_HEADROOM } from './transfers.js';
 import { evaluateApproach } from './agency.js';
 import { standingsOrder } from './season.js';
 import { ERA_REALITY, eraForScenario, entryKey } from './ledger.js';
@@ -141,6 +141,10 @@ function counterPunchSign(state: GameState, club: ClubState, rng: Rng): boolean 
     // 95 to come) through to Newcastle. Gate on stature — a club won't land a
     // future world-beater a rung or more above its level as a knee-jerk reaction.
     if (year - p.birthYear <= 23 && p.potentialCeiling >= club.prestige + 8) continue;
+    // Absolute stature cap: a club cannot counter-punch for an outright star a
+    // chasm above its level (a prestige-46 side landing an 85). Complements the
+    // relative band above and the young-wonderkid guard.
+    if (p.ability > club.prestige + REPLACEMENT_STATURE_HEADROOM) continue;
     if (p.resistance.hardBlocks.length > 0) continue;
     if (valuePlayer(p, year) > budget) continue;
     const match = roleMatch(p);

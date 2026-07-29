@@ -243,6 +243,18 @@ function positionGroup(p: PlayerState): string {
  *  draining the market over several windows, not by one raid. */
 const SUPPRESSION_PER_GAP = 0.4;
 
+/**
+ * How far above its own stature a club may reach for a REACTIVE replacement (a
+ * raid-response or counter-punch). A club can punch a bit above its prestige, but
+ * not by a chasm: without this an absolute cap the like-for-like rule (replacement
+ * ≤ the lost man) let a raided minnow whose standout was itself an over-reach sign
+ * an outright star — a prestige-46 side landing an 85-rated André Gomes. The gate
+ * is ABSOLUTE (tied to the buyer's prestige), complementing the RELATIVE
+ * lost-player cap and the young-wonderkid guard. Reactive signings only fire under
+ * a live divergence, so the passive world and the calibration harness never see it.
+ */
+export const REPLACEMENT_STATURE_HEADROOM = 20;
+
 /** The best available REAL alternative for a raided-out player — a step down, never
  *  an upgrade, from a club that would realistically sell (not another happy giant's
  *  key man). The finite elite pool: once the closest names are gone, the next raid
@@ -272,6 +284,7 @@ function bestAvailableReplacement(
       if (positionGroup(p) !== group) continue;
       if (p.ability > lost.ability || lost.ability - p.ability > 8) continue; // a plausible like-for-like, not a plunge
       if (nowYear - p.birthYear <= 23 && p.potentialCeiling >= raidedClub.prestige + 8) continue; // no future world-beater parked at a minnow
+      if (p.ability > raidedClub.prestige + REPLACEMENT_STATURE_HEADROOM) continue; // a minnow cannot land an outright star, even like-for-like
       if (!best || e.window < best.entry.window) best = { entry: e, p };
     }
     if (best) return { p: best.p, consumedKey: entryKey(best.entry) };
@@ -287,6 +300,7 @@ function bestAvailableReplacement(
     if (positionGroup(p) !== group) continue;
     if (p.ability > lost.ability || lost.ability - p.ability > 8) continue; // a step down, not a plunge
     if (nowYear - p.birthYear <= 23 && p.potentialCeiling >= raidedClub.prestige + 8) continue; // a wonderkid a giant is grooming won't be parked at a minnow to develop
+    if (p.ability > raidedClub.prestige + REPLACEMENT_STATURE_HEADROOM) continue; // a minnow cannot land an outright star, even like-for-like
     const seller = state.clubs[p.club];
     if (!seller) continue;
     // The elite pool is CONTESTED: a happy giant (home or abroad) won't sell you their
