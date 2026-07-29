@@ -142,12 +142,36 @@ export function processRetirementsAndYouth(state: GameState, rng: Rng): void {
 
   for (const club of Object.values(state.clubs)) {
     // Retirements — collect first, then remove (don't mutate while iterating).
-    const retirees = [];
+    let retirees = [];
     for (const player of clubSquadPlayers(state, club.id)) {
       const prob = retirementProbability(player, year - player.birthYear);
       // Only players in the retirement window draw — a young player never consumes
       // an RNG draw (keeps the stream stable and cheap).
       if (prob > 0 && rr.chance(prob)) retirees.push(player);
+    }
+    // The USER's club is the PLAYABLE roster, not an abstract-depth AI side, so it
+    // must always field a real XI. Under §4 no-regens we never invent a successor, so
+    // instead we let a real career run one more season: defer just enough would-be
+    // retirements (the oldest first — the least likely to have anything left) to hold
+    // the roster at a playable floor, and NEVER retire the last fit goalkeeper. This
+    // reads true (a veteran plays on because there's no heir — Maldini to 41 at Milan)
+    // and, crucially, adds no RNG draws, so determinism and the calibration hold.
+    // AI clubs are untouched — their depth is abstract, a thin named spine is by design.
+    if (club.id === state.playerClub && retirees.length) {
+      const PLAYABLE_FLOOR = 15;
+      const squadNow = clubSquadPlayers(state, club.id).length;
+      const isGK = (p: PlayerState) => p.positions.includes('GK');
+      // 1) Keeper protection — if every fit keeper is set to retire, the best one stays.
+      const gkStaying = clubSquadPlayers(state, club.id).some((p) => isGK(p) && !retirees.includes(p));
+      if (!gkStaying) {
+        const keptKeeper = retirees.filter(isGK).sort((a, b) => b.ability - a.ability)[0];
+        if (keptKeeper) retirees = retirees.filter((p) => p !== keptKeeper);
+      }
+      // 2) Floor protection — retire at most enough to reach the floor, oldest first.
+      const maxRetire = Math.max(0, squadNow - PLAYABLE_FLOOR);
+      if (retirees.length > maxRetire) {
+        retirees = retirees.slice().sort((a, b) => a.birthYear - b.birthYear).slice(0, maxRetire);
+      }
     }
     for (const player of retirees) {
       // Remove from the squad but KEEP `club` (his final club is his reality — the
