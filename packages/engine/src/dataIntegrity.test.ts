@@ -66,6 +66,31 @@ describe('curated data integrity', () => {
     expect(dups, `same-club duplicate seeds in ${id}`).toEqual([]);
   });
 
+  // The two checks above read `s.players`, a map keyed by id — so a player seeded at
+  // two clubs collapses to ONE entry and the dup hides in the `club.squad` ARRAYS.
+  // These two inspect the squad arrays directly, catching the id-level duplication the
+  // name checks structurally cannot (a curated seed re-listed at his destination, or a
+  // depth pack re-adding a marquee already present).
+  it.each(scenarioIds)('%s lists no player in two squads at once', (id) => {
+    const s: GameState = createNewGame({ scenarioId: id, seed: 'integrity' });
+    const clubsOf = new Map<string, Set<string>>();
+    for (const [cid, club] of Object.entries(s.clubs))
+      for (const pid of club.squad ?? []) (clubsOf.get(pid) ?? clubsOf.set(pid, new Set()).get(pid)!).add(cid);
+    const dups = [...clubsOf.entries()].filter(([, c]) => c.size > 1)
+      .map(([pid, c]) => `${s.players[pid]?.name ?? pid} @ ${[...c].join(', ')}`);
+    expect(dups, `player in two squads in ${id}`).toEqual([]);
+  });
+
+  it.each(scenarioIds)('%s lists no player twice in one squad', (id) => {
+    const s: GameState = createNewGame({ scenarioId: id, seed: 'integrity' });
+    const dups: string[] = [];
+    for (const [cid, club] of Object.entries(s.clubs)) {
+      const seen = new Set<string>();
+      for (const pid of club.squad ?? []) { if (seen.has(pid)) dups.push(`${s.players[pid]?.name ?? pid} @ ${cid}`); seen.add(pid); }
+    }
+    expect(dups, `same-squad duplicate entries in ${id}`).toEqual([]);
+  });
+
   it.each(scenarioIds)('%s uses only valid position codes', (id) => {
     const s: GameState = createNewGame({ scenarioId: id, seed: 'integrity' });
     const bad: string[] = [];

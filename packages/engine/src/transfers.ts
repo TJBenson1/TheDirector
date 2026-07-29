@@ -60,6 +60,16 @@ export function executeTransfer(
   const fromClubId = player.club;
   if (fromClubId === req.toClub) return { ok: false, reason: 'Player already at this club' };
 
+  // A retired player must never enter a squad. A DEVIATION (user/rival move) simply
+  // can't sign him. A REALITY move, though, is documentary proof he was still playing
+  // then — so it overrides a premature sim retirement (e.g. a 35-year-old the ageing
+  // model hung up early who reality shows still moving clubs), un-retiring him rather
+  // than leaving reality unexecuted or, worse, parking a "retired" name in the squad.
+  if (player.retired) {
+    if (!opts.reality) return { ok: false, reason: `${player.name} has retired` };
+    player.retired = false;
+  }
+
   // Star premium BEFORE the move, for the continental butterfly (§ showcase). A
   // reality (ledger) move leaves the premium's real trajectory intact; only a
   // DEVIATION banks its change as a butterfly, so the CL sees a gutted spine.
@@ -98,7 +108,7 @@ export function executeTransfer(
       }
     }
   }
-  buyer.squad.push(player.id);
+  if (!buyer.squad.includes(player.id)) buyer.squad.push(player.id); // never double-list a player
   buyer.finances.transferBudget -= fee;
 
   player.club = req.toClub;

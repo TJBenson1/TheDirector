@@ -39,7 +39,6 @@ const UDINESE_07: CuratedSeed[] = [
 const SAMPDORIA_07: CuratedSeed[] = [
   q('sampdoria', 'castellazzi_sa07', 'Luca Castellazzi', 1975, 'Italy', ['GK'], 76, 78, 2010, 30, t(8, 5, 8, 8, 5, 7)),
   q('sampdoria', 'palombo_sa07', 'Angelo Palombo', 1981, 'Italy', ['DM', 'CM'], 79, 82, 2011, 30, t(9, 5, 8, 9, 5, 8), { loyalty: 90 }),
-  q('sampdoria', 'palombo_sa07', 'Angelo Palombo', 1981, 'Italy', ['DM', 'CM'], 79, 81, 2010, 20, t(9, 5, 8, 9, 5, 8), { loyalty: 88 }),
   q('sampdoria', 'ziegler_sa07', 'Reto Ziegler', 1986, 'Switzerland', ['LB', 'LW'], 74, 81, 2011, 30, t(7, 6, 8, 7, 5, 8)),
   q('sampdoria', 'montella_sa07', 'Vincenzo Montella', 1974, 'Italy', ['ST'], 78, 79, 2009, 30, t(8, 6, 8, 8, 5, 8)),
   q('sampdoria', 'bellucci_sa07', 'Claudio Bellucci', 1975, 'Italy', ['ST'], 73, 74, 2009, 30, t(7, 6, 8, 7, 5, 8)),

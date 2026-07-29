@@ -213,7 +213,6 @@ const LEVERKUSEN_2013: CuratedSeed[] = [
 //    clubs, deepening the pipeline for the man-utd-2013 and spurs-2013 worlds.
 //    Real names, real clubs; marquees already curated are omitted. ──
 const EUROPE_2013_DEPTH: CuratedSeed[] = [
-  q('ajax', 'schone_13', 'Lasse Schöne', 1986, 'Denmark', ['CM', 'AM'], 77, 79, 2017, 20, t(8, 5, 8, 7, 5, 8)),
   q('ajax', 'van_rhijn_13', 'Ricardo van Rhijn', 1991, 'Netherlands', ['RB'], 74, 80, 2017, 20, t(8, 5, 8, 8, 5, 8)),
   q('ajax', 'moisander_13', 'Niklas Moisander', 1985, 'Finland', ['CB'], 77, 79, 2016, 20, t(8, 5, 8, 8, 5, 8)),
   q('ajax', 'sigthorsson_13', 'Kolbeinn Sigþórsson', 1990, 'Iceland', ['ST'], 75, 81, 2016, 25, t(7, 6, 8, 7, 5, 8)),

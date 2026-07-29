@@ -86,8 +86,9 @@ export const MAN_UTD_2013: CuratedSeed[] = [
   // Signed from Crystal Palace in Jan 2013 (~£15m) and folded in for 2013–14 before a
   // January loan back to Cardiff — a wing talent who never got a look-in under Moyes.
   q('man_utd', 'zaha', 'Wilfried Zaha', 1992, 'England', ['RW', 'LW'], 74, 84, 2018, 25, t(6, 7, 8, 6, 6, 6)),
-  // The window's only signing — the chaotic £27.5m deadline-day scramble from Everton.
-  q('man_utd', 'fellaini', 'Marouane Fellaini', 1987, 'Belgium', ['CM', 'DM'], 78, 80, 2018, 25, t(7, 6, 7, 6, 6, 6)),
+  // The window's only signing — the chaotic £27.5m deadline-day scramble from Everton
+  // — is NOT pre-seeded here: Fellaini starts at Everton (his pre-window club) and the
+  // ledger move everton→man_utd (2013-08) makes it a live, interceptable decision.
 ];
 
 /** Manchester City, 2013–14 — Pellegrini's champions-to-be. */

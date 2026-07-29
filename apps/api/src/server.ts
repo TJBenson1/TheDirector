@@ -285,6 +285,15 @@ const routes: Record<string, Handler> = {
     if (!p || p.club !== s.playerClub) return { state: s, view: buildView(s), result: { ok: false, reason: 'Not your player.' } };
     const buyer = s.clubs[toClub as string];
     if (!buyer) return { state: s, view: buildView(s), result: { ok: false, reason: 'Unknown buying club.' } };
+    // Never let the Director brick his own squad. A sale that would leave him unable to
+    // field an XI — fewer than 11 fit players, or no goalkeeper at all — is refused with
+    // a plain reason, so he sells someone else or buys cover first. (Reality/rival moves
+    // go through the primitive directly and are not bound by this playable-squad floor.)
+    const remaining = clubSquadPlayers(s, s.playerClub).filter((q) => q.id !== playerId && !q.retired);
+    if (remaining.length < 11)
+      return { state: s, view: buildView(s), result: { ok: false, reason: `Selling ${p.name} would leave you fewer than 11 fit players — buy cover first.` } };
+    if (p.positions.includes('GK') && !remaining.some((q) => q.positions.includes('GK')))
+      return { state: s, view: buildView(s), result: { ok: false, reason: `${p.name} is your only goalkeeper — sign a keeper before selling him.` } };
     const price = fee !== undefined ? Math.round(fee) : Math.round(valuePlayer(p, currentYear(s)));
     // Clubs have real budgets — a buyer who can't afford the fee isn't topped up;
     // the deal is refused with a clear reason so another buyer can be found.

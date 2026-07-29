@@ -202,17 +202,21 @@ export const BAYERN_E8: CuratedSeed[] = [
 export const INTER_E8: CuratedSeed[] = [
   q('inter', 'julio_cesar_e8', 'Júlio César', 1979, 'Brazil', ['GK'], 87, 87, 2013, 15, t(9, 6, 8, 8, 4, 7)),
   q('inter', 'maicon_e8', 'Maicon', 1981, 'Brazil', ['RB'], 86, 86, 2013, 20, t(8, 6, 8, 7, 5, 7)),
-  q('inter', 'lucio_e8', 'Lúcio', 1978, 'Brazil', ['CB'], 85, 85, 2012, 20, t(8, 6, 8, 7, 5, 7)),
   q('inter', 'samuel_e8', 'Walter Samuel', 1978, 'Argentina', ['CB'], 84, 84, 2012, 20, t(9, 6, 8, 8, 6, 7)),
   q('inter', 'zanetti_e8', 'Javier Zanetti', 1973, 'Argentina', ['RB', 'CM'], 85, 85, 2012, 15, t(10, 5, 9, 10, 3, 8), { loyalty: 97 }),
   q('inter', 'cambiasso_e8', 'Esteban Cambiasso', 1980, 'Argentina', ['DM', 'CM'], 85, 86, 2013, 20, t(9, 6, 9, 8, 5, 7)),
-  q('inter', 'sneijder_e8', 'Wesley Sneijder', 1984, 'Netherlands', ['AM', 'CM'], 86, 88, 2014, 20, t(7, 7, 9, 7, 6, 8)),
   q('inter', 'stankovic_e8', 'Dejan Stanković', 1978, 'Serbia', ['CM', 'AM'], 82, 82, 2012, 25, t(8, 6, 8, 8, 5, 7)),
   q('inter', 'muntari', 'Sulley Muntari', 1984, 'Ghana', ['CM', 'DM'], 80, 82, 2013, 20, t(7, 6, 8, 7, 6, 8)),
   q('inter', 'ibrahimovic_e8', 'Zlatan Ibrahimović', 1981, 'Sweden', ['ST'], 88, 89, 2013, 20, t(6, 9, 9, 6, 6, 8)),
   q('inter', 'milito_e8', 'Diego Milito', 1979, 'Argentina', ['ST'], 84, 86, 2014, 20, t(8, 7, 9, 8, 5, 7)),
   q('inter', 'balotelli_e8', 'Mario Balotelli', 1990, 'Italy', ['ST'], 76, 88, 2013, 20, t(4, 9, 8, 5, 9, 6)),
   q('inter', 'pandev_e8', 'Goran Pandev', 1983, 'North Macedonia', ['AM', 'ST'], 80, 82, 2013, 20, t(8, 6, 8, 7, 5, 7)),
+  // Real 2008-09 Inter — the men who actually held these slots before Sneijder/Lúcio
+  // arrived in 2009 (both correctly seeded at their real 2008 clubs, Real Madrid and
+  // Bayern, so they are no longer double-placed here).
+  q('inter', 'cordoba_e8', 'Iván Córdoba', 1976, 'Colombia', ['CB'], 82, 82, 2011, 15, t(9, 5, 8, 9, 4, 7), { loyalty: 92 }),
+  q('inter', 'chivu_e8', 'Cristian Chivu', 1980, 'Romania', ['CB', 'LB'], 81, 82, 2012, 15, t(8, 5, 8, 8, 5, 7)),
+  q('inter', 'jcruz_e8', 'Julio Cruz', 1974, 'Argentina', ['ST'], 78, 79, 2010, 12, t(8, 6, 8, 8, 5, 7)),
 ];
 
 export const JUVENTUS_E8: CuratedSeed[] = [
@@ -305,7 +309,8 @@ for (const [club, seeds] of Object.entries(ENG_DOMESTIC_2008_SQUADS)) {
 export const CITY_FUTURE_TARGETS_2008: CuratedSeed[] = [
   q('sevilla', 'negredo_08', 'Álvaro Negredo', 1985, 'Spain', ['ST'], 80, 82, 2013, 20, t(7, 6, 8, 7, 6, 7)),
   q('porto', 'fernando_re08', 'Fernando', 1987, 'Brazil', ['DM', 'CM'], 80, 82, 2014, 15, t(8, 6, 8, 7, 5, 7)),
-  q('fiorentina', 'jovetic_08', 'Stevan Jovetić', 1989, 'Montenegro', ['ST', 'AM'], 80, 85, 2013, 32, t(7, 7, 8, 6, 6, 7)),
+  // Jovetić is already seeded at Fiorentina via EUROPE_2008_SQUADS — re-listing him
+  // here as a City target double-placed him in the squad, so he's dropped from this list.
 ];
 for (const seed of CITY_FUTURE_TARGETS_2008) {
   if (!seed.club) continue;

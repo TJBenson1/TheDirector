@@ -201,7 +201,13 @@ function pointsForRank(rank0: number, n: number, key: string): number {
   const games = (n - 1) * 2;
   const champ = Math.round(games * (CHAMP_PPG[key] ?? 2.32));
   const bottom = Math.round(games * (BOTTOM_PPG[key] ?? 0.63));
-  const t = n <= 1 ? 0 : rank0 / (n - 1); // 0 (champion) … 1 (bottom)
+  // Clamp to [0,1]: a real-standings order can be LONGER than the sim league
+  // (e.g. the 20-team 2004-05 Serie A ledger against an 18-team sim division), so
+  // a club can map to a rank at/beyond the sim's bottom. Without the clamp `idx`
+  // runs past PL_SHAPE and the interpolation reads `undefined`, poisoning the
+  // whole table with NaN points. Clamped, an over-the-bottom rank simply anchors
+  // to the wooden-spoon target — the sensible reading of "finished last or lower".
+  const t = n <= 1 ? 0 : Math.max(0, Math.min(1, rank0 / (n - 1))); // 0 (champion) … 1 (bottom)
   const idx = t * (PL_SHAPE.length - 1);
   const lo = Math.floor(idx);
   const hi = Math.min(PL_SHAPE.length - 1, Math.ceil(idx));
