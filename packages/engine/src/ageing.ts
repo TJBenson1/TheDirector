@@ -142,7 +142,7 @@ export function processRetirementsAndYouth(state: GameState, rng: Rng): void {
 
   for (const club of Object.values(state.clubs)) {
     // Retirements — collect first, then remove (don't mutate while iterating).
-    let retirees = [];
+    let retirees: PlayerState[] = [];
     for (const player of clubSquadPlayers(state, club.id)) {
       const prob = retirementProbability(player, year - player.birthYear);
       // Only players in the retirement window draw — a young player never consumes

@@ -558,6 +558,28 @@ function renderXI(firstEleven: string[]): string {
   return `${keeper} in goal, ${parts.join(', ')}.`;
 }
 
+/** The bare surname/name from an authored entry, dropping a leading position token
+ *  ("AM Roberto Baggio" → "Roberto Baggio") or a trailing " — reason" clause. */
+function entryName(entry: string): string {
+  const beforeDash = entry.split(/\s+—\s+/)[0]!.trim();
+  const sp = beforeDash.indexOf(' ');
+  const maybePos = sp === -1 ? '' : beforeDash.slice(0, sp).toUpperCase();
+  return UNIT[maybePos] ? beforeDash.slice(sp + 1) : beforeDash;
+}
+
+/** The authored first-choice side filtered to the men ACTUALLY on the books now. The
+ *  authored XI is the historical END-of-window lineup, but the live opening window
+ *  (M12C) rewinds that summer's real signings to their selling clubs so each is an
+ *  interceptable decision — so a man not yet signed (Baggio at Bologna, Chelsea's 2003
+ *  arrivals) must not be narrated as a nailed-on starter while his deal is offered on
+ *  the desk. We render only the current squad here and let the pending deals be told as
+ *  what they are (the marquee line + the tappable decisions), rather than projecting
+ *  them into the XI in the present tense. */
+function currentSquadXI(state: GameState, firstEleven: string[]): string[] {
+  const squad = new Set(clubSquadPlayers(state, state.playerClub).map((p) => p.name));
+  return firstEleven.filter((entry) => squad.has(entryName(entry)));
+}
+
 /** The rich, historically-grounded opening — the true story of this exact summer. */
 function curatedOpening(state: GameState, o: ScenarioOpening): Opening {
   const club = state.clubs[state.playerClub]!;
@@ -585,12 +607,24 @@ function curatedOpening(state: GameState, o: ScenarioOpening): Opening {
   // ── Beat three: the manager meeting — his real shape, his real XI, the fringe,
   // and where he wants the side strengthened. The named deals become tappable
   // decisions below (openingActions), so the prose ends on the hook, not a list. ──
-  const meetingParts: string[] = [
-    `You take your seat opposite ${o.coach}. He'll set up in a ${o.formation}, and he names the side he trusts: ${renderXI(o.firstEleven)}`,
-  ];
-  if (o.fringe && o.fringe.length) {
+  // The side as it stands TODAY — current squad only, with this summer's real signings
+  // (rewound to their selling clubs) left out, because they're still deals to make, not
+  // men he can pick. When the window's business is all still to come the present-tense
+  // XI is naturally thin; frame it as a side being built rather than one he "trusts".
+  const pendingArrivals = new Set(realInboundThisWindow(state).map((m) => m.name));
+  const squadXI = currentSquadXI(state, o.firstEleven);
+  const xiLine = pendingArrivals.size > 0
+    ? `You take your seat opposite ${o.coach}. He'll set up in a ${o.formation}, and the men he can name today are: ${renderXI(squadXI)} The rest of the side is the summer's business — the deals on your desk.`
+    : `You take your seat opposite ${o.coach}. He'll set up in a ${o.formation}, and he names the side he trusts: ${renderXI(squadXI)}`;
+  const meetingParts: string[] = [xiLine];
+  // A pending opening-window arrival is already surfaced as the deal on the table and a
+  // tappable decision, so drop any fringe bullet whose subject hasn't actually signed
+  // yet — otherwise he's described as here ("the marquee summer arrival") in the same
+  // breath the game asks whether to sign him.
+  const fringe = (o.fringe ?? []).filter((f) => !pendingArrivals.has(entryName(f)));
+  if (fringe.length) {
     meetingParts.push(
-      `But the squad isn't settled, and the real decisions live around the edges:\n${o.fringe.map((f) => `• ${f}`).join('\n')}`,
+      `But the squad isn't settled, and the real decisions live around the edges:\n${fringe.map((f) => `• ${f}`).join('\n')}`,
     );
   }
   const brief = coachBriefing(state);

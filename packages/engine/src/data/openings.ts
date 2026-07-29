@@ -142,7 +142,7 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
       'Iván Zamorano — the incumbent striker forced to cede the No.9 to Ronaldo (he’d later wear the famous "1+8").',
       'Gigi Simoni — the coach himself is fragile: fresh from winning the 1998 UEFA Cup, yet already under pressure at an impatient club where a slow start could prove fatal.',
     ],
-    briefing: `This is Moratti’s blank-cheque Inter at its most dazzling and most volatile: Ronaldo, freshly crowned the world’s best and most expensive player, is the jewel of an expensively assembled galaxy. On top of Zamorano and Djorkaeff, Moratti has just added Roberto Baggio from Bologna, creating a glittering but hopelessly unbalanced forward glut — and enormous pressure to finally end a Scudetto drought stretching to 1989. Gigi Simoni starts as the man who won the UEFA Cup in May, but at a club this impatient his seat is already warm — a slow start would put him under real threat. The talent is overwhelming; the coherence is not.`,
+    briefing: `This is Moratti’s blank-cheque Inter at its most dazzling and most volatile: Ronaldo, freshly crowned the world’s best and most expensive player, is the jewel of an expensively assembled galaxy. On top of Zamorano and Djorkaeff, Moratti has a deal on the table for Roberto Baggio from Bologna — a signing that would complete a glittering but hopelessly unbalanced forward glut, under enormous pressure to finally end a Scudetto drought stretching to 1989. Gigi Simoni starts as the man who won the UEFA Cup in May, but at a club this impatient his seat is already warm — a slow start would put him under real threat. The talent is overwhelming; the coherence is not.`,
   },
 
   'dortmund-1997': {
