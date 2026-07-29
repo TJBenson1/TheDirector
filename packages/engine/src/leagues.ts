@@ -448,7 +448,12 @@ export const ITALY_B_2006: LeagueSeed = {
   name: 'Serie B',
   season: '2006-07',
   clubs: [
-    { id: 'juventus', name: 'Juventus', prestige: 78, strength: 77 },
+    // A Serie-A squad (Buffon, Del Piero, Trezeguet, Nedvěd, Camoranesi) dropped
+    // into Serie B — overwhelmingly the strongest side, as the real 2006-07 Juve
+    // were: they won it at a canter despite a points penalty. Rated to dominate the
+    // division rather than be pipped on the match model's (correct) top-flight
+    // upset variance, which an 11-point gap didn't overcome.
+    { id: 'juventus', name: 'Juventus', prestige: 78, strength: 94 },
     { id: 'bari', name: 'Bari', prestige: 48, strength: 66 },
     { id: 'rimini', name: 'Rimini', prestige: 40, strength: 62 },
     { id: 'crotone', name: 'Crotone', prestige: 38, strength: 61 },
