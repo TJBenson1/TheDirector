@@ -206,6 +206,14 @@ export function createNewGame(options: NewGameOptions = {}): GameState {
   // club's strength to its M2 baseline, and set finances (§4, §11).
   populateSquads(state, scenarioId, parseYearMonth(scenario.startDate).year, rng.fork('squads'));
 
+  // Explicit starting war chest, where a scenario models money the prestige-derived
+  // kitty can't (a fresh takeover: 2009 City's owners had the cash but not yet the
+  // reputation). Set AFTER populateSquads so it overrides the derived transferBudget.
+  for (const [id, budget] of Object.entries(scenario.startingBudget ?? {})) {
+    const club = state.clubs[id];
+    if (club && budget != null) club.finances.transferBudget = budget;
+  }
+
   logEvent(state, {
     category: 'system',
     code: 'game.created',

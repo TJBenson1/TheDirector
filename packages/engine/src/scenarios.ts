@@ -65,6 +65,10 @@ export interface ScenarioSeed {
    *  (Abramovich) or a debt-laden club (Arsenal's Emirates build). Defaults to
    *  'sustainable' for anyone unlisted. */
   ownership?: Record<ClubId, OwnershipModel>;
+  /** Explicit opening transfer budget (£) for a club, overriding the prestige-derived
+   *  kitty — for a war chest reputation can't yet explain, e.g. a just-completed
+   *  takeover (2009 City). Applied after squads are built. */
+  startingBudget?: Partial<Record<ClubId, number>>;
 }
 
 /** The 12 elite clubs (§14), with rough late-90s prestige. Refined in M3. */
@@ -949,20 +953,27 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
   },
   'man-city-2008': {
     id: 'man-city-2008',
-    name: 'Manchester City — 2008: The Takeover',
-    startDate: '2008-07',
+    name: 'Manchester City — 2009: Welcome to Manchester',
+    startDate: '2009-07',
     playerClub: 'man_city',
-    // In September 2008 the Abu Dhabi money lands, and a mid-table club with Richard
-    // Dunne and Stephen Ireland is suddenly the richest in the world. Robinho arrives
-    // as a statement. Reality: years of waste, then Tévez, Silva, Yaya and the 2012
-    // title. Build the superclub faster — and don't squander the billions.
+    // The Abu Dhabi takeover completed on deadline day 2008 and Robinho landed as the
+    // statement; a modest 10th followed. Now, summer 2009, comes the first unrestricted
+    // window — the £100m+ spree that announced City for real: Tévez prised off United
+    // ("Welcome to Manchester"), Adebayor from Arsenal, Barry from Villa, Lescott from
+    // Everton. (Starting here, not 2008, so the Director spends money the club actually
+    // had — the takeover cash arrived on deadline day 2008, too late to reshape that
+    // summer.) Reality: 5th, then the 2011 FA Cup and the 2012 title. Do it faster.
     mandate: 'Turn the billions into titles — build a superclub without wasting a decade.',
     boardPatience: 78,
-    boardExpectedFinish: 5,
+    boardExpectedFinish: 4,
     // The Premier League is the simulated league; the continental elite (full
     // squads) anchor every real European Cup of 2009–2025. City are bankrolled by
     // the takeover — the money is there; the challenge is spending it well.
     ownership: { man_city: 'sugar-daddy' },
+    // The Abu Dhabi war chest: the owners had limitless money from day one even though
+    // City's reputation (prestige 62) hadn't caught up. Reality's summer-2009 spree ran
+    // to ~£120m; this leaves a real chest to complete it AND build beyond history.
+    startingBudget: { man_city: 150_000_000 },
     clubs: [
       { id: 'man_city', name: 'Manchester City', prestige: 62 },
       { id: 'man_utd', name: 'Manchester United', prestige: 90 },

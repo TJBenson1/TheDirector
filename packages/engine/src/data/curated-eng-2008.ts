@@ -38,7 +38,6 @@ function q(
 export const MANCITY_2008: CuratedSeed[] = [
   q('man_city', 'given_c8', 'Shay Given', 1976, 'Ireland', ['GK'], 83, 83, 2012, 20, t(9, 5, 8, 8, 5, 7)),
   // Real 2008–09 Man City (pre-takeover Mark Hughes side): the full-back pairing.
-  q('man_city', 'benhaim08', 'Tal Ben Haim', 1982, 'Israel', ['CB'], 73, 75, 2011, 28, t(7, 6, 7, 6, 6, 6)),
   q('man_city', 'garrido08', 'Javier Garrido', 1985, 'Spain', ['LB'], 72, 76, 2012, 25, t(7, 5, 7, 7, 5, 7)),
   q('man_city', 'hart_c8', 'Joe Hart', 1987, 'England', ['GK'], 76, 87, 2013, 15, t(8, 6, 8, 8, 5, 7)),
   q('man_city', 'richards_c8', 'Micah Richards', 1988, 'England', ['RB', 'CB'], 79, 85, 2013, 25, t(7, 6, 8, 8, 6, 7)),
@@ -51,10 +50,12 @@ export const MANCITY_2008: CuratedSeed[] = [
   q('man_city', 'de_jong_c8', 'Nigel de Jong', 1984, 'Netherlands', ['DM'], 80, 83, 2013, 20, t(8, 6, 8, 7, 6, 8)),
   q('man_city', 'petrov_c8', 'Martin Petrov', 1979, 'Bulgaria', ['LW'], 78, 79, 2011, 25, t(7, 6, 8, 7, 5, 7)),
   q('man_city', 'wright_phillips', 'Shaun Wright-Phillips', 1981, 'England', ['RW'], 79, 81, 2012, 20, t(7, 6, 8, 8, 5, 7)),
-  // Robinho is pre-parked at Real Madrid: his deadline-day switch to City — the
-  // defining statement of the takeover — is a LIVE opening-window move (M12C), so a
-  // City Director signs it as the real-in it was, not a fait accompli. See
-  // LEDGER_ENG_2008 (robinho-city-2008).
+  // Robinho — the deadline-day 2008 British-record signing that announced the takeover;
+  // by this scenario's 2009 kickoff he's the club's marquee man, a year in and under
+  // pressure to justify the fee before the real spree arrives.
+  q('man_city', 'robinho_c8', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 83, 85, 2013, 25, t(5, 8, 8, 5, 6, 7)),
+  // Craig Bellamy — the January 2009 signing from West Ham, the side's cutting edge.
+  q('man_city', 'bellamy_c9', 'Craig Bellamy', 1979, 'Wales', ['LW', 'ST'], 81, 82, 2012, 30, t(6, 8, 9, 6, 8, 7)),
   // Real 2008–09 Man City: the £19m CSKA Moscow striker who led the line beside Robinho.
   q('man_city', 'jo_c8', 'Jô', 1987, 'Brazil', ['ST'], 74, 80, 2012, 25, t(6, 6, 7, 6, 6, 6)),
   q('man_city', 'caicedo', 'Felipe Caicedo', 1988, 'Ecuador', ['ST'], 74, 80, 2013, 20, t(6, 6, 8, 7, 6, 7)),
@@ -62,7 +63,6 @@ export const MANCITY_2008: CuratedSeed[] = [
   // Real 2008-09 depth to the era minimum (Elano's creativity, Ćorluka's defensive
   // cover, Benjani up front — the pre-splurge takeover squad).
   q('man_city', 'elano_c8', 'Elano', 1981, 'Brazil', ['AM', 'RW'], 80, 82, 2011, 25, t(7, 6, 7, 6, 5, 7)),
-  q('man_city', 'corluka_c8', 'Vedran Ćorluka', 1986, 'Croatia', ['CB', 'RB'], 78, 82, 2012, 25, t(8, 5, 7, 7, 5, 7)),
   q('man_city', 'benjani_c8', 'Benjani', 1978, 'Zimbabwe', ['ST'], 75, 76, 2011, 30, t(7, 5, 7, 7, 5, 6)),
 ];
 
@@ -178,9 +178,8 @@ export const REAL_MADRID_E8: CuratedSeed[] = [
   q('real_madrid', 'raul_e8', 'Raúl', 1977, 'Spain', ['ST', 'AM'], 84, 84, 2010, 20, t(9, 6, 9, 10, 4, 7), { loyalty: 96 }),
   q('real_madrid', 'higuain_e8', 'Gonzalo Higuaín', 1987, 'Argentina', ['ST'], 82, 88, 2013, 20, t(8, 6, 9, 8, 5, 8)),
   q('real_madrid', 'van_nistelrooy_e8', 'Ruud van Nistelrooy', 1976, 'Netherlands', ['ST'], 84, 84, 2010, 25, t(9, 7, 9, 7, 4, 7)),
-  // Robinho starts here — his real club until deadline day, when City's takeover
-  // money prised him away (a LIVE opening-window move; see LEDGER_ENG_2008).
-  q('real_madrid', 'robinho_c8', 'Robinho', 1984, 'Brazil', ['LW', 'ST'], 84, 86, 2013, 25, t(5, 8, 8, 5, 6, 7)),
+  // Robinho left for City on deadline day 2008, so by this scenario's 2009 kickoff he
+  // is a City player (seeded in MANCITY_2008), not a Madrid one.
 ];
 
 export const BAYERN_E8: CuratedSeed[] = [

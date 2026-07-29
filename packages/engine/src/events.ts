@@ -730,38 +730,12 @@ const DORTMUND_2012_PACK: ScriptedEvent[] = [
   },
 ];
 
-const MAN_CITY_2008_PACK: ScriptedEvent[] = [
-  {
-    // The moment everything changed: the Abu Dhabi takeover on deadline day 2008,
-    // and Robinho hijacked from under Chelsea's nose — the birth of modern City.
-    id: 'city-takeover',
-    date: '2008-08',
-    scenarios: ['man-city-2008'],
-    requires: (s) => s.playerClub === 'man_city',
-    build: () => ({
-      id: 'scripted:city-takeover',
-      title: 'The Abu Dhabi group buy the club — a fortune arrives overnight',
-      description: 'On deadline day the takeover completes and the richest owners in football hand you a war chest. Reality’s statement was to hijack Robinho from under Chelsea. Make the marquee statement now, or bank the power and strike in January?',
-      interrupt: true,
-      clubId: 'man_city',
-      category: 'event',
-      choices: [
-        {
-          id: 'statement', label: 'Make the statement signing now', successProbability: 0.9,
-          onSuccess: [{ kind: 'money', clubId: 'man_city', amount: 40_000_000 }, { kind: 'morale', clubId: 'man_city', amount: 8 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'takeover', text: 'The takeover lands — City announce themselves to the world.' }],
-          onFailure: [],
-        },
-        {
-          id: 'patient', label: 'Bank the power, plan a bigger January', successProbability: 0.8,
-          onSuccess: [{ kind: 'money', clubId: 'man_city', amount: 55_000_000 }, { kind: 'memory', tag: 'takeover', text: 'Held fire on deadline day — a colossal January is being planned.' }],
-          onFailure: [{ kind: 'money', clubId: 'man_city', amount: 40_000_000 }],
-        },
-      ],
-      falloutIfIgnored: [{ kind: 'money', clubId: 'man_city', amount: 40_000_000 }, { kind: 'memory', tag: 'takeover', text: 'The Abu Dhabi era begins — the money is here.' }],
-      memoryTags: ['takeover'],
-    }),
-  },
-];
+// The Abu Dhabi takeover (deadline day 2008) and the Robinho statement predate this
+// scenario's 2009 kickoff — the money is a given from the first window now, not a
+// mid-save decision — so the old "spend the takeover cash on deadline day" event is
+// gone. The 2009 spree itself (Tévez, Adebayor, Barry, Lescott) is the live opening
+// window, driven by the reality ledger.
+const MAN_CITY_2008_PACK: ScriptedEvent[] = [];
 
 const BARCELONA_2003_PACK: ScriptedEvent[] = [
   {

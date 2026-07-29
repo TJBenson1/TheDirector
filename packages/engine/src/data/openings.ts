@@ -471,20 +471,19 @@ export const SCENARIO_OPENINGS: Record<string, ScenarioOpening> = {
 
   'man-city-2008': {
     coach: 'Mark Hughes',
-    formation: '4-4-2 (often 4-4-1-1, Robinho tucked behind Jô)',
+    formation: '4-4-2 (Robinho off the front)',
     firstEleven: [
-      'GK Joe Hart', 'RB Micah Richards', 'CB Richard Dunne', 'CB Tal Ben Haim',
-      'LB Javier Garrido', 'RM Shaun Wright-Phillips', 'CM Vincent Kompany', 'CM Stephen Ireland',
-      'LM Elano', 'ST Robinho', 'ST Jô',
+      'GK Shay Given', 'RB Micah Richards', 'CB Vincent Kompany', 'CB Richard Dunne',
+      'LB Wayne Bridge', 'RM Shaun Wright-Phillips', 'CM Nigel de Jong', 'CM Stephen Ireland',
+      'LM Craig Bellamy', 'ST Robinho', 'ST Benjani',
     ],
     fringe: [
-      'Robinho — the deadline-day £32.5m British-record hijack from under Chelsea’s nose on 1 September 2008, the glittering statement of the new age.',
-      'The Abu Dhabi United Group — the takeover completed that very deadline day, making City the richest club on earth overnight.',
-      'Vincent Kompany — the quiet summer arrival from Hamburg, played mostly in defensive midfield in year one, not yet the centre-back colossus.',
-      'Jô — the £19m pre-takeover striker signing who never delivered.',
-      'Tévez, Adebayor & Kolo Touré — NOT here yet: the big-money reshaping waits until summer 2009 (with Given and Bridge arriving in January).',
+      'Robinho — a year on from the deadline-day British record, the emblem of the takeover but yet to justify the fee; still the marquee man until the spree arrives.',
+      'Vincent Kompany — a year into his City career, moving from defensive midfield toward the centre-back role that will define him.',
+      'Shay Given, Wayne Bridge & Nigel de Jong — the January 2009 arrivals who steadied a chaotic first year of ownership.',
+      'Stephen Ireland — the inherited midfielder coming off his best-ever season, the heartbeat of the pre-spree side.',
     ],
-    briefing: `Mark Hughes was hired in June 2008 to rebuild a mid-table, cash-strapped side under Thaksin Shinawatra’s crumbling ownership — and then, on 1 September, the Abu Dhabi United Group completed a takeover that made Manchester City the richest club on the planet overnight. Minutes before the window shut, the new owners announced themselves by hijacking Real Madrid’s Robinho from under Chelsea’s nose for a British record. Overnight the club went from also-rans to a place with no spending ceiling, Robinho the emblem of it all, while Hughes is left to fuse a chaotic inherited squad with sudden limitless ambition. The revolution has money — but not yet a team, and turning the billions into titles without wasting years is the whole challenge.`,
+    briefing: `The Abu Dhabi United Group's takeover — completed on deadline day 2008, with Robinho hijacked from under Chelsea's nose to announce it — made Manchester City the richest club on the planet, but the money landed too late to touch that summer's window, and a chaotic first season under Mark Hughes brought only 10th. Now, July 2009, comes the first window with the war chest truly open: the owners are ready to spend whatever it takes to gatecrash the top four, and the targets are already circling — Carlos Tévez off United, Emmanuel Adebayor and Kolo Touré from Arsenal, Gareth Barry from Villa, Joleon Lescott from Everton. The revolution finally has the money AND the window; turning the billions into titles without wasting years is the whole challenge.`,
   },
 
   'liverpool-2010': {
