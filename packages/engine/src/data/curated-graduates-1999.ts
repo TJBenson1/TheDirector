@@ -145,6 +145,11 @@ export const GRADUATES_1999: CuratedSeed[] = [
   q('chelsea', 'debruyne_grad', 'Kevin De Bruyne', 1991, 'Belgium', ['AM', 'CM', 'RW'], 68, 91, 2016, 15, t(9, 6, 9, 7, 5, 8)),
   q('chelsea', 'salah_grad', 'Mohamed Salah', 1992, 'Egypt', ['RW', 'ST'], 70, 90, 2018, 15, t(9, 6, 10, 7, 4, 8)),
 
+  // ── Playable-club renewal depth: real academy squad players so the English clubs
+  // replenish with real youth over a long save. Modest debut ratings (§7), depth not XI.
+  q('liverpool', 'flanagan_grad', 'Jon Flanagan', 1993, 'England', ['RB', 'LB'], 58, 74, 2016, 25, t(8, 5, 7, 9, 4, 7), { loyalty: 90 }),
+  q('spurs', 'winks_grad', 'Harry Winks', 1996, 'England', ['CM', 'DM'], 60, 80, 2021, 20, t(9, 5, 8, 8, 4, 7)),
+
   // ── The full modern 80+ elite (curated-graduates-modern.ts) ──
   ...MODERN_GRADS,
 ];
@@ -235,6 +240,8 @@ export const INTAKES_1999: AcademyIntake[] = [
   { clubId: 'dortmund', year: 2010, playerId: 'cur_lewandowski_grad' },
   { clubId: 'chelsea', year: 2012, playerId: 'cur_debruyne_grad' },
   { clubId: 'chelsea', year: 2014, playerId: 'cur_salah_grad' },
+  { clubId: 'liverpool', year: 2011, playerId: 'cur_flanagan_grad' },
+  { clubId: 'spurs', year: 2016, playerId: 'cur_winks_grad' },
 
   // ── The full modern 80+ elite, at their real debut years ──
   ...MODERN_INTAKES,

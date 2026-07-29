@@ -49,6 +49,14 @@ export const GRADUATES_ITA: CuratedSeed[] = [
   q('atalanta', 'bonaventura_ita', 'Giacomo Bonaventura', 1989, 'Italy', ['AM', 'CM'], 60, 80, 2011, 25, t(8, 5, 8, 8, 4, 7)),
   q('roma', 'romagnoli_ita', 'Alessio Romagnoli', 1995, 'Italy', ['CB'], 60, 83, 2017, 20, t(8, 6, 8, 7, 4, 7)),
   q('milan', 'donnarumma_ita', 'Gianluigi Donnarumma', 1999, 'Italy', ['GK'], 66, 89, 2018, 15, t(8, 6, 8, 7, 4, 8)),
+
+  // ── Playable-club renewal depth: real Milan/Inter Primavera products (2008-2017),
+  // so the Serie A eras' own clubs replenish with real youth over a long save rather
+  // than lean on lingering veterans. Modest debut ratings (§7 hidden), depth not XI.
+  q('milan', 'de_sciglio_ita', 'Mattia De Sciglio', 1992, 'Italy', ['RB', 'LB'], 60, 80, 2016, 25, t(8, 5, 7, 7, 4, 7)),
+  q('milan', 'calabria_ita', 'Davide Calabria', 1996, 'Italy', ['RB'], 58, 78, 2019, 20, t(8, 5, 8, 9, 4, 7), { loyalty: 90 }),
+  q('milan', 'cutrone_ita', 'Patrick Cutrone', 1998, 'Italy', ['ST'], 60, 78, 2021, 20, t(8, 6, 8, 8, 5, 7)),
+  q('inter', 'santon_ita', 'Davide Santon', 1991, 'Italy', ['RB', 'LB'], 60, 80, 2013, 25, t(8, 5, 8, 8, 5, 7)),
 ];
 
 export const INTAKES_ITA: AcademyIntake[] = [
@@ -76,4 +84,8 @@ export const INTAKES_ITA: AcademyIntake[] = [
   { clubId: 'atalanta', year: 2007, playerId: 'cur_bonaventura_ita' },
   { clubId: 'roma', year: 2013, playerId: 'cur_romagnoli_ita' },
   { clubId: 'milan', year: 2015, playerId: 'cur_donnarumma_ita' },
+  { clubId: 'inter', year: 2008, playerId: 'cur_santon_ita' },
+  { clubId: 'milan', year: 2012, playerId: 'cur_de_sciglio_ita' },
+  { clubId: 'milan', year: 2015, playerId: 'cur_calabria_ita' },
+  { clubId: 'milan', year: 2017, playerId: 'cur_cutrone_ita' },
 ];
