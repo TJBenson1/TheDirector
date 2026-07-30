@@ -8,6 +8,7 @@ import type {
   DifficultySettings,
   GameState,
   LeagueState,
+  OwnershipModel,
   PlayerState,
   ScenarioId,
 } from './types.js';
@@ -26,7 +27,7 @@ import {
   buildResistance,
   instantiateCuratedSeed,
 } from './players.js';
-import { initialFinances, suggestWage } from './finance.js';
+import { initialFinances, suggestWage, inflationFactor } from './finance.js';
 import { CURATED_SQUADS } from './data/curated-1999.js';
 import { coachForScenario } from './coaches.js';
 import { ERA_REALITY, eraForScenario } from './ledger.js';
@@ -269,7 +270,51 @@ function populateSquads(state: GameState, scenarioId: ScenarioId, year: number, 
     recomputeClubStrength(state, club.id);
     const wageBill = computeWageBill(state, club.id);
     club.finances = initialFinances(club.prestige, year, club.finances.ownership, wageBill);
+    // The USER's opening transfer budget is grounded in what his club REALLY did that
+    // summer — its net spend (buys − sales) scaled by financial strength — not a
+    // prestige guess. So he can complete the real business provided he makes the real
+    // sales, with a surplus that reflects the club's financial muscle (§ budget model).
+    if (club.id === state.playerClub) {
+      club.finances.transferBudget = openingTransferBudget(state, club.finances.ownership, year);
+    }
   }
+}
+
+/** Financial-strength multiplier on the club's real NET transfer spend — how far
+ *  past merely matching history the board backs the Director. A sugar-daddy owner
+ *  goes well beyond it; a debt/stadium-constrained club can only balance the books. */
+const NET_SPEND_MULT: Record<OwnershipModel, number> = {
+  'sugar-daddy': 1.5,
+  sustainable: 1.2,
+  debt: 1.0,
+};
+
+/**
+ * The Director's opening transfer budget: his club's REAL net spend that summer
+ * (buys − sales, straight from the reality ledger) scaled by financial strength, and
+ * floored so a quiet or net-selling window still leaves something to work with. This
+ * makes the war chest self-derived and honest — sell to buy, with surplus by financial
+ * muscle — so no scenario needs a hand-tuned figure. Real sales resolve before real
+ * buys in the window (resolvePendingLedgerDecisions), so reality-default still
+ * reproduces history: the summer's sales fund the summer's buys.
+ */
+function openingTransferBudget(state: GameState, ownership: OwnershipModel, year: number): number {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  let buys = 0;
+  let sales = 0;
+  if (pack) {
+    for (const e of pack.realTransferLedger) {
+      const wy = Number(e.window.slice(0, 4));
+      const wm = Number(e.window.slice(5, 7));
+      if (wy !== year || wm < 6 || wm > 9) continue; // the opening SUMMER window only
+      if (e.to === state.playerClub) buys += e.fee ?? 0;
+      else if (e.from === state.playerClub) sales += e.fee ?? 0;
+    }
+  }
+  const net = buys - sales;
+  const mult = NET_SPEND_MULT[ownership] ?? NET_SPEND_MULT.sustainable;
+  const floor = Math.round(2_500_000 * inflationFactor(year)); // a base for quiet windows
+  return Math.max(floor, Math.round(net * mult));
 }
 
 /**

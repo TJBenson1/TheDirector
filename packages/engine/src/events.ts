@@ -149,8 +149,12 @@ export function applyConsequence(state: GameState, c: Consequence): void {
       break;
     }
     case 'signReal': {
-      // A real incoming signing to the user's club: fund it (the board backs the
-      // real deal) then complete the move.
+      // A real incoming signing the club genuinely made: the board backs it (topped up
+      // to the fee) so reality-default reproduces history — many real signings were
+      // funded by revenue or owner money, not sales (United's £59.7m Di María), so the
+      // real ledger cannot be gated on the user balancing the books. The DISCRETIONARY
+      // budget (his real net spend × financial strength) is the room he has to go
+      // BEYOND history, and THAT is what selling players grows.
       if (c.playerId) {
         const user = state.clubs[state.playerClub];
         if (user) user.finances.transferBudget = Math.max(user.finances.transferBudget, c.amount ?? 0);
@@ -283,13 +287,17 @@ export function resolveIgnoredDecisions(state: GameState): void {
  */
 export function resolvePendingLedgerDecisions(state: GameState): void {
   const kept: typeof state.pendingDecisions = [];
+  const ledgerDecisions: typeof state.pendingDecisions = [];
   for (const d of state.pendingDecisions) {
-    if (d.id.startsWith('real-in:') || d.id.startsWith('real-out:')) {
-      applyConsequences(state, d.falloutIfIgnored);
-    } else {
-      kept.push(d);
-    }
+    if (d.id.startsWith('real-in:') || d.id.startsWith('real-out:')) ledgerDecisions.push(d);
+    else kept.push(d);
   }
+  // Resolve SALES (real-out) before BUYS (real-in): the summer's outgoings must bank
+  // their fees before the incomings draw on them, or a passive reproduction of a real
+  // sell-to-buy window could fail a buy for want of the sale that funds it. With the
+  // net-spend budget model the chest only covers the buys once the sales land.
+  ledgerDecisions.sort((a, b) => (a.id.startsWith('real-out:') ? 0 : 1) - (b.id.startsWith('real-out:') ? 0 : 1));
+  for (const d of ledgerDecisions) applyConsequences(state, d.falloutIfIgnored);
   state.pendingDecisions = kept;
 }
 

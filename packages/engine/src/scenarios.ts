@@ -970,10 +970,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     // squads) anchor every real European Cup of 2009–2025. City are bankrolled by
     // the takeover — the money is there; the challenge is spending it well.
     ownership: { man_city: 'sugar-daddy' },
-    // The Abu Dhabi war chest: the owners had limitless money from day one even though
-    // City's reputation (prestige 62) hadn't caught up. Reality's summer-2009 spree ran
-    // to ~£120m; this leaves a real chest to complete it AND build beyond history.
-    startingBudget: { man_city: 150_000_000 },
+    // No hand-tuned figure needed: the budget model derives City's war chest from its
+    // real summer-2009 net spend × the sugar-daddy multiplier — the takeover cash falls
+    // straight out of what the club actually did.
     clubs: [
       { id: 'man_city', name: 'Manchester City', prestige: 62 },
       { id: 'man_utd', name: 'Manchester United', prestige: 90 },
