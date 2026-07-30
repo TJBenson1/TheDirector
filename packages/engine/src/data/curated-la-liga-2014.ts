@@ -38,6 +38,9 @@ export const BARCELONA_2014: CuratedSeed[] = [
   q('barcelona', 'pique_b14', 'Gerard Piqué', 1987, 'Spain', ['CB'], 87, 88, 2019, 20, t(8, 7, 8, 9, 5, 8), { loyalty: 90 }),
   q('barcelona', 'mascherano_b14', 'Javier Mascherano', 1984, 'Argentina', ['CB', 'DM'], 85, 85, 2018, 20, t(9, 6, 9, 8, 6, 7)),
   q('barcelona', 'alba_b14', 'Jordi Alba', 1989, 'Spain', ['LB'], 85, 87, 2019, 20, t(9, 6, 9, 9, 5, 8), { loyalty: 88 }),
+  // Alexis Sánchez — a Barça man at the 2014 kickoff, sold to Arsenal that summer (£30m)
+  // to help fund Suárez; seeded here so that real departure (and its income) is live.
+  q('barcelona', 'sanchez_b14', 'Alexis Sánchez', 1988, 'Chile', ['RW', 'ST'], 84, 87, 2018, 20, t(8, 7, 9, 7, 6, 8)),
   q('barcelona', 'alves_b14', 'Dani Alves', 1983, 'Brazil', ['RB'], 85, 85, 2016, 20, t(8, 7, 9, 8, 5, 8)),
   q('barcelona', 'bartra_b14', 'Marc Bartra', 1991, 'Spain', ['CB'], 78, 84, 2017, 20, t(8, 6, 8, 8, 5, 7)),
   q('barcelona', 'montoya_b14', 'Martín Montoya', 1991, 'Spain', ['RB'], 76, 81, 2017, 20, t(8, 5, 8, 8, 5, 7)),
@@ -227,6 +230,27 @@ export const INTER_2014: CuratedSeed[] = [
   q('inter', 'obi_i14', 'Joel Obi', 1991, 'Nigeria', ['CM', 'DM'], 74, 79, 2018, 20, t(8, 5, 8, 7, 5, 7)),
 ];
 
+// Arsenal 2014-15 — a real Champions League side in this world, and the club that
+// signed Alexis Sánchez from Barcelona that summer (his sale is in the ledger).
+export const ARSENAL_2014: CuratedSeed[] = [
+  q('arsenal', 'szczesny_a14', 'Wojciech Szczęsny', 1990, 'Poland', ['GK'], 82, 86, 2019, 15, t(7, 7, 8, 7, 6, 7)),
+  q('arsenal', 'ospina_a14', 'David Ospina', 1988, 'Colombia', ['GK'], 79, 80, 2018, 15, t(8, 5, 8, 8, 5, 7)),
+  q('arsenal', 'debuchy_a14', 'Mathieu Debuchy', 1985, 'France', ['RB'], 80, 81, 2018, 25, t(8, 6, 8, 7, 5, 7)),
+  q('arsenal', 'mertesacker_a14', 'Per Mertesacker', 1984, 'Germany', ['CB'], 82, 82, 2018, 20, t(9, 5, 8, 9, 4, 7), { loyalty: 88 }),
+  q('arsenal', 'koscielny_a14', 'Laurent Koscielny', 1985, 'France', ['CB'], 85, 85, 2019, 20, t(9, 6, 9, 8, 5, 7)),
+  q('arsenal', 'monreal_a14', 'Nacho Monreal', 1986, 'Spain', ['LB', 'CB'], 81, 82, 2019, 15, t(9, 5, 8, 9, 4, 7)),
+  q('arsenal', 'gibbs_a14', 'Kieran Gibbs', 1989, 'England', ['LB'], 79, 80, 2018, 25, t(8, 5, 8, 8, 5, 7)),
+  q('arsenal', 'chambers_a14', 'Calum Chambers', 1995, 'England', ['CB', 'RB'], 74, 83, 2020, 20, t(8, 5, 8, 8, 5, 7)),
+  q('arsenal', 'arteta_a14', 'Mikel Arteta', 1982, 'Spain', ['DM', 'CM'], 80, 80, 2016, 20, t(10, 6, 9, 9, 4, 8), { loyalty: 88 }),
+  q('arsenal', 'ramsey_a14', 'Aaron Ramsey', 1990, 'Wales', ['CM', 'AM'], 84, 86, 2019, 30, t(8, 6, 9, 8, 5, 8)),
+  q('arsenal', 'wilshere_a14', 'Jack Wilshere', 1992, 'England', ['CM', 'AM'], 80, 84, 2018, 55, t(7, 6, 8, 8, 6, 7)),
+  q('arsenal', 'cazorla_a14', 'Santi Cazorla', 1984, 'Spain', ['AM', 'CM'], 85, 85, 2018, 15, t(9, 6, 9, 8, 4, 8)),
+  q('arsenal', 'ozil_a14', 'Mesut Özil', 1988, 'Germany', ['AM'], 86, 88, 2019, 20, t(8, 6, 9, 7, 4, 8)),
+  q('arsenal', 'giroud_a14', 'Olivier Giroud', 1986, 'France', ['ST'], 82, 83, 2018, 20, t(8, 6, 9, 8, 5, 7)),
+  q('arsenal', 'walcott_a14', 'Theo Walcott', 1989, 'England', ['RW', 'ST'], 81, 82, 2018, 30, t(8, 6, 8, 8, 5, 8)),
+  q('arsenal', 'oxlade_a14', 'Alex Oxlade-Chamberlain', 1993, 'England', ['RW', 'CM'], 79, 84, 2019, 35, t(8, 6, 8, 8, 5, 8)),
+];
+
 export const PSG_2014: CuratedSeed[] = [
   q('psg', 'sirigu_p14', 'Salvatore Sirigu', 1987, 'Italy', ['GK'], 82, 83, 2018, 15, t(8, 6, 8, 8, 5, 7)),
   q('psg', 'thiago_silva_p14', 'Thiago Silva', 1984, 'Brazil', ['CB'], 88, 88, 2018, 20, t(9, 6, 9, 8, 5, 8), { loyalty: 88 }),
@@ -289,6 +313,7 @@ export const BARCELONA_2014_SQUADS: Record<string, CuratedSeed[]> = {
   psg: PSG_2014,
   dortmund: DORTMUND_2014,
   ajax: AJAX_2014,
+  arsenal: ARSENAL_2014,
 };
 
 // Domestic mid-tier of the 2014-15 La Liga (M12 shortlist supply) — real squad

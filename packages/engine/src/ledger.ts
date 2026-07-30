@@ -885,6 +885,9 @@ const LEDGER_ENG_2010: RealTransferLedgerEntry[] = [
   { playerId: 'cur_meireles_lv10', from: 'porto', to: 'liverpool', window: '2010-07', fee: 11_500_000, id: 'meireles-lfc-2010' },
   { playerId: 'cur_poulsen_lv10', from: 'juventus', to: 'liverpool', window: '2010-07', fee: 4_500_000, id: 'poulsen-lfc-2010' },
   { playerId: 'cur_konchesky_lv10', from: 'fulham', to: 'liverpool', window: '2010-07', fee: 4_000_000, id: 'konchesky-lfc-2010' },
+  // The real SALE that funded the summer: Mascherano forced his move to Barça on
+  // deadline day — sanction it and bank the fee, or keep the captain-grade midfielder.
+  { playerId: 'cur_mascherano_bc10', from: 'liverpool', to: 'barcelona', window: '2010-08', fee: 17_000_000, id: 'mascherano-barca-2010' },
   // ── Liverpool's departures (the user's stars leaving, if they are Liverpool) ──
   { playerId: 'cur_torres_lv10', from: 'liverpool', to: 'chelsea', window: '2011-01', fee: 50_000_000, id: 'torres-chelsea-2011' },
   { playerId: 'cur_meireles_lv10', from: 'liverpool', to: 'chelsea', window: '2011-08', fee: 12_000_000, id: 'meireles-chelsea-2011' },
@@ -958,6 +961,11 @@ const LEDGER_BUNDESLIGA_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_robben_09', from: 'real_madrid', to: 'bayern', window: '2009-07', fee: 24_000_000, id: 'robben-bayern-2009' },
   { playerId: 'cur_gomez_09', from: 'stuttgart', to: 'bayern', window: '2009-07', fee: 30_000_000, id: 'gomez-bayern-2009' },
   { playerId: 'cur_olic_09', from: 'hamburg', to: 'bayern', window: '2009-07', fee: 0, id: 'olic-bayern-2009' },
+  // The real 2009 SALES that part-funded the Van Gaal reset — the veterans moved on
+  // as reality had it: sanction them and bank the fees, or keep them a year longer.
+  { playerId: 'cur_podolski_ko09', from: 'bayern', to: 'koln', window: '2009-07', fee: 10_000_000, id: 'podolski-koln-2009' },
+  { playerId: 'cur_lucio_in10', from: 'bayern', to: 'inter', window: '2009-07', fee: 6_000_000, id: 'lucio-inter-2009' },
+  { playerId: 'cur_ze_roberto_ha10', from: 'bayern', to: 'hamburg', window: '2009-07', fee: 2_000_000, id: 'zeroberto-hamburg-2009' },
   { playerId: 'cur_sahin_09', from: 'dortmund', to: 'real_madrid', window: '2011-07', fee: 10_000_000, id: 'sahin-real-2011' },
   { playerId: 'cur_gotze_09', from: 'dortmund', to: 'bayern', window: '2013-07', fee: 37_000_000, id: 'gotze-bayern-2013' },
   { playerId: 'cur_kroos_09', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
@@ -1018,6 +1026,10 @@ const LEDGER_LA_LIGA_2014: RealTransferLedgerEntry[] = [
   { playerId: 'cur_suarez_b14', from: 'liverpool', to: 'barcelona', window: '2014-07', fee: 65_000_000, id: 'suarez-barca-2014b' },
   { playerId: 'cur_rakitic_b14', from: 'sevilla', to: 'barcelona', window: '2014-07', fee: 15_000_000, id: 'rakitic-barca-2014' },
   { playerId: 'cur_mathieu_b14', from: 'valencia', to: 'barcelona', window: '2014-07', fee: 16_000_000, id: 'mathieu-barca-2014' },
+  // The real SALES that funded the Suárez summer — sanction them (as reality did) or
+  // keep the men and find the money elsewhere. Both were sold to make room and cash.
+  { playerId: 'cur_sanchez_b14', from: 'barcelona', to: 'arsenal', window: '2014-07', fee: 30_000_000, id: 'sanchez-arsenal-2014' },
+  { playerId: 'cur_fabregas_c14', from: 'barcelona', to: 'chelsea', window: '2014-07', fee: 27_000_000, id: 'fabregas-chelsea-2014' },
   { playerId: 'cur_kroos_r14', from: 'bayern', to: 'real_madrid', window: '2014-07', fee: 24_000_000, id: 'kroos-real-2014' },
   // ── The hinge: Neymar out, the wasted-money signing in ──
   { playerId: 'cur_neymar_b14', from: 'barcelona', to: 'psg', window: '2017-08', fee: 222_000_000, id: 'neymar-psg-2017' },

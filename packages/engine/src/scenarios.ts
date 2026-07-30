@@ -864,6 +864,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'juventus', name: 'Juventus', prestige: 86 },
       { id: 'liverpool', name: 'Liverpool', prestige: 84 },
       { id: 'inter', name: 'Internazionale', prestige: 80 },
+      { id: 'arsenal', name: 'Arsenal', prestige: 82 },
     ],
     contextExtra: [
       { id: 'atletico', name: 'Atlético Madrid', prestige: 82 },
