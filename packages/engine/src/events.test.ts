@@ -115,13 +115,30 @@ describe('scripted pack & scandals fire in sims', () => {
     expect(fired).toBe(true);
   });
 
-  it('a career produces user-club scandals', () => {
-    let s = createNewGame({ seed: 'scandal-run' });
+  it('a passive, on-script career invents no procedural scandals (reality holds)', () => {
+    // Procedural scandals are gated on divergence: a user who follows history sees
+    // the calm real baseline, with era scandals told as scripted history instead.
+    let s = createNewGame({ seed: 'scandal-passive' });
     let scandals = 0;
     for (let i = 0; i < 20; i++) {
       const res = advanceWindow(s);
       s = res.state;
-      scandals += res.events.filter((e) => e.code === 'scandal.fired' && e.data?.user === true).length;
+      scandals += res.events.filter((e) => e.code === 'scandal.fired').length;
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
+    }
+    expect(scandals).toBe(0);
+  });
+
+  it('a diverged world throws up procedural scandals', () => {
+    // Once the user has bent the world off history's script, off-script drama
+    // returns — the world writes its own storylines (§9f).
+    let s = createNewGame({ seed: 'scandal-diverged' });
+    s = { ...s, userAggression: 40 }; // an aggressive Director, well off the real path
+    let scandals = 0;
+    for (let i = 0; i < 20; i++) {
+      const res = advanceWindow(s);
+      s = res.state;
+      scandals += res.events.filter((e) => e.code === 'scandal.fired').length;
       for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
     }
     expect(scandals).toBeGreaterThan(0);

@@ -374,7 +374,7 @@ export function executeLedgerWindow(state: GameState, rng: Rng, step: number = W
           category: 'transfer',
           code: 'ledger.executed',
           message: `Reality holds: ${player!.name} → ${dest!.name}`,
-          data: { playerId: entry.playerId, from: entry.from, to: entry.to },
+          data: { playerId: entry.playerId, from: entry.from, to: entry.to, key },
         });
         continue;
       }

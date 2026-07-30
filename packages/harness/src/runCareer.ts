@@ -207,6 +207,7 @@ export function runCareer(options: RunCareerOptions): CareerMetrics {
 
   metrics.userMajorInjuryCrisisDecades = crisisDecades.size;
   metrics.userScandalDecades = scandalDecades.size;
+  metrics.zeroDivergence = zeroDivergence;
   // "Keep him happy" campaigns = players bid for; departures = those who were
   // forced out despite the keep policy (counted from the event, so a later
   // re-signing doesn't mask that the departure happened).

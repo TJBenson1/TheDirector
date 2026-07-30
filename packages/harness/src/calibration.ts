@@ -62,13 +62,20 @@ export const TARGETS: CalibrationTarget[] = [
   },
   {
     id: 'user-scandal',
-    label: 'User club ≥1 significant scandal per decade',
-    band: '≥80% of sims',
+    label: 'On-script career invents no procedural scandals (reality holds)',
+    band: '≤5% of sims',
     ownedBy: 'M7',
     active: true,
+    // Procedural scandals are OFF-SCRIPT drama, gated on divergence (§9f): a career
+    // that follows history sees the calm real baseline, with the era's real scandals
+    // told as scripted history instead. Measured over the ZERO-DIVERGENCE control
+    // careers only (a passive Director who bends nothing) — those must manufacture
+    // essentially no procedural scandals. Diverged, aggressive careers still throw
+    // them up (covered by the engine's events tests).
     evaluate: (c) => {
-      const f = fractionOfCareers(c, (x) => x.userScandalDecades >= x.decadesElapsed);
-      return { value: pct(f), pass: f >= 0.8 };
+      const onScript = c.filter((x) => x.zeroDivergence);
+      const f = onScript.length ? fractionOfCareers(onScript, (x) => x.userScandalDecades > 0) : 0;
+      return { value: pct(f), pass: f <= 0.05 };
     },
   },
   {

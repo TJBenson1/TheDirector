@@ -80,8 +80,11 @@ describe('reality-ledger execution (§9f)', () => {
     let s = createNewGame({ seed: 'ledger-once' });
     s = play(s, 30);
     const executed = s.eventLog.filter((e) => e.code === 'ledger.executed');
-    const ids = executed.map((e) => e.data?.playerId);
-    expect(new Set(ids).size).toBe(ids.length); // no duplicates
+    // Dedup by the ENTRY key, not the player: a player can legitimately have more
+    // than one real move over 15 seasons (Downing: Middlesbrough → Villa → Liverpool),
+    // and each of those distinct entries should still resolve exactly once.
+    const keys = executed.map((e) => e.data?.key);
+    expect(new Set(keys).size).toBe(keys.length); // no entry resolves twice
   });
 
   it('a ledger entry TO the user club is offered as a decision, never a rival butterfly', () => {

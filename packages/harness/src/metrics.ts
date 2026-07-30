@@ -22,6 +22,9 @@ export interface CareerMetrics {
   /** Decades in which the user club suffered ≥1 major injury crisis (3+ simultaneous). */
   userMajorInjuryCrisisDecades: number;
   userScandalDecades: number;
+  /** This career made no user transfers — the on-script control (§9f). Procedural
+   *  off-script drama (scandals, divergent storylines) must stay absent here. */
+  zeroDivergence: boolean;
   decadesElapsed: number;
   /** League-wide serious (6mo+) injuries, summed, plus squad-seasons for context. */
   seriousInjuriesLeagueWide: number;
@@ -110,6 +113,7 @@ export function emptyCareerMetrics(seed: string, years: number): CareerMetrics {
     maxConsecutiveTitlesAnyClub: 0,
     userMajorInjuryCrisisDecades: 0,
     userScandalDecades: 0,
+    zeroDivergence: false,
     decadesElapsed: Math.max(1, Math.floor(years / 10)),
     seriousInjuriesLeagueWide: 0,
     squadSeasons: 0,

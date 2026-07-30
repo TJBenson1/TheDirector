@@ -396,14 +396,26 @@ function hashCode(s: string): number {
 }
 
 function rollScandals(state: GameState, rng: Rng): void {
-  // Divergence adds chaos: a world the user has reshaped throws up more
-  // off-script drama (§9f). Passive users see the calm real baseline.
-  const scandalFrequency = state.settings.scandalFrequency * (1 + 0.6 * divergenceFactor(state));
+  // Procedural scandals are OFF-SCRIPT drama, and the reality-default holds them
+  // back: real disciplinary sagas of a given era are told as scripted history, so
+  // an on-script world should not be inventing its own. They are therefore gated on
+  // divergence — ~0 while the user is still following history (a passive save, or
+  // the opening seasons before butterflies compound) and rising only as the world
+  // frays (§9f). An extra early-seasons ramp keeps the first year or two quiet even
+  // for an aggressive start, so "the early years follow reality" holds.
+  const year = Number(state.clock.date.slice(0, 4));
+  const seasonsIn = Math.max(0, year - state.meta.startYear);
+  const earlyRamp = Math.min(1, seasonsIn / 3); // 0 in the opening season, full by season 3
+  const gate = divergenceFactor(state) * earlyRamp;
+  const scandalFrequency = state.settings.scandalFrequency * gate;
   for (const club of Object.values(state.clubs)) {
     if (club.leagueId === null) continue; // simulated clubs only
     for (const id of club.squad) {
       const player = state.players[id];
       if (!player || player.injury) continue;
+      // One main-stream draw per player regardless of the gate, so calibration's
+      // RNG stream is byte-identical whatever the scandal rate; all fallout runs on
+      // a forked stream (fork does not consume the parent).
       if (!rng.chance(scandalProbability(player, scandalFrequency))) continue;
 
       const isUser = club.id === state.playerClub;
@@ -419,7 +431,7 @@ function rollScandals(state: GameState, rng: Rng): void {
         state.pendingDecisions.push(scandalDecision(state, player));
       } else {
         // AI clubs navigate it themselves — a morale hit and occasional board fallout.
-        player.morale = clamp(player.morale - rng.int(3, 9), 0, 100);
+        player.morale = clamp(player.morale - rng.fork(`scandal:${player.id}`).int(3, 9), 0, 100);
       }
     }
   }
