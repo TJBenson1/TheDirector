@@ -17,6 +17,100 @@ import { Rng } from './rng.js';
 import { logEvent } from './eventLog.js';
 import { standingsOrder } from './season.js';
 import { appendMemory } from './memory.js';
+import { getScenario } from './scenarios.js';
+
+/** What the Director is asking the board to fund — a marquee star, youth investment,
+ *  or a general war-chest top-up. The owner's taste makes some asks an easier sell. */
+export type BudgetAskKind = 'general' | 'star' | 'youth';
+
+export interface BoardBudgetResult {
+  approved: boolean;
+  amount: number; // extra transfer budget released (0 if refused)
+  patienceCost: number; // board patience spent — always, more on a refusal
+  chance: number; // the approval probability rolled against (for narration)
+  reason: string;
+}
+
+/** Seasons since the Director's club last won its own domestic league (in-game),
+ *  or a default when there's no title on the board yet — a drought a title-hungry
+ *  owner is itching to end. */
+function seasonsSinceDomesticTitle(state: GameState): number {
+  const leagueId = state.clubs[state.playerClub]?.leagueId;
+  const league = leagueId ? state.leagues[leagueId] : undefined;
+  const year = Number(state.clock.date.slice(0, 4));
+  if (!league) return 6;
+  let lastWon = -1;
+  for (const t of league.titleHistory ?? []) {
+    if (t.championId === state.playerClub) lastWon = Math.max(lastWon, t.seasonYear);
+  }
+  return lastWon < 0 ? 6 : Math.max(0, year - lastWon);
+}
+
+/**
+ * The Director asks the board for extra transfer funds. Never a formality: approval
+ * hangs on club context — the owner's wealth and appetite, the credit the Director
+ * has banked (patience), how the side has been doing (recent misses), a title drought
+ * a demanding owner is itching to end, and whether the ask fits the owner's taste (a
+ * marquee swoop vs backing youth). Asking spends political capital either way, and a
+ * refusal stings more than a yes — so it's a real tactic with a cost, not free money.
+ */
+export function requestBoardBudget(state: GameState, rng: Rng, kind: BudgetAskKind = 'general'): BoardBudgetResult {
+  const club = state.clubs[state.playerClub];
+  const board = state.board;
+  const ownership = club?.finances.ownership ?? 'sustainable';
+  const profile = getScenario(state.meta.scenarioId).ownerProfile;
+  const backing = profile?.backing ?? (ownership === 'sugar-daddy' ? 'bold' : ownership === 'debt' ? 'frugal' : 'measured');
+  const taste = profile?.taste ?? 'balanced';
+
+  let chance = 0.38;
+  // Wealth: a sugar-daddy owner reaches for the chequebook; a debt/stadium squeeze can't.
+  chance += ownership === 'sugar-daddy' ? 0.24 : ownership === 'debt' ? -0.22 : 0;
+  // Appetite: a bold owner gambles, a frugal one hoards.
+  chance += backing === 'bold' ? 0.12 : backing === 'frugal' ? -0.12 : 0;
+  // Credit banked: a board that trusts the Director (high patience) backs him; a
+  // fraying one won't throw good money after bad.
+  chance += (board.patience - 55) / 220;
+  // Recent form: a run of finishes below what was expected makes the board reluctant.
+  chance -= Math.min(3, board.consecutiveMisses) * 0.09;
+  // A title-or-bust owner itching to end a drought will gamble on one more push.
+  if (board.expectedFinish <= 2 && seasonsSinceDomesticTitle(state) >= 4) chance += 0.12;
+  // Does the ask fit the owner's taste? A star-hungry owner loves a marquee swoop; a
+  // youth-backer prefers investing in the future — a mismatch is a harder sell.
+  if (kind === 'star') chance += taste === 'stars' ? 0.1 : taste === 'youth' ? -0.08 : 0;
+  else if (kind === 'youth') chance += taste === 'youth' ? 0.1 : taste === 'stars' ? -0.08 : 0;
+  chance = Math.max(0.05, Math.min(0.9, chance)); // never impossible, never a certainty
+
+  const approved = rng.chance(chance);
+  const patienceCost = approved ? 4 : 9; // the ask costs goodwill; a refusal costs more
+  board.patience = Math.max(0, board.patience - patienceCost);
+
+  let amount = 0;
+  if (approved && club) {
+    // Scales with the club's stature/era (its wage bill), lifted by a generous owner.
+    const gen = backing === 'bold' ? 0.7 : backing === 'frugal' ? 0.3 : 0.5;
+    amount = Math.max(2_000_000, Math.round((club.finances.wageBill * gen) / 500_000) * 500_000);
+    club.finances.transferBudget += amount;
+  }
+
+  const gbp = (n: number) => `£${(n / 1_000_000).toFixed(1)}m`;
+  logEvent(state, {
+    category: 'event',
+    code: approved ? 'board.budget.granted' : 'board.budget.refused',
+    message: approved
+      ? `The board release an extra ${gbp(amount)} into the war chest — patience −${patienceCost}.`
+      : `The board turn down the request for more funds — patience −${patienceCost}.`,
+    data: { approved, amount, patienceCost, chance: Math.round(chance * 100), kind },
+  });
+  return {
+    approved,
+    amount,
+    patienceCost,
+    chance,
+    reason: approved
+      ? `The board back you with ${gbp(amount)} — but you've spent goodwill to get it.`
+      : `The board say no — and simply asking has cost you goodwill.`,
+  };
+}
 
 /**
  * Review the user's season against the board mandate and adjust patience;

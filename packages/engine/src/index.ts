@@ -134,7 +134,7 @@ export { rollSquadFrictionEvents } from './squadFriction.js';
 export { rollBoardUltimatum } from './boardUltimatum.js';
 export { relegateClub, restoreRelegatedClubs } from './relegation.js';
 export { resolveParmalat, resolveCalciopoli } from './italyEvents.js';
-export { reviewBoard, rollInternalCrisis, boardRuthlessness } from './board.js';
+export { reviewBoard, rollInternalCrisis, boardRuthlessness, requestBoardBudget, type BudgetAskKind, type BoardBudgetResult } from './board.js';
 export { divergenceFactor, rollDivergentStoryline } from './divergence.js';
 export { appendMemory, memoriesWithTag } from './memory.js';
 export { CURATED_SQUADS, MAN_UTD_1999, type CuratedSeed } from './data/curated-1999.js';

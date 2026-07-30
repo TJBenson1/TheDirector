@@ -47,8 +47,10 @@ import {
   liveRoleEstimate,
   liveSeasonProjection,
   currentYear,
+  requestBoardBudget,
   Rng,
   SCENARIOS,
+  type BudgetAskKind,
   type GameState,
   type Position,
 } from '@director/engine';
@@ -337,6 +339,33 @@ const routes: Record<string, Handler> = {
         contractUntil: s.players[playerId]?.contractUntil,
         wageWeekly: wk(p.wage), wageWeeklyBefore: wk(wageBefore),
         raisePct: wageBefore > 0 ? Math.round(((p.wage - wageBefore) / wageBefore) * 100) : 0,
+      },
+    };
+  },
+
+  // Ask the board for extra transfer funds — a real tactic, not free money. Approval
+  // hangs on club context (owner wealth/appetite, banked patience, recent form, a
+  // title drought, and whether the ask fits the owner's taste), and simply asking
+  // costs board patience whether or not it lands. `kind`: 'star' | 'youth' | 'general'.
+  '/games/ask-board': ({ state, kind }) => {
+    const s = state as GameState;
+    const rng = new Rng(s.meta.rngState).fork(`ask-board:${s.clock.date}`);
+    const before = s.clubs[s.playerClub]?.finances.transferBudget ?? 0;
+    const res = requestBoardBudget(s, rng, (kind as BudgetAskKind) ?? 'general');
+    const m = (n: number) => Math.round(n / 100_000) / 10;
+    return {
+      state: s,
+      view: buildView(s),
+      result: {
+        ok: true,
+        approved: res.approved,
+        grantedM: m(res.amount),
+        budgetMBefore: m(before),
+        budgetMAfter: m(s.clubs[s.playerClub]?.finances.transferBudget ?? 0),
+        patienceCost: res.patienceCost,
+        patience: s.board.patience,
+        chancePct: Math.round(res.chance * 100),
+        reason: res.reason,
       },
     };
   },

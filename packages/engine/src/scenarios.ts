@@ -69,6 +69,12 @@ export interface ScenarioSeed {
    *  kitty — for a war chest reputation can't yet explain, e.g. a just-completed
    *  takeover (2009 City). Applied after squads are built. */
   startingBudget?: Partial<Record<ClubId, number>>;
+  /** The owner's appetite for backing the Director with extra funds, and his taste.
+   *  Drives whether a mid-save "ask the board for more budget" is approved. Defaults
+   *  are derived from ownership (sugar-daddy → bold, debt → frugal), so this is only
+   *  set where the real owner's character is distinctive (Abramovich/City: bold+stars;
+   *  Wenger-era Arsenal: frugal+youth; Dortmund: measured+youth). */
+  ownerProfile?: { backing: 'bold' | 'measured' | 'frugal'; taste: 'stars' | 'youth' | 'balanced' };
 }
 
 /** The 12 elite clubs (§14), with rough late-90s prestige. Refined in M3. */
@@ -340,6 +346,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     ],
     // Abramovich bankrolls Chelsea; Arsenal are servicing the Emirates debt.
     ownership: { chelsea: 'sugar-daddy', arsenal: 'debt' },
+    // Wenger's Arsenal, mid-Emirates-build: the board hoards for the stadium and backs
+    // the youth project over marquee spending — an ask for star money is a hard sell.
+    ownerProfile: { backing: 'frugal', taste: 'youth' },
     domesticLeagueId: 'eng-2004',
   },
   'man-utd-1999': {
@@ -401,6 +410,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     clubs: ERA_2003_CLUBS,
     contextExtra: ERA_2003_CONTEXT,
     ownership: { chelsea: 'sugar-daddy' },
+    // Abramovich's first summer: limitless money and a hunger for marquee names — the
+    // board says yes to a star swoop readily, though never quite for free.
+    ownerProfile: { backing: 'bold', taste: 'stars' },
     domesticLeagueId: 'eng-2003',
   },
   'arsenal-1996': {
@@ -876,6 +888,9 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     mandate: 'Hold the golden generation together — and turn the Wembley run into a European Cup.',
     boardPatience: 74,
     boardExpectedFinish: 2,
+    // Dortmund's model is measured, self-sustaining, youth-first — they develop and
+    // sell, not splurge; a request for star money runs against the whole philosophy.
+    ownerProfile: { backing: 'measured', taste: 'youth' },
     // The Bundesliga is the simulated league; the elite of Europe (full squads)
     // plus a light context anchor every real European Cup of 2013–2025.
     clubs: [
@@ -973,6 +988,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
     // No hand-tuned figure needed: the budget model derives City's war chest from its
     // real summer-2009 net spend × the sugar-daddy multiplier — the takeover cash falls
     // straight out of what the club actually did.
+    // Abu Dhabi's owners: the boldest backers in football, hungry for galáctico names.
+    ownerProfile: { backing: 'bold', taste: 'stars' },
     clubs: [
       { id: 'man_city', name: 'Manchester City', prestige: 62 },
       { id: 'man_utd', name: 'Manchester United', prestige: 90 },
