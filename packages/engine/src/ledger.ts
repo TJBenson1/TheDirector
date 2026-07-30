@@ -1125,6 +1125,13 @@ const LEDGER_1998_2004: RealTransferLedgerEntry[] = [
   // Lazio round out the live 1998 window.
   { playerId: 'cur_baggio_i', from: 'bologna', to: 'inter', window: '1998-07', fee: 6_500_000, id: 'baggio-inter-1998' },
   { playerId: 'cur_salas', from: 'river_plate', to: 'lazio', window: '1998-07', fee: 12_000_000, id: 'salas-lazio-1998' },
+  // Two real summer-1998 moves that would otherwise leave their subjects looking
+  // freely signable at clubs they'd only just joined: Zenden (PSV → Barcelona) and
+  // Poborský (Man Utd → Benfica). Seeded at their destinations and rewound to the
+  // selling club at kickoff, so they are live, hijackable deals from PSV / United —
+  // not off-the-shelf buys from Barça / Benfica the day the window opens.
+  { playerId: 'cur_zenden', from: 'psv', to: 'barcelona', window: '1998-07', fee: 8_500_000, id: 'zenden-barca-1998' },
+  { playerId: 'cur_poborsky_l90', from: 'man_utd', to: 'benfica', window: '1998-07', fee: 3_000_000, id: 'poborsky-benfica-1998' },
   // ── Inter's business (the user's, if they are Inter) ──
   { playerId: 'cur_vieri_l', from: 'lazio', to: 'inter', window: '1999-07', fee: 46_000_000, id: 'vieri-inter-1999' },
   { playerId: 'cur_cannavaro_p8', from: 'parma', to: 'inter', window: '2002-07', fee: 23_000_000, id: 'cannavaro-inter-2002' },
