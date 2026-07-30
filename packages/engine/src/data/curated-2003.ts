@@ -272,6 +272,13 @@ const CHELSEA_2003_EXTRA: CuratedSeed[] = [
   q('chelsea', 'melchiot_c3', 'Mario Melchiot', 1976, 'Netherlands', ['RB'], 78, 79, 2004, 25, t(8, 5, 7, 7, 4, 7)),
   q('chelsea', 'geremi_c3', 'Geremi', 1978, 'Cameroon', ['CM', 'RB'], 78, 80, 2007, 25, t(8, 5, 7, 7, 4, 7)),
   q('chelsea', 'hasselbaink_c3', 'Jimmy Floyd Hasselbaink', 1972, 'Netherlands', ['ST'], 81, 82, 2004, 30, t(7, 7, 8, 6, 6, 6)),
+  // The pre-Abramovich side that was already on the books — the men Ranieri could
+  // name on day one before a single Roman-empire signing arrived, so the current
+  // squad fields a real XI while the summer's business is still on the desk.
+  q('chelsea', 'petit_c3', 'Emmanuel Petit', 1970, 'France', ['CM', 'DM'], 80, 80, 2004, 20, t(8, 5, 8, 7, 3, 7)),
+  q('chelsea', 'babayaro_c3', 'Celestine Babayaro', 1978, 'Nigeria', ['LB'], 77, 78, 2005, 20, t(7, 5, 7, 6, 5, 7)),
+  q('chelsea', 'gronkjaer_c3', 'Jesper Grønkjær', 1977, 'Denmark', ['RW', 'LW'], 77, 78, 2004, 20, t(7, 6, 7, 6, 5, 7)),
+  q('chelsea', 'zenden_c3', 'Boudewijn Zenden', 1976, 'Netherlands', ['LW', 'AM'], 78, 79, 2004, 25, t(7, 6, 7, 6, 6, 7)),
 ];
 /** Manchester City, 2003–04 — a mid-table side (Anelka up front, pre-takeover). */
 const MAN_CITY_2003: CuratedSeed[] = [

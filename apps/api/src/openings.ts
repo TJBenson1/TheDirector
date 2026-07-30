@@ -567,17 +567,45 @@ function entryName(entry: string): string {
   return UNIT[maybePos] ? beforeDash.slice(sp + 1) : beforeDash;
 }
 
-/** The authored first-choice side filtered to the men ACTUALLY on the books now. The
- *  authored XI is the historical END-of-window lineup, but the live opening window
- *  (M12C) rewinds that summer's real signings to their selling clubs so each is an
- *  interceptable decision — so a man not yet signed (Baggio at Bologna, Chelsea's 2003
- *  arrivals) must not be narrated as a nailed-on starter while his deal is offered on
- *  the desk. We render only the current squad here and let the pending deals be told as
- *  what they are (the marquee line + the tappable decisions), rather than projecting
- *  them into the XI in the present tense. */
+/** The authored first-choice side, resolved to the men ACTUALLY on the books now.
+ *  The authored XI is the historical END-of-window lineup, but the live opening
+ *  window (M12C) rewinds that summer's real signings to their selling clubs so each
+ *  is an interceptable decision — so a man not yet signed (Baggio at Bologna,
+ *  Chelsea's 2003 arrivals) must not be narrated as a nailed-on starter while his
+ *  deal is offered on the desk. Rather than leaving his slot as a hole (Inter '98's
+ *  No.10 blank where Baggio's deal still sits on the desk), we fill it with the best
+ *  current-squad man for that position — the player the coach would actually field
+ *  today (Djorkaeff at the No.10) — so the present-tense XI is complete and matches
+ *  the Manager's Room. The pending deals are still told as what they are (the marquee
+ *  line + the tappable decisions), not projected into this XI. */
 function currentSquadXI(state: GameState, firstEleven: string[]): string[] {
-  const squad = new Set(clubSquadPlayers(state, state.playerClub).map((p) => p.name));
-  return firstEleven.filter((entry) => squad.has(entryName(entry)));
+  const squadPlayers = clubSquadPlayers(state, state.playerClub);
+  const onBooks = new Set(squadPlayers.map((p) => p.name));
+  const used = new Set<string>();
+  const out: string[] = [];
+  for (const entry of firstEleven) {
+    const name = entryName(entry);
+    if (onBooks.has(name)) {
+      used.add(name);
+      out.push(entry);
+      continue;
+    }
+    // The authored man isn't on the books yet (a pending opening-window arrival).
+    // Fill his slot with the best current-squad player for that position, preferring
+    // a natural fit and falling back to the same unit, so the XI has no hole.
+    const sp = entry.indexOf(' ');
+    const pos = sp === -1 ? '' : entry.slice(0, sp).toUpperCase();
+    const unit = UNIT[pos] ?? 'MID';
+    const free = squadPlayers.filter((p) => !used.has(p.name));
+    const natural = free.filter((p) => (p.positions as string[]).includes(pos)).sort((a, b) => b.ability - a.ability);
+    const sameUnit = free.filter((p) => p.positions.some((q) => UNIT[q] === unit)).sort((a, b) => b.ability - a.ability);
+    const pick = natural[0] ?? sameUnit[0];
+    if (pick) {
+      used.add(pick.name);
+      out.push(`${pos} ${pick.name}`);
+    }
+  }
+  return out;
 }
 
 /** The rich, historically-grounded opening — the true story of this exact summer. */

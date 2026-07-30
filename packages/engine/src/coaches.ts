@@ -101,7 +101,7 @@ const REAL_COACHES: Record<string, RealCoach> = {
   'milan-2007': { identity: 'Carlo Ancelotti', archetype: 'man-manager', formation: '4-2-3-1', favourites: ['Kaká'] },
   // Gigi Simoni is the man in the dugout at kickoff (fresh from the 1998 UEFA Cup
   // with Ronaldo), as the opening says — Lucescu was only his in-season replacement.
-  'inter-1998': { identity: 'Gigi Simoni', archetype: 'pragmatic-counter', formation: '4-4-2', favourites: ['Ronaldo'] },
+  'inter-1998': { identity: 'Gigi Simoni', archetype: 'pragmatic-counter', formation: '4-3-1-2', favourites: ['Ronaldo'] },
   'inter-2004': { identity: 'Roberto Mancini', archetype: 'pragmatic-counter', formation: '4-4-2' },
   'real-madrid-2000': { identity: 'Vicente del Bosque', archetype: 'man-manager', formation: '4-4-2' },
   'real-madrid-2006': { identity: 'Fabio Capello', archetype: 'defensive-block', formation: '4-4-2' },

@@ -16,18 +16,20 @@
 export type Formation =
   | '4-4-2'
   | '4-4-2-diamond'
+  | '4-3-1-2'
   | '4-3-3'
   | '4-2-3-1'
   | '3-5-2'
   | '5-3-2'
   | '3-4-3';
 
-export const ALL_FORMATIONS: Formation[] = ['4-4-2', '4-4-2-diamond', '4-3-3', '4-2-3-1', '3-5-2', '5-3-2', '3-4-3'];
+export const ALL_FORMATIONS: Formation[] = ['4-4-2', '4-4-2-diamond', '4-3-1-2', '4-3-3', '4-2-3-1', '3-5-2', '5-3-2', '3-4-3'];
 
 /** Central-midfield bodies a shape fields — the axis the modern game is won on. */
 const CENTRAL_MIDFIELD: Record<Formation, number> = {
   '4-4-2': 2,
   '4-4-2-diamond': 4,
+  '4-3-1-2': 3, // a genuine three plus a trequartista behind the front two
   '4-3-3': 3,
   '4-2-3-1': 3,
   '3-5-2': 3,
