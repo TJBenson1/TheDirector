@@ -10,12 +10,32 @@
  */
 
 import type { ClubId, GameState, PlayerId } from './types.js';
-import { parseYearMonth } from './clock.js';
+import { parseYearMonth, transferWindowOrdinal } from './clock.js';
 import { styleKeyForClub } from './leaguestyle.js';
 import { poleMoveFor } from './wooing.js';
 import { clubSquadPlayers } from './players.js';
 import { loanParent, isPersonaNonGrata } from './restrictions.js';
-import { pendingPreAgreedMove } from './ledger.js';
+import { pendingPreAgreedMove, ERA_REALITY, eraForScenario, entryKey } from './ledger.js';
+
+/** How far ahead (in window-ordinals) a real move TO the buyer still counts as
+ *  "his move, brought forward" — ~one year, matching the pole horizon. */
+const REAL_MOVE_HORIZON_ORDINALS = 2;
+
+/** Does reality already have this player joining `buyer` now or imminently? If so
+ *  he is willing by definition — he made (or was about to make) exactly this move.
+ *  Skips a move already resolved. Pure ledger read. */
+function isRealMoveToBuyer(state: GameState, playerId: PlayerId, buyer: ClubId): boolean {
+  const pack = ERA_REALITY[eraForScenario(state.meta.scenarioId)];
+  if (!pack) return false;
+  const nowOrd = transferWindowOrdinal(state.clock.date);
+  for (const e of pack.realTransferLedger) {
+    if (e.playerId !== playerId || e.to !== buyer) continue;
+    if (state.meta.executedLedger.includes(entryKey(e))) continue;
+    const ahead = transferWindowOrdinal(e.window) - nowOrd;
+    if (ahead >= 0 && ahead <= REAL_MOVE_HORIZON_ORDINALS) return true;
+  }
+  return false;
+}
 
 /** Willingness at/above which a player will consider a move at a fair package. */
 export const WILLINGNESS_THRESHOLD = 50;
@@ -180,6 +200,21 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
       willingness: 0,
       hardBlocked: true,
       reason: `${fromClub.name} will not sell ${player.name} to a direct rival in ${buyer.name} — at any price.`,
+    };
+  }
+
+  // Reality-default: this window's real ledger already has him joining THIS buyer
+  // (Cannavaro → Real Madrid, summer 2006). He went there in history, so at a fair
+  // package he is willing by definition — no persuasion, no resistance. This must
+  // sit AFTER the hard blocks (a rivalry/loan/pre-agreed-elsewhere still overrides)
+  // but ahead of the ordinary pull/resistance maths, which would otherwise read a
+  // loyal veteran as "not convinced" by the very move he actually made.
+  if (isRealMoveToBuyer(state, player.id, buyer.id)) {
+    return {
+      willing: true,
+      willingness: 95,
+      hardBlocked: false,
+      reason: `${player.name} is set to join ${buyer.name} — this is the move history had him making.`,
     };
   }
 

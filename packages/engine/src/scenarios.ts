@@ -479,6 +479,12 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'everton', name: 'Everton', prestige: 64 },
       { id: 'santos', name: 'Santos', prestige: 68 },
       { id: 'river_plate', name: 'River Plate', prestige: 70 },
+      // South American source clubs — the real 2000 homes of players who only moved
+      // to Europe later (Dani Alves, Baptista, Forlán), so they aren't seeded at
+      // their eventual European clubs years early.
+      { id: 'bahia', name: 'Bahia', prestige: 58 },
+      { id: 'sao_paulo', name: 'São Paulo', prestige: 64 },
+      { id: 'independiente', name: 'Independiente', prestige: 62 },
       { id: 'man_city', name: 'Manchester City', prestige: 60 },
     ],
     domesticLeagueId: 'esp-1',

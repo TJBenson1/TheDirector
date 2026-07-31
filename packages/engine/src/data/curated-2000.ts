@@ -242,7 +242,6 @@ export const MILAN_2000: CuratedSeed[] = [
 export const MANUTD_2000: CuratedSeed[] = [
   q('man_utd', 'beckham', 'David Beckham', 1975, 'England', ['RW', 'CM'], 87, 88, 2004, 20, t(9, 7, 8, 7, 4, 7)),
   q('man_utd', 'vannistelrooy', 'Ruud van Nistelrooy', 1976, 'Netherlands', ['ST'], 86, 89, 2006, 40, t(8, 6, 9, 6, 4, 7)),
-  q('man_utd', 'forlan', 'Diego Forlán', 1979, 'Uruguay', ['ST'], 74, 84, 2005, 25, t(9, 5, 8, 6, 4, 7)),
   q('man_utd', 'keane_r', 'Roy Keane', 1971, 'Ireland', ['CM', 'DM'], 87, 88, 2004, 35, t(9, 8, 10, 8, 8, 6)),
   q('man_utd', 'giggs', 'Ryan Giggs', 1973, 'Wales', ['LW'], 85, 86, 2005, 30, t(9, 5, 8, 10, 3, 7), { loyalty: 96 }),
   q('man_utd', 'scholes', 'Paul Scholes', 1974, 'England', ['CM', 'AM'], 86, 87, 2005, 25, t(9, 4, 8, 10, 3, 7), { loyalty: 95 }),
@@ -289,11 +288,27 @@ export const SANTOS_2000: CuratedSeed[] = [
   q('santos', 'diego_r', 'Diego', 1985, 'Brazil', ['AM'], 74, 87, 2005, 25, t(8, 6, 8, 6, 4, 7)),
 ];
 export const SEVILLA_2000: CuratedSeed[] = [
-  q('sevilla', 'baptista', 'Julio Baptista', 1981, 'Brazil', ['CM', 'ST'], 79, 85, 2005, 25, t(7, 6, 8, 6, 5, 7)),
+  // Sevilla's real academy spine of 2000 (Reyes/Ramos/Puerta came through here).
+  // Baptista and Dani Alves are NOT here yet — both were still in South America in
+  // 2000 and only arrived in 2003/2002 (seeded at their real clubs below, with a
+  // reality ledger move at the right window).
   q('sevilla', 'ramos_s', 'Sergio Ramos', 1986, 'Spain', ['RB', 'CB'], 68, 90, 2006, 25, t(8, 7, 9, 7, 6, 7)),
   q('sevilla', 'reyes', 'José Antonio Reyes', 1983, 'Spain', ['LW', 'ST'], 78, 86, 2005, 35, t(6, 7, 7, 6, 7, 6)),
-  q('sevilla', 'dani_alves', 'Dani Alves', 1983, 'Brazil', ['RB'], 72, 88, 2006, 20, t(8, 6, 9, 7, 5, 8)),
   q('sevilla', 'puerta', 'Antonio Puerta', 1984, 'Spain', ['LB', 'LW'], 70, 82, 2006, 25, t(8, 5, 8, 9, 5, 7)),
+];
+
+// ── South American source clubs: the real 2000 homes of players who only crossed
+//    to Europe later. Seeding them here (not at their eventual European club) keeps
+//    the reality-default honest — a 17-year-old Dani Alves is at Bahia in 2000, not
+//    already at Sevilla — and the era ledger moves each to Europe at his real window.
+export const BAHIA_2000: CuratedSeed[] = [
+  q('bahia', 'dani_alves', 'Dani Alves', 1983, 'Brazil', ['RB'], 66, 88, 2004, 5, t(8, 6, 9, 7, 5, 8)),
+];
+export const SAO_PAULO_2000: CuratedSeed[] = [
+  q('sao_paulo', 'baptista', 'Julio Baptista', 1981, 'Brazil', ['CM', 'ST'], 76, 85, 2004, 10, t(7, 6, 8, 6, 5, 7)),
+];
+export const INDEPENDIENTE_2000: CuratedSeed[] = [
+  q('independiente', 'forlan', 'Diego Forlán', 1979, 'Uruguay', ['ST'], 70, 84, 2003, 8, t(9, 5, 8, 6, 4, 7)),
 ];
 export const LAZIO_2000: CuratedSeed[] = [
   q('lazio', 'crespo', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 86, 87, 2004, 35, t(7, 7, 8, 6, 5, 7)),
@@ -336,6 +351,9 @@ export const CONTEXT_2000_SQUADS: Record<string, CuratedSeed[]> = {
   arsenal: ARSENAL_2000,
   chelsea: CHELSEA_2000,
   river_plate: RIVER_2000,
+  bahia: BAHIA_2000,
+  sao_paulo: SAO_PAULO_2000,
+  independiente: INDEPENDIENTE_2000,
 };
 
 /**
