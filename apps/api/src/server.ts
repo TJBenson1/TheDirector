@@ -400,13 +400,18 @@ const routes: Record<string, Handler> = {
   },
 
   // Persuade the CURRENT coach to change his style/shape (same man, new approach).
-  '/games/change-style': ({ state, style, formation }) => {
+  // He may refuse; the Director can insist with force.
+  '/games/change-style': ({ state, style, formation, force }) => {
     const s = state as GameState;
     if (!style && !formation) return { state: s, view: buildView(s), styles: coachArchetypes() };
     const wanted = style ? String(style).toLowerCase().replace(/\s+/g, '-') : undefined;
     const match = wanted ? coachArchetypes().find((c) => c.archetype === wanted) : undefined;
-    restyleCoach(s, { archetype: match?.archetype, formation });
-    return { state: s, view: buildView(s), result: { ok: true, coach: s.managerRelations.identity, style: s.managerRelations.archetype, formation: s.managerRelations.preferredFormation, relationship: s.managerRelations.relationshipWithUser } };
+    const verdict = restyleCoach(s, { archetype: match?.archetype, formation, force: force === true });
+    const c = s.managerRelations;
+    if (!verdict.applied) {
+      return { state: s, view: buildView(s), result: { ok: false, resisted: true, coach: c.identity, reason: verdict.reason, canForce: true } };
+    }
+    return { state: s, view: buildView(s), result: { ok: true, coach: c.identity, style: c.archetype, formation: c.preferredFormation, relationship: c.relationshipWithUser, forced: verdict.forced, reason: verdict.reason } };
   },
 
   // Rich structured "current situation" for the narrator (the app's language

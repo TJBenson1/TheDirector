@@ -185,11 +185,13 @@ export {
   resolveCoachFriction,
   appointCoach,
   restyleCoach,
+  evaluateRestyle,
   coachArchetypes,
   playerStyleProfile,
   type CoachFit,
   type FitVerdict,
   type CoachOption,
+  type RestyleVerdict,
 } from './coaches.js';
 export {
   formationLabel,

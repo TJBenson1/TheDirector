@@ -327,39 +327,107 @@ export function appointCoach(
   });
 }
 
+/** Where each archetype sits on a reactive→proactive spectrum. The gap between
+ *  two is how radical a philosophical switch is: nudging a defensive coach to a
+ *  pragmatic counter (1→3) is a small ask; asking him to play possession (1→8) is
+ *  asking him to abandon everything he believes. */
+const ARCHETYPE_PROACTIVITY: Record<CoachArchetype, number> = {
+  'defensive-block': 1,
+  'pragmatic-counter': 3,
+  balanced: 5,
+  'man-manager': 5,
+  possession: 8,
+  gegenpress: 9,
+};
+
+export interface RestyleVerdict {
+  /** True once the change is in effect (either agreed, or imposed with `force`). */
+  applied: boolean;
+  /** Would the coach agree of his own accord? */
+  willing: boolean;
+  /** Was it pushed through over his objection? */
+  forced: boolean;
+  /** How radical the philosophical switch is (0 = shape-only, up to ~8). */
+  distance: number;
+  reason: string;
+}
+
+/** Would the sitting coach agree to this restyle? A dogmatic coach (low
+ *  adaptability) digs in against a radical switch; a good relationship buys some
+ *  latitude, and a shape-only tweak within the same philosophy is never resisted. */
+export function evaluateRestyle(
+  state: GameState,
+  opts: { archetype?: CoachArchetype; formation?: Formation } = {},
+): { willing: boolean; distance: number; reason: string } {
+  const mr = state.managerRelations;
+  const archetype: CoachArchetype = opts.archetype && ARCHETYPES[opts.archetype] ? opts.archetype : mr.archetype;
+  const distance = Math.abs(ARCHETYPE_PROACTIVITY[archetype] - ARCHETYPE_PROACTIVITY[mr.archetype]);
+  if (distance === 0) return { willing: true, distance, reason: 'A tweak within his own approach — no quarrel.' };
+  // Openness to the idea: his adaptability, plus a little leeway from a strong
+  // working relationship. He agrees when that clears how radical the switch is.
+  const openness = (mr.adaptability ?? 6) + (mr.relationshipWithUser - 50) / 10;
+  const willing = openness >= distance;
+  const reason = willing
+    ? 'He can see the logic and will give it a go.'
+    : distance >= 5
+      ? `${mr.identity} built his name on this approach and won't abandon it on a conversation.`
+      : `${mr.identity} isn't convinced — it cuts against how he sees the game.`;
+  return { willing, distance, reason };
+}
+
 /**
  * Persuade the SITTING coach to change his playing style and/or shape — the same
  * man, a new approach — rather than appointing a new one. Keeps his identity,
- * relationship, favourites and feuds; swaps his archetype/style and formation. A
- * coach talked out of the philosophy he's built his name on takes it as a small
- * knock to the working relationship even when he agrees (the more so the less
- * adaptable he is), so it isn't quite free — but the Director's call carries.
+ * relationship, favourites and feuds; swaps his archetype/style and formation.
+ *
+ * A coach isn't a puppet: a dogmatic one asked for a radical switch will RESIST,
+ * and the change is not applied unless the Director insists with `force`. Agreeing
+ * willingly costs a little goodwill; being overruled costs a lot — he plays it
+ * under protest, and his happiness (which tracks the relationship) drops sharply.
  */
 export function restyleCoach(
   state: GameState,
-  opts: { archetype?: CoachArchetype; formation?: Formation } = {},
-): void {
+  opts: { archetype?: CoachArchetype; formation?: Formation; force?: boolean } = {},
+): RestyleVerdict {
   const mr = state.managerRelations;
   const archetype: CoachArchetype = opts.archetype && ARCHETYPES[opts.archetype] ? opts.archetype : mr.archetype;
   const base = ARCHETYPES[archetype];
   const formation = opts.formation ?? base.formation;
+  const { willing, distance, reason } = evaluateRestyle(state, { archetype, formation });
+
+  if (!willing && !opts.force) {
+    logEvent(state, {
+      category: 'event',
+      code: 'coach.restyle-refused',
+      message: `${mr.identity} pushes back on switching to ${archetype} — ${reason}`,
+      data: { archetype, formation, distance },
+    });
+    return { applied: false, willing: false, forced: false, distance, reason };
+  }
+
   const changedStyle = archetype !== mr.archetype;
   mr.archetype = archetype;
   mr.style = { ...base.style };
   mr.preferredFormation = formation;
   mr.activeFormation = formation;
-  // The friction of abandoning his approach — smaller the more adaptable he is,
-  // zero if only the shape moved and his philosophy is intact.
+
   if (changedStyle) {
-    const knock = Math.max(0, Math.round((10 - (mr.adaptability ?? 6)) * 0.8));
+    // Willing: a small knock, smaller the more adaptable he is. Forced: he's doing
+    // it under protest — a real blow to the relationship, scaled by how radical it is.
+    const knock = willing
+      ? Math.max(0, Math.round((10 - (mr.adaptability ?? 6)) * 0.8))
+      : 8 + distance * 2;
     mr.relationshipWithUser = Math.max(0, Math.min(100, mr.relationshipWithUser - knock));
   }
   logEvent(state, {
     category: 'event',
     code: 'coach.restyled',
-    message: `${mr.identity} switches approach — ${archetype}, ${formationLabel(formation)}.`,
-    data: { archetype, formation },
+    message: willing
+      ? `${mr.identity} switches approach — ${archetype}, ${formationLabel(formation)}.`
+      : `${mr.identity} is overruled and will play ${archetype} (${formationLabel(formation)}) under protest.`,
+    data: { archetype, formation, forced: !willing },
   });
+  return { applied: true, willing, forced: !willing, distance, reason };
 }
 
 // ── Coach–Director friction (M13b) ───────────────────────────────────────────
