@@ -27,6 +27,7 @@ import {
   midSeasonForm,
   europeanCampaign,
   appointCoach,
+  restyleCoach,
   coachArchetypes,
   standingsOrder,
   clubSquadPlayers,
@@ -116,6 +117,22 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
       });
       const c = s.managerRelations;
       return { state: s, result: { ok: true, coach: c.identity, style: c.archetype, formation: c.preferredFormation } };
+    }
+
+    case 'change_style': {
+      // Persuade the CURRENT coach to change his approach (same man, new style/shape).
+      const styles = coachArchetypes();
+      if (!input.style && !input.formation) {
+        return { state: s, result: { coach: s.managerRelations.identity, current: s.managerRelations.archetype, chooseFrom: styles.map((c) => ({ style: c.archetype, plays: c.style, formation: c.formation })) } };
+      }
+      const wanted = input.style ? String(input.style).toLowerCase().replace(/\s+/g, '-') : undefined;
+      const match = wanted ? styles.find((c) => c.archetype === wanted) : undefined;
+      restyleCoach(s, {
+        archetype: match?.archetype,
+        formation: input.formation ? (String(input.formation) as any) : undefined,
+      });
+      const c = s.managerRelations;
+      return { state: s, result: { ok: true, coach: c.identity, style: c.archetype, formation: c.preferredFormation, relationship: c.relationshipWithUser } };
     }
 
     case 'squad': {
@@ -361,7 +378,8 @@ export const TOOL_SCHEMAS = [
   { name: 'manager_room', description: "The head coach's full dashboard: his happiness, playing style and formation, first-choice XI (top performers marked), position-by-position depth chart, rising stars and whether they're getting minutes to develop, concerns (age/form/happiness/injury/contract), and his transfer wishlist in and out. Use when the Director asks about the squad, the coach's plans, who's developing, who to sell, or the state of the dressing room.", input_schema: { type: 'object', properties: {} } },
   { name: 'squad_form', description: "A MID-SEASON form report on the Director's own players — a SITUATION-driven read, not just ability: each man's minutes%, projected goals & assists, an impact rating, starter or not, and a flag/note. Flags: flying (real attacking output), solid, struggling, fringe (barely playing), injured, and three situational stories the engine engineers around a player's circumstances — ADAPTING (a signing from a foreign league still settling, a story of time not talent), MISFIT (a talent the coach can't fit into his system — great player, wrong shape), and LOGJAM (a good player stuck in a position the Director has OVERSTOCKED, chafing on the bench). Use whenever the Director asks how his players/signings are performing, who's scoring/assisting/getting minutes, who's struggling to settle or fit, or who's frustrated. Lead with the notable stories.", input_schema: { type: 'object', properties: {} } },
   { name: 'europe', description: "The continental cup (Champions League / European Cup) this season: whether the club is in it, how the group stage went (cruised through / a close shave), the phase, and the tournament favourites with reasons. Use whenever the Director asks how Europe / the Champions League is going.", input_schema: { type: 'object', properties: {} } },
-  { name: 'change_coach', description: "Appoint a new head coach — the Director's prerogative, so it always goes through. Call with no arguments to list the playing styles to choose from; then call again with a style (and optionally a name and formation) to make the change. Never refuse a coach change.", input_schema: { type: 'object', properties: { style: { type: 'string', description: 'possession | gegenpress | pragmatic-counter | defensive-block | man-manager | balanced' }, name: { type: 'string', description: "the new coach's name (optional)" }, formation: { type: 'string' } }, required: [] } },
+  { name: 'change_coach', description: "Appoint a NEW head coach (a different man) — the Director's prerogative, so it always goes through. Call with no arguments to list the playing styles to choose from; then call again with a style (and optionally a name and formation) to make the change. Never refuse a coach change. NOTE: to keep the SAME coach but change how he plays, use change_style instead.", input_schema: { type: 'object', properties: { style: { type: 'string', description: 'possession | gegenpress | pragmatic-counter | defensive-block | man-manager | balanced' }, name: { type: 'string', description: "the new coach's name (optional)" }, formation: { type: 'string' } }, required: [] } },
+  { name: 'change_style', description: "Persuade the CURRENT head coach to change his playing style and/or formation — the same man, a new approach. You MUST call this whenever the Director convinces the coach to switch how the team plays (e.g. Capello agreeing to move from a defensive block to possession 4-3-3): the narration alone does NOT change the game — only this tool updates the Manager's Room, the shape and the best XI. Call with no arguments to list the styles; then call again with a style and/or formation. It applies the change and reports the (small) hit to the working relationship a set-in-his-ways coach takes.", input_schema: { type: 'object', properties: { style: { type: 'string', description: 'possession | gegenpress | pragmatic-counter | defensive-block | man-manager | balanced' }, formation: { type: 'string', description: 'e.g. 4-3-3, 4-2-3-1, 4-4-2' } }, required: [] } },
   { name: 'advance', description: 'Move time forward one step (window phase or month). Returns what happened + new decisions.', input_schema: { type: 'object', properties: {} } },
   { name: 'squad', description: 'Your full squad with age, ability, morale, contract, wages.', input_schema: { type: 'object', properties: {} } },
   { name: 'league_table', description: 'The current league table.', input_schema: { type: 'object', properties: {} } },

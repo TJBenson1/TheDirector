@@ -38,6 +38,7 @@ import {
   midSeasonForm,
   europeanCampaign,
   appointCoach,
+  restyleCoach,
   coachArchetypes,
   rippleSaleSatesNeed,
   clubSquadPlayers,
@@ -396,6 +397,16 @@ const routes: Record<string, Handler> = {
     const match = coachArchetypes().find((c) => c.archetype === wanted);
     appointCoach(s, { identity: name ? String(name) : undefined, archetype: match?.archetype, formation });
     return { state: s, view: buildView(s), result: { ok: true, coach: s.managerRelations.identity, style: s.managerRelations.archetype, formation: s.managerRelations.preferredFormation } };
+  },
+
+  // Persuade the CURRENT coach to change his style/shape (same man, new approach).
+  '/games/change-style': ({ state, style, formation }) => {
+    const s = state as GameState;
+    if (!style && !formation) return { state: s, view: buildView(s), styles: coachArchetypes() };
+    const wanted = style ? String(style).toLowerCase().replace(/\s+/g, '-') : undefined;
+    const match = wanted ? coachArchetypes().find((c) => c.archetype === wanted) : undefined;
+    restyleCoach(s, { archetype: match?.archetype, formation });
+    return { state: s, view: buildView(s), result: { ok: true, coach: s.managerRelations.identity, style: s.managerRelations.archetype, formation: s.managerRelations.preferredFormation, relationship: s.managerRelations.relationshipWithUser } };
   },
 
   // Rich structured "current situation" for the narrator (the app's language

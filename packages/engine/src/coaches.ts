@@ -327,6 +327,41 @@ export function appointCoach(
   });
 }
 
+/**
+ * Persuade the SITTING coach to change his playing style and/or shape — the same
+ * man, a new approach — rather than appointing a new one. Keeps his identity,
+ * relationship, favourites and feuds; swaps his archetype/style and formation. A
+ * coach talked out of the philosophy he's built his name on takes it as a small
+ * knock to the working relationship even when he agrees (the more so the less
+ * adaptable he is), so it isn't quite free — but the Director's call carries.
+ */
+export function restyleCoach(
+  state: GameState,
+  opts: { archetype?: CoachArchetype; formation?: Formation } = {},
+): void {
+  const mr = state.managerRelations;
+  const archetype: CoachArchetype = opts.archetype && ARCHETYPES[opts.archetype] ? opts.archetype : mr.archetype;
+  const base = ARCHETYPES[archetype];
+  const formation = opts.formation ?? base.formation;
+  const changedStyle = archetype !== mr.archetype;
+  mr.archetype = archetype;
+  mr.style = { ...base.style };
+  mr.preferredFormation = formation;
+  mr.activeFormation = formation;
+  // The friction of abandoning his approach — smaller the more adaptable he is,
+  // zero if only the shape moved and his philosophy is intact.
+  if (changedStyle) {
+    const knock = Math.max(0, Math.round((10 - (mr.adaptability ?? 6)) * 0.8));
+    mr.relationshipWithUser = Math.max(0, Math.min(100, mr.relationshipWithUser - knock));
+  }
+  logEvent(state, {
+    category: 'event',
+    code: 'coach.restyled',
+    message: `${mr.identity} switches approach — ${archetype}, ${formationLabel(formation)}.`,
+    data: { archetype, formation },
+  });
+}
+
 // ── Coach–Director friction (M13b) ───────────────────────────────────────────
 
 /** Below this the working relationship is untenable — the coach walks. */

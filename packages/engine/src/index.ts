@@ -184,6 +184,7 @@ export {
   coachFit,
   resolveCoachFriction,
   appointCoach,
+  restyleCoach,
   coachArchetypes,
   playerStyleProfile,
   type CoachFit,
