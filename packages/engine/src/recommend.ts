@@ -17,6 +17,7 @@ import { scoutPlayer, type ScoutReport } from './scouting.js';
 import { evaluateApproach, areDirectRivals } from './agency.js';
 import { isProcedural, ERA_REALITY, eraForScenario } from './ledger.js';
 import { isOnLoan, isPersonaNonGrata } from './restrictions.js';
+import { assessSigning, type SigningAssessment } from './signingFit.js';
 import { eraImportAffinity } from './culture.js';
 
 const GROUP: Record<Position, string> = {
@@ -328,6 +329,8 @@ export interface PlayerQuery {
   askingPrice?: number;
   willing?: boolean;
   resistanceReason?: string;
+  /** Would he improve the SIDE? Position-aware role + arguments for and against. */
+  fit?: SigningAssessment;
 }
 
 /** Query any specific real player — visible only if he is at least 16 (§4). */
@@ -349,6 +352,7 @@ export function queryPlayer(state: GameState, idOrName: string): PlayerQuery {
     askingPrice: askingPrice(state, p.id),
     willing: verdict.willing,
     resistanceReason: verdict.reason,
+    fit: assessSigning(state, state.playerClub, p),
   };
 }
 

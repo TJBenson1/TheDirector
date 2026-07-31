@@ -19,6 +19,7 @@ import {
   realDepartureThisWindow,
   evaluateApproach,
   coachFit,
+  assessSigning,
   currentYear,
   suggestWage,
   narrativeContext,
@@ -247,6 +248,13 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
           willing: verdict.willing,
           resistanceReason: verdict.reason,
           coach: `${fit.verdict}: ${fit.reason}`,
+          // Would he improve the SIDE? Position-aware role + honest arguments both
+          // ways, so the boardroom can weigh a genuine upgrade against a redundant
+          // stack instead of treating every big name as a plus.
+          squadFit: (() => {
+            const a = assessSigning(s, s.playerClub, p);
+            return { role: a.role, verdict: a.summary, for: a.for, against: a.against };
+          })(),
         },
       };
     }

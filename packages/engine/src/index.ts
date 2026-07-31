@@ -194,6 +194,11 @@ export {
   type RestyleVerdict,
 } from './coaches.js';
 export {
+  assessSigning,
+  type SigningAssessment,
+  type SigningRole,
+} from './signingFit.js';
+export {
   formationLabel,
   formationEraModifier,
   eraIdealFormation,
