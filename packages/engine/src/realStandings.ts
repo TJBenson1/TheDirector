@@ -257,6 +257,16 @@ const FIELD_RELAX_CAP = 1;
  *  so a do-nothing Director still reproduces his real finish (calibration untouched). */
 const USER_RELAX_K = 1.6;
 
+/** …and how fast he sheds it purely from the STRENGTH he has added or shed relative to
+ *  history. Aggression-by-move-count is coarse — two galácticos and two squad-fillers
+ *  bank the same count — so the anchor must also answer to the actual squad-strength
+ *  swing (his `starButterfly`, in the same ~0.2/star units the field uses). Stacking a
+ *  real title side with a Nedvěd it never had bends the race off history in proportion
+ *  to that added quality, not just to how many deals were done. Same scale as the field
+ *  (~one marquee ≈ half-released, a spine's worth ≈ fully) so buyer and seller move on
+ *  one consistent yardstick. Zero swing (passive/reality-only) → no extra release. */
+const USER_STRENGTH_RELAX_SCALE = 5;
+
 export function anchorSeasonToReality(state: GameState, league: LeagueState, progress = 1): void {
   const key = leagueKey(league);
   if (!key) return;
@@ -285,7 +295,11 @@ export function anchorSeasonToReality(state: GameState, league: LeagueState, pro
     //     table is still reproduced exactly and the calibration is untouched.
     let relax: number;
     if (clubId === state.playerClub) {
-      relax = Math.min(1, div * USER_RELAX_K); // his fate is his squad's merit, not a pin
+      // His fate is his squad's merit, not a pin. Released by his aggression AND, so
+      // the table answers to STRENGTH not just move-count, by how far he has pushed
+      // his own squad off its real quality (a stacked title side runs clear).
+      const strengthShift = Math.abs(state.clubs[clubId]?.starButterfly ?? 0);
+      relax = Math.min(1, Math.max(div * USER_RELAX_K, strengthShift / USER_STRENGTH_RELAX_SCALE));
     } else if (div <= 0) {
       relax = 0; // passive → field fully anchored (byte-identical reality)
     } else {

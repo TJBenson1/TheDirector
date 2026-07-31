@@ -6,6 +6,7 @@ import {
   maxConsecutiveTitles,
   matchStrength,
 } from './season.js';
+import { anchorSeasonToReality } from './realStandings.js';
 import { createNewGame, cloneState, hashState } from './state.js';
 import { advanceWindow } from './advance.js';
 import { executeTransfer } from './transfers.js';
@@ -247,5 +248,53 @@ describe('player ratings have a realistic spread (§4)', () => {
       .filter((p) => p.id !== 'cur_gerrard3')
       .map((p) => p.ability);
     expect(Math.max(...otherLiverpool)).toBeLessThan(gerrard.ability); // he stands alone at the top
+  });
+});
+
+describe('reality anchor answers to squad strength', () => {
+  // The friend's report: stacking Real Madrid with players it never had still left
+  // the title race landing as in reality. The anchor must release the user's club
+  // in proportion to the STRENGTH he has actually added, not just the count of deals.
+  function madridDeporGap(butterfly: number): { madrid: number; gap: number } {
+    const s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'anchor' });
+    const league = Object.values(s.leagues).find((l) => l.clubIds.includes('real_madrid'))!;
+    league.seasonYear = 2000;
+    const games = (league.clubIds.length - 1) * 2;
+    // A synthetic full emergent season: a dominant Madrid on merit, a mid field.
+    for (const id of league.clubIds) {
+      league.standings[id] = { played: games, won: 12, drawn: 10, lost: games - 22, goalsFor: 45, goalsAgainst: 45, points: 46 };
+    }
+    const mad = league.standings['real_madrid']!;
+    mad.won = games - 4; mad.drawn = 2; mad.lost = 2; mad.goalsFor = 100; mad.goalsAgainst = 25; mad.points = 3 * mad.won + mad.drawn;
+    s.userAggression = 2; // a live, non-passive campaign
+    s.clubs['real_madrid']!.starButterfly = butterfly;
+    anchorSeasonToReality(s, league, 1);
+    const madrid = league.standings['real_madrid']!.points;
+    return { madrid, gap: madrid - league.standings['deportivo']!.points };
+  }
+
+  it('a stacked title side pulls clear of its real runner-up', () => {
+    const base = madridDeporGap(0); // no added quality → anchored to the real close race
+    const stacked = madridDeporGap(6); // two galácticos' worth → released to merit
+    // Adding real strength both lifts the champion's points and widens the title gap.
+    expect(stacked.madrid).toBeGreaterThan(base.madrid);
+    expect(stacked.gap).toBeGreaterThan(base.gap + 4);
+  });
+
+  it('a passive world still reproduces the real table exactly', () => {
+    // The invariant that protects calibration: no aggression, no strength swing → the
+    // user's club is fully anchored, byte-identical to reality.
+    const s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'passive' });
+    const league = Object.values(s.leagues).find((l) => l.clubIds.includes('real_madrid'))!;
+    league.seasonYear = 2000;
+    const games = (league.clubIds.length - 1) * 2;
+    for (const id of league.clubIds) {
+      league.standings[id] = { played: games, won: games - 4, drawn: 2, lost: 2, goalsFor: 90, goalsAgainst: 25, points: 3 * (games - 4) + 2 };
+    }
+    // Passive: userAggression 0, no butterfly.
+    anchorSeasonToReality(s, league, 1);
+    // Real 2000-01: Madrid champions ahead of Deportivo, both clear of the rest.
+    expect(league.standings['real_madrid']!.points).toBeGreaterThan(league.standings['deportivo']!.points);
+    expect(league.standings['deportivo']!.points).toBeGreaterThan(league.standings['barcelona']!.points);
   });
 });
