@@ -155,13 +155,16 @@ export const STAR_WEIGHT_CL = 0.2;
 export function deriveRawStrength(players: PlayerState[], starWeight = 0, pad?: DepthPad): number {
   if (players.length === 0 && !pad) return 0;
   // Effective ability so an unsettled signing (adaptation penalty) genuinely
-  // weakens the XI while he beds in (§3).
-  const byGroup: Record<string, number[]> = { GK: [], DEF: [], MID: [], ATT: [] };
-  for (const p of players) byGroup[strengthGroup(p)]!.push(effectiveAbility(p));
-  for (const g of Object.keys(byGroup)) byGroup[g]!.sort((a, b) => b - a);
+  // weakens the XI while he beds in (§3). Carry each man's POSITIONS through so the
+  // XI can be judged for balance, not just for total ability.
+  type Ent = { a: number; pos: readonly Position[] };
+  const byGroup: Record<string, Ent[]> = { GK: [], DEF: [], MID: [], ATT: [] };
+  for (const p of players) byGroup[strengthGroup(p)]!.push({ a: effectiveAbility(p), pos: p.positions });
+  for (const g of Object.keys(byGroup)) byGroup[g]!.sort((x, y) => y.a - x.a);
 
-  const xi: number[] = [];
-  const leftover: number[] = [];
+  const xi: Ent[] = [];
+  const leftover: Ent[] = [];
+  const peg = (a: number): Ent => ({ a, pos: [] });
   for (const g of ['GK', 'DEF', 'MID', 'ATT'] as const) {
     const need = FORMATION[g];
     const real = byGroup[g]!;
@@ -171,24 +174,30 @@ export function deriveRawStrength(players: PlayerState[], starWeight = 0, pad?: 
     // "no regens" replacement for anonymous filler players. The world holds only
     // real names; the depth a real academy/reserve side would provide lives here
     // as a number, so a thin real spine still fields a coherent XI at its level.
-    if (pad && real.length < need) for (let k = real.length; k < need; k++) xi.push(pad.xiPeg);
+    if (pad && real.length < need) for (let k = real.length; k < need; k++) xi.push(peg(pad.xiPeg));
     leftover.push(...real.slice(need));
   }
-  leftover.sort((a, b) => b - a);
+  leftover.sort((x, y) => y.a - x.a);
   // A short position (e.g. only three defenders) is patched from the best
   // leftover — a real side still fields eleven — then, if still short, by depth.
   while (xi.length < 11 && leftover.length) xi.push(leftover.shift()!);
-  if (pad) while (xi.length < 11) xi.push(pad.xiPeg);
+  if (pad) while (xi.length < 11) xi.push(peg(pad.xiPeg));
   // Bench depth to a working size: real reserves first, then abstract depth.
   if (pad) {
     const benchSize = pad.benchSize ?? 9;
-    while (leftover.length < benchSize) leftover.push(pad.benchPeg);
+    while (leftover.length < benchSize) leftover.push(peg(pad.benchPeg));
   }
 
   const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
-  const xiAvg = avg(xi);
-  const depthAvg = avg(leftover.slice(0, 9));
-  const base = xiAvg * 0.85 + depthAvg * 0.15;
+  const xiAvg = avg(xi.map((e) => e.a));
+  const depthAvg = avg(leftover.slice(0, 9).map((e) => e.a));
+  // A lopsided XI is worth less than a balanced one of the same raw ability — two
+  // natural right-siders and nobody on the left leave a hole no total-ability sum
+  // sees. Folded in HERE (not bolted on later) so the kickoff anchor carries the
+  // same term: a club's opening strength still equals its authored baseStrength
+  // whatever its shape, and only a transfer that shifts the BALANCE moves the
+  // number. Balanced squads — nearly all of them — are untouched.
+  const base = xiAvg * 0.85 + depthAvg * 0.15 - flankImbalancePenalty(xi.map((e) => e.pos));
   if (starWeight === 0) return base;
   // Convex peak: the summed MARGIN of the XI's best few over a FIXED replacement
   // level. Near-zero for a flat side; large for a star-built one — and each
@@ -196,9 +205,35 @@ export function deriveRawStrength(players: PlayerState[], starWeight = 0, pad?: 
   // his place, so a star's exit bites past the linear mean (the counterfactual
   // lever), while a star bought onto a full bench never reaches the top few and
   // so never inflates the buyer.
-  const top = [...xi].sort((a, b) => b - a).slice(0, STAR_CORE);
+  const top = xi.map((e) => e.a).sort((a, b) => b - a).slice(0, STAR_CORE);
   const starBonus = starWeight * top.reduce((sum, a) => sum + Math.max(0, a - STAR_REPLACEMENT), 0);
   return base + starBonus;
+}
+
+/** The strength points shaved off an XI that is lopsided across the pitch. A
+ *  balanced side (a left AND a right presence, some genuine width) pays nothing;
+ *  two natural right-siders with the left bare, or a front line with no width at
+ *  all, pays — the hole a raw ability sum can't see. Deliberately gentle and
+ *  capped: it is the DIFFERENCE between shapes, not a wrecking ball, and because
+ *  it also sits in the kickoff anchor a normally-balanced squad nets zero. */
+const FLANK_STEP = 1.1; // per unit of left/right imbalance beyond the first
+const BARE_FLANK = 1.6; // a side with NO natural presence at all
+const NO_WIDTH = 1.3; // an attack with neither winger — nothing to stretch a game
+const IMBALANCE_CAP = 5;
+function flankImbalancePenalty(xiPositions: readonly (readonly Position[])[]): number {
+  let left = 0;
+  let right = 0;
+  let width = 0;
+  for (const pos of xiPositions) {
+    if (pos.some((p) => p === 'LB' || p === 'LW')) left++;
+    if (pos.some((p) => p === 'RB' || p === 'RW')) right++;
+    if (pos.some((p) => p === 'LW' || p === 'RW')) width++;
+  }
+  let pen = FLANK_STEP * Math.max(0, Math.abs(left - right) - 1);
+  if (left === 0) pen += BARE_FLANK;
+  if (right === 0) pen += BARE_FLANK;
+  if (width === 0) pen += NO_WIDTH; // narrow to the point of one-dimensional
+  return Math.min(IMBALANCE_CAP, pen);
 }
 
 /** Squad players for a club, in a stable order. */

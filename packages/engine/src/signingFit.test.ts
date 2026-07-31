@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { createNewGame } from './state.js';
 import { assessSigning } from './signingFit.js';
-import type { GameState, PlayerState } from './types.js';
+import { deriveRawStrength, clubDepthPad } from './players.js';
+import { SCENARIOS } from './scenarios.js';
+import type { GameState, PlayerState, Position } from './types.js';
 
 /** A real player from the world by (partial) name. */
 function byName(s: GameState, name: string): PlayerState {
@@ -43,5 +45,35 @@ describe('signing assessment — does he improve the side?', () => {
     s.players['test_lb'] = lb;
     const a = assessSigning(s, 'real_madrid', lb);
     expect(a.for.join(' ')).toMatch(/light|need/i);
+  });
+});
+
+describe('positional balance costs strength on the pitch', () => {
+  const mk = (pos: Position[], a: number): PlayerState =>
+    ({ id: 'x' + Math.random(), name: 'p', positions: pos, ability: a, birthYear: 1980, adaptation: null } as unknown as PlayerState);
+
+  it('kickoff strength still equals authored baseStrength for every club', () => {
+    // The invariant that protects M2's calibrated tables: the balance term lives in
+    // the anchor too, so a club opens on exactly its baseStrength whatever its shape.
+    let worst = 0;
+    for (const sc of Object.values(SCENARIOS)) {
+      const s = createNewGame({ scenarioId: sc.id, seed: 'inv' });
+      for (const c of Object.values(s.clubs)) {
+        if (!c.squad.length) continue;
+        worst = Math.max(worst, Math.abs(c.strength - c.baseStrength));
+      }
+    }
+    expect(worst).toBeLessThan(0.5);
+  });
+
+  it('a balanced front three outscores two right-wingers of equal ability', () => {
+    const pad = clubDepthPad(80);
+    const spine = () => [
+      mk(['GK'], 82), mk(['RB'], 82), mk(['CB'], 82), mk(['CB'], 82), mk(['LB'], 82),
+      mk(['DM'], 82), mk(['CM'], 82), mk(['AM'], 82),
+    ];
+    const balanced = deriveRawStrength([...spine(), mk(['LW'], 85), mk(['RW'], 85), mk(['ST'], 85)], 0, pad);
+    const lopsided = deriveRawStrength([...spine(), mk(['RW'], 85), mk(['RW'], 85), mk(['ST'], 85)], 0, pad);
+    expect(balanced).toBeGreaterThan(lopsided);
   });
 });
