@@ -15,9 +15,13 @@ import {
   midSeasonForm,
   standingsOrder,
   currentYear,
+  realInboundThisWindow,
+  realDepartureThisWindow,
+  SCENARIOS,
+  getScenario,
   type GameState,
 } from '@director/engine';
-import { generatedSummerOpening, generatedWinterOpening } from './openings.js';
+import { generatedSummerOpening, generatedWinterOpening, scriptedOpening } from './openings.js';
 
 /** Advance passively to the first January at which the season is underway. */
 function toFirstWinter(scenarioId: string): GameState {
@@ -65,6 +69,36 @@ describe('generated winter set-piece', () => {
       for (const b of winter!.beats) expect(b.text.length, `${id} beat`).toBeGreaterThan(20);
     }
   });
+});
+
+describe('curated opening tense/sequencing (§ narration)', () => {
+  // The live opening window rewinds this summer's real moves and offers them as
+  // decisions, so the opening PROSE must not narrate one of those movers as done.
+  // The fringe list must therefore drop any pending mover — an arrival still to be
+  // signed, or a departure still to be fought over — because each is surfaced as a
+  // tappable decision instead (Figo "on the table", Redondo "fight to keep").
+  for (const sc of Object.values(SCENARIOS)) {
+    if (!getScenario(sc.id).opening) continue;
+    it(`"${sc.id}" opening never lists a live mover in the fringe`, () => {
+      const s = createNewGame({ scenarioId: sc.id, seed: 'tense' });
+      const movers = new Set<string>([
+        ...realInboundThisWindow(s).map((m) => m.name),
+        ...realDepartureThisWindow(s).map((m) => m.name),
+      ]);
+      const opening = scriptedOpening(s);
+      const fringeBullets = allText(opening.beats)
+        .split('\n')
+        .filter((l) => l.trimStart().startsWith('•'))
+        .map((l) => l.replace(/^\s*•\s*/, ''));
+      for (const bullet of fringeBullets) {
+        for (const name of movers) {
+          // A bullet whose subject IS a live mover (it leads with his name) must not
+          // appear — he lives in the tappable decisions, not the past-tense fringe.
+          expect(bullet.startsWith(name), `${sc.id}: fringe narrates live mover "${name}": ${bullet}`).toBe(false);
+        }
+      }
+    });
+  }
 });
 
 describe('generated summer set-piece', () => {

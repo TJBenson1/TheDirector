@@ -645,11 +645,16 @@ function curatedOpening(state: GameState, o: ScenarioOpening): Opening {
     ? `You take your seat opposite ${o.coach}. He'll set up in a ${o.formation}, and the men he can name today are: ${renderXI(squadXI)} The rest of the side is the summer's business — the deals on your desk.`
     : `You take your seat opposite ${o.coach}. He'll set up in a ${o.formation}, and he names the side he trusts: ${renderXI(squadXI)}`;
   const meetingParts: string[] = [xiLine];
-  // A pending opening-window arrival is already surfaced as the deal on the table and a
-  // tappable decision, so drop any fringe bullet whose subject hasn't actually signed
-  // yet — otherwise he's described as here ("the marquee summer arrival") in the same
-  // breath the game asks whether to sign him.
-  const fringe = (o.fringe ?? []).filter((f) => !pendingArrivals.has(entryName(f)));
+  // A pending opening-window mover — an arrival still to be signed, or a departure the
+  // Director can still fight to keep — is already surfaced as the deal on the table and
+  // a tappable decision, so drop any fringe bullet whose subject is one of them.
+  // Otherwise he's narrated in the past tense ("the marquee summer arrival", "sold to
+  // Milan", "GONE") in the same breath the game asks whether to sign or keep him.
+  const pendingMovers = new Set<string>([
+    ...pendingArrivals,
+    ...realDepartureThisWindow(state).map((m) => m.name),
+  ]);
+  const fringe = (o.fringe ?? []).filter((f) => !pendingMovers.has(entryName(f)));
   if (fringe.length) {
     meetingParts.push(
       `But the squad isn't settled, and the real decisions live around the edges:\n${fringe.map((f) => `• ${f}`).join('\n')}`,
