@@ -559,6 +559,7 @@ const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
   // America in 2000, not already at their eventual European clubs) — after which the
   // onward moves below chain naturally.
   { playerId: 'cur_forlan', from: 'independiente', to: 'man_utd', window: '2002-01', fee: 6_900_000, id: 'forlan-utd-2002' },
+  { playerId: 'cur_vannistelrooy', from: 'psv', to: 'man_utd', window: '2001-07', fee: 19_000_000, id: 'ruud-utd-2001' },
   { playerId: 'cur_dani_alves', from: 'bahia', to: 'sevilla', window: '2002-07', fee: 600_000, id: 'alves-sevilla-2002' },
   { playerId: 'cur_baptista', from: 'sao_paulo', to: 'sevilla', window: '2003-07', fee: 3_000_000, id: 'baptista-sevilla-2003' },
   { playerId: 'cur_baptista', from: 'sevilla', to: 'real_madrid', window: '2005-07', fee: 20_000_000, id: 'baptista-real-2005' },

@@ -3,6 +3,8 @@ import { SCENARIOS } from './scenarios.js';
 import { createNewGame } from './state.js';
 import { currentYear } from './transfers.js';
 import { clubSquadPlayers } from './players.js';
+import { ERA_REALITY, eraForScenario } from './ledger.js';
+import { transferWindowOrdinal } from './clock.js';
 import type { GameState } from './types.js';
 
 /**
@@ -118,5 +120,38 @@ describe('curated data integrity', () => {
       if (age < 15 || age > 42) bad.push(`${p.name}: age ${age}`);
     }
     expect(bad, `implausible ages in ${id}`).toEqual([]);
+  });
+
+  // "Seeded too early": a player sitting at a club at kickoff that the reality ledger
+  // says he only ARRIVES at later (Dani Alves at Sevilla in 2000; van Nistelrooy at
+  // United a year before his move). A genuine round-trip (he was really there, left,
+  // and returns — Piqué's Barça→United→Barça) is NOT this: it has an earlier ledger
+  // departure FROM that club, so it's excluded. The remaining allowlist is context
+  // clubs whose whole squad is deliberately reused from the adjacent era pack (a
+  // Serie-B Juventus save borrowing Milan's 2007 side, a Dortmund '97 save borrowing
+  // Bayern's '98 side) — low-visibility bit-part clubs, documented not chased.
+  const KNOWN_EARLY_SEEDS = new Set<string>([
+    'cur_effenberg_98@bayern', // dortmund-1997 reuses the 1998 Bayern squad
+    'cur_emerson_07@milan', //    juventus-2006 reuses the 2007 Milan squad
+    'cur_oddo@milan', //          juventus-2006 reuses the 2007 Milan squad
+  ]);
+
+  it.each(scenarioIds)('%s seeds no player at a club before his real arrival', (id) => {
+    const s: GameState = createNewGame({ scenarioId: id, seed: 'integrity' });
+    const ledger = ERA_REALITY[eraForScenario(id)]?.realTransferLedger ?? [];
+    const kick = transferWindowOrdinal(s.clock.date);
+    const early: string[] = [];
+    for (const e of ledger) {
+      const p = s.players[e.playerId];
+      if (!p || p.retired || p.club !== e.to) continue; // must be seeded AT the arrival club
+      if (transferWindowOrdinal(e.window) - kick <= 1) continue; // opening-window move (M12C rewind handles it)
+      // Round-trip? An earlier real departure FROM this club means he was genuinely
+      // here and this "arrival" is a return, not a too-early seed.
+      const isReturn = ledger.some((d) => d.playerId === e.playerId && d.from === e.to && d.window < e.window);
+      if (isReturn) continue;
+      const key = `${e.playerId}@${e.to}`;
+      if (!KNOWN_EARLY_SEEDS.has(key)) early.push(`${p.name} @ ${e.to} (arrives ${e.window})`);
+    }
+    expect(early, `players seeded before real arrival in ${id}`).toEqual([]);
   });
 });

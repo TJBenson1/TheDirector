@@ -241,7 +241,6 @@ export const MILAN_2000: CuratedSeed[] = [
 ];
 export const MANUTD_2000: CuratedSeed[] = [
   q('man_utd', 'beckham', 'David Beckham', 1975, 'England', ['RW', 'CM'], 87, 88, 2004, 20, t(9, 7, 8, 7, 4, 7)),
-  q('man_utd', 'vannistelrooy', 'Ruud van Nistelrooy', 1976, 'Netherlands', ['ST'], 86, 89, 2006, 40, t(8, 6, 9, 6, 4, 7)),
   q('man_utd', 'keane_r', 'Roy Keane', 1971, 'Ireland', ['CM', 'DM'], 87, 88, 2004, 35, t(9, 8, 10, 8, 8, 6)),
   q('man_utd', 'giggs', 'Ryan Giggs', 1973, 'Wales', ['LW'], 85, 86, 2005, 30, t(9, 5, 8, 10, 3, 7), { loyalty: 96 }),
   q('man_utd', 'scholes', 'Paul Scholes', 1974, 'England', ['CM', 'AM'], 86, 87, 2005, 25, t(9, 4, 8, 10, 3, 7), { loyalty: 95 }),
@@ -310,6 +309,12 @@ export const SAO_PAULO_2000: CuratedSeed[] = [
 export const INDEPENDIENTE_2000: CuratedSeed[] = [
   q('independiente', 'forlan', 'Diego Forlán', 1979, 'Uruguay', ['ST'], 70, 84, 2003, 8, t(9, 5, 8, 6, 4, 7)),
 ];
+// van Nistelrooy is still at PSV in 2000 — his Manchester United move collapsed on a
+// cruciate injury that summer and only completed in 2001, so he starts here and
+// crosses at his real window via the ledger, not seeded at United a year early.
+export const PSV_2000: CuratedSeed[] = [
+  q('psv', 'vannistelrooy', 'Ruud van Nistelrooy', 1976, 'Netherlands', ['ST'], 85, 89, 2003, 20, t(8, 6, 9, 6, 4, 7)),
+];
 export const LAZIO_2000: CuratedSeed[] = [
   q('lazio', 'crespo', 'Hernán Crespo', 1975, 'Argentina', ['ST'], 86, 87, 2004, 35, t(7, 7, 8, 6, 5, 7)),
   q('lazio', 'nesta', 'Alessandro Nesta', 1976, 'Italy', ['CB'], 87, 90, 2005, 30, t(9, 5, 8, 8, 3, 7)),
@@ -354,6 +359,7 @@ export const CONTEXT_2000_SQUADS: Record<string, CuratedSeed[]> = {
   bahia: BAHIA_2000,
   sao_paulo: SAO_PAULO_2000,
   independiente: INDEPENDIENTE_2000,
+  psv: PSV_2000,
 };
 
 /**

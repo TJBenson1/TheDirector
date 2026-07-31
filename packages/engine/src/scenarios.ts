@@ -485,6 +485,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioSeed> = {
       { id: 'bahia', name: 'Bahia', prestige: 58 },
       { id: 'sao_paulo', name: 'São Paulo', prestige: 64 },
       { id: 'independiente', name: 'Independiente', prestige: 62 },
+      // PSV — van Nistelrooy's real 2000 club before his 2001 move to United.
+      { id: 'psv', name: 'PSV Eindhoven', prestige: 72 },
       { id: 'man_city', name: 'Manchester City', prestige: 60 },
     ],
     domesticLeagueId: 'esp-1',
