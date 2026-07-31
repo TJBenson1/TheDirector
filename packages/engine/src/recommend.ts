@@ -11,7 +11,7 @@
 
 import type { ClubId, GameState, PlayerId, PlayerState, Position, YearMonth } from './types.js';
 import { Rng } from './rng.js';
-import { parseYearMonth } from './clock.js';
+import { parseYearMonth, transferWindowOrdinal } from './clock.js';
 import { valuePlayer, inflationFactor } from './finance.js';
 import { scoutPlayer, type ScoutReport } from './scouting.js';
 import { evaluateApproach, areDirectRivals } from './agency.js';
@@ -43,11 +43,20 @@ export function acquisitionTags(state: GameState, player: PlayerState): Acquisit
   return tags;
 }
 
+/** How far ahead a real departure can be and still price him NOW — ~two years.
+ *  A move further out (a fallen star's cut-price exit, an end-of-career free years
+ *  hence) does not reflect what he is worth today: a peak-2000 Vieri is not priced
+ *  at his 2005 fee. Beyond this horizon we fall back to the model valuation. */
+const REAL_FEE_HORIZON_ORDINALS = 4;
+
 /** What a player REALLY sold for out of his current club, if the era ledger knows
- *  — the reality anchor for his market price. A Vidić at Spartak costs roughly what
- *  United really paid (~£7m), not the abstract model value of an 82-rated CB (~£15m):
- *  the market discounts an unproven talent in a lesser league, and the real fee IS
- *  that discount. Inflation-adjusted from the real transfer's window to now. */
+ *  AND the move is near enough to be his current market price — the reality anchor.
+ *  A Vidić at Spartak costs roughly what United really paid (~£7m), not the abstract
+ *  model value of an 82-rated CB (~£15m): the market discounts an unproven talent in
+ *  a lesser league, and the real fee IS that discount. But a real move years away is
+ *  NOT today's price (a champion Nedvěd is not priced at some distant cut-price exit),
+ *  so only a move within ~2 years anchors; otherwise return null and use the model.
+ *  Inflation-adjusted from the real transfer's window to now. */
 function realMarketFee(state: GameState, p: PlayerState): number | null {
   if (!p.club) return null;
   const ledger = ERA_REALITY[eraForScenario(state.meta.scenarioId)]?.realTransferLedger;
@@ -58,6 +67,10 @@ function realMarketFee(state: GameState, p: PlayerState): number | null {
   if (!entries.length) return null;
   entries.sort((a, b) => a.window.localeCompare(b.window));
   const e = entries[0]!;
+  // Only a near-term real move sets his price now; a distant one doesn't.
+  if (transferWindowOrdinal(e.window) - transferWindowOrdinal(state.clock.date) > REAL_FEE_HORIZON_ORDINALS) {
+    return null;
+  }
   const entryYear = Number(e.window.slice(0, 4));
   return e.fee * (inflationFactor(year(state)) / inflationFactor(entryYear));
 }

@@ -590,6 +590,11 @@ const LEDGER_2000_2006: RealTransferLedgerEntry[] = [
   { playerId: 'cur_villa', from: 'zaragoza', to: 'valencia', window: '2005-07', fee: 8_000_000, id: 'villa-valencia-2005' },
   // ── Italy/England context that colours the wider world ──
   { playerId: 'cur_veron', from: 'lazio', to: 'man_utd', window: '2001-07', fee: 28_000_000, id: 'veron-utd-2001' },
+  // Nedvěd's real record move — the reality anchor for his price. Without it he fell
+  // back to the generic model (~£18m), far too cheap for a champion at a wealthy,
+  // pre-crisis Lazio; this both prices him at his true ~£29m and makes Juventus his
+  // pole, so prising him to Madrid a year early means out-bidding that deal.
+  { playerId: 'cur_nedved_z00', from: 'lazio', to: 'juventus', window: '2001-07', fee: 29_000_000, id: 'nedved-juve-2001-e2000' },
   { playerId: 'cur_nesta', from: 'lazio', to: 'milan', window: '2002-07', fee: 30_000_000, id: 'nesta-milan-2002' },
   { playerId: 'cur_crespo', from: 'lazio', to: 'inter', window: '2002-07', fee: 35_000_000, id: 'crespo-inter-2002' },
   { playerId: 'cur_reyes', from: 'sevilla', to: 'arsenal', window: '2004-01', fee: 17_000_000, id: 'reyes-arsenal-2004' },
