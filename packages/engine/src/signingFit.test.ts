@@ -76,4 +76,15 @@ describe('positional balance costs strength on the pitch', () => {
     const lopsided = deriveRawStrength([...spine(), mk(['RW'], 85), mk(['RW'], 85), mk(['ST'], 85)], 0, pad);
     expect(balanced).toBeGreaterThan(lopsided);
   });
+
+  it('a midfield with a holder outscores one of only playmakers (the no-Makélélé side)', () => {
+    const pad = clubDepthPad(84);
+    const rest = () => [
+      mk(['GK'], 85), mk(['RB'], 84), mk(['CB'], 85), mk(['CB'], 85), mk(['LB'], 84),
+      mk(['LW'], 86), mk(['RW'], 86), mk(['ST'], 87),
+    ];
+    const withAnchor = deriveRawStrength([...rest(), mk(['DM'], 86), mk(['CM'], 86), mk(['AM'], 86)], 0, pad);
+    const noAnchor = deriveRawStrength([...rest(), mk(['AM'], 86), mk(['AM'], 86), mk(['AM'], 86)], 0, pad);
+    expect(withAnchor).toBeGreaterThan(noAnchor);
+  });
 });

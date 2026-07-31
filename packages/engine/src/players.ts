@@ -197,7 +197,7 @@ export function deriveRawStrength(players: PlayerState[], starWeight = 0, pad?: 
   // same term: a club's opening strength still equals its authored baseStrength
   // whatever its shape, and only a transfer that shifts the BALANCE moves the
   // number. Balanced squads — nearly all of them — are untouched.
-  const base = xiAvg * 0.85 + depthAvg * 0.15 - flankImbalancePenalty(xi.map((e) => e.pos));
+  const base = xiAvg * 0.85 + depthAvg * 0.15 - shapeImbalancePenalty(xi.map((e) => e.pos));
   if (starWeight === 0) return base;
   // Convex peak: the summed MARGIN of the XI's best few over a FIXED replacement
   // level. Near-zero for a flat side; large for a star-built one — and each
@@ -210,29 +210,45 @@ export function deriveRawStrength(players: PlayerState[], starWeight = 0, pad?: 
   return base + starBonus;
 }
 
-/** The strength points shaved off an XI that is lopsided across the pitch. A
- *  balanced side (a left AND a right presence, some genuine width) pays nothing;
- *  two natural right-siders with the left bare, or a front line with no width at
- *  all, pays — the hole a raw ability sum can't see. Deliberately gentle and
- *  capped: it is the DIFFERENCE between shapes, not a wrecking ball, and because
- *  it also sits in the kickoff anchor a normally-balanced squad nets zero. */
+/** The strength points shaved off an XI that is out of shape — across the pitch
+ *  (a flank bare while the other is doubled, no genuine width) AND up its spine (a
+ *  midfield with no defensive anchor, or none with any craft). These are holes a
+ *  raw ability sum can't see: a Guti/Beckham pivot with no destroyer, or a
+ *  Busquets swapped for a No.10, are worth less than the ability totals say.
+ *  Deliberately gentle and capped — the DIFFERENCE between shapes, not a wrecking
+ *  ball — and because it also sits in the kickoff anchor a normally-balanced squad
+ *  nets zero, so only reshaping a side OFF balance moves the number. */
 const FLANK_STEP = 1.1; // per unit of left/right imbalance beyond the first
 const BARE_FLANK = 1.6; // a side with NO natural presence at all
 const NO_WIDTH = 1.3; // an attack with neither winger — nothing to stretch a game
+const NO_ANCHOR = 1.7; // a midfield stacked with playmakers and no shield in front of the back four
+const NO_CRAFT = 1.3; // a midfield all destroyers, no one to make it play
 const IMBALANCE_CAP = 5;
-function flankImbalancePenalty(xiPositions: readonly (readonly Position[])[]): number {
+function shapeImbalancePenalty(xiPositions: readonly (readonly Position[])[]): number {
   let left = 0;
   let right = 0;
   let width = 0;
+  let holders = 0; // genuine defensive midfielders (a Makélélé / Busquets)
+  let playmakers = 0; // pure No.10s with no defensive brief
+  let craft = 0; // anyone who makes it play (a creator OR a rounded central mid)
   for (const pos of xiPositions) {
     if (pos.some((p) => p === 'LB' || p === 'LW')) left++;
     if (pos.some((p) => p === 'RB' || p === 'RW')) right++;
     if (pos.some((p) => p === 'LW' || p === 'RW')) width++;
+    if (pos.includes('DM')) holders++;
+    if (pos.includes('AM') && !pos.includes('DM') && !pos.includes('CM')) playmakers++;
+    if (pos.some((p) => p === 'AM' || p === 'CM')) craft++;
   }
   let pen = FLANK_STEP * Math.max(0, Math.abs(left - right) - 1);
   if (left === 0) pen += BARE_FLANK;
   if (right === 0) pen += BARE_FLANK;
   if (width === 0) pen += NO_WIDTH; // narrow to the point of one-dimensional
+  // Vertical balance up the middle. No holder AND a midfield leaning on two-plus
+  // pure playmakers is the classic no-Makélélé side — brilliant going forward,
+  // wide open in front of the back four. Conversely a midfield of only destroyers
+  // (no craft) can't make the ball stick.
+  if (holders === 0 && playmakers >= 2) pen += NO_ANCHOR;
+  if (craft === 0 && holders >= 2) pen += NO_CRAFT;
   return Math.min(IMBALANCE_CAP, pen);
 }
 
