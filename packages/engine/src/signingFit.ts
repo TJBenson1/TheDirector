@@ -16,7 +16,13 @@
 
 import type { ClubId, GameState, PlayerState, Position } from './types.js';
 import { effectiveAbility } from './adaptation.js';
-import { clubSquadPlayers } from './players.js';
+import {
+  clubSquadPlayers,
+  availableSquadPlayers,
+  deriveRawStrength,
+  clubDepthPad,
+  squadChemistryPenalty,
+} from './players.js';
 
 /** How many of each specific position a balanced side starts — the yardstick for
  *  "are we already covered here?". Roughly a 4-3-3: two centre-backs and two
@@ -168,4 +174,115 @@ export function assessSigning(state: GameState, clubId: ClubId, player: PlayerSt
           : `Hard to justify on footballing grounds — the squad is already covered at ${label}.`;
 
   return { position: pos, role, displaces: best.incumbent?.name ?? null, slotGain: Math.max(0, Math.round(best.gain)), for: forArgs, against, summary };
+}
+
+// ── Departure assessment: what selling him would cost ────────────────────────
+
+export type DepartureRole = 'key' | 'starter' | 'squad' | 'fringe';
+
+export interface DepartureAssessment {
+  role: DepartureRole;
+  /** Strength points the XI loses — INCLUDING any balance hole the sale opens
+   *  (the shape-aware strength calc means losing your only holder costs extra). */
+  strengthLoss: number;
+  /** The specific gap the sale opens, if he uniquely holds a role. */
+  hole: string | null;
+  /** How badly the dressing room takes it. */
+  moraleRisk: 'high' | 'some' | 'low';
+  for: string[]; // reasons to cash in
+  against: string[]; // reasons to keep
+  summary: string;
+}
+
+const POS_LABEL_D: Record<Position, string> = {
+  GK: 'in goal', RB: 'at right-back', LB: 'at left-back', CB: 'at centre-back', DM: 'holding midfield',
+  CM: 'in central midfield', AM: 'at No.10', LW: 'on the left', RW: 'on the right', ST: 'up front',
+};
+
+/**
+ * Assess what SELLING one of your own would cost — the mirror of assessSigning.
+ * Weighs the hole it leaves (strength AND shape: losing your only holder or your
+ * only left-sided player bites past his rating), the dressing-room ripple (a loyal
+ * talisman is a blow; a surplus ego eases a logjam), and whether he's genuinely
+ * surplus. Pure and read-only.
+ */
+export function assessDeparture(state: GameState, clubId: ClubId, player: PlayerState): DepartureAssessment {
+  const club = state.clubs[clubId];
+  const year = Number(state.clock.date.slice(0, 4));
+  const age = year - player.birthYear;
+  const forArgs: string[] = [];
+  const against: string[] = [];
+
+  // Strength (and balance) lost, via the shape-aware calc: rebuild the raw XI with
+  // and without him. The difference already carries any hole the sale opens.
+  const pad = club ? clubDepthPad(club.baseStrength) : undefined;
+  const avail = availableSquadPlayers(state, clubId);
+  const rawNow = deriveRawStrength(avail, 0, pad);
+  const rawAfter = deriveRawStrength(avail.filter((p) => p.id !== player.id), 0, pad);
+  const strengthLoss = Math.max(0, Math.round((rawNow - rawAfter) * 10) / 10);
+
+  // Is he a starter at his best position? (top slots by ability at that position).
+  const SLOT: Record<Position, number> = { GK: 1, RB: 1, LB: 1, CB: 2, DM: 1, CM: 2, AM: 1, LW: 1, RW: 1, ST: 1 };
+  const others = clubSquadPlayers(state, clubId).filter((p) => p.id !== player.id);
+  const startsSomewhere = player.positions.some((pos) => {
+    const ahead = others.filter((p) => p.positions.includes(pos) && effectiveAbility(p) >= effectiveAbility(player)).length;
+    return ahead < (SLOT[pos] ?? 1);
+  });
+  let role: DepartureRole;
+  if (startsSomewhere && (player.ability >= 84 || strengthLoss >= 2)) role = 'key';
+  else if (startsSomewhere) role = 'starter';
+  else if (player.ability >= 76) role = 'squad';
+  else role = 'fringe';
+
+  // A hole he uniquely holds: the only holder, or the only presence on a flank.
+  let hole: string | null = null;
+  const lists = (pos: Position) => player.positions.includes(pos);
+  const othersList = (pos: Position) => others.some((p) => p.positions.includes(pos));
+  if (lists('DM') && !othersList('DM')) {
+    hole = `He is your only genuine holding midfielder — sell him and nothing shields the back four.`;
+  } else if ((lists('LB') || lists('LW')) && !others.some((p) => p.positions.some((q) => q === 'LB' || q === 'LW'))) {
+    hole = `He is your only natural left-sided player — the left flank goes bare.`;
+  } else if ((lists('RB') || lists('RW')) && !others.some((p) => p.positions.some((q) => q === 'RB' || q === 'RW'))) {
+    hole = `He is your only natural right-sided player — the right flank goes bare.`;
+  } else if (lists('ST') && !othersList('ST') && !othersList('AM')) {
+    hole = `He is your only recognised striker — there's no focal point without him.`;
+  }
+
+  // Dressing-room ripple. A loyal, senior talisman hurts; a bit-part barely registers.
+  const loyalty = player.personality?.loyalty ?? 5;
+  const talisman = player.ability >= 84;
+  const beloved = loyalty >= 7 || (age >= 30 && talisman);
+  const moraleRisk: 'high' | 'some' | 'low' =
+    talisman && beloved ? 'high' : talisman || (beloved && player.ability >= 80) ? 'some' : 'low';
+
+  // Chemistry: does moving him EASE an over-stacked zone? (a surplus ego cleared).
+  const chemBefore = squadChemistryPenalty(state, clubId);
+  const without = { ...state, clubs: { ...state.clubs, [clubId]: { ...club!, squad: club!.squad.filter((id) => id !== player.id) } } } as GameState;
+  const chemAfter = squadChemistryPenalty(without, clubId);
+  const epar = chemBefore - chemAfter;
+
+  // Arguments — for cashing in…
+  if (role === 'fringe') forArgs.push(`He's on the fringes — you can bank the fee without weakening the first XI.`);
+  else if (role === 'squad') forArgs.push(`Useful squad man, not a mainstay — sellable if the fee is right or he wants to play.`);
+  if (age >= 31) forArgs.push(`At ${age} his resale value only falls from here — cashing in now is sound business.`);
+  if (epar > 0.5) forArgs.push(`Clearing him eases a star logjam — the men behind him finally get their minutes.`);
+  if (player.morale < 45) forArgs.push(`He's unsettled (morale ${Math.round(player.morale)}) — a disgruntled player kept against his will drags others down too.`);
+
+  // …and for keeping.
+  if (role === 'key') against.push(`A key man ${POS_LABEL_D[player.positions[0] ?? 'CM']} — the XI is materially weaker without him (about -${strengthLoss} strength).`);
+  else if (role === 'starter') against.push(`A first-choice starter — you'd need to replace him, not just pocket the fee.`);
+  if (hole) against.push(hole);
+  if (moraleRisk === 'high') against.push(`A dressing-room blow: he's a loyal figure and losing him will unsettle the squad.`);
+  else if (moraleRisk === 'some') against.push(`Selling a name like his sends a message — expect some dressing-room grumbling.`);
+
+  const summary =
+    role === 'fringe'
+      ? `Low-risk sale — squad fringe, little lost on the pitch.`
+      : hole
+        ? `Sell with caution — it tears a specific hole in the side.`
+        : role === 'key'
+          ? `A big call: he's central to the team, on the pitch and off it.`
+          : `A judgement call — a useful player, but not one who unbalances the side to lose.`;
+
+  return { role, strengthLoss, hole, moraleRisk, for: forArgs, against, summary };
 }

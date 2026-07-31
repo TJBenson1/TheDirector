@@ -20,6 +20,7 @@ import {
   evaluateApproach,
   coachFit,
   assessSigning,
+  assessDeparture,
   currentYear,
   suggestWage,
   narrativeContext,
@@ -145,9 +146,17 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
       const year = currentYear(s);
       return {
         state: s,
-        result: clubSquadPlayers(s, s.playerClub).sort((a, b) => b.ability - a.ability).map((p) => ({
-          id: p.id, name: p.name, positions: p.positions, age: year - p.birthYear, ability: p.ability, morale: p.morale, contractUntil: p.contractUntil, wageWeekly: `£${Math.round(p.wage / 52 / 1000)}k/wk`, injured: !!p.injury,
-        })),
+        result: clubSquadPlayers(s, s.playerClub).sort((a, b) => b.ability - a.ability).map((p) => {
+          // A lightweight sell-side read per man so "who can I move on?" is
+          // balance/morale-aware: his squad role, whether selling opens a specific
+          // hole, and how the dressing room would take it. Full arguments come from
+          // asking about him by name.
+          const d = assessDeparture(s, s.playerClub, p);
+          return {
+            id: p.id, name: p.name, positions: p.positions, age: year - p.birthYear, ability: p.ability, morale: p.morale, contractUntil: p.contractUntil, wageWeekly: `£${Math.round(p.wage / 52 / 1000)}k/wk`, injured: !!p.injury,
+            sellRole: d.role, opensHole: !!d.hole, moraleRisk: d.moraleRisk,
+          };
+        }),
       };
     }
 
@@ -205,6 +214,13 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
             contractUntil: p.contractUntil,
             morale: p.morale,
             coach: `${fit.verdict}: ${fit.reason}`,
+            // What selling him would cost the SIDE — strength, the specific hole it
+            // opens (balance), and the dressing-room ripple (morale/chemistry) — so
+            // the discussion weighs a sale honestly, not just the fee.
+            sellImpact: (() => {
+              const d = assessDeparture(s, s.playerClub, p);
+              return { role: d.role, strengthLoss: d.strengthLoss, hole: d.hole, moraleRisk: d.moraleRisk, verdict: d.summary, for: d.for, against: d.against };
+            })(),
             ...(dep
               ? {
                   realDeparture: {
@@ -402,7 +418,7 @@ export const TOOL_SCHEMAS = [
   { name: 'scout', description: 'A sharper scouting report on a player id.', input_schema: { type: 'object', properties: { playerId: { type: 'string' } }, required: ['playerId'] } },
   { name: 'sign', description: 'Sign a player to your club (optional fee in £m). May be refused.', input_schema: { type: 'object', properties: { playerId: { type: 'string' }, feeM: { type: 'number' } }, required: ['playerId'] } },
   { name: 'offers', description: 'Who would buy one of your players, and for how much.', input_schema: { type: 'object', properties: { playerId: { type: 'string' } }, required: ['playerId'] } },
-  { name: 'sell', description: 'Sell your player to a club for a fee (from offers).', input_schema: { type: 'object', properties: { playerId: { type: 'string' }, toClub: { type: 'string' }, fee: { type: 'number' } }, required: ['playerId', 'toClub', 'fee'] } },
+  { name: 'sell', description: "Sell your player to a club for a fee (from offers). Before selling a starter, weigh the squad cost: ask about him by name (scout_player) or check the squad list for his sellRole, whether it opensHole (a balance gap like your only holder), and moraleRisk — surface the case for AND against, not just the fee.", input_schema: { type: 'object', properties: { playerId: { type: 'string' }, toClub: { type: 'string' }, fee: { type: 'number' } }, required: ['playerId', 'toClub', 'fee'] } },
   { name: 'renew', description: "Extend one of your players' contracts by 1-5 years.", input_schema: { type: 'object', properties: { playerId: { type: 'string' }, years: { type: 'number' } }, required: ['playerId', 'years'] } },
   { name: 'let_lapse', description: "Choose NOT to renew a player — let his contract run down so he leaves on a free at the next summer window (real free agency). Reverse it any time before then by renewing him.", input_schema: { type: 'object', properties: { playerId: { type: 'string' } }, required: ['playerId'] } },
   { name: 'free_agents', description: 'Players out of contract next summer, optionally by position.', input_schema: { type: 'object', properties: { position: { type: 'string', enum: POS } } } },

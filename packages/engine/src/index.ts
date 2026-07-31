@@ -195,8 +195,11 @@ export {
 } from './coaches.js';
 export {
   assessSigning,
+  assessDeparture,
   type SigningAssessment,
   type SigningRole,
+  type DepartureAssessment,
+  type DepartureRole,
 } from './signingFit.js';
 export {
   formationLabel,

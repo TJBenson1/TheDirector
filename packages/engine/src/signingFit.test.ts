@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createNewGame } from './state.js';
-import { assessSigning } from './signingFit.js';
+import { assessSigning, assessDeparture } from './signingFit.js';
 import { deriveRawStrength, clubDepthPad } from './players.js';
 import { SCENARIOS } from './scenarios.js';
 import type { GameState, PlayerState, Position } from './types.js';
@@ -88,3 +88,39 @@ describe('positional balance costs strength on the pitch', () => {
     expect(withAnchor).toBeGreaterThan(noAnchor);
   });
 });
+
+describe('departure assessment — what selling him costs', () => {
+  it('a fringe player is a low-risk sale with a case for cashing in', () => {
+    const s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'dep' });
+    const fringe = clubSquadPlayersFor(s, 'real_madrid').sort((a, b) => a.ability - b.ability)[0]!;
+    const d = assessDeparture(s, 'real_madrid', fringe);
+    expect(d.role).toBe('fringe');
+    expect(d.for.length).toBeGreaterThan(0);
+  });
+
+  it('a talismanic mainstay is a high morale risk and a keep argument', () => {
+    const s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'dep' });
+    const raul = Object.values(s.players).find((p) => p.club === 'real_madrid' && p.name.includes('Raúl'))!;
+    const d = assessDeparture(s, 'real_madrid', raul);
+    expect(d.role).toBe('key');
+    expect(d.against.length).toBeGreaterThan(0);
+  });
+
+  it('selling your only holder is flagged as tearing a hole', () => {
+    // A bespoke squad with a single defensive midfielder — losing him opens the anchor.
+    const s = createNewGame({ scenarioId: 'real-madrid-2000', seed: 'dep' });
+    const mk = (id: string, pos: Position[], a: number): PlayerState =>
+      ({ id, name: id, positions: pos, ability: a, birthYear: 1988, adaptation: null, injury: null, morale: 70, personality: { loyalty: 5 } } as unknown as PlayerState);
+    const ids = ['g', 'rb', 'cb1', 'cb2', 'lb', 'dm', 'cm', 'am', 'lw', 'rw', 'st'];
+    const posByIdx: Position[][] = [['GK'], ['RB'], ['CB'], ['CB'], ['LB'], ['DM'], ['CM'], ['AM'], ['LW'], ['RW'], ['ST']];
+    ids.forEach((id, i) => { s.players[id] = mk(id, posByIdx[i]!, 84); });
+    s.clubs['real_madrid']!.squad = ids;
+    const d = assessDeparture(s, 'real_madrid', s.players['dm']!);
+    expect(d.hole).toMatch(/holding midfielder/i);
+    expect(d.against.some((a) => /holding|shields/i.test(a))).toBe(true);
+  });
+});
+
+function clubSquadPlayersFor(s: GameState, clubId: string): PlayerState[] {
+  return (s.clubs[clubId]?.squad ?? []).map((id) => s.players[id]!).filter(Boolean);
+}
