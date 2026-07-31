@@ -57,6 +57,18 @@ export function areRivals(a: ClubId, b: ClubId): boolean {
   return RIVALRIES.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
 }
 
+/** Softer, derby-grade rivalries: a sale across one is done grudgingly and at a
+ *  premium (the selling club won't want to strengthen a neighbour), but it is not
+ *  the near-absolute wall of a Barça↔Real or Inter↔Milan. The Madrid derby is the
+ *  canonical case — Atlético would sell to Real only reluctantly, not never. */
+const DERBY_RIVALRIES: Array<[ClubId, ClubId]> = [
+  ['real_madrid', 'atletico'],
+];
+
+export function areDerbyRivals(a: ClubId, b: ClubId): boolean {
+  return DERBY_RIVALRIES.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
+}
+
 /**
  * Direct rivals for the purposes of the transfer market: a named rivalry, OR two
  * big clubs (prestige ≥ 78) in the SAME domestic league — title competitors do
@@ -171,9 +183,23 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
     };
   }
 
+  // A player already lined up for a specific bigger move (a "pole" suitor in the
+  // reality ledger) is governed by that below — his head is turned by THAT deal, so
+  // the flat giant-glamour bump must not stack on top and undercut the fee lever.
+  const pole = poleMoveFor(state, input.playerId);
+  const spokenForElsewhere = !!pole && pole.to !== input.toClub;
+
   // 2) Pull — the buyer's appeal.
   let pull = 45;
   if (fromClub) pull += (buyer.prestige - fromClub.prestige) * 0.9; // moving up appeals
+  // The glamour of the genuine giants: a move to one of the biggest clubs on earth
+  // (Real, Barça, United, Bayern, Milan…) is a career dream almost no player at a
+  // smaller side turns down — the allure of the shirt itself, on top of the raw
+  // step-up. Scales from ~0 at a strong-but-ordinary club to a heavy draw at the
+  // very top, so a Villarreal or Bremen man jumps at Real rather than dithering.
+  // Suppressed when he's already spoken for by a different big club — that contest
+  // is resolved by the pole/fee-lever logic, not a blanket glamour bonus.
+  if (!spokenForElsewhere) pull += Math.max(0, buyer.prestige - 82) * 2.8;
   pull += magnetPull(state, buyer.id); // play alongside a galáctico (§ magnet)
   if (res.dreamClubs.includes(input.toClub)) pull += 35; // boyhood dream
   const wageOffer = input.wageOffer ?? player.wage;
@@ -194,11 +220,13 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
   }
   // Rivalry: near-absolute at player level.
   if (fromClub && areRivals(fromClub.id, buyer.id)) resistance += 70;
+  // A derby sale (Atlético → Real) is grudging and priced at a premium, but not
+  // impossible — moderate friction, not a wall.
+  if (fromClub && areDerbyRivals(fromClub.id, buyer.id)) resistance += 26;
   // "Spoken for": if reality already has him lined up for another top club, that
   // club is in pole position. A cold bid won't shift him; you must out-court them
   // and/or be the bigger draw. Being clearly bigger than the pole suitor helps.
-  const pole = poleMoveFor(state, input.playerId);
-  if (pole && pole.to !== input.toClub) {
+  if (spokenForElsewhere && pole) {
     const poleClub = state.clubs[pole.to];
     const poleLead = (poleClub?.prestige ?? 72) - buyer.prestige;
     // Strong by default (a cold late bid loses out to the club in pole), eased by
@@ -235,8 +263,14 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
   ).length;
   // Two incumbents of his calibre is a healthy rotation; a third means he'd be the
   // fourth option and won't play — the friction rises with every body beyond that.
+  // At a genuine giant the glut bites far less: players accept the fight for a place
+  // as the price of joining the elite (a Marcos Senna backs himself at Real), so the
+  // per-body penalty is roughly halved for the biggest clubs.
   const glutted = competitors >= 3;
-  if (glutted) resistance += (competitors - 2) * DEPTH_GLUT_PENALTY;
+  if (glutted) {
+    const glutPenalty = buyer.prestige >= 85 ? DEPTH_GLUT_PENALTY * 0.3 : DEPTH_GLUT_PENALTY;
+    resistance += (competitors - 2) * glutPenalty;
+  }
 
   const willingness = Math.max(0, Math.min(100, Math.round(pull - resistance + 30)));
   const willing = willingness >= WILLINGNESS_THRESHOLD;
@@ -248,6 +282,8 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
       : `${player.name} is open to the move.`;
   } else if (fromClub && areRivals(fromClub.id, buyer.id)) {
     reason = `${player.name} will not cross to a direct rival in ${buyer.name}.`;
+  } else if (fromClub && areDerbyRivals(fromClub.id, buyer.id)) {
+    reason = `${fromClub.name} will only sell ${player.name} to derby rivals ${buyer.name} grudgingly — expect to pay a premium to make it happen.`;
   } else if (res.clubLoyalty >= 80 && fromClub) {
     reason = `${player.name} will not leave ${fromClub.name}. This is not about money.`;
   } else if (pole && pole.to !== input.toClub && (input.feeOffer ?? 0) <= pole.fee) {
