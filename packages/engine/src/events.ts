@@ -3174,22 +3174,231 @@ const BARCELONA_2003_PACK: ScriptedEvent[] = [
   },
 ];
 
+// The Wenger revolution, 1996-2003. The transfers (Vieira in 1996, Overmars &
+// Petit 1997, Anelka out / Henry in 1999, Overmars & Petit out 2000, Campbell
+// 2001) are all ledger-replayed, and the coach is already seeded as Wenger, so
+// these beats are narrative overlays: morale/fanTrust/boardPatience/memory, each
+// with a real Director fork and reality-default fallout.
 const ARSENAL_1996_PACK: ScriptedEvent[] = [
   {
-    id: 'anelka-real',
-    date: '1999-07',
+    id: 'rioch-sacked',
+    date: '1996-08',
     scenarios: ['arsenal-1996'],
-    requires: (s) => playerAt(s, 'cur_anelka_a96', 'arsenal') && s.playerClub === 'arsenal',
+    requires: (s) => s.playerClub === 'arsenal',
     build: () => ({
-      id: 'scripted:anelka-real', title: 'Real Madrid come for the young Anelka',
-      description: 'The teenager Wenger picked over Ian Wright is the most wanted forward in Europe, and Real Madrid have come calling with a fortune. Reality banked a ~£22m profit and reinvested it in Overmars-money and a training ground. Cash in on the prodigy, or build the side around him?',
+      id: 'scripted:rioch-sacked', title: 'Rioch sacked days before kickoff',
+      description: 'Five days before the season opener, the board have fallen out with Bruce Rioch over transfer funds — one season, a 5th place, and it is over. Reality: David Dein won the argument, Pat Rice took caretaker charge, and a little-known foreign coach was already being lined up. Back Rioch with a war chest, or side with Dein and gamble on the untried target?',
       interrupt: true, clubId: 'arsenal', category: 'event',
       choices: [
-        { id: 'sell', label: 'Cash in — a record profit (£22m)', successProbability: 0.9, onSuccess: [{ kind: 'transferOut', playerId: 'cur_anelka_a96', clubId: 'real_madrid', amount: 22_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Anelka to Real for a fortune — as Arsenal really did.' }], onFailure: [] },
-        { id: 'keep', label: 'Keep him — build around the prodigy', successProbability: 0.5, onSuccess: [{ kind: 'morale', playerId: 'cur_anelka_a96', amount: 10 }, { kind: 'ability', playerId: 'cur_anelka_a96', amount: 2 }], onFailure: [{ kind: 'agitation', playerId: 'cur_anelka_a96', amount: 16 }] },
+        { id: 'back-rioch', label: 'Back Rioch — stability and a war chest', successProbability: 0.4, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Kept faith with Rioch against Dein.' }], onFailure: [{ kind: 'boardPatience', amount: -5 }] },
+        { id: 'side-dein', label: 'Side with Dein — dismiss him now (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Sided with Dein — Rioch out, the foreign gamble on.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
       ],
-      falloutIfIgnored: [{ kind: 'transferOut', playerId: 'cur_anelka_a96', clubId: 'real_madrid', amount: 22_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Anelka joins Real Madrid — the profit reshaped the club, as it did.' }],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Rioch is sacked days before kickoff; Pat Rice takes caretaker charge.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'vieira-signed',
+    date: '1996-08',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:vieira-signed', title: 'A 20-year-old from Milan on a coach’s word',
+      description: 'David Dein has pushed through a ~£3.5m deal for Patrick Vieira — an unproven 20-year-old rotting in Milan’s reserves, signed on the recommendation of a manager who has not officially started. Reality: the archetype of the Wenger transfer model. Sanction the punt on your future coach’s word, or insist on a Premier-League-ready midfielder first?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'sanction', label: 'Sanction the punt (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 3, text: 'A gangly Frenchman arrives — the Wenger model begins.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Vieira on the incoming coach’s recommendation.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'proven', label: 'Demand a proven midfielder instead', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Chose a ready-made midfielder over the gamble.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Vieira arrives from Milan — the future engine of the Double side.' }],
+      memoryTags: ['transfer', 'cur_vieira_a96'],
+    }),
+  },
+  {
+    id: 'adams-alcoholism',
+    date: '1996-09',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:adams-alcoholism', title: 'Tony Adams admits he is an alcoholic',
+      description: 'The club captain has publicly admitted he is an alcoholic and has begun attending AA; his last drink was 16 August, after a bender following England’s Euro 96 exit. Reality: the club stood by him, and he stayed sober and captained both Doubles. Publicly back your captain and fund his recovery, or quietly protect the club’s image by easing him out of the armband?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'back', label: 'Stand behind him — fund the recovery (as reality did)', successProbability: 0.85, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 6 }, { kind: 'fanTrust', amount: 4, text: 'The club stands by its captain.' }, { kind: 'memory', tag: 'leadership', text: 'Backed Adams through his recovery — captain of both Doubles.' }], onFailure: [] },
+        { id: 'ease-out', label: 'Protect the image — ease him out of the captaincy', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'leadership', text: 'Quietly moved the captaincy on.' }], onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -6 }, { kind: 'fanTrust', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'arsenal', amount: 4 }, { kind: 'memory', tag: 'leadership', text: 'Adams is backed through his recovery and stays as captain.' }],
+      memoryTags: ['leadership'],
+    }),
+  },
+  {
+    id: 'wenger-appointed',
+    date: '1996-10',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:wenger-appointed', title: '‘Arsène Who?’',
+      description: 'The little-known Frenchman takes charge on 1 October — Arsenal’s first manager born outside the British Isles, greeted by the ‘Arsène Who?’ headline. Reality: he overhauled diet, fitness and scouting and won at Blackburn in his first match. Give him full control over training, diet and transfers, or appoint him but keep a British No. 2 and a boardroom veto?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'full-control', label: 'Full control — let him revolutionise the club', successProbability: 0.7, onSuccess: [{ kind: 'managerRelationship', amount: 12 }, { kind: 'memory', tag: 'manager', text: 'Handed Wenger the keys — diet, fitness and scouting overhauled.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'veto', label: 'Appoint him but keep a boardroom veto', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'managerRelationship', amount: -6 }, { kind: 'memory', tag: 'manager', text: 'Wenger in, but on a leash.' }], onFailure: [{ kind: 'managerRelationship', amount: -10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Wenger takes charge — the revolution begins.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'overmars-petit',
+    date: '1997-08',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:overmars-petit', title: 'Wenger’s continental engine — Overmars & Petit',
+      description: 'Marc Overmars (~£5.5m from Ajax) and Emmanuel Petit (~£2.5m from Monaco) have arrived, with Grimandi alongside. Reality: Overmars’ pace and Petit’s partnership with Vieira became the engine of the Double side. Reinvest fully in the coach’s recruits, or balance the books after a heavy first summer?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'reinvest', label: 'Reinvest fully (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Overmars and Petit complete Wenger’s spine.' }, { kind: 'memory', tag: 'transfer', text: 'Backed the continental rebuild — the Double engine assembled.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'balance', label: 'Balance the books — sign fewer, cheaper', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Trimmed the summer spend.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Overmars and Petit arrive — the engine of the Double side.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'double-1998',
+    date: '1998-05',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:double-1998', title: 'The Double — Wenger’s first full season',
+      description: 'A 4-0 win over Everton clinched the title at Highbury, then Newcastle were beaten 2-0 at Wembley (Overmars, Anelka) — the domestic Double in Wenger’s first full season. Reward the squad and hold it together for a title defence, or cash in on peak-value stars while the market is hot?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'hold', label: 'Hold the squad together for a defence', successProbability: 0.7, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 5 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Won the Double and kept the champions together.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'cash-in', label: 'Cash in on a star at peak value', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Won the Double, then sold from the top.' }], onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Arsenal are champions of England and FA Cup winners — the Double.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 1997-98 Double.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'anelka-real',
+    date: '1999-08',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:anelka-real', title: '‘Le Sulk’ sold to Real for a fortune',
+      description: 'Bought from PSG for ~£500k two years ago, the disaffected Nicolas Anelka has gone to Real Madrid for ~£22-23m. Reality: the proceeds funded BOTH the new London Colney training centre (~£10m) AND the signing of Henry (~£11m) — not Henry alone. Bank the record profit and reinvest, or hold firm, discipline him and keep your homegrown star?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Bank the record profit — fund the training ground & a striker', successProbability: 0.85, onSuccess: [{ kind: 'money', clubId: 'arsenal', amount: 11_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Anelka at a record profit — funded London Colney and Henry.' }], onFailure: [] },
+        { id: 'keep', label: 'Hold firm and discipline the sulking prodigy', successProbability: 0.4, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Kept Anelka against his wishes.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }, { kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Anelka joins Real Madrid — the profit funds the training ground and Henry.' }],
       memoryTags: ['transfer', 'cur_anelka_a96'],
+    }),
+  },
+  {
+    id: 'henry-arrives',
+    date: '1999-08',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:henry-arrives', title: 'A misfiring winger, a club-record fee',
+      description: 'A ~£11m club record has brought Thierry Henry from Juventus — a struggling wide man in Italy, funded by the Anelka sale. Reality: Wenger converted him into a central striker and he became the club’s all-time leading scorer. Trust the coach to reinvent a winger as your main striker, or spend the money on a proven goalscorer instead?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'trust', label: 'Trust Wenger to reinvent him (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'fanTrust', amount: 4, text: 'A new No.14 arrives from Turin.' }, { kind: 'memory', tag: 'transfer', text: 'Backed Wenger on Henry — a club-record striker in the making.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'proven', label: 'Buy a proven Premier League goalscorer', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Chose a ready-made scorer over the project.' }], onFailure: [{ kind: 'managerRelationship', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Henry arrives from Juventus — reinvented as a striker.' }],
+      memoryTags: ['transfer', 'cur_henry_m'],
+    }),
+  },
+  {
+    id: 'pires-arrives',
+    date: '2000-07',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:pires-arrives', title: 'Pirès over Real Madrid',
+      description: 'France’s Euro 2000 winner Robert Pirès has arrived from Marseille (~£5-6m), Arsenal beating Real Madrid to his signature. Reality: earmarked as the long-term replacement for the departing Overmars, he became a talismanic creator and scorer. Pay up for the marquee international, or promote from within and save the fee for the stadium project?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'pay', label: 'Pay up — replace Overmars with a star (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Pirès chooses Arsenal over Real Madrid.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Pirès to replace Overmars.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'promote', label: 'Promote from within — save for the stadium', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Backed youth and banked the fee for the build.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Pirès signs from Marseille — Overmars’ heir.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'campbell-bosman',
+    date: '2001-08',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:campbell-bosman', title: 'Sol Campbell crosses North London',
+      description: 'England centre-back Sol Campbell has joined on a free after his Tottenham contract expired — one of the most incendiary transfers in English football, branding him ‘Judas’ to Spurs fans (though several players had crossed the divide before him). Reality: he anchored the 2002 Double and 2004 Invincibles. Take the PR firestorm and sign your rivals’ captain for nothing, or avoid the toxic backlash and buy elsewhere?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'sign', label: 'Sign him — free, and a defensive rock (as reality did)', successProbability: 0.8, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Campbell crosses the divide — Highbury has its rock.' }, { kind: 'memory', tag: 'rivalry', text: 'Signed Campbell on a free from Tottenham — ‘Judas’ to Spurs.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'elsewhere', label: 'Avoid the backlash — buy a centre-back elsewhere', successProbability: 0.55, onSuccess: [{ kind: 'memory', tag: 'rivalry', text: 'Passed on the toxic transfer.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'rivalry', text: 'Campbell joins on a free from Tottenham — the North London firestorm.' }],
+      memoryTags: ['rivalry', 'cur_campbell'],
+    }),
+  },
+  {
+    id: 'ashburton-grove',
+    date: '2001-12',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:ashburton-grove', title: 'Ashburton Grove approved',
+      description: 'Islington Council has resolved to grant planning permission for a new 60,000-seat stadium at Ashburton Grove (the Emirates naming-rights deal came later, in 2004). Reality: leaving 38,000-capacity Highbury shaped the club’s finances and transfer budgets for a decade. Commit to a costly self-financed stadium that will squeeze spending for years, or redevelop Highbury / go to Wembley and keep the cash free?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'build', label: 'Commit to the new stadium (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'stadium', text: 'Committed to Ashburton Grove — years of squeezed budgets ahead.' }], onFailure: [{ kind: 'money', clubId: 'arsenal', amount: -5_000_000 }] },
+        { id: 'stay', label: 'Redevelop Highbury / go to Wembley — keep cash free', successProbability: 0.55, onSuccess: [{ kind: 'money', clubId: 'arsenal', amount: 5_000_000 }, { kind: 'memory', tag: 'stadium', text: 'Stayed put and kept the transfer war chest.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'stadium', text: 'Ashburton Grove approved — the move that would define a decade’s finances.' }],
+      memoryTags: ['stadium'],
+    }),
+  },
+  {
+    id: 'double-2002',
+    date: '2002-05',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:double-2002', title: 'The second Double — title sealed at Old Trafford',
+      description: 'Chelsea were beaten 2-0 in the FA Cup final (Parlour, Ljungberg), then the title was clinched with a 1-0 win at Old Trafford (Wiltord) — a second Wenger Double, equalling United’s record of three club Doubles. Declare this the platform for an unbeaten assault and keep it intact, or sell a star at peak value to bankroll the stadium build?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Keep it intact — build toward the invincible season', successProbability: 0.7, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 5 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Won the Double at Old Trafford — the platform for the Invincibles.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'sell', label: 'Sell a peak-value star for the stadium', successProbability: 0.5, onSuccess: [{ kind: 'money', clubId: 'arsenal', amount: 8_000_000 }, { kind: 'memory', tag: 'silverware', text: 'Won the Double, then cashed in for the build.' }], onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Arsenal seal the Double at Old Trafford.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2001-02 Double.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'unbeaten-begins',
+    date: '2003-05',
+    scenarios: ['arsenal-1996'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:unbeaten-begins', title: 'FA Cup retained — and the unbeaten run begins',
+      description: 'The title went to United, but the FA Cup was retained (1-0 over Southampton, Pirès). And on 7 May the famous 49-match unbeaten league run quietly began — at the END of this title-losing season, not the next — the springboard for the Invincibles. Endorse Wenger’s public claim that the team can go a whole season unbeaten and build around it, or react to losing the title by overhauling the squad?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'endorse', label: 'Endorse the unbeaten vision — build around this core', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'morale', clubId: 'arsenal', amount: 5 }, { kind: 'memory', tag: 'turning-point', text: 'Backed Wenger’s unbeaten claim — the Invincibles were coming.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'overhaul', label: 'Overhaul the squad after losing the title', successProbability: 0.45, onSuccess: [{ kind: 'memory', tag: 'turning-point', text: 'Reacted to losing the title with a rebuild.' }], onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -5 }, { kind: 'managerRelationship', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4, text: 'Arsenal retain the FA Cup and, unnoticed, begin their unbeaten run.' }, { kind: 'memory', tag: 'turning-point', text: 'The 49-match unbeaten run begins in May 2003.' }],
+      memoryTags: ['turning-point'],
     }),
   },
 ];
