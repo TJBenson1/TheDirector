@@ -3440,6 +3440,230 @@ const JUVENTUS_1995_PACK: ScriptedEvent[] = [
       memoryTags: ['europe'],
     }),
   },
+  // Lippi's dynasty: three straight CL finals (one won), two Scudetti, the Zeman
+  // scandal and Del Piero's injury, into the Zidane sale. Transfers are ledger-side;
+  // the manager changes can't be enacted — narrative overlays throughout.
+  {
+    id: 'baggio-sold',
+    date: '1995-08',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:baggio-sold', title: 'Baggio sold — Del Piero’s No.10',
+      description: 'With Del Piero emerging and Lippi favouring youth, the Divine Ponytail is sold to rivals Milan. Reality: Juve won the Scudetto that first Lippi season without him. Keep the ageing icon and box-office draw, or hand the No.10 fully to the 20-year-old?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'youth', label: 'Hand it to Del Piero (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'morale', playerId: 'cur_delpiero_j', amount: 8 }, { kind: 'memory', tag: 'transfer', text: 'Sold Baggio; the No.10 is Del Piero’s.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'keep', label: 'Keep the icon', successProbability: 0.45, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Kept Baggio — the crowds are delighted.' }], onFailure: [{ kind: 'morale', playerId: 'cur_delpiero_j', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Baggio sold to Milan; the Del Piero era begins.' }],
+      memoryTags: ['transfer', 'cur_baggio_r'],
+    }),
+  },
+  {
+    id: 'vialli-ravanelli-leave',
+    date: '1996-07',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:vialli-ravanelli-leave', title: 'The winning strikeforce dismantled',
+      description: 'Weeks after lifting the European Cup, captain Vialli leaves on a Bosman free to Chelsea and Ravanelli is sold to Middlesbrough. Reality: the champions’ attack was broken up at its peak. Retain the winning forwards, or sanction the exodus and rebuild around Del Piero and a new signing?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'rebuild', label: 'Let them go and rebuild (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Vialli and Ravanelli move on; a new spine takes shape.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -3 }] },
+        { id: 'retain', label: 'Retain the European-winning attack', successProbability: 0.4, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Held the winning forwards together.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Vialli (free to Chelsea) and Ravanelli (Middlesbrough) leave after the final.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'zidane-arrives-juve',
+    date: '1996-07',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:zidane-arrives-juve', title: 'Zidane arrives from Bordeaux',
+      description: 'Juventus sign Zinedine Zidane from Bordeaux for a modest fee — a playmaker unproven in Italy. Reality: he became the creative fulcrum of the team. Gamble the fee on the Frenchman, or spend it on an established Serie A name?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'zidane', label: 'Sign Zidane (as reality did)', successProbability: 0.85, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Signed Zidane — the fulcrum of the great side.' }, { kind: 'fanTrust', amount: 3 }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'proven', label: 'Buy an established name', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Chose a proven Serie A star over the gamble.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Zidane joins from Bordeaux.' }],
+      memoryTags: ['transfer', 'cur_zidane_b'],
+    }),
+  },
+  {
+    id: 'juve-scudetto-24',
+    date: '1997-05',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:juve-scudetto-24', title: 'Scudetto No.24',
+      description: 'The new Del Piero–Zidane axis delivers the league title. Reality: the first crown of the team that would dominate Serie A. Stand pat with a champion squad, or push the wage bill to strengthen for another European tilt?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'stand', label: 'Keep the champions', successProbability: 0.75, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Scudetto No.24 — the Del Piero–Zidane axis rules Italy.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'push', label: 'Strengthen for Europe', successProbability: 0.55, onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Pushed the budget to chase the European Cup again.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Won Scudetto No.24.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'cl-final-dortmund-1997',
+    date: '1997-05',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:cl-final-dortmund-1997', title: 'Champions League final lost to Dortmund',
+      description: 'Defending champions, Juventus lose the final 3-1 to Borussia Dortmund, Del Piero’s late goal a mere consolation. Reality: a first defeat in what would be three straight finals. Blame fatigue and keep faith, or make a marquee signing to close the European gap?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'faith', label: 'Keep faith with the group', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Took the Dortmund defeat on the chin and went again.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -3 }] },
+        { id: 'marquee', label: 'Sign a marquee to close the gap', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'near-miss', text: 'Reinforced after the European final loss.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Lost the 1997 Champions League final to Dortmund.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'inzaghi-davids',
+    date: '1997-06',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:inzaghi-davids', title: 'Inzaghi signs; Davids joins in winter',
+      description: 'The reigning Serie A top scorer Filippo Inzaghi arrives, and that winter Edgar "Pitbull" Davids joins from Milan to become the engine of the midfield. Reality: two shrewd additions to a title machine. Build the attack around the poacher Inzaghi, or keep Del Piero central and adapt around him?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'inzaghi', label: 'Build around Inzaghi’s goals', successProbability: 0.7, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Inzaghi and Davids in — the machine gets stronger.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'delpiero', label: 'Keep Del Piero as the focal point', successProbability: 0.6, onSuccess: [{ kind: 'morale', playerId: 'cur_delpiero_j', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Adapted the new men around Del Piero.' }], onFailure: [] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Inzaghi signs; Davids arrives in winter.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'juve-scudetto-25',
+    date: '1998-05',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:juve-scudetto-25', title: 'Scudetto No.25',
+      description: 'A bitter title race with Ronaldo’s Inter — defined by the disputed no-penalty on the Iuliano–Ronaldo clash — ends in Juventus’ hands. Reality: another Scudetto amid controversy. Ride the momentum toward the European final, or rotate to protect key legs for Amsterdam?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'ride', label: 'Ride the momentum', successProbability: 0.7, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Scudetto No.25 — into the European final on a high.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'rotate', label: 'Rotate for Amsterdam', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Managed the legs for the European final.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Won Scudetto No.25 in a bitter race with Inter.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'cl-final-real-1998',
+    date: '1998-05',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:cl-final-real-1998', title: 'Champions League final lost to Real Madrid',
+      description: 'A third straight final, in Amsterdam — and a second straight defeat, 1-0 to Real Madrid, Mijatović scoring. Reality: three finals, one win. Accept the near-miss and persist with the group, or overhaul a side that keeps falling at the last?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'persist', label: 'Persist with the group', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Kept faith after a second straight final defeat.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -3 }] },
+        { id: 'overhaul', label: 'Overhaul after three finals', successProbability: 0.45, onSuccess: [{ kind: 'memory', tag: 'near-miss', text: 'Reshaped the squad after the Amsterdam loss.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Lost the 1998 Champions League final to Real Madrid.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'zeman-doping',
+    date: '1998-08',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:zeman-doping', title: 'The Zeman doping accusations',
+      description: 'Roma’s coach Zeman has alleged doping in Italian football, naming Juventus players, and a Turin prosecutor opens an investigation. Reality: a long saga (with later acquittals) that shadowed the club. Circle the wagons and sue, or cooperate publicly and reform the medical practices?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'fight', label: 'Circle the wagons and sue Zeman', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'scandal', text: 'Fought the Zeman allegations head-on.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+        { id: 'cooperate', label: 'Cooperate and reform', successProbability: 0.55, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'scandal', text: 'Cooperated with the inquiry and reformed practices.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'scandal', text: 'Zeman’s doping allegations trigger a Turin investigation.' }],
+      memoryTags: ['scandal'],
+    }),
+  },
+  {
+    id: 'delpiero-injury',
+    date: '1998-11',
+    scenarios: ['juventus-1995'],
+    requires: (s) => playerAt(s, 'cur_delpiero_j', 'juventus') && s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:delpiero-injury', title: 'Del Piero’s cruciate at Udine',
+      description: 'Your talisman ruptures knee ligaments at the Friuli, needing surgery in Colorado and around nine months out. Reality: he was never quite the same explosive player. Sign an emergency forward to cover, or trust the squad and preserve the budget?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'cover', label: 'Sign emergency cover', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'injury', text: 'Brought in cover for the stricken Del Piero.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'trust', label: 'Trust the squad', successProbability: 0.45, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'injury', text: 'Held the budget and rode out the absence.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'ban', playerId: 'cur_delpiero_j', months: 9 }, { kind: 'memory', tag: 'injury', text: 'Del Piero ruptures his cruciate at Udinese.' }],
+      memoryTags: ['injury', 'cur_delpiero_j'],
+    }),
+  },
+  {
+    id: 'ancelotti-replaces-lippi',
+    date: '1999-02',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus' && s.managerRelations.identity === 'Marcello Lippi',
+    build: () => ({
+      id: 'scripted:ancelotti-replaces-lippi', title: 'Ancelotti replaces Lippi',
+      description: 'Mired in their worst domestic season in years amid injuries, the club faces a call on Lippi. Reality: he departed and Carlo Ancelotti was appointed. Back Lippi to steady the ship, or make the change and hand Ancelotti a rebuild?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'keep-lippi', label: 'Back Lippi', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Kept faith with Lippi through the slump.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'ancelotti', label: 'Appoint Ancelotti (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Handed the rebuild to Ancelotti.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Lippi departs; Ancelotti is appointed head coach.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'lippi-returns',
+    date: '2001-06',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:lippi-returns', title: 'Lippi returns as Ancelotti goes',
+      description: 'After two seasons as runners-up — one lost on the final day — Ancelotti is dismissed and Lippi returns for a second spell. Reality: the reunion that would restore the Scudetti. Persevere with Ancelotti’s project, or bring back the man who won it all in 1996?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'lippi', label: 'Bring Lippi back (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Lippi returns to restore the winning years.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'ancelotti', label: 'Persevere with Ancelotti', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Stuck with Ancelotti’s project.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Ancelotti dismissed; Lippi returns for a second spell.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'zidane-sold-thuram-buffon',
+    date: '2001-07',
+    scenarios: ['juventus-1995'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:zidane-sold-thuram-buffon', title: 'Zidane sold; Thuram & Buffon arrive',
+      description: 'Real Madrid offer a world-record fee for Zidane, and Juventus reinvest in Lilian Thuram (a world record for a defender) and the record keeper Gianluigi Buffon. Reality: cash in and rebuild the spine — and it worked. Take the money and remake the team, or reject Madrid and keep your galáctico?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Cash in and rebuild the spine (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Sold Zidane at a world record; Thuram and Buffon in.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'keep', label: 'Reject Madrid, keep Zidane', successProbability: 0.4, onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'Kept Zidane against Madrid’s millions.' }, { kind: 'morale', clubId: 'juventus', amount: 4 }], onFailure: [{ kind: 'agitation', playerId: 'cur_zidane_b', amount: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Zidane sold to Real Madrid; Thuram and Buffon signed with the proceeds.' }],
+      memoryTags: ['transfer', 'cur_zidane_b'],
+    }),
+  },
 ];
 
 const LIVERPOOL_1995_PACK: ScriptedEvent[] = [
