@@ -5196,22 +5196,232 @@ const INTER_1998_PACK: ScriptedEvent[] = [
   },
 ];
 
+// Mancini's rebuild into Mourinho's treble, 2004-2010: the Coppa foundation, the
+// Derby of Shame, the Calciopoli-awarded titles, the raid on the Juventus
+// wreckage and the 2010 Bernabéu night. Every transfer (Cannavaro out;
+// Cambiasso, Verón, Figo, Ibrahimović, Vieira in; Ibra out / Eto'o in) is
+// ledger-replayed and the manager churn can't be enacted as coach swaps, so most
+// beats are narrative overlays; Adriano's decline stays the one mechanical beat.
 const INTER_2004_PACK: ScriptedEvent[] = [
   {
-    id: 'adriano-grief',
+    id: 'mancini-in-2004',
+    date: '2004-08',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:mancini-in-2004', title: 'Mancini takes on the drought',
+      description: 'Roberto Mancini has been hired to succeed Zaccheroni, tasked with ending Inter’s Scudetto drought stretching back to 1988-89. Back the young, ambitious Mancini for a rebuild, or chase a proven trophy-winner for an immediate title push?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'back', label: 'Back Mancini’s rebuild (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'manager', text: 'Backed Mancini to end the drought.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'proven', label: 'Chase a proven winner instead', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Went for experience over the young Mancini.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Mancini takes charge, chasing a first title since 1989.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'rebuild-2004',
+    date: '2004-09',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:rebuild-2004', title: 'Reloading cheap — Cambiasso & Verón',
+      description: 'Esteban Cambiasso has joined on a free after his Real Madrid deal expired (a decade-long anchor in the making), with Juan Sebastián Verón on loan from Chelsea, reuniting the Argentine axis. Spend the wage budget on free and loan veterans to reload cheaply, or bank the money for a marquee purchase?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'reload', label: 'Reload cheaply on frees and loans (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 3, text: 'Cambiasso and Verón arrive without a transfer fee.' }, { kind: 'memory', tag: 'transfer', text: 'Reloaded on frees and loans — the Argentine axis reunited.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'marquee', label: 'Bank it for a marquee purchase', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Saved for a single marquee signing.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Cambiasso (free) and Verón (loan) join the rebuild.' }],
+      memoryTags: ['transfer', 'cur_cambiasso_04'],
+    }),
+  },
+  {
+    id: 'derby-of-shame',
+    date: '2005-04',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:derby-of-shame', title: 'The Derby of Shame',
+      description: 'The Champions League quarter-final second leg against Milan has been abandoned after 73 minutes when Inter ultras rained flares onto the pitch, one striking Milan keeper Dida. (Myth-check: Inter did not ‘win’ the tie — Milan led 3-0 on aggregate and were awarded it.) Inter are fined and docked European points. Issue a hardline crackdown on the ultras and eat the ticket-revenue hit, or appease the curva to keep the atmosphere and avoid a boycott?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'crackdown', label: 'Crack down on the ultras', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'money', clubId: 'inter', amount: -3_000_000 }, { kind: 'memory', tag: 'controversy', text: 'Took a hardline stance on the curva after the Derby of Shame.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'appease', label: 'Appease the curva', successProbability: 0.55, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'controversy', text: 'Kept the peace with the ultras.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'controversy', text: 'The Derby of Shame: the tie awarded to Milan, Inter fined and docked points.' }],
+      memoryTags: ['controversy'],
+    }),
+  },
+  {
+    id: 'coppa-2005',
+    date: '2005-06',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:coppa-2005', title: 'Coppa Italia — the first trophy of the era',
+      description: 'Inter have beaten Roma over two legs (3-0 aggregate) to lift the Coppa Italia — the club’s first major domestic trophy since 1982 and the foundation of Mancini’s project. Use the trophy as leverage to extend Mancini and core players now, or wait for league success before committing big money?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'extend', label: 'Extend Mancini and the core now', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'silverware', text: 'Won the Coppa and locked in the project.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'wait', label: 'Wait for the league before committing', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Won the Coppa but held off on the big deals.' }], onFailure: [{ kind: 'managerRelationship', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Inter lift the Coppa Italia — a first major trophy since 1982.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2005 Coppa Italia.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'figo-free',
     date: '2005-08',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:figo-free', title: 'Figo arrives on a free',
+      description: 'Luís Figo has joined from Real Madrid on a free — a Ballon d’Or-winning galáctico for the wing and marquee star power for the coming dominance. Sign the 32-year-old Figo for prestige and know-how, or invest the wage packet in a younger long-term winger?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'figo', label: 'Sign Figo — prestige and know-how (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'A galáctico arrives on the wing.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Figo on a free from Real.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'young', label: 'Invest in a younger winger', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Backed youth over the veteran galáctico.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Figo joins on a free — marquee star power for the wing.' }],
+      memoryTags: ['transfer', 'cur_figo_04'],
+    }),
+  },
+  {
+    id: 'materazzi-wc',
+    date: '2006-07',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:materazzi-wc', title: 'Materazzi, the headbutt and a World Cup',
+      description: 'Inter’s Marco Materazzi has scored the equaliser and provoked Zidane’s infamous headbutt in the World Cup final; Italy beat France on penalties. Cash in on the World Cup spotlight to raise Materazzi’s profile and price, or lock him into a loyalty extension while his value peaks?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'cash', label: 'Raise his profile and price', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 3, text: 'A World Cup winner in the heart of the defence.' }, { kind: 'memory', tag: 'honour', text: 'Rode the World Cup spotlight on Materazzi.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'loyalty', label: 'Lock in a loyalty extension', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'honour', text: 'Tied down the World Cup hero.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4, text: 'Materazzi lifts the World Cup with Italy.' }, { kind: 'memory', tag: 'honour', text: 'Materazzi central to Italy’s World Cup win.' }],
+      memoryTags: ['honour'],
+    }),
+  },
+  {
+    id: 'calciopoli-scudetto',
+    date: '2006-07',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:calciopoli-scudetto', title: 'Calciopoli hands Inter the Scudetto',
+      description: 'The Calciopoli rulings have stripped Juventus of two titles and relegated them; Milan are docked points. The 2005-06 Scudetto is reassigned to Inter, who finished third on the pitch — ending the drought since 1989 (the 2004-05 title left unassigned). Publicly embrace the awarded title as legitimate, or downplay it and stake the club’s credibility on winning the next one on the pitch?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'embrace', label: 'Embrace the title as legitimate', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'The drought is over — a Scudetto after 17 years, however it came.' }, { kind: 'memory', tag: 'silverware', text: 'Embraced the Calciopoli-awarded 2006 Scudetto.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'downplay', label: 'Downplay it — win the next on the pitch', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Downplayed the awarded title and vowed to earn the next.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Inter awarded the 2005-06 Scudetto after Calciopoli.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'juve-wreckage-raid',
+    date: '2006-08',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:juve-wreckage-raid', title: 'Raiding the Calciopoli wreckage',
+      description: 'With Juventus relegated, Inter can sign Zlatan Ibrahimović (~€24.8m) days after Patrick Vieira also arrives from Turin, alongside other reinforcements. (Myth-check: Raiola says the Ibra move was planned beforehand, not caused by Calciopoli.) It would fuel a domestic superpower. Gorge on discounted Juventus stars to build a super-team now, or show restraint to protect dressing-room balance and finances?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'gorge', label: 'Raid the wreckage — build a super-team (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Ibrahimović and Vieira arrive — a superpower assembled.' }, { kind: 'memory', tag: 'transfer', text: 'Raided the relegated Juventus for Ibra and Vieira.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'restraint', label: 'Show restraint — protect the balance', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Held back from gorging on the fire-sale.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Ibrahimović and Vieira join from the relegated Juventus.' }],
+      memoryTags: ['transfer', 'cur_ibrahimovic_04'],
+    }),
+  },
+  {
+    id: 'adriano-grief',
+    date: '2008-01',
     scenarios: ['inter-2004'],
     requires: (s) => playerAt(s, 'cur_adriano_04', 'inter') && s.playerClub === 'inter',
     build: () => ({
       id: 'scripted:adriano-grief', title: 'The Emperor is grieving',
-      description: 'Adriano — the most fearsome forward in Italy, a man who once seemed unstoppable — has lost his father, and those close to him say he is slipping away from the game into drink and depression. Reality watched one of football’s great talents fade. Wrap the club around him and fight for him, or accept the decline and move on?',
+      description: 'Adriano — the most fearsome forward in Italy, once seemingly unstoppable — has spiralled since his father’s death into weight and discipline problems; reality loaned him to São Paulo and he never recovered his level. Wrap the club around him and fight for him, or cut losses and sell while there is still resale value?',
       interrupt: true, clubId: 'inter', category: 'event',
       choices: [
         { id: 'support', label: 'Fight for him — the club as a family', successProbability: 0.4, onSuccess: [{ kind: 'morale', playerId: 'cur_adriano_04', amount: 14 }, { kind: 'ability', playerId: 'cur_adriano_04', amount: 3 }, { kind: 'memory', tag: 'human', text: 'Rallied around Adriano — a chance to save the Emperor reality never took.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_adriano_04', amount: 8 }] },
-        { id: 'move-on', label: 'Accept the decline — plan without him', successProbability: 0.8, onSuccess: [{ kind: 'memory', tag: 'human', text: 'Let Adriano drift — the fall of the Emperor, as it sadly went.' }], onFailure: [] },
+        { id: 'move-on', label: 'Cut losses — sell while there is value', successProbability: 0.8, onSuccess: [{ kind: 'memory', tag: 'human', text: 'Let Adriano drift away — the fall of the Emperor, as it sadly went.' }], onFailure: [] },
       ],
-      falloutIfIgnored: [{ kind: 'ability', playerId: 'cur_adriano_04', amount: -4 }, { kind: 'memory', tag: 'human', text: 'Adriano fades from the game.' }],
+      falloutIfIgnored: [{ kind: 'ability', playerId: 'cur_adriano_04', amount: -4 }, { kind: 'memory', tag: 'human', text: 'Adriano fades from the game, loaned to São Paulo.' }],
       memoryTags: ['human', 'cur_adriano_04'],
+    }),
+  },
+  {
+    id: 'mourinho-in',
+    date: '2008-06',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:mourinho-in', title: 'Mourinho for the Champions League',
+      description: 'After three straight titles Mancini has departed and José Mourinho is being appointed to finally deliver the elusive Champions League, ushering in a more pragmatic, star-driven era. Gamble the wage bill on the expensive, ego-driven Mourinho for European glory, or promote continuity to protect the domestic machine?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'mourinho', label: 'Gamble on Mourinho for Europe (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Hired Mourinho to chase the Champions League.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'continuity', label: 'Promote continuity — protect the machine', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Chose continuity over the marquee gamble.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Mourinho appointed to deliver the Champions League.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'ibra-out-etoo',
+    date: '2009-07',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:ibra-out-etoo', title: 'Ibrahimović traded for Eto’o',
+      description: 'Barcelona want Ibrahimović in a landmark deal worth ~€46m plus Samuel Eto’o coming the other way. Reality: Eto’o became a key, hard-working piece of Mourinho’s treble side. Trade the temperamental superstar for cash-plus-Eto’o to reshape the squad, or keep Ibra and build around him?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'trade', label: 'Trade Ibra for Eto’o and cash (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Eto’o arrives — a selfless runner for Mourinho’s system.' }, { kind: 'memory', tag: 'transfer', text: 'Traded Ibrahimović to Barça for Eto’o and a fortune.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'keep', label: 'Keep Ibra and build around him', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'inter', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Kept Ibra as the centrepiece.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Ibrahimović to Barcelona; Eto’o joins for the treble push.' }],
+      memoryTags: ['transfer', 'cur_etoo_04'],
+    }),
+  },
+  {
+    id: 'the-treble',
+    date: '2010-05',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:the-treble', title: 'The Treble — Champions League at the Bernabéu',
+      description: 'Inter have completed an unprecedented treble for an Italian club: a fifth straight Serie A title, the Coppa Italia, and the Champions League — beating Bayern 2-0 in the final at the Bernabéu with two Diego Milito goals. Immediately reinvest the prize money to defend the treble, or sell from a peak to cash in before the ageing core declines?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'defend', label: 'Reinvest to defend the treble', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'inter', amount: 6 }, { kind: 'memory', tag: 'silverware', text: 'Won the treble and backed the side to defend it.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'cash', label: 'Sell from the peak before the decline', successProbability: 0.55, onSuccess: [{ kind: 'money', clubId: 'inter', amount: 20_000_000 }, { kind: 'memory', tag: 'silverware', text: 'Won the treble and cashed in from the summit.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 8, text: 'Inter win the treble — Champions League glory at the Bernabéu.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2010 treble.' }],
+      memoryTags: ['silverware', 'cur_etoo_04'],
+    }),
+  },
+  {
+    id: 'mourinho-out',
+    date: '2010-05',
+    scenarios: ['inter-2004'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:mourinho-out', title: 'Mourinho leaves for Real Madrid',
+      description: 'Days after the treble, Mourinho is off to Real Madrid — the departure that would trigger the slow unwinding of the great Inter side. Fight to keep him with a record contract, or let him go and pocket a compensation fee to fund a rebuild?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Fight to keep him — a record contract', successProbability: 0.35, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'manager', text: 'Persuaded Mourinho to stay after the treble.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'let-go', label: 'Let him go — pocket the compensation (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'inter', amount: 8_000_000 }, { kind: 'memory', tag: 'manager', text: 'Let Mourinho leave for Madrid with a compensation fee.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Mourinho leaves for Real Madrid — the great side begins to unwind.' }],
+      memoryTags: ['manager'],
     }),
   },
 ];
