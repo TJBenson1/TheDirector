@@ -5167,7 +5167,63 @@ const BARCELONA_2014_PACK: ScriptedEvent[] = [
   },
 ];
 
+// Hitzfeld's Bayern, 1998-2003: the treble-that-wasn't of 1999, the three-peat,
+// the 2001 European Cup redemption and the Ballack-era double. Effenberg's and
+// Makaay's arrivals are ledger-replayed and the coach is already seeded as
+// Hitzfeld, so most beats are narrative overlays with real Director forks and
+// reality-default fallout. The 1999 final keeps its dramatic in-game fork.
 const BAYERN_1998_PACK: ScriptedEvent[] = [
+  {
+    id: 'hitzfeld-backing',
+    date: '1998-08',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:hitzfeld-backing', title: 'Backing Hitzfeld’s rebuild',
+      description: 'With Trapattoni’s second spell over, Bayern have hired Champions League-winning ex-Dortmund coach Ottmar Hitzfeld. Reality: he built the spine that defined the era — three straight titles and the 2001 European Cup. Back him with full squad-rebuild funds and authority, or install a cheaper in-house appointment and keep the war chest for players?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'back', label: 'Back Hitzfeld fully (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'manager', text: 'Handed Hitzfeld the funds and authority for his rebuild.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'cheap', label: 'Cheaper in-house — keep the war chest', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'managerRelationship', amount: -6 }, { kind: 'memory', tag: 'manager', text: 'Kept the money for players over the marquee coach.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Hitzfeld arrives to build the era-defining spine.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'midfield-engine',
+    date: '1998-09',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:midfield-engine', title: 'The engine room — Effenberg returns',
+      description: 'Hitzfeld’s priority target Stefan Effenberg has returned (from Gladbach — a RE-signing, after a prior spell and years in Italy) to captain the side, with Jeremies from 1860 Munich as the ball-winner and Salihamidzic from Hamburg. Together they are the era’s engine. Sign the veteran leader Effenberg to captain the rebuild, or invest the wage budget in younger, higher-ceiling midfielders and promote from within?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'effenberg', label: 'Sign Effenberg as captain (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Effenberg is back — the leader of Hitzfeld’s Bayern.' }, { kind: 'memory', tag: 'transfer', text: 'Re-signed Effenberg to captain the engine room.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'young', label: 'Invest in youth and promote from within', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Chose higher-ceiling youth over the veteran leader.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Effenberg, Jeremies and Salihamidzic form the engine room.' }],
+      memoryTags: ['transfer', 'cur_effenberg_98'],
+    }),
+  },
+  {
+    id: 'title-1999',
+    date: '1999-05',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:title-1999', title: 'Title #1 — 15 points clear',
+      description: 'In Hitzfeld’s first season Bayern have romped to the Bundesliga title by 15 points, Elber and Effenberg starring — the first leg of a would-be treble. With the league won early, rest key men to protect the Champions League and Pokal runs, or keep a full-strength side out to chase records and momentum?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'rest', label: 'Rest key men for the cups', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Won the league early and rotated for the cups.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'full-strength', label: 'Keep chasing records at full strength', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Kept the foot down and chased records.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Bayern win the title by a distance — the first leg of a treble bid.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 1998-99 Bundesliga.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
   {
     id: 'bayern-1999-final',
     date: '1999-05',
@@ -5175,7 +5231,7 @@ const BAYERN_1998_PACK: ScriptedEvent[] = [
     requires: (s) => playerAt(s, 'cur_kahn_98', 'bayern') && s.playerClub === 'bayern',
     build: () => ({
       id: 'scripted:bayern-1999-final', title: 'The Champions League final — 90 minutes from glory',
-      description: 'Hitzfeld’s Bayern have reached the final against Manchester United and lead through Basler. Reality is the cruellest in the competition’s history: two injury-time corners, Sheringham, Solskjær, and the cup ripped away. Sit deep and protect the lead, or keep playing and kill the game off?',
+      description: 'Hitzfeld’s Bayern have reached the final against Manchester United and lead through Basler. Reality is the cruellest in the competition’s history: two injury-time corners, Sheringham, Solskjær, and the cup ripped away — with Matthäus subbed off before the collapse. Sit deep and protect the lead, or keep playing and kill the game off?',
       interrupt: true, clubId: 'bayern', category: 'event',
       choices: [
         { id: 'kill', label: 'Keep playing — get the second goal', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 8 }, { kind: 'morale', clubId: 'bayern', amount: 12 }, { kind: 'memory', tag: 'europe', text: 'Bayern got the second and lifted the cup — rewriting the cruelest night of all.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -8 }] },
@@ -5183,6 +5239,159 @@ const BAYERN_1998_PACK: ScriptedEvent[] = [
       ],
       falloutIfIgnored: [{ kind: 'morale', clubId: 'bayern', amount: -8 }, { kind: 'memory', tag: 'europe', text: 'The 1999 final slips away in stoppage time.' }],
       memoryTags: ['europe'],
+    }),
+  },
+  {
+    id: 'pokal-1999',
+    date: '1999-06',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:pokal-1999', title: 'Second final, same pain — the Pokal on penalties',
+      description: 'Days after the Camp Nou trauma, Bayern have drawn 1-1 with Werder Bremen after extra time in the DFB-Pokal final and lost the shootout — a demoralising trio of near-misses, a double slipping away. Rotate a tired, mentally-drained squad to manage the burnout, or demand the strongest XI to salvage silverware from the season?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'rotate', label: 'Rotate — manage the burnout', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Rested drained men; the Pokal slipped away too.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'strongest', label: 'Strongest XI — salvage silverware', successProbability: 0.45, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Went full-strength but fell in the shootout.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Bayern lose the Pokal final shootout — a bruising trio of near-misses.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'title-2000',
+    date: '2000-05',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:title-2000', title: 'Title #2 — ‘Neverkusen’ hand it over',
+      description: 'On the final day Leverkusen needed only a draw at tiny Unterhaching but lost 2-0 after a Michael Ballack own goal; Bayern beat Werder 3-1 and took the title on goal difference (holding only a replica Meisterschale on the day). Publicly downplay the race to keep the dressing room calm, or pile media pressure on the rivals to force the wobble?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'calm', label: 'Downplay it — keep the room calm', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Kept calm and took the title as Leverkusen collapsed.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'pressure', label: 'Pile pressure on the rivals', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Turned the screw in the media — the rivals wobbled.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Bayern take the title on goal difference — ‘Neverkusen’ collapse at Unterhaching.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 1999-2000 Bundesliga on the final day.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'matthaus-leaves',
+    date: '2000-07',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:matthaus-leaves', title: 'Matthäus departs for the MetroStars',
+      description: 'MYTH-BUSTER: Lothar Matthäus did NOT play in the 2001 European Cup win — he is leaving now, in 2000, for the MetroStars in the USA; his last European final for the club was the 1999 loss, from which he was substituted before United’s comeback. Give the 39-year-old icon a ceremonial farewell and lean on his leadership legacy, or move on cleanly and hand the veteran minutes to the next generation?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'farewell', label: 'A ceremonial farewell for the icon', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Matthäus is sent off with honour to New York.' }, { kind: 'memory', tag: 'legend', text: 'Gave Matthäus a fitting send-off in 2000.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'move-on', label: 'Move on — minutes to the next generation', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'legend', text: 'Handed the veteran’s minutes to youth.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'legend', text: 'Matthäus leaves for the MetroStars in 2000 — his last final was 1999.' }],
+      memoryTags: ['legend'],
+    }),
+  },
+  {
+    id: 'title-2001',
+    date: '2001-05',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:title-2001', title: 'Title #3 — Andersson’s last-gasp free kick',
+      description: 'On the final day Bayern fell behind at Hamburg in the 90th and Schalke were champions for about four minutes — until an indirect free kick (the HSV keeper had picked up a back-pass) was drilled home by defender Patrik Andersson in the fourth minute of stoppage time. 1-1 secured the three-peat; Schalke became the ‘Champions of Hearts’. Keep faith and let the players find the equaliser themselves, or throw on extra attackers early and gamble the point?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'faith', label: 'Keep faith — let them find it (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Held the nerve — Andersson’s last kick sealed the three-peat.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'gamble', label: 'Throw on attackers early — gamble the point', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Gambled early and snatched the title.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Andersson’s stoppage-time free kick secures a third straight title.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2000-01 Bundesliga with the last kick.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'cl-2001',
+    date: '2001-05',
+    scenarios: ['bayern-1998'],
+    requires: (s) => playerAt(s, 'cur_kahn_98', 'bayern') && s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:cl-2001', title: 'Redemption in Milan — Kahn the hero',
+      description: 'At the San Siro, Bayern have drawn 1-1 with Valencia (both goals penalties, Effenberg converting theirs) and won 5-4 on the shootout — Oliver Kahn saving three kicks and taking Man of the Match, delivering Bayern’s first European Cup in 25 years and redemption for 1999. Trust Kahn and your regular takers for the shootout, or bring on specialist penalty-takers late to load the order?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'trust-kahn', label: 'Trust Kahn and the regular takers (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Kahn saves three — the European Cup comes home to Munich.' }, { kind: 'memory', tag: 'europe', text: 'Won the 2001 European Cup on penalties — redemption for Camp Nou.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -6 }] },
+        { id: 'specialists', label: 'Load the order with specialists late', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'europe', text: 'Stacked the takers and won the shootout.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 7, text: 'Bayern win the 2001 European Cup — Kahn saves three penalties.' }, { kind: 'memory', tag: 'europe', text: 'Won the 2001 Champions League, redemption for 1999.' }],
+      memoryTags: ['europe', 'cur_kahn_98'],
+    }),
+  },
+  {
+    id: 'intercontinental-2001',
+    date: '2001-11',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:intercontinental-2001', title: 'World champions in Tokyo',
+      description: 'In Tokyo, Bayern have beaten Copa Libertadores holders Boca Juniors 1-0 after extra time — Samuel Kuffour scoring and named Man of the Match — to be crowned club world champions. Fly a full-strength squad across the world mid-season to win the intercontinental crown, or prioritise Bundesliga fitness and treat the trip as secondary?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'full', label: 'Full strength — win the world crown (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Kuffour’s goal makes Bayern champions of the world.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2001 Intercontinental Cup in Tokyo.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -3 }] },
+        { id: 'secondary', label: 'Prioritise Bundesliga fitness', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Treated the trip as secondary to the league.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Bayern beat Boca Juniors in Tokyo — champions of the world.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2001 Intercontinental Cup.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'ballack-deisler',
+    date: '2002-07',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:ballack-deisler', title: 'Poaching Ballack from the rivals',
+      description: 'After Leverkusen’s treble-runner-up heartbreak and a strong World Cup, Michael Ballack is available for ~€6m (turning down Real Madrid), with Sebastian Deisler alongside — Hoeneß driving the deals. Reality: Ballack, who’d scored the own goal that handed Bayern the 2000 title, became the new midfield star as the Effenberg era ended. Spend big to poach the league’s best German and weaken a direct rival, or reinvest in the existing core and academy instead?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'poach', label: 'Poach Ballack and Deisler (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Ballack chooses Bayern over Real — and weakens a rival.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Ballack from Leverkusen — the new midfield star.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'core', label: 'Reinvest in the core and academy', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Backed the existing core over the marquee poach.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Ballack and Deisler arrive from Leverkusen — the Effenberg era ends.' }],
+      memoryTags: ['transfer', 'cur_ballack'],
+    }),
+  },
+  {
+    id: 'double-2003',
+    date: '2003-05',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:double-2003', title: 'The Double — 2002-03',
+      description: 'Bayern have won the Bundesliga by a then-record 16 points over Stuttgart and beaten Kaiserslautern 3-1 in the Pokal final for the double, Ballack and Kahn the focal points — offset by a group-stage Champions League flop (two points from six). With the league sewn up, prioritise fixing the European campaign via squad depth, or bank the domestic double and reload in summer?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'europe', label: 'Prioritise fixing Europe with depth', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Won the double and set about fixing Europe.' }], onFailure: [{ kind: 'money', clubId: 'bayern', amount: -5_000_000 }] },
+        { id: 'reload', label: 'Bank the double and reload in summer', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Banked the domestic double and planned the summer.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Bayern win the Bundesliga and Pokal double by a record margin.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2002-03 domestic double.' }],
+      memoryTags: ['silverware', 'cur_ballack'],
+    }),
+  },
+  {
+    id: 'makaay-record',
+    date: '2003-07',
+    scenarios: ['bayern-1998'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:makaay-record', title: 'Makaay — a club-record striker',
+      description: 'Fresh off the double, Bayern can make Deportivo’s Roy Makaay a club-record signing (~€19m) to lead the line and finally fix the goalscoring for a serious European push. Reality: ‘the Phantom’ delivered goals for years. Smash the record for the proven La Liga top scorer, or spread the budget across depth to fix the European failings first?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'smash', label: 'Smash the record for Makaay (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 4, text: '‘The Phantom’ arrives to lead the line.' }, { kind: 'memory', tag: 'transfer', text: 'Broke the club record for Makaay.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'depth', label: 'Spread the budget on depth', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Chose depth over a single record striker.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Makaay arrives from Deportivo for a club record.' }],
+      memoryTags: ['transfer', 'cur_makaay'],
     }),
   },
 ];
