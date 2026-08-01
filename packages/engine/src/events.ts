@@ -2333,7 +2333,408 @@ const DORTMUND_2012_PACK: ScriptedEvent[] = [
 // mid-save decision — so the old "spend the takeover cash on deadline day" event is
 // gone. The 2009 spree itself (Tévez, Adebayor, Barry, Lescott) is the live opening
 // window, driven by the reality ledger.
-const MAN_CITY_2008_PACK: ScriptedEvent[] = [];
+const MAN_CITY_2008_PACK: ScriptedEvent[] = [
+  // The Abu Dhabi era. NOTE the playable start is 2009-07 (Robinho and the 2008
+  // takeover are backstory, already in place at kickoff), so the opening beats fire
+  // from 2009-08. Every marquee arrival (the 2009 spree; Yaya/Balotelli/Silva 2010;
+  // Agüero/Nasri 2011) is ledger-replayed → narrative overlays.
+  {
+    id: 'city-project-expectations',
+    date: '2009-08',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:city-project-expectations',
+      title: 'The richest club in the world',
+      description:
+        'Sheikh Mansour’s ADUG money has made City the wealthiest club on earth — Robinho already prised from under Chelsea’s nose, and a mandate to gatecrash the established order fast. Reality: limitless funds, and limitless, impatient expectation. Promise instant success and spend to match, or set a steadier "built to last" course with the owners?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'instant',
+          label: 'Promise instant success (as reality did)',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'The blue half of Manchester dreams of toppling United.' }, { kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'takeover', text: 'The Abu Dhabi project promises to conquer everything, fast.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+        {
+          id: 'built-to-last',
+          label: 'Sell a patient, built-to-last project',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'takeover', text: 'Won the owners to a longer-term build.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'takeover', text: 'The ADUG billions make City a superpower overnight.' }],
+      memoryTags: ['takeover'],
+    }),
+  },
+  {
+    id: 'city-2009-spree',
+    date: '2009-08',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:city-2009-spree',
+      title: 'The 2009 spree',
+      description:
+        'The chequebook is open: Tévez, Adebayor, Barry, Lescott and Kolo Touré all arrive in one summer to turbo-charge Mark Hughes’s squad. Reality: a huge, slightly scattergun outlay that lifted City but didn’t yet cohere. Back the wholesale spend, or urge a more targeted, balanced build?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'spend',
+          label: 'Back the spree (as reality did)',
+          successProbability: 0.75,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Tévez, Adebayor, Barry, Lescott, Kolo — the spree lands.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'targeted',
+          label: 'Push for a targeted, balanced build',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Spent big but smart, chasing balance over noise.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'City’s 2009 spree: Tévez, Adebayor, Barry, Lescott, Kolo Touré.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'tevez-billboard',
+    date: '2009-09',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:tevez-billboard',
+      title: '"Welcome to Manchester"',
+      description:
+        'Prising Carlos Tévez from Manchester United, the club plasters a giant sky-blue "Welcome to Manchester" billboard across the city. Reality: Ferguson dismissed it as "small-time," and the mind-games lit the rivalry. Own the provocation and stoke the derby, or take the classy high road?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'provoke',
+          label: 'Own the billboard (as reality did)',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'The billboard delights the blue half and needles the red.' }, { kind: 'memory', tag: 'rivalry', text: '"Welcome to Manchester" — City announce themselves to United.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'highroad',
+          label: 'Take the high road',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'rivalry', text: 'Let the signing do the talking, no billboard needed.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -2 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'rivalry', text: 'The "Welcome to Manchester" Tévez billboard taunts United.' }],
+      memoryTags: ['rivalry', 'cur_tevez_u8'],
+    }),
+  },
+  {
+    id: 'hughes-out-mancini',
+    date: '2009-12',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city' && s.managerRelations.identity === 'Mark Hughes',
+    build: () => ({
+      id: 'scripted:hughes-out-mancini',
+      title: 'Hughes out, Mancini in',
+      description:
+        'Despite heavy spending, results — and a leaky defence — have the owners unconvinced by Mark Hughes. Reality: he was sacked in December 2009 and Roberto Mancini, a serial Serie A winner, took over to instil steel. Make the mid-season change for a proven winner, or give Hughes the time to make the expensive squad gel?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'mancini',
+          label: 'Appoint Mancini (as reality did)',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Hired Mancini to turn the spending into silverware.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+        {
+          id: 'keep-hughes',
+          label: 'Give Hughes time',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Kept faith with Hughes to bed the new signings in.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Hughes sacked; Roberto Mancini takes charge.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'mancini-marquees',
+    date: '2010-08',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:mancini-marquees',
+      title: 'Mancini’s marquees — Yaya, Balotelli, Silva',
+      description:
+        'The new manager reshapes the spine: Yaya Touré’s midfield power, David Silva’s craft, and the combustible genius of Mario Balotelli. Reality: the core of the team that would win the title — and, in Balotelli, endless drama. Back the blend of elite talent and volatility, or steer clear of the risk and buy safer?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'back',
+          label: 'Sign them all, drama included (as reality did)',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Yaya, Silva and Balotelli in — the title core takes shape.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'safe',
+          label: 'Avoid the volatility, buy safer',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Chose stability over the high-risk genius.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Mancini brings in Yaya Touré, Silva and Balotelli.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'fa-cup-2011',
+    date: '2011-05',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:fa-cup-2011',
+      title: 'The FA Cup — first trophy in 35 years',
+      description:
+        'Yaya Touré’s goals win the FA Cup — City’s first major trophy since 1976 and the validation the whole project needed. Reality: the breakthrough that turned spending into belief, and Champions League qualification followed. Use it as the launchpad for a title tilt, or caution that one cup doesn’t make champions?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'launchpad',
+          label: 'Launch the title assault',
+          successProbability: 0.75,
+          onSuccess: [{ kind: 'morale', clubId: 'man_city', amount: 6 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'First trophy in 35 years — now for the title.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'caution',
+          label: 'Temper the celebration',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Won the cup and kept the feet on the ground.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -2 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'The FA Cup — City’s first major trophy in 35 years.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2011 FA Cup, the breakthrough trophy.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'tevez-refusal',
+    date: '2011-09',
+    scenarios: ['man-city-2008'],
+    requires: (s) => playerAt(s, 'cur_tevez_u8', 'man_city') && s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:tevez-refusal',
+      title: 'Tévez refuses to play',
+      description:
+        'In a Champions League night in Munich, your talismanic striker appears to refuse to come off the bench. Reality: a huge disciplinary crisis — Tévez was exiled for months before an uneasy reconciliation, and still ended up part of the title run-in. Come down hard and freeze him out, or smooth it over to keep his goals available?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'hardline',
+          label: 'Freeze him out — discipline first (as reality did)',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', clubId: 'man_city', amount: 3 }, { kind: 'agitation', playerId: 'cur_tevez_u8', amount: 8 }, { kind: 'memory', tag: 'scandal', text: 'Exiled Tévez over the Munich refusal — authority upheld.' }],
+          onFailure: [{ kind: 'morale', clubId: 'man_city', amount: -4 }],
+        },
+        {
+          id: 'smooth',
+          label: 'Smooth it over to keep his goals',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_tevez_u8', amount: 6 }, { kind: 'memory', tag: 'scandal', text: 'Patched things up with Tévez to keep him firing.' }],
+          onFailure: [{ kind: 'morale', clubId: 'man_city', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_tevez_u8', amount: 6 }, { kind: 'memory', tag: 'scandal', text: 'Tévez’s Munich refusal triggers a months-long exile.' }],
+      memoryTags: ['scandal', 'cur_tevez_u8'],
+    }),
+  },
+  {
+    id: 'six-one-old-trafford',
+    date: '2011-10',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:six-one-old-trafford',
+      title: '6-1 at Old Trafford — "Why Always Me?"',
+      description:
+        'City demolish United 6-1 in their own back yard, Balotelli revealing a "Why Always Me?" shirt after scoring. Reality: a statement of the new order and one of the derby’s most famous days. Milk the psychological blow to United, or keep the squad grounded with the title still to be won?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'milk',
+          label: 'Ram home the statement',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', clubId: 'man_city', amount: 5 }, { kind: 'memory', tag: 'rivalry', text: '6-1 at Old Trafford — the balance of power shifts.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'grounded',
+          label: 'Keep the squad grounded',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'rivalry', text: 'Enjoyed the 6-1 but kept the eyes on the prize.' }],
+          onFailure: [{ kind: 'morale', clubId: 'man_city', amount: -2 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'rivalry', text: 'City win 6-1 at Old Trafford; Balotelli asks "Why Always Me?"' }],
+      memoryTags: ['rivalry'],
+    }),
+  },
+  {
+    id: 'aguero-9320',
+    date: '2012-05',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:aguero-9320',
+      title: 'Agüerooo — 93:20',
+      description:
+        'Level on points with United on the final day, needing to beat QPR and trailing late, Sergio Agüero scores in the 94th minute to win the title on goal difference. Reality: "93:20" — the most dramatic finish in Premier League history, City’s first league title in 44 years. Build a dynasty on it, or let the euphoria mask the squad’s rough edges?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'dynasty',
+          label: 'Build the dynasty',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'morale', clubId: 'man_city', amount: 6 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'silverware', text: '93:20 — champions of England, and hungry for more.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'euphoria',
+          label: 'Ride the euphoria',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Basked in the Agüero moment.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 8, text: 'Agüero’s 93:20 winner clinches the title on the final day.' }, { kind: 'memory', tag: 'silverware', text: 'Won the title on goal difference — Agüero, 93:20.' }],
+      memoryTags: ['silverware', 'cur_aguero_08'],
+    }),
+  },
+  {
+    id: 'mancini-sacked',
+    date: '2013-05',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:mancini-sacked',
+      title: 'Mancini sacked',
+      description:
+        'A trophyless title defence and an FA Cup final lost to Wigan have the owners ready to move on from the manager who delivered 93:20. Reality: Mancini was dismissed days after the Wigan defeat, his relationships across the club frayed. Stand by the title-winning coach, or make the ruthless change the owners want?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'stand-by',
+          label: 'Stand by Mancini',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Kept faith with the man who won 93:20.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -5 }],
+        },
+        {
+          id: 'sack',
+          label: 'Make the change (as reality did)',
+          successProbability: 0.65,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Moved on from Mancini despite the title.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Mancini sacked two days after the Wigan cup final defeat.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'pellegrini-appointed',
+    date: '2013-06',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:pellegrini-appointed',
+      title: 'Pellegrini appointed',
+      description:
+        'The owners want a calmer, more expansive approach after Mancini’s abrasive reign. Reality: Manuel Pellegrini — "This Charming Man" — was appointed, and brought a more attacking style and a settled dressing room. Back the change of tone and hand him a refresh, or worry that a softer touch loses the winning edge?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'back',
+          label: 'Back Pellegrini’s calmer, attacking project (as reality did)',
+          successProbability: 0.75,
+          onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Pellegrini in — a calmer dressing room and an attacking plan.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+        {
+          id: 'worry',
+          label: 'Demand he keep the hard edge',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Asked the new man to keep the ruthless streak.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Manuel Pellegrini appointed manager.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'title-2014',
+    date: '2014-05',
+    scenarios: ['man-city-2008'],
+    requires: (s) => s.playerClub === 'man_city',
+    build: () => ({
+      id: 'scripted:title-2014',
+      title: 'Champions again — Pellegrini’s first',
+      description:
+        'A relentless, goal-laden season delivers a second title in three years — Agüero, Yaya, Silva, Nasri and Džeko sweeping teams aside. Reality: 156 goals, the League Cup too, and the project firmly established as England’s dominant force. Cement the dynasty and keep the core, or push the squad through a bigger refresh while on top?',
+      interrupt: true,
+      clubId: 'man_city',
+      category: 'event',
+      choices: [
+        {
+          id: 'cement',
+          label: 'Cement the dynasty',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'morale', clubId: 'man_city', amount: 6 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'silverware', text: 'Champions again — the project is England’s new power.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'refresh',
+          label: 'Push a bigger refresh from the top',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Won the title and pressed on with an evolution.' }],
+          onFailure: [{ kind: 'morale', clubId: 'man_city', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 7, text: 'Champions again — Pellegrini’s free-scoring first title.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2014 title, City’s second in three years.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+];
 
 const BARCELONA_2003_PACK: ScriptedEvent[] = [
   {
