@@ -4102,22 +4102,232 @@ const LIVERPOOL_1995_PACK: ScriptedEvent[] = [
   },
 ];
 
+// Pre-money Chelsea, 1996-2003: Gullit's 'sexy football', the continental
+// imports, the trophy years under Vialli and the slow slide into debt that made
+// the Abramovich takeover both necessary and possible. The transfers (Vialli,
+// Di Matteo, Zola) are ledger-replayed and the manager churn can't be enacted as
+// coach swaps, so these are narrative overlays with real Director forks and
+// reality-default fallout.
 const CHELSEA_1996_PACK: ScriptedEvent[] = [
   {
-    id: 'gullit-vialli',
-    date: '1998-02',
+    id: 'gullit-player-manager',
+    date: '1996-08',
     scenarios: ['chelsea-1996'],
-    requires: (s) => playerAt(s, 'cur_vialli_c96', 'chelsea') && s.playerClub === 'chelsea',
+    requires: (s) => s.playerClub === 'chelsea',
     build: () => ({
-      id: 'scripted:gullit-vialli', title: 'Vialli frozen out by player-manager Gullit',
-      description: 'Ruud Gullit is barely picking Gianluca Vialli, and the dressing room is split. Reality: the board sacked Gullit and Vialli took charge — and promptly won the Cup Winners’ Cup. Back your manager, or side with the striker the players adore?',
+      id: 'scripted:gullit-player-manager', title: 'The crowd’s choice in the dugout',
+      description: 'With Hoddle gone to England, the terraces want their glamorous Dutchman as player-manager; chairman Ken Bates had favoured the proven, pragmatic George Graham. Reality: fan pressure won out, and Gullit delivered ‘sexy football’ and the club’s first major trophy in 26 years. Back the crowd’s untested choice, or overrule the terraces for a safe pair of hands?',
       interrupt: true, clubId: 'chelsea', category: 'event',
       choices: [
-        { id: 'back-gullit', label: 'Back Gullit — hold the line', successProbability: 0.45, onSuccess: [{ kind: 'managerRelationship', amount: 8 }], onFailure: [{ kind: 'morale', clubId: 'chelsea', amount: -6 }, { kind: 'agitation', playerId: 'cur_vialli_c96', amount: 10 }] },
-        { id: 'back-vialli', label: 'Side with Vialli and the players', successProbability: 0.7, onSuccess: [{ kind: 'morale', playerId: 'cur_vialli_c96', amount: 12 }, { kind: 'morale', clubId: 'chelsea', amount: 5 }, { kind: 'managerRelationship', amount: -10 }, { kind: 'memory', tag: 'dressing-room', text: 'Sided with Vialli over Gullit — the room’s mood lifts, the manager fumes.' }], onFailure: [{ kind: 'managerRelationship', amount: -12 }] },
+        { id: 'gullit', label: 'Back Gullit — the glamour gamble (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'The terraces get their man — ‘sexy football’ is coming.' }, { kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Installed Gullit as player-manager over George Graham.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'graham', label: 'Overrule the crowd — hire George Graham', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Chose Graham’s pragmatism over Gullit’s glamour.' }], onFailure: [{ kind: 'fanTrust', amount: -5 }] },
       ],
-      falloutIfIgnored: [{ kind: 'agitation', playerId: 'cur_vialli_c96', amount: 8 }, { kind: 'memory', tag: 'dressing-room', text: 'The Gullit–Vialli standoff festers.' }],
-      memoryTags: ['dressing-room', 'cur_vialli_c96'],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Gullit becomes player-manager — the crowd’s choice.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'continental-revolution',
+    date: '1996-09',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:continental-revolution', title: 'The continental revolution',
+      description: 'Gullit has used Chelsea’s new muscle and post-Bosman freedom to import elite talent: Gianluca Vialli (free from the European champions Juventus), Frank Leboeuf (Strasbourg) and Roberto Di Matteo (a then-British-record ~£4.9m from Lazio). Reality: it transformed Chelsea’s image overnight. Sanction the marquee foreign-star remake, or insist on a cheaper British-core rebuild to protect the wage structure?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'import', label: 'Sanction the foreign-star spree (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Vialli, Leboeuf and Di Matteo remake Chelsea overnight.' }, { kind: 'memory', tag: 'transfer', text: 'Backed Gullit’s continental revolution.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'british', label: 'Protect the wage structure — a British-core rebuild', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Held the wage line with a home-grown core.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Vialli, Leboeuf and Di Matteo arrive — the continental revolution.' }],
+      memoryTags: ['transfer', 'cur_vialli_c96'],
+    }),
+  },
+  {
+    id: 'harding-crash',
+    date: '1996-10',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:harding-crash', title: 'Matthew Harding killed in a helicopter crash',
+      description: 'Vice-chairman and lifelong fan Matthew Harding — whose ~£26m funded the North Stand and the club’s revival — has been killed with four others when his helicopter crashed returning from a League Cup defeat at Bolton. Reality: the North Stand was renamed in his honour, but he and Bates had been locked in a bitter power struggle. In his memory, lean on the benefactor legacy and its boardroom influence, or keep that faction at arm’s length under Bates?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'honour', label: 'Honour the legacy — embrace his influence', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'The North Stand becomes the Matthew Harding Stand — the fans are moved.' }, { kind: 'memory', tag: 'club', text: 'Honoured Harding and his benefactor legacy.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'bates', label: 'Keep the faction at arm’s length under Bates', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'club', text: 'Consolidated control under Bates after the tragedy.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'club', text: 'Matthew Harding dies; the North Stand is renamed in his honour.' }],
+      memoryTags: ['club'],
+    }),
+  },
+  {
+    id: 'zola-signs',
+    date: '1996-11',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:zola-signs', title: 'The mid-season swoop for Zola',
+      description: 'Ancelotti has frozen out the 30-year-old Gianfranco Zola at Parma, and he is available mid-season for ~£4.5m (NOT the summer — this is a November deal). Reality: an instant sensation, he won the FWA Footballer of the Year that season despite arriving mid-campaign, and became a club icon. Authorise the in-season swoop for the ‘past-it reject’, or judge a short 30-year-old too risky mid-campaign and bank the cash?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'sign', label: 'Sign him now (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Zola arrives from Parma — a magician in the making.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Zola mid-season — an instant icon.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'bank', label: 'Bank the cash — too risky in-season', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Passed on the 30-year-old Zola.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Zola signs from Parma in November — an instant sensation.' }],
+      memoryTags: ['transfer', 'cur_zola_c96'],
+    }),
+  },
+  {
+    id: 'fa-cup-1997',
+    date: '1997-05',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:fa-cup-1997', title: 'The 26-year wait ends — 1997 FA Cup',
+      description: 'Chelsea have beaten Middlesbrough 2-0 at Wembley — Di Matteo scoring after 43 seconds (the fastest goal in an FA Cup FINAL at the time, not the competition’s fastest ever), Newton adding the second. It is the club’s first major trophy in 26 years and makes Gullit the first non-British manager to win the FA Cup. Publicly commit to Gullit’s project with a contract and a war chest, or treat the Cup as a one-off and keep your options open?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'commit', label: 'Commit to Gullit’s project', successProbability: 0.7, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'morale', clubId: 'chelsea', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Won the FA Cup and backed Gullit’s project.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'hedge', label: 'Treat it as a one-off — keep options open', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Won the Cup but kept the manager on notice.' }], onFailure: [{ kind: 'managerRelationship', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Chelsea win the FA Cup — a first major trophy in 26 years.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 1997 FA Cup.' }],
+      memoryTags: ['silverware', 'cur_dimatteo_c96'],
+    }),
+  },
+  {
+    id: 'gullit-sacked',
+    date: '1998-02',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea' && s.managerRelations.identity === 'Ruud Gullit',
+    build: () => ({
+      id: 'scripted:gullit-sacked', title: 'Gullit sacked — 2nd in the league',
+      description: 'The board have sacked Gullit — NOT over results (Chelsea sit 2nd, in the League Cup semis and the Cup Winners’ Cup quarters) but over a contract dispute and his reported demand for a large net-of-tax salary. Reality: Vialli, whom Gullit had signed, was installed as player-manager and won five trophies in roughly two years. Pull the trigger over wages and gamble on the untested Vialli, or meet Gullit’s terms to keep an in-form, title-chasing side intact?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'sack', label: 'Sack him over the wages — gamble on Vialli (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Sacked Gullit over pay; Vialli takes charge.' }], onFailure: [{ kind: 'morale', clubId: 'chelsea', amount: -5 }] },
+        { id: 'keep', label: 'Meet his terms — keep the side intact', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'manager', text: 'Met Gullit’s terms and kept a settled side.' }], onFailure: [{ kind: 'boardPatience', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Gullit sacked in a wage row; Vialli installed as player-manager.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'league-cup-1998',
+    date: '1998-03',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:league-cup-1998', title: 'Vialli’s first trophy — 1998 League Cup',
+      description: 'Weeks into his reign, Vialli has beaten Middlesbrough 2-0 after extra time at Wembley (Sinclair, Di Matteo) to lift the League Cup — his first trophy as manager. Credit the bold appointment and empower him fully, or keep him on a short leash as a caretaker while eyeing a big-name permanent boss?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'empower', label: 'Empower Vialli fully (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'morale', clubId: 'chelsea', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Backed Vialli — a trophy in weeks.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'leash', label: 'Short leash — eye a big-name permanent boss', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Kept Vialli on caretaker terms.' }], onFailure: [{ kind: 'managerRelationship', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4, text: 'Vialli lifts the League Cup — a trophy in his first weeks.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 1998 League Cup under Vialli.' }],
+      memoryTags: ['silverware', 'cur_dimatteo_c96'],
+    }),
+  },
+  {
+    id: 'cwc-1998',
+    date: '1998-05',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:cwc-1998', title: 'European glory — 1998 Cup Winners’ Cup',
+      description: 'In Stockholm, Chelsea have beaten Stuttgart 1-0 to win the Cup Winners’ Cup — their first European trophy since 1971 — Zola scoring the winner seconds after coming off the bench. Use the European glory to push for Champions League-level investment and a bigger wage bill, or consolidate, wary of over-extending a club already carrying heavy debt?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'invest', label: 'Push for Champions League-level investment', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Europe is conquered — the ambition grows.' }, { kind: 'memory', tag: 'silverware', text: 'Won in Europe and pushed the investment on.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'consolidate', label: 'Consolidate — mind the debt', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Won in Europe but kept the books in check.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Chelsea win the Cup Winners’ Cup — Zola’s winner off the bench.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 1998 Cup Winners’ Cup.' }],
+      memoryTags: ['silverware', 'cur_zola_c96'],
+    }),
+  },
+  {
+    id: 'fa-cup-2000',
+    date: '2000-05',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:fa-cup-2000', title: 'The last final at old Wembley — 2000 FA Cup',
+      description: 'Chelsea have beaten Aston Villa 1-0 in the last FA Cup Final played at the OLD Wembley before demolition (finals then moved to Cardiff). Di Matteo scored the winner, three years after his 1997 goal — a second FA Cup in four years under Vialli. Reward Vialli’s serial trophy-winning with a lavish new contract, or grow uneasy at his spending and dressing-room tensions and quietly plan a change?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'reward', label: 'Reward Vialli with a new contract', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'silverware', text: 'Won the Cup and rewarded Vialli.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'plan-change', label: 'Grow uneasy — quietly plan a change', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Won the Cup but began eyeing the exit.' }], onFailure: [{ kind: 'managerRelationship', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Chelsea win the last final at old Wembley.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2000 FA Cup, Vialli’s second.' }],
+      memoryTags: ['silverware', 'cur_dimatteo_c96'],
+    }),
+  },
+  {
+    id: 'ranieri-appointed',
+    date: '2000-09',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:ranieri-appointed', title: 'Five trophies, one bad month — Vialli out',
+      description: 'Despite five trophies, a poor start (one league win in five) has cost Vialli his job. Reality: the little-known Claudio Ranieri was appointed — his first job in England and the start of the ‘Tinkerman’ era that steadied the club into the takeover. Axe the legend over a five-game slump and hire the unknown Italian, or show patience and bet Vialli’s pedigree outweighs a bad month?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'ranieri', label: 'Axe Vialli — hire Ranieri (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Vialli out over a slump; Ranieri’s Tinkerman era begins.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'patience', label: 'Show patience — keep Vialli', successProbability: 0.45, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Kept faith with Vialli through the slump.' }], onFailure: [{ kind: 'boardPatience', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Vialli sacked after a poor start; Ranieri appointed.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'debt-strain',
+    date: '2002-06',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:debt-strain', title: 'The debt behind Chelsea Village',
+      description: 'The club is carrying heavy debt — a £75m Eurobond and Bates’s ‘Chelsea Village’ hotel and property project around Stamford Bridge. Foreign-star wages, missed Champions League revenue and looming bond repayments have left Chelsea exposed, making Champions League qualification an existential need. Keep spending on borrowed money to stay competitive (the real path that nearly ruined the club), or impose austerity and sell stars to service the debt?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'spend', label: 'Keep spending on borrowed money (the real path)', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'finance', text: 'Gambled on borrowed money to stay competitive.' }], onFailure: [{ kind: 'boardPatience', amount: -5 }] },
+        { id: 'austerity', label: 'Impose austerity — sell to service the debt', successProbability: 0.6, onSuccess: [{ kind: 'money', clubId: 'chelsea', amount: 10_000_000 }, { kind: 'memory', tag: 'finance', text: 'Sold stars to steady the books.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'finance', text: 'The debt mounts — Champions League money becomes an existential need.' }],
+      memoryTags: ['finance'],
+    }),
+  },
+  {
+    id: 'gronkjaer-goal',
+    date: '2003-05',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:gronkjaer-goal', title: 'The £20m goal — 4th secured over Liverpool',
+      description: 'In a winner-takes-4th showdown, Chelsea have beaten Liverpool 2-1 (Desailly, then Gronkjaer, after Hyypiä had put Liverpool ahead) to clinch the last Champions League spot. CEO Trevor Birch reportedly told the players they had to win to avoid financial ruin — Gronkjaer’s goal is dubbed ‘the £20m goal’ that made the club an attractive purchase. Gamble everything on qualification to save the finances, or hedge by cashing in on assets and sacrificing the fourth-place bid for solvency?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'gamble', label: 'Gamble on qualification (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Gronkjaer’s goal secures the Champions League — and the club’s future.' }, { kind: 'memory', tag: 'turning-point', text: 'Won the winner-takes-4th showdown — the goal that saved the club.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'hedge', label: 'Hedge — cash in for solvency', successProbability: 0.5, onSuccess: [{ kind: 'money', clubId: 'chelsea', amount: 12_000_000 }, { kind: 'memory', tag: 'turning-point', text: 'Sold up for safety, sacrificing the top-four bid.' }], onFailure: [{ kind: 'fanTrust', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Chelsea beat Liverpool to secure 4th — the Champions League, and a future.' }, { kind: 'memory', tag: 'turning-point', text: 'Gronkjaer’s goal secures the Champions League spot.' }],
+      memoryTags: ['turning-point'],
+    }),
+  },
+  {
+    id: 'abramovich-buys',
+    date: '2003-07',
+    scenarios: ['chelsea-1996'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:abramovich-buys', title: 'Abramovich buys Chelsea',
+      description: 'Roman Abramovich has bought Chelsea from Ken Bates for ~£140m, taking on the club’s ~£80m debt — then the biggest takeover in British football, made possible weeks earlier by the Gronkjaer result and the Champions League revenue it secured. It ends the pre-money era and launches an unprecedented spending revolution. Welcome the billions and the total transformation, or resist the sale to preserve the club’s independent, self-funded identity?',
+      interrupt: true, clubId: 'chelsea', category: 'event',
+      choices: [
+        { id: 'welcome', label: 'Welcome the billions (as reality did)', successProbability: 0.85, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'The Roman era begins — Chelsea will never be the same.' }, { kind: 'boardPatience', amount: 8 }, { kind: 'memory', tag: 'takeover', text: 'Abramovich buys the club — the debt cleared, the revolution on.' }], onFailure: [] },
+        { id: 'resist', label: 'Resist — keep the club self-funded', successProbability: 0.35, onSuccess: [{ kind: 'memory', tag: 'takeover', text: 'Refused the sale to keep Chelsea independent.' }], onFailure: [{ kind: 'boardPatience', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Roman Abramovich buys Chelsea — the biggest takeover in British football.' }, { kind: 'memory', tag: 'takeover', text: 'Abramovich buys Chelsea for ~£140m.' }],
+      memoryTags: ['takeover'],
     }),
   },
 ];
