@@ -986,6 +986,214 @@ const ARSENAL_2004_PACK: ScriptedEvent[] = [
       memoryTags: ['rivalry', 'manager'],
     }),
   },
+  // ── The stadium-debt drought (2005-2011), authored from beatsheets.json ──
+  // Passive coach identity stays 'Arsène Wenger' throughout. The Invincibles'
+  // spine is dismantled by ledger-replayed sales (Vieira '05, Cole '06, Henry '07,
+  // Fàbregas & Nasri '11), so departure beats narrate rather than transferOut.
+  {
+    id: 'fa-cup-2005',
+    date: '2005-05',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:fa-cup-2005', title: 'FA Cup won on penalties — the last trophy for nine years',
+      description: 'Outplayed by Manchester United, Arsenal win the first FA Cup final decided by a shoot-out, 5–4 — Vieira scoring the winning kick with his final touch in an Arsenal shirt. Reality: this was the last trophy until 2014. Use the cup as a platform to fund a squad refresh, or bank the prize money against the looming stadium debt?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'refresh', label: 'Use it to fund a squad refresh', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'trophy', text: 'Turned the cup into momentum for a refresh — a road reality couldn’t afford.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'bank', label: 'Bank the money against the stadium debt', successProbability: 0.75, onSuccess: [{ kind: 'money', clubId: 'arsenal', amount: 10_000_000 }, { kind: 'memory', tag: 'trophy', text: 'Prudence over ambition — the cash goes to the build, as reality did.' }], onFailure: [] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'arsenal', amount: 4 }, { kind: 'memory', tag: 'trophy', text: 'Arsenal edge the FA Cup on penalties — their last trophy for nine years.' }],
+      memoryTags: ['trophy'],
+    }),
+  },
+  {
+    id: 'vieira-to-juventus',
+    date: '2005-07',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => playerAt(s, 'cur_vieira2', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:vieira-to-juventus', title: 'Vieira sold to Juventus',
+      description: 'Juventus want your captain and midfield talisman for around €20m. Reality: Arsenal cashed in on the 29-year-old, Henry took the armband, and the Invincibles’ spine began to come apart. Cash in at peak value to reinvest, or block the sale and keep the leadership core for one more push?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Cash in at peak — reinvest the fee', successProbability: 0.8, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Sold Vieira at 29 to reinvest — as reality did.' }], onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -3 }] },
+        { id: 'keep', label: 'Block the sale — keep the captain', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Kept Vieira for one more tilt — the spine holds a while longer.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_vieira2', amount: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Vieira leaves for Juventus; Henry inherits the armband and the spine frays.' }],
+      memoryTags: ['transfer', 'cur_vieira2'],
+    }),
+  },
+  {
+    id: 'farewell-highbury',
+    date: '2006-05',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:farewell-highbury', title: 'Farewell to Highbury',
+      description: 'After 93 years, Arsenal play their last match at Highbury — a Henry hat-trick beats Wigan 4–2 to clinch 4th and Champions League football on the final day. The marble-halls era ends. Stage the send-off as a commercial and legacy showcase (Highbury Square), or keep every ounce of focus on the pitch and the CL final ten days away?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'showcase', label: 'Stage a grand send-off and legacy showcase', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'arsenal', amount: 8_000_000 }, { kind: 'fanTrust', amount: 4, text: 'A fitting farewell to the marble halls warms the support.' }], onFailure: [] },
+        { id: 'focus', label: 'Keep focus on the pitch and the CL final', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 4 }, { kind: 'memory', tag: 'heritage', text: 'No fuss — eyes only on Paris.' }], onFailure: [{ kind: 'fanTrust', amount: -3, text: 'A muted goodbye to Highbury disappoints the faithful.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'heritage', text: 'Highbury bows out with a Henry hat-trick; the marble-halls era ends.' }],
+      memoryTags: ['heritage'],
+    }),
+  },
+  {
+    id: 'cl-final-2006',
+    date: '2006-05',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => playerAt(s, 'cur_lehmann', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:cl-final-2006', title: 'Champions League final lost in Paris — Lehmann sent off',
+      description: 'The Stade de France, the club’s first European Cup final. Lehmann is sent off after 18 minutes for a foul on Eto’o; ten-man Arsenal lead through Sol Campbell before Eto’o and Belletti win it late for Barcelona. The closest Arsenal have come to the European crown. Treat the near-miss as vindication and hold Wenger’s course, or judge it the ceiling and push for aggressive spending?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'hold', label: 'Vindication — hold the course', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'europe', text: 'Took the Paris final as proof the project was right.' }], onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -3 }] },
+        { id: 'spend', label: 'This is the ceiling — spend aggressively', successProbability: 0.45, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'europe', text: 'Read the near-miss as a warning and reached for the chequebook.' }], onFailure: [{ kind: 'managerRelationship', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'europe', text: 'Ten-man Arsenal fall to Barcelona in Paris — the closest they come to the European Cup.' }],
+      memoryTags: ['europe', 'cur_lehmann'],
+    }),
+  },
+  {
+    id: 'emirates-move',
+    date: '2006-07',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:emirates-move', title: 'Move to the Emirates — and its debt',
+      description: 'Arsenal move into the 60,000-seat Emirates Stadium. The ~£390m project lifts matchday revenue but saddles the club with debt that will constrain transfers for years — the financial root of the coming drought. Enforce Wenger’s austere ‘self-sustaining’ model to pay it down, or leverage the new revenue to break the wage structure for a marquee star?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'austerity', label: 'Enforce the self-sustaining model', successProbability: 0.8, onSuccess: [{ kind: 'money', clubId: 'arsenal', amount: 12_000_000 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'finance', text: 'Discipline over dazzle — the debt gets serviced, as reality demanded.' }], onFailure: [] },
+        { id: 'leverage', label: 'Leverage the revenue — break the wage structure', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 5 }, { kind: 'fanTrust', amount: 4, text: 'A statement signing tells the fans the club still means to win.' }], onFailure: [{ kind: 'boardPatience', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'finance', text: 'The Emirates opens; the debt ushers in years of austerity.' }],
+      memoryTags: ['finance'],
+    }),
+  },
+  {
+    id: 'cashley-gallas-swap',
+    date: '2006-08',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => playerAt(s, 'cur_gallas2', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:cashley-gallas-swap', title: 'The ‘Cashley’ Cole saga — deadline swap for Gallas',
+      description: 'After the 2005 tapping-up meeting with Mourinho and the ‘£55k-a-week’ furore that made him ‘Cashley’, Ashley Cole finally forces his way to Chelsea in an acrimonious deadline swap that brings William Gallas plus £5m the other way. Force through the swap to recoup value from a rebel, or meet Cole’s wage demand to keep a world-class full-back and win the PR battle?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'swap', label: 'Force the swap — cash and Gallas for a rebel', successProbability: 0.75, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Swapped the rebel Cole for Gallas plus cash — as reality did.' }], onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -3 }] },
+        { id: 'keep-cole', label: 'Meet his demand — keep Cole, win the PR war', successProbability: 0.4, onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'Kept a world-class full-back and beat Chelsea to the punch.' }, { kind: 'money', clubId: 'arsenal', amount: -10_000_000 }], onFailure: [{ kind: 'agitation', playerId: 'cur_acole', amount: 10 }, { kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Ashley Cole joins Chelsea; William Gallas and £5m come to Arsenal.' }],
+      memoryTags: ['transfer', 'cur_gallas2'],
+    }),
+  },
+  {
+    id: 'henry-to-barca',
+    date: '2007-06',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => playerAt(s, 'cur_henry', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:henry-to-barca', title: 'Henry sold to Barcelona',
+      description: 'Barcelona want your all-time record scorer and captain for ~£16m. Reality: Wenger let the 29-year-old icon go and pivoted fully to a young, cheap ‘Project Youth’ around Fàbregas. Sanction the sale to fund youth and clear wages, or build the team around Henry for a final assault before he ages out?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Sell the icon — fund Project Youth', successProbability: 0.75, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Let Henry go to build around the kids — as reality did.' }], onFailure: [{ kind: 'fanTrust', amount: -4, text: 'Selling the greatest of them all stings the support.' }] },
+        { id: 'keep', label: 'Keep Henry for a final assault', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 6 }, { kind: 'memory', tag: 'transfer', text: 'Kept the talisman for one last charge — a road reality didn’t take.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_henry', amount: 8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Henry joins Barcelona; Wenger pivots fully to Project Youth.' }],
+      memoryTags: ['transfer', 'cur_henry'],
+    }),
+  },
+  {
+    id: 'eduardo-leg-break',
+    date: '2008-02',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:eduardo-leg-break', title: 'Eduardo’s leg break and the title collapse',
+      description: 'Top of the league and title favourites, a horror tackle at Birmingham breaks Eduardo’s leg seconds into a 2–2 draw that Arsenal lead until a 94th-minute equaliser. Reality: the young side unravelled from there and finished third — the defining ‘so close’ of the drought years. Add experienced reinforcements in the summer to steel a fragile squad, or keep faith in youth and wage discipline?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'reinforce', label: 'Add experience to steel the young squad', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 5 }, { kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'squad', text: 'Bought experience to harden the kids — the fix reality never made.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'faith', label: 'Keep faith in the youth project', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'squad', text: 'Held the line on youth and austerity, come what may.' }], onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'arsenal', amount: -5 }, { kind: 'memory', tag: 'squad', text: 'Eduardo’s leg is broken at Birmingham and the title challenge collapses to third.' }],
+      memoryTags: ['squad'],
+    }),
+  },
+  {
+    id: 'fabregas-captain',
+    date: '2008-11',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => playerAt(s, 'cur_fabregas', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:fabregas-captain', title: 'Fàbregas made captain — the Project Youth generation',
+      description: 'Gallas is stripped of the armband after a public rant, and Cesc Fàbregas is made permanent captain — the on-pitch face of Wenger’s young, attractive but trophyless side (Van Persie, Nasri, Walcott, Song, Clichy). Commit to the youth identity and hand Fàbregas a long-term project, or use the Gallas fallout to sanction senior signings and dilute the ‘kids’ experiment?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'commit', label: 'Commit to youth — build around Fàbregas', successProbability: 0.7, onSuccess: [{ kind: 'morale', playerId: 'cur_fabregas', amount: 8 }, { kind: 'memory', tag: 'youth', text: 'Made Cesc the standard-bearer of Project Youth, as reality did.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'dilute', label: 'Sanction senior signings — dilute the experiment', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'youth', text: 'Blended in experience rather than trust the kids alone.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_fabregas', amount: 6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'youth', text: 'Fàbregas is made captain — the face of a gifted, trophyless young Arsenal.' }],
+      memoryTags: ['youth', 'cur_fabregas'],
+    }),
+  },
+  {
+    id: 'fabregas-nasri-sold',
+    date: '2011-08',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:fabregas-nasri-sold', title: 'Fàbregas and Nasri sold — the spine stripped',
+      description: 'In one window Arsenal lose their two best players: Fàbregas home to Barcelona (~£29m) and Nasri to Manchester City (~£24m). With the drought at six years, it triggers open revolt against the board and Wenger. Sell both to fund a reactive rebuild (an Arteta, a Mertesacker, a Cazorla), or hold firm, refuse the cash and force the pair to see out their deals?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Sell both — fund a reactive rebuild', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'arsenal', amount: 40_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Cashed in on Cesc and Nasri to rebuild in a hurry — as reality did.' }], onFailure: [{ kind: 'fanTrust', amount: -6, text: 'Selling both stars at once enrages a support already in revolt.' }] },
+        { id: 'hold', label: 'Hold firm — force them to stay', successProbability: 0.35, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Refused the money and kept them under contract — a stand reality couldn’t make.' }], onFailure: [{ kind: 'boardPatience', amount: -8 }, { kind: 'fanTrust', amount: -4, text: 'Two unhappy stars run their deals down — value bleeds away.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -6, text: 'Fàbregas and Nasri both leave in one window; the fanbase turns on the board.' }, { kind: 'memory', tag: 'transfer', text: 'The spine is stripped: Cesc to Barça, Nasri to City.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'rvp-talisman',
+    date: '2011-08',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => playerAt(s, 'cur_rvp', 'arsenal') && s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:rvp-talisman', title: 'Van Persie inherits the armband',
+      description: 'With Fàbregas gone, Robin van Persie takes the captaincy and erupts into the league’s best striker, dragging a gutted squad back toward the top — before his own controversial sale to United a year later. Build the reconstruction around him with a bumper new deal, or bank his surging value while it peaks to reinvest across the squad?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'build', label: 'Build around him — a bumper new contract', successProbability: 0.6, onSuccess: [{ kind: 'renewContract', playerId: 'cur_rvp', amount: 4 }, { kind: 'morale', playerId: 'cur_rvp', amount: 8 }, { kind: 'memory', tag: 'talisman', text: 'Tied Van Persie down as the face of the rebuild.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_rvp', amount: 8 }] },
+        { id: 'cash', label: 'Bank his peak value and reinvest', successProbability: 0.55, onSuccess: [{ kind: 'money', clubId: 'arsenal', amount: 24_000_000 }, { kind: 'memory', tag: 'talisman', text: 'Sold at the peak rather than lose him for less — the calculation reality got wrong.' }], onFailure: [{ kind: 'fanTrust', amount: -5, text: 'Selling the one star left reads as surrender.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'talisman', text: 'Van Persie takes the armband and carries a gutted Arsenal almost single-handed.' }],
+      memoryTags: ['talisman', 'cur_rvp'],
+    }),
+  },
+  {
+    id: 'eight-two-old-trafford',
+    date: '2011-08',
+    scenarios: ['arsenal-2004'],
+    requires: (s) => s.playerClub === 'arsenal',
+    build: () => ({
+      id: 'scripted:eight-two-old-trafford', title: '8–2 humiliation at Old Trafford',
+      description: 'A threadbare, injury- and suspension-hit Arsenal — Fàbregas and Nasri just sold, kids and reserves patched in — are thrashed 8–2 at Old Trafford, the club’s heaviest league defeat since 1896. Sign off an emergency deadline-day spree to stop the freefall (Arteta, Mertesacker, and the rest), or refuse to panic-buy and ride out the storm on principle?',
+      interrupt: true, clubId: 'arsenal', category: 'event',
+      choices: [
+        { id: 'panic-buy', label: 'Emergency deadline-day spending spree', successProbability: 0.7, onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 5 }, { kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'crisis', text: 'Slammed the panic button and bought bodies — as reality did after 8–2.' }], onFailure: [{ kind: 'money', clubId: 'arsenal', amount: -20_000_000 }] },
+        { id: 'ride-out', label: 'Refuse to panic — ride it out on principle', successProbability: 0.4, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'crisis', text: 'Held nerve after the humiliation — no panic buys.' }], onFailure: [{ kind: 'morale', clubId: 'arsenal', amount: -6 }, { kind: 'fanTrust', amount: -5, text: 'Standing pat after 8–2 looks like negligence to the fans.' }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'arsenal', amount: -6 }, { kind: 'memory', tag: 'crisis', text: 'Old Trafford 8–2 — the heaviest defeat since 1896 forces a panic deadline-day spend.' }],
+      memoryTags: ['crisis'],
+    }),
+  },
 ];
 
 // ── Set-piece high-drama packs (§ stories) — the defining forks of each era, richest
