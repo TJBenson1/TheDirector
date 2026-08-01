@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createNewGame, cloneState, hashState } from './state.js';
 import { advanceWindow } from './advance.js';
+import { resolveIgnoredDecisions } from './events.js';
 import { processInjuriesMonth, significantInjuredCount } from './injuries.js';
 import { recomputeClubStrength, clubSquadPlayers } from './players.js';
 import { processSeasonAgeing } from './ageing.js';
@@ -48,8 +49,12 @@ describe('injuries (§9c)', () => {
     let serious = 0;
     let seasons = 0;
     // The live opening window consumes one advance in place, so run a couple more
-    // to clear the same number of full seasons as before.
-    for (let i = 0; i < 10; i++) {
+    // to clear the same number of full seasons as before. Clear any scripted
+    // interrupts (reality-default) each step so the injury RATE is measured over
+    // real seasons, not throttled by how many set-pieces a scenario now fires.
+    for (let i = 0; i < 14; i++) {
+      resolveIgnoredDecisions(state);
+      state.pendingDecisions = [];
       const res = advanceWindow(state);
       state = res.state;
       serious += res.events.filter((e) => e.code === 'injury.serious').length;

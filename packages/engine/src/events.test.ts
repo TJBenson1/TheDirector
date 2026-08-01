@@ -1,8 +1,28 @@
 import { describe, it, expect } from 'vitest';
 import { createNewGame, cloneState, hashState } from './state.js';
 import { advanceWindow } from './advance.js';
-import { applyDecision, applyConsequence } from './events.js';
+import { applyDecision, applyConsequence, resolveIgnoredDecisions } from './events.js';
 import type { GameState, Decision } from './types.js';
+
+/** Run a scenario fully passively (ignore every scripted decision → reality-default
+ *  fallout) and collect the scripted beats that fired vs were skipped as spurious. */
+function passiveScriptedCensus(scenarioId: string, untilYear: number): { fired: string[]; skipped: string[] } {
+  let s = createNewGame({ scenarioId, seed: `passive-${scenarioId}` });
+  const fired: string[] = [];
+  const skipped: string[] = [];
+  for (let i = 0; i < 120; i++) {
+    resolveIgnoredDecisions(s);
+    s.pendingDecisions = [];
+    const before = s.eventLog.length;
+    s = advanceWindow(s).state;
+    for (const e of s.eventLog.slice(before)) {
+      if (e.code === 'scripted.fired') fired.push(String(e.data?.id));
+      if (e.code === 'scripted.skipped') skipped.push(String(e.data?.id));
+    }
+    if (Number(s.clock.date.slice(0, 4)) >= untilYear) break;
+  }
+  return { fired, skipped };
+}
 
 function advanceUntilDecision(state: GameState, maxWindows = 40): GameState {
   let s = state;
@@ -157,4 +177,22 @@ describe('event determinism (§18)', () => {
     };
     expect(run()).toBe(run());
   });
+});
+
+describe('scripted beat-sheet packs (passive fidelity)', () => {
+  // A passive save must replay a scenario's real history as a dense stream of
+  // set-pieces, firing the whole pack in order with NO spurious skips (a skip
+  // means a gate is wrong — an id that never exists, or a precondition a passive
+  // world never meets). Grows as each scenario's pack is authored from the bible.
+  const EXPECTED_MIN: Record<string, number> = {
+    'man-utd-1999': 13,
+  };
+  for (const [scenarioId, min] of Object.entries(EXPECTED_MIN)) {
+    it(`${scenarioId} fires its pack in order with no spurious skips`, () => {
+      const { fired, skipped } = passiveScriptedCensus(scenarioId, 2007);
+      // Only count this scenario's OWN scripted beats (shared procedural packs aside).
+      expect(skipped, `spurious skips in ${scenarioId}: ${skipped.join(', ')}`).toEqual([]);
+      expect(fired.length, `too few beats fired in ${scenarioId}`).toBeGreaterThanOrEqual(min);
+    });
+  }
 });

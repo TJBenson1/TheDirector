@@ -557,6 +557,344 @@ const MAN_UTD_1999_PACK: ScriptedEvent[] = [
       memoryTags: ['manager', 'cur_beckham'],
     }),
   },
+  {
+    id: 'utd-club-world-championship',
+    // The withdrawal bit in Dec 1999 (United skipped the FA Cup third round to
+    // prepare for January's tournament in Brazil) — fire the decision then.
+    date: '1999-12',
+    scenarios: ['man-utd-1999'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:utd-club-world-championship',
+      title: 'Brazil, or defend the FA Cup?',
+      description:
+        'The FA wants you in Brazil for FIFA’s inaugural Club World Championship — which means withdrawing as holders from the FA Cup. Reality: United flew to Brazil, flopped in the group stage, and took heavy criticism for abandoning the Cup. Go, or defend the trophy?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'brazil',
+          label: 'Fly to Brazil (as reality did)',
+          successProbability: 0.35,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'world', text: 'Went to Brazil for the Club World Championship and salvaged some credit.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -5, text: 'Abandoning the FA Cup for a flop in Brazil sours the support.' }],
+        },
+        {
+          id: 'defend-cup',
+          label: 'Stay and defend the FA Cup',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'Defied the FA to defend the Cup — the fans love it.' }, { kind: 'memory', tag: 'world', text: 'Kept United in the FA Cup instead of flying to Brazil.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -4, text: 'United withdrew from the FA Cup for the Club World Championship and flopped.' }, { kind: 'memory', tag: 'world', text: 'Withdrew as FA Cup holders to play in Brazil — and came home early.' }],
+      memoryTags: ['world'],
+    }),
+  },
+  {
+    id: 'rvn-knee',
+    date: '2000-04',
+    scenarios: ['man-utd-1999'],
+    // On-script only while van Nistelrooy (cur_ruud, at PSV) is NOT yet a United
+    // player — the real deal collapsed on the medical in 2000, a year before he signed.
+    requires: (s) => s.playerClub === 'man_utd' && s.players['cur_ruud']?.club !== 'man_utd',
+    build: () => ({
+      id: 'scripted:rvn-knee',
+      title: 'Van Nistelrooy fails the medical',
+      description:
+        'The deal for the PSV striker is agreed — then the medical flags his knee. Reality: United pulled out, he ruptured the cruciate days later, and they waited a year to sign him fit in 2001. Gamble on him now, or hold your nerve?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'gamble',
+          label: 'Sign him anyway, bad knee and all',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'signReal', playerId: 'cur_ruud', clubId: 'man_utd' }, { kind: 'memory', tag: 'transfer', text: 'Gambled on van Nistelrooy’s knee a year early — and it held.' }],
+          onFailure: [{ kind: 'ban', playerId: 'cur_ruud', months: 10 }, { kind: 'money', clubId: 'man_utd', amount: -18_000_000 }, { kind: 'fanTrust', amount: -6, text: 'The knee went. £18m on the treatment table.' }],
+        },
+        {
+          id: 'wait',
+          label: 'Pull out and wait (as reality did)',
+          successProbability: 0.9,
+          onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Held nerve on the medical; re-signed him fit a year on.' }],
+          onFailure: [],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'The deal collapsed on the medical; he ruptured the cruciate and arrived a year late.' }],
+      memoryTags: ['transfer', 'cur_ruud'],
+    }),
+  },
+  {
+    id: 'ferguson-u-turn',
+    date: '2001-12',
+    scenarios: ['man-utd-1999'],
+    // On-script only while Ferguson is still the manager — a Director who already
+    // changed the dugout has written this succession drama out of history.
+    requires: (s) => s.playerClub === 'man_utd' && s.managerRelations.identity === 'Alex Ferguson',
+    build: () => ({
+      id: 'scripted:ferguson-u-turn',
+      title: 'Ferguson signals he will retire — then wavers',
+      description:
+        'Your manager announced he would step down at season’s end, and successors are being sounded out (Sven-Göran Eriksson was courted). Now he is wavering. Reality: he reversed the decision in Feb 2002 and stayed on for another decade. Line up the succession, or convince him to stay?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'persuade',
+          label: 'Convince him to stay (as reality did)',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Talked Ferguson out of retirement — the dynasty rolls on.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -6 }],
+        },
+        {
+          id: 'succeed',
+          label: 'Let him go and line up a successor',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Began the search for the post-Ferguson era early.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -14 }, { kind: 'fanTrust', amount: -8, text: 'Pushing Ferguson towards the door outrages the support.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Ferguson reversed his retirement call and stayed on.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'keane-saipan',
+    date: '2002-05',
+    scenarios: ['man-utd-1999'],
+    requires: (s) => playerAt(s, 'cur_keane', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:keane-saipan',
+      title: 'Keane sent home from the World Cup',
+      description:
+        'Your captain’s bust-up with Mick McCarthy has seen him sent home from Ireland’s World Cup camp — a global story rebounding on the club. Reality: Keane returned, unrepentant. Back him publicly, or stay out of an international row?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'back',
+          label: 'Back your captain publicly',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_keane', amount: 8 }, { kind: 'managerRelationship', amount: 3 }],
+          onFailure: [{ kind: 'fanTrust', amount: -4, text: 'Wading into the Saipan row drags the club into the mess.' }],
+        },
+        {
+          id: 'stayout',
+          label: 'Stay out of it',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 2 }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_keane', amount: -6 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'fallout', text: 'Keane came home from Saipan; the club rode out the storm.' }],
+      memoryTags: ['fallout', 'cur_keane'],
+    }),
+  },
+  {
+    id: 'ronaldinho-or-cristiano',
+    date: '2003-07',
+    scenarios: ['man-utd-1999'],
+    requires: (s) => s.playerClub === 'man_utd' && s.players['cur_cristiano']?.club !== 'man_utd',
+    build: () => ({
+      id: 'scripted:ronaldinho-or-cristiano',
+      title: 'The marquee or the teenager',
+      description:
+        'With Beckham sold to Real Madrid, the summer’s move is a Brazilian playmaker (Ronaldinho was chased) — or a bet on the 18-year-old winger who tormented you in a friendly. Reality: United missed Ronaldinho (he went to Barça) and signed Cristiano Ronaldo instead. Chase the finished star, or gamble on the kid?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'teenager',
+          label: 'Bet on the 18-year-old (as reality did)',
+          successProbability: 0.9,
+          onSuccess: [{ kind: 'signReal', playerId: 'cur_cristiano', clubId: 'man_utd' }, { kind: 'memory', tag: 'transfer', text: 'Signed the teenage Ronaldo — the bet of the decade.' }],
+          onFailure: [],
+        },
+        {
+          id: 'marquee',
+          label: 'Chase the marquee Brazilian instead',
+          successProbability: 0.35,
+          onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Landed the marquee playmaker — but the teenager got away.' }, { kind: 'fanTrust', amount: 4 }],
+          onFailure: [{ kind: 'memory', tag: 'transfer', text: 'Missed the Brazilian AND passed on the teenager — the summer slipped away.' }, { kind: 'fanTrust', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'signReal', playerId: 'cur_cristiano', clubId: 'man_utd' }, { kind: 'memory', tag: 'transfer', text: 'Missed Ronaldinho, signed the teenage Cristiano Ronaldo.' }],
+      memoryTags: ['transfer', 'cur_cristiano'],
+    }),
+  },
+  {
+    id: 'ferdinand-drug-test',
+    date: '2003-09',
+    scenarios: ['man-utd-1999'],
+    requires: (s) => playerAt(s, 'cur_ferdinand', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:ferdinand-drug-test',
+      title: 'Ferdinand misses a drug test',
+      description:
+        'Your first-choice centre-back failed to attend a routine drug test. Reality: he was banned eight months from January 2004 — a season-defining blow. Fight the charge, or accept the discipline and plan around his absence?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'appeal',
+          label: 'Back him and fight the charge',
+          successProbability: 0.25,
+          onSuccess: [{ kind: 'memory', tag: 'scandal', text: 'The appeal softened the sanction.' }, { kind: 'morale', playerId: 'cur_ferdinand', amount: 6 }],
+          onFailure: [{ kind: 'ban', playerId: 'cur_ferdinand', months: 8 }, { kind: 'fanTrust', amount: -4, text: 'The failed appeal drags the club through the press.' }],
+        },
+        {
+          id: 'accept',
+          label: 'Accept the ban and move on',
+          successProbability: 0.9,
+          onSuccess: [{ kind: 'ban', playerId: 'cur_ferdinand', months: 8 }, { kind: 'boardPatience', amount: 3 }],
+          onFailure: [{ kind: 'ban', playerId: 'cur_ferdinand', months: 8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'ban', playerId: 'cur_ferdinand', months: 8 }, { kind: 'morale', clubId: 'man_utd', amount: -5 }],
+      memoryTags: ['scandal', 'cur_ferdinand'],
+    }),
+  },
+  {
+    id: 'rooney-record',
+    date: '2004-08',
+    scenarios: ['man-utd-1999'],
+    // Rooney is not a curated player in this world, so this is a club+date beat with
+    // narrative consequences (no signReal on a non-existent id).
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:rooney-record',
+      title: 'A record fee for an 18-year-old',
+      description:
+        'Everton’s teenage forward lit up Euro 2004, and the fee is a world record for a teenager (~£25.6m). Reality: United paid it and Wayne Rooney became a generational signing. Pay up, or balk at the price for a kid?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'pay',
+          label: 'Pay the record fee (as reality did)',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'money', clubId: 'man_utd', amount: -25_600_000 }, { kind: 'fanTrust', amount: 6, text: 'Smashed the teenage transfer record for Rooney — a statement of intent.' }, { kind: 'memory', tag: 'transfer', text: 'Signed the 18-year-old Rooney for a record fee.' }],
+          onFailure: [{ kind: 'money', clubId: 'man_utd', amount: -25_600_000 }],
+        },
+        {
+          id: 'pass',
+          label: 'Balk at the price',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Passed on the record teenage fee and kept the powder dry.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -6, text: 'Letting the country’s brightest teenager go elsewhere stings.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'money', clubId: 'man_utd', amount: -25_600_000 }, { kind: 'memory', tag: 'transfer', text: 'United paid a record teenage fee for Wayne Rooney.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'pizzagate',
+    date: '2004-10',
+    scenarios: ['man-utd-1999'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:pizzagate',
+      title: 'The Battle of the Buffet',
+      description:
+        'Your side has just ended Arsenal’s 49-game unbeaten run — and the tunnel has erupted, with pizza thrown at your manager. Reality: the fracas became folklore and fired the rivalry. Escalate the mind-games, or take the high road?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'escalate',
+          label: 'Escalate the mind-games',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', clubId: 'man_utd', amount: 4 }, { kind: 'memory', tag: 'world', text: 'Won the war of words after the Battle of the Buffet.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -3 }],
+        },
+        {
+          id: 'highroad',
+          label: 'Take the high road',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'world', text: 'Rose above the tunnel fracas and let the win do the talking.' }],
+          onFailure: [],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'world', text: 'United ended Arsenal’s 49-game unbeaten run; pizza flew in the tunnel.' }],
+      memoryTags: ['world'],
+    }),
+  },
+  {
+    id: 'glazer-takeover',
+    date: '2005-05',
+    scenarios: ['man-utd-1999'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:glazer-takeover',
+      title: 'The Glazers’ leveraged takeover',
+      description:
+        'A leveraged buyout is loading debt onto the club and the fans are in open revolt (FC United of Manchester will form in protest). Reality: the takeover completed and the debt stayed for a generation. You have no vote — but how you position the club shapes the fallout.',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'reassure',
+          label: 'Reassure the dressing room, insulate football from the boardroom',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', clubId: 'man_utd', amount: 4 }, { kind: 'memory', tag: 'ownership', text: 'Shielded the squad from the takeover noise.' }],
+          onFailure: [{ kind: 'morale', clubId: 'man_utd', amount: -3 }],
+        },
+        {
+          id: 'sidewithfans',
+          label: 'Side publicly with the fan protest',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'fanTrust', amount: 8, text: 'The support rallies to a Director who stood with them.' }, { kind: 'boardPatience', amount: -8 }],
+          onFailure: [{ kind: 'boardPatience', amount: -15 }, { kind: 'memory', tag: 'ownership', text: 'Picking a fight with the new owners burned boardroom capital.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -6, text: 'The debt-loaded takeover completes; a splinter club forms in protest.' }, { kind: 'memory', tag: 'ownership', text: 'The Glazers’ leveraged buyout completed.' }],
+      memoryTags: ['ownership'],
+    }),
+  },
+  {
+    id: 'keane-mutv-exit',
+    date: '2005-11',
+    scenarios: ['man-utd-1999'],
+    requires: (s) => playerAt(s, 'cur_keane', 'man_utd') && s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:keane-mutv-exit',
+      title: 'Keane’s MUTV interview',
+      description:
+        'Your captain recorded a club-TV interview savaging his teammates; it was pulled before broadcast, but the damage is done. Reality: it was the final straw — Keane left by mutual consent in November 2005, joining Celtic, ending an era. Back the split, or fight to keep him?',
+      interrupt: true,
+      clubId: 'man_utd',
+      category: 'event',
+      choices: [
+        {
+          id: 'split',
+          label: 'Agree the split (as reality did)',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'transferOut', playerId: 'cur_keane', clubId: 'celtic', amount: 0 }, { kind: 'managerRelationship', amount: 4 }, { kind: 'memory', tag: 'fallout', text: 'Keane left by mutual consent for Celtic — the end of an era.' }],
+          onFailure: [{ kind: 'transferOut', playerId: 'cur_keane', clubId: 'celtic', amount: 0 }],
+        },
+        {
+          id: 'keep',
+          label: 'Fight to keep the captain',
+          successProbability: 0.35,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_keane', amount: 6 }, { kind: 'memory', tag: 'fallout', text: 'Talked Keane down and kept the captain — for now.' }],
+          onFailure: [{ kind: 'transferOut', playerId: 'cur_keane', clubId: 'celtic', amount: 0 }, { kind: 'managerRelationship', amount: -6 }, { kind: 'morale', clubId: 'man_utd', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'transferOut', playerId: 'cur_keane', clubId: 'celtic', amount: 0 }, { kind: 'memory', tag: 'fallout', text: 'Keane and United parted by mutual consent; he joined Celtic.' }],
+      memoryTags: ['fallout', 'cur_keane'],
+    }),
+  },
 ];
 
 /** Liverpool 2001 (Houllier era). */
@@ -1937,7 +2275,6 @@ const TRANSFER_NEAR_MISS_PACK: ScriptedEvent[] = [
 ];
 
 const ALL_SCRIPTED: ScriptedEvent[] = [
-  ...MAN_UTD_1999_PACK,
   ...MAN_UTD_1999_PACK,
   ...LIVERPOOL_2001_PACK,
   ...ARSENAL_2004_PACK,
