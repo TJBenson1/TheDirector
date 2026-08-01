@@ -272,8 +272,12 @@ describe('2013 post-Ferguson era pack (§4 data)', () => {
     expect(s.players.cur_anelka01?.loan).toBeUndefined();
     expect(s.clubs.liverpool!.squad).not.toContain('cur_anelka01');
     // Into the season: he joins Liverpool on loan in the January window, owned by PSG.
+    // Resolve any scripted interrupts (reality-default) each step so the loan window
+    // is actually reached — the beat-sheet pack now fires several early interrupts
+    // that would otherwise pause the advance before January.
     let onLoan = false;
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 8; i++) {
+      for (const d of [...s.pendingDecisions]) s = applyDecision(s, d.id, d.choices[0]!.id).state;
       s = advanceWindow(s).state;
       if (s.players.cur_anelka01?.club === 'liverpool' && s.players.cur_anelka01?.loan?.parent === 'psg') onLoan = true;
     }

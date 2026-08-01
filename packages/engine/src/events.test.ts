@@ -191,6 +191,7 @@ describe('scripted beat-sheet packs (passive fidelity)', () => {
     'barcelona-2003': { min: 13, until: 2011 },
     'chelsea-2003': { min: 13, until: 2009 },
     'arsenal-2004': { min: 13, until: 2012 },
+    'liverpool-2001': { min: 14, until: 2008 },
   };
   for (const [scenarioId, { min, until }] of Object.entries(EXPECTED)) {
     it(`${scenarioId} fires its pack in order with no spurious skips`, () => {
