@@ -3212,6 +3212,214 @@ const MILAN_1995_PACK: ScriptedEvent[] = [
       memoryTags: ['legend', 'cur_baresi'],
     }),
   },
+  // The Capello dynasty's tail into the centenary title and the Ancelotti dawn.
+  // Transfers (Weah/Baggio in, Shevchenko in, Weah out) are ledger-side; the long
+  // managerial churn (Capello→Tabárez→Sacchi→Capello→Zaccheroni→Ancelotti) can't be
+  // enacted as coach swaps, so these are narrative overlays.
+  {
+    id: 'weah-baggio-arrive',
+    date: '1995-08',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:weah-baggio-arrive', title: 'Weah and Baggio — a galáctico attack',
+      description: 'Capello has rebuilt the front line with George Weah from PSG and Roberto Baggio from champions Juventus. Reality: two superstars, and a balancing act to make them fit. Headline the double marquee splash, or worry it unbalances a winning spine?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'headline', label: 'Build around the two stars (as reality did)', successProbability: 0.8, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Weah and Baggio light up the San Siro.' }, { kind: 'memory', tag: 'transfer', text: 'Weah and Baggio arrive — Capello’s star attack.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'balance', label: 'Protect the defensive spine', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Added the stars but kept the balance.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Weah and Baggio join Capello’s Milan.' }],
+      memoryTags: ['transfer', 'cur_weah'],
+    }),
+  },
+  {
+    id: 'weah-ballon-dor',
+    date: '1995-12',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:weah-ballon-dor', title: 'Weah wins the Ballon d’Or',
+      description: 'George Weah becomes the first African-born Ballon d’Or winner — the first edition open to non-Europeans. Reality: a global talisman at his peak. Build the club’s commercial and sporting identity around him, or cash in at maximum value?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'build', label: 'Build around the talisman', successProbability: 0.8, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'The Ballon d’Or winner is the face of Milan.' }, { kind: 'memory', tag: 'honour', text: 'Weah’s Ballon d’Or crowns the project.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'cashin', label: 'Cash in at peak value', successProbability: 0.4, onSuccess: [{ kind: 'memory', tag: 'honour', text: 'Sold from the very top of the market.' }], onFailure: [{ kind: 'fanTrust', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'honour', text: 'Weah is named Ballon d’Or winner.' }],
+      memoryTags: ['honour', 'cur_weah'],
+    }),
+  },
+  {
+    id: 'scudetto-15',
+    date: '1996-04',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:scudetto-15', title: 'The 15th Scudetto',
+      description: 'Milan clinch the title, Weah top-scoring — Capello’s fourth in five years, and, though nobody knows it, his last of this spell. Keep the winning core and the champion coach together, or treat the dynasty’s peak as the moment to rebuild?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Keep the champions together', successProbability: 0.8, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 5 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'The 15th Scudetto — dynasty preserved.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'rebuild', label: 'Rebuild at the peak', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Chose to refresh from a title-winning base.' }], onFailure: [{ kind: 'morale', clubId: 'milan', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Milan are champions of Italy — Capello’s fourth title in five years.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 15th Scudetto.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'capello-leaves-tabarez',
+    date: '1996-06',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan' && s.managerRelations.identity === 'Fabio Capello',
+    build: () => ({
+      id: 'scripted:capello-leaves-tabarez', title: 'Capello leaves for Real Madrid',
+      description: 'After nine years of success Capello is off to Real Madrid, and Óscar Tabárez is lined up — the first bench change in nearly a decade. Reality: the reboot misfired and the dynasty wobbled. Promote continuity and protect the identity, or gamble on the foreign reboot?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'continuity', label: 'Protect the winning identity', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Kept the Milan way after Capello’s exit.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'reboot', label: 'Gamble on the reboot (as reality did)', successProbability: 0.4, onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Handed the project to a new voice.' }], onFailure: [{ kind: 'boardPatience', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Capello departs for Real Madrid; Tabárez takes over.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'weah-coast-to-coast',
+    date: '1996-09',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:weah-coast-to-coast', title: 'Weah’s coast-to-coast',
+      description: 'Weah collects the ball in his own box and runs ninety metres to score against Verona — one of Serie A’s greatest solo goals. A moment of pure box office in a faltering season. Milk it commercially, or keep a low profile amid the on-pitch struggles?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'milk', label: 'Make it a global highlight', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Weah’s wonder-goal goes around the world.' }, { kind: 'memory', tag: 'iconic', text: 'Weah’s coast-to-coast against Verona.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'lowkey', label: 'Keep it low-key', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'iconic', text: 'Let the goal speak for itself.' }], onFailure: [] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'iconic', text: 'Weah scores a ninety-metre solo goal against Verona.' }],
+      memoryTags: ['iconic', 'cur_weah'],
+    }),
+  },
+  {
+    id: 'tabarez-sacked-sacchi',
+    date: '1996-12',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:tabarez-sacked-sacchi', title: 'Sacchi’s shock return',
+      description: 'The season is unravelling and the call is made to bring back Arrigo Sacchi, five years on from his great side. Reality: the club was already in disarray and limped to 11th. Recall the legend as firefighter, or hold nerve to avoid a mid-season identity crisis?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'sacchi', label: 'Recall Sacchi (as reality did)', successProbability: 0.4, onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Brought Sacchi back to steady the ship.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'hold', label: 'Hold nerve, avoid the churn', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Refused to panic mid-season.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Tabárez sacked; Sacchi returns as the club slides to 11th.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'baggio-departs-capello-returns',
+    date: '1997-07',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:baggio-departs-capello-returns', title: 'Baggio out, Capello back',
+      description: 'The Divine Ponytail is sold to Bologna (where he’ll score 22) while Capello returns from Madrid to restore order. Reality: the second spell flopped badly. Keep Baggio as creative fulcrum, or let him go and re-hire Capello to reimpose the old discipline?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'keep-baggio', label: 'Keep Baggio', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Kept Baggio’s creativity at the heart of the side.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'capello', label: 'Re-hire Capello (as reality did)', successProbability: 0.45, onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Brought Capello back to reimpose the winning ways.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Baggio leaves for Bologna; Capello returns for a second spell.' }],
+      memoryTags: ['manager', 'cur_baggio_r'],
+    }),
+  },
+  {
+    id: 'capello-sacked-zaccheroni',
+    date: '1998-06',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:capello-sacked-zaccheroni', title: 'Zaccheroni and his 3-4-3',
+      description: 'Capello’s return has failed — a distant 10th — and he’s dismissed. The outsider Alberto Zaccheroni is available from Udinese, bringing his 3-4-3 and Oliver Bierhoff. Reality: it clicked into the centenary title. Back the unfashionable outsider and his system, or reach for a reassuring marquee name?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'zac', label: 'Back Zaccheroni’s system (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Hired Zaccheroni and his 3-4-3 — the centenary title beckons.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'marquee', label: 'Reach for a big name instead', successProbability: 0.45, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Chose a reassuring name over the outsider.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Capello sacked again; Zaccheroni hired from Udinese.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'centenary-scudetto',
+    date: '1999-05',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:centenary-scudetto', title: 'The Centenary Scudetto',
+      description: 'In the club’s hundredth year, a late surge snatches the title from a Lazio side that looked home — Bierhoff, Weah, Boban and Leonardo powering the run. Reality: the 16th Scudetto. Build a new cycle on it, or bank the glory and coast?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'build', label: 'Reinforce and build a cycle', successProbability: 0.75, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 6 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'The centenary title — a platform to build on.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'coast', label: 'Bank the glory', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Basked in the centenary title.' }], onFailure: [{ kind: 'morale', clubId: 'milan', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Milan snatch the centenary Scudetto from Lazio.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 16th, centenary-season Scudetto.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'shevchenko-arrives',
+    date: '1999-07',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:shevchenko-arrives', title: 'Shevchenko arrives from Dynamo Kyiv',
+      description: 'Milan sign the prolific Andriy Shevchenko from Dynamo Kyiv. Reality: he plundered 24 league goals to finish Serie A top scorer in his debut season — and hastened Weah’s exit. Spend big on the new spearhead, or spread the budget and keep the veteran Weah central?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'sheva', label: 'Build around Sheva (as reality did)', successProbability: 0.85, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Shevchenko is an instant sensation.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Shevchenko — the new spearhead.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'spread', label: 'Keep Weah central, spread the spend', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Balanced the budget around the existing stars.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Shevchenko signs and takes Serie A by storm.' }],
+      memoryTags: ['transfer', 'cur_shevchenko_k'],
+    }),
+  },
+  {
+    id: 'weah-leaves',
+    date: '2000-01',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:weah-leaves', title: 'Weah moves on',
+      description: 'Squeezed out by Bierhoff, Shevchenko and José Mari, the 33-year-old Weah heads to Chelsea on loan before his contract is cancelled that summer — the end of a five-year, two-Scudetto run. Free the wages and move the legend on, or keep him as a squad leader and mentor?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'move-on', label: 'Move the legend on (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'memory', tag: 'departure', text: 'Weah moves on after five years and two titles.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'keep', label: 'Keep him as a mentor', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 3 }, { kind: 'memory', tag: 'departure', text: 'Kept Weah on as a dressing-room leader.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'departure', text: 'Weah leaves for Chelsea on loan; his Milan contract is cancelled.' }],
+      memoryTags: ['departure', 'cur_weah'],
+    }),
+  },
+  {
+    id: 'ancelotti-dawn',
+    date: '2001-11',
+    scenarios: ['milan-1995'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:ancelotti-dawn', title: 'The dawn of Ancelotti',
+      description: 'The champions have unravelled — Zaccheroni sacked, Fatih Terim tried and dismissed — and Carlo Ancelotti takes charge. Reality: the reset that would build the next dynasty of Champions League glory. Churn coaches chasing a quick fix, or commit fully to Ancelotti’s long-term project?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'commit', label: 'Commit to Ancelotti (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Backed Ancelotti — the next dynasty begins.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'churn', label: 'Keep chasing a quick fix', successProbability: 0.35, onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Rolled the coaching dice again.' }], onFailure: [{ kind: 'boardPatience', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'After a coaching carousel, Ancelotti takes charge — the reset that builds a dynasty.' }],
+      memoryTags: ['manager'],
+    }),
+  },
 ];
 
 const JUVENTUS_1995_PACK: ScriptedEvent[] = [
