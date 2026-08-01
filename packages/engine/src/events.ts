@@ -1023,6 +1023,412 @@ const REAL_MADRID_2000_PACK: ScriptedEvent[] = [
       memoryTags: ['galactico', 'cur_makelele'],
     }),
   },
+  // The rest of the Galáctico era. Real Madrid's marquee transfers (Figo, Zidane,
+  // Ronaldo, Beckham in; van Nistelrooy/Cannavaro in 2006; Redondo out) are ALL
+  // replayed by the reality ledger by default, so these beats are NARRATIVE
+  // OVERLAYS — the story and the Director's stance (rivalry, fan backlash,
+  // boardroom, man-management), not duplicate signings. They carry no transfer
+  // consequence; the ledger moves the players.
+  {
+    id: 'figo-betrayal',
+    // Figo signed 24 Jul 2000 — the very kickoff month, which the live opening
+    // window owns — so the rivalry-fallout beat fires the month after.
+    date: '2000-08',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:figo-betrayal',
+      title: 'The Figo betrayal',
+      description:
+        'Days after winning the presidency, Pérez has triggered Luís Figo’s buyout clause — a world-record ~£37m to prise Barcelona’s talisman from the Camp Nou. Reality: it was the founding act of the Galáctico project and made Figo a hate figure in Catalonia for life. Detonate the rivalry and embrace the project, or play it down?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'embrace',
+          label: 'Own it — the Galácticos begin (as reality did)',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'fanTrust', amount: 8, text: 'Prising Figo from Barça electrifies the Bernabéu.' }, { kind: 'memory', tag: 'rivalry', text: 'Signed Figo from Barcelona — the founding Galáctico, and a lifelong villain at Camp Nou.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+        {
+          id: 'downplay',
+          label: 'Downplay the rivalry angle',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'memory', tag: 'rivalry', text: 'Signed Figo but kept the temperature down.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Figo arrives from Barcelona — the Galáctico era is launched.' }, { kind: 'memory', tag: 'rivalry', text: 'Figo prised from Barcelona in a world-record deal.' }],
+      memoryTags: ['rivalry', 'transfer'],
+    }),
+  },
+  {
+    id: 'redondo-forced-sale',
+    date: '2000-08',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:redondo-forced-sale',
+      title: 'Selling Redondo against the fans’ will',
+      description:
+        'Pérez wants to cash in on the beloved midfield metronome Fernando Redondo (~£11m to Milan) to help fund the Galácticos — but the player didn’t ask to go, and fans are gathering outside the Bernabéu chanting his name. Reality: the sale went through and knee injuries then wrecked his Milan spell. Push it through, or find the money elsewhere?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'sell',
+          label: 'Cash in to fund the project (as reality did)',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'memory', tag: 'fan-backlash', text: 'Sold Redondo to Milan — the war chest grows, the terraces seethe.' }, { kind: 'fanTrust', amount: -4, text: 'Selling Redondo against his will stings the support.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -6 }],
+        },
+        {
+          id: 'protect',
+          label: 'Refuse — keep the fans’ favourite',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Stood by Redondo against the boardroom — the terraces roar approval.' }, { kind: 'boardPatience', amount: -4 }],
+          onFailure: [{ kind: 'boardPatience', amount: -6 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -4, text: 'Redondo sold to Milan against his will; fans protest outside the Bernabéu.' }, { kind: 'memory', tag: 'fan-backlash', text: 'The popular Redondo was moved on to help fund the Galácticos.' }],
+      memoryTags: ['fan-backlash', 'cur_redondo'],
+    }),
+  },
+  {
+    id: 'zidane-galactico',
+    date: '2001-07',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:zidane-galactico',
+      title: 'Zidane — the record smashed again',
+      description:
+        'Pérez has broken the world transfer record a second summer running (~€77.5m) to bring Zinedine Zidane from Juventus — a fee that will stand for eight years. Reality: the ultimate Galáctico signing. Bankroll the spectacle, or bank the money and fix the balance instead?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'smash',
+          label: 'Smash the record for Zidane (as reality did)',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'fanTrust', amount: 7, text: 'The best playmaker on earth, in white.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Zidane for a world record — the Galáctico project peaks.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+        {
+          id: 'balance',
+          label: 'Reinvest in depth and defensive balance',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Passed on the Zidane spectacle to build a more balanced side.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Zidane joins for a world-record fee.' }],
+      memoryTags: ['transfer', 'cur_zidane'],
+    }),
+  },
+  {
+    id: 'la-novena',
+    date: '2002-05',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:la-novena',
+      title: 'La Novena — Zidane’s volley in Glasgow',
+      description:
+        'In the club’s centenary year you’ve won a ninth European Cup, Bayer Leverkusen beaten at Hampden Park — settled by Zidane’s left-footed volley off a Roberto Carlos cross, one of the greatest final goals ever. Reality: the peak of the project. Reward and lock down the core, or treat the peak as a selling window?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'reward',
+          label: 'Reward the core and build on it',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'morale', clubId: 'real_madrid', amount: 6 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'La Novena — and the champions kept together.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'cashin',
+          label: 'Cash in at peak value',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Sold from a position of strength after La Novena.' }, { kind: 'fanTrust', amount: -3 }],
+          onFailure: [{ kind: 'morale', clubId: 'real_madrid', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'La Novena: a ninth European Cup, sealed by Zidane’s Glasgow volley.' }, { kind: 'memory', tag: 'silverware', text: 'Won the Champions League with Zidane’s volley at Hampden.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'ronaldo-fenomeno',
+    date: '2002-08',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:ronaldo-fenomeno',
+      title: 'Ronaldo, on deadline day',
+      description:
+        'Hours before the deadline, the World Cup golden-boot winner Ronaldo is available from Inter. Reality: Madrid signed him, he took the 2002 Ballon d’Or, and the Galáctico gallery grew again. Add the marquee firepower, or spend the budget on the holding midfielder and centre-back the side actually needs?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'sign',
+          label: 'Sign the World Cup star (as reality did)',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'fanTrust', amount: 7, text: 'O Fenômeno, in white — the gallery grows.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Ronaldo on deadline day.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+        {
+          id: 'spine',
+          label: 'Reinforce the spine instead',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Chose balance over another galáctico forward.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Ronaldo signed from Inter on deadline day.' }],
+      memoryTags: ['transfer', 'cur_ronaldo_r9'],
+    }),
+  },
+  {
+    id: 'del-bosque-sack',
+    date: '2003-06',
+    scenarios: ['real-madrid-2000'],
+    // Only while del Bosque is still in post — a Director who already changed the
+    // coach has written this out of history.
+    requires: (s) => s.playerClub === 'real_madrid' && s.managerRelations.identity === 'Vicente del Bosque',
+    build: () => ({
+      id: 'scripted:del-bosque-sack',
+      title: 'Del Bosque — champion, discarded',
+      description:
+        'You’ve just won La Liga on the final day. Reality: Madrid let the two-time Champions League winner del Bosque go the very next day — deemed not "glamorous" enough for the project — and moved captain Hierro on too. Renew the trusted, trophy-winning coach, or replace him with a glamour name (Queiroz) to fit the brand?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'renew',
+          label: 'Keep the man who keeps winning',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Kept del Bosque — substance over glamour.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -4 }],
+        },
+        {
+          id: 'glamour',
+          label: 'Replace him for a glamour appointment (as reality did)',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Let del Bosque go for a more "glamorous" name.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -8, text: 'Discarding a title-winning coach for image outrages the support.' }, { kind: 'boardPatience', amount: -6 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -5, text: 'Del Bosque let go the day after winning La Liga; Hierro moved on too.' }, { kind: 'memory', tag: 'manager', text: 'A title-winning coach discarded for not fitting the Galáctico brand.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'beckham-brand',
+    date: '2003-07',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:beckham-brand',
+      title: 'Beckham — the global brand',
+      description:
+        'Manchester United have accepted ~£25m for David Beckham. Reality: the ultimate commercial-and-sporting Galáctico, unveiled to a sea of cameras. Land the planet’s biggest football brand for the shirt sales and star power, or resist Beckham-mania to protect the squad balance and wage structure?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'sign',
+          label: 'Sign the brand (as reality did)',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'Beckham-mania sweeps the Bernabéu — and the megastore.' }, { kind: 'memory', tag: 'marketing', text: 'Signed Beckham — the commercial peak of the Galácticos.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'resist',
+          label: 'Resist — protect the balance',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'marketing', text: 'Passed on Beckham-mania to keep the wage structure intact.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'marketing', text: 'Beckham signed from Manchester United — the global-brand Galáctico.' }],
+      memoryTags: ['marketing', 'cur_beckham'],
+    }),
+  },
+  {
+    id: 'trophy-drought-carousel',
+    date: '2004-09',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:trophy-drought-carousel',
+      title: 'The drought and the manager carousel',
+      description:
+        'The galaxy of stars is winning nothing. Reality: after the 2003 title Madrid went three years trophyless, burning through coaches (Queiroz, Camacho, Luxemburgo…) and falling in Europe to Monaco, Juventus and Arsenal — the midfield and defence never rebuilt after Makélélé. Impose stability and fix the spine, or chase another big-name quick fix?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'stability',
+          label: 'Stability — rebuild the neglected spine',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'crisis', text: 'Broke the coaching carousel and rebuilt the midfield.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -4 }],
+        },
+        {
+          id: 'quickfix',
+          label: 'Another high-profile hire (as reality did)',
+          successProbability: 0.35,
+          onSuccess: [{ kind: 'fanTrust', amount: 3 }],
+          onFailure: [{ kind: 'boardPatience', amount: -6 }, { kind: 'memory', tag: 'crisis', text: 'The carousel spun on; the drought deepened.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'boardPatience', amount: -5 }, { kind: 'memory', tag: 'crisis', text: 'Three trophyless years and a carousel of coaches — the Galáctico model creaks.' }],
+      memoryTags: ['crisis'],
+    }),
+  },
+  {
+    id: 'perez-resigns',
+    date: '2006-02',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:perez-resigns',
+      title: 'Pérez resigns',
+      description:
+        'Amid a three-year trophy drought, a Copa exit and a Champions League loss to Arsenal, Florentino Pérez has resigned the presidency he built the Galácticos on. Reality: he walked, and an interim took over before fresh elections. Back the man and the project to the end, or side with the clean break?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'back',
+          label: 'Back Pérez to double down',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'boardroom', text: 'Stood by Pérez and the project through the storm.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -6 }],
+        },
+        {
+          id: 'break',
+          label: 'Side with a clean break (as reality did)',
+          successProbability: 0.65,
+          onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'boardroom', text: 'The Pérez era ends; the club looks for new leadership.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'boardroom', text: 'Florentino Pérez resigned the presidency amid the trophy drought.' }],
+      memoryTags: ['boardroom'],
+    }),
+  },
+  {
+    id: 'calderon-capello-rebuild',
+    date: '2006-07',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:calderon-capello-rebuild',
+      title: 'Calderón, Capello, and a grittier rebuild',
+      description:
+        'A new president (Calderón) has reappointed Fabio Capello and pivoted from pure glamour to a results-first squad — World Cup-winning captain Cannavaro and striker van Nistelrooy arriving. Reality: pragmatism over spectacle, and it worked. Endorse Capello’s hard-nosed rebuild, or insist on staying loyal to the flamboyant blueprint?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'endorse',
+          label: 'Back the pragmatic rebuild (as reality did)',
+          successProbability: 0.75,
+          onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'rebuild', text: 'Backed Capello’s results-first reset — Cannavaro and van Nistelrooy in.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -3 }],
+        },
+        {
+          id: 'glamour',
+          label: 'Insist on the glamour blueprint',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'fanTrust', amount: 3 }],
+          onFailure: [{ kind: 'managerRelationship', amount: -8 }, { kind: 'boardPatience', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'rebuild', text: 'Calderón brought Capello back and pivoted to a grittier, winning squad.' }],
+      memoryTags: ['rebuild'],
+    }),
+  },
+  {
+    id: 'beckham-frozen',
+    date: '2007-02',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => playerAt(s, 'cur_beckham', 'real_madrid') && s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:beckham-frozen',
+      title: 'Beckham frozen out — then reinstated',
+      description:
+        'Beckham has agreed a summer move to LA Galaxy, and Capello has declared he’ll never play for Madrid again. Reality: Capello relented weeks later; Beckham returned, scored, and became pivotal to the title run-in. Back your coach’s hardline stance, or force the marketable star back into the side?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'back-coach',
+          label: 'Back Capello’s discipline',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'man-management', text: 'Backed the coach — and Beckham forced his own way back on merit.' }],
+          onFailure: [{ kind: 'morale', playerId: 'cur_beckham', amount: -8 }],
+        },
+        {
+          id: 'reinstate',
+          label: 'Force Beckham back into the side',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_beckham', amount: 8 }, { kind: 'memory', tag: 'man-management', text: 'Reinstated Beckham — he repaid it in the run-in.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -8 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'man-management', text: 'Capello froze Beckham out, then reinstated him — and he drove the title run-in.' }],
+      memoryTags: ['man-management', 'cur_beckham'],
+    }),
+  },
+  {
+    id: 'la-liga-2007',
+    date: '2007-06',
+    scenarios: ['real-madrid-2000'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:la-liga-2007',
+      title: 'Champions again, on the final day',
+      description:
+        'From a goal down against Mallorca on the last day, you’ve come back to win and clinch a 30th La Liga title — level on points with Barcelona but ahead on the head-to-head. Reality: the drought ended and the Capello reset was vindicated. Build on the pragmatic foundation, or use the glory to relaunch a new star-signing cycle?',
+      interrupt: true,
+      clubId: 'real_madrid',
+      category: 'event',
+      choices: [
+        {
+          id: 'build',
+          label: 'Build on the reset',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'silverware', text: 'Title won — and the pragmatic foundation kept.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'relaunch',
+          label: 'Relaunch a new galáctico cycle',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Vindicated — and straight back to the marquee market.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Champions on the final day — the drought is over.' }, { kind: 'memory', tag: 'silverware', text: 'Won a 30th La Liga on the final day, edging Barcelona on head-to-head.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
 ];
 
 const DORTMUND_2012_PACK: ScriptedEvent[] = [

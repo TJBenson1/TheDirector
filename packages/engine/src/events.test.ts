@@ -184,12 +184,14 @@ describe('scripted beat-sheet packs (passive fidelity)', () => {
   // set-pieces, firing the whole pack in order with NO spurious skips (a skip
   // means a gate is wrong — an id that never exists, or a precondition a passive
   // world never meets). Grows as each scenario's pack is authored from the bible.
-  const EXPECTED_MIN: Record<string, number> = {
-    'man-utd-1999': 13,
+  // { minBeats, runUntilYear } — run past the era's last beat so late-season beats count.
+  const EXPECTED: Record<string, { min: number; until: number }> = {
+    'man-utd-1999': { min: 13, until: 2006 },
+    'real-madrid-2000': { min: 13, until: 2008 },
   };
-  for (const [scenarioId, min] of Object.entries(EXPECTED_MIN)) {
+  for (const [scenarioId, { min, until }] of Object.entries(EXPECTED)) {
     it(`${scenarioId} fires its pack in order with no spurious skips`, () => {
-      const { fired, skipped } = passiveScriptedCensus(scenarioId, 2007);
+      const { fired, skipped } = passiveScriptedCensus(scenarioId, until);
       // Only count this scenario's OWN scripted beats (shared procedural packs aside).
       expect(skipped, `spurious skips in ${scenarioId}: ${skipped.join(', ')}`).toEqual([]);
       expect(fired.length, `too few beats fired in ${scenarioId}`).toBeGreaterThanOrEqual(min);
