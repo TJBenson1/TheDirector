@@ -1504,9 +1504,9 @@ const MAN_CITY_2008_PACK: ScriptedEvent[] = [];
 const BARCELONA_2003_PACK: ScriptedEvent[] = [
   {
     // La Masia's crown jewel knocks on the first-team door: promote the 17-year-old
-    // Messi, or send him out to toughen up. History fast-tracked him.
+    // Messi, or send him out to toughen up. History fast-tracked him (debut 16 Oct 2004).
     id: 'messi-debut',
-    date: '2004-08',
+    date: '2004-10',
     scenarios: ['barcelona-2003'],
     requires: (s) => playerAt(s, 'cur_messi_b3', 'barcelona') && s.playerClub === 'barcelona',
     build: () => ({
@@ -1530,6 +1530,411 @@ const BARCELONA_2003_PACK: ScriptedEvent[] = [
       ],
       falloutIfIgnored: [{ kind: 'ability', playerId: 'cur_messi_b3', amount: 2 }, { kind: 'memory', tag: 'la-masia', text: 'Messi breaks through regardless — some things history insists upon.' }],
       memoryTags: ['la-masia', 'cur_messi_b3'],
+    }),
+  },
+  // The Rijkaard–Ronaldinho era through the Guardiola dawn. Ronaldinho (2003 in,
+  // 2008 out to Milan), Eto'o and Deco (2004 in) are ledger-replayed, so those are
+  // NARRATIVE OVERLAYS. The 2009 Eto'o→Inter swap is NOT in the ledger, so that
+  // beat carries the real departure. Ibrahimović isn't a curated player here, so
+  // his arrival is narrative colour only.
+  {
+    id: 'laporta-presidency',
+    // Laporta won the vote in June 2003, the month before kickoff — surface the new
+    // regime's opening statement in the first month of play.
+    date: '2003-08',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:laporta-presidency',
+      title: 'A new presidency, a new direction',
+      description:
+        'Joan Laporta has taken the presidency on a promise of galáctico ambition and a return to the top. Reality: his board (with a young Sandro Rosell) reshaped the club and gambled on a Brazilian playmaker. Back an all-in, statement-signing mandate, or a patient, youth-and-structure rebuild?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'statement',
+          label: 'Go big — a statement signing (as reality did)',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'The new board promises the earth — and the Camp Nou believes.' }, { kind: 'memory', tag: 'boardroom', text: 'Laporta’s regime bets on a marquee arrival to relaunch the club.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+        {
+          id: 'patient',
+          label: 'Build on youth and structure',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'boardroom', text: 'The new board backs La Masia and the long game.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'boardroom', text: 'Laporta takes the presidency, promising a return to the summit.' }],
+      memoryTags: ['boardroom'],
+    }),
+  },
+  {
+    id: 'beckham-ronaldinho',
+    // Ronaldinho signed in the kickoff window (opening-window owned); the "we chased
+    // Beckham, landed Ronaldinho" story lands the month after.
+    date: '2003-08',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:beckham-ronaldinho',
+      title: 'Missed Beckham, landed Ronaldinho',
+      description:
+        'The summer’s marquee chase was David Beckham — but he always leaned to Madrid, and the pursuit turned into the signing of Ronaldinho instead. Reality: Laporta felt "used" by the Beckham saga, and Ronaldinho became the face of the revival. Sell the pivot as a triumph, or let the Beckham snub rankle?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'embrace',
+          label: 'Ronaldinho is the future — sell the vision',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'Ronaldinho’s smile relaunches the Camp Nou.' }, { kind: 'memory', tag: 'transfer', text: 'Turned the Beckham snub into the signing of Ronaldinho.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'rankle',
+          label: 'Let the Beckham snub drive the rivalry',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'memory', tag: 'rivalry', text: 'Barça "felt used" by Beckham — the Clásico edge sharpens.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -2 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Beckham chose Madrid; Barça signed Ronaldinho instead.' }],
+      memoryTags: ['transfer', 'cur_ronaldinho_b3'],
+    }),
+  },
+  {
+    id: 'rijkaard-brink',
+    date: '2003-12',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona' && s.managerRelations.identity === 'Frank Rijkaard',
+    build: () => ({
+      id: 'scripted:rijkaard-brink',
+      title: 'Rijkaard on the brink',
+      description:
+        'A poor first half of the season has your coach’s job in question — mid-table and the fans restless. Reality: the board held its nerve, a January spark followed, and Rijkaard went on to build a dynasty. Sack him now, or hold firm and back him through the slump?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'hold',
+          label: 'Hold your nerve (as reality did)',
+          successProbability: 0.75,
+          onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Backed Rijkaard through the slump — the turnaround followed.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -4 }],
+        },
+        {
+          id: 'sack',
+          label: 'Pull the trigger now',
+          successProbability: 0.35,
+          onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Changed the coach mid-season, chasing a spark.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -6 }, { kind: 'fanTrust', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'The board kept faith with Rijkaard through a shaky first half.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'davids-loan-spark',
+    date: '2004-01',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:davids-loan-spark',
+      title: 'Davids’ loan sparks the turnaround',
+      description:
+        'A January loan for the veteran Edgar Davids injects steel and leadership into a drifting midfield. Reality: it lit the fuse — Barça surged up the table around Xavi and the new arrival. Bring in the warrior on loan, or trust the existing group to find its own way?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'loan',
+          label: 'Sign the loan — add the steel (as reality did)',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'morale', clubId: 'barcelona', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Davids’ loan sparked the second-half surge.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'trust',
+          label: 'Trust the group as it is',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Backed the existing midfield to find its feet.' }],
+          onFailure: [{ kind: 'morale', clubId: 'barcelona', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'barcelona', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Davids arrived on loan and helped ignite the turnaround.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'etoo-deco-arrive',
+    date: '2004-08',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:etoo-deco-arrive',
+      title: 'Eto’o and Deco — the title spine arrives',
+      description:
+        'Samuel Eto’o (from Mallorca) and Deco (Champions League winner from Porto) join to turn a promising side into champions. Reality: they were the making of the 2005 and 2006 titles. Build the team around the new core, or worry that two big egos will unbalance the room?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'build',
+          label: 'Build around the new core (as reality did)',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'morale', clubId: 'barcelona', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Eto’o and Deco land — the champions-in-waiting take shape.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'caution',
+          label: 'Integrate them cautiously',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Eased the new stars in to protect the dressing room.' }],
+          onFailure: [{ kind: 'morale', clubId: 'barcelona', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Eto’o and Deco arrive — the spine of the coming titles.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'first-title-2005',
+    date: '2005-05',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:first-title-2005',
+      title: 'Champions of Spain again',
+      description:
+        'Ronaldinho at his peak, Eto’o scoring for fun — Barça are La Liga champions for the first time in six years. Reality: the springboard for a golden era. Reward the squad and push on for Europe, or bank the moment and sell from strength?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'pushon',
+          label: 'Reward the squad and go for Europe',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'morale', clubId: 'barcelona', amount: 5 }, { kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Champions of Spain — and eyes on the continent.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'cashin',
+          label: 'Sell from strength',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Cashed in from a title-winning position.' }, { kind: 'fanTrust', amount: -3 }],
+          onFailure: [{ kind: 'morale', clubId: 'barcelona', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Barça are champions of Spain again — the Ronaldinho era peaks.' }, { kind: 'memory', tag: 'silverware', text: 'First La Liga title under Rijkaard.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'cl-paris-2006',
+    date: '2006-05',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:cl-paris-2006',
+      title: 'Champions of Europe in Paris',
+      description:
+        'Barça come from behind to beat Arsenal in the Champions League final in Paris — Belletti’s late winner seals a second European Cup. Reality: the peak of the Rijkaard–Ronaldinho project. Lock the champions down and build a dynasty, or take the peak as a selling window?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'dynasty',
+          label: 'Build the dynasty',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'morale', clubId: 'barcelona', amount: 6 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'silverware', text: 'Champions of Europe — and determined to stay there.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'cashin',
+          label: 'Cash in at the summit',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Sold from the top of Europe.' }, { kind: 'fanTrust', amount: -4 }],
+          onFailure: [{ kind: 'morale', clubId: 'barcelona', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 7, text: 'Champions of Europe in Paris — Belletti sinks Arsenal.' }, { kind: 'memory', tag: 'silverware', text: 'Won the Champions League in Paris.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'decline-indiscipline',
+    date: '2007-06',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:decline-indiscipline',
+      title: 'The champions go stale',
+      description:
+        'Success has bred complacency — Ronaldinho’s edge is fading, Deco and Eto’o are unsettled, and the dressing room’s discipline is slipping. Reality: the title was surrendered and the cracks widened toward the 2008 reset. Crack down hard now, or indulge the stars a little longer?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'crackdown',
+          label: 'Impose discipline — no untouchables',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'morale', clubId: 'barcelona', amount: 3 }, { kind: 'memory', tag: 'crisis', text: 'Cracked down on the slipping standards.' }],
+          onFailure: [{ kind: 'morale', clubId: 'barcelona', amount: -5 }],
+        },
+        {
+          id: 'indulge',
+          label: 'Indulge the stars a while longer',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'memory', tag: 'crisis', text: 'Gave the champions the benefit of the doubt.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -5, text: 'The indiscipline festers and the title slips away.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'barcelona', amount: -4 }, { kind: 'memory', tag: 'crisis', text: 'Discipline slipped and the champions went stale.' }],
+      memoryTags: ['crisis'],
+    }),
+  },
+  {
+    id: 'rijkaard-out-guardiola',
+    date: '2008-05',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona' && s.managerRelations.identity === 'Frank Rijkaard',
+    build: () => ({
+      id: 'scripted:rijkaard-out-guardiola',
+      title: 'Rijkaard out — promote the B-team coach?',
+      description:
+        'Two trophyless years end Rijkaard’s reign. Reality: Barça made the bold call to promote their B-team coach — a certain Pep Guardiola — and cleared out Ronaldinho and Deco to hand the group to Messi. Trust the untested insider and sell the stars, or bring in an established name and keep the marquee men?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'pep',
+          label: 'Promote Guardiola and clear the stars (as reality did)',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Handed the team to Guardiola and built it around Messi — the dynasty begins.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -4 }],
+        },
+        {
+          id: 'safe',
+          label: 'Hire an established name, keep the stars',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Chose a proven coach over the B-team gamble.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Rijkaard out, Guardiola promoted; Ronaldinho and Deco sold to reset the culture.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'treble-sextuple',
+    date: '2009-05',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:treble-sextuple',
+      title: 'The treble',
+      description:
+        'Guardiola’s first season delivers La Liga, the Copa del Rey and the Champions League — a treble built on Messi, Xavi and Iniesta and the tiki-taka. Reality: three more cups later in 2009 made it a historic sextuple. Anoint this as the new identity and protect it, or treat a peak as the time to freshen the squad?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'protect',
+          label: 'Protect the identity and the core',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'morale', clubId: 'barcelona', amount: 6 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'silverware', text: 'The treble — and a philosophy to defend for a decade.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'freshen',
+          label: 'Freshen the squad at the peak',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Reinforced from a position of total strength.' }],
+          onFailure: [{ kind: 'morale', clubId: 'barcelona', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 8, text: 'The treble — Guardiola’s Barça conquer everything.' }, { kind: 'memory', tag: 'silverware', text: 'Won La Liga, Copa del Rey and the Champions League — the treble (a sextuple by year’s end).' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'ibra-etoo-swap',
+    date: '2009-07',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => playerAt(s, 'cur_etoo_m3', 'barcelona') && s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:ibra-etoo-swap',
+      title: 'Ibrahimović in, Eto’o out',
+      description:
+        'The summer’s big move: sign Zlatan Ibrahimović and let Samuel Eto’o go the other way to Inter. Reality: Barça made the swap — a huge gamble on a different kind of striker. Do the deal and cash in on Eto’o, or keep the treble’s goalscorer and pass on Zlatan?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'swap',
+          label: 'Do the swap — Zlatan in, Eto’o to Inter (as reality did)',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'transferOut', playerId: 'cur_etoo_m3', clubId: 'inter', amount: 20_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Signed Ibrahimović; Eto’o left for Inter in the swap.' }],
+          onFailure: [{ kind: 'transferOut', playerId: 'cur_etoo_m3', clubId: 'inter', amount: 20_000_000 }],
+        },
+        {
+          id: 'keep',
+          label: 'Keep Eto’o, pass on Zlatan',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', playerId: 'cur_etoo_m3', amount: 6 }, { kind: 'memory', tag: 'transfer', text: 'Kept Eto’o and walked away from the Ibrahimović gamble.' }],
+          onFailure: [{ kind: 'agitation', playerId: 'cur_etoo_m3', amount: 6 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'transferOut', playerId: 'cur_etoo_m3', clubId: 'inter', amount: 20_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Ibrahimović signed; Eto’o moved to Inter in the swap.' }],
+      memoryTags: ['transfer', 'cur_etoo_m3'],
+    }),
+  },
+  {
+    id: 'record-99-points',
+    date: '2010-05',
+    scenarios: ['barcelona-2003'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:record-99-points',
+      title: 'A record 99-point title',
+      description:
+        'Guardiola’s side retain La Liga with a record 99 points, Messi, Xavi and Iniesta at the height of their powers. Reality: statistical dominance, the tiki-taka era in full flow. Push the same core on for more, or begin the careful evolution while on top?',
+      interrupt: true,
+      clubId: 'barcelona',
+      category: 'event',
+      choices: [
+        {
+          id: 'continue',
+          label: 'Keep the core together',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'A record 99 points — and the core kept intact.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'evolve',
+          label: 'Begin evolving from the top',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Started the next evolution while still champions.' }],
+          onFailure: [{ kind: 'morale', clubId: 'barcelona', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'A record 99-point La Liga title — dominance made numeric.' }, { kind: 'memory', tag: 'silverware', text: 'Retained La Liga with a record 99 points.' }],
+      memoryTags: ['silverware'],
     }),
   },
 ];

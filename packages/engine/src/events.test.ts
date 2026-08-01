@@ -188,6 +188,7 @@ describe('scripted beat-sheet packs (passive fidelity)', () => {
   const EXPECTED: Record<string, { min: number; until: number }> = {
     'man-utd-1999': { min: 13, until: 2006 },
     'real-madrid-2000': { min: 13, until: 2008 },
+    'barcelona-2003': { min: 13, until: 2011 },
   };
   for (const [scenarioId, { min, until }] of Object.entries(EXPECTED)) {
     it(`${scenarioId} fires its pack in order with no spurious skips`, () => {
