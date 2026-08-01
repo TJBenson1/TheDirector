@@ -4738,15 +4738,105 @@ const CHELSEA_2003_PACK: ScriptedEvent[] = [
   },
 ];
 
+// Kings of Europe into the slow fade and the 2002 title, 1997-2002. Riedle's and
+// Möller's exits are ledger-replayed and the manager churn (Hitzfeld upstairs →
+// Scala → Skibbe → Sammer) can't be enacted as coach swaps, so most of these are
+// narrative overlays. Sammer's career-ending knee is the one mechanical beat
+// (curated, not a transfer), told in the injury-register style.
 const DORTMUND_1997_PACK: ScriptedEvent[] = [
   {
+    id: 'euro-cup-inheritance',
+    date: '1997-08',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:euro-cup-inheritance', title: 'You inherit the champions of Europe',
+      description: 'Weeks ago in Munich, Dortmund stunned holders Juventus 3-1 — Riedle’s brace and Ricken’s audacious first-touch lob — to win the club’s first European Cup. You inherit the reigning champions, but the side is ageing and Bayern are reloading. Set the tone: cash in on peaking stars at a premium and reinvest, or keep the winning core intact for a title defence and a shot at back-to-back?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Keep the core — defend the throne (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Held the European Cup-winning core together.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'cash-in', label: 'Cash in on the peak and reinvest', successProbability: 0.5, onSuccess: [{ kind: 'money', clubId: 'dortmund', amount: 10_000_000 }, { kind: 'memory', tag: 'silverware', text: 'Sold from the summit to fund a refresh.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Dortmund are champions of Europe — the throne is yours to defend.' }, { kind: 'memory', tag: 'silverware', text: 'Inherited the 1997 European champions.' }],
+      memoryTags: ['silverware', 'cur_ricken_97'],
+    }),
+  },
+  {
+    id: 'riedle-liverpool',
+    date: '1997-08',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:riedle-liverpool', title: 'The final’s two-goal hero leaves for Liverpool',
+      description: 'Karl-Heinz Riedle, 31, scorer of two in the Munich final, has a ~£1.8m offer from Liverpool. Reality: Dortmund banked the fee on an ageing icon right after the peak. Take the value for the 31-year-old and trust Chapuisat and the incoming attackers, or block the sale and keep his big-game know-how for the title defence and the Intercontinental Cup?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Bank the fee (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'dortmund', amount: 2_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Riedle to Liverpool for value at 31.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'keep', label: 'Block the sale — keep his big-game nous', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Kept Riedle for one more big-game year.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Riedle leaves for Liverpool — value banked on the ageing hero.' }],
+      memoryTags: ['transfer', 'cur_riedle_97'],
+    }),
+  },
+  {
+    id: 'hitzfeld-scala',
+    date: '1997-09',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:hitzfeld-scala', title: 'A two-headed dugout — Hitzfeld upstairs, Scala in',
+      description: 'The winning coach Hitzfeld has NOT left — he has been moved ‘upstairs’ into a new sporting-director role, with Italian Nevio Scala (a UEFA Cup winner at Parma) appointed head coach. Reality: Hitzfeld found the figurehead role frustrating and left for Bayern a year later. Manage the awkward structure: back Scala with full authority and let Hitzfeld fade to a titular role, or keep Hitzfeld as the real power broker above the new coach?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'back-scala', label: 'Full authority to Scala', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Gave Scala full control; Hitzfeld a titular role.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'keep-hitzfeld', label: 'Keep Hitzfeld as the power broker', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'managerRelationship', amount: -6 }, { kind: 'memory', tag: 'manager', text: 'Left Hitzfeld above the coach — tension in the structure.' }], onFailure: [{ kind: 'managerRelationship', amount: -10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Hitzfeld moves upstairs; Scala takes the dugout.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'lambert-celtic',
+    date: '1997-11',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:lambert-celtic', title: 'Lambert goes home to Celtic',
+      description: 'Paul Lambert — the Scot who neutralised Zidane in the final — is homesick, and Celtic want him for ~£2m mid-season; his BVB farewell drew a full stadium’s applause. Release the fan-favourite and reinvest the fee immediately, or refuse mid-campaign and hold him through the Intercontinental Cup and the title run-in?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'release', label: 'Let him go home — reinvest the fee (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'money', clubId: 'dortmund', amount: 2_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Let Lambert return to Celtic — a cult hero waved off.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'hold', label: 'Refuse mid-season — hold him for the run-in', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Held Lambert through the campaign.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Lambert leaves for Celtic mid-season — a cult hero applauded off.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'intercontinental-cup',
+    date: '1997-12',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:intercontinental-cup', title: 'Kings of the World — Tokyo, 1997',
+      description: 'In Tokyo, Dortmund have beaten Copa Libertadores winners Cruzeiro 2-0 to be crowned world club champions — the high-water mark of the era, Möller Man of the Match. Frame it: treat the world title as validation to double down on this ageing golden generation, or use the prestige as the moment to start a managed rebuild before decline sets in?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'double-down', label: 'Double down on the golden generation', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'World champions — backed the golden generation to run on.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'rebuild', label: 'Start a managed rebuild at the peak', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Used the world title to begin refreshing the squad.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Dortmund beat Cruzeiro in Tokyo — champions of the world.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 1997 Intercontinental Cup.' }],
+      memoryTags: ['silverware', 'cur_moller_97'],
+    }),
+  },
+  {
     id: 'sammer-knee',
-    date: '1998-01',
+    date: '1998-02',
     scenarios: ['dortmund-1997'],
     requires: (s) => playerAt(s, 'cur_sammer_97', 'dortmund') && s.playerClub === 'dortmund',
     build: () => ({
       id: 'scripted:sammer-knee', title: 'Matthias Sammer’s knee gives way',
-      description: 'The reigning Ballon d’Or, the libero who drives your European champions, has broken down again — chronic cartilage damage. Reality: the knee never healed and it ended his career at 30. Push him through cortisone and comebacks, or shut him down to save the man?',
+      description: 'The reigning Ballon d’Or, the libero who drives your European champions, has broken down again — chronic cartilage damage after surgeries since August. Reality: complications forced his retirement at 30 in early 1998; he later returned as head coach and won the 2002 title. Push him through cortisone and comebacks, or shut him down to save the man?',
       interrupt: true, clubId: 'dortmund', category: 'event',
       choices: [
         { id: 'push', label: 'Push him back — you need him now', successProbability: 0.3, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 6 }], onFailure: [{ kind: 'ban', playerId: 'cur_sammer_97', months: 10 }, { kind: 'ability', playerId: 'cur_sammer_97', amount: -6 }, { kind: 'memory', tag: 'injury', text: 'Rushed Sammer back and the knee gave out for good — the tragedy history remembers.' }] },
@@ -4754,6 +4844,125 @@ const DORTMUND_1997_PACK: ScriptedEvent[] = [
       ],
       falloutIfIgnored: [{ kind: 'ban', playerId: 'cur_sammer_97', months: 10 }, { kind: 'memory', tag: 'injury', text: 'Sammer’s knee ends a glittering career at 30.' }],
       memoryTags: ['injury', 'cur_sammer_97'],
+    }),
+  },
+  {
+    id: 'fallen-goal-semi',
+    date: '1998-04',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:fallen-goal-semi', title: 'The ‘Fallen Goal’ semi-final at the Bernabéu',
+      description: 'As holders, Dortmund reached the 1998 semi-final against Real Madrid. The first leg was delayed ~75 minutes when a goal collapsed as Real ultras shook the perimeter fence. Reality: BVB asked for the tie to be awarded, but it went ahead, Real won 2-0, and they went on to win the trophy. Formally push UEFA for a walkover and refuse to play under unsafe conditions, or accept the delay, play on and protest afterwards?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'refuse', label: 'Demand a walkover — refuse to play', successProbability: 0.25, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'controversy', text: 'Stood firm and demanded the tie be awarded.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'play-on', label: 'Play on and protest afterwards (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'controversy', text: 'Played the delayed leg under protest, then went out.' }], onFailure: [{ kind: 'morale', clubId: 'dortmund', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'controversy', text: 'The delayed leg is played; Real Madrid win and eliminate the holders.' }],
+      memoryTags: ['controversy'],
+    }),
+  },
+  {
+    id: 'scala-out-skibbe',
+    date: '1998-05',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund' && s.managerRelations.identity === 'Nevio Scala',
+    build: () => ({
+      id: 'scripted:scala-out-skibbe', title: 'The fade begins — Scala out, Skibbe up',
+      description: 'Behind the cup runs the league sagged to 10th, the lowest since 1991. Scala has left after the season and Hitzfeld has departed for Bayern. Reality: assistant Michael Skibbe, one of the youngest coaches in the league, was promoted — and the golden era’s decline set in. Promote cheap continuity in the young in-house Skibbe, or pay for an established name to arrest the slide immediately?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'skibbe', label: 'Promote Skibbe — cheap continuity (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Promoted the young Skibbe from within.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'established', label: 'Pay for an established name', successProbability: 0.5, onSuccess: [{ kind: 'money', clubId: 'dortmund', amount: -5_000_000 }, { kind: 'memory', tag: 'manager', text: 'Spent to bring in a proven coach.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Scala leaves; Skibbe promoted as the decline begins.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'moller-schalke',
+    date: '2000-07',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:moller-schalke', title: 'Möller crosses the divide to Schalke',
+      description: 'MYTH-BUSTER: Möller did NOT leave in 1997 — he stayed three more years and now, at 32, his contract has expired and he is going on a free to bitter Revierderby rivals Schalke 04, igniting fury among BVB fans. Offer him a renewal a year early to stop him leaving on a free (and never to Schalke), or let the 32-year-old walk for nothing and reallocate his wages to youth?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'renew', label: 'Renew early — never to Schalke', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Möller kept from the enemy — the terraces exhale.' }, { kind: 'memory', tag: 'rivalry', text: 'Tied Möller down before Schalke could take him.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'let-walk', label: 'Let the 32-year-old walk (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'memory', tag: 'rivalry', text: 'Let Möller leave for nothing — to Schalke, of all clubs.' }], onFailure: [{ kind: 'fanTrust', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'rivalry', text: 'Möller joins Schalke on a free — one of German football’s most provocative moves.' }],
+      memoryTags: ['rivalry', 'cur_moller_97'],
+    }),
+  },
+  {
+    id: 'bvb-ipo',
+    date: '2000-10',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:bvb-ipo', title: 'Dortmund floats on the stock market',
+      description: 'BVB has become the first (and still only) Bundesliga club to go public, listing in Frankfurt at ~€11/share. Reality: it fuelled aggressive spending — and planted the seeds of the near-bankruptcy that almost destroyed the club by 2004-05. Pour the IPO windfall into marquee signings for an immediate title assault, or bank it prudently against future debt and grow more slowly?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'spend', label: 'Spend the windfall on a title assault (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'money', clubId: 'dortmund', amount: 25_000_000 }, { kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'finance', text: 'Poured the IPO cash into the squad — the spend-to-win gamble.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'bank', label: 'Bank it prudently against future debt', successProbability: 0.65, onSuccess: [{ kind: 'money', clubId: 'dortmund', amount: 15_000_000 }, { kind: 'memory', tag: 'finance', text: 'Grew slowly and kept the balance sheet safe.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'money', clubId: 'dortmund', amount: 20_000_000 }, { kind: 'memory', tag: 'finance', text: 'BVB goes public — the windfall that fuelled the spend-to-win years.' }],
+      memoryTags: ['finance'],
+    }),
+  },
+  {
+    id: 'amoroso-record',
+    date: '2001-07',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:amoroso-record', title: 'Amoroso — the German transfer record',
+      description: 'Backed by the IPO cash, Dortmund can make Brazilian striker Márcio Amoroso a Bundesliga transfer-record signing (~€25m from Parma), alongside young Tomáš Rosický. Reality: Amoroso repaid it as top scorer in the title season — the emblem of the spend-to-win gamble. Smash the record for an instant title challenge, or spread the same budget across several cheaper additions and stay within safer limits?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'smash', label: 'Smash the record for Amoroso (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'A German-record Brazilian leads the line.' }, { kind: 'memory', tag: 'transfer', text: 'Broke the German record for Amoroso.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'spread', label: 'Spread the budget — stay within limits', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Chose depth over a single record signing.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Amoroso arrives for a German record — the spend-to-win emblem.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'champions-2002',
+    date: '2002-05',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:champions-2002', title: 'Champions again — Sammer’s title',
+      description: 'On the final day Dortmund beat Werder Bremen 2-1 to clinch the Bundesliga on 70 points, one ahead of Leverkusen. The coach: Matthias Sammer — the very libero whose playing career the knee ended, now back on the bench and, at 34, among the youngest ever to win the Bundesliga, in his first full season in management. Go all-in to build a European dynasty on the back of the title, or bank the success and rein in the ballooning wage bill before it becomes unsustainable?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'all-in', label: 'Go all-in for a dynasty', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 6 }, { kind: 'memory', tag: 'silverware', text: 'Won the title and gambled on a dynasty.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'rein-in', label: 'Bank it — rein in the wage bill', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Won the title and steadied the finances.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Dortmund are champions of Germany — Sammer’s title as coach.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2002 Bundesliga under Sammer.' }],
+      memoryTags: ['silverware', 'cur_sammer_97'],
+    }),
+  },
+  {
+    id: 'uefa-cup-final',
+    date: '2002-05',
+    scenarios: ['dortmund-1997'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:uefa-cup-final', title: 'UEFA Cup heartbreak in Rotterdam',
+      description: 'Four days after the title, Dortmund lost the UEFA Cup final 3-2 to Feyenoord in Rotterdam — veteran Jürgen Kohler, in his farewell match, sent off after 31 minutes (no fairytale send-off). A double denied on hostile ground. In the two-final week, rest key men for the UEFA Cup final and chase the double, or go full-strength for the guaranteed league title and treat the away final as a bonus?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'chase-double', label: 'Rest men and chase the double', successProbability: 0.4, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 5 }, { kind: 'memory', tag: 'near-miss', text: 'Gambled on the double — and fell agonisingly short.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'league-first', label: 'Prioritise the league — final as a bonus (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Secured the title; the UEFA Cup slipped away in Rotterdam.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Dortmund lose the UEFA Cup final to Feyenoord; Kohler sent off on his farewell.' }],
+      memoryTags: ['near-miss'],
     }),
   },
 ];
