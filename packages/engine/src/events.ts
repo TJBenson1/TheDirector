@@ -2074,6 +2074,375 @@ const CHELSEA_2003_PACK: ScriptedEvent[] = [
       memoryTags: ['scandal', 'cur_mutu_c3'],
     }),
   },
+  // The Roman revolution, 2003–08. Every marquee move (the 2003 spree, Drogba/Čech/
+  // Carvalho/Robben in 2004, Shevchenko and Ashley Cole in 2006, Duff out) is
+  // ledger-replayed, so these are NARRATIVE OVERLAYS — the ownership, the Mourinho
+  // arc, the trophies and the near-misses — with no duplicate transfers.
+  {
+    id: 'abramovich-takeover',
+    // Completed Jul 2003 (kickoff month, opening-window owned); the ownership-shift
+    // beat lands the month after, alongside the spending.
+    date: '2003-08',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:abramovich-takeover',
+      title: 'The Roman revolution',
+      description:
+        'Roman Abramovich has bought the club from Ken Bates, and with him come limitless funds — and limitless expectation. Reality: Chelsea were transformed overnight into a superpower, and patience grew short. Embrace the revolution and its win-now pressure, or try to manage the culture shift and protect the existing dressing room?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'embrace',
+          label: 'Embrace the revolution (as reality did)',
+          successProbability: 0.75,
+          onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'The Roman era begins — Stamford Bridge dreams big.' }, { kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'takeover', text: 'Abramovich’s billions transform Chelsea into a superpower.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+        {
+          id: 'manage',
+          label: 'Manage the culture shift carefully',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', clubId: 'chelsea', amount: 4 }, { kind: 'memory', tag: 'takeover', text: 'Steadied the dressing room through the ownership upheaval.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'takeover', text: 'Abramovich completes the takeover — the money, and the pressure, arrive.' }],
+      memoryTags: ['takeover'],
+    }),
+  },
+  {
+    id: 'ranieri-mourinho',
+    date: '2004-06',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea' && s.managerRelations.identity === 'Claudio Ranieri',
+    build: () => ({
+      id: 'scripted:ranieri-mourinho',
+      title: 'The Special One is available',
+      description:
+        'Ranieri — the "Tinkerman" — took the club to a Champions League semi-final but the owner wants more. José Mourinho, fresh from winning the Champions League with Porto, is available. Reality: Ranieri was dismissed and Mourinho arrived to change everything. Make the ruthless change, or reward Ranieri’s progress with another season?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'mourinho',
+          label: 'Appoint Mourinho (as reality did)',
+          successProbability: 0.75,
+          onSuccess: [{ kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Hired the Special One — the winning machine is about to be built.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -4 }],
+        },
+        {
+          id: 'keep-ranieri',
+          label: 'Reward Ranieri with another year',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Kept faith with the Tinkerman over the glamour hire.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Ranieri out; Mourinho, the Special One, takes charge.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'mourinho-machine',
+    date: '2004-07',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:mourinho-machine',
+      title: 'Building the machine',
+      description:
+        'The new manager wants his own spine: Drogba up top, Čech in goal, Carvalho and Ferreira from Porto, Robben on the wing. Reality: this was the core that won back-to-back titles. Back the wholesale overhaul, or ask him to build more gradually around the players already here?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'overhaul',
+          label: 'Back the overhaul (as reality did)',
+          successProbability: 0.85,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Drogba, Čech, Carvalho, Robben in — the machine takes shape.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'gradual',
+          label: 'Build more gradually',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Evolved the squad rather than tearing it up.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -4 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Mourinho builds his machine: Drogba, Čech, Carvalho, Robben.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'league-cup-2005',
+    date: '2005-02',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:league-cup-2005',
+      title: 'Mourinho’s first trophy',
+      description:
+        'The League Cup is won — the manager’s first silverware and a statement of the momentum building. Reality: the springboard to the title. Treat it as a priority and ride the momentum, or downplay it and save your energy for the league and Europe?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'momentum',
+          label: 'Ride the momentum',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'morale', clubId: 'chelsea', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'First trophy of the Mourinho era — the machine rolls.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'downplay',
+          label: 'Save energy for the bigger prizes',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Banked the cup and kept the eyes on the league.' }],
+          onFailure: [{ kind: 'morale', clubId: 'chelsea', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'silverware', text: 'The League Cup — Mourinho’s first trophy at Chelsea.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'first-title-50-years',
+    date: '2005-04',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:first-title-50-years',
+      title: 'Champions of England — after 50 years',
+      description:
+        'A record-breaking season delivers the league title — Chelsea’s first English top-flight crown since 1955. Reality: 95 points, the meanest defence in history, and the making of a dynasty. Reward the squad and build for dominance, or bank the moment and evolve while on top?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'dominate',
+          label: 'Build for dominance',
+          successProbability: 0.8,
+          onSuccess: [{ kind: 'morale', clubId: 'chelsea', amount: 6 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'silverware', text: 'Champions after 50 years — and hungry for more.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+        {
+          id: 'evolve',
+          label: 'Evolve from the top',
+          successProbability: 0.55,
+          onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Freshened the champions from a position of strength.' }],
+          onFailure: [{ kind: 'morale', clubId: 'chelsea', amount: -3 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 7, text: 'Champions of England for the first time in 50 years.' }, { kind: 'memory', tag: 'silverware', text: 'Won the title — a first in half a century.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'ghost-goal',
+    date: '2005-05',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:ghost-goal',
+      title: 'The ghost goal — Europe denied',
+      description:
+        'A Champions League semi-final at Anfield turns on Luís García’s disputed early goal — "a goal from the moon," the manager calls it, never conclusively shown to have crossed the line. Reality: Chelsea went out, and the European Cup stayed out of reach. Rage at the injustice publicly, or take it on the chin and refocus?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'rage',
+          label: 'Rage at the injustice',
+          successProbability: 0.5,
+          onSuccess: [{ kind: 'morale', clubId: 'chelsea', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Made the ghost goal a rallying cry.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -2 }],
+        },
+        {
+          id: 'refocus',
+          label: 'Take it on the chin and refocus',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Absorbed the European heartbreak and went again.' }],
+          onFailure: [],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Knocked out of Europe by Liverpool’s disputed "ghost goal".' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'back-to-back-2006',
+    date: '2006-04',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:back-to-back-2006',
+      title: 'Back-to-back champions',
+      description:
+        'A second successive league title confirms Chelsea as the dominant force in England — Terry, Lampard and Drogba at their peak. Reality: the high-water mark of Mourinho’s first spell. Push for the Champions League that’s still missing, or consolidate the domestic stranglehold?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'europe',
+          label: 'Go all-in for Europe',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Back-to-back champions — now for the European Cup.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+        {
+          id: 'consolidate',
+          label: 'Consolidate at home',
+          successProbability: 0.75,
+          onSuccess: [{ kind: 'morale', clubId: 'chelsea', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Tightened the domestic grip.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -2 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6 }, { kind: 'memory', tag: 'silverware', text: 'Back-to-back Premier League titles.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'shevchenko-abramovich',
+    date: '2006-05',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:shevchenko-abramovich',
+      title: 'The owner’s signing',
+      description:
+        'Abramovich wants Andriy Shevchenko — a ~£30m personal pursuit, effectively forced on a reluctant Mourinho. Reality: it never clicked, and it became a key cause of the rift that ended Mourinho’s reign. Wave the owner’s signing through to keep the peace, or defend your manager’s judgement and resist it?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'wave-through',
+          label: 'Wave it through (as reality did)',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'managerRelationship', amount: -6 }, { kind: 'memory', tag: 'boardroom', text: 'Signed the owner’s man over the manager’s objection — the rift widens.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -8 }],
+        },
+        {
+          id: 'defend-coach',
+          label: 'Defend the manager and resist',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'boardroom', text: 'Backed the coach against the owner’s pet signing.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -12, text: 'Defying the owner over a signing burns serious capital.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: -5 }, { kind: 'memory', tag: 'boardroom', text: 'Shevchenko arrives as Abramovich’s signing — the owner-manager rift begins.' }],
+      memoryTags: ['boardroom', 'cur_shevchenko_m'],
+    }),
+  },
+  {
+    id: 'fa-cup-wembley-2007',
+    date: '2007-05',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:fa-cup-wembley-2007',
+      title: 'Drogba christens the new Wembley',
+      description:
+        'Drogba’s goal wins the first FA Cup final at the rebuilt Wembley. Reality: silverware, but a season below the sky-high expectations, and the manager’s position quietly weakening. Use the cup to steady the ship, or read the warning signs behind a trophy that papered over the cracks?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'steady',
+          label: 'Use the cup to steady things',
+          successProbability: 0.65,
+          onSuccess: [{ kind: 'morale', clubId: 'chelsea', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Drogba’s Wembley winner buys some calm.' }],
+          onFailure: [{ kind: 'boardPatience', amount: -3 }],
+        },
+        {
+          id: 'confront',
+          label: 'Confront the underlying tensions',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Won the cup but tackled the boardroom cracks head-on.' }],
+          onFailure: [{ kind: 'managerRelationship', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'silverware', text: 'Drogba’s goal wins the first FA Cup final at the new Wembley.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'mourinho-leaves',
+    date: '2007-09',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:mourinho-leaves',
+      title: 'Mourinho leaves',
+      description:
+        'The owner-manager relationship has broken down irreparably. Reality: Mourinho left "by mutual consent" in September 2007 and the little-known Avram Grant stepped up — a hugely divisive change with the fans firmly behind the departing manager. Force the split and promote from within, or move heaven and earth to repair the relationship and keep him?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'repair',
+          label: 'Fight to keep Mourinho',
+          successProbability: 0.4,
+          onSuccess: [{ kind: 'fanTrust', amount: 8, text: 'Kept the Special One — the fans are jubilant.' }, { kind: 'boardPatience', amount: -6 }],
+          onFailure: [{ kind: 'fanTrust', amount: -6, text: 'The reconciliation collapsed and he walked anyway.' }],
+        },
+        {
+          id: 'split',
+          label: 'Accept the split (as reality did)',
+          successProbability: 0.7,
+          onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Mourinho leaves by mutual consent; Grant steps in.' }],
+          onFailure: [{ kind: 'fanTrust', amount: -8, text: 'Losing Mourinho enrages the support.' }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -6, text: 'Mourinho gone; Avram Grant takes over to a divided fanbase.' }, { kind: 'memory', tag: 'manager', text: 'The Special One departs by mutual consent.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'moscow-final',
+    date: '2008-05',
+    scenarios: ['chelsea-2003'],
+    requires: (s) => s.playerClub === 'chelsea',
+    build: () => ({
+      id: 'scripted:moscow-final',
+      title: 'Moscow — the final lost on a slip',
+      description:
+        'The first Champions League final in the club’s history, against Manchester United in the Moscow rain. Reality: it went to penalties, John Terry slipped taking the one that would have won it, and Chelsea lost the shootout — the European Cup would wait until 2012. Rally the devastated squad, or let the heartbreak force a reckoning?',
+      interrupt: true,
+      clubId: 'chelsea',
+      category: 'event',
+      choices: [
+        {
+          id: 'rally',
+          label: 'Rally the squad — so close, go again',
+          successProbability: 0.6,
+          onSuccess: [{ kind: 'morale', clubId: 'chelsea', amount: 5 }, { kind: 'memory', tag: 'near-miss', text: 'Turned the Moscow heartbreak into fuel for another run.' }],
+          onFailure: [{ kind: 'morale', clubId: 'chelsea', amount: -4 }],
+        },
+        {
+          id: 'reckoning',
+          label: 'Force a reckoning after the near-miss',
+          successProbability: 0.45,
+          onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Used the Moscow defeat to demand change.' }],
+          onFailure: [{ kind: 'morale', clubId: 'chelsea', amount: -5 }],
+        },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Lost the Moscow final on penalties — Terry’s slip, and the European Cup slips away.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
 ];
 
 const DORTMUND_1997_PACK: ScriptedEvent[] = [
