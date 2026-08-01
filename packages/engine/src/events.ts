@@ -5316,22 +5316,215 @@ const MAN_UTD_2013_PACK: ScriptedEvent[] = [
   },
 ];
 
+// The 'Sleeping Giant' era, 2001-2007: the Campbell betrayal, the veteran patch-
+// up, the continental experiment, Lasagne-gate and the bright Berbatov-Keane
+// side that peaked as nearly-men. Every transfer (Campbell out; Sheringham,
+// Ziege, Keane, Defoe, Carrick, Berbatov in; Carrick out) is ledger-replayed and
+// the manager churn can't be enacted as coach swaps, so these are narrative
+// overlays with real Director forks and reality-default fallout.
 const SPURS_2001_PACK: ScriptedEvent[] = [
+  {
+    id: 'campbell-betrayal',
+    date: '2001-08',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:campbell-betrayal', title: 'The Sol Campbell betrayal',
+      description: 'Club captain and homegrown talisman Sol Campbell has let his contract expire and joined arch-rivals Arsenal on a free — Spurs receive nothing, and he is branded ‘Judas’. (Myth-check: he made no formal pledge never to join Arsenal; his camp had floated Champions League clubs, and the Gunners were the shock destination.) Meet his wage-and-status demands and match Arsenal’s promise of trophies to keep him, or let him walk for free and reinvest the wage budget?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Meet his demands — keep the captain', successProbability: 0.4, onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'Campbell stays — the unthinkable betrayal averted.' }, { kind: 'memory', tag: 'rivalry', text: 'Persuaded Campbell to stay against Arsenal.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'walk', label: 'Let him walk — reinvest the wages (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'memory', tag: 'rivalry', text: 'Let Campbell leave for nothing — to Arsenal, of all clubs.' }], onFailure: [{ kind: 'fanTrust', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -4, text: 'Campbell joins Arsenal on a free — ‘Judas’ to White Hart Lane.' }, { kind: 'memory', tag: 'rivalry', text: 'Campbell crosses to Arsenal for nothing.' }],
+      memoryTags: ['rivalry', 'cur_campbell'],
+    }),
+  },
+  {
+    id: 'veteran-rebuild',
+    date: '2001-09',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:veteran-rebuild', title: 'The veteran patch-up — Sheringham & Ziege',
+      description: 'Spurs have patched the Campbell hole with experience: Teddy Sheringham returns from Manchester United on a free (just named FWA & PFA Footballer of the Year) and Christian Ziege arrives from Liverpool for ~£5.85m. Spend the freed-up budget on proven 30-somethings to compete now, or bank the money and build around younger, cheaper talent for the longer term?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'veterans', label: 'Buy experience to compete now (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Sheringham’s homecoming lifts the mood.' }, { kind: 'memory', tag: 'transfer', text: 'Patched the Campbell hole with experience.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'youth', label: 'Bank it — build around youth', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Chose the long-term build over the veterans.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Sheringham returns and Ziege arrives — experience over youth.' }],
+      memoryTags: ['transfer', 'cur_sheringham01'],
+    }),
+  },
   {
     id: 'worthington-final',
     date: '2002-02',
     scenarios: ['spurs-2001'],
-    requires: (s) => playerAt(s, 'cur_king01', 'spurs') && s.playerClub === 'spurs',
+    requires: (s) => s.playerClub === 'spurs',
     build: () => ({
       id: 'scripted:worthington-final', title: 'A cup final — Spurs’ shot at silverware',
-      description: 'Hoddle’s Tottenham have battled to the League Cup final and a first trophy in a decade is within reach. Reality: they froze against unfancied Blackburn and lost 2-1. This is the club’s day — throw everything at it, or manage the nerves of a side unused to finals?',
+      description: 'Hoddle’s Tottenham have battled to the League Cup final against Blackburn — a first trophy since 1999 within reach. Reality: Ziege equalised but Andy Cole struck the winner and Spurs lost 2-1. This is the club’s day — throw everything at it, or manage the nerves of a side unused to finals?',
       interrupt: true, clubId: 'spurs', category: 'event',
       choices: [
         { id: 'go', label: 'Throw everything at it', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 10 }, { kind: 'morale', clubId: 'spurs', amount: 12 }, { kind: 'memory', tag: 'cup', text: 'Spurs seize the day and lift the cup — beating the ghost of reality.' }], onFailure: [{ kind: 'morale', clubId: 'spurs', amount: -6 }] },
         { id: 'manage', label: 'Steady the nerves, play it tight', successProbability: 0.45, onSuccess: [{ kind: 'boardPatience', amount: 8 }, { kind: 'memory', tag: 'cup', text: 'Nervelessly saw out a final Spurs had waited a decade for.' }], onFailure: [{ kind: 'morale', clubId: 'spurs', amount: -6 }, { kind: 'memory', tag: 'cup', text: 'Froze on the big day, as reality did.' }] },
       ],
-      falloutIfIgnored: [{ kind: 'memory', tag: 'cup', text: 'The cup final comes and goes.' }],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'cup', text: 'The League Cup final comes and goes — lost 2-1 to Blackburn.' }],
       memoryTags: ['cup'],
+    }),
+  },
+  {
+    id: 'keane-leeds',
+    date: '2002-08',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:keane-leeds', title: 'Keane from a fire-sale Leeds',
+      description: 'A financially imploding Leeds have let Robbie Keane go for ~£7m. Reality: he became top scorer in his first season and a long-term fan favourite who called White Hart Lane his ‘spiritual home’. Sanction the £7m and exploit Leeds’ fire-sale, or hold funds and trust the Sheringham-Ferdinand-Iversen forward line?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'sign', label: 'Sign Keane — exploit the fire-sale (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Keane arrives — a future spiritual son of the Lane.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Keane from a collapsing Leeds.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'hold', label: 'Hold funds — trust the existing forwards', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Passed on Keane and kept the budget.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Keane joins from Leeds — an instant favourite.' }],
+      memoryTags: ['transfer', 'cur_rkeane'],
+    }),
+  },
+  {
+    id: 'hoddle-sacked',
+    date: '2003-09',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs' && s.managerRelations.identity === 'Glenn Hoddle',
+    build: () => ({
+      id: 'scripted:hoddle-sacked', title: 'Hoddle sacked, Pleat steps in',
+      description: 'Just four points from the opening six games has cost club legend Glenn Hoddle his job; Director of Football David Pleat has taken caretaker charge for the rest of a season that would end 14th. Pull the trigger early after a poor start, or back the club legend with more time and a transfer window to turn it around?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'sack', label: 'Sack Hoddle now (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Sacked Hoddle after a poor start; Pleat caretakes.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'back', label: 'Back the legend with time', successProbability: 0.4, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Gave Hoddle a window to turn it around.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Hoddle sacked; Pleat takes caretaker charge.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'west-ham-raid',
+    date: '2004-02',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:west-ham-raid', title: 'The West Ham raid — Defoe',
+      description: 'A cash-strapped West Ham have let Jermain Defoe go for ~£6m on deadline day (Bobby Zamora going the other way), with Michael Carrick to follow that summer for ~£3.5m. Reality: two future England internationals prised from a fallen East London rival. Raid West Ham for their best young English talent, or avoid the deadline-day premium and develop from the academy?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'raid', label: 'Raid West Ham (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Defoe arrives — England talent prised from a fallen rival.' }, { kind: 'memory', tag: 'transfer', text: 'Raided West Ham for Defoe (and later Carrick).' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'academy', label: 'Avoid the premium — develop from within', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Backed the academy over the deadline-day premium.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Defoe (and later Carrick) arrive from West Ham.' }],
+      memoryTags: ['transfer', 'cur_defoe_grad'],
+    }),
+  },
+  {
+    id: 'continental-experiment',
+    date: '2004-06',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:continental-experiment', title: 'The continental experiment — Santini & Arnesen',
+      description: 'After Euro 2004, Spurs are set to appoint France coach Jacques Santini as manager and install Frank Arnesen as Sporting Director in a continental director-of-football model, with Martin Jol as assistant. Import the foreign coach and hand real power to a sporting director, or keep a traditional all-powerful British manager?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'continental', label: 'Adopt the continental model (as reality did)', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Adopted the director-of-football structure under Arnesen.' }], onFailure: [{ kind: 'managerRelationship', amount: -6 }] },
+        { id: 'traditional', label: 'Keep a traditional British manager', successProbability: 0.55, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Kept an all-powerful manager over the continental split.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Santini appointed with Arnesen as Sporting Director — the continental experiment.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'santini-walks',
+    date: '2004-11',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:santini-walks', title: 'Santini walks out — Jol promoted',
+      description: 'After only 13 games Santini has resigned, citing personal reasons — though a power struggle with Arnesen over control and recruitment is widely understood to be the real cause. Reality: assistant Martin Jol was confirmed as head coach, scrapped the defensive style and revived the club. Promote the in-house Jol immediately for continuity, or go back to market for a bigger-name replacement?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'jol', label: 'Promote Jol — continuity (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Promoted Jol — the revival begins.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'market', label: 'Go to market for a bigger name', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Chased a marquee replacement over the assistant.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Santini walks; Jol promoted and revives the club.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'lasagne-gate',
+    date: '2006-05',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:lasagne-gate', title: 'Lasagne-gate — fourth place lost on the final day',
+      description: 'Needing only to match Arsenal’s result to seal 4th and the Champions League (a draw would have done — Spurs held a goal-difference edge), much of the squad has fallen ill overnight at the hotel. (Myth-check: health authorities found no confirmed food-poisoning source; it was likely a contagious stomach bug, not the lasagne.) The kick-off request is denied. Demand a postponement and field the fit fringe players, or send out the sick first XI to chase the result you need?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'postpone', label: 'Demand a postponement / field the fit men', successProbability: 0.35, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'near-miss', text: 'Fought for a postponement on the day the bug struck.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'sick-xi', label: 'Send out the sick first XI (as reality did)', successProbability: 0.4, onSuccess: [{ kind: 'memory', tag: 'near-miss', text: 'Sent out a weakened, sick side and fell short of 4th.' }], onFailure: [{ kind: 'morale', clubId: 'spurs', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Lasagne-gate: a sick Spurs lose at West Ham and are pipped to 4th by Arsenal.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'berbatov-signs',
+    date: '2006-07',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:berbatov-signs', title: 'Berbatov — a statement of ambition',
+      description: 'Spurs can sign Dimitar Berbatov from Bayer Leverkusen for ~£10.9m — a club record and the most expensive Bulgarian ever. Reality: he formed a celebrated partnership with Keane and became the league’s most watchable forward. Break the club’s fee/wage ceiling for a marquee striker to push for the top four, or stay disciplined on the wage structure and reinvest across the squad?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'break-ceiling', label: 'Break the ceiling for Berbatov (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'A club-record striker — a statement of ambition.' }, { kind: 'memory', tag: 'transfer', text: 'Broke the club record for Berbatov.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'discipline', label: 'Stay disciplined — spread the budget', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Held the wage line over a marquee splash.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Berbatov arrives for a club record — the Keane partnership forms.' }],
+      memoryTags: ['transfer', 'cur_berbatov'],
+    }),
+  },
+  {
+    id: 'carrick-sold',
+    date: '2006-07',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:carrick-sold', title: 'Carrick cashed in to United',
+      description: 'Manchester United have bid an initial £14m (rising to ~£18.6m) for Michael Carrick — a huge profit on a two-year-old signing, but it means losing your metronome midfielder to a title rival. Accept United’s big money and reinvest the profit, or reject the bid and keep your best deep-lying midfielder to build a top-four side?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Accept the money — reinvest (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'spurs', amount: 14_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Carrick to United at a big profit.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'keep', label: 'Reject the bid — keep the metronome', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'spurs', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Kept Carrick to build a top-four side.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Carrick sold to United — a big profit, a rival strengthened.' }],
+      memoryTags: ['transfer', 'cur_carrick2'],
+    }),
+  },
+  {
+    id: 'sevilla-uefa',
+    date: '2007-04',
+    scenarios: ['spurs-2001'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:sevilla-uefa', title: 'UEFA Cup run ends at Sevilla',
+      description: 'Under Jol, Spurs have reached the UEFA Cup quarter-final (heading for a second straight 5th in the league) against holders Sevilla. Reality: they lost 4-3 on aggregate to the eventual back-to-back winners — the Berbatov-Keane era peaking as a bright, entertaining, nearly-there side. Prioritise the European run and a possible trophy, or rest key men to protect the Premier League top-five push?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'europe', label: 'Chase the European run', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'spurs', amount: 5 }, { kind: 'memory', tag: 'near-miss', text: 'Went for the UEFA Cup — out to the eventual winners.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'league', label: 'Rest men — protect the league push', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Prioritised the league; Europe slipped away at Sevilla.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Spurs go out to Sevilla 4-3 on aggregate — the bright era peaks as nearly-men.' }],
+      memoryTags: ['near-miss'],
     }),
   },
 ];
