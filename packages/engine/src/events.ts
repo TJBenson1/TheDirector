@@ -4967,7 +4967,97 @@ const DORTMUND_1997_PACK: ScriptedEvent[] = [
   },
 ];
 
+// Moratti's Inter, 1998-2004: the overstocked attack, the coaching carousel, the
+// Vieri record, Ronaldo's knee tragedy, the Cinque Maggio collapse and the long
+// wait for Mancini. The transfers (Baggio, Vieri in; Ronaldo out) are
+// ledger-replayed and the manager churn can't be enacted as coach swaps, so most
+// beats are narrative overlays. Ronaldo's rupture stays the one mechanical beat.
 const INTER_1998_PACK: ScriptedEvent[] = [
+  {
+    id: 'baggio-arrives',
+    date: '1998-08',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:baggio-arrives', title: 'Il Divin Codino joins the circus',
+      description: 'After relaunching his career at Bologna (22 goals) and starring at France ’98, Roberto Baggio has joined Inter — deepening an already crowded attack under Simoni, signed to partner Ronaldo but at risk of being squeezed out. Build the team around a Ronaldo-Baggio axis and guarantee Baggio a starting role, or treat him as a luxury super-sub and protect the Ronaldo-Zamorano-Djorkaeff status quo?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'axis', label: 'Build a Ronaldo-Baggio axis — start him', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Baggio and Ronaldo — a dream front two on paper.' }, { kind: 'memory', tag: 'transfer', text: 'Committed to a Ronaldo-Baggio axis.' }], onFailure: [{ kind: 'morale', clubId: 'inter', amount: -3 }] },
+        { id: 'supersub', label: 'Luxury super-sub — keep the status quo', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Kept Baggio as a super-sub to protect the balance.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_baggio_i', amount: 10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Baggio joins Inter — a dazzling but crowded attack.' }],
+      memoryTags: ['transfer', 'cur_baggio_i'],
+    }),
+  },
+  {
+    id: 'attacking-logjam',
+    date: '1998-09',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:attacking-logjam', title: 'Too many stars',
+      description: 'Simoni’s Inter carry a surplus of world-class forwards and No.10s — Ronaldo, Baggio, Zamorano, Djorkaeff, plus Recoba. They cannot all play at once, and rotating egos is becoming the defining tension of the season. Sanction selling or loaning one marquee attacker to restore balance, or insist the coach keeps all the stars and rotates, prioritising depth over a settled XI?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'thin', label: 'Sell one to restore balance', successProbability: 0.55, onSuccess: [{ kind: 'money', clubId: 'inter', amount: 8_000_000 }, { kind: 'memory', tag: 'squad', text: 'Thinned the attacking glut to settle the XI.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'keep-all', label: 'Keep all the stars and rotate (as reality did)', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'squad', text: 'Kept every star and rotated — egos and all.' }], onFailure: [{ kind: 'morale', clubId: 'inter', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'squad', text: 'The attacking logjam festers — too many stars, one XI.' }],
+      memoryTags: ['squad'],
+    }),
+  },
+  {
+    id: 'simoni-sacked',
+    date: '1998-11',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter' && s.managerRelations.identity === 'Gigi Simoni',
+    build: () => ({
+      id: 'scripted:simoni-sacked', title: 'The carousel begins — Simoni sacked',
+      description: 'Moratti has sacked Gigi Simoni after a stuttering start — on the very day Simoni received the Panchina d’Oro. MYTH-BUSTER: Lippi did NOT replace him — Mircea Lucescu did, and the 1998-99 season would churn through four coaches (Simoni, Lucescu, caretaker Castellini, then Hodgson). Back continuity and keep Simoni through the rough patch, or pull the trigger and hire a firefighter, embracing Moratti’s trigger-happy reputation?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Back Simoni — continuity', successProbability: 0.45, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'manager', text: 'Kept faith with Simoni through the slump.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+        { id: 'sack', label: 'Hire a firefighter (as reality did)', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Sacked Simoni; the coaching carousel spins up.' }], onFailure: [{ kind: 'morale', clubId: 'inter', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Simoni sacked; Lucescu in — the four-coach season begins.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'vieri-record',
+    date: '1999-06',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:vieri-record', title: 'Vieri smashes the world transfer record',
+      description: 'Inter can sign Christian Vieri from Lazio for ~90 billion lire — a world-record fee, structured with Diego Simeone moving to Lazio as part of the deal (not a simple cash transfer). Reality: Bobo became the spearhead for five years. Sanction the record spend and build around him, or resist Moratti’s chequebook, arguing the Ronaldo-Baggio attack is already overstocked and the money should rebuild the defence?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'sign', label: 'Smash the record for Vieri (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'A world-record striker leads the line.' }, { kind: 'memory', tag: 'transfer', text: 'Broke the world record for Vieri; Simeone went the other way.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'defence', label: 'Resist — rebuild the defence instead', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Spent on the defence over another striker.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Vieri arrives for a world record; Simeone to Lazio in the deal.' }],
+      memoryTags: ['transfer', 'cur_vieri_l'],
+    }),
+  },
+  {
+    id: 'lippi-era',
+    date: '1999-07',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:lippi-era', title: 'The Lippi era begins',
+      description: 'Moratti has appointed reigning Serie A/Champions-League-winning coach Marcello Lippi with a huge (~€123m) rebuild budget. Reality: despite the star power, Lippi’s Inter finished only 4th and lost the Coppa Italia final, and he was sacked after the opening game of the next season. Give Lippi full transfer autonomy and time to impose his system, or keep a tight leash, protect favoured stars from being sold and demand instant results?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'autonomy', label: 'Full autonomy and time', successProbability: 0.55, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Gave Lippi full control of the rebuild.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'leash', label: 'Tight leash — protect stars, demand results', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'managerRelationship', amount: -6 }, { kind: 'memory', tag: 'manager', text: 'Kept Lippi on a leash over the squad.' }], onFailure: [{ kind: 'managerRelationship', amount: -10 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Lippi takes charge with a vast rebuild budget.' }],
+      memoryTags: ['manager'],
+    }),
+  },
   {
     id: 'ronaldo-knee',
     date: '1999-11',
@@ -4975,7 +5065,7 @@ const INTER_1998_PACK: ScriptedEvent[] = [
     requires: (s) => playerAt(s, 'cur_ronaldo_r9', 'inter') && s.playerClub === 'inter',
     build: () => ({
       id: 'scripted:ronaldo-knee', title: 'Ronaldo’s knee ruptures — Il Fenomeno in ruins',
-      description: 'The greatest striker on earth, at 23, has ruptured the tendon in his right knee. Reality was catastrophic: he rushed a comeback in April and it went again in six minutes, costing him three years. Rush the Phenomenon back for the run-in, or lock him away for a full, patient rehabilitation?',
+      description: 'Minutes after converting a penalty against Lecce, the greatest striker on earth, at 23, has ruptured the tendon in his right knee — the first act of his ‘black-and-blue period’. Reality was catastrophic: he rushed a comeback in April and it went again in six minutes, costing him three years. Rush the Phenomenon back for the run-in, or lock him away for a full, patient rehabilitation?',
       interrupt: true, clubId: 'inter', category: 'event',
       choices: [
         { id: 'rush', label: 'Rush him back — you need him', successProbability: 0.2, onSuccess: [{ kind: 'morale', clubId: 'inter', amount: 8 }], onFailure: [{ kind: 'ban', playerId: 'cur_ronaldo_r9', months: 18 }, { kind: 'ability', playerId: 'cur_ronaldo_r9', amount: -5 }, { kind: 'memory', tag: 'injury', text: 'Ronaldo broke down again on his comeback — the six-minute tragedy, as it happened.' }] },
@@ -4983,6 +5073,125 @@ const INTER_1998_PACK: ScriptedEvent[] = [
       ],
       falloutIfIgnored: [{ kind: 'ban', playerId: 'cur_ronaldo_r9', months: 14 }, { kind: 'ability', playerId: 'cur_ronaldo_r9', amount: -3 }, { kind: 'memory', tag: 'injury', text: 'Ronaldo’s knee robs the game of its phenomenon for years.' }],
       memoryTags: ['injury', 'cur_ronaldo_r9'],
+    }),
+  },
+  {
+    id: 'ronaldo-rerupture',
+    date: '2000-04',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:ronaldo-rerupture', title: 'Six minutes — the Coppa Italia final horror',
+      description: 'On his comeback in the Coppa Italia final against Lazio, Ronaldo has completely ruptured the same knee tendon after only ~6-7 minutes — one of football’s most harrowing injuries. Lazio won the final; reality kept him from playing meaningfully again until 2002. Spare no expense on the world’s best surgeons and a multi-year recovery, betting on redemption, or quietly write off his Inter future and plan the attack without him?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'redemption', label: 'Bet on redemption — the best surgeons (as reality did)', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 3, text: 'The club commits everything to bringing Il Fenomeno back.' }, { kind: 'memory', tag: 'injury', text: 'Backed Ronaldo’s long road back from the six-minute tragedy.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'write-off', label: 'Write off his future — plan without him', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'injury', text: 'Planned the attack without Ronaldo.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'injury', text: 'Ronaldo re-ruptures the knee after six minutes — out until 2002.' }],
+      memoryTags: ['injury', 'cur_ronaldo_r9'],
+    }),
+  },
+  {
+    id: 'cuper-appointed',
+    date: '2001-07',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:cuper-appointed', title: 'Cúper — the nearly-man arrives',
+      description: 'Moratti has hired Héctor Cúper, fresh from taking Valencia to two Champions League finals. Reality: the dour, defensive Argentine came agonisingly close but earned a ‘nearly-man’ reputation, culminating in the 2002 title collapse. Endorse Cúper’s pragmatic defensive philosophy, or demand a more attacking style to suit Vieri, Ronaldo and Recoba, sowing friction with the coach?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'endorse', label: 'Endorse the defensive pragmatism', successProbability: 0.55, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Backed Cúper’s defensive method.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'attack', label: 'Demand attacking football for the stars', successProbability: 0.45, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Pushed Cúper towards a bolder style.' }], onFailure: [{ kind: 'managerRelationship', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Cúper takes charge — a defensive nearly-man for Inter.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'cinque-maggio',
+    date: '2002-05',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:cinque-maggio', title: 'Cinque Maggio — the last-day collapse',
+      description: 'Top of the table and needing a win, Inter went to LAZIO (not Juventus) on the final day and lost 4-2 — Vieri and Di Biagio had them 2-1 up before it turned. Juventus won at Udinese to steal the title. The image of Ronaldo weeping on the bench in his final Inter match is iconic. Back Cúper to rebuild after the trauma, or decide the collapse is unforgivable and line up his replacement?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'back', label: 'Back Cúper to rebuild', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'near-miss', text: 'Stuck with Cúper after the Cinque Maggio heartbreak.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'replace', label: 'Unforgivable — line up a replacement', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Judged the collapse fatal and looked elsewhere.' }], onFailure: [{ kind: 'managerRelationship', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Inter lose 4-2 at Lazio and the title on the final day — Cinque Maggio.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'ronaldo-sold',
+    date: '2002-08',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:ronaldo-sold', title: 'Ronaldo joins the Galácticos',
+      description: 'Weeks after his 2002 World Cup redemption (8 goals, Golden Boot, both goals in the final), Ronaldo has left for Real Madrid for ~€45m — ending five injury-cursed seasons in which he never won Serie A for Inter. Cash in on his restored value while the market is hot and fund a rebuild, or fight to keep the returning World Cup hero as the centrepiece, gambling on his fitness?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Cash in at peak value (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'inter', amount: 20_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Ronaldo to Real at restored value — funded a rebuild.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'keep', label: 'Keep the World Cup hero — gamble on fitness', successProbability: 0.4, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Fought to keep Ronaldo despite the injury history.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Ronaldo joins Real Madrid — title-less at Inter after five cursed years.' }],
+      memoryTags: ['transfer', 'cur_ronaldo_r9'],
+    }),
+  },
+  {
+    id: 'cl-semi-2003',
+    date: '2003-05',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:cl-semi-2003', title: 'Derby heartbreak — the 2003 semi on away goals',
+      description: 'Cúper’s Inter reached the Champions League semi-final, an all-San-Siro Derby della Madonnina against Milan. After 0-0 and 1-1 (Shevchenko scoring, Martins equalising) Milan advanced on away goals and went on to win the final — Inter’s best European run of the era ending in derby agony. Treat the run as vindication and extend Cúper, or judge another semi-final near-miss as proof the project has peaked and plan changes?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'extend', label: 'Vindication — extend Cúper', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'near-miss', text: 'Extended Cúper on the back of the European run.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'change', label: 'Peaked — plan changes', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Judged the project peaked after another semi-final loss.' }], onFailure: [{ kind: 'managerRelationship', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Milan knock Inter out of the semi on away goals — derby heartbreak.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'zaccheroni-in',
+    date: '2003-10',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:zaccheroni-in', title: 'Cúper out, Zaccheroni in',
+      description: 'Six games into the season Cúper has been sacked after a poor start; following a brief caretaker spell, Alberto Zaccheroni has been appointed and would steer Inter to 4th. Act fast on Cúper and install Zaccheroni, or show patience, absorbing a poor start rather than triggering yet another mid-season upheaval?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'act', label: 'Act fast — Zaccheroni in (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Sacked Cúper; Zaccheroni takes over.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'patience', label: 'Show patience — no more upheaval', successProbability: 0.45, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Absorbed the poor start rather than sack again.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Cúper sacked; Zaccheroni appointed.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'mancini-appointed',
+    date: '2004-07',
+    scenarios: ['inter-1998'],
+    requires: (s) => s.playerClub === 'inter',
+    build: () => ({
+      id: 'scripted:mancini-appointed', title: 'Mancini opens a new chapter',
+      description: 'Roberto Mancini has succeeded Zaccheroni on a three-year deal. Reality: his arrival opened a new, more successful chapter that would soon deliver Coppa Italia and Serie A trophies — the payoff after the barren Ronaldo years. Bet on the young, ambitious Mancini as a long-term project, or chase a more proven big-name coach, questioning whether he is ready for a giant?',
+      interrupt: true, clubId: 'inter', category: 'event',
+      choices: [
+        { id: 'mancini', label: 'Bet on Mancini long-term (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Backed the young Mancini — a new chapter begins.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'proven', label: 'Chase a proven big name instead', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Went for experience over the young Mancini.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Mancini appointed — the payoff years are coming.' }],
+      memoryTags: ['manager'],
     }),
   },
 ];
