@@ -3684,6 +3684,213 @@ const LIVERPOOL_1995_PACK: ScriptedEvent[] = [
       memoryTags: ['culture'],
     }),
   },
+  // The Evans 'Spice Boys' years into Houllier's cup treble. Transfers are
+  // ledger-side; Owen (a 1997 academy breakthrough, not curated at 1995 kickoff) and
+  // the manager changes are narrative — overlays throughout.
+  {
+    id: 'collymore-record',
+    date: '1995-08',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:collymore-record', title: 'A British-record £8.5m for Collymore',
+      description: 'Roy Evans breaks the British transfer record for Stan Collymore, intending a partnership with Fowler. Reality: flashes of brilliance, but a troubled spell. Sanction the record outlay to chase the title now, or bank the fee and promote from within (Fowler, McManaman, the emerging youth)?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'spend', label: 'Break the record for Collymore (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'A British-record signing announces Liverpool’s intent.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Collymore for a British-record fee.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'promote', label: 'Bank it and back the youth', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Backed the homegrown core over a record signing.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Collymore signs for a British-record £8.5m.' }],
+      memoryTags: ['transfer', 'cur_collymore_95'],
+    }),
+  },
+  {
+    id: 'rush-leaves',
+    date: '1996-06',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:rush-leaves', title: 'Ian Rush leaves on a free',
+      description: 'The club’s all-time top scorer (346 goals) is out of contract after 16 seasons and can leave on a free. Reality: he went to Leeds; the end of an era. Offer a one-year extension or coaching role to keep the legend mentoring the young strikers, or let him walk and complete the handover to Fowler and Owen?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Keep the legend as a mentor', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 4 }, { kind: 'memory', tag: 'departure', text: 'Kept Rush on to mentor the young strikers.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'walk', label: 'Let him walk, complete the handover (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'memory', tag: 'departure', text: 'Rush departs; the future belongs to Fowler and Owen.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'departure', text: 'Ian Rush leaves on a free after 16 seasons.' }],
+      memoryTags: ['departure', 'cur_rush_95'],
+    }),
+  },
+  {
+    id: 'owen-breakthrough',
+    date: '1997-05',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:owen-breakthrough', title: 'Michael Owen’s breakthrough',
+      description: 'A 17-year-old debuts and scores at Wimbledon, then explodes with 18 league goals to finish joint top scorer. Reality: a teenage sensation, stepping up after Fowler’s injury. Fast-track him into the first team on senior wages (risking burnout), or manage his minutes and tie him to a long youth deal?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'fasttrack', label: 'Fast-track him (as reality did)', successProbability: 0.8, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'A teenage goalscoring phenomenon is born.' }, { kind: 'memory', tag: 'youth', text: 'Owen breaks through at 17.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'manage', label: 'Manage his minutes carefully', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'youth', text: 'Protected the prodigy with a patient path.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'youth', text: 'Michael Owen explodes onto the scene as a teenager.' }],
+      memoryTags: ['youth'],
+    }),
+  },
+  {
+    id: 'fowler-knee',
+    date: '1998-02',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => playerAt(s, 'cur_fowler_95', 'liverpool') && s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:fowler-knee', title: 'Fowler’s knee wrecked in the derby',
+      description: 'A collision with Everton’s keeper ruptures Fowler’s knee ligaments — around seven months out, and it will cost him the World Cup and blunt his peak. Reality: 129 of his 183 Liverpool goals came before this. Fund an elite overseas surgery/rehab to protect the asset, or pivot the attack permanently around Owen?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'rehab', label: 'Fund the best rehab to protect him', successProbability: 0.55, onSuccess: [{ kind: 'ban', playerId: 'cur_fowler_95', months: 7 }, { kind: 'morale', playerId: 'cur_fowler_95', amount: 5 }, { kind: 'memory', tag: 'injury', text: 'Gave Fowler the best chance to come back strong.' }], onFailure: [{ kind: 'ban', playerId: 'cur_fowler_95', months: 7 }] },
+        { id: 'pivot', label: 'Pivot the attack around Owen', successProbability: 0.6, onSuccess: [{ kind: 'ban', playerId: 'cur_fowler_95', months: 7 }, { kind: 'memory', tag: 'injury', text: 'Rebuilt the attack around Owen during Fowler’s absence.' }], onFailure: [{ kind: 'ban', playerId: 'cur_fowler_95', months: 7 }, { kind: 'morale', clubId: 'liverpool', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'ban', playerId: 'cur_fowler_95', months: 7 }, { kind: 'memory', tag: 'injury', text: 'Fowler’s knee ligaments rupture in the Merseyside derby.' }],
+      memoryTags: ['injury', 'cur_fowler_95'],
+    }),
+  },
+  {
+    id: 'owen-wonder-goal',
+    date: '1998-06',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:owen-wonder-goal', title: 'Owen’s wonder goal v Argentina',
+      description: 'At the World Cup, 18-year-old Owen scores a solo goal against Argentina and becomes a global star overnight. Reality: his value and profile rocket. Cash in at peak global interest, or build the commercial and sporting project around him with an improved, longer contract?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'build', label: 'Build around him with a new deal', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'The world’s brightest teenager is tied to Anfield.' }, { kind: 'memory', tag: 'international', text: 'Owen’s wonder goal makes him a global star; the club builds around him.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'cashin', label: 'Cash in at peak interest', successProbability: 0.4, onSuccess: [{ kind: 'memory', tag: 'international', text: 'Sold at the very height of Owen-mania.' }], onFailure: [{ kind: 'fanTrust', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'international', text: 'Owen’s solo goal against Argentina makes him a global star.' }],
+      memoryTags: ['international'],
+    }),
+  },
+  {
+    id: 'houllier-joint',
+    date: '1998-07',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool' && s.managerRelations.identity === 'Roy Evans',
+    build: () => ({
+      id: 'scripted:houllier-joint', title: 'Houllier arrives as joint manager',
+      description: 'The club takes the unprecedented step of installing Gérard Houllier alongside Roy Evans as joint managers. Reality: a divided dressing room and blurred authority from day one. Commit to the joint-manager experiment, or give Houllier a Director-of-Football role and keep a single clear chain of command to Evans?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'joint', label: 'Try the joint-manager experiment (as reality did)', successProbability: 0.4, onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Installed Houllier alongside Evans.' }], onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -4 }] },
+        { id: 'clarify', label: 'Clarify a single chain of command', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Avoided the divided-authority trap.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Houllier joins Evans as joint manager — authority blurred from day one.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'evans-resigns',
+    date: '1998-11',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool' && s.managerRelations.identity === 'Roy Evans',
+    build: () => ({
+      id: 'scripted:evans-resigns', title: 'Evans resigns; Houllier takes sole charge',
+      description: 'After a home defeat to Spurs, Roy Evans resigns in tears, ending the awkward dual role. Houllier takes sole command and begins dismantling the "Spice Boys" culture. Reality: a hard cultural reset followed. Hand Houllier full autonomy for the reset, or insist on retaining boot-room continuity within a restructured staff?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'autonomy', label: 'Full autonomy for the reset (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Gave Houllier the keys for a hard cultural reset.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'continuity', label: 'Retain boot-room continuity', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Kept a thread of Anfield continuity in the restructure.' }], onFailure: [{ kind: 'managerRelationship', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Evans resigns; Houllier takes sole charge and resets the culture.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'mcmanaman-bosman',
+    date: '1999-07',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:mcmanaman-bosman', title: 'McManaman leaves for Real Madrid (Bosman)',
+      description: 'Having agreed a pre-contract in January, Steve McManaman completes a free transfer to Real Madrid — one of the era’s landmark Bosman departures, and Liverpool get nothing for a homegrown star. Reality: he’d win two Champions Leagues in Spain. Sell in the January window for a real fee once the pre-contract is known, or keep him for the run-in and lose him for free?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'sell-jan', label: 'Cash in early rather than lose him free', successProbability: 0.55, onSuccess: [{ kind: 'memory', tag: 'departure', text: 'Salvaged a fee before McManaman’s Bosman exit.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'keep-runin', label: 'Keep him for the run-in (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 3 }, { kind: 'memory', tag: 'departure', text: 'Kept McManaman to the end, then lost him for nothing.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'departure', text: 'McManaman leaves for Real Madrid on a Bosman free.' }],
+      memoryTags: ['departure', 'cur_mcmanaman_95'],
+    }),
+  },
+  {
+    id: 'houllier-rebuild',
+    date: '2000-07',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:houllier-rebuild', title: 'Houllier’s rebuild for the treble push',
+      description: 'Houllier reshapes the squad with pragmatic recruits — Hyypiä, Heskey, plus free/veteran additions McAllister, Babbel and Barmby — building the solid, counter-attacking side that would peak in 2000-01. Bankroll the blend of experienced frees and a marquee striker, or demand a younger, cheaper homegrown core?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'bankroll', label: 'Back Houllier’s blend (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Backed the pragmatic rebuild — the treble side takes shape.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'homegrown', label: 'Demand a younger, cheaper core', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Held the budget and leaned on youth.' }], onFailure: [{ kind: 'managerRelationship', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Houllier rebuilds with Hyypiä, Heskey, McAllister and more.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'league-cup-2001',
+    date: '2001-02',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:league-cup-2001', title: 'League Cup won — treble part one',
+      description: 'A penalty-shootout win over Birmingham lifts the first trophy of a cup treble, ending a six-year drought. Treat the League Cup as a priority to build momentum, or rotate heavily to protect the UEFA Cup and top-four push?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'priority', label: 'Win it — build momentum', successProbability: 0.75, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'The drought ends — first leg of the cup treble.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'rotate', label: 'Rotate for the bigger prizes', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Managed the load across the cup runs.' }], onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'silverware', text: 'League Cup won on penalties — the treble begins.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'fa-cup-2001',
+    date: '2001-05',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:fa-cup-2001', title: 'FA Cup won — Owen sinks Arsenal',
+      description: 'Trailing late, Michael Owen scores twice in the final minutes to beat Arsenal 2-1 — treble part two. Reality: days before a UEFA Cup final. Rest key men for the European final, or go full-strength to guarantee the silverware in hand?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'rest', label: 'Rest men for the UEFA Cup final', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Won the Cup and protected legs for Dortmund.' }], onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -2 }] },
+        { id: 'fullstrength', label: 'Go full-strength', successProbability: 0.7, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Owen’s double beats Arsenal — treble part two.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'silverware', text: 'Owen’s late double beats Arsenal in the FA Cup final.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'uefa-cup-2001',
+    date: '2001-05',
+    scenarios: ['liverpool-1995'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:uefa-cup-2001', title: 'UEFA Cup — 5-4 v Alavés completes the treble',
+      description: 'A five-goal-each classic against Alavés, settled by a golden-goal own goal in extra time, completes an unprecedented cup treble just four days after the FA Cup. Use the treble to sanction a bigger summer and push for the league title, or consolidate and reinvest selectively on inflated values?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'push', label: 'Go for the league title', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'The cup treble complete — now for the league.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'consolidate', label: 'Consolidate and reinvest selectively', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Banked the treble and built carefully.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 8, text: 'A 5-4 classic against Alavés completes an unprecedented cup treble.' }, { kind: 'memory', tag: 'silverware', text: 'Won the UEFA Cup 5-4 to complete the treble.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
 ];
 
 const CHELSEA_1996_PACK: ScriptedEvent[] = [
