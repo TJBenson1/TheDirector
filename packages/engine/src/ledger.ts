@@ -643,7 +643,11 @@ const LEDGER_1995_2001: RealTransferLedgerEntry[] = [
   // ── Juventus rebuild (real-in decisions) ──
   { playerId: 'cur_zidane_b', from: 'bordeaux', to: 'juventus', window: '1996-07', fee: 3_200_000, id: 'zidane-juve-1996' },
   { playerId: 'cur_boksic', from: 'lazio', to: 'juventus', window: '1996-07', fee: 7_000_000, id: 'boksic-juve-1996' },
-  { playerId: 'cur_inzaghi_a', from: 'atalanta', to: 'juventus', window: '1997-07', fee: 12_500_000, id: 'inzaghi-juve-1997' },
+  // Pippo Inzaghi: Piacenza → Atalanta ('96, capocannoniere) → Juventus ('97).
+  // Seeded at Piacenza as cur_inzaghi_f_pc95, so the whole chain uses that id (an
+  // orphan cur_inzaghi_a keyed only the Juve leg, which then anchored nothing).
+  { playerId: 'cur_inzaghi_f_pc95', from: 'piacenza', to: 'atalanta', window: '1996-07', fee: 3_500_000, id: 'inzaghi-atalanta-1996' },
+  { playerId: 'cur_inzaghi_f_pc95', from: 'atalanta', to: 'juventus', window: '1997-07', fee: 12_500_000, id: 'inzaghi-juve-1997' },
   { playerId: 'cur_trezeguet_m', from: 'monaco', to: 'juventus', window: '2000-07', fee: 21_000_000, id: 'trezeguet-juve-2000' },
   { playerId: 'cur_thuram_p', from: 'parma', to: 'juventus', window: '2001-07', fee: 32_500_000, id: 'thuram-juve-2001' },
   { playerId: 'cur_buffon_p', from: 'parma', to: 'juventus', window: '2001-07', fee: 32_000_000, id: 'buffon-juve-2001' },

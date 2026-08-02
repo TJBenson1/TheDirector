@@ -154,4 +154,60 @@ describe('curated data integrity', () => {
     }
     expect(early, `players seeded before real arrival in ${id}`).toEqual([]);
   });
+
+  // "Dead price anchor": a paid departure whose playerId never resolves to a real
+  // squad member at its `from` club. This is the SWP/Wiltord class — the same real
+  // footballer carries a DIFFERENT curated id per era (SWP is `cur_swp_mc` in
+  // era-2004 but `cur_swp_mc3` in era-2003), so a sale entry keyed to the other
+  // era's id silently anchors nothing. realMarketFee matches on
+  // `e.playerId === p.id && e.from === p.club && e.fee > 0`; if no seeded player
+  // satisfies that, the asking price falls back to the abstract model value and
+  // reality-pricing breaks (SWP offered at £3.7m in Jan 2005 instead of ~£21m).
+  // A departure is "live" when the player is either seeded at `from` at kickoff OR
+  // arrives there via an earlier ledger entry (so he'll be there when it fires).
+  // A departure fires only while the player is at `from`; he can get there three
+  // ways: (a) seeded at `from` at kickoff, (b) an earlier ledger arrival TO `from`,
+  // or (c) an academy intake at `from` before the sale (graduates enter the world
+  // mid-sim, not at kickoff, so the kickoff snapshot won't list them). Context
+  // clubs whose whole squad is borrowed from an adjacent era carry pre-borrow sale
+  // entries that can never fire — the same reuse the early-seed check documents.
+  const KNOWN_DEAD_ANCHORS = new Set<string>([
+    'cur_emerson_07@real_madrid', // juventus-2006 reuses the 2007 Milan squad
+    'cur_oddo@lazio', //            juventus-2006 reuses the 2007 Milan squad
+    'cur_effenberg_98@gladbach', // dortmund-1997 reuses the 1998 Bayern squad (he's
+    //                              already at Bayern a year early, so his real
+    //                              Gladbach→Bayern '98 move can never fire)
+    'cur_suarez_lv10@liverpool', // bayern-2009 background: Suárez isn't seeded (he
+    //                              was at Ajax in '09, no Ajax→Liverpool arrival in
+    //                              this pack), so the '14 Barça sale is inert colour,
+    //                              not a mispriced live player. Expand upstream to lift.
+  ]);
+
+  it.each(scenarioIds)('%s anchors every paid future departure to a resolvable squad member', (id) => {
+    const s: GameState = createNewGame({ scenarioId: id, seed: 'integrity' });
+    const ledger = ERA_REALITY[eraForScenario(id)]?.realTransferLedger ?? [];
+    const intakes = ERA_REALITY[eraForScenario(id)]?.academyIntakes ?? [];
+    const kick = transferWindowOrdinal(s.clock.date);
+    const dead: string[] = [];
+    for (const e of ledger) {
+      if (e.fee <= 0 || !e.from) continue; // only paid departures anchor pricing
+      // A move at/before kickoff has already happened (or is the opening window,
+      // handled by the M12C rewind) — it never anchors a live price, so skip it.
+      if (transferWindowOrdinal(e.window) <= kick) continue;
+      if (KNOWN_DEAD_ANCHORS.has(`${e.playerId}@${e.from}`)) continue;
+      const p = s.players[e.playerId];
+      const eYear = Number(e.window.slice(0, 4));
+      const seededAtFrom = !!p && !p.retired && p.club === e.from;
+      const arrivesAtFrom = ledger.some(
+        (d) => d.playerId === e.playerId && d.to === e.from && d.window < e.window,
+      );
+      const graduatesAtFrom = intakes.some(
+        (g) => g.playerId === e.playerId && g.clubId === e.from && g.year <= eYear,
+      );
+      if (!seededAtFrom && !arrivesAtFrom && !graduatesAtFrom) {
+        dead.push(`${p?.name ?? '??'} (${e.playerId}) leaves ${e.from} for ${e.fee} @ ${e.window}`);
+      }
+    }
+    expect(dead, `dead price anchors (playerId never reaches 'from') in ${id}`).toEqual([]);
+  });
 });
