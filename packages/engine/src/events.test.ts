@@ -222,3 +222,45 @@ describe('scripted beat-sheet packs (passive fidelity)', () => {
     });
   }
 });
+
+describe('world headlines: dated background news', () => {
+  // A passive save should hear the wider era pass as dated colour — World Cups,
+  // takeovers, world-shaking news — with no perturbation of the sim.
+  function passiveNews(scenarioId: string, untilYear: number): string[] {
+    let s = createNewGame({ scenarioId, seed: `news-${scenarioId}` });
+    const news: string[] = [];
+    for (let i = 0; i < 160; i++) {
+      resolveIgnoredDecisions(s);
+      s.pendingDecisions = [];
+      const before = s.eventLog.length;
+      s = advanceWindow(s).state;
+      for (const e of s.eventLog.slice(before)) {
+        if (e.code === 'world.news') news.push(String(e.message));
+      }
+      if (Number(s.clock.date.slice(0, 4)) >= untilYear) break;
+    }
+    return news;
+  }
+
+  it('fires each scenario’s own headlines passively (spot-check across eras)', () => {
+    // Representative spread of eras; each has 3-6 headlines in the source data.
+    const cases: Array<[string, number, number]> = [
+      ['man-utd-1999', 2006, 3],
+      ['juventus-1995', 2002, 5],
+      ['barcelona-2014', 2021, 5],
+      ['man-city-2008', 2015, 5],
+    ];
+    for (const [scenarioId, until, min] of cases) {
+      const news = passiveNews(scenarioId, until);
+      expect(news.length, `too few world headlines in ${scenarioId}`).toBeGreaterThanOrEqual(min);
+    }
+  });
+
+  it('a scenario never hears another era’s news', () => {
+    // man-utd-1999 (1999-2014) must not surface the 2016 Leicester / 2018 headlines
+    // that belong only to later scenarios.
+    const news = passiveNews('man-utd-1999', 2010).join(' | ');
+    expect(news).not.toContain('Leicester');
+    expect(news).not.toContain('Brexit');
+  });
+});

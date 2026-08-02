@@ -21,6 +21,7 @@ import type {
   GameState,
   LoggedEvent,
   PlayerState,
+  ScenarioId,
   YearMonth,
 } from './types.js';
 import { Rng } from './rng.js';
@@ -9015,12 +9016,238 @@ export function fireMacroEvents(state: GameState): void {
   }
 }
 
+// ── World headlines: dated background news ───────────────────────────────────
+// Per-scenario real-world and football headlines that give a passive save a sense
+// of the wider era passing — the World Cups, the takeovers, the world-shaking
+// news, told as dated colour. Pure narration: logEvent + a 'world' memory, no
+// state change and no RNG, so it can never perturb the sim or calibration. Keyed
+// by scenarioId so a save only ever hears its own era's news, and deduped in
+// meta.firedScripted. Distinct from MACRO_EVENTS, which can move money and raise
+// decisions; these never do.
+interface WorldHeadline {
+  date: YearMonth;
+  headline: string;
+}
+
+const WORLD_HEADLINES: Partial<Record<ScenarioId, WorldHeadline[]>> = {
+  'arsenal-1996': [
+    { date: '1998-07', headline: 'France win the World Cup on home soil (12 Jul 1998), beating Brazil 3-0 — Arsenal\'s Emmanuel Petit scores the third goal and Patrick Vieira assists, cementing Highbury\'s French revolution.' },
+    { date: '1999-05', headline: 'Manchester United complete an unprecedented Treble, winning the Champions League with two stoppage-time goals against Bayern Munich (26 May 1999) — raising the bar Arsenal must chase.' },
+    { date: '2001-07', headline: 'Zinedine Zidane joins Real Madrid from Juventus for a world-record fee (~£46m / €75m, 9 Jul 2001), the peak of the \'Galácticos\' spending era.' },
+    { date: '2003-07', headline: 'Roman Abramovich buys Chelsea for ~£140m (1 Jul 2003), unleashing unprecedented transfer spending and permanently reshaping the Premier League\'s economics on the eve of Arsenal\'s Invincibles season.' },
+  ],
+  'arsenal-2004': [
+    { date: '2004-12', headline: 'Indian Ocean earthquake and tsunami kills ~230,000 across 14 countries (26 Dec 2004).' },
+    { date: '2005-07', headline: '7/7 London bombings: four suicide attacks on the transport network kill 52 (7 Jul 2005).' },
+    { date: '2008-09', headline: 'Lehman Brothers collapses (15 Sep 2008), triggering the global financial crisis.' },
+    { date: '2008-11', headline: 'Barack Obama elected first Black U.S. President (4 Nov 2008).' },
+    { date: '2011-08', headline: 'England riots: days of looting and unrest across London and other cities (Aug 2011), coinciding with the season\'s start.' },
+  ],
+  'barcelona-2003': [
+    { date: '2004-07', headline: 'Greece win Euro 2004, one of football\'s greatest shocks, beating hosts Portugal 1-0 in the final (4 July 2004).' },
+    { date: '2006-07', headline: 'Italy win the 2006 World Cup on penalties over France (9 July 2006); Zinedine Zidane\'s headbutt on Marco Materazzi ends his career in infamy.' },
+    { date: '2008-06', headline: 'Spain win Euro 2008 (29 June 2008), ending a 44-year trophy drought and launching the tiki-taka dynasty built on Barca\'s core.' },
+    { date: '2009-06', headline: 'Real Madrid sign Cristiano Ronaldo for a world-record ~EUR94m as Florentino Perez returns and relaunches the Galacticos, framing the era\'s Clasico arms race.' },
+    { date: '2010-07', headline: 'Spain win the 2010 World Cup (11 July 2010) via Andres Iniesta\'s extra-time goal, their first world title, with a Barcelona-heavy spine.' },
+  ],
+  'barcelona-2014': [
+    { date: '2014-07', headline: 'Germany win the 2014 World Cup, beating Messi\'s Argentina 1-0 in the final (13 July); Germany had earlier destroyed hosts Brazil 7-1 in the semi-final.' },
+    { date: '2016-05', headline: 'Leicester City win the Premier League at 5000-1 odds, the greatest underdog title in football history.' },
+    { date: '2018-05', headline: 'Real Madrid win a third consecutive Champions League under Zidane (beating Liverpool 3-1, 26 May), Barcelona\'s great rival at its European peak.' },
+    { date: '2018-07', headline: 'Cristiano Ronaldo leaves Real Madrid for Juventus (~€100m), ending the Messi-Ronaldo La Liga duopoly.' },
+    { date: '2020-03', headline: 'The COVID-19 pandemic suspends world football; seasons resume behind closed doors, and the 2020 Champions League is finished as single-leg ties in empty Lisbon stadiums.' },
+  ],
+  'bayern-1998': [
+    { date: '1998-07', headline: 'France win their first World Cup on home soil, Zidane\'s two headers sinking Brazil 3-0 in the Paris final (12 July 1998).' },
+    { date: '2000-07', headline: 'France add Euro 2000, Trezeguet\'s golden goal beating Italy in the final to make them simultaneous world and European champions.' },
+    { date: '2001-07', headline: 'Zinedine Zidane joins Real Madrid for a world-record fee (~76m euros), the signing that defines the \'Galacticos\' era.' },
+    { date: '2002-06', headline: 'Brazil win the 2002 World Cup 2-0 over Germany; Ronaldo\'s redemption double, while Bayern\'s Oliver Kahn becomes the first (and only) goalkeeper to win the tournament\'s Golden Ball despite his final error.' },
+    { date: '2002-05', headline: 'Zidane\'s iconic left-foot volley wins the Champions League final for Real Madrid over Leverkusen at Hampden Park (15 May 2002).' },
+  ],
+  'bayern-2009': [
+    { date: '2010-07', headline: 'Spain win the World Cup (11 July 2010, 1-0 v Netherlands, Iniesta 116\') — Bayern\'s Robben and Van Bommel lose the final with the Dutch.' },
+    { date: '2012-05', headline: 'Klopp\'s Borussia Dortmund complete a Bundesliga-and-Pokal double, retaining the title and hammering Bayern 5-2 in the cup final — the rivalry peaks.' },
+    { date: '2013-09', headline: 'Gareth Bale joins Real Madrid for a then-world-record fee (~£85m, 1 Sept 2013), marking the era\'s transfer-market inflation.' },
+    { date: '2014-05', headline: 'Real Madrid win \'La Decima\', their 10th European Cup (24 May 2014, 4-1 aet v Atletico Madrid).' },
+    { date: '2014-07', headline: 'Germany win the World Cup (13 July 2014, 1-0 v Argentina) with Bayern\'s Mario Gotze scoring the extra-time winner, days after the 7-1 demolition of Brazil.' },
+  ],
+  'chelsea-1996': [
+    { date: '1996-06', headline: 'Euro 96 held in England; \'Football\'s Coming Home\' — Germany beat Czech Republic in the final at Wembley on a golden goal.' },
+    { date: '1998-07', headline: 'France win the 1998 World Cup on home soil, beating Brazil 3-0 in the Paris final (Zidane double).' },
+    { date: '1999-05', headline: 'Manchester United complete the Treble, beating Bayern Munich with two injury-time goals in the Champions League final.' },
+    { date: '2001-09', headline: '9/11 terrorist attacks on the United States reshape global politics.' },
+    { date: '2002-06', headline: 'Brazil win the 2002 World Cup in Japan/South Korea, beating Germany 2-0 (Ronaldo double).' },
+  ],
+  'chelsea-2003': [
+    { date: '2003-03', headline: 'US-led coalition invades Iraq, toppling Saddam Hussein (20 March 2003)' },
+    { date: '2004-12', headline: 'Indian Ocean earthquake and tsunami kill c.230,000 across 14 countries on Boxing Day (26 Dec 2004)' },
+    { date: '2005-07', headline: 'London 7/7 suicide bombings kill 52 on the transport network (7 July 2005)' },
+    { date: '2007-06', headline: 'Apple launches the first iPhone, redefining the smartphone (29 June 2007)' },
+    { date: '2008-09', headline: 'Lehman Brothers collapses (15 Sept 2008), triggering the global financial crisis' },
+  ],
+  'dortmund-1997': [
+    { date: '1998-07', headline: 'France win the World Cup on home soil, beating Brazil 3-0 in the Paris final (12 Jul 1998).' },
+    { date: '1999-05', headline: 'Manchester United complete the treble with a stoppage-time comeback to beat Bayern Munich 2-1 in the Champions League final (26 May 1999).' },
+    { date: '2001-09', headline: 'The 11 September 2001 attacks in the United States halt sport worldwide and reshape the global mood.' },
+    { date: '2002-01', headline: 'The euro enters physical circulation across 12 nations on 1 Jan 2002, remaking European club finances.' },
+    { date: '2002-06', headline: 'Brazil win the 2002 World Cup in Japan/South Korea, Ronaldo\'s two goals sinking Germany 2-0 in the final (30 Jun 2002).' },
+  ],
+  'dortmund-2012': [
+    { date: '2012-07', headline: 'London 2012 Summer Olympics open (27 July 2012).' },
+    { date: '2013-03', headline: 'Cardinal Jorge Bergoglio elected Pope Francis (13 March 2013).' },
+    { date: '2014-07', headline: 'Germany win the World Cup in Brazil; ex-Dortmund man Mario Gotze scores the extra-time final winner vs Argentina (13 July 2014).' },
+    { date: '2016-06', headline: 'United Kingdom votes to leave the European Union in the Brexit referendum (23 June 2016).' },
+    { date: '2016-11', headline: 'Donald Trump elected US President (8 November 2016).' },
+  ],
+  'inter-1998': [
+    { date: '1998-07', headline: 'France win their first World Cup on home soil, beating a strangely subdued Ronaldo\'s Brazil 3-0 in the final (Zidane 2 goals), 12 July 1998.' },
+    { date: '1999-05', headline: 'Manchester United complete the Treble, winning the Champions League with two stoppage-time goals against Bayern Munich in Barcelona, 26 May 1999.' },
+    { date: '2001-07', headline: 'Zinedine Zidane joins Real Madrid\'s Galácticos for a world-record fee (~€75m) from Juventus, July 2001.' },
+    { date: '2002-06', headline: 'Brazil win their fifth World Cup; Ronaldo completes his redemption with 8 goals and the Golden Boot, scoring both in a 2-0 final win over Germany, 30 June 2002.' },
+    { date: '2003-07', headline: 'Roman Abramovich buys Chelsea, ushering in the era of billionaire-funded transfer inflation across European football, July 2003.' },
+  ],
+  'inter-2004': [
+    { date: '2004-07', headline: 'Greece stun Europe to win Euro 2004 (final 4 July, beating hosts Portugal 1-0).' },
+    { date: '2005-05', headline: 'The \'Miracle of Istanbul\': Liverpool recover from 3-0 down to beat AC Milan on penalties in the Champions League final (25 May 2005).' },
+    { date: '2006-07', headline: 'Italy win the 2006 World Cup, beating France on penalties in Berlin (9 July 2006).' },
+    { date: '2009-05', headline: 'Pep Guardiola\'s Barcelona complete their own treble, beating Manchester United 2-0 in the Champions League final in Rome (27 May 2009) — foreshadowing the Ibra/Eto\'o swap.' },
+    { date: '2010-07', headline: 'Spain win their first World Cup in South Africa (Iniesta\'s extra-time winner vs Netherlands, 11 July 2010).' },
+  ],
+  'juventus-1995': [
+    { date: '1995-12', headline: 'Bosman ruling (15 Dec 1995): the European Court of Justice frees out-of-contract EU players to move without a fee and scraps foreigner quotas, reshaping every transfer market.' },
+    { date: '1997-07', headline: 'Ronaldo \'Il Fenomeno\' joins Inter Milan from Barcelona for a world-record fee, arming Juventus\' fiercest title rival with the world\'s best striker.' },
+    { date: '1998-07', headline: 'France win the World Cup (12 Jul 1998), Juventus\' Zidane heading two goals past Brazil in a 3-0 final in Paris.' },
+    { date: '2000-07', headline: 'France beat Italy 2-1 in the Euro 2000 final (2 Jul) on Trezeguet\'s golden goal after Wiltord\'s last-gasp equaliser; Del Piero spurned chances to kill it — and Trezeguet then signed for Juventus.' },
+    { date: '2000-05', headline: 'Real Madrid win the 2000 Champions League, cementing the \'Galactico\' era that would soon lure Zidane away from Turin.' },
+  ],
+  'juventus-2006': [
+    { date: '2006-07', headline: 'Italy win the 2006 World Cup (9 Jul, beating France on penalties) with a Juventus-heavy spine — Buffon, Cannavaro, Del Piero, Camoranesi, Zambrotta — days before Calciopoli sends the club to Serie B.' },
+    { date: '2007-05', headline: 'AC Milan win the Champions League (23 May 2007), avenging Istanbul against Liverpool — while co-accused in Calciopoli, Milan escaped with only a points deduction and kept European football.' },
+    { date: '2010-05', headline: 'Jose Mourinho\'s Inter Milan complete the treble (Serie A, Coppa Italia, Champions League), cementing Inter\'s dominance during Juventus\' wilderness years.' },
+    { date: '2010-07', headline: 'Spain win the 2010 World Cup, extending the Barcelona/Spain tiki-taka golden era (after Euro 2008) that defined the period\'s global game.' },
+    { date: '2012-05', headline: 'Manchester City win their first Premier League title on the final day via Aguero\'s stoppage-time goal (13 May 2012), the same weekend Juventus completed their unbeaten Scudetto.' },
+  ],
+  'liverpool-1995': [
+    { date: '1995-12', headline: 'Bosman ruling (15 Dec 1995): the European Court of Justice lets out-of-contract EU players move for free, reshaping transfers — the mechanism McManaman would later use to leave for nothing.' },
+    { date: '1996-06', headline: 'Euro 96 hosted in England (\'Football\'s Coming Home\'); Germany beat the Czech Republic in the Wembley final on a golden goal (30 June 1996).' },
+    { date: '1998-05', headline: 'Arsenal win the Premier League–FA Cup Double in Arsène Wenger\'s first full season, accelerating the foreign-coach revolution that framed Houllier\'s arrival.' },
+    { date: '1998-07', headline: 'France win the World Cup on home soil, beating Brazil 3-0 (12 July 1998).' },
+    { date: '1999-05', headline: 'Manchester United complete the Treble, beating Bayern Munich 2-1 with two injury-time goals in the Champions League final (26 May 1999) — the benchmark Liverpool\'s rivals set.' },
+  ],
+  'liverpool-2001': [
+    { date: '2001-09', headline: 'September 11 attacks on the United States kill nearly 3,000 people' },
+    { date: '2002-01', headline: 'Euro banknotes and coins enter circulation across the Eurozone' },
+    { date: '2003-03', headline: 'US-led invasion of Iraq begins' },
+    { date: '2004-12', headline: 'Indian Ocean earthquake and tsunami kills an estimated 230,000 people' },
+    { date: '2005-07', headline: '7/7 London bombings kill 52 commuters' },
+    { date: '2007-06', headline: 'Apple releases the first iPhone' },
+  ],
+  'liverpool-2010': [
+    { date: '2010-07', headline: 'Spain beat the Netherlands 1-0 to win the 2010 FIFA World Cup in South Africa (11 July 2010)' },
+    { date: '2011-05', headline: 'Osama bin Laden killed by US special forces in Pakistan (2 May 2011)' },
+    { date: '2014-07', headline: 'Germany beat Argentina 1-0 to win the 2014 FIFA World Cup in Brazil (13 July 2014)' },
+    { date: '2016-05', headline: '5000-1 Leicester City crowned Premier League champions (title confirmed 2 May 2016)' },
+    { date: '2016-06', headline: 'United Kingdom votes to leave the European Union in the Brexit referendum (23 June 2016)' },
+  ],
+  'man-city-2008': [
+    { date: '2008-09', headline: 'Lehman Brothers collapses (15 Sept 2008), triggering the global financial crisis — the same month City became the richest club in the world, a jarring contrast that framed the takeover\'s optics.' },
+    { date: '2008-11', headline: 'Barack Obama elected 44th US President (4 Nov 2008).' },
+    { date: '2010-07', headline: 'Spain win the 2010 FIFA World Cup in South Africa (11 July 2010).' },
+    { date: '2012-07', headline: 'London hosts the 2012 Summer Olympics (opening 27 July 2012), Britain\'s sporting summer alongside City\'s first title.' },
+    { date: '2014-07', headline: 'Germany win the 2014 World Cup in Brazil, having thrashed the hosts 7-1 in the semi-final (8 July 2014).' },
+  ],
+  'man-utd-1999': [
+    { date: '2000-07', headline: 'Real Madrid win the presidency for Florentino Perez and sign Luis Figo from Barcelona in a world-record deal.' },
+    { date: '2003-07', headline: 'Roman Abramovich buys Chelsea, reshaping the transfer market.' },
+    { date: '2004-05', headline: 'Arsenal go the whole league season unbeaten — the Invincibles.' },
+  ],
+  'man-utd-2013': [
+    { date: '2014-07', headline: 'Germany win the 2014 World Cup in Brazil (final 13 July 2014), days after humiliating the hosts 7-1 in the semi-final on 8 July 2014.' },
+    { date: '2016-05', headline: 'Leicester City complete a 5000-1 Premier League title triumph (confirmed 2 May 2016), the greatest shock in modern English football.' },
+    { date: '2018-05', headline: 'Manchester City become the first English top-flight side to reach 100 points in a season under Pep Guardiola (2017-18 \'Centurions\').' },
+    { date: '2018-07', headline: 'France win the 2018 World Cup in Russia, beating Croatia 4-2 in the final on 15 July 2018.' },
+    { date: '2019-06', headline: 'Liverpool win the Champions League, beating Tottenham 2-0 in the all-English final in Madrid on 1 June 2019.' },
+  ],
+  'milan-1995': [
+    { date: '1995-12', headline: 'Bosman ruling (15 Dec 1995): the European Court of Justice frees out-of-contract EU players and scraps EU foreigner quotas, reshaping the transfer market.' },
+    { date: '1997-07', headline: 'Ronaldo joins city rivals Inter from Barcelona for a world-record fee (~$27m), the era\'s defining superstar transfer.' },
+    { date: '1998-07', headline: 'France win their home 1998 World Cup, beating Brazil 3-0 in the final on 12 Jul 1998 (Zidane double).' },
+    { date: '1999-05', headline: 'Manchester United complete the Treble with a stoppage-time comeback over Bayern in the Champions League final on 26 May 1999.' },
+    { date: '2001-07', headline: 'Zinedine Zidane joins Real Madrid for a world-record ~€75m, cementing the Galacticos project.' },
+  ],
+  'milan-2007': [
+    { date: '2006-07', headline: 'Italy win the 2006 World Cup in Germany, beating France on penalties after Zidane\'s headbutt-and-red-card exit in the final (9 July 2006).' },
+    { date: '2009-06', headline: 'Real Madrid launch Galácticos 2.0, breaking the world transfer record for Cristiano Ronaldo (~£80m) days after buying Kaká from Milan.' },
+    { date: '2010-07', headline: 'Spain win the 2010 World Cup in South Africa, cementing the tiki-taka era with a 1-0 final win over the Netherlands (11 July 2010).' },
+    { date: '2011-05', headline: 'Guardiola\'s Barcelona dismantle Manchester United 3-1 at Wembley to win the Champions League — the peak of the Messi-led tiki-taka dynasty (28 May 2011).' },
+    { date: '2012-05', headline: 'Chelsea win their first Champions League, beating Bayern Munich on penalties in Munich (19 May 2012).' },
+  ],
+  'real-madrid-2000': [
+    { date: '2002-06', headline: 'Brazil win the 2002 World Cup in Japan/South Korea (final 30 June); Ronaldo\'s redemption with 8 goals sets up his Real Madrid move weeks later.' },
+    { date: '2003-07', headline: 'Roman Abramovich buys Chelsea (July 2003), unleashing spending that reshapes the transfer market and pulls Makelele to London.' },
+    { date: '2004-07', headline: 'Greece shock Europe, beating hosts Portugal 1-0 to win Euro 2004 (4 July), the biggest upset in the tournament\'s history.' },
+    { date: '2005-05', headline: 'Liverpool\'s \'Miracle of Istanbul\' (25 May 2005): from 3-0 down to beat AC Milan on penalties in the Champions League final.' },
+    { date: '2006-07', headline: 'Italy win the 2006 World Cup on penalties (9 July, Berlin); Zidane\'s career ends with a red card for headbutting Materazzi in the final.' },
+  ],
+  'real-madrid-2006': [
+    { date: '2006-07', headline: 'Italy win the 2006 World Cup; Zidane\'s headbutt on Materazzi ends his career in the final (9 Jul 2006).' },
+    { date: '2008-06', headline: 'Spain win Euro 2008 (29 Jun 2008), beginning their era of dominance.' },
+    { date: '2008-09', headline: 'Global financial crisis erupts with the collapse of Lehman Brothers (15 Sep 2008).' },
+    { date: '2010-07', headline: 'Spain win their first World Cup (11 Jul 2010), Iniesta scoring the final winner.' },
+    { date: '2012-07', headline: 'Spain retain the European crown at Euro 2012, completing a historic three-tournament run.' },
+  ],
+  'spurs-2001': [
+    { date: '2001-09', headline: 'September 11 attacks in the United States reshape the geopolitical decade.' },
+    { date: '2003-07', headline: 'Roman Abramovich buys Chelsea (1 July 2003), launching the oligarch/petro-money era of Premier League spending.' },
+    { date: '2004-05', headline: 'Arsenal complete the \'Invincibles\' season — unbeaten 2003-04 Premier League champions — right on Spurs\' doorstep.' },
+    { date: '2005-05', headline: 'Liverpool win the Champions League in Istanbul (25 May 2005), recovering from 3-0 down against AC Milan.' },
+    { date: '2006-07', headline: 'Italy win the 2006 World Cup; Zinedine Zidane is sent off for headbutting Marco Materazzi in the final (9 July 2006).' },
+  ],
+  'spurs-2013': [
+    { date: '2013-05', headline: 'Sir Alex Ferguson retires after 26 years at Manchester United, ending an era as the Spurs rebuild begins.' },
+    { date: '2016-05', headline: 'Leicester City win the Premier League at 5000-1, the outsider miracle that also ends Spurs\' title bid.' },
+    { date: '2018-05', headline: 'Manchester City become the first English top-flight \'Centurions\', hitting 100 points under Pep Guardiola and raising the title bar.' },
+    { date: '2018-07', headline: 'France win the 2018 World Cup in Russia; England reach the semi-finals and Harry Kane takes the Golden Boot.' },
+    { date: '2019-06', headline: 'Liverpool win the Champions League, beating Spurs in an all-English final in Madrid.' },
+  ],
+};
+
+/**
+ * Fire the current scenario's dated world headlines as background news. Each fires
+ * once when its month is reached (deduped in meta.firedScripted), logging a
+ * 'world.news' event and a 'world' memory. Pure colour — no state change, no RNG,
+ * no pending decisions — so it never throttles the sim or perturbs calibration
+ * (the fidelity census counts only scripted.fired/skipped, never world.news).
+ */
+export function fireWorldHeadlines(state: GameState): void {
+  const headlines = WORLD_HEADLINES[state.meta.scenarioId];
+  if (!headlines) return;
+  const curYM = ymIndex(state.clock.date);
+  for (let i = 0; i < headlines.length; i++) {
+    const h = headlines[i]!;
+    const key = `news:${state.meta.scenarioId}:${i}`;
+    if (state.meta.firedScripted.includes(key)) continue;
+    const evYM = ymIndex(h.date);
+    if (curYM < evYM) continue;
+    // Fire once, the first window at or after the headline's month (window
+    // stepping can skip several months, so don't gate on an exact hit).
+    state.meta.firedScripted.push(key);
+    logEvent(state, {
+      category: 'event', code: 'world.news',
+      message: h.headline,
+      data: { id: key, kind: 'headline' },
+    });
+    appendMemory(state, 'world', h.headline);
+  }
+}
+
 // ── Monthly entry point ──────────────────────────────────────────────────────
 
 /** Fire scripted + procedural events for the current month. */
 export function rollEventsMonth(state: GameState, rng: Rng): void {
   fireScriptedEvents(state);
   fireMacroEvents(state);
+  fireWorldHeadlines(state);
   rollScandals(state, rng.fork(`events:${state.clock.date}`));
   // Non-real storylines emerge as the world diverges from real history (§9f).
   rollDivergentStoryline(state, rng.fork(`divergence:${state.clock.date}`));

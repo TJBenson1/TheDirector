@@ -129,7 +129,7 @@ const routes: Record<string, Handler> = {
       //    the summer's headline story. ──
       beat = 'season-start';
       const worldStory = events
-        .filter((e) => /takeover|abramovich|super.?league|covid|charge|macro|pif|saudi/i.test(e.code))
+        .filter((e) => /takeover|abramovich|super.?league|covid|charge|macro|pif|saudi|world\.news/i.test(e.code))
         .map((e) => e.message)
         .filter((m): m is string => !!m);
       opening = { beats: generatedSummerOpening(next, { review: review.data as any, worldStory }).beats };

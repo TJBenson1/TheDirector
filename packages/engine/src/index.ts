@@ -124,6 +124,7 @@ export {
   applyConsequence,
   rollEventsMonth,
   fireMacroEvents,
+  fireWorldHeadlines,
   resolveIgnoredDecisions,
   type DecisionResult,
 } from './events.js';
