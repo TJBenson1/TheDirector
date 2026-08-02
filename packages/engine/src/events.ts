@@ -2265,65 +2265,248 @@ const REAL_MADRID_2000_PACK: ScriptedEvent[] = [
   },
 ];
 
+// Klopp's peak and its dismantling into the Tuchel years, 2012-2017. Every
+// transfer (Kagawa out, Reus in, Götze, Lewandowski, Hummels out) is ledger-
+// replayed and the coach change (Klopp → Tuchel) can't be enacted as a swap, so
+// these are narrative overlays with real Director forks and reality-default
+// fallout — the rival raids by Bayern told as the recurring wound they were.
 const DORTMUND_2012_PACK: ScriptedEvent[] = [
   {
-    // The defining Dortmund heartbreak: Bayern trigger Götze's release clause and
-    // take the jewel of Klopp's side — the ultimate rival raid.
+    id: 'kagawa-utd',
+    date: '2012-08',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:kagawa-utd', title: 'Kagawa sold to Manchester United',
+      description: 'Fresh off the domestic double, playmaker Shinji Kagawa can go to Manchester United for ~£12m. Cash in on Kagawa now and reinvest the fee, or block the sale and keep your title-winning creative fulcrum for one more European push?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Cash in — reinvest the fee (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'dortmund', amount: 12_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Kagawa to United and reinvested.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'keep', label: 'Block the sale — keep the fulcrum', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Kept Kagawa for one more European push.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Kagawa joins Manchester United.' }],
+      memoryTags: ['transfer', 'cur_kagawa_u12'],
+    }),
+  },
+  {
+    id: 'reus-signed',
+    date: '2012-09',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:reus-signed', title: 'Reus — the hometown prodigy returns',
+      description: 'Dortmund can trigger the ~€17m release clause of Germany forward Marco Reus from Gladbach — a local wunderkind directly offsetting the Kagawa exit. Trigger the clause for the hometown prodigy immediately, or bank the Kagawa money and pursue a cheaper alternative?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'reus', label: 'Trigger the clause for Reus (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'The local boy comes home to the Yellow Wall.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Reus to replace Kagawa.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'cheaper', label: 'Bank the money — a cheaper alternative', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Chose a cheaper option over the local star.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Reus returns to Dortmund, offsetting Kagawa.' }],
+      memoryTags: ['transfer', 'cur_reus_12'],
+    }),
+  },
+  {
     id: 'gotze-bayern',
     date: '2013-04',
     scenarios: ['dortmund-2012'],
-    requires: (s) => playerAt(s, 'cur_gotze_12', 'dortmund') && s.playerClub === 'dortmund',
+    requires: (s) => s.playerClub === 'dortmund',
     build: () => ({
-      id: 'scripted:gotze-bayern',
-      title: 'Bayern trigger Götze’s release clause',
-      description: 'Your golden boy — the face of Klopp’s revolution — and your greatest rival has met his €37m buy-out clause in secret. Reality: he went to Munich and it broke Dortmund hearts. Move heaven and earth to keep him, or take the money and let the rival strengthen at your expense?',
-      interrupt: true,
-      clubId: 'dortmund',
-      category: 'event',
+      id: 'scripted:gotze-bayern', title: 'Bayern trigger Götze’s release clause',
+      description: 'On the eve of the Champions League semi-final against Real Madrid, news has broken that Bayern have triggered Mario Götze’s ~€37m buy-out clause — a known contractual term, but the timing detonates the ‘traitor’ narrative. The face of Klopp’s revolution is off to Munich. Accept the €37m and manage a dignified, quiet farewell, or go to war publicly with Bayern and risk toxic final months for a player already leaving?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
       choices: [
-        {
-          id: 'fight', label: 'Fight to keep him — a new deal above the clause', successProbability: 0.4,
-          onSuccess: [{ kind: 'renewContract', playerId: 'cur_gotze_12', amount: 4 }, { kind: 'morale', clubId: 'dortmund', amount: 10 }, { kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'rivalry', text: 'Kept Götze from Bayern’s clutches — the Yellow Wall roars.' }],
-          onFailure: [{ kind: 'transferOut', playerId: 'cur_gotze_12', clubId: 'bayern', amount: 37_000_000 }, { kind: 'morale', clubId: 'dortmund', amount: -8 }],
-        },
-        {
-          id: 'sell', label: 'Let him go to Bayern (£31m) — as reality did', successProbability: 0.95,
-          onSuccess: [{ kind: 'transferOut', playerId: 'cur_gotze_12', clubId: 'bayern', amount: 31_000_000 }, { kind: 'morale', clubId: 'dortmund', amount: -6 }, { kind: 'memory', tag: 'rivalry', text: 'Götze joins Bayern — the rival is armed with your own jewel.' }],
-          onFailure: [],
-        },
+        { id: 'dignified', label: 'A dignified, quiet farewell', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'rivalry', text: 'Managed Götze’s exit to Bayern with dignity.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'war', label: 'Go to war publicly with Bayern', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'The board rages at the rival’s raid — the Wall approves.' }, { kind: 'memory', tag: 'rivalry', text: 'Went public against Bayern over Götze.' }], onFailure: [{ kind: 'morale', clubId: 'dortmund', amount: -4 }] },
       ],
-      falloutIfIgnored: [{ kind: 'transferOut', playerId: 'cur_gotze_12', clubId: 'bayern', amount: 31_000_000 }, { kind: 'morale', clubId: 'dortmund', amount: -6 }],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'dortmund', amount: -4 }, { kind: 'memory', tag: 'rivalry', text: 'Götze’s clause is triggered — Bayern take the jewel of Klopp’s side.' }],
       memoryTags: ['rivalry', 'cur_gotze_12'],
     }),
   },
   {
-    // A year on, the same story: Lewandowski runs his deal down and leaves for Bayern
-    // on a free. Sell now for a fee, or watch the rival take him for nothing.
-    id: 'lewandowski-bayern',
-    date: '2013-08',
+    id: 'wembley-final-2013',
+    date: '2013-05',
     scenarios: ['dortmund-2012'],
-    requires: (s) => playerAt(s, 'cur_lewandowski_12', 'dortmund') && s.playerClub === 'dortmund',
+    requires: (s) => s.playerClub === 'dortmund',
     build: () => ({
-      id: 'scripted:lewandowski-bayern',
-      title: 'Lewandowski runs his contract down — Bayern wait',
-      description: 'Your talisman striker has one year left and his heart is set on Munich; reality let him leave on a FREE. Cash in now while he has value, or hold him for one last charge and lose him for nothing to the rival?',
-      interrupt: true,
-      clubId: 'dortmund',
-      category: 'event',
+      id: 'scripted:wembley-final-2013', title: 'Champions League final at Wembley',
+      description: 'The first all-German European Cup final, against Bayern at Wembley. Reality: Dortmund lost 2-1 (Gündoğan’s penalty; Robben’s 89th-minute winner) — the ‘hold the wall’ era peaking just short of the continent’s biggest prize. Back Klopp to go toe-to-toe attacking Bayern, or mandate a disciplined low-block and play for the upset?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
       choices: [
-        {
-          id: 'cash-in', label: 'Sell now for a real fee (£22m)', successProbability: 0.85,
-          onSuccess: [{ kind: 'transferOut', playerId: 'cur_lewandowski_12', clubId: 'bayern', amount: 22_000_000 }, { kind: 'memory', tag: 'rivalry', text: 'Banked a fee on Lewandowski rather than lose him for free — smarter than reality.' }],
-          onFailure: [],
-        },
-        {
-          id: 'hold', label: 'Hold him for one last charge (he leaves free in 2014)', successProbability: 0.5,
-          onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 6 }, { kind: 'letContractLapse', playerId: 'cur_lewandowski_12' }, { kind: 'memory', tag: 'rivalry', text: 'Kept Lewandowski for a final season — glory now, a free exit to Bayern later.' }],
-          onFailure: [{ kind: 'agitation', playerId: 'cur_lewandowski_12', amount: 12 }],
-        },
+        { id: 'attack', label: 'Go toe-to-toe with Bayern', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 5 }, { kind: 'memory', tag: 'near-miss', text: 'Took Bayern on at Wembley — agonisingly short.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'block', label: 'Low block — play for the upset', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'near-miss', text: 'Sat deep at Wembley and nearly stole it.' }], onFailure: [{ kind: 'morale', clubId: 'dortmund', amount: -4 }] },
       ],
-      falloutIfIgnored: [{ kind: 'letContractLapse', playerId: 'cur_lewandowski_12' }, { kind: 'memory', tag: 'rivalry', text: 'Let Lewandowski run his deal down — Bayern get him for free, as they did.' }],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Dortmund lose the all-German final to Bayern at Wembley.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'lewandowski-bayern',
+    date: '2014-07',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:lewandowski-bayern', title: 'Lewandowski walks to Bayern on a free',
+      description: 'Having refused to sell him to Bayern in January to keep him for the season, Dortmund have lost Robert Lewandowski on a free when his deal expired (he’d signed a pre-contract in early 2014) — a second star striker walking to the rival for nothing. Reality made peace with it. Publicly rue the free exit and rally the Wall, or move on cleanly and reinvest the wages?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'rally', label: 'Rue it publicly — rally the Wall', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 3, text: 'The Wall rallies behind the club against another Bayern raid.' }, { kind: 'memory', tag: 'rivalry', text: 'Made a cause of Lewandowski’s free exit to Bayern.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'move-on', label: 'Move on cleanly — reinvest the wages', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'rivalry', text: 'Moved on from Lewandowski and reinvested.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'rivalry', text: 'Lewandowski leaves for Bayern on a free — a second jewel gone for nothing.' }],
       memoryTags: ['rivalry', 'cur_lewandowski_12'],
+    }),
+  },
+  {
+    id: 'relegation-crisis',
+    date: '2015-02',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund' && s.managerRelations.identity === 'Jürgen Klopp',
+    build: () => ({
+      id: 'scripted:relegation-crisis', title: 'Bottom of the Bundesliga',
+      description: 'An astonishing fall: the recent finalist has collapsed to last place around the winter break. Reality: they backed Klopp and recovered to finish 7th and qualify for Europe. Sack Klopp mid-season to arrest the slide, or publicly back him and ride out the storm?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'back', label: 'Back Klopp — ride it out (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'manager', text: 'Backed Klopp through the relegation scare — and recovered.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'sack', label: 'Sack him to arrest the slide', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Pulled the trigger on Klopp mid-crisis.' }], onFailure: [{ kind: 'fanTrust', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Dortmund hit bottom at the winter break, then recover under Klopp.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'klopp-departs',
+    date: '2015-04',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund' && s.managerRelations.identity === 'Jürgen Klopp',
+    build: () => ({
+      id: 'scripted:klopp-departs', title: 'Klopp announces his departure',
+      description: 'Jürgen Klopp has announced he will leave at season’s end by mutual agreement after seven years — he was NOT sacked. The farewell campaign would end in a Pokal final loss. Try to persuade Klopp to stay one more year, or accept his exit and plan a clean-slate rebuild?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'persuade', label: 'Persuade Klopp to stay', successProbability: 0.4, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'fanTrust', amount: 4, text: 'The Klopp era is extended — the Wall exhales.' }, { kind: 'memory', tag: 'manager', text: 'Talked Klopp into one more year.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'accept', label: 'Accept his exit — plan the rebuild (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Accepted Klopp’s farewell and planned the succession.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Klopp announces he will leave after seven years, by mutual agreement.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'tuchel-in',
+    date: '2015-04',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:tuchel-in', title: 'Tuchel named as Klopp’s successor',
+      description: 'Dortmund can name young tactician Thomas Tuchel (ex-Mainz) as Klopp’s successor. Reality: he took charge from July and immediately drove the club back up the table. Appoint the modern, unproven tactician, or chase an experienced, trophy-winning name for continuity?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'tuchel', label: 'Appoint Tuchel (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Appointed the young Tuchel to follow Klopp.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'experienced', label: 'Chase an experienced winner', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Went for experience over the young tactician.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Tuchel appointed as Klopp’s successor.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'aubameyang-machine',
+    date: '2016-05',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:aubameyang-machine', title: 'Aubameyang, the goal machine',
+      description: 'Signed from Saint-Étienne in 2013, Pierre-Emerick Aubameyang has exploded under Tuchel — a torrent of goals and, soon, the Bundesliga top scorer. Cash in at peak value on a Premier League or Chinese Super League mega-bid, or build the whole team around your golden boot?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'build', label: 'Build the team around him (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'The goal machine stays — Dortmund’s focal point.' }, { kind: 'memory', tag: 'transfer', text: 'Built the side around Aubameyang.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'cash', label: 'Cash in at peak value', successProbability: 0.55, onSuccess: [{ kind: 'money', clubId: 'dortmund', amount: 30_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Aubameyang from the top of the market.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4, text: 'Aubameyang’s goals fire Dortmund.' }, { kind: 'memory', tag: 'transfer', text: 'Aubameyang becomes the goal machine.' }],
+      memoryTags: ['transfer', 'cur_aubameyang_12'],
+    }),
+  },
+  {
+    id: 'hummels-bayern',
+    date: '2016-05',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:hummels-bayern', title: 'Hummels forces his move to Bayern',
+      description: 'Captain and homegrown centre-back Mats Hummels has forced through a move to Bayern for ~€35m — another symbolic defection to the champions. Sell your captain to the arch-rival for ~€35m, or refuse and risk a disgruntled dressing room and a cheaper future exit?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Take the €35m (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'dortmund', amount: 35_000_000 }, { kind: 'memory', tag: 'rivalry', text: 'Sold captain Hummels to Bayern.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+        { id: 'refuse', label: 'Refuse to sell to the rival', successProbability: 0.4, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'rivalry', text: 'Refused to sell Hummels to Bayern.' }], onFailure: [{ kind: 'morale', clubId: 'dortmund', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'rivalry', text: 'Hummels forces his move to Bayern — another defection to the champions.' }],
+      memoryTags: ['rivalry', 'cur_hummels_12'],
+    }),
+  },
+  {
+    id: 'gotze-homecoming',
+    date: '2016-06',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:gotze-homecoming', title: 'Götze’s homecoming',
+      description: 'In a redemptive twist, Dortmund can re-sign Mario Götze from Bayern — the ‘prodigal son’ back three years after his bitter exit (though illness would blight his return). Bring the prodigal son home despite lingering fan anger, or spend the budget on a fresh, untainted star?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'homecoming', label: 'Welcome him home (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 3, text: 'The prodigal son returns to the Yellow Wall.' }, { kind: 'memory', tag: 'transfer', text: 'Re-signed Götze from Bayern.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'fresh', label: 'Spend on a fresh, untainted star', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Passed on the Götze reunion for a fresh face.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Götze returns to Dortmund three years after his exit.' }],
+      memoryTags: ['transfer', 'cur_gotze_12'],
+    }),
+  },
+  {
+    id: 'mkhitaryan-utd',
+    date: '2016-07',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:mkhitaryan-utd', title: 'Mkhitaryan sold to Manchester United',
+      description: 'Playmaker Henrikh Mkhitaryan, the standout of the season, can move to Manchester United for ~€42m. Accept United’s money, or keep your best creator to anchor Tuchel’s project?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Accept the €42m (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'dortmund', amount: 42_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Mkhitaryan to United.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'keep', label: 'Keep the creator for Tuchel', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'dortmund', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Kept Mkhitaryan to anchor the project.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Mkhitaryan joins Manchester United.' }],
+      memoryTags: ['transfer', 'cur_mkhitaryan_12'],
+    }),
+  },
+  {
+    id: 'bus-bomb',
+    date: '2017-04',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:bus-bomb', title: 'The team-bus attack',
+      description: 'Three explosions have struck the team bus heading to the Champions League quarter-final against Monaco; Marc Bartra suffered a broken wrist and a police officer was hurt. (The convicted attacker acted in a stock-market scheme, having bet against the club’s shares — not terrorism, despite fake claim letters.) UEFA want the match played just 24 hours later. Demand UEFA postpone properly for the players’ welfare, or comply and force a traumatised squad to play the next night?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'postpone', label: 'Demand a proper postponement', successProbability: 0.4, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'crisis', text: 'Fought UEFA for the players’ welfare after the bus attack.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'comply', label: 'Comply and play the next night (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'memory', tag: 'crisis', text: 'A shaken squad played on 24 hours after the attack.' }], onFailure: [{ kind: 'morale', clubId: 'dortmund', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'morale', clubId: 'dortmund', amount: -4 }, { kind: 'memory', tag: 'crisis', text: 'The team bus is bombed; UEFA order the match played the next night.' }],
+      memoryTags: ['crisis'],
+    }),
+  },
+  {
+    id: 'pokal-2017',
+    date: '2017-05',
+    scenarios: ['dortmund-2012'],
+    requires: (s) => s.playerClub === 'dortmund',
+    build: () => ({
+      id: 'scripted:pokal-2017', title: 'DFB-Pokal triumph — and Tuchel out',
+      description: 'Dortmund have beaten Eintracht Frankfurt 2-1 in the DFB-Pokal final (Aubameyang’s penalty, Dembélé the difference) — the era’s crowning trophy. Reality: Tuchel was dismissed days later despite the win, amid a boardroom rift. Rotate and protect players for the future, or go full-strength to win Tuchel a trophy and try to save the relationship?',
+      interrupt: true, clubId: 'dortmund', category: 'event',
+      choices: [
+        { id: 'full', label: 'Full-strength — win it for Tuchel', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Silverware in Berlin — the era’s crowning trophy.' }, { kind: 'memory', tag: 'silverware', text: 'Won the Pokal, though the Tuchel rift lingered.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'rotate', label: 'Rotate — protect players for the future', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Protected the squad on the run to the final.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Dortmund win the DFB-Pokal — the era’s crowning trophy.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2017 DFB-Pokal; Tuchel dismissed days later.' }],
+      memoryTags: ['silverware', 'cur_aubameyang_12'],
     }),
   },
 ];
