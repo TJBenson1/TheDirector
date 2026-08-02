@@ -6527,7 +6527,30 @@ const LIVERPOOL_2010_PACK: ScriptedEvent[] = [
   },
 ];
 
+// After Ferguson, 2013-2019: the Moyes disaster, the van Gaal Galácticos, the
+// Mourinho trophies and implosion, and the Solskjær revival. Every transfer
+// (Fellaini, Mata, Di María, Pogba, Ibra, Lukaku in; Rooney out) is ledger-
+// replayed and the manager churn (Moyes → van Gaal → Mourinho → Solskjær) can't
+// be enacted as coach swaps, so most beats are narrative overlays; Rooney's 2013
+// saga keeps its player-level fork.
 const MAN_UTD_2013_PACK: ScriptedEvent[] = [
+  {
+    id: 'ferguson-succession',
+    date: '2013-08',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:ferguson-succession', title: 'After Ferguson — ‘The Chosen One’',
+      description: 'Sir Alex Ferguson has retired after winning the title in his final season and personally anointed David Moyes as his successor on a six-year deal. You inherit the champions, but a 26-year dynasty rests on the handover. Honour Ferguson’s succession plan and back the safe continuity candidate, or override the icon and pursue an elite proven winner despite the political cost?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'moyes', label: 'Honour the plan — back Moyes (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Backed Ferguson’s chosen successor, Moyes.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'elite', label: 'Override the icon — chase an elite winner', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Defied Ferguson to pursue a proven winner.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Ferguson retires; Moyes anointed as ‘The Chosen One’.' }],
+      memoryTags: ['manager'],
+    }),
+  },
   {
     id: 'rooney-request',
     date: '2013-08',
@@ -6543,6 +6566,210 @@ const MAN_UTD_2013_PACK: ScriptedEvent[] = [
       ],
       falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_rooney', amount: 6 }, { kind: 'agitation', playerId: 'cur_rooney', amount: -8 }, { kind: 'memory', tag: 'saga', text: 'Rooney stays and knuckles down.' }],
       memoryTags: ['saga', 'cur_rooney'],
+    }),
+  },
+  {
+    id: 'shambolic-window',
+    date: '2013-09',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:shambolic-window', title: 'The shambolic window — only Fellaini',
+      description: 'The first post-Ferguson window is a public embarrassment: bids for Fàbregas rejected, a deadline-day double for Herrera and Baines collapsing into farce, and United signing only Marouane Fellaini for ~£27.5m — MORE than his release clause, which had expired weeks earlier. Back the manager’s chaotic single-target approach and accept the panic-buy premium, or impose a Director-led recruitment structure with pre-agreed targets and walk-away prices?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'back', label: 'Back the manager’s approach (as reality did)', successProbability: 0.45, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Signed only Fellaini, at a premium, in a chaotic window.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'structure', label: 'Impose a Director-led recruitment structure', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Brought order to recruitment with pre-agreed targets.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'A shambolic window ends with only Fellaini, at a premium.' }],
+      memoryTags: ['transfer', 'cur_fellaini'],
+    }),
+  },
+  {
+    id: 'moyes-sacked',
+    date: '2014-04',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd' && s.managerRelations.identity === 'David Moyes',
+    build: () => ({
+      id: 'scripted:moyes-sacked', title: 'Moyes sacked; Giggs interim',
+      description: 'The champions have collapsed toward a 7th-place finish and out of the Champions League places, and Moyes has been sacked less than a year into a six-year deal; club legend Ryan Giggs takes interim charge. Pull the trigger early to protect the season’s remnants and reset, or hold firm on the long-term project and give the manager the full summer he was promised?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'sack', label: 'Sack Moyes now (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Sacked Moyes inside a year; Giggs caretakes.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'hold', label: 'Hold firm — give him the summer', successProbability: 0.4, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Gave Moyes the summer he was promised.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Moyes sacked; Giggs takes interim charge.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'van-gaal-in',
+    date: '2014-05',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:van-gaal-in', title: 'Van Gaal appointed',
+      description: 'United can appoint Louis van Gaal on a three-year deal after his run to third at the World Cup, with Giggs staying on as assistant. Hire the high-pedigree, high-ego elite coach and commit to his philosophy and heavy spend, or promote from within / choose a cheaper developmental profile and rebuild patiently?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'vangaal', label: 'Hire van Gaal — commit to the spend (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Appointed van Gaal for a big-money rebuild.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'develop', label: 'Cheaper developmental profile', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Chose a patient, cheaper rebuild.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Van Gaal appointed on a three-year deal.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'galactico-summer',
+    date: '2014-08',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:galactico-summer', title: 'The £150m+ Galáctico summer',
+      description: 'A record-breaking rebuild: Ángel Di María from Real for a British-record ~£59.7m, Falcao on a deadline-day loan, plus Herrera, Shaw, Rojo and Blind — over £150m in one summer. Sanction the marquee, splash-the-cash rebuild to buy instant credibility, or enforce financial discipline and value-based recruitment, refusing record fees and loan gambles?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'splash', label: 'Sanction the marquee rebuild (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'A record-breaking summer of stars.' }, { kind: 'memory', tag: 'transfer', text: 'Backed the £150m Galáctico rebuild.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'discipline', label: 'Enforce value-based discipline', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Refused the record fees and loan gambles.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Di María and Falcao headline a £150m+ summer.' }],
+      memoryTags: ['transfer', 'cur_dimaria'],
+    }),
+  },
+  {
+    id: 'dimaria-flops',
+    date: '2015-08',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:dimaria-flops', title: 'Di María flops and leaves',
+      description: 'After a bright start faded into a miserable, disillusioned season (and a burglary at his home), Di María can be sold to PSG for ~£44m — a substantial loss on the club-record fee, and the emblem of the failed Galáctico gamble. Cut losses fast and recoup what you can, or fight to reintegrate the record signing to protect the balance sheet and avoid admitting the mistake?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Cut losses — sell (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'man_utd', amount: 20_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Di María at a loss — the Galáctico gamble admitted.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'reintegrate', label: 'Fight to reintegrate him', successProbability: 0.35, onSuccess: [{ kind: 'morale', clubId: 'man_utd', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Tried to rehabilitate the record signing.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Di María leaves for PSG at a loss — the gamble failed.' }],
+      memoryTags: ['transfer', 'cur_dimaria'],
+    }),
+  },
+  {
+    id: 'vangaal-facup',
+    date: '2016-05',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:vangaal-facup', title: 'The FA Cup — then van Gaal sacked two days later',
+      description: 'United have beaten Crystal Palace in the FA Cup final (Mata equalising, Lingard the extra-time winner) — van Gaal’s only trophy. Reality: amid dull football and a Champions League miss, the club sacked him two days later. Treat the cup as vindication and extend the manager, or judge on style, league position and mood and dismiss him regardless of the silverware?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'extend', label: 'Treat the cup as vindication — extend him', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'silverware', text: 'Kept van Gaal on the back of the FA Cup.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'sack', label: 'Dismiss him despite the trophy (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Won the Cup, sacked van Gaal two days later.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4, text: 'United win the FA Cup — but the manager’s days are numbered.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2016 FA Cup; van Gaal sacked days later.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'mourinho-in',
+    date: '2016-05',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:mourinho-in', title: 'Mourinho appointed',
+      description: 'United can appoint José Mourinho on a three-year deal, turning to a serial winner to restore the club to the top. Appoint the ruthless, trophy-guaranteeing but high-friction ‘win now’ manager, or choose a longer-term identity/continuity hire and accept a slower rebuild?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'mourinho', label: 'Appoint Mourinho (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Hired Mourinho to win now.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'identity', label: 'A longer-term identity hire', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Chose a slower, identity-led rebuild.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Mourinho appointed to restore United to the top.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'pogba-ibra',
+    date: '2016-08',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:pogba-ibra', title: 'Ibrahimović free, Pogba a world record',
+      description: 'United can sign Ibrahimović on a free and re-sign Paul Pogba from Juventus for a then-world-record ~£89.3m — four years after letting him leave for nothing (the fee was a record, but not nine figures in sterling). Break the world record and pay premium wages for star power, or refuse to be held to ransom by a former academy player’s agent and reinvest across positions?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'record', label: 'Break the record for Pogba (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Pogba returns for a world record, with Ibra free.' }, { kind: 'memory', tag: 'transfer', text: 'Re-signed Pogba for a world record; Ibra on a free.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'spread', label: 'Refuse the ransom — reinvest across positions', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Spread the budget rather than smash the record.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Pogba returns for a world record; Ibrahimović arrives free.' }],
+      memoryTags: ['transfer', 'cur_pogba'],
+    }),
+  },
+  {
+    id: 'efl-cup-2017',
+    date: '2017-02',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:efl-cup-2017', title: 'EFL Cup — first Mourinho silverware',
+      description: 'United have beaten Southampton 3-2 in the EFL Cup final, Ibrahimović scoring twice including the late winner. Prioritise the domestic cups as achievable early silverware to build momentum, or rest and rotate to protect the league and Europa run?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'prioritise', label: 'Chase the cups for momentum (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'fanTrust', amount: 3, text: 'Silverware to build on under Mourinho.' }, { kind: 'memory', tag: 'silverware', text: 'Won the EFL Cup — first Mourinho trophy.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'rotate', label: 'Rest and rotate for the league/Europa', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Prioritised the league and Europa over the League Cup.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4, text: 'United win the EFL Cup at Wembley.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2017 EFL Cup.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'europa-2017',
+    date: '2017-05',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:europa-2017', title: 'Europa League glory in Stockholm',
+      description: 'United have beaten Ajax 2-0 in the Europa League final (Pogba and Mkhitaryan), securing a return to the Champions League — an emotionally charged night two days after the Manchester Arena bombing. Go all-in on the Europa League as the backdoor to the Champions League (rotating heavily in the league), or gamble everything on a top-four finish and treat the European run as secondary?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'europa', label: 'Go all-in on the Europa League (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'European silverware and a Champions League return.' }, { kind: 'memory', tag: 'europe', text: 'Won the Europa League to get back into the Champions League.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'league', label: 'Gamble on the top-four finish', successProbability: 0.45, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'europe', text: 'Chased the league over the European run.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'United win the Europa League in Stockholm.' }, { kind: 'memory', tag: 'europe', text: 'Won the 2017 Europa League.' }],
+      memoryTags: ['europe', 'cur_pogba'],
+    }),
+  },
+  {
+    id: 'mourinho-out',
+    date: '2018-12',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:mourinho-out', title: 'Decline, strife, Mourinho sacked',
+      description: 'A distant second place has soured into a fractured third season: a public feud with Pogba (stripped of the vice-captaincy), the ‘respect’ press-conference rant, and a 3-1 loss at Liverpool that proves the end — Mourinho is sacked. Back the manager against a rebellious star and sell the disruptive player, or side with the dressing room and expensive squad assets and remove the manager to save the season?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'coach', label: 'Back Mourinho — sell the disruptive star', successProbability: 0.4, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Sided with Mourinho against the dressing room.' }], onFailure: [{ kind: 'morale', clubId: 'man_utd', amount: -4 }] },
+        { id: 'room', label: 'Remove the manager to save the season (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Sacked Mourinho amid the dressing-room revolt.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Mourinho sacked amid decline and dressing-room strife.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'solskjaer-psg',
+    date: '2019-03',
+    scenarios: ['man-utd-2013'],
+    requires: (s) => s.playerClub === 'man_utd',
+    build: () => ({
+      id: 'scripted:solskjaer-psg', title: 'Solskjær and the PSG miracle',
+      description: 'Caretaker Ole Gunnar Solskjær has sparked a stunning revival, its peak a 3-1 win at PSG after losing the home leg 0-2 (Lukaku twice, Rashford’s stoppage-time penalty) — the first side ever to overturn a two-goal first-leg home deficit in the competition. Reward the feel-good caretaker run with the permanent job on emotion and results, or hold nerve and run a full, unsentimental search for a proven elite coach?',
+      interrupt: true, clubId: 'man_utd', category: 'event',
+      choices: [
+        { id: 'permanent', label: 'Give Solskjær the job (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'The feel-good factor is back — Ole gets the job.' }, { kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Rewarded Solskjær’s revival with the permanent role.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'search', label: 'Run a full search for an elite coach', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Held nerve for a proven elite appointment.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Solskjær’s United pull off the PSG miracle.' }, { kind: 'memory', tag: 'manager', text: 'Solskjær’s revival peaks at PSG; he is made permanent.' }],
+      memoryTags: ['manager'],
     }),
   },
 ];
