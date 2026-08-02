@@ -400,6 +400,12 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   // Arsenal's real 2004 arrival — Van Persie from Feyenoord (a live signing for an
   // Arsenal Director).
   { playerId: 'cur_rvp', from: 'feyenoord', to: 'arsenal', window: '2004-07', fee: 2_750_000, id: 'rvp-arsenal-2004' },
+  // Arsenal's real Bosman departures of the era — both left for nothing at contract
+  // end (Wiltord to Lyon in 2004, Edu to Valencia in 2005). Free (fee 0), so a
+  // reality save actually moves them out; realMarketFee ignores a £0 ledger fee, so
+  // a Director who sells either early still gets full market value.
+  { playerId: 'cur_wiltord_04', from: 'arsenal', to: 'lyon', window: '2004-07', fee: 0, id: 'wiltord-lyon-2004' },
+  { playerId: 'cur_edu', from: 'arsenal', to: 'valencia', window: '2005-07', fee: 0, id: 'edu-valencia-2005' },
   // Chelsea's real 2004 arrivals — at their source clubs, joining via the ledger,
   // so intercepting one is a butterfly and a deprived Chelsea buys an alternative.
   { playerId: 'cur_drogba', from: 'marseille', to: 'chelsea', window: '2004-07', fee: 24_000_000, id: 'drogba-chelsea-2004' },

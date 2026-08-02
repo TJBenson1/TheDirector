@@ -51,6 +51,21 @@ function jitter(str: string): number {
   return (h >>> 0) % 100;
 }
 
+/** Resolve a club by id OR name so a natural-language reference the narrator
+ *  passes ("Bolton Wanderers", "Bolton") lands on the real club — never a
+ *  silent "unknown club" that the model then papers over with a phantom deal. */
+function resolveClub(s: GameState, ref: string): GameState['clubs'][string] | undefined {
+  if (s.clubs[ref]) return s.clubs[ref];
+  const needle = ref.trim().toLowerCase();
+  if (!needle) return undefined;
+  const clubs = Object.values(s.clubs);
+  return (
+    clubs.find((c) => c.name.toLowerCase() === needle) ??
+    clubs.find((c) => c.name.toLowerCase().includes(needle)) ??
+    clubs.find((c) => needle.includes(c.name.toLowerCase()))
+  );
+}
+
 export function listScenarios() {
   return Object.values(SCENARIOS).map((sc) => ({ id: sc.id, name: sc.name, startDate: sc.startDate, mandate: sc.mandate }));
 }
@@ -276,25 +291,28 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
     }
 
     case 'scout': {
-      const rng = new Rng(s.meta.rngState).fork(`scout:web:${input.playerId}`);
-      return { state: s, result: scoutPlayer(s, s.playerClub, String(input.playerId), rng, { observation: 0.6 }) };
+      const target = resolvePlayer(s, String(input.playerId));
+      const pid = target?.id ?? String(input.playerId);
+      const rng = new Rng(s.meta.rngState).fork(`scout:web:${pid}`);
+      return { state: s, result: scoutPlayer(s, s.playerClub, pid, rng, { observation: 0.6 }) };
     }
 
     case 'sign': {
-      const p = s.players[String(input.playerId)];
+      const p = resolvePlayer(s, String(input.playerId));
       // Realism floor: a player still under contract can't be prised from his club
       // for less than his asking price — which already bakes in the near-expiry
       // (Bosman) discount and any distress. No taking a contracted player for
       // nothing in January; a genuine free applies only to an actual free agent.
-      const floor = p && p.club && p.club !== s.playerClub ? askingPrice(s, p.id) : 0;
+      if (!p) return { state: s, result: { ok: false, reason: `No player found matching "${String(input.playerId)}".` } };
+      const floor = p.club && p.club !== s.playerClub ? askingPrice(s, p.id) : 0;
       const raw = input.feeM !== undefined ? Math.round(Number(input.feeM) * 1_000_000) : undefined;
       const fee = raw !== undefined ? Math.max(raw, floor) : floor > 0 ? floor : undefined;
-      const result = attemptSigning(s, { playerId: String(input.playerId), toClub: s.playerClub, fee });
-      return { state: s, result: result.ok ? { ok: true, signed: s.players[String(input.playerId)]?.name, fee: m(result.fee) } : { ok: false, reason: result.reason } };
+      const result = attemptSigning(s, { playerId: p.id, toClub: s.playerClub, fee });
+      return { state: s, result: result.ok ? { ok: true, signed: s.players[p.id]?.name, fee: m(result.fee) } : { ok: false, reason: result.reason } };
     }
 
     case 'offers': {
-      const p = s.players[String(input.playerId)];
+      const p = resolvePlayer(s, String(input.playerId));
       if (!p || p.club !== s.playerClub) return { state: s, result: { offers: [], reason: 'Not your player.' } };
       // Reality-anchored value: askingPrice uses the real sale fee when the ledger
       // knows it (Baggio → Milan was £6.5m, not his £14m abstract model value), so
@@ -308,10 +326,10 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
     }
 
     case 'sell': {
-      const p = s.players[String(input.playerId)];
+      const p = resolvePlayer(s, String(input.playerId));
       if (!p || p.club !== s.playerClub) return { state: s, result: { ok: false, reason: 'Not your player.' } };
-      const buyer = s.clubs[String(input.toClub)];
-      if (!buyer) return { state: s, result: { ok: false, reason: 'Unknown buying club.' } };
+      const buyer = resolveClub(s, String(input.toClub));
+      if (!buyer) return { state: s, result: { ok: false, reason: `No club found matching "${String(input.toClub)}".` } };
       // Never sell for £0 because the fee arrived missing/garbled — fall back to
       // the reality-anchored asking price so a fumbled number can't give a player
       // away (and matches the real fee when the ledger knows it).
@@ -351,7 +369,7 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
     }
 
     case 'renew': {
-      const p = s.players[String(input.playerId)];
+      const p = resolvePlayer(s, String(input.playerId));
       if (!p || p.club !== s.playerClub) return { state: s, result: { ok: false, reason: 'Not your player.' } };
       const n = Math.max(1, Math.min(5, Math.round(Number(input.years ?? 3))));
       const wageBefore = p.wage;
@@ -372,7 +390,7 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
     }
 
     case 'let_lapse': {
-      const p = s.players[String(input.playerId)];
+      const p = resolvePlayer(s, String(input.playerId));
       if (!p || p.club !== s.playerClub) return { state: s, result: { ok: false, reason: 'Not your player.' } };
       applyConsequence(s, { kind: 'letContractLapse', playerId: p.id });
       return { state: s, result: { ok: true, player: p.name, note: `${p.name}'s deal will run down — he leaves on a free at the next summer window unless you renew him first.` } };
