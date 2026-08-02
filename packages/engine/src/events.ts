@@ -6081,22 +6081,265 @@ const REAL_MADRID_2006_PACK: ScriptedEvent[] = [
   },
 ];
 
+// From the Hicks & Gillett wreckage to the Klopp dawn, 2010-2015. Every transfer
+// (Mascherano, Torres, Suárez, Sterling out; Suárez, Carroll in) is ledger-
+// replayed and the manager churn (Hodgson → Dalglish → Rodgers → Klopp) can't be
+// enacted as coach swaps, so these are narrative overlays with real Director
+// forks and reality-default fallout.
 const LIVERPOOL_2010_PACK: ScriptedEvent[] = [
+  {
+    id: 'hodgson-appointed',
+    date: '2010-08',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:hodgson-appointed', title: 'Hodgson inherits the debt',
+      description: 'Roy Hodgson, fresh from an overachieving Fulham, has replaced Benítez — inheriting a club drowning in the Hicks & Gillett debt, and never winning the fanbase as the team drifts toward the drop by winter. Back Hodgson with a war-chest and public support, or hold the budget and line up a marquee replacement, betting the crisis needs a bigger name from day one?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'back', label: 'Back Hodgson publicly', successProbability: 0.45, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Backed Hodgson against the fans’ mood.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'plan', label: 'Hold the budget — line up a bigger name', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Kept the powder dry for a marquee replacement.' }], onFailure: [{ kind: 'managerRelationship', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Hodgson takes over a debt-laden, sliding Liverpool.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'mascherano-barca',
+    date: '2010-09',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:mascherano-barca', title: 'Mascherano forces his move to Barcelona',
+      description: 'Captain-in-waiting Javier Mascherano has refused to play and forced through a move to Barcelona for ~£17-22m; a cash-strapped, debt-laden club can cash in. Take Barcelona’s cash to service the RBS debt, or refuse to sell your best midfielder and make an example of a striking player?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Take the cash — service the debt (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'liverpool', amount: 17_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Mascherano to Barça to ease the debt.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'stand', label: 'Refuse — make an example of him', successProbability: 0.4, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Refused to sell the striking Mascherano.' }], onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Mascherano forces his move to Barcelona.' }],
+      memoryTags: ['transfer', 'cur_mascherano_bc10'],
+    }),
+  },
+  {
+    id: 'fsg-takeover',
+    date: '2010-10',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:fsg-takeover', title: 'FSG end the Hicks & Gillett crisis',
+      description: 'After a High Court battle, John W. Henry’s Fenway Sports Group has completed the purchase for ~£300m — defeating Hicks and Gillett’s attempt to block the sale and averting an RBS-triggered administration and points deduction. (The headline mostly cleared the debt; the club was hours from administration, not a clean premium buy.) Accept FSG’s cost-discipline / Moneyball mandate, or push the new owners for immediate buy-now spending to relaunch on the pitch?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'moneyball', label: 'Accept the Moneyball mandate (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'club', text: 'Bought into FSG’s cost-discipline model.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'spend', label: 'Push for immediate buy-now spending', successProbability: 0.45, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'club', text: 'Pressed the new owners to spend big now.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4, text: 'FSG buy the club and end the Hicks & Gillett nightmare.' }, { kind: 'memory', tag: 'club', text: 'FSG complete the takeover, averting administration.' }],
+      memoryTags: ['club'],
+    }),
+  },
+  {
+    id: 'dalglish-returns',
+    date: '2011-01',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool' && s.managerRelations.identity === 'Roy Hodgson',
+    build: () => ({
+      id: 'scripted:dalglish-returns', title: 'Hodgson out, King Kenny returns',
+      description: 'With the club near the drop zone, Hodgson has left ‘by mutual consent’ (not an outright sacking) and club legend Kenny Dalglish has returned as caretaker, reigniting the fanbase. Restore the beloved ‘King Kenny’ for the emotional lift, or appoint a modern progressive coach and resist the nostalgia play?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'kenny', label: 'Restore King Kenny (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'The King is back — Anfield roars.' }, { kind: 'memory', tag: 'manager', text: 'Brought Dalglish back for the emotional lift.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'modern', label: 'Appoint a modern progressive coach', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Resisted the nostalgia for a modern coach.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'manager', text: 'Hodgson leaves; Dalglish returns to reignite the Kop.' }],
+      memoryTags: ['manager'],
+    }),
+  },
   {
     id: 'torres-chelsea',
     date: '2011-01',
     scenarios: ['liverpool-2010'],
-    requires: (s) => playerAt(s, 'cur_torres_lv10', 'liverpool') && s.playerClub === 'liverpool',
+    requires: (s) => s.playerClub === 'liverpool',
     build: () => ({
-      id: 'scripted:torres-chelsea', title: 'Torres hands in a transfer request — Chelsea bid £50m',
-      description: 'El Niño, the idol of the Kop, wants out — and Chelsea have tabled a British-record £50m on deadline day. Reality: Liverpool took the money and spent it on Carroll and Suárez. Cash in on the talisman at a staggering price, or refuse to sell to a rival and hold him to his contract?',
+      id: 'scripted:torres-chelsea', title: 'Torres to Chelsea for £50m',
+      description: 'El Niño has handed in a transfer request and Chelsea have tabled a British-record £50m on deadline day. Reality: Liverpool took the money and reinvested it the same day. Cash in on the talisman at a staggering price, or refuse to sell to a rival and hold him to his contract?',
       interrupt: true, clubId: 'liverpool', category: 'event',
       choices: [
-        { id: 'sell', label: 'Take the £50m — reinvest it', successProbability: 0.9, onSuccess: [{ kind: 'transferOut', playerId: 'cur_torres_lv10', clubId: 'chelsea', amount: 50_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Torres to Chelsea for a British record — the money that bought Suárez, as it did.' }], onFailure: [] },
-        { id: 'keep', label: 'Refuse — no sale to a rival', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 6 }, { kind: 'agitation', playerId: 'cur_torres_lv10', amount: -10 }, { kind: 'memory', tag: 'transfer', text: 'Kept Torres against his wishes — a defiance reality didn’t risk.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_torres_lv10', amount: 16 }] },
+        { id: 'sell', label: 'Take the £50m — reinvest it (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'money', clubId: 'liverpool', amount: 35_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Torres to Chelsea for a British record.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'keep', label: 'Refuse — no sale to a rival', successProbability: 0.4, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Kept Torres against his wishes — a defiance reality didn’t risk.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
       ],
-      falloutIfIgnored: [{ kind: 'transferOut', playerId: 'cur_torres_lv10', clubId: 'chelsea', amount: 50_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Torres joins Chelsea on deadline day.' }],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Torres joins Chelsea on deadline day for £50m.' }],
       memoryTags: ['transfer', 'cur_torres_lv10'],
+    }),
+  },
+  {
+    id: 'suarez-carroll',
+    date: '2011-01',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:suarez-carroll', title: 'The Torres windfall — Suárez and Carroll',
+      description: 'The Torres money can bring Luis Suárez from Ajax (~£22.8m) and, on deadline day, Andy Carroll from Newcastle for a British-record ~£35m. Reality: Suárez became world-class; Carroll largely flopped (and the Suárez deal was separate business, not paid for by Torres). Spend the windfall on the safe British target-man, or gamble the sum on the volatile foreign genius and a cheaper backup?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'both', label: 'Sign both — Suárez and Carroll (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'A club-record double swoop to replace Torres.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Suárez and the record-fee Carroll.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'suarez-only', label: 'Gamble on Suárez and a cheaper backup', successProbability: 0.6, onSuccess: [{ kind: 'money', clubId: 'liverpool', amount: 15_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Backed Suárez and banked the Carroll fee.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Suárez and Carroll arrive on the Torres money.' }],
+      memoryTags: ['transfer', 'cur_suarez_lv10'],
+    }),
+  },
+  {
+    id: 'suarez-evra',
+    date: '2011-12',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:suarez-evra', title: 'The Suárez–Evra ban',
+      description: 'The FA has banned Luis Suárez for eight games and fined him £40,000 over his exchange with Patrice Evra (the finding concerned the Spanish word ‘negro’ in a specific exchange, not a repeated slur as the retelling has it). The club’s defiant ‘wear the T-shirt’ response and the February handshake snub would damage its reputation. Publicly back your player and print the support T-shirts, or distance the club from the ban, accept the verdict and protect the brand?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'back', label: 'Back the player — print the T-shirts (as reality did)', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 4 }, { kind: 'memory', tag: 'controversy', text: 'Backed Suárez publicly through the ban.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+        { id: 'distance', label: 'Distance the club — protect the brand', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'controversy', text: 'Accepted the verdict to protect the club’s image.' }], onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'controversy', text: 'Suárez banned eight games; the club’s response draws criticism.' }],
+      memoryTags: ['controversy'],
+    }),
+  },
+  {
+    id: 'league-cup-2012',
+    date: '2012-02',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:league-cup-2012', title: 'League Cup won — Dalglish’s trophy',
+      description: 'Liverpool have beaten Cardiff on penalties at Wembley to win the League Cup — the club’s first silverware since 2006 and Dalglish’s only trophy of his second spell. Prioritise the cup run as a morale-restoring trophy, or rest key men and treat it as a distraction from the league rebuild?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'prioritise', label: 'Chase the trophy (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Silverware at last — the first since 2006.' }, { kind: 'memory', tag: 'silverware', text: 'Won the League Cup under Dalglish.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'rest', label: 'Rest men — focus on the league', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Treated the cup as secondary to the rebuild.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4, text: 'Liverpool win the League Cup — a first trophy since 2006.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2012 League Cup.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'fa-cup-2012',
+    date: '2012-05',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:fa-cup-2012', title: 'FA Cup final defeat to Chelsea',
+      description: 'Liverpool have lost the FA Cup final 2-1 to Chelsea, denying a domestic cup double in a season of a poor 8th-place league finish. Judge the season a success on the cup double bid, or treat 8th place as unacceptable regardless of the Wembley runs?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'success', label: 'Call it a success on the cup runs', successProbability: 0.45, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'near-miss', text: 'Framed the season around the Wembley runs.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'unacceptable', label: '8th is unacceptable', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Judged 8th place a failure despite the cups.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Liverpool lose the FA Cup final to Chelsea — no double, 8th in the league.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'rodgers-in',
+    date: '2012-05',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:rodgers-in', title: 'Dalglish sacked, Rodgers appointed',
+      description: 'Dalglish has been dismissed after the 8th-place finish; FSG have appointed Swansea’s Brendan Rodgers to install a possession, pressing philosophy. Hire the young, ideological possession coach, or pursue an established elite winner to short-cut back to the top four?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'rodgers', label: 'Hire Rodgers — the ideologue (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Appointed Rodgers for a possession philosophy.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'elite', label: 'Pursue an established elite winner', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Chased a proven winner over the young coach.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Dalglish sacked; Rodgers appointed.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'suarez-bite',
+    date: '2013-04',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:suarez-bite', title: 'Suárez bites Ivanović',
+      description: 'Luis Suárez has bitten Chelsea’s Branislav Ivanović and been banned for 10 matches — a global scandal that would fuel his summer transfer agitation. Slap Suárez with a heavy internal fine and public rebuke to stay ahead of the FA, or shield him and quietly begin planning a sale at peak value?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'fine', label: 'Fine and rebuke him publicly', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'controversy', text: 'Came down hard on Suárez over the bite.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_suarez_lv10', amount: 10 }] },
+        { id: 'shield', label: 'Shield him — plan a sale at peak', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'controversy', text: 'Protected Suárez while eyeing a peak-value sale.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'controversy', text: 'Suárez bites Ivanović and is banned 10 games.' }],
+      memoryTags: ['controversy', 'cur_suarez_lv10'],
+    }),
+  },
+  {
+    id: 'gerrard-slip',
+    date: '2014-04',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:gerrard-slip', title: 'The title charge and Gerrard’s slip',
+      description: 'Rodgers’ swashbuckling side leads the title race — but against Chelsea, Steven Gerrard slips to gift Demba Ba a goal in a 0-2 home loss (a 3-3 collapse at Crystal Palace would follow, and City would take the title as Liverpool finished 2nd — the era’s best. The slip was one moment, not the sole cause). Go all-in attacking to keep the charge alive, or shut up shop against Chelsea and prioritise not losing?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'attack', label: 'Go all-in attacking (as reality did)', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'liverpool', amount: 5 }, { kind: 'memory', tag: 'near-miss', text: 'Kept the swashbuckling charge going to the last.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'shut-shop', label: 'Shut up shop — prioritise not losing', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Played it safe against Chelsea in the run-in.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Gerrard’s slip and a Palace collapse hand City the title; Liverpool finish 2nd.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'suarez-barca',
+    date: '2014-07',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:suarez-barca', title: 'Suárez sold to Barcelona for ~£65m',
+      description: 'Following his World Cup bite of Chiellini and a fresh long ban, Barcelona have come with ~£65m for Luis Suárez — losing your best player at the peak of the near-title side. Bank the ~£65m and rebuild the squad in breadth, or refuse to sell and keep the world-class forward for one more title tilt?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Bank the £65m and rebuild (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'liverpool', amount: 40_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Suárez to Barça and spread the money.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+        { id: 'keep', label: 'Refuse — one more title tilt', successProbability: 0.4, onSuccess: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Kept Suárez for another charge.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Suárez joins Barcelona for ~£65m — the near-title side loses its best.' }],
+      memoryTags: ['transfer', 'cur_suarez_lv10'],
+    }),
+  },
+  {
+    id: 'sterling-city',
+    date: '2015-07',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:sterling-city', title: 'Sterling sold to Manchester City',
+      description: 'After a public contract standoff, Manchester City have bid ~£49m for homegrown forward Raheem Sterling — another star cashed in as the post-Suárez rebuild falters. Take City’s record fee for a homegrown asset, or hold firm on the contract dispute and refuse to strengthen a direct rival?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Take City’s record fee (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'liverpool', amount: 30_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Sterling to City after the standoff.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'hold', label: 'Hold firm — don’t strengthen a rival', successProbability: 0.4, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Refused to sell Sterling to a rival.' }], onFailure: [{ kind: 'morale', clubId: 'liverpool', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Sterling joins Manchester City for ~£49m.' }],
+      memoryTags: ['transfer', 'cur_sterling_l14'],
+    }),
+  },
+  {
+    id: 'klopp-in',
+    date: '2015-10',
+    scenarios: ['liverpool-2010'],
+    requires: (s) => s.playerClub === 'liverpool',
+    build: () => ({
+      id: 'scripted:klopp-in', title: 'Rodgers out, Klopp in',
+      description: 'After a stagnating start and a 1-1 Merseyside derby, Brendan Rodgers has been sacked and Liverpool can appoint Jürgen Klopp (ex-Borussia Dortmund), ushering in ‘gegenpressing’ and ‘heavy metal football’. Land the charismatic elite German to reset the project, or keep faith with Rodgers through the slump and back him in the market?',
+      interrupt: true, clubId: 'liverpool', category: 'event',
+      choices: [
+        { id: 'klopp', label: 'Appoint Klopp (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'The Normal One arrives — Anfield believes again.' }, { kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Landed Klopp to reset the club.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'rodgers', label: 'Keep faith with Rodgers', successProbability: 0.4, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Stuck with Rodgers through the slump.' }], onFailure: [{ kind: 'fanTrust', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Jürgen Klopp is appointed — a new era dawns.' }, { kind: 'memory', tag: 'manager', text: 'Rodgers sacked; Klopp appointed.' }],
+      memoryTags: ['manager'],
     }),
   },
 ];
