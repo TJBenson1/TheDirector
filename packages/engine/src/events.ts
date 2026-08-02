@@ -7198,7 +7198,97 @@ const SPURS_2013_PACK: ScriptedEvent[] = [
   },
 ];
 
+// Peak MSN to the 8-2 and the burofax, 2014-2020: the 2015 treble, the slow
+// squander of the Neymar money, and the run of European collapses that broke the
+// era. Every transfer (Suárez in, Neymar out, Coutinho in) is ledger-replayed and
+// the coach churn (Luis Enrique → Valverde → Setién) can't be enacted as swaps,
+// so most beats are narrative overlays; Xavi's farewell keeps its legend fork.
 const BARCELONA_2014_PACK: ScriptedEvent[] = [
+  {
+    id: 'luis-enrique-in',
+    date: '2014-08',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:luis-enrique-in', title: 'Luis Enrique takes charge',
+      description: 'After a trophyless season under Tata Martino, Barcelona have appointed the returning club man Luis Enrique, who would install a faster, more direct, front-three-led system. Gamble on the bold, high-tempo overhaul, or appoint a safer established name to steady the dressing room?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'lucho', label: 'Back Luis Enrique’s overhaul (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Backed Luis Enrique’s front-three revolution.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'safe', label: 'A safer established name', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Chose a steady hand over the bold overhaul.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Luis Enrique appointed to lead the MSN era.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'suarez-signed',
+    date: '2014-08',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:suarez-signed', title: 'Suárez signed under the bite ban',
+      description: 'Barcelona can sign Luis Suárez from Liverpool for ~£65m days after his World Cup bite of Chiellini — a four-month ban means he can train but not play competitively until late October, completing the MSN alongside Messi and Neymar. Sanction the record fee for a world-class striker who arrives disgraced and can’t debut for months, or wait for a cleaner, immediately-available signing?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'sign', label: 'Sign Suárez — complete the MSN (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'The final piece of the MSN arrives.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Suárez under his ban to complete the MSN.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'clean', label: 'Wait for a cleaner signing', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Passed on the disgraced Suárez for an available target.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Suárez joins to complete the MSN, serving his ban.' }],
+      memoryTags: ['transfer', 'cur_suarez_b14'],
+    }),
+  },
+  {
+    id: 'suarez-clasico',
+    date: '2014-10',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:suarez-clasico', title: 'Suárez debuts in the Clásico',
+      description: 'Suárez’s competitive debut comes away to Real Madrid, assisting Neymar — Barcelona lost 3-1, but the MSN front three is live for the first time and will soon be the most feared attack in world football. Trust Luis Enrique to unleash the untested MSN immediately in the season’s biggest fixture, or ease Suárez in through lower-stakes matches first?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'unleash', label: 'Unleash the MSN in the Clásico (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 3, text: 'The MSN takes the field together for the first time.' }, { kind: 'memory', tag: 'squad', text: 'Threw Suárez straight into the Clásico.' }], onFailure: [{ kind: 'morale', clubId: 'barcelona', amount: -3 }] },
+        { id: 'ease', label: 'Ease him in gently first', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'squad', text: 'Eased Suárez in before the big fixtures.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'squad', text: 'Suárez debuts in the Clásico — the MSN is live.' }],
+      memoryTags: ['squad'],
+    }),
+  },
+  {
+    id: 'fifa-ban',
+    date: '2014-12',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:fifa-ban', title: 'The FIFA transfer ban upheld',
+      description: 'CAS has upheld a two-window registration ban for breaches over the transfer of minors — Barça cannot register new signings until January 2016 (Suárez was registered before it took effect). Keep fighting the ban through the courts at reputational cost, or accept it, front-load signings now, and double down on La Masia?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'fight', label: 'Keep fighting the ban', successProbability: 0.4, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'controversy', text: 'Fought the transfer ban in the courts.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'accept', label: 'Accept it — front-load and back La Masia (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'controversy', text: 'Accepted the ban and leaned on the academy.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'controversy', text: 'The FIFA registration ban is upheld through to January 2016.' }],
+      memoryTags: ['controversy'],
+    }),
+  },
+  {
+    id: 'treble-2015',
+    date: '2015-06',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:treble-2015', title: 'The Treble — Berlin, the MSN peak',
+      description: 'Barcelona have completed the treble in Luis Enrique’s first season — La Liga, the Copa del Rey (Messi’s iconic solo goal), and the Champions League in Berlin, beating Juventus 3-1. The MSN scored 122 goals, their absolute peak. Cash in on players at maximum market value at the summit, or keep the treble-winning core together to chase a dynasty?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Keep the core — chase a dynasty', successProbability: 0.65, onSuccess: [{ kind: 'morale', clubId: 'barcelona', amount: 6 }, { kind: 'memory', tag: 'silverware', text: 'Won the treble and kept the MSN together.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'cash', label: 'Cash in at the summit', successProbability: 0.5, onSuccess: [{ kind: 'money', clubId: 'barcelona', amount: 20_000_000 }, { kind: 'memory', tag: 'silverware', text: 'Won the treble and sold from the peak.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 8, text: 'Barcelona win the treble in Berlin — the MSN at its peak.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2015 treble.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
   {
     id: 'xavi-farewell',
     date: '2015-05',
@@ -7214,6 +7304,142 @@ const BARCELONA_2014_PACK: ScriptedEvent[] = [
       ],
       falloutIfIgnored: [{ kind: 'letContractLapse', playerId: 'cur_xavi_b14' }, { kind: 'memory', tag: 'legend', text: 'Xavi leaves for Al Sadd, a Barça immortal.' }],
       memoryTags: ['legend', 'cur_xavi_b14'],
+    }),
+  },
+  {
+    id: 'remontada',
+    date: '2017-03',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:remontada', title: 'La Remontada — 6-1 over PSG',
+      description: 'After losing the round-of-16 first leg 4-0 in Paris, Barcelona have won the return 6-1 at Camp Nou — Sergi Roberto’s 95th-minute goal completing the greatest comeback in Champions League knockout history (6-5 aggregate). (Barça then exited in the very next round to Juventus.) Frame the miracle as proof the ageing squad can still deliver and delay a rebuild, or read the 4-0 first-leg humiliation as the real warning and push reinforcements?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'delay', label: 'Proof they can still deliver — delay the rebuild', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'barcelona', amount: 5 }, { kind: 'memory', tag: 'europe', text: 'Rode the Remontada high and delayed the rebuild.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'warning', label: 'Heed the 4-0 warning — push reinforcements', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'europe', text: 'Read the Paris humiliation as the real warning.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Sergi Roberto completes the greatest comeback in the competition’s history.' }, { kind: 'memory', tag: 'europe', text: 'La Remontada — 6-1 over PSG.' }],
+      memoryTags: ['europe'],
+    }),
+  },
+  {
+    id: 'valverde-in',
+    date: '2017-05',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:valverde-in', title: 'Valverde and the transition',
+      description: 'With Luis Enrique stepping down after three seasons, Barcelona can appoint the pragmatic Ernesto Valverde — who would win two La Liga titles but preside over the era’s most traumatic European collapses. Hire the safe, low-drama Valverde to manage the transition, or chase a marquee tactician for a bolder philosophical reset?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'valverde', label: 'Hire the safe Valverde (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Appointed Valverde to manage the transition.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'marquee', label: 'Chase a marquee tactician for a reset', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Went for a bolder philosophical reset.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Valverde appointed as Luis Enrique steps down.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'neymar-psg',
+    date: '2017-08',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:neymar-psg', title: 'Neymar’s €222m world record to PSG',
+      description: 'Neymar has triggered his release clause and joined PSG for €222m — more than doubling the previous world record, ending the MSN and reshaping the transfer market overnight. Accept the unprecedented windfall, or fight to block the exit and hold Neymar to his contract at all costs?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'accept', label: 'Accept the €222m windfall (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'barcelona', amount: 60_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Banked the €222m for Neymar — the MSN ends.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+        { id: 'block', label: 'Fight to block the exit', successProbability: 0.3, onSuccess: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Fought to keep Neymar against the clause.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Neymar joins PSG for €222m — the MSN is over.' }],
+      memoryTags: ['transfer', 'cur_neymar_b14'],
+    }),
+  },
+  {
+    id: 'post-neymar-splurge',
+    date: '2017-08',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:post-neymar-splurge', title: 'Spending the Neymar money',
+      description: 'Barcelona can reinvest the Neymar money at inflated prices — Ousmane Dembélé from Dortmund (~€105m rising to ~€148m), then Coutinho from Liverpool in January (~€120m rising to ~€142m). Reality: both underdelivered and became emblematic of poor recruitment. Splash the cash on two big-money replacements at seller’s-market prices, or bank the fee and pursue one elite target or long-term youth?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'splurge', label: 'Splash on Dembélé and Coutinho (as reality did)', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Spent the Neymar money on Dembélé and Coutinho.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'bank', label: 'Bank it — one elite target or youth', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'money', clubId: 'barcelona', amount: 30_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Held the Neymar money rather than overpay.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'The Neymar money goes on Dembélé and Coutinho at inflated prices.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'roma-collapse',
+    date: '2018-04',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:roma-collapse', title: 'The Roma collapse',
+      description: 'After winning the quarter-final first leg 4-1 at home, Barcelona have lost 3-0 at Roma and gone out on away goals — a shock capitulation exposing the fragility beneath a strong domestic season. Treat the collapse as a wake-up call and force squad surgery, or trust the imminent La Liga/Copa double and keep faith in Valverde?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'surgery', label: 'Force squad surgery', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Took the Roma collapse as a warning and rebuilt.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'faith', label: 'Trust the double — keep faith (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'near-miss', text: 'Kept faith in Valverde after Rome.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Barcelona collapse 3-0 at Roma and go out on away goals.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'anfield-collapse',
+    date: '2019-05',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:anfield-collapse', title: 'The Anfield collapse',
+      description: 'Leading 3-0 from the first leg, Barcelona have lost the semi-final second leg 4-0 at Anfield (Origi’s quick corner sealing it) — a second straight European humiliation from a winning position, deepening the crisis around Valverde. Sack Valverde immediately after a second collapse, or keep him for continuity and a title defence, absorbing the fan backlash?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'sack', label: 'Sack Valverde now', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Pulled the trigger on Valverde after Anfield.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'keep', label: 'Keep him for continuity (as reality did)', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'near-miss', text: 'Kept Valverde despite the Anfield collapse.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Barcelona lose 4-0 at Anfield from 3-0 up — a second collapse.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'bayern-8-2',
+    date: '2020-08',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:bayern-8-2', title: 'The 8-2 humiliation',
+      description: 'In the one-legged quarter-final in Lisbon, Bayern have thrashed Barcelona 8-2 — the club’s heaviest European defeat in decades — laying bare a decayed, ageing squad and triggering an institutional reckoning (Setién, who replaced Valverde in January, is sacked days later). Launch an emergency ground-up rebuild around Messi, or chase a quick-fix marquee coach and signings to paper over the rot?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'rebuild', label: 'Emergency ground-up rebuild', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'crisis', text: 'Began a ground-up rebuild after the 8-2.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'quick-fix', label: 'Quick-fix coach and signings', successProbability: 0.45, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'crisis', text: 'Papered over the rot with a quick fix.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -5, text: 'Bayern humiliate Barcelona 8-2 — the era’s nadir.' }, { kind: 'memory', tag: 'crisis', text: 'The 8-2 to Bayern lays the squad’s decay bare.' }],
+      memoryTags: ['crisis'],
+    }),
+  },
+  {
+    id: 'messi-burofax',
+    date: '2020-08',
+    scenarios: ['barcelona-2014'],
+    requires: (s) => s.playerClub === 'barcelona',
+    build: () => ({
+      id: 'scripted:messi-burofax', title: 'Messi’s burofax',
+      description: 'Days after the 8-2, Messi has sent a burofax stating he wishes to leave, citing a contract clause. Reality: after a public standoff with Bartomeu, he stayed one more year to avoid a legal battle, but the relationship was fractured (he left for PSG in 2021, not 2020). Cash in on an unsettled 33-year-old Messi while a fee is still possible, or hold him to his contract and gamble on reconciliation?',
+      interrupt: true, clubId: 'barcelona', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Cash in while a fee is possible', successProbability: 0.4, onSuccess: [{ kind: 'money', clubId: 'barcelona', amount: 40_000_000 }, { kind: 'memory', tag: 'saga', text: 'Cashed in on Messi rather than lose him free — a road reality never took.' }], onFailure: [{ kind: 'fanTrust', amount: -6 }] },
+        { id: 'hold', label: 'Hold him — gamble on reconciliation (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Messi stays, for now — the standoff cools.' }, { kind: 'memory', tag: 'saga', text: 'Held Messi to his contract after the burofax.' }], onFailure: [{ kind: 'morale', clubId: 'barcelona', amount: -5 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'saga', text: 'Messi’s burofax fails; he stays one more fractured year.' }],
+      memoryTags: ['saga'],
     }),
   },
 ];
