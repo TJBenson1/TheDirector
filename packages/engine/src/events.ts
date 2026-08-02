@@ -5659,15 +5659,71 @@ const MILAN_2007_PACK: ScriptedEvent[] = [
   },
 ];
 
+// The Calderón pragmatic era into Galácticos 2.0 and the Mourinho peak,
+// 2006-2012. Every transfer (Ruud, Cannavaro, Emerson in 2006; Ronaldo Nazário
+// out 2007; CR7, Kaká, Benzema, Alonso in 2009; Sneijder/Robben/Robinho out) is
+// ledger-replayed and the coaching churn (Capello → Schuster → Pellegrini →
+// Mourinho) can't be enacted as coach swaps, so these are narrative overlays.
 const REAL_MADRID_2006_PACK: ScriptedEvent[] = [
+  {
+    id: 'calderon-capello',
+    date: '2006-08',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:calderon-capello', title: 'The Calderón era — Capello’s pragmatic rebuild',
+      description: 'With Pérez resigned and Calderón elected, Fabio Capello is back for a second spell, and the club has pivoted hard: van Nistelrooy (Man Utd), Cannavaro and Emerson (from a relegated Juventus), Diarra (Lyon) and a loan for Reyes — a harder, results-first squad. (Zidane retired after the 2006 World Cup; Figo left in 2005 — neither is here.) Back Capello’s defensive rebuild, or push the board toward an attacking, Galáctico-style coach and a marquee attacker instead?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'back', label: 'Back Capello’s pragmatism (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Backed Capello’s results-first rebuild.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'galactico', label: 'Push for a Galáctico attacking coach', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'managerRelationship', amount: -6 }, { kind: 'memory', tag: 'manager', text: 'Pushed for flair over Capello’s pragmatism.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Capello returns for a pragmatic rebuild under Calderón.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'cannavaro-ballon',
+    date: '2006-11',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:cannavaro-ballon', title: 'Cannavaro wins the Ballon d’Or',
+      description: 'Fresh off captaining Italy to the World Cup, Fabio Cannavaro has won the Ballon d’Or — a Real Madrid defender at the summit of the individual game. Build the spine around the 33-year-old and hand him the leadership role, or treat his peak as maximum resale value and prioritise younger foundations?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'build', label: 'Build around him — hand him the armband', successProbability: 0.65, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'A Ballon d’Or winner anchors the defence.' }, { kind: 'memory', tag: 'honour', text: 'Built the spine around Cannavaro’s leadership.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'resale', label: 'Cash in at peak value', successProbability: 0.5, onSuccess: [{ kind: 'money', clubId: 'real_madrid', amount: 8_000_000 }, { kind: 'memory', tag: 'honour', text: 'Prioritised younger foundations over the veteran.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4, text: 'Cannavaro is crowned the best in the world.' }, { kind: 'memory', tag: 'honour', text: 'Cannavaro wins the Ballon d’Or.' }],
+      memoryTags: ['honour', 'cur_cannavaro_r6'],
+    }),
+  },
+  {
+    id: 'ronaldo-milan',
+    date: '2007-01',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:ronaldo-milan', title: 'Ronaldo (Nazário) frozen out and sold',
+      description: 'Out of favour and out of shape under Capello, the Brazilian Ronaldo has been frozen out and can be sold to Milan this January (this is Il Fenomeno, not the young Cristiano, who is years away). Sanction the coach’s freeze-out and cash in, or overrule Capello and force the striker’s reintegration?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Back the freeze-out — sell Ronaldo (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'transfer', text: 'Sold Ronaldo to Milan, backing Capello.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'reintegrate', label: 'Overrule Capello — reintegrate him', successProbability: 0.4, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Forced Ronaldo back into the fold against the coach.' }], onFailure: [{ kind: 'managerRelationship', amount: -8 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Ronaldo Nazário sold to Milan — the Galáctico era’s last act.' }],
+      memoryTags: ['transfer', 'cur_ronaldo_r6'],
+    }),
+  },
   {
     id: 'beckham-exile',
     date: '2007-01',
     scenarios: ['real-madrid-2006'],
-    requires: (s) => playerAt(s, 'cur_beckham_r6', 'real_madrid') && s.playerClub === 'real_madrid',
+    requires: (s) => s.playerClub === 'real_madrid',
     build: () => ({
       id: 'scripted:beckham-exile', title: 'Beckham signs for LA Galaxy — freeze him out, or bring him back?',
-      description: 'David Beckham has announced he’ll join LA Galaxy at season’s end, and Capello has declared he’ll never play for Real again. Reality: Capello swallowed his words, reintegrated him, and Beckham drove Madrid to a stunning late title. Hold the hard line, or bring the Englishman back in from the cold?',
+      description: 'David Beckham has announced he’ll join LA Galaxy at season’s end, and Capello has declared he’ll never play for Real again. Reality: Capello swallowed his words, reintegrated him, and Beckham drove Madrid to a stunning late title before leaving in July 2007. Hold the hard line, or bring the Englishman back in from the cold?',
       interrupt: true, clubId: 'real_madrid', category: 'event',
       choices: [
         { id: 'reintegrate', label: 'Bring him back in — swallow the pride', successProbability: 0.7, onSuccess: [{ kind: 'morale', playerId: 'cur_beckham_r6', amount: 12 }, { kind: 'boardPatience', amount: 6 }, { kind: 'memory', tag: 'redemption', text: 'Brought Beckham back from exile — and he dragged Madrid to the title, as reality had it.' }], onFailure: [{ kind: 'managerRelationship', amount: -6 }] },
@@ -5675,6 +5731,159 @@ const REAL_MADRID_2006_PACK: ScriptedEvent[] = [
       ],
       falloutIfIgnored: [{ kind: 'morale', playerId: 'cur_beckham_r6', amount: 8 }, { kind: 'memory', tag: 'redemption', text: 'Beckham forces his way back and fires the title run.' }],
       memoryTags: ['redemption', 'cur_beckham_r6'],
+    }),
+  },
+  {
+    id: 'liga-2007',
+    date: '2007-06',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:liga-2007', title: 'La Liga on the final day',
+      description: 'Real Madrid have beaten Mallorca 3-1 at the Bernabéu to seal the title, finishing level on points with Barcelona but ahead on the head-to-head tiebreaker — Capello’s crown. Publicly credit Capello and offer a new contract on the back of the title, or use the triumph as cover to change footballing direction?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'credit', label: 'Credit Capello — offer a new deal', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'silverware', text: 'Won the title and backed Capello.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'change', label: 'Use it as cover to change direction', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Won the title but eyed a new footballing direction.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Real Madrid pip Barcelona to La Liga on the final day.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2006-07 La Liga.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'capello-sacked',
+    date: '2007-07',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid' && s.managerRelations.identity === 'Fabio Capello',
+    build: () => ({
+      id: 'scripted:capello-sacked', title: 'Capello sacked despite the title',
+      description: 'Weeks after winning La Liga, Capello has been dismissed over the team’s unattractive, defensive football; Bernd Schuster is set to take over promising a more expansive style, with Sneijder (Ajax) and Robben (Chelsea) arriving. Sack the title-winning coach on aesthetic grounds and gamble on Schuster’s attacking project, or keep Capello for continuity and results?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'schuster', label: 'Sack him — gamble on Schuster (as reality did)', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'A promise of flair to follow the title.' }, { kind: 'memory', tag: 'manager', text: 'Sacked Capello despite the title; Schuster in for flair.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'keep', label: 'Keep Capello for continuity', successProbability: 0.55, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Kept the title-winning Capello.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Capello sacked despite winning La Liga; Schuster appointed.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'title-2008',
+    date: '2008-05',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:title-2008', title: 'Back-to-back titles under Schuster',
+      description: 'Real Madrid have won La Liga again comfortably, van Nistelrooy prolific and Sneijder and Robben adding flair — a second straight championship. Reinvest heavily to build a dynasty around Schuster’s side, or begin quietly planning a Galáctico reset and leadership change?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'dynasty', label: 'Reinvest to build a dynasty', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'real_madrid', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Won back-to-back and backed the side to dominate.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'reset', label: 'Plan a Galáctico reset', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Won the title but planned the next reset.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Real Madrid retain La Liga under Schuster.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2007-08 La Liga.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'perez-returns',
+    date: '2009-06',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:perez-returns', title: 'Florentino Pérez returns',
+      description: 'With Schuster sacked and Juande Ramos steadying a runner-up finish, Florentino Pérez has returned unopposed as president, relaunching the Galácticos era and installing Manuel Pellegrini. Align fully with Pérez’s spend-big Galáctico vision, or act as a brake, arguing for squad balance over marquee names?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'align', label: 'Align with the Galáctico vision (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'club', text: 'Backed Pérez’s Galáctico relaunch.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'brake', label: 'Argue for balance over marquee names', successProbability: 0.45, onSuccess: [{ kind: 'memory', tag: 'club', text: 'Pushed for squad balance over the marquee splurge.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'club', text: 'Pérez returns and relaunches the Galácticos.' }],
+      memoryTags: ['club'],
+    }),
+  },
+  {
+    id: 'galacticos-2',
+    date: '2009-07',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:galacticos-2', title: 'World-record Ronaldo and Kaká',
+      description: 'Real Madrid can sign Kaká from Milan (~€65m) and Cristiano Ronaldo from Man Utd for a then-world-record fee (~€94m), alongside Benzema and Xabi Alonso — Galácticos 2.0. Sanction consecutive world-record fees for the headline stars, or spread the same budget across greater squad depth?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'records', label: 'Smash the records for CR7 and Kaká (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 6, text: 'A world-record galáctico front line arrives.' }, { kind: 'memory', tag: 'transfer', text: 'Broke the world record for Cristiano Ronaldo and signed Kaká.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'depth', label: 'Spread the budget on depth', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Chose depth over the record galáctico splurge.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6 }, { kind: 'memory', tag: 'transfer', text: 'Cristiano Ronaldo and Kaká arrive — Galácticos 2.0.' }],
+      memoryTags: ['transfer', 'cur_cristiano_07'],
+    }),
+  },
+  {
+    id: 'young-core-sold',
+    date: '2009-08',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:young-core-sold', title: 'The young core sold to fund the stars',
+      description: 'To finance the rebuild, Sneijder (to Inter) and Robben (to Bayern) are being sold, following Robinho’s earlier exit to Manchester City — all three would thrive elsewhere (Sneijder won the 2010 treble). Sell the young Dutch/Brazilian core to bankroll the superstars, or keep them and scale back the incoming spend?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Sell the core to fund the Galácticos (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'real_madrid', amount: 40_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Sneijder and Robben to bankroll the stars.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'keep', label: 'Keep them — scale back the spend', successProbability: 0.5, onSuccess: [{ kind: 'morale', clubId: 'real_madrid', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Kept the young core over the marquee names.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Sneijder and Robben sold to fund the Galácticos.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'mourinho-in-2010',
+    date: '2010-05',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:mourinho-in-2010', title: 'Pellegrini out, Mourinho in',
+      description: 'Despite a then-record 96 points, Pellegrini’s side has won nothing — pipped by Barça, out of the Champions League to Lyon. José Mourinho, fresh off Inter’s treble, is available to break Barcelona’s grip. Hire the combative, guaranteed-winner Mourinho, or stick with the calmer Pellegrini or a less confrontational profile?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'mourinho', label: 'Hire Mourinho (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Hired Mourinho to break Barcelona’s grip.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'calm', label: 'Stick with a calmer profile', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Chose a less confrontational coach.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Pellegrini out despite 96 points; Mourinho appointed.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'copa-2011',
+    date: '2011-04',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:copa-2011', title: 'Copa del Rey over Barcelona',
+      description: 'Amid four Clásicos in 18 days, Real Madrid have beaten Barcelona 1-0 after extra time in the Copa del Rey final at Mestalla, Cristiano Ronaldo heading the winner — Mourinho’s first Madrid trophy and a first cup over Guardiola’s Barça. Go all-in on the Clásico wars and the cup as a psychological breakthrough, or rein in Mourinho’s escalating conflicts to protect the club’s image?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'all-in', label: 'Go all-in on the Clásico wars', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'real_madrid', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Beat Barça in the Copa — a psychological breakthrough.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'rein-in', label: 'Rein in the conflicts — protect the image', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'silverware', text: 'Won the cup but curbed Mourinho’s war.' }], onFailure: [{ kind: 'managerRelationship', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Ronaldo’s header beats Barça in the Copa del Rey final.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2011 Copa del Rey over Barcelona.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'liga-100',
+    date: '2012-05',
+    scenarios: ['real-madrid-2006'],
+    requires: (s) => s.playerClub === 'real_madrid',
+    build: () => ({
+      id: 'scripted:liga-100', title: 'La Liga reclaimed with a record 100 points',
+      description: 'Real Madrid have won La Liga with a record 100 points and 121 goals, dethroning Barcelona — the peak of the Mourinho era. Celebrate ending Barça’s reign and extend Mourinho long-term, or anticipate the coming dressing-room fallout and plan an orderly succession?',
+      interrupt: true, clubId: 'real_madrid', category: 'event',
+      choices: [
+        { id: 'extend', label: 'Extend Mourinho long-term', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'silverware', text: 'Won with 100 points and tied Mourinho down.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'succession', label: 'Plan an orderly succession', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Won the record title and planned the succession.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 7, text: 'Real Madrid dethrone Barça with a record 100 points.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2011-12 La Liga with a record 100 points.' }],
+      memoryTags: ['silverware'],
     }),
   },
 ];
