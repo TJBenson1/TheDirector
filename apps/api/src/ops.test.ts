@@ -61,3 +61,28 @@ describe('offers admit foreign suitors and headline the real destination', () =>
     expect(offersFor('cur_wiltord_04').map((o) => o.clubId)).toContain('lyon');
   });
 });
+
+// Loans are era-gated: rare (youth-development only) in the late 90s/early 2000s,
+// widening to fringe players through the 2000s and to anyone from ~2010.
+describe('loan_out is era-gated and moves the player', () => {
+  type R = { ok: boolean; reason?: string; to?: string };
+  it('loans out a young player in 1999, sends him to a smaller club, and refuses a senior', () => {
+    const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'loan' });
+    const young = runOp(s, 'loan_out', { playerId: 'Wes Brown' }).result as R; // age 20
+    expect(young.ok).toBe(true);
+    // He left United's squad, joined a genuinely smaller (non-rival) club.
+    expect(s.clubs['man_utd']!.squad.includes('cur_wbrown')).toBe(false);
+    expect(young.to).not.toBe('Liverpool');
+
+    const senior = runOp(s, 'loan_out', { playerId: 'Roy Keane' }).result as R; // age 28
+    expect(senior.ok).toBe(false);
+    expect(senior.reason).toMatch(/rare|youth-development|21 or under/i);
+  });
+
+  it('lets an established player go out on loan in the modern era', () => {
+    const m = createNewGame({ scenarioId: 'man-utd-2013', seed: 'loan' });
+    const senior = Object.values(m.players).find((p) => p.club === 'man_utd' && 2013 - p.birthYear > 26)!;
+    const r = runOp(m, 'loan_out', { playerId: senior.id }).result as R;
+    expect(r.ok).toBe(true);
+  });
+});

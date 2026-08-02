@@ -126,6 +126,18 @@ describe('player agency & resistance (§6)', () => {
     expect(someMovesUp).toBe(true);
   });
 
+  it('a settled, loyal icon is a wall — unbuyable at any fee or wage', () => {
+    // Peak Kahn at Bayern (loyal, contented) should be very challenging to sign, not
+    // a marginal maybe. An ahistorical United bid — even with a huge wage — fails
+    // comfortably below the threshold, with the "not about money" verdict.
+    const s = createNewGame({ scenarioId: 'man-utd-1999', seed: 'icon' });
+    const kahn = find(s, 'Oliver Kahn'); // an 88-rated keeper at a giant — a jewel
+    const v = evaluateApproach(s, { playerId: kahn.id, toClub: 'man_utd', feeOffer: 30_000_000, wageOffer: kahn.wage * 10 });
+    expect(v.willing).toBe(false);
+    expect(v.willingness).toBeLessThan(40); // a comfortable wall, not a 48/50 near-miss
+    expect(v.reason).toMatch(/not about money|will not leave/i);
+  });
+
   it('a boyhood dream club adds real pull', () => {
     const state = cloneState(createNewGame({ seed: 'dream' }));
     const p = Object.values(state.players).find((x) => x.club === 'leeds' && x.resistance.hardBlocks.length === 0)!;

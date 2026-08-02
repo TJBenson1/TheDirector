@@ -307,6 +307,29 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
     resistance += (competitors - 2) * glutPenalty;
   }
 
+  // The icon wall: a settled star is a wall, not a maybe. Either a genuinely loyal
+  // man (high loyalty) OR a giant's jewel (elite ability at a top-prestige club) does
+  // not leave for an ahistorical bid at any fee — peak Kahn does not join United,
+  // however deep the pockets. Keyed on the jewel test as well as loyalty because the
+  // loyalty trait is jittered and shouldn't be the only thing standing between an icon
+  // and a wage-driven exit. It sits AFTER the reality-default/pole short-circuits (so
+  // a move he really made still fires) and is gated on morale, so a genuinely
+  // unsettled star can still be prised loose and the rival poaching seam keeps biting.
+  // Only a CONTENTED icon is a wall — a settled man, not one already agitating for
+  // the exit. Gating on low agitation (as well as morale) leaves the rival poaching
+  // seam free to prise away the stars who actually want out, so the departure
+  // calibration holds; it only walls the happy, settled greats a Director shouldn't
+  // be able to buy on a whim.
+  // Kept deliberately NARROW — a true one-club icon (high loyalty) or an absolute
+  // elite jewel at an elite club — so it walls only the handful of Kahn/Maldini
+  // types and leaves the ordinary star market (and the rival-poaching ecosystem)
+  // untouched.
+  const isJewel = player.ability >= 88 && res.clubLoyalty >= 75 && (fromClub?.prestige ?? 0) >= 85;
+  const contentedIcon = player.morale >= 55 && (player.agitation ?? 0) < 20 && (res.clubLoyalty >= 80 || isJewel);
+  if (contentedIcon) {
+    resistance += 26 + Math.max(0, res.clubLoyalty - 70) * 1.4;
+  }
+
   const willingness = Math.max(0, Math.min(100, Math.round(pull - resistance + 30)));
   const willing = willingness >= WILLINGNESS_THRESHOLD;
 
@@ -319,8 +342,8 @@ export function evaluateApproach(state: GameState, input: ApproachInput): Approa
     reason = `${player.name} will not cross to a direct rival in ${buyer.name}.`;
   } else if (fromClub && areDerbyRivals(fromClub.id, buyer.id)) {
     reason = `${fromClub.name} will only sell ${player.name} to derby rivals ${buyer.name} grudgingly — expect to pay a premium to make it happen.`;
-  } else if (res.clubLoyalty >= 80 && fromClub) {
-    reason = `${player.name} will not leave ${fromClub.name}. This is not about money.`;
+  } else if (fromClub && contentedIcon) {
+    reason = `${player.name} is a settled mainstay at ${fromClub.name} and will not be prised away. This is not about money.`;
   } else if (pole && pole.to !== input.toClub && (input.feeOffer ?? 0) <= pole.fee) {
     // The blocker is a rival already in pole for his real move — tell the user the
     // lever (out-bid the selling club) rather than a flat "not convinced".

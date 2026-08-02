@@ -12,7 +12,7 @@
  * ledger alone and Anelka goes to Madrid, Crespo to Chelsea, on schedule.
  */
 
-import type { ClubId, Consequence, Decision, GameState, PlayerState } from './types.js';
+import type { ClubId, Consequence, Decision, GameState, PlayerState, PlayerId, YearMonth } from './types.js';
 import { Rng, hashStringToU32 } from './rng.js';
 import { WINDOW_STEPS, WINDOW_PHASE_REVIEW, transferWindowOrdinal } from './clock.js';
 import { logEvent } from './eventLog.js';
@@ -92,6 +92,64 @@ export function executeLoanWindow(state: GameState): void {
         data: { playerId: player.id, parent: loan.parent, to: loan.to },
       });
     }
+  }
+}
+
+// ── User-initiated loans OUT (era-gated) ─────────────────────────────────────────
+// The season-long loan grew from a rare youth-development tool in the late 90s /
+// early 2000s into a mainstream squad-management lever by the 2010s. The tier gates
+// WHO the Director can send out on loan, so loaning is not the default early-era move.
+
+/** Which players a Director may loan out in a given year. */
+export type LoanTier = 'youth' | 'fringe' | 'open';
+export function loanEraTier(year: number): LoanTier {
+  if (year < 2004) return 'youth'; //  essentially development loans of kids only
+  if (year < 2010) return 'fringe'; // young men and squad fringe, not first-teamers
+  return 'open'; //                    a normal squad-management tool for anyone
+}
+
+/** The next summer window strictly after `date` — when a season-long loan reverts. */
+export function nextSummerWindow(date: YearMonth): YearMonth {
+  const year = Number(date.slice(0, 4));
+  const month = Number(date.slice(5, 7));
+  return month >= 7 ? `${year + 1}-07` : `${year}-07`;
+}
+
+/** Loan a squad player OUT to a host club until `until`. The parent keeps his
+ *  registration and he reverts at `until` (see revertExpiredLoans). Fee-free squad
+ *  move; validation (era tier, squad floor, host choice) is the caller's job. */
+export function loanOut(state: GameState, playerId: PlayerId, toClub: ClubId, until: YearMonth): void {
+  const player = state.players[playerId];
+  const parent = player?.club;
+  if (!player || !parent || !state.clubs[toClub]) return;
+  moveSquad(state, player, parent, toClub);
+  player.loan = { parent, until };
+  logEvent(state, {
+    category: 'transfer',
+    code: 'loan.start',
+    message: `${player.name} joins ${state.clubs[toClub]?.name} on loan from ${state.clubs[parent]?.name} (until ${until})`,
+    data: { playerId, parent, to: toClub, userLoan: true },
+  });
+}
+
+/** Revert any loan that has reached its `until` back to the parent. Runs AFTER the
+ *  real-loan window (which clears its own entries), so this only catches leftover
+ *  user loans — a real loan that converts to permanent has already cleared its flag. */
+export function revertExpiredLoans(state: GameState): void {
+  const nowOrd = transferWindowOrdinal(state.clock.date);
+  for (const player of Object.values(state.players)) {
+    const loan = player.loan;
+    if (!loan || player.retired) continue;
+    if (nowOrd < transferWindowOrdinal(loan.until)) continue;
+    const host = player.club;
+    if (host && host !== loan.parent && state.clubs[loan.parent]) moveSquad(state, player, host, loan.parent);
+    player.loan = undefined;
+    logEvent(state, {
+      category: 'transfer',
+      code: 'loan.end',
+      message: `${player.name} returns to ${state.clubs[loan.parent]?.name} as his loan ends`,
+      data: { playerId: player.id, parent: loan.parent },
+    });
   }
 }
 

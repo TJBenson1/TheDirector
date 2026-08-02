@@ -18,6 +18,10 @@ import {
   askingPrice,
   realDeparture,
   realDepartureThisWindow,
+  areDirectRivals,
+  loanOut,
+  loanEraTier,
+  nextSummerWindow,
   evaluateApproach,
   coachFit,
   assessSigning,
@@ -65,6 +69,27 @@ function resolveClub(s: GameState, ref: string): GameState['clubs'][string] | un
     clubs.find((c) => c.name.toLowerCase().includes(needle)) ??
     clubs.find((c) => needle.includes(c.name.toLowerCase()))
   );
+}
+
+/** A plausible club to take a fringe player on loan: a genuinely smaller side (in a
+ *  real league, well below the user's standing and never a rival) where he'd actually
+ *  play — you don't loan your kid to an arch-rival or a fellow giant. Prefer the best
+ *  such environment he'd still start in (host strength at or below his ability). */
+function pickLoanHost(s: GameState, ability: number): GameState['clubs'][string] | undefined {
+  const user = s.clubs[s.playerClub];
+  const smaller = Object.values(s.clubs).filter(
+    (c) =>
+      c.id !== s.playerClub &&
+      c.leagueId !== null &&
+      c.prestige < (user?.prestige ?? 100) - 6 &&
+      !areDirectRivals(s, s.playerClub, c.id),
+  );
+  if (!smaller.length) return undefined;
+  // Where he'd play: host no stronger than he is; take the strongest such club, else
+  // (everyone's above his level) the weakest available so he still features.
+  const playsThere = smaller.filter((c) => c.strength <= ability + 4);
+  if (playsThere.length) return playsThere.sort((a, b) => b.strength - a.strength)[0];
+  return smaller.sort((a, b) => a.strength - b.strength)[0];
 }
 
 export function listScenarios() {
@@ -384,6 +409,35 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
       };
     }
 
+    case 'loan_out': {
+      const p = resolvePlayer(s, String(input.playerId));
+      if (!p || p.club !== s.playerClub) return { state: s, result: { ok: false, reason: 'Not your player.' } };
+      if (p.loan) return { state: s, result: { ok: false, reason: `${p.name} is already out on loan.` } };
+      const yr = currentYear(s);
+      const age = yr - p.birthYear;
+      const tier = loanEraTier(yr);
+      // Era gate: the season-long loan grew from a youth tool into a squad tool, so
+      // it isn't the default early-era move (loans were rare in the late 90s/early 00s).
+      if (tier === 'youth' && age > 21) {
+        return { state: s, result: { ok: false, reason: `Season-long loans are rare in ${yr} — at this stage they're essentially a youth-development tool. Only players 21 or under go out on loan; ${p.name} is ${age}. Sell him or keep him. (The loan market opens up from the mid-2000s.)` } };
+      }
+      const fringe = age <= 23 || (p.lastSeason ? p.lastSeason.minutesShare < 0.45 : true);
+      if (tier === 'fringe' && !fringe) {
+        return { state: s, result: { ok: false, reason: `In ${yr} loans are for the young and the fringe, not established first-teamers. ${p.name} is a regular — sell him or keep him rather than loan him out. (Loaning out first-teamers only becomes normal around 2010.)` } };
+      }
+      // Squad floor: never leave the side unable to field an XI or without a keeper.
+      const remaining = clubSquadPlayers(s, s.playerClub).filter((q) => q.id !== p.id && !q.retired);
+      if (remaining.length < 11) return { state: s, result: { ok: false, reason: `Loaning out ${p.name} would leave you fewer than 11 fit players — bring in cover first.` } };
+      if (p.positions.includes('GK') && !remaining.some((q) => q.positions.includes('GK'))) return { state: s, result: { ok: false, reason: `${p.name} is your only goalkeeper — don't loan him out.` } };
+      // Host: a named club if given, else a plausible smaller side where he'd play.
+      let host = input.toClub ? resolveClub(s, String(input.toClub)) : pickLoanHost(s, p.ability);
+      if (input.toClub && !host) return { state: s, result: { ok: false, reason: `No club found matching "${String(input.toClub)}".` } };
+      if (!host) return { state: s, result: { ok: false, reason: `No suitable club to take ${p.name} on loan right now.` } };
+      const until = nextSummerWindow(s.clock.date);
+      loanOut(s, p.id, host.id, until);
+      return { state: s, result: { ok: true, loaned: p.name, to: host.name, until, note: `Returns from loan in ${until}.` } };
+    }
+
     case 'renew': {
       const p = resolvePlayer(s, String(input.playerId));
       if (!p || p.club !== s.playerClub) return { state: s, result: { ok: false, reason: 'Not your player.' } };
@@ -454,6 +508,7 @@ export const TOOL_SCHEMAS = [
   { name: 'offers', description: 'Who would buy one of your players, and for how much.', input_schema: { type: 'object', properties: { playerId: { type: 'string' } }, required: ['playerId'] } },
   { name: 'sell', description: "Sell your player to a club for a fee (from offers). Before selling a starter, weigh the squad cost: ask about him by name (scout_player) or check the squad list for his sellRole, whether it opensHole (a balance gap like your only holder), and moraleRisk — surface the case for AND against, not just the fee.", input_schema: { type: 'object', properties: { playerId: { type: 'string' }, toClub: { type: 'string' }, fee: { type: 'number' } }, required: ['playerId', 'toClub', 'fee'] } },
   { name: 'renew', description: "Extend one of your players' contracts by 1-5 years.", input_schema: { type: 'object', properties: { playerId: { type: 'string' }, years: { type: 'number' } }, required: ['playerId', 'years'] } },
+  { name: 'loan_out', description: "Loan one of your squad players out for the season (he returns next summer) — good for giving a young or fringe player minutes. Era-gated: in the late 90s/early 2000s loans are a rare youth tool (roughly under-21s only), widening to young/fringe players through the 2000s and to anyone from ~2010. Optionally name a host club; otherwise a suitable smaller side is chosen. The op refuses (with the era reason) if the player is too senior for the era's loan norms.", input_schema: { type: 'object', properties: { playerId: { type: 'string' }, toClub: { type: 'string' } }, required: ['playerId'] } },
   { name: 'let_lapse', description: "Choose NOT to renew a player — let his contract run down so he leaves on a free at the next summer window (real free agency). Reverse it any time before then by renewing him.", input_schema: { type: 'object', properties: { playerId: { type: 'string' } }, required: ['playerId'] } },
   { name: 'free_agents', description: 'Players out of contract next summer, optionally by position.', input_schema: { type: 'object', properties: { position: { type: 'string', enum: POS } } } },
 ];

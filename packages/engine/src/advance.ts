@@ -24,7 +24,7 @@ import { runRivalWindow, updateWorldDefiance, processAgitationDepartures } from 
 import { logEvent } from './eventLog.js';
 import { reviewBoard, rollInternalCrisis } from './board.js';
 import { divergenceFactor } from './divergence.js';
-import { executeLedgerWindow, executeAcademyIntakes, executeLoanWindow } from './ledgerExec.js';
+import { executeLedgerWindow, executeAcademyIntakes, executeLoanWindow, revertExpiredLoans } from './ledgerExec.js';
 import { runReviewPhase } from './review.js';
 import { rollSquadFrictionEvents } from './squadFriction.js';
 import { rollBoardUltimatum } from './boardUltimatum.js';
@@ -194,6 +194,9 @@ function runWindowStep(state: GameState, rng: Rng, step: number): void {
   // transfer ledger, so a loanee reverting to his parent is back home before any
   // same-window sale of him fires. No-op for loan-free eras.
   executeLoanWindow(state);
+  // User-initiated loans revert at their end date too (after the real-loan window,
+  // which clears its own entries, so this only catches leftover Director loans).
+  revertExpiredLoans(state);
   // M10: proactive AI transfers follow the REAL ledger by default (§9f) — this
   // step's slice of it (or the whole window, on a final-step sweep).
   executeLedgerWindow(state, rng, step);
