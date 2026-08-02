@@ -195,17 +195,21 @@ async function advance(){
         renderOpeningBeat(beats, 0);
         noteTurn('Advance to '+head+'.', beats.map(x=>x.text).join(' '));
       } else {
-        // A routine advance — the month's real news, plus any model-written beat.
-        // Drop the mechanical bookkeeping (the "Advanced to"/"N rounds played" lines
-        // the date header already conveys) and rival clubs' random serious injuries
-        // (data.rival) — so what's left is real: transfers, the Director's own squad,
-        // world news. Nothing left → a quiet month, not a wall of log noise.
+        // A routine advance. Every in-season month now comes with a model-written
+        // football narrative — lead with it. Otherwise fall back to the month's real
+        // news, dropping the mechanical bookkeeping (the "Advanced to"/"N rounds
+        // played" lines the date header already conveys) and rival clubs' random
+        // serious injuries (data.rival). Nothing left → a quiet month.
         const NOISE = new Set(['board.season-review','season.kickoff','month.advanced','league.month']);
         const msgs = (d.events||[]).filter(e=>!NOISE.has(e.code)&&!(e.data&&e.data.rival)).map(e=>e.message).filter(Boolean);
-        const body = msgs.length ? msgs.slice(0,10).join('\n') : 'The month passes quietly.';
-        bubble(head + '\n' + body, 'narrator');
-        if (d.narration) bubble(d.narration, 'narrator');
-        noteTurn('Advance.', (d.narration ? d.narration+' ' : '')+head+' — '+(msgs.slice(0,6).join('; ')||'quiet'));
+        if (d.narration) {
+          bubble(head + '\n' + d.narration, 'narrator');
+          noteTurn('Advance.', d.narration+' '+head);
+        } else {
+          const body = msgs.length ? msgs.slice(0,10).join('\n') : 'The month passes quietly.';
+          bubble(head + '\n' + body, 'narrator');
+          noteTurn('Advance.', head+' — '+(msgs.slice(0,6).join('; ')||'quiet'));
+        }
       }
       renderPendingDecisions();
       saveLocal(); renderStatus(); refreshPanelIfOpen();

@@ -190,6 +190,31 @@ export function beatFacts(
     return { facts, fallback: reviewData ? scriptedSeasonReview(state, reviewData) : `The season ends at ${ctx.club}.` };
   }
 
+  if (kind === 'routine') {
+    // A routine in-season month: the same football facts as mid-season, plus the
+    // concrete things that just happened this stretch (real transfers, real/own
+    // injuries, and football world news) so the narrative reflects the actual month
+    // — never the wider non-football world.
+    const form = midSeasonForm(state);
+    const recent = state.eventLog.slice(-16);
+    const footballNews = recent.filter((e) => e.code === 'world.news' || e.code === 'macro.world').map((e) => e.message).slice(-3);
+    const moves = recent
+      .filter((e) => e.code === 'transfer.completed' || e.code === 'injury.real' || e.code === 'injury.real.serious' || (e.code === 'injury.serious' && !(e.data as { rival?: boolean } | undefined)?.rival))
+      .map((e) => e.message)
+      .slice(-6);
+    const facts = {
+      ...common,
+      table: ctx.league,
+      momentum: ctx.form.momentum,
+      inForm: form.players.filter((p) => p.flag === 'flying' || p.goals + p.assists >= 5).slice(0, 3).map((p) => ({ name: p.name, goals: p.goals, assists: p.assists, note: p.note })),
+      struggling: form.players.filter((p) => ['struggling', 'misfit', 'adapting', 'injured'].includes(p.flag)).slice(0, 2).map((p) => ({ name: p.name, situation: p.flag, note: p.note })),
+      europe: safeEuro(state),
+      thisMonth: moves, // real transfers / injuries logged this stretch
+      footballNews, // wider football happenings (World Cups, rivals' titles, big moves)
+    };
+    return { facts, fallback: scriptedMidSeasonNote(state) ?? `The season rolls on at ${ctx.club}.` };
+  }
+
   // season-start
   const facts = {
     ...common,

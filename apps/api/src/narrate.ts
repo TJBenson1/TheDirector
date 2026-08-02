@@ -255,7 +255,7 @@ export async function narrate(opts: {
 
 // ── Season beats (§ stories, not a results engine) ───────────────────────────
 
-export type BeatKind = 'mid-season' | 'end-of-season' | 'season-start';
+export type BeatKind = 'mid-season' | 'end-of-season' | 'season-start' | 'routine';
 
 const BEAT_SYSTEM = `You are the narrator of "The Director", a counterfactual football story. This is a SET-PIECE beat — a moment that earns real writing. A deterministic engine owns every fact; you own the voice.
 
@@ -279,6 +279,8 @@ const BEAT_FRAMING: Record<BeatKind, string> = {
     "The season is done. Deliver the verdict: where they finished and what it means against the club's real history that year, the board's reaction, the men who defined the campaign, and how the European story ended.",
   'season-start':
     'A new campaign is about to kick off. Survey the side the Director has built over the summer — who has come in, who has gone, how it compares to the real history — set the board\'s expectation, name the threats, and frame the story to watch.',
+  routine:
+    'A stretch of the season has just been played — NOT a set-piece, a routine month. Tell its story briefly and vividly: the results and where they leave the club, who is carrying the side and who is off it, any real transfer/injury news, and any football happening in the wider game (a World Cup, a rival\'s title, a record move). Keep it to ONE tight paragraph, occasionally two — a columnist\'s notebook entry, not a full column. Only football; never real-world news outside the game.',
 };
 
 /**
@@ -293,20 +295,22 @@ export async function narrateBeat(opts: {
   kind: BeatKind;
   facts: unknown;
   fallback: string;
+  maxTokens?: number;
 }): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return opts.fallback;
   const client = new Anthropic({ apiKey, timeout: 40_000, maxRetries: 1 });
   let activeModel = OPUS_MODEL;
+  const maxTokens = opts.maxTokens ?? 900;
   const prompt = `${BEAT_FRAMING[opts.kind]}\n\nFACTS:\n${JSON.stringify(opts.facts)}`;
   try {
     let res: Anthropic.Message;
     try {
-      res = await client.messages.create({ model: activeModel, max_tokens: 900, system: BEAT_SYSTEM, messages: [{ role: 'user', content: prompt }] });
+      res = await client.messages.create({ model: activeModel, max_tokens: maxTokens, system: BEAT_SYSTEM, messages: [{ role: 'user', content: prompt }] });
     } catch (err) {
       console.error(`[narrateBeat] model "${activeModel}" failed:`, err instanceof Error ? err.message : err);
       activeModel = SONNET_MODEL;
-      res = await client.messages.create({ model: activeModel, max_tokens: 900, system: BEAT_SYSTEM, messages: [{ role: 'user', content: prompt }] });
+      res = await client.messages.create({ model: activeModel, max_tokens: maxTokens, system: BEAT_SYSTEM, messages: [{ role: 'user', content: prompt }] });
     }
     const text = res.content.filter((b): b is Anthropic.TextBlock => b.type === 'text').map((b) => b.text).join('\n').trim();
     return text || opts.fallback;

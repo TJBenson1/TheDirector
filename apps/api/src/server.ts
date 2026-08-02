@@ -149,6 +149,14 @@ const routes: Record<string, Handler> = {
       beat = 'season-start';
       const { facts, fallback } = beatFacts(next, beat);
       narration = await narrateBeat({ state: next, kind: beat, facts, fallback });
+    } else if (midSeasonForm(next).underway) {
+      // Every in-season month earns a short, model-written football narrative —
+      // not a raw event dump. Grounded in the month's real results/moves/football
+      // news; a tight columnist's note (Opus, ~one paragraph), with the scripted
+      // mid-season line as the graceful fallback.
+      beat = 'mid-season';
+      const { facts, fallback } = beatFacts(next, 'routine');
+      narration = await narrateBeat({ state: next, kind: 'routine', facts, fallback, maxTokens: 420 });
     }
     return { state: next, view: buildView(next), events, narration, beat, opening };
   },
