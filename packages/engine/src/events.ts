@@ -6603,7 +6603,46 @@ const BAYERN_1998_PACK: ScriptedEvent[] = [
   },
 ];
 
+// Van Gaal's reset to the Heynckes treble and the Pep handover, 2009-2015. The
+// transfers (Robben in 2009, Neuer 2011, Götze 2013, Lewandowski free 2014) are
+// ledger-replayed and the coach churn (van Gaal → Heynckes → Guardiola) can't be
+// enacted as swaps, so most beats are narrative overlays; Müller's breakthrough
+// keeps its player-level academy fork.
 const BAYERN_2009_PACK: ScriptedEvent[] = [
+  {
+    id: 'van-gaal-reset',
+    date: '2009-08',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:van-gaal-reset', title: 'Van Gaal takes charge — the reset',
+      description: 'After the Klinsmann collapse, Louis van Gaal has taken over on a two-year deal, launching an uncompromising rebuild — blooding academy players and imposing a possession system. Greenlight the abrasive Van Gaal’s full youth-led reset, or appoint a safer, continuity German coach and keep buying finished stars?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'reset', label: 'Back Van Gaal’s youth-led reset (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Backed Van Gaal’s uncompromising rebuild.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'continuity', label: 'Safer continuity — keep buying stars', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Chose continuity and finished stars over the reset.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Van Gaal takes over and launches a youth-led reset.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'robben-signed',
+    date: '2009-08',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:robben-signed', title: 'Robben — the other half of ‘Robbery’',
+      description: 'Real Madrid’s Galáctico reshuffle (Ronaldo, Kaká) has made Arjen Robben expendable for ~€25m. Reality: he scored on debut and formed the ‘Robbery’ wing partnership with Ribéry (at the club since 2007). Spend ~€25m on the injury-prone Robben, or bank the money and promote a winger from the academy?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'sign', label: 'Sign Robben (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 4, text: '‘Robbery’ is born — Robben scores on debut.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Robben to partner Ribéry.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'academy', label: 'Promote a winger from within', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Backed the academy over the injury-prone Robben.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Robben joins from Real Madrid — ‘Robbery’ takes shape.' }],
+      memoryTags: ['transfer', 'cur_robben_07'],
+    }),
+  },
   {
     id: 'muller-breakthrough',
     date: '2009-09',
@@ -6611,7 +6650,7 @@ const BAYERN_2009_PACK: ScriptedEvent[] = [
     requires: (s) => playerAt(s, 'cur_muller_09', 'bayern') && s.playerClub === 'bayern',
     build: () => ({
       id: 'scripted:muller-breakthrough', title: 'Van Gaal stakes his job on a 19-year-old',
-      description: 'Louis van Gaal has taken a shine to a gangly, unheralded academy forward named Thomas Müller and wants to throw him straight into the side ahead of established names. Reality: he was right, spectacularly — Müller became a World Cup Golden Boot winner within a year. Fast-track the kid, or protect him with a slower path?',
+      description: 'Louis van Gaal has taken a shine to a gangly, unheralded academy forward named Thomas Müller and wants to throw him straight into the side ahead of established names — part of a youth revolution that also blooded Badstuber and Alaba and reinvented Schweinsteiger in central midfield. Reality: he was right, spectacularly — Müller became a World Cup Golden Boot winner within a year. Fast-track the kid, or protect him with a slower path?',
       interrupt: true, clubId: 'bayern', category: 'event',
       choices: [
         { id: 'promote', label: 'Throw him in — trust the coach', successProbability: 0.8, onSuccess: [{ kind: 'ability', playerId: 'cur_muller_09', amount: 4 }, { kind: 'morale', playerId: 'cur_muller_09', amount: 10 }, { kind: 'memory', tag: 'academy', text: 'Fast-tracked Müller — van Gaal’s hunch pays off, as history proved.' }], onFailure: [{ kind: 'agitation', playerId: 'cur_muller_09', amount: 6 }] },
@@ -6619,6 +6658,176 @@ const BAYERN_2009_PACK: ScriptedEvent[] = [
       ],
       falloutIfIgnored: [{ kind: 'ability', playerId: 'cur_muller_09', amount: 3 }, { kind: 'memory', tag: 'academy', text: 'Müller breaks through regardless — some talents will not be denied.' }],
       memoryTags: ['academy', 'cur_muller_09'],
+    }),
+  },
+  {
+    id: 'double-then-inter',
+    date: '2010-05',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:double-then-inter', title: 'The double, then Champions League heartbreak',
+      description: 'Bayern have won the Bundesliga and the DFB-Pokal chasing a treble — but lost the Champions League final 0-2 to Mourinho’s Inter at the Bernabéu, a Diego Milito brace (no treble in 2010). Keep faith in the near-treble squad, or use the final defeat as the trigger for a rebuild?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'faith', label: 'Keep faith in the squad', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Won the double and kept the near-treble side together.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'rebuild', label: 'Trigger a rebuild after the final', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'silverware', text: 'Used the final loss to begin a rebuild.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Bayern win the double but fall in the Champions League final to Inter.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2010 domestic double; lost the final to Inter.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'van-gaal-sacked',
+    date: '2011-04',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern' && s.managerRelations.identity === 'Louis van Gaal',
+    build: () => ({
+      id: 'scripted:van-gaal-sacked', title: 'Van Gaal sacked',
+      description: 'After Champions League elimination and a slump off the title race, Bayern have relieved Van Gaal with immediate effect, an assistant taking interim charge. Pull the trigger now and go interim, or let Van Gaal see out the season with dignity?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'sack', label: 'Sack him now — go interim (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Sacked Van Gaal with immediate effect.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'dignity', label: 'Let him see out the season', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Let Van Gaal finish the season with dignity.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Van Gaal sacked; an assistant takes interim charge.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'heynckes-returns',
+    date: '2011-04',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:heynckes-returns', title: 'Heynckes returns for a third spell',
+      description: 'Bayern have announced that club legend Jupp Heynckes — manager 1987-91 and a 2009 caretaker — will take over, prioritising stability and man-management over Van Gaal’s confrontation. Bring back the trusted elder statesman for stability, or gamble on a younger, progressive coach?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'heynckes', label: 'Bring back Heynckes (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Recalled Heynckes for stability.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'young', label: 'Gamble on a younger progressive coach', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'manager', text: 'Went for a young, progressive coach.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Heynckes returns for a third spell.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'neuer-signed',
+    date: '2011-06',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:neuer-signed', title: 'Neuer despite the ‘Koan Neuer’ revolt',
+      description: 'Bayern can sign Manuel Neuer from Schalke for ~€22m — but his rival-club roots have sparked ultra protests (‘Koan Neuer’). Reality: he became the modern sweeper-keeper archetype (and did NOT arrive in 2009). Sign him despite the ultras’ revolt, or keep the peace and stick with the incumbents?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'sign', label: 'Sign Neuer despite the revolt (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 3, text: 'A sweeper-keeper for the modern era — the ultras will come round.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Neuer through the ‘Koan Neuer’ storm.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'peace', label: 'Keep the peace — stick with the incumbents', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Passed on Neuer to placate the curva.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Neuer signs from Schalke amid ultra protests.' }],
+      memoryTags: ['transfer', 'cur_neuer_sc10'],
+    }),
+  },
+  {
+    id: 'finale-dahoam',
+    date: '2012-05',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:finale-dahoam', title: '‘Finale dahoam’ — losing the final at home',
+      description: 'A trophyless collapse: pipped to the title by Klopp’s Dortmund, thrashed 2-5 by them in the Pokal final, and now the Champions League final ‘at home’ at the Allianz Arena — 1-1 v Chelsea (Müller 83’, Drogba 88’), lost 3-4 on penalties, Robben missing a spot-kick in extra time. Steady the ship and trust the core after triple heartbreak, or overhaul the squad and mentality?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'steady', label: 'Trust the core (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 4 }, { kind: 'memory', tag: 'near-miss', text: 'Held the core together after the ‘Finale dahoam’ agony.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'overhaul', label: 'Overhaul the squad and mentality', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'near-miss', text: 'Overhauled after the triple heartbreak.' }], onFailure: [{ kind: 'morale', clubId: 'bayern', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Bayern lose the final at home to Chelsea on penalties — a trophyless year.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'pep-lined-up',
+    date: '2013-01',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:pep-lined-up', title: 'Guardiola lined up to succeed Heynckes',
+      description: 'Bayern have announced Pep Guardiola will take over from summer 2013 — mid-season, and before Heynckes’ side has won anything this year (Heynckes, not Pep, would win the 2013 treble). Line up Pep now and let Heynckes ride off after this season, or extend the in-form Heynckes and pass on Guardiola?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'pep', label: 'Line up Pep for the summer (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'The best coach in the world is coming to Munich.' }, { kind: 'memory', tag: 'manager', text: 'Lined up Guardiola to follow Heynckes.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'extend', label: 'Extend the in-form Heynckes', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Kept faith with Heynckes over Guardiola.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Guardiola announced to take over in summer 2013.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'gotze-raid',
+    date: '2013-04',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:gotze-raid', title: 'The Dortmund raid I — Götze’s clause triggered',
+      description: 'Days before the two clubs meet in the Champions League semi-final, Bayern can activate Mario Götze’s ~€37m release clause, signing him from Dortmund for the summer (he did NOT arrive in 2009). Activate the clause and raid the rival on the eve of the semi-final, or avoid the antagonism and target a different playmaker?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'raid', label: 'Trigger the clause — raid Dortmund (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Götze is prised from the great rival.' }, { kind: 'memory', tag: 'transfer', text: 'Activated Götze’s clause on the eve of the semi-final.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'avoid', label: 'Avoid the antagonism — a different target', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Passed on Götze to avoid the bad blood.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Bayern trigger Götze’s €37m clause.' }],
+      memoryTags: ['transfer', 'cur_gotze_12'],
+    }),
+  },
+  {
+    id: 'wembley-treble',
+    date: '2013-05',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:wembley-treble', title: 'The Treble — Wembley over Dortmund',
+      description: 'Heynckes’ farewell masterpiece: the Bundesliga clinched a record-early, then the first all-German Champions League final at Wembley — Bayern 2-1 Dortmund (Mandžukić, Robben’s 89th-minute winner) — with the Pokal to follow for the treble, Javi Martínez anchoring midfield. Celebrate and keep the treble-winning core intact, or cash in aggressively at peak market value?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Keep the treble core intact', successProbability: 0.65, onSuccess: [{ kind: 'morale', clubId: 'bayern', amount: 6 }, { kind: 'memory', tag: 'silverware', text: 'Won the treble and kept the core for Pep.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'cash', label: 'Cash in at peak value', successProbability: 0.5, onSuccess: [{ kind: 'money', clubId: 'bayern', amount: 20_000_000 }, { kind: 'memory', tag: 'silverware', text: 'Won the treble and sold from the summit.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 8, text: 'Bayern win the treble — Wembley glory over Dortmund.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2013 treble under Heynckes.' }],
+      memoryTags: ['silverware', 'cur_robben_07'],
+    }),
+  },
+  {
+    id: 'hoeness-scandal',
+    date: '2014-03',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:hoeness-scandal', title: 'Hoeneß tax scandal and resignation',
+      description: 'President Uli Hoeneß has been convicted of tax evasion and sentenced to three and a half years; he has resigned as club president and supervisory-board chairman. Accept his resignation for a clean institutional break, or publicly stand by the president through his sentence?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'accept', label: 'Accept the resignation — a clean break (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'club', text: 'Accepted Hoeneß’s resignation for a clean break.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'stand-by', label: 'Stand by the president', successProbability: 0.45, onSuccess: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'club', text: 'Publicly backed Hoeneß through his sentence.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'club', text: 'Hoeneß convicted of tax evasion and resigns as president.' }],
+      memoryTags: ['club'],
+    }),
+  },
+  {
+    id: 'lewandowski-free',
+    date: '2014-07',
+    scenarios: ['bayern-2009'],
+    requires: (s) => s.playerClub === 'bayern',
+    build: () => ({
+      id: 'scripted:lewandowski-free', title: 'The Dortmund raid II — Lewandowski on a free',
+      description: 'Robert Lewandowski has run down his Dortmund deal and can join on a FREE transfer — a second bruising raid on the rival (he did NOT arrive in 2013, and it is not a paid transfer). Take the free transfer and build a Götze-Lewandowski Dortmund axis, or reinvest the wages saved into a different profile of striker?',
+      interrupt: true, clubId: 'bayern', category: 'event',
+      choices: [
+        { id: 'take', label: 'Take Lewandowski free (as reality did)', successProbability: 0.8, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'A free world-class No.9 — another blow to Dortmund.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Lewandowski on a free from Dortmund.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'different', label: 'Reinvest the wages in a different striker', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Chose a different striker profile over Lewandowski.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Lewandowski joins on a free from Dortmund.' }],
+      memoryTags: ['transfer', 'cur_lewandowski_12'],
     }),
   },
 ];
