@@ -29,6 +29,16 @@ describe('target suggestions (§16 UI)', () => {
     expect(askingPrice(state, nesta.id)).toBeLessThan(valuePlayer(nesta, 1999));
   });
 
+  it('anchors a player’s price to an imminent real big-money move (SWP, not a bargain)', () => {
+    // Regression: Shaun Wright-Phillips really went Man City → Chelsea for ~£21m in
+    // summer 2005, so months earlier he must be priced near that, not the cheap model
+    // value that once let him be prised away for £3.7m. His real move must be in the
+    // arsenal-2004 ledger under his ACTUAL era squad id (cur_swp_mc).
+    const state = createNewGame({ scenarioId: 'arsenal-2004', seed: 'swp' });
+    expect(state.players['cur_swp_mc']?.club).toBe('man_city');
+    expect(askingPrice(state, 'cur_swp_mc')).toBeGreaterThanOrEqual(15_000_000);
+  });
+
   it('flags a player in the last year of his deal as a Bosman', () => {
     const state = cloneState(createNewGame({ seed: 'bosman' }));
     const p = resolvePlayer(state, 'Sol Campbell')!;

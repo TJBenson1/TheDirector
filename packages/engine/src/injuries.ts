@@ -47,11 +47,12 @@ function injuryProbability(
   return Math.max(0, Math.min(0.5, p));
 }
 
-/** Roll a severity and its duration in months. */
+/** Roll a severity and its duration in months. Serious ligament-class injuries
+ *  are the ~9% tail — real football has far more knocks than cruciates. */
 function rollSeverity(rng: Rng): { kind: InjuryKind; months: number } {
   const r = rng.next();
-  if (r < 0.64) return { kind: 'minor', months: 1 };
-  if (r < 0.88) return { kind: 'moderate', months: rng.int(2, 3) };
+  if (r < 0.66) return { kind: 'minor', months: 1 };
+  if (r < 0.91) return { kind: 'moderate', months: rng.int(2, 3) };
   return { kind: 'serious', months: rng.int(6, 9) };
 }
 
@@ -105,6 +106,15 @@ export function processInjuriesMonth(state: GameState, rng: Rng): void {
     if (club.leagueId === null) continue; // only simulated squads get injuries
     let changed = false;
 
+    // Anti-clustering: an occasional 3-man crisis is real drama, but a club already
+    // down three-plus significant men shouldn't keep taking fresh SERIOUS blows —
+    // an implausible 4-5-man pile-up is what reads as "too many". We don't cut the
+    // injury RATE (a genuine crisis must still be reachable), only downgrade a
+    // would-be serious injury to a knock once the treatment room is overflowing.
+    const alreadyOut = clubSquadPlayers(state, club.id).filter(
+      (p) => p.injury !== null && p.injury.kind !== 'minor',
+    ).length;
+
     for (const player of clubSquadPlayers(state, club.id)) {
       if (player.injury) {
         player.seasonMonthsInjured += 1; // time lost this season (drives valuation §1)
@@ -132,15 +142,25 @@ export function processInjuriesMonth(state: GameState, rng: Rng): void {
 
       const p = injuryProbability(player, year, monthIndex, injuryFrequency);
       if (injRng.chance(p)) {
-        const { kind, months } = rollSeverity(injRng);
+        let { kind, months } = rollSeverity(injRng);
+        // Overflowing treatment room → a fresh serious blow is downgraded to a
+        // knock (keeps the rare 3-man crisis, kills the absurd 4-5-man pile-up).
+        if (kind === 'serious' && alreadyOut >= 3 && injRng.chance(0.75)) {
+          kind = 'moderate';
+          months = injRng.int(2, 3);
+        }
         player.injury = { kind, monthsRemaining: months, since: state.clock.date };
         if (kind === 'serious') {
           player.injuryHistory += 1;
+          // A rival club's random serious injury is squad-strength bookkeeping, not
+          // the Director's news — flag it so the feed/digest don't spam every club's
+          // treatment room. His own club and real (ledger) injuries stay prominent.
+          const rival = club.id !== state.playerClub;
           logEvent(state, {
             category: 'injury',
             code: 'injury.serious',
             message: `${player.name} (${club.name}) suffers a serious injury — out ~${months} months`,
-            data: { playerId: player.id, clubId: club.id, months },
+            data: { playerId: player.id, clubId: club.id, months, rival },
           });
         }
         changed = true;

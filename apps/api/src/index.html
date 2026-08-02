@@ -195,8 +195,13 @@ async function advance(){
         renderOpeningBeat(beats, 0);
         noteTurn('Advance to '+head+'.', beats.map(x=>x.text).join(' '));
       } else {
-        // A routine advance — the terse month feed, plus any model-written beat.
-        const msgs = (d.events||[]).filter(e=>e.code!=='board.season-review'&&e.code!=='season.kickoff').map(e=>e.message).filter(Boolean);
+        // A routine advance — the month's real news, plus any model-written beat.
+        // Drop the mechanical bookkeeping (the "Advanced to"/"N rounds played" lines
+        // the date header already conveys) and rival clubs' random serious injuries
+        // (data.rival) — so what's left is real: transfers, the Director's own squad,
+        // world news. Nothing left → a quiet month, not a wall of log noise.
+        const NOISE = new Set(['board.season-review','season.kickoff','month.advanced','league.month']);
+        const msgs = (d.events||[]).filter(e=>!NOISE.has(e.code)&&!(e.data&&e.data.rival)).map(e=>e.message).filter(Boolean);
         const body = msgs.length ? msgs.slice(0,10).join('\n') : 'The month passes quietly.';
         bubble(head + '\n' + body, 'narrator');
         if (d.narration) bubble(d.narration, 'narrator');

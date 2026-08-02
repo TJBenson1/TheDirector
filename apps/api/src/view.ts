@@ -183,11 +183,14 @@ function feedEvents(state: GameState): unknown[] {
   };
   return [...state.eventLog]
     .filter((e) => {
-      const d = e.data ?? {};
+      const d = (e.data ?? {}) as Record<string, unknown>;
       // Injury/transfer events carry the player in data.playerId; a filler subject
       // is noise unless it somehow concerns the user's club (it won't — the user's
       // squad is real-only).
-      if (isFiller((d as Record<string, unknown>).playerId)) return false;
+      if (isFiller(d.playerId)) return false;
+      // A rival club's random serious injury is squad-strength bookkeeping, not the
+      // Director's news — keep it out of the feed (his own + real injuries stay).
+      if (d.rival === true) return false;
       return true;
     })
     .slice(-RECENT_EVENTS)

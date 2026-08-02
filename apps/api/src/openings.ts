@@ -469,13 +469,17 @@ export function generatedWinterOpening(state: GameState): Opening | null {
   const club = state.clubs[state.playerClub]!;
   const coach = coachBriefing(state);
 
-  // ── Beat one: the state of the season — the title race, the form, Europe. ──
+  // ── Beat one: the state of the season — the title race, the form, Europe, and
+  //    the wider world moving outside the touchline. ──
   const race = titleRaceLine(state);
+  const leaguePos = ctx.league.position ?? 99;
   let lead = `Midwinter at ${club.name}, January ${year}.`;
   if (race) {
     lead += ` ${race}`;
-    if (ctx.form?.momentum === 'surging') lead += ` — and the side is flying`;
-    else if (badForm) lead += ` — but the run of results has the mood turning`;
+    // The stakes, not just the standing — what this half-season is turning into.
+    if (leaguePos === 1) lead += ctx.form?.momentum === 'surging' ? ' — and pulling away' : ' — the title is yours to lose';
+    else if (leaguePos <= 4) lead += ctx.form?.momentum === 'surging' ? ' — and closing fast' : badForm ? ' — and the gap is starting to tell' : ' — still in the hunt';
+    else if (badForm) lead += ' — and the season is drifting';
     lead += '.';
   } else if (ctx.form?.momentum === 'surging') lead += ` The side is flying.`;
   else if (badForm) lead += ` The run of results has the mood turning.`;
@@ -486,6 +490,10 @@ export function generatedWinterOpening(state: GameState): Opening | null {
       ? `In Europe you are the reigning champions, having beaten ${ctx.europe.runnerUp} in the final.`
       : `In Europe you reached the final, beaten by ${ctx.europe.winner}.`);
   }
+  // The world beyond the touchline — the era's most recent headline as backdrop, so
+  // the half-season sits in its moment (a World Cup, a takeover, a world event).
+  const backdrop = latestWorldBackdrop(state);
+  if (backdrop) sentences.push(`Beyond the game: ${backdrop.replace(/\.?$/, '')}.`);
   const opener = sentences.join(' ');
 
   // ── Beat two: your fingerprints on the half-season — form, injuries, the fans.
@@ -539,6 +547,16 @@ export function generatedWinterOpening(state: GameState): Opening | null {
 
 function capitalise(s: string): string {
   return s.length ? s[0]!.toUpperCase() + s.slice(1) : s;
+}
+
+/** The era's most recent world/football headline (a World Cup, a takeover, a
+ *  world-shaking event) — background colour so a winter beat sits in its moment.
+ *  Reads the logged world news; returns just the first sentence to stay a clause. */
+function latestWorldBackdrop(state: GameState): string | null {
+  const news = [...state.eventLog].reverse().find((e) => e.code === 'world.news' || e.code === 'macro.world');
+  if (!news?.message) return null;
+  const first = news.message.split(/(?<=\.)\s/)[0]?.trim();
+  return first && first.length > 8 ? first : null;
 }
 
 /** Render a curated first XI ("GK Peruzzi", "CB Ferrara", …) as prose by unit. */

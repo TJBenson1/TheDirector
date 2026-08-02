@@ -411,6 +411,10 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
   { playerId: 'cur_drogba', from: 'marseille', to: 'chelsea', window: '2004-07', fee: 24_000_000, id: 'drogba-chelsea-2004' },
   { playerId: 'cur_robben2', from: 'psv', to: 'chelsea', window: '2004-07', fee: 12_000_000, id: 'robben-chelsea-2004' },
   { playerId: 'cur_vieira2', from: 'arsenal', to: 'juventus', window: '2005-07', fee: 13_750_000, id: 'vieira-juve-2005' },
+  // Chelsea's real 2005 record buy from Man City — so SWP is priced at his true
+  // ~£21m worth in the months before the move (realMarketFee anchors the asking
+  // price), not the cheap model value that let him be prised away for a pittance.
+  { playerId: 'cur_swp_mc', from: 'man_city', to: 'chelsea', window: '2005-07', fee: 21_000_000, id: 'swp-chelsea-2005' },
   { playerId: 'cur_acole', from: 'arsenal', to: 'chelsea', window: '2006-07', fee: 16_000_000, id: 'cole-chelsea-2006' },
   // The Gallas move was the OTHER HALF of the Cole deal — a swap. If the user
   // keeps Cole, the swap never happens, so Gallas never arrives.
@@ -448,6 +452,10 @@ const LEDGER_2004_2009: RealTransferLedgerEntry[] = [
 
 /** Real 2004-era injuries — fire only if the player is at his real club. */
 const INJURIES_2004: RealInjuryEntry[] = [
+  // Xabi Alonso's real broken ankle — 1 Jan 2005 vs Chelsea, out ~4 months. The
+  // marquee injury of the 2004-05 winter, so the treatment-room news the Director
+  // sees is a real one, not a random roll.
+  { playerId: 'cur_alonso', atClub: 'liverpool', since: '2005-01', months: 4, serious: true, note: 'broken ankle' },
   { playerId: 'cur_king', atClub: 'spurs', since: '2005-11', months: 4, serious: true, note: 'chronic knee trouble' },
   { playerId: 'cur_rooney2', atClub: 'man_utd', since: '2006-04', months: 2, serious: false, note: 'metatarsal fracture before the World Cup' },
 ];
