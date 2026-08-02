@@ -76,6 +76,27 @@ function realMarketFee(state: GameState, p: PlayerState): number | null {
   return e.fee * (inflationFactor(year(state)) / inflationFactor(entryYear));
 }
 
+/** The player's REAL onward move from his current club, if the era ledger knows one
+ *  within the pricing horizon — the destination club and a fee (a Bosman free, fee 0,
+ *  is surfaced at the asking floor). Lets the offers list headline the real suitor
+ *  (Vieira → Juventus, Edu → Valencia, Wiltord → Lyon) instead of only the richest
+ *  same-league bidders, so a foreign destination isn't quietly written out. */
+export function realDeparture(state: GameState, p: PlayerState): { toClub: ClubId; fee: number } | null {
+  if (!p.club) return null;
+  const ledger = ERA_REALITY[eraForScenario(state.meta.scenarioId)]?.realTransferLedger;
+  if (!ledger) return null;
+  const entries = ledger.filter((e) => e.playerId === p.id && e.from === p.club);
+  if (!entries.length) return null;
+  entries.sort((a, b) => a.window.localeCompare(b.window));
+  const e = entries[0]!;
+  if (transferWindowOrdinal(e.window) - transferWindowOrdinal(state.clock.date) > REAL_FEE_HORIZON_ORDINALS) return null;
+  const fee =
+    e.fee > 0
+      ? Math.round(e.fee * (inflationFactor(year(state)) / inflationFactor(Number(e.window.slice(0, 4)))))
+      : askingPrice(state, p.id);
+  return { toClub: e.to, fee };
+}
+
 /** The fee a selling club would realistically accept. Anchored to the player's
  *  REAL sale fee when the ledger knows it (reality-default pricing), else the model
  *  valuation. Distress/relegation cut it further; a Bosman is already cheap via the

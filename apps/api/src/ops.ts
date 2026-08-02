@@ -16,6 +16,7 @@ import {
   suggestTargets,
   resolvePlayer,
   askingPrice,
+  realDeparture,
   realDepartureThisWindow,
   evaluateApproach,
   coachFit,
@@ -318,10 +319,25 @@ export function runOp(state: GameState, name: string, input: Record<string, unkn
       // knows it (Baggio → Milan was £6.5m, not his £14m abstract model value), so
       // an offer never inflates a departure the history books already priced.
       const value = askingPrice(s, p.id);
-      const offers = Object.values(s.clubs)
-        .filter((c) => c.id !== s.playerClub && c.leagueId !== null && c.strength >= p.ability - 13 && c.strength <= p.ability + 5 && c.finances.transferBudget >= value * 0.5)
+      // Any real club of the right calibre and means can bid — NOT just the user's
+      // own league. Foreign giants sit in the world as context clubs (leagueId null,
+      // but real strength and budget), so gating on leagueId made every suitor list
+      // English. Drop that gate: Vieira draws Juventus and Real, not just Chelsea.
+      const suitors = Object.values(s.clubs)
+        .filter((c) => c.id !== s.playerClub && c.strength >= p.ability - 13 && c.strength <= p.ability + 5 && c.finances.transferBudget >= value * 0.5)
         .map((c) => ({ clubId: c.id, club: c.name, fee: Math.round(Math.min(c.finances.transferBudget, value * (0.6 + (jitter(c.id + p.id) / 100) * 0.35))) }))
-        .sort((a, b) => b.fee - a.fee).slice(0, 4).map((o) => ({ ...o, feeLabel: m(o.fee) }));
+        .sort((a, b) => b.fee - a.fee);
+      // Headline the player's REAL destination if the ledger knows it (Vieira →
+      // Juventus, Edu → Valencia, Wiltord → Lyon) so the true suitor isn't crowded
+      // out of the top four by richer clubs who never actually chased him.
+      const real = realDeparture(s, p);
+      let top = suitors.slice(0, 4);
+      if (real && s.clubs[real.toClub] && real.toClub !== s.playerClub) {
+        top = top.filter((o) => o.clubId !== real.toClub);
+        top.unshift({ clubId: real.toClub, club: s.clubs[real.toClub]!.name, fee: Math.max(value, real.fee) });
+        top = top.slice(0, 4);
+      }
+      const offers = top.map((o) => ({ ...o, feeLabel: m(o.fee) }));
       return { state: s, result: { player: p.name, marketValue: m(value), offers } };
     }
 

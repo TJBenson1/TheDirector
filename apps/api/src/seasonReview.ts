@@ -199,7 +199,7 @@ export function beatFacts(
     const recent = state.eventLog.slice(-16);
     const footballNews = recent.filter((e) => e.code === 'world.news' || e.code === 'macro.world').map((e) => e.message).slice(-3);
     const moves = recent
-      .filter((e) => e.code === 'transfer.completed' || e.code === 'injury.real' || e.code === 'injury.real.serious' || (e.code === 'injury.serious' && !(e.data as { rival?: boolean } | undefined)?.rival))
+      .filter((e) => e.code === 'transfer.completed' || e.code === 'injury.real' || e.code === 'injury.real.serious' || e.code === 'register.nearmiss' || (e.code === 'injury.serious' && !(e.data as { rival?: boolean } | undefined)?.rival))
       .map((e) => e.message)
       .slice(-6);
     const facts = {

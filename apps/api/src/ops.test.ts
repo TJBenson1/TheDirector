@@ -34,3 +34,30 @@ describe('transfer ops resolve players and clubs by name or id', () => {
     expect((result as { reason: string }).reason).toMatch(/No club found/i);
   });
 });
+
+// Regression for the "English-centric buyers" bug: the offers op gated suitors on
+// leagueId !== null, but foreign giants sit in the world as context clubs (leagueId
+// null), so every suitor list came out all-English — Vieira drawing Chelsea/Liverpool
+// /United instead of Juventus/Real. Offers now (a) admit foreign clubs and (b) headline
+// the player's REAL destination from the era ledger.
+describe('offers admit foreign suitors and headline the real destination', () => {
+  type Offer = { clubId: string; club: string; fee: number };
+  const offersFor = (playerId: string): Offer[] => {
+    const s = createNewGame({ scenarioId: 'arsenal-2004', seed: 'offers' });
+    return (runOp(s, 'offers', { playerId }).result as { offers: Offer[] }).offers;
+  };
+
+  it('Vieira draws his real suitor Juventus, not an all-English list', () => {
+    const offers = offersFor('cur_vieira2');
+    expect(offers.map((o) => o.clubId)).toContain('juventus');
+    // The lead suitor is the real destination, and it isn't an English club.
+    expect(offers[0]!.clubId).toBe('juventus');
+    const english = new Set(['chelsea', 'liverpool', 'man_utd', 'newcastle', 'everton', 'spurs', 'bolton']);
+    expect(offers.every((o) => english.has(o.clubId))).toBe(false);
+  });
+
+  it('a Bosman departure (Edu → Valencia, Wiltord → Lyon) still surfaces the real club', () => {
+    expect(offersFor('cur_edu').map((o) => o.clubId)).toContain('valencia');
+    expect(offersFor('cur_wiltord_04').map((o) => o.clubId)).toContain('lyon');
+  });
+});

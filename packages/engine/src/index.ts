@@ -157,6 +157,7 @@ export {
   queryPlayer,
   acquisitionTags,
   askingPrice,
+  realDeparture,
   resolvePlayer,
   realInboundThisWindow,
   realDepartureThisWindow,

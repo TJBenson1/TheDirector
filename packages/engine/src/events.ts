@@ -449,7 +449,13 @@ interface ScriptedEvent {
   scenarios: string[];
   /** Precondition (divergence check): usually a curated player still at his club. */
   requires: (state: GameState) => boolean;
-  build: (state: GameState) => Decision;
+  /** Raise an interactive decision the Director must answer. */
+  build?: (state: GameState) => Decision;
+  /** Resolve as a pure narrative beat instead of a decision: roll the outcome from
+   *  context (squad strength, etc.), apply the effects, and log the report. Used for
+   *  moments the Director shouldn't *choose* — a match result, a near-miss — where a
+   *  "pick the outcome" card breaks immersion. Exactly one of build/narrative is set. */
+  narrative?: (state: GameState, rng: Rng) => void;
 }
 
 function playerAt(state: GameState, playerId: string, clubId: string): boolean {
@@ -1381,46 +1387,10 @@ const LIVERPOOL_2001_PACK: ScriptedEvent[] = [
 
 /** Arsenal 2004 (the Invincibles, playing forward). */
 const ARSENAL_2004_PACK: ScriptedEvent[] = [
-  {
-    id: 'battle-of-the-buffet',
-    date: '2004-10',
-    scenarios: ['arsenal-2004'],
-    // Only if the real feud's protagonist is still in the dugout — a Director who
-    // has already replaced Wenger has written this rivalry out.
-    requires: (s) => s.playerClub === 'arsenal' && s.managerRelations.identity === 'Arsène Wenger',
-    build: () => ({
-      id: 'scripted:battle-of-the-buffet',
-      title: 'The Battle of the Buffet — 49 unbeaten ends at Old Trafford',
-      description:
-        'A bad-tempered defeat at United ends your record unbeaten run, and it boils over in the tunnel — a slice of pizza flies past Ferguson and the two managers are at war in the press. The dressing room is raw. Which way do you point it?',
-      interrupt: true,
-      clubId: 'arsenal',
-      category: 'event',
-      choices: [
-        {
-          id: 'stoke',
-          label: 'Back Wenger and stoke the feud — us against the world',
-          successProbability: 0.55,
-          onSuccess: [
-            { kind: 'morale', clubId: 'arsenal', amount: 5 },
-            { kind: 'managerRelationship', amount: 4 },
-            { kind: 'memory', tag: 'rivalry', text: 'Stoked the United feud after the Old Trafford defeat; the squad closed ranks.' },
-          ],
-          onFailure: [{ kind: 'fanTrust', amount: -4, text: 'The war of words invites a media pile-on.' }],
-        },
-        {
-          id: 'calm',
-          label: 'Calm it down — draw a line, back to the football',
-          successProbability: 0.6,
-          onSuccess: [{ kind: 'morale', clubId: 'arsenal', amount: 3 }, { kind: 'boardPatience', amount: 3 }],
-          onFailure: [{ kind: 'managerRelationship', amount: -5 }],
-        },
-      ],
-      // Reality-default: the run's over, the feud simmers, the squad takes the knock.
-      falloutIfIgnored: [{ kind: 'morale', clubId: 'arsenal', amount: -4 }, { kind: 'memory', tag: 'rivalry', text: 'The unbeaten run ended at Old Trafford; the Wenger–Ferguson feud hardened.' }],
-      memoryTags: ['rivalry', 'manager'],
-    }),
-  },
+  // NOTE: the Old Trafford clash / "Battle of the Buffet" is the sporting near-miss
+  // `nearmiss-invincibles-run-2004` (a narrative beat resolved by squad strength) —
+  // NOT a decision here. It used to be BOTH, which fired two contradictory cards in
+  // the same month (one asserting the defeat, one asking "do you want to win?").
   // Post-Invincibles decline into the austerity years. Vieira (2005), Ashley Cole
   // (2006) and Henry (2007) exits are ledger-replayed → narrative overlays; the 2011
   // Fàbregas sale to Barça is NOT in the ledger, so that beat carries the real
@@ -8120,13 +8090,16 @@ interface SportingNearMissCfg {
   requiresPlayer?: string; // a key figure who must still be at the club for it to land
   title: string;
   blurb: string;
-  goLabel: string;
-  holdLabel: string;
   winMemory: string; // the outcome that beats history's near-miss
   loseMemory: string; // history's heartbreak, relived
 }
 
-/** Build a near-miss beat whose outcome turns on how good the side really is now. */
+/** A near-miss is a MATCH/season moment, not a management call — the Director can't
+ *  simply choose to win at Old Trafford. So it resolves as a narrative beat: the
+ *  outcome is rolled from how good the side really is now (sportingRewriteOdds), the
+ *  effects apply, and the result is reported. A juggernaut rewrites the heartbreak
+ *  more often than a fragile side, but never as a certainty — because these never
+ *  were. The routine month narration weaves the reported line into prose. */
 function sportingNearMiss(cfg: SportingNearMissCfg): ScriptedEvent {
   return {
     id: cfg.id,
@@ -8134,38 +8107,29 @@ function sportingNearMiss(cfg: SportingNearMissCfg): ScriptedEvent {
     scenarios: [cfg.scenario],
     requires: (s) =>
       s.playerClub === cfg.club && (!cfg.requiresPlayer || playerAt(s, cfg.requiresPlayer, cfg.club)),
-    build: (s) => {
+    narrative: (s, rng) => {
       const odds = sportingRewriteOdds(s, { realWon: cfg.realWon });
-      const win = [
-        { kind: 'boardPatience' as const, amount: 12 },
-        { kind: 'morale' as const, clubId: cfg.club, amount: 12 },
-        { kind: 'memory' as const, tag: 'near-miss', text: cfg.winMemory },
-      ];
-      const lose = [
-        { kind: 'morale' as const, clubId: cfg.club, amount: -8 },
-        { kind: 'boardPatience' as const, amount: -3 },
-        { kind: 'memory' as const, tag: 'near-miss', text: cfg.loseMemory },
-      ];
-      return {
-        id: `register:${cfg.id}`,
-        title: cfg.title,
-        description: cfg.blurb,
-        interrupt: true,
-        clubId: cfg.club,
+      const rewrote = rng.chance(odds);
+      applyConsequences(
+        s,
+        rewrote
+          ? [
+              { kind: 'boardPatience', amount: 12 },
+              { kind: 'morale', clubId: cfg.club, amount: 12 },
+              { kind: 'memory', tag: 'near-miss', text: cfg.winMemory },
+            ]
+          : [
+              { kind: 'morale', clubId: cfg.club, amount: -8 },
+              { kind: 'boardPatience', amount: -3 },
+              { kind: 'memory', tag: 'near-miss', text: cfg.loseMemory },
+            ],
+      );
+      logEvent(s, {
         category: 'event',
-        choices: [
-          { id: 'go', label: cfg.goLabel, successProbability: Math.min(0.9, odds + 0.05), onSuccess: win, onFailure: lose },
-          {
-            id: 'hold',
-            label: cfg.holdLabel,
-            successProbability: odds,
-            onSuccess: win,
-            onFailure: [{ kind: 'morale', clubId: cfg.club, amount: -5 }, { kind: 'memory', tag: 'near-miss', text: cfg.loseMemory }],
-          },
-        ],
-        falloutIfIgnored: odds >= 0.5 ? win : lose,
-        memoryTags: ['near-miss'],
-      };
+        code: 'register.nearmiss',
+        message: rewrote ? cfg.winMemory : cfg.loseMemory,
+        data: { id: cfg.id, outcome: rewrote ? 'rewritten' : 'as-reality' },
+      });
     },
   };
 }
@@ -8176,7 +8140,6 @@ const SPORTING_NEAR_MISS_PACK: ScriptedEvent[] = [
     requiresPlayer: 'cur_gerrard_lv10',
     title: 'The title in your hands — and a slip away',
     blurb: 'Liverpool lead the title race with weeks to go, Chelsea at Anfield the last true test. Reality is the cruellest of images: Gerrard’s slip, Demba Ba, the dream gone by two points. Throw caution to the wind, or manage the biggest game of a generation?',
-    goLabel: 'Go for the throat — win it outright', holdLabel: 'Control it — nerveless and tight',
     winMemory: 'No slip, no collapse — Liverpool are champions at last, the ghost of 2014 exorcised.',
     loseMemory: 'The slip, the two points, the agony — the title lost exactly as it was.',
   }),
@@ -8185,15 +8148,13 @@ const SPORTING_NEAR_MISS_PACK: ScriptedEvent[] = [
     requiresPlayer: 'cur_henry',
     title: '49 unbeaten — and Old Trafford await',
     blurb: 'The Invincibles have stretched their unbeaten league run to a record 49 games, and only Manchester United and a hostile Old Trafford stand in the way. Reality ended it in the "Battle of the Buffet" — a disputed penalty, a pizza thrown, the streak over. Protect the record, or go and win it in their backyard?',
-    goLabel: 'Attack — win at Old Trafford', holdLabel: 'Stay disciplined — do not lose it',
-    winMemory: 'The run rolls on past Old Trafford — the Invincibles’ streak becomes untouchable.',
-    loseMemory: 'The streak dies at Old Trafford amid the pizza and the fury, as it really did.',
+    winMemory: 'Your side went to Old Trafford and refused to buckle — the record run rolls on even after that hostile afternoon, the Invincibles’ streak now looking untouchable.',
+    loseMemory: 'The run dies at Old Trafford in the Battle of the Buffet — a disputed penalty, a slice of pizza flying past Ferguson, the streak over exactly as it really ended.',
   }),
   sportingNearMiss({
     id: 'nearmiss-liverpool-title-2002', scenario: 'liverpool-2001', club: 'liverpool', date: '2002-04',
     title: 'Houllier’s Liverpool close on the title',
     blurb: 'Liverpool are chasing a first league title since 1990, Arsenal just ahead. Reality: they finished a strong second, seven points back, the drought going on. This is the run-in — chase Arsenal down, or bank the Champions League place?',
-    goLabel: 'Chase the title — all or nothing', holdLabel: 'Lock down second and Europe',
     winMemory: 'Liverpool run Arsenal down and end the long wait — champions, decades early.',
     loseMemory: 'Second again, the title drought unbroken — as it went.',
   }),
@@ -8201,7 +8162,6 @@ const SPORTING_NEAR_MISS_PACK: ScriptedEvent[] = [
     id: 'nearmiss-lasagne-2006', scenario: 'spurs-2001', club: 'spurs', date: '2006-05',
     title: 'The final day — Champions League on the line',
     blurb: 'Tottenham need only match Arsenal on the last day to seize fourth and the Champions League. Reality: half the squad went down with food poisoning at the team hotel the night before — "Lasagne-gate" — and they lost at West Ham, the dream snatched away. Steady the ship, or throw everything forward?',
-    goLabel: 'Attack — take it into your own hands', holdLabel: 'Keep calm — a point may be enough',
     winMemory: 'Spurs hold their nerve and take fourth — the Champions League reached, the lasagne curse beaten.',
     loseMemory: 'Struck down on the final morning, beaten at West Ham — fourth surrendered, as it was.',
   }),
@@ -8209,7 +8169,6 @@ const SPORTING_NEAR_MISS_PACK: ScriptedEvent[] = [
     id: 'nearmiss-aguero-2012', scenario: 'man-city-2008', club: 'man_city', date: '2012-05', realWon: true,
     title: '93:20 — the title on the final kick',
     blurb: 'The last day, the title decided on goal difference, and City somehow losing to ten-man QPR deep into stoppage time as United celebrate up the road. Reality produced the most famous moment in Premier League history — Agüerooooo. Do you hold your nerve for the miracle, or does the pressure tell?',
-    goLabel: 'Throw everyone forward — force the winner', holdLabel: 'Trust the players — keep believing',
     winMemory: 'Agüero, 93:20 — City are champions in the maddest finish of all, exactly as it happened.',
     loseMemory: 'The winner never comes — City fall agonisingly short and United take the title, a miracle undone.',
   }),
@@ -8218,7 +8177,6 @@ const SPORTING_NEAR_MISS_PACK: ScriptedEvent[] = [
     requiresPlayer: 'cur_terry_c',
     title: 'Moscow — one kick from the European Cup',
     blurb: 'Chelsea’s first Champions League final, United the opponents, and it comes down to penalties in the Moscow rain. Reality: Terry slipped taking the kick that would have won it, and the trophy slipped away with him. Steel your men for the shootout, or go for the win in normal time?',
-    goLabel: 'Win it before penalties', holdLabel: 'Hold firm — trust the shootout',
     winMemory: 'No slip in the rain — Chelsea are kings of Europe years ahead of schedule.',
     loseMemory: 'Terry slips, the kick misses, and the European Cup is lost in Moscow — as it truly was.',
   }),
@@ -8227,7 +8185,6 @@ const SPORTING_NEAR_MISS_PACK: ScriptedEvent[] = [
     requiresPlayer: 'cur_ronaldinho_b3',
     title: 'Rijkaard’s revival closes on the title',
     blurb: 'After a dismal first half of the season, Ronaldinho and a reborn Barcelona have surged up the table. Reality: they fell just short in second and won the title the following year. Push for it now, or trust the project to bloom on schedule?',
-    goLabel: 'Seize it a year early', holdLabel: 'Build steadily — second is progress',
     winMemory: 'Barça complete the surge and take the title a year early — the revival crowned ahead of time.',
     loseMemory: 'A strong second, the title one year away — the Rijkaard revival on its real timeline.',
   }),
@@ -8236,7 +8193,6 @@ const SPORTING_NEAR_MISS_PACK: ScriptedEvent[] = [
     requiresPlayer: 'cur_delpiero_j',
     title: 'A third European final in a row — Real await',
     blurb: 'Lippi’s Juventus have reached yet another Champions League final, this time against Real Madrid. Reality: a lone Mijatović goal beat them, a third final in a row that ended in defeat — the great nearly-side of the age. Can you finally get it right on the grandest night?',
-    goLabel: 'Go for the win — end the final curse', holdLabel: 'Control it — do not lose another',
     winMemory: 'Juventus finally win the big one — the serial finalists crowned, rewriting three years of hurt.',
     loseMemory: 'Beaten by Real, a third straight final lost — the nearly-men of Europe once more, as it was.',
   }),
@@ -8686,7 +8642,7 @@ const ALL_SCRIPTED: ScriptedEvent[] = [
   ...TRANSFER_NEAR_MISS_PACK,
 ];
 
-function fireScriptedEvents(state: GameState): void {
+function fireScriptedEvents(state: GameState, rng: Rng): void {
   for (const ev of ALL_SCRIPTED) {
     // Only ever consider an event for its own scenario — a different scenario must
     // not process it, so it never logs a spurious skip against fidelity.
@@ -8696,7 +8652,9 @@ function fireScriptedEvents(state: GameState): void {
     state.meta.firedScripted.push(ev.id);
 
     if (ev.requires(state)) {
-      state.pendingDecisions.push(ev.build(state));
+      // A narrative beat resolves itself (roll + apply + log) — no decision card.
+      if (ev.narrative) ev.narrative(state, rng.fork(ev.id));
+      else if (ev.build) state.pendingDecisions.push(ev.build(state));
       logEvent(state, {
         category: 'event',
         code: 'scripted.fired',
@@ -9237,7 +9195,7 @@ export function fireWorldHeadlines(state: GameState): void {
 
 /** Fire scripted + procedural events for the current month. */
 export function rollEventsMonth(state: GameState, rng: Rng): void {
-  fireScriptedEvents(state);
+  fireScriptedEvents(state, rng.fork(`scripted:${state.clock.date}`));
   fireMacroEvents(state);
   fireWorldHeadlines(state);
   rollScandals(state, rng.fork(`events:${state.clock.date}`));
