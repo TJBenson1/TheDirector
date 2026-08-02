@@ -5426,22 +5426,215 @@ const INTER_2004_PACK: ScriptedEvent[] = [
   },
 ];
 
+// From Calciopoli to the unbeaten Scudetto, 2006-2012: relegation, the exodus,
+// the loyalists who stayed, the wilderness years and the Conte revival built on
+// shrewd free transfers. The departures (Cannavaro, Emerson, Ibrahimović,
+// Vieira, Thuram, Zambrotta out; Pirlo in) are ledger-replayed and the coaching
+// churn can't be enacted as coach swaps, so these are narrative overlays with
+// real Director forks and reality-default fallout.
 const JUVENTUS_2006_PACK: ScriptedEvent[] = [
   {
-    id: 'juve-loyalists',
+    id: 'calciopoli-verdict',
     date: '2006-08',
     scenarios: ['juventus-2006'],
-    requires: (s) => playerAt(s, 'cur_delpiero_06', 'juventus') && s.playerClub === 'juventus',
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:calciopoli-verdict', title: 'Calciopoli — relegation and stripped titles',
+      description: 'The match-fixing scandal centred on GM Moggi has stripped Juventus of two titles (2004-05 revoked and unassigned, 2005-06 awarded to Inter), relegated the club to Serie B and banned it from the Champions League. (Myth-check: the initial -30 was cut to a -9 handicap on appeal, and Milan, Fiorentina, Lazio and Reggina were also sanctioned.) Mount an aggressive legal campaign to overturn or soften the penalty, or accept the punishment publicly and rebuild goodwill by cooperating with the FIGC?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'fight', label: 'Fight the penalty in the courts', successProbability: 0.45, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'controversy', text: 'Fought to soften the Calciopoli sanctions.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'cooperate', label: 'Accept it and rebuild goodwill (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Juventus take their punishment with dignity.' }, { kind: 'memory', tag: 'controversy', text: 'Accepted the Calciopoli verdict and cooperated with the FIGC.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'controversy', text: 'Calciopoli: Juventus stripped of two titles and sent to Serie B.' }],
+      memoryTags: ['controversy'],
+    }),
+  },
+  {
+    id: 'the-exodus',
+    date: '2006-09',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:the-exodus', title: 'The exodus',
+      description: 'Relegation has triggered a fire sale: Ballon d’Or winner Cannavaro and Emerson to Real Madrid, Ibrahimović and Vieira to Inter, Thuram and Zambrotta to Barcelona. Cash in on the departing stars to fund a Serie B war-chest and rebuild, or fight to retain one marquee name as a statement of intent?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'cash', label: 'Cash in — fund the rebuild (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'money', clubId: 'juventus', amount: 25_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Cashed in the departing stars for a Serie B war-chest.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'retain', label: 'Fight to keep one marquee name', successProbability: 0.4, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'A superstar stays — a statement of defiance.' }, { kind: 'memory', tag: 'transfer', text: 'Kept a marquee name against the tide.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'The stars scatter — Cannavaro, Ibra, Thuram, Zambrotta all leave.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'juve-loyalists',
+    date: '2006-10',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus',
     build: () => ({
       id: 'scripted:juve-loyalists', title: 'Serie B — the loyalists who stayed',
-      description: 'Calciopoli has stripped the titles and cast the Old Lady into Serie B. The mercenaries fled — but Del Piero, Buffon, Trezeguet and Nedvěd chose to go down with the club and win their way back. Make heroes of the men who stayed and build the promotion push around them, or treat it as a fire-sale rebuild?',
+      description: 'The mercenaries fled — but Buffon, Del Piero, Nedvěd, Trezeguet and Camoranesi chose to go down with the club and win their way back, alongside emerging youngsters Chiellini and Giovinco, under new coach Didier Deschamps. Build the Serie B side around veteran leadership for a guaranteed instant return, or blood the young talent to future-proof the club?',
       interrupt: true, clubId: 'juventus', category: 'event',
       choices: [
         { id: 'honour', label: 'Build around the loyalists — win it back together', successProbability: 0.8, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 12 }, { kind: 'boardPatience', amount: 8 }, { kind: 'memory', tag: 'loyalty', text: 'Made icons of the men who stayed — the Old Lady marches back up together.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: 4 }] },
-        { id: 'rebuild', label: 'Cold rebuild — cash in and start over', successProbability: 0.6, onSuccess: [{ kind: 'money', clubId: 'juventus', amount: 20_000_000 }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -8 }, { kind: 'agitation', playerId: 'cur_delpiero_06', amount: 10 }] },
+        { id: 'youth', label: 'Blood the youngsters — future-proof the club', successProbability: 0.6, onSuccess: [{ kind: 'memory', tag: 'loyalty', text: 'Trusted Chiellini and Giovinco for the long game.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -4 }] },
       ],
       falloutIfIgnored: [{ kind: 'morale', clubId: 'juventus', amount: 4 }, { kind: 'memory', tag: 'loyalty', text: 'The loyalists drag Juventus back to Serie A.' }],
       memoryTags: ['loyalty', 'cur_delpiero_06'],
+    }),
+  },
+  {
+    id: 'serie-b-title',
+    date: '2007-05',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus' && s.managerRelations.identity === 'Didier Deschamps',
+    build: () => ({
+      id: 'scripted:serie-b-title', title: 'Instant promotion — and Deschamps resigns',
+      description: 'Deschamps has won Serie B at the first attempt, securing immediate promotion — but days later, amid tension with management over transfer strategy, he has resigned despite the success. Meet his demands for greater transfer control to keep the promotion-winning coach, or let him walk and appoint a more experienced Serie A manager for the top-flight return?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Meet his demands — keep Deschamps', successProbability: 0.45, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'manager', text: 'Kept Deschamps by handing him transfer control.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'let-walk', label: 'Let him walk — hire a Serie A name (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Won promotion, then let Deschamps go.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Juventus win Serie B at the first attempt — straight back up.' }, { kind: 'memory', tag: 'manager', text: 'Won Serie B; Deschamps resigns.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'ranieri-era',
+    date: '2007-06',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:ranieri-era', title: 'Ranieri and the return to Serie A',
+      description: 'Claudio Ranieri has been appointed for the return to Serie A. Reality: he restored respectability, finishing 3rd and reaching the Champions League at the first attempt back up. Spend big immediately to challenge Inter’s dominance, or run a patient mid-table rebuild prioritising financial recovery?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'spend', label: 'Spend big to challenge Inter', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Backed a bold return to the top of Serie A.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'patient', label: 'Patient rebuild — recover the finances (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'manager', text: 'Rebuilt patiently under Ranieri — 3rd and back in Europe.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Ranieri restores respectability on the return to Serie A.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'ferrara-up',
+    date: '2009-05',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:ferrara-up', title: 'Ranieri sacked, Ferrara steps up',
+      description: 'With a 2nd-place finish slipping and form collapsing, Ranieri has been sacked with two games left; club legend Ciro Ferrara took caretaker charge and has been handed the job permanently — a turn toward internal Juventus identity. Gamble on the rookie club-legend to restore the Juventus ‘DNA’, or bring in a proven winner from outside?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'ferrara', label: 'Gamble on Ferrara and the DNA (as reality did)', successProbability: 0.45, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'manager', text: 'Handed the club legend Ferrara the reins.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'proven', label: 'Bring in a proven winner', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Chose experience over the rookie legend.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Ranieri sacked; Ferrara steps up.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'wilderness-years',
+    date: '2010-01',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:wilderness-years', title: 'The wilderness years — and Agnelli arrives',
+      description: 'Ferrara has been sacked after a poor run and Zaccheroni brought in to steady a side limping to 7th — the low point of the mid-table rebuild. Reality: in May 2010 Andrea Agnelli became president, launching a new era. Back Zaccheroni through the storm, or pivot to a long-term structural overhaul under the incoming Agnelli?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'back', label: 'Back Zaccheroni through the storm', successProbability: 0.4, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Stuck with Zaccheroni through the wilderness.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'overhaul', label: 'Pivot to an overhaul under Agnelli (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 5 }, { kind: 'memory', tag: 'club', text: 'Agnelli takes over — a structural overhaul begins.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'club', text: 'The wilderness years bottom out; Agnelli becomes president.' }],
+      memoryTags: ['club'],
+    }),
+  },
+  {
+    id: 'conte-appointed',
+    date: '2011-05',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:conte-appointed', title: 'Conte comes home',
+      description: 'Agnelli has appointed former Juventus captain Antonio Conte, fresh off promoting Siena. Reality: the transformational hire that ended the crisis years. Gamble on the passionate but relatively unproven club legend, or chase an established elite-name manager for instant credibility?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'conte', label: 'Gamble on Conte (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'manager', text: 'Hired the club legend Conte — the revival begins.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'elite', label: 'Chase an elite name for credibility', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Went for a marquee name over the club legend.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Conte appointed — the transformational hire.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'pirlo-vidal',
+    date: '2011-08',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:pirlo-vidal', title: 'Pirlo (free), Vidal — the shrewd coups',
+      description: 'Andrea Pirlo has arrived on a free from Milan (deemed surplus), with Arturo Vidal from Leverkusen and Lichtsteiner alongside. Reality: Pirlo-Vidal-Marchisio became the engine of the revival — one of the shrewdest free/mid-market recruitment coups in the club’s history, not blockbuster spending. Commit to the proven-but-ageing playmaker Pirlo as the fulcrum, or invest in younger legs and build around Vidal’s energy?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'pirlo', label: 'Build around Pirlo, free (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Pirlo arrives on a free — Milan’s loss, Juve’s fulcrum.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Pirlo free and Vidal — the revival’s engine.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'young', label: 'Build around Vidal’s younger legs', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Built the midfield around Vidal’s energy.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Pirlo (free) and Vidal arrive — a recruitment masterstroke.' }],
+      memoryTags: ['transfer', 'cur_pirlo_07'],
+    }),
+  },
+  {
+    id: 'juve-stadium',
+    date: '2011-09',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:juve-stadium', title: 'The Juventus Stadium opens',
+      description: 'Juventus have opened their new club-owned stadium on the site of the old Delle Alpi — the first fully-owned modern stadium of a major Italian club, a landmark for revenue and identity. Maximise the new stadium’s commercial revenue with naming rights and premium seating to fund transfers, or keep ticket prices low to guarantee a packed, intimidating fortress?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'commercial', label: 'Maximise commercial revenue', successProbability: 0.65, onSuccess: [{ kind: 'money', clubId: 'juventus', amount: 12_000_000 }, { kind: 'memory', tag: 'stadium', text: 'Turned the new stadium into a revenue engine.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'fortress', label: 'Keep prices low — a packed fortress', successProbability: 0.65, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'A packed, intimidating new fortress.' }, { kind: 'memory', tag: 'stadium', text: 'Prioritised a full, hostile stadium over revenue.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'stadium', text: 'The Juventus Stadium opens — a landmark for the club.' }],
+      memoryTags: ['stadium'],
+    }),
+  },
+  {
+    id: 'unbeaten-scudetto',
+    date: '2012-05',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:unbeaten-scudetto', title: 'The unbeaten Scudetto',
+      description: 'In Conte’s first season Juventus have won Serie A unbeaten across the 38-game campaign — the first Italian club to do it over a full season — clinching ahead of Milan. A defining, era-launching triumph. Consolidate the champion squad for continuity, or reinvest the prestige immediately in marquee signings to attack the Champions League?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'consolidate', label: 'Consolidate for continuity', successProbability: 0.65, onSuccess: [{ kind: 'morale', clubId: 'juventus', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Won the title unbeaten and kept the champions together.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'reinvest', label: 'Reinvest for a European push', successProbability: 0.55, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Won unbeaten, then spent to attack Europe.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 7, text: 'Juventus win the Scudetto unbeaten — the first over a full Serie A season.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2011-12 title unbeaten.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'delpiero-farewell',
+    date: '2012-05',
+    scenarios: ['juventus-2006'],
+    requires: (s) => s.playerClub === 'juventus',
+    build: () => ({
+      id: 'scripted:delpiero-farewell', title: 'Del Piero’s farewell',
+      description: 'Captain Alessandro Del Piero — who stayed loyal through the Serie B relegation — has played his final Juventus match at the new stadium after 19 years and a record goals tally, departing at the natural expiry of his contract in an emotional send-off crowning the title. (Myth-check: Conte did not force him out — it was a mutually respectful farewell.) Offer the icon a final one-year extension as a symbolic bench leader, or give him a dignified farewell and hand the future to the new generation?',
+      interrupt: true, clubId: 'juventus', category: 'event',
+      choices: [
+        { id: 'extend', label: 'One more year as a bench leader', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'The captain gets one more season.' }, { kind: 'memory', tag: 'legend', text: 'Kept Del Piero on for a farewell year.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'farewell', label: 'A dignified farewell (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'A tearful, fitting send-off for a 19-year servant.' }, { kind: 'memory', tag: 'legend', text: 'Gave Del Piero a dignified farewell after 19 years.' }], onFailure: [{ kind: 'morale', clubId: 'juventus', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'legend', text: 'Del Piero bows out after 19 years, crowning the title.' }],
+      memoryTags: ['legend', 'cur_delpiero_06'],
     }),
   },
 ];
