@@ -5639,7 +5639,81 @@ const JUVENTUS_2006_PACK: ScriptedEvent[] = [
   },
 ];
 
+// The Last Dance and the fall, 2007-2012. The scenario opens with the club as
+// reigning European champions (Athens 2007), so the pre-kickoff beats (Sheva out,
+// Calciopoli, Ronaldo in) are backstory reflected in the starting squad. The
+// transfers (Ronaldinho, Ibra, Robinho in; Kaká, Pirlo out) are ledger-replayed
+// and the coach churn can't be enacted as swaps, so these are narrative overlays;
+// the Kaká/City £100m beat keeps its player-level fork.
 const MILAN_2007_PACK: ScriptedEvent[] = [
+  {
+    id: 'athens-champions',
+    date: '2007-08',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:athens-champions', title: 'Champions of Europe — the Athens redemption',
+      description: 'Months ago in Athens, Milan beat Liverpool 2-1 (Inzaghi twice) to avenge the 2005 Istanbul collapse and lift a seventh European Cup — but you inherit the oldest side on the continent: Maldini at 39, Cafu at 37, a broken Ronaldo, and only Kaká and the teenage Pato pointing forward. Build the marketing and identity around the redemption triumph and the veteran core, or use the trophy as the perfect high point to begin selling ageing heroes at maximum value?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'veterans', label: 'Build around the veteran core (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Inherited the European champions and kept the old guard together.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'sell-high', label: 'Sell ageing heroes at the peak', successProbability: 0.55, onSuccess: [{ kind: 'money', clubId: 'milan', amount: 15_000_000 }, { kind: 'memory', tag: 'silverware', text: 'Used the Athens high to cash in and rebuild early.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Milan are champions of Europe — redemption for Istanbul.' }, { kind: 'memory', tag: 'silverware', text: 'Inherited the 2007 European champions.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'kaka-ballon',
+    date: '2007-12',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:kaka-ballon', title: 'Kaká crowned Ballon d’Or',
+      description: 'Kaká has won the Ballon d’Or as a Milan player (later FIFA World Player of the Year) — the last man before the Messi–Ronaldo duopoly, the undisputed jewel of the squad and the face of the club. Slap a no-sale tag on him and build the commercial future around him, or quietly listen to record offers while his value is at its absolute ceiling?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'no-sale', label: 'No-sale — build around him (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'The best in the world, and he’s ours.' }, { kind: 'memory', tag: 'honour', text: 'Built the future around a Ballon d’Or-winning Kaká.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'listen', label: 'Listen to record offers at the ceiling', successProbability: 0.5, onSuccess: [{ kind: 'memory', tag: 'honour', text: 'Quietly explored selling Kaká at his peak.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Kaká is named the best player in the world.' }, { kind: 'memory', tag: 'honour', text: 'Kaká wins the Ballon d’Or as a Milan player.' }],
+      memoryTags: ['honour', 'cur_kaka_07'],
+    }),
+  },
+  {
+    id: 'club-world-cup-2007',
+    date: '2007-12',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:club-world-cup-2007', title: 'World champions in Yokohama',
+      description: 'Milan have beaten Boca Juniors 4-2 in the Club World Cup final — Kaká takes the Golden Ball, Inzaghi scores twice — capping 2007 as world champions. Leverage the world-title status for a global commercial and sponsorship push, or treat it as a swan song and prioritise squad renewal over a fading-team farewell tour?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'commercial', label: 'Push the global commercial machine', successProbability: 0.6, onSuccess: [{ kind: 'money', clubId: 'milan', amount: 8_000_000 }, { kind: 'memory', tag: 'silverware', text: 'Leveraged world-champion status commercially.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'renew', label: 'Prioritise squad renewal', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Used the world title as cover to start renewing.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Milan beat Boca in Yokohama — champions of the world.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2007 Club World Cup.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'ronaldinho-pato',
+    date: '2008-07',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:ronaldinho-pato', title: 'Ronaldinho joins the Pato project',
+      description: 'Milan can sign Ronaldinho from Barcelona, past his Ballon d’Or peak, to line up alongside teenager Alexandre Pato (signed that January). Reality: moments of magic but inconsistent form as the team drifted from title contention. Bet on a marquee, box-office Galáctico to reignite the brand, or resist the ageing-star pattern and reinvest in the emerging Pato-led youth core?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'dinho', label: 'Sign Ronaldinho — box office (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'Ronaldinho’s magic returns to Serie A.' }, { kind: 'memory', tag: 'transfer', text: 'Signed Ronaldinho alongside the teenage Pato.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'youth', label: 'Resist — reinvest in the Pato core', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Backed youth over another ageing star.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 3 }, { kind: 'memory', tag: 'transfer', text: 'Ronaldinho arrives from Barcelona to partner Pato.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
   {
     id: 'kaka-100m',
     date: '2009-01',
@@ -5655,6 +5729,125 @@ const MILAN_2007_PACK: ScriptedEvent[] = [
       ],
       falloutIfIgnored: [{ kind: 'morale', clubId: 'milan', amount: 6 }, { kind: 'memory', tag: 'transfer', text: 'Milan reject City’s £100m for Kaká.' }],
       memoryTags: ['transfer', 'cur_kaka_07'],
+    }),
+  },
+  {
+    id: 'beckham-loan',
+    date: '2009-02',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:beckham-loan', title: 'Beckham on loan from LA Galaxy',
+      description: 'David Beckham has joined on loan from LA Galaxy and impressed enough to earn a second loan the following year (a stint that would end with a ruptured Achilles at San Siro). Both spells are loans — he was never bought permanently. Turn the loan into a permanent, global-marketing signing, or keep him as a short-term commercial and on-pitch boost and let him return to MLS?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'permanent', label: 'Make it permanent — a marketing coup', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 3, text: 'Beckham signs on for good — a global brand at San Siro.' }, { kind: 'memory', tag: 'transfer', text: 'Turned Beckham’s loan into a permanent deal.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'loan', label: 'Keep it a loan — back to MLS (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'memory', tag: 'transfer', text: 'Kept Beckham as a loan boost; back to the Galaxy he went.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Beckham arrives on loan from LA Galaxy.' }],
+      memoryTags: ['transfer'],
+    }),
+  },
+  {
+    id: 'maldini-farewell',
+    date: '2009-05',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:maldini-farewell', title: 'Maldini’s farewell — the end of an era',
+      description: 'Paolo Maldini has played his final San Siro match, closing a 25-year, one-club legend’s career — though a section of ultras jeered him over his critical comments, souring the goodbye. The old guard is departing and the decline is setting in. Fast-track Maldini into a club leadership role to preserve institutional identity, or make a clean break and hand the rebuild entirely to a new generation?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'leadership', label: 'Bring Maldini into the club structure', successProbability: 0.55, onSuccess: [{ kind: 'fanTrust', amount: 4, text: 'A Milan immortal stays inside the club.' }, { kind: 'memory', tag: 'legend', text: 'Kept Maldini’s identity in the club leadership.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'clean-break', label: 'Clean break — hand it to the new generation', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'legend', text: 'Made a clean break from the old guard.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'legend', text: 'Maldini bows out after 25 years — the end of an era.' }],
+      memoryTags: ['legend'],
+    }),
+  },
+  {
+    id: 'kaka-sold',
+    date: '2009-06',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:kaka-sold', title: 'Kaká sold to Real Madrid',
+      description: 'Real Madrid have come with ~€65m amid the Galácticos 2.0 spree — after Berlusconi rejected the bigger City bid months earlier. Reality: the sale marked the definitive end of Milan’s superpower status and the start of financial belt-tightening. Take the record fee to balance the books and fund a rebuild, or hold firm on the icon and accept the financial strain to keep a title contender together?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Take the fee — balance the books (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'money', clubId: 'milan', amount: 30_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Kaká to Real — the superpower era ends.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+        { id: 'hold', label: 'Hold firm — keep the icon', successProbability: 0.4, onSuccess: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Refused to sell Kaká despite the strain.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Kaká joins Real Madrid — Milan’s superpower status ends.' }],
+      memoryTags: ['transfer', 'cur_kaka_07'],
+    }),
+  },
+  {
+    id: 'ibra-robinho',
+    date: '2010-08',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:ibra-robinho', title: 'Ibrahimović & Robinho — the Galliani rebuild',
+      description: 'Milan can sign Ibrahimović on a loan-with-obligation from Barcelona and Robinho from Manchester City, rebuilding around new arrivals alongside Thiago Silva (who joined a year earlier). Go all-in on a marquee Ibrahimović-led title tilt, or spread the same budget across several younger signings for a more sustainable squad?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'all-in', label: 'All-in on Ibrahimović (as reality did)', successProbability: 0.7, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'Ibra and Robinho land — a title tilt is on.' }, { kind: 'memory', tag: 'transfer', text: 'Rebuilt around Ibrahimović and Robinho.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'sustainable', label: 'Spread the budget on youth', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Chose a sustainable rebuild over the marquee tilt.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'transfer', text: 'Ibrahimović and Robinho arrive for the Galliani rebuild.' }],
+      memoryTags: ['transfer', 'cur_ibrahimovic_07'],
+    }),
+  },
+  {
+    id: 'scudetto-18',
+    date: '2011-05',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:scudetto-18', title: 'Scudetto No. 18 under Allegri',
+      description: 'In Allegri’s first season Milan have won Serie A — an 18th league title and their first since 2004 — Ibrahimović, Robinho, Thiago Silva and Nesta driving the last great side of the era. Reinvest the title momentum into strengthening for a Champions League charge, or bank the success and begin offloading the highest earners to reset the wage bill?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'reinvest', label: 'Reinvest for a European charge', successProbability: 0.55, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 5 }, { kind: 'memory', tag: 'silverware', text: 'Won the Scudetto and backed a Champions League push.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'reset', label: 'Bank it and reset the wage bill', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Won the title but began trimming the wage bill.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Milan are champions of Italy — an 18th Scudetto under Allegri.' }, { kind: 'memory', tag: 'silverware', text: 'Won the 2010-11 Scudetto.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'muntari-ghost',
+    date: '2012-02',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:muntari-ghost', title: 'The Muntari ‘ghost goal’',
+      description: 'In a title-decider at San Siro, Sulley Muntari’s header clearly crossed the line against Juventus but was not given. The 1-1 draw becomes pivotal as Milan surrender the Scudetto to a resurgent Juventus, fuelling the goal-line-technology debate. Channel the injustice into a public campaign and a galvanised run-in, or keep the squad calm and focused rather than fixating on the officiating?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'campaign', label: 'Channel the injustice into a campaign', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'milan', amount: 5 }, { kind: 'memory', tag: 'controversy', text: 'Turned the ghost goal into a rallying grievance.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'calm', label: 'Keep the squad calm and focused', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'controversy', text: 'Kept the players focused past the officiating storm.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'controversy', text: 'Muntari’s ghost goal goes unseen; the title slips to Juventus.' }],
+      memoryTags: ['controversy'],
+    }),
+  },
+  {
+    id: 'psg-firesale',
+    date: '2012-07',
+    scenarios: ['milan-2007'],
+    requires: (s) => s.playerClub === 'milan',
+    build: () => ({
+      id: 'scripted:psg-firesale', title: 'The fire-sale — Ibrahimović & Thiago Silva to PSG',
+      description: 'The newly petro-funded Paris Saint-Germain have bid for both Ibrahimović and Thiago Silva in a combined deal worth ~€60-65m+, which would gut the title-winning spine and signal the definitive end of the era. Accept the massive offer to slash the wage bill and rebuild with youth, or refuse to sell the two best players and fight to keep Milan competitive despite the financial squeeze?',
+      interrupt: true, clubId: 'milan', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Accept PSG’s money — rebuild with youth (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'money', clubId: 'milan', amount: 40_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Ibra and Thiago Silva to PSG — the era ends.' }], onFailure: [{ kind: 'fanTrust', amount: -4 }] },
+        { id: 'refuse', label: 'Refuse — fight to stay competitive', successProbability: 0.4, onSuccess: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Refused PSG and kept the spine despite the squeeze.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: -3, text: 'Milan sell Ibrahimović and Thiago Silva to PSG — the great side is gutted.' }, { kind: 'memory', tag: 'transfer', text: 'The 2012 fire-sale to PSG ends the era.' }],
+      memoryTags: ['transfer'],
     }),
   },
 ];
