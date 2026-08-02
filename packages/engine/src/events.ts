@@ -6760,6 +6760,10 @@ const SPURS_2001_PACK: ScriptedEvent[] = [
   },
 ];
 
+// The Bale money to the Pochettino near-misses, 2013-2019. The transfers (Bale
+// out; the Magnificent Seven, Son in) are ledger-replayed and the manager churn
+// (AVB → Sherwood → Pochettino) can't be enacted as coach swaps, so these are
+// narrative overlays; the Bale-money beat keeps its 'one star vs seven' fork.
 const SPURS_2013_PACK: ScriptedEvent[] = [
   {
     id: 'bale-money',
@@ -6767,8 +6771,8 @@ const SPURS_2013_PACK: ScriptedEvent[] = [
     scenarios: ['spurs-2013'],
     requires: (s) => s.playerClub === 'spurs',
     build: () => ({
-      id: 'scripted:bale-money', title: 'The Bale money — £85m to reshape the club',
-      description: 'Gareth Bale has gone to Real for a world record, and the £85m is burning a hole in the club’s pocket. Reality: Levy spread it across SEVEN signings — Soldado, Eriksen, Lamela, Chadli, Paulinho, Capoue, Chiriches — and none replaced the one who left. Spend it on a single galáctico to fill Bale’s boots, or spread it wide as reality did?',
+      id: 'scripted:bale-money', title: 'The ‘Magnificent Seven’ — £110m spread wide',
+      description: 'Flush with the incoming Bale windfall, Levy signs seven players in one window — Paulinho, Soldado, Capoue, Chadli, Chiriches, and on deadline day Eriksen and Lamela (~£110m gross). Reality: a mixed rebuild, not the wholesale flop of legend — Eriksen and Lamela became key men. Spend it on a single galáctico to fill Bale’s boots, or spread it wide as reality did?',
       interrupt: true, clubId: 'spurs', category: 'event',
       choices: [
         { id: 'marquee', label: 'One galáctico to replace him', successProbability: 0.6, onSuccess: [{ kind: 'money', clubId: 'spurs', amount: 30_000_000 }, { kind: 'morale', clubId: 'spurs', amount: 6 }, { kind: 'memory', tag: 'bale-money', text: 'Backed one star with the Bale money — the bet Spurs never made.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
@@ -6776,6 +6780,193 @@ const SPURS_2013_PACK: ScriptedEvent[] = [
       ],
       falloutIfIgnored: [{ kind: 'money', clubId: 'spurs', amount: 20_000_000 }, { kind: 'memory', tag: 'bale-money', text: 'The Bale money is spread across a magnificent seven.' }],
       memoryTags: ['bale-money'],
+    }),
+  },
+  {
+    id: 'bale-sold',
+    date: '2013-09',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:bale-sold', title: 'Bale sold to Real for a world record',
+      description: 'Gareth Bale has joined Real Madrid for a world-record fee (later confirmed at ~£85.3m, though Madrid downplayed it for years), surpassing Ronaldo’s 2009 move and funding the summer rebuild. Cash in at the record fee and reinvest across the squad, or refuse to sell the talisman and build the team around Bale for one more title tilt?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'sell', label: 'Cash in at the record fee (as reality did)', successProbability: 0.8, onSuccess: [{ kind: 'money', clubId: 'spurs', amount: 40_000_000 }, { kind: 'memory', tag: 'transfer', text: 'Sold Bale for a world record and reinvested.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+        { id: 'keep', label: 'Refuse — build around Bale', successProbability: 0.35, onSuccess: [{ kind: 'fanTrust', amount: 5 }, { kind: 'memory', tag: 'transfer', text: 'Kept Bale for one more tilt against the money.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'transfer', text: 'Bale joins Real Madrid for a world-record fee.' }],
+      memoryTags: ['transfer', 'cur_bale'],
+    }),
+  },
+  {
+    id: 'avb-sacked',
+    date: '2013-12',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs' && s.managerRelations.identity === 'André Villas-Boas',
+    build: () => ({
+      id: 'scripted:avb-sacked', title: 'AVB sacked; Sherwood takes over',
+      description: 'After heavy defeats (0-3 to West Ham, 0-5 to Liverpool), André Villas-Boas has been dismissed; Tim Sherwood is put in caretaker charge and handed an 18-month deal, promoting academy youth including a young Harry Kane. Pull the trigger on AVB and gamble on the inexperienced in-house Sherwood, or keep faith through the slump / hire an established external manager?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'sherwood', label: 'Sack AVB — gamble on Sherwood (as reality did)', successProbability: 0.55, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Sacked AVB; Sherwood promotes the kids, including Kane.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'keep', label: 'Keep faith / hire externally', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'manager', text: 'Held off the sack or looked outside.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'AVB sacked; Sherwood takes caretaker charge and bloods Kane.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'pochettino-in',
+    date: '2014-05',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:pochettino-in', title: 'Pochettino appointed',
+      description: 'Sherwood has been dismissed and Spurs can appoint Mauricio Pochettino from Southampton, ushering in a high-press, youth-led identity that would define the era. Back the young, pressing-oriented Pochettino for a long-term project, or chase a bigger-name ‘win-now’ manager?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'poch', label: 'Back Pochettino long-term (as reality did)', successProbability: 0.65, onSuccess: [{ kind: 'managerRelationship', amount: 10 }, { kind: 'memory', tag: 'manager', text: 'Appointed Pochettino for a long-term, pressing project.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'win-now', label: 'Chase a win-now big name', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'manager', text: 'Went for a marquee win-now manager instead.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'manager', text: 'Pochettino appointed — a new pressing identity begins.' }],
+      memoryTags: ['manager'],
+    }),
+  },
+  {
+    id: 'kane-breakthrough',
+    date: '2015-02',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:kane-breakthrough', title: 'Kane’s breakthrough — a North London brace',
+      description: 'Harry Kane’s explosion peaks with two goals in a 2-1 win over Arsenal — 21 league goals, PFA Young Player of the Year and an England debut, ending the ‘one-season-wonder’ doubts (the prediction, not the player, was wrong). Commit to the homegrown striker as the franchise centrepiece with a new contract, or sell at peak value / sign an established No.9 over him?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'build', label: 'Build around Kane — new contract (as reality did)', successProbability: 0.75, onSuccess: [{ kind: 'fanTrust', amount: 5, text: 'A homegrown hero to build the club around.' }, { kind: 'memory', tag: 'academy', text: 'Made Kane the franchise centrepiece.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'sell', label: 'Cash in / sign an established No.9', successProbability: 0.4, onSuccess: [{ kind: 'money', clubId: 'spurs', amount: 30_000_000 }, { kind: 'memory', tag: 'academy', text: 'Doubted Kane and looked to the market — a road reality never took.' }], onFailure: [{ kind: 'fanTrust', amount: -6 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Kane announces himself with a derby brace.' }, { kind: 'memory', tag: 'academy', text: 'Kane breaks through as a 20-goal striker.' }],
+      memoryTags: ['academy'],
+    }),
+  },
+  {
+    id: 'league-cup-2015',
+    date: '2015-03',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:league-cup-2015', title: 'League Cup final loss to Chelsea',
+      description: 'Spurs have lost the League Cup final 2-0 to Chelsea at Wembley — Pochettino’s first final, and the trophyless run continues. Treat the cup run as vital silverware and prioritise it, or rotate for the league top-four push and accept the final as development experience?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'cup', label: 'Prioritise the cup — chase silverware', successProbability: 0.45, onSuccess: [{ kind: 'morale', clubId: 'spurs', amount: 4 }, { kind: 'memory', tag: 'near-miss', text: 'Went all-in for the League Cup and fell short.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'league', label: 'Rotate — protect the top-four push', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Treated the final as development, eyes on the league.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Spurs lose the League Cup final to Chelsea — the trophyless run goes on.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'battle-of-bridge',
+    date: '2016-05',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:battle-of-bridge', title: 'The title collapse — Battle of the Bridge',
+      description: 'Chasing a first title in decades, Spurs led 2-0 at Chelsea but drew 2-2 in a bad-tempered match (nine bookings) that mathematically handed Leicester the title, then lost 1-5 at Newcastle to finish 3rd, below Arsenal. Hold your nerve and stay the course after the collapse, or intervene with reinforcements and a disciplinary reset for a young side that buckled?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'stay', label: 'Hold nerve — stay the course (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'managerRelationship', amount: 6 }, { kind: 'memory', tag: 'near-miss', text: 'Kept faith after the title collapse.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'reset', label: 'Intervene — reinforcements and a reset', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Steadied the young side with a reset.' }], onFailure: [{ kind: 'morale', clubId: 'spurs', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'The title bid collapses at the Bridge; Leicester are champions.' }],
+      memoryTags: ['near-miss'],
+    }),
+  },
+  {
+    id: 'above-arsenal',
+    date: '2017-05',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:above-arsenal', title: '2nd — and above Arsenal at last',
+      description: 'Spurs have finished 2nd (86 points) and, crucially, above Arsenal for the first time since 1995 — ending the fan-coined ‘St Totteringham’s Day’ streak — with Kane’s Golden Boot, in the last season at White Hart Lane. Double down to convert 2nd into a title next season with big spending, or bank the progress and stay disciplined ahead of the stadium-driven austerity?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'spend', label: 'Spend big to chase the title', successProbability: 0.5, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Backed a title push off the back of 2nd.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'discipline', label: 'Stay disciplined for the stadium (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'silverware', text: 'Banked the progress against the stadium costs.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 5, text: 'Spurs finish above Arsenal for the first time since 1995.' }, { kind: 'memory', tag: 'silverware', text: 'Finished 2nd and ended St Totteringham’s Day.' }],
+      memoryTags: ['silverware'],
+    }),
+  },
+  {
+    id: 'wembley-move',
+    date: '2017-08',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:wembley-move', title: 'The move to Wembley',
+      description: 'With White Hart Lane demolished, Spurs will play home matches at Wembley while the new ground is built — early struggles (‘the Wembley hoodoo’) amid an ultra-frugal transfer stance (reality: zero senior signings in summer 2018). Accept the stadium-funded austerity and trust the existing squad, or insist on continued investment to keep the title window open despite construction costs?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'austerity', label: 'Accept the austerity (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'stadium', text: 'Trusted the squad through the Wembley austerity years.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+        { id: 'invest', label: 'Insist on investment', successProbability: 0.45, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'stadium', text: 'Kept spending to hold the title window open.' }], onFailure: [{ kind: 'boardPatience', amount: -4 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'stadium', text: 'Spurs decamp to Wembley amid transfer austerity.' }],
+      memoryTags: ['stadium'],
+    }),
+  },
+  {
+    id: 'new-stadium-opens',
+    date: '2019-04',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:new-stadium-opens', title: 'Tottenham Hotspur Stadium opens',
+      description: 'After long delays, the new 62,850-seat stadium has opened with a 2-0 win over Crystal Palace (Son the first competitive scorer) — a landmark for the club’s finances and future. Use the new revenue immediately for a squad refresh, or prioritise paying down stadium debt and delay major spending?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'refresh', label: 'Refresh the squad now', successProbability: 0.55, onSuccess: [{ kind: 'fanTrust', amount: 4 }, { kind: 'memory', tag: 'stadium', text: 'Put the new revenue straight into the squad.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'debt', label: 'Pay down the debt first (as reality did)', successProbability: 0.6, onSuccess: [{ kind: 'boardPatience', amount: 4 }, { kind: 'memory', tag: 'stadium', text: 'Prioritised the stadium debt over spending.' }], onFailure: [{ kind: 'fanTrust', amount: -2 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 4, text: 'The new stadium opens with a win over Palace.' }, { kind: 'memory', tag: 'stadium', text: 'Tottenham Hotspur Stadium opens.' }],
+      memoryTags: ['stadium'],
+    }),
+  },
+  {
+    id: 'ajax-miracle',
+    date: '2019-05',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:ajax-miracle', title: 'The Ajax miracle — Lucas Moura’s hat-trick',
+      description: 'Down 0-3 on aggregate at half-time of the semi-final second leg in Amsterdam, Lucas Moura has scored a second-half hat-trick — the winner in stoppage time — to send Spurs to their first Champions League final on away goals. Rest key players for the final, or push for a strong league finish first?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'rest', label: 'Rest key men for the final', successProbability: 0.6, onSuccess: [{ kind: 'morale', clubId: 'spurs', amount: 5 }, { kind: 'memory', tag: 'europe', text: 'Saved the legs for the club’s first European final.' }], onFailure: [{ kind: 'boardPatience', amount: -2 }] },
+        { id: 'league', label: 'Push for the league finish', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'europe', text: 'Chased the league too, into the final.' }], onFailure: [{ kind: 'morale', clubId: 'spurs', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'fanTrust', amount: 6, text: 'Lucas Moura’s hat-trick sends Spurs to their first Champions League final.' }, { kind: 'memory', tag: 'europe', text: 'The Ajax miracle — a first Champions League final.' }],
+      memoryTags: ['europe'],
+    }),
+  },
+  {
+    id: 'cl-final-2019',
+    date: '2019-06',
+    scenarios: ['spurs-2013'],
+    requires: (s) => s.playerClub === 'spurs',
+    build: () => ({
+      id: 'scripted:cl-final-2019', title: 'Champions League final loss to Liverpool',
+      description: 'In Madrid, Spurs have lost the Champions League final 2-0 to Liverpool (a Salah penalty inside two minutes, Origi late) — the peak of the Pochettino era, who would depart months later. Keep faith with Pochettino to go one better, or read the final as a ceiling reached and plan a managerial change and squad overhaul?',
+      interrupt: true, clubId: 'spurs', category: 'event',
+      choices: [
+        { id: 'keep', label: 'Keep faith with Pochettino', successProbability: 0.5, onSuccess: [{ kind: 'managerRelationship', amount: 8 }, { kind: 'memory', tag: 'near-miss', text: 'Backed Pochettino to go one better after the final.' }], onFailure: [{ kind: 'boardPatience', amount: -3 }] },
+        { id: 'change', label: 'A ceiling reached — plan a change', successProbability: 0.5, onSuccess: [{ kind: 'boardPatience', amount: 3 }, { kind: 'memory', tag: 'near-miss', text: 'Judged the final a ceiling and planned an overhaul.' }], onFailure: [{ kind: 'fanTrust', amount: -3 }] },
+      ],
+      falloutIfIgnored: [{ kind: 'memory', tag: 'near-miss', text: 'Spurs lose the Champions League final to Liverpool — the era’s peak and end.' }],
+      memoryTags: ['near-miss'],
     }),
   },
 ];
